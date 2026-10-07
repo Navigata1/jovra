@@ -6,7 +6,9 @@ extension Font {
     /// Section and card headings ("Latest session").
     static let jovraHeadline = Font.title3.weight(.semibold)
     /// Editorial card titles ("Ready for your next session?").
-    static let jovraEditorial = Font.title.weight(.bold)
+    static let jovraEditorial = Font.largeTitle.weight(.bold)
+    /// Letter-spaced capitals on editorial cards ("A BETTER GAME TOMORROW").
+    static let jovraKicker = Font.caption2.weight(.semibold)
     /// Screen subtitles under the display title ("Your game, in focus.").
     static let jovraSubtitle = Font.title3
     static let jovraBody = Font.body

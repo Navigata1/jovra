@@ -49,7 +49,7 @@ boot_simulator
 echo "==> JovraUITests on $SIMULATOR_ID"
 status=0
 run_tests "$DERIVED_DATA/ui-tests-$STAMP.xcresult" JovraUITests || status=$?
-export_screenshots "$DERIVED_DATA/ui-tests-$STAMP.xcresult" "(?:light|dark)"
+export_screenshots "$DERIVED_DATA/ui-tests-$STAMP.xcresult" "(?:light|dark|ax5)"
 
 ORIGINAL_APPEARANCE="$(xcrun simctl ui "$SIMULATOR_ID" appearance)"
 trap 'xcrun simctl ui "$SIMULATOR_ID" appearance "$ORIGINAL_APPEARANCE"' EXIT

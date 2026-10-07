@@ -5,19 +5,28 @@ import SwiftUI
 struct AppShell: View {
     @State private var router = AppRouter()
 
+    private var selection: Binding<AppTab> {
+        Binding(get: { router.selectedTab }, set: { router.select($0) })
+    }
+
     var body: some View {
         // A native TabView keeps each tab's navigation state and mounts only the selected tab, so
         // hidden tabs never reach VoiceOver; its system bar is hidden in favour of `JovraTabBar`.
-        TabView(selection: Binding(get: { router.selectedTab }, set: { router.select($0) })) {
+        // The bar is inset into each tab's root screen, inside its NavigationStack: an inset applied
+        // outside the TabView or the NavigationStack does not reach the scroll view, so the end of a
+        // screen could never scroll clear of the bar.
+        TabView(selection: selection) {
             ForEach(AppTab.allCases) { tab in
-                NavigationStack { TabRoot(tab: tab) }
-                    .toolbar(.hidden, for: .tabBar)
+                NavigationStack {
+                    TabRoot(tab: tab)
+                        .safeAreaInset(edge: .bottom, spacing: 0) {
+                            if router.isTabBarVisible {
+                                JovraTabBar(selection: selection)
+                            }
+                        }
+                }
+                .toolbar(.hidden, for: .tabBar)
                     .tag(tab)
-            }
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            if router.isTabBarVisible {
-                JovraTabBar(selection: Binding(get: { router.selectedTab }, set: { router.select($0) }))
             }
         }
         .background(Color.jovra(.background).ignoresSafeArea())

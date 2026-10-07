@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Capsule buttons. All are at least 44 pt tall; pressed state dims (and gently scales unless
+/// Capsule buttons (a 26 pt continuous radius on a 52 pt button, so a label that wraps at large
+/// text sizes gets a rounded rectangle rather than a blob). All are at least 44 pt tall; pressed state dims (and gently scales unless
 /// Reduce Motion is on).
 struct JovraButtonStyle: ButtonStyle {
     enum Kind {
@@ -27,16 +28,20 @@ struct JovraButtonStyle: ButtonStyle {
             .padding(.vertical, Space.x1 + Space.half)
             .frame(maxWidth: fullWidth ? .infinity : nil, minHeight: 52)
             .foregroundStyle(foreground)
-            .background(background, in: Capsule())
+            .background(background, in: shape)
             .overlay {
                 if kind == .secondary {
-                    Capsule().strokeBorder(Color.jovra(.textPrimary).opacity(0.55), lineWidth: 1.5)
+                    shape.strokeBorder(Color.jovra(.textPrimary).opacity(0.55), lineWidth: 1.5)
                 }
             }
-            .contentShape(Capsule())
+            .contentShape(shape)
             .opacity(isEnabled ? (configuration.isPressed ? 0.82 : 1) : 0.45)
             .scaleEffect(configuration.isPressed && !reduceMotion ? 0.98 : 1)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.15), value: configuration.isPressed)
+    }
+
+    private var shape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: 26, style: .continuous)
     }
 
     private var foreground: Color {

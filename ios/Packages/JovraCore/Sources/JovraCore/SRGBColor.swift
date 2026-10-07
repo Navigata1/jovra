@@ -20,7 +20,9 @@ public struct SRGBColor: Hashable, Sendable {
     public init?(hex: String) {
         var digits = Substring(hex)
         if digits.hasPrefix("#") { digits = digits.dropFirst() }
-        guard digits.count == 6, let value = UInt32(digits, radix: 16) else { return nil }
+        // Check every character first: UInt32(_:radix:) on its own would accept a leading "+" or "-".
+        let isASCIIHex: (Character) -> Bool = { $0.isASCII && $0.isHexDigit }
+        guard digits.count == 6, digits.allSatisfy(isASCIIHex), let value = UInt32(digits, radix: 16) else { return nil }
         self.init(
             red: Double((value >> 16) & 0xFF) / 255,
             green: Double((value >> 8) & 0xFF) / 255,

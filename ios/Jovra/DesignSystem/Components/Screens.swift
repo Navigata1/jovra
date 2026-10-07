@@ -36,6 +36,11 @@ struct JovraScreen<Accessory: View, Content: View>: View {
             .frame(maxWidth: .infinity)
         }
         .scrollIndicators(.hidden)
+        // An opaque page-coloured backdrop under the status bar, so scrolled content never sits
+        // behind the clock and battery (there is no navigation bar to provide one).
+        .safeAreaInset(edge: .top, spacing: 0) {
+            Color.clear.frame(height: 0).background(Color.jovra(.background))
+        }
         // Content stops at the tab bar instead of sliding beneath it, so nothing is ever half-covered.
         .clipped()
         .background(Color.jovra(.background).ignoresSafeArea())
@@ -57,8 +62,9 @@ struct ComingLaterCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.x2) {
+            // Decorative and inside a fixed 52 pt disc, so it keeps a fixed size at every text size.
             Image(systemName: symbol)
-                .font(.title2)
+                .font(.system(size: 22, weight: .regular))
                 .foregroundStyle(.jovra(.onAccent))
                 .frame(width: 52, height: 52)
                 .background(Color.jovra(.accent), in: Circle())

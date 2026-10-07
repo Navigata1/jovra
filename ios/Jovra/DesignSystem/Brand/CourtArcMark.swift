@@ -71,11 +71,14 @@ struct JovraLockup: View {
             let wordRect = CGRect(x: markWidth + gap, y: wordTop, width: wordmarkWidth, height: wordmarkHeight)
             context.fill(JovraWordmarkShape().path(in: wordRect), with: .color(markColor))
 
+            // Centred under JOVRA at about half its width, as on the logo board. Tracking is added after
+            // every glyph, the last included, so the centre shifts right by half of it.
+            let tracking = height * 0.095
             let tennis = Text(verbatim: "TENNIS")
-                .font(.system(size: height * 0.15, weight: .semibold))
-                .tracking(height * 0.12)
+                .font(.system(size: height * 0.18, weight: .semibold))
+                .tracking(tracking)
                 .foregroundStyle(tennisColor)
-            context.draw(tennis, at: CGPoint(x: wordRect.midX + height * 0.06, y: wordRect.maxY + height * 0.17), anchor: .center)
+            context.draw(tennis, at: CGPoint(x: wordRect.midX + tracking / 2, y: wordRect.maxY + height * 0.2), anchor: .center)
         }
         .frame(width: markWidth + gap + wordmarkWidth, height: height)
         .accessibilityElement()

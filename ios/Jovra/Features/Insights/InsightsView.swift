@@ -12,7 +12,7 @@ struct InsightsView: View {
     var body: some View {
         JovraScreen(title: "Insights", subtitle: "See the work pay off.") {
             ComingLaterCard(
-                symbol: "chart.bar",
+                symbol: "chart.line.uptrend.xyaxis",
                 message: "Shot placement, Serve Lab, Stroke Lab, progress trends and practice suggestions, each linked to the points they came from."
             )
             VStack(alignment: .leading, spacing: Space.x2) {

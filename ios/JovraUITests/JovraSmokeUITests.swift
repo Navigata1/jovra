@@ -61,26 +61,108 @@ final class JovraSmokeUITests: XCTestCase {
         try audit(app)
     }
 
+    /// The largest accessibility text size (AX5). The tab bar must stay one compact row with every
+    /// title on one line (its labels cap at xxxLarge and hand over to the Large Content Viewer), the
+    /// Sessions filter pills must stack instead of breaking words, and every tab must pass the audit.
+    @MainActor
+    func testEveryTabAtLargestAccessibilityTextSize() throws {
+        let app = launch(appearance: "light", contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
+        let tabBar = app.otherElements["tabBar"]
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 5))
+        for (index, tab) in tabs.enumerated() {
+            let button = app.buttons[tab.identifier]
+            button.tap()
+            XCTAssertTrue(heading(tab.heading, in: app).waitForExistence(timeout: 5), "\(tab.slug) shows “\(tab.heading)”")
+            XCTAssertTrue(button.isSelected, "\(tab.identifier) reports selected")
+
+            XCTAssertLessThanOrEqual(tabBar.frame.height, app.frame.height * 0.15, "tab bar (overhang strip and home-indicator inset included) stays compact at AX5 (\(tabBar.frame))")
+            let frames = tabs.map { app.buttons[$0.identifier].frame }
+            for (other, frame) in zip(tabs, frames) {
+                XCTAssertEqual(frame.minY, frames[0].minY, accuracy: 0.5, "\(other.identifier) sits on the same row")
+                XCTAssertEqual(frame.height, frames[0].height, accuracy: 0.5, "\(other.identifier) title stays on one line")
+                XCTAssertGreaterThanOrEqual(frame.height, 44, "\(other.identifier) is at least 44 pt tall")
+            }
+
+            if tab.slug == "sessions" {
+                let pills = ["All", "Matches", "Practice"].map { app.buttons[$0] }
+                pills.forEach { XCTAssertTrue($0.exists, "filter pill \($0) exists") }
+                XCTAssertLessThan(pills[0].frame.maxY, pills[1].frame.minY + 1, "filter pills stack vertically at AX5")
+                XCTAssertLessThan(pills[1].frame.maxY, pills[2].frame.minY + 1, "filter pills stack vertically at AX5")
+                XCTAssertGreaterThan(pills[1].frame.width, app.frame.width * 0.6, "a stacked pill spans the panel")
+            }
+
+            attachScreenshot(app, name: "ax5-\(index + 1)-\(tab.slug)")
+            try audit(app)
+        }
+    }
+
     // MARK: Helpers
 
-    /// Runs Xcode's full accessibility audit. One narrow exception: a *contrast* issue on an element
-    /// that reaches into the opaque tab bar (or touches its top edge, where the audit's sampling
-    /// window takes in bar pixels) is ignored. Such an element is scrolled out of sight or cut by the
-    /// bar; SwiftUI keeps off-screen scroll content in the tree, and the audit measures the bar, not
-    /// the element. Text contrast itself is enforced for every colour role by ColorRoleContrastTests.
-    /// Every other issue, of every audit type, fails the test.
+    /// Runs Xcode's full accessibility audit on what is on screen, then audits again one, two, …
+    /// slow swipes further down (each swipe shorter than the viewport) until the end of the screen,
+    /// so anything first seen cut off by the tab bar is audited fully visible at a later step.
+    ///
+    /// Two narrow exceptions. A *dynamic type* issue on tab bar text is ignored: its titles cap at
+    /// xxxLarge and the Large Content Viewer takes over (JovraTabBar). A *contrast* issue on an element
+    /// that is not a tab bar item is ignored in one audit pass when the element is clipped (under the
+    /// status-bar backdrop, or reaching into the tab bar and the strip reserved for the Record circle)
+    /// or ends within `edgeBand` of the bar, where the audit's sampling takes in the bar and the
+    /// chartreuse circle. SwiftUI keeps off-screen scroll content in the tree, so such elements are
+    /// sampled against pixels that are not theirs. Every ignored issue is logged.
+    ///
+    /// Nothing escapes the audit this way. Each slow swipe moves the page by more than `edgeBand` and
+    /// less than the visible height, so an element in the band at one step is fully visible and clear
+    /// of the band at the next; and the last step (the end of the screen, always audited) leaves the
+    /// final element Space.x4 (32 pt, twice `edgeBand`) above the bar, as JovraScreen pads its end.
     @MainActor
     private func audit(_ app: XCUIApplication) throws {
+        // On a tab screen the lockup is the first row, Space.x1 (8 pt) below the status-bar backdrop.
+        let lockup = app.descendants(matching: .any).matching(identifier: "brand.lockup").firstMatch
+        let onTabScreen = app.otherElements["tabBar"].exists && lockup.exists
+        let visibleTop = onTabScreen ? lockup.frame.minY - 8 : 0
+        let title = app.staticTexts.matching(identifier: "screen.title").firstMatch
+        let scrollView = app.scrollViews.firstMatch
+        try auditVisibleScreen(app, visibleTop: visibleTop)
+        guard scrollView.exists, title.exists else { return }
+        // The audit itself may move the scroll position, so each step starts again from the top
+        // and scrolls `step` slow swipes down; it stops once another swipe no longer moves the page.
+        var previousTitleY = title.frame.minY
+        for step in 1...6 {
+            scrollToTop(scrollView)
+            for _ in 0..<step { scrollView.swipeUp(velocity: .slow) }
+            let titleY = title.frame.minY
+            guard abs(titleY - previousTitleY) > 1 else { break }
+            previousTitleY = titleY
+            try auditVisibleScreen(app, visibleTop: visibleTop)
+        }
+        scrollToTop(scrollView)
+    }
+
+    @MainActor
+    private func scrollToTop(_ scrollView: XCUIElement) {
+        for _ in 0..<3 { scrollView.swipeDown(velocity: .fast) }
+    }
+
+    /// Height of the band above the tab bar in which contrast sampling is unreliable (see `audit`).
+    private static let edgeBand: CGFloat = 16
+
+    @MainActor
+    private func auditVisibleScreen(_ app: XCUIApplication, visibleTop: CGFloat) throws {
         let tabBar = app.otherElements["tabBar"]
         let visibleBottom = tabBar.exists ? tabBar.frame.minY : app.frame.maxY
-        let edgeSamplingMargin: CGFloat = 6
+        let tabBarFrame = tabBar.exists ? tabBar.frame : .null
         try app.performAccessibilityAudit { issue in
-            guard issue.auditType == .contrast, let element = issue.element else { return false }
-            let atOrBehindTabBar = element.frame.maxY > visibleBottom - edgeSamplingMargin
-            if atOrBehindTabBar {
-                print("audit: ignored contrast on “\(element.label)” at \(element.frame) (tab bar top \(visibleBottom))")
+            guard let element = issue.element else { return false }
+            if issue.auditType == .dynamicType, tabBarFrame.contains(element.frame) {
+                print("audit: ignored dynamic type on tab bar “\(element.label)” (Large Content Viewer)")
+                return true
             }
-            return atOrBehindTabBar
+            guard issue.auditType == .contrast else { return false }
+            let frame = element.frame
+            let isTabBarItem = element.identifier.hasPrefix("tab.")
+            let isClipped = !isTabBarItem && (frame.maxY > visibleBottom - Self.edgeBand || frame.minY < visibleTop)
+            print("audit: contrast issue on “\(element.label)” at \(frame), visible \(visibleTop)–\(visibleBottom): \(isClipped ? "ignored (clipped or in the edge band)" : "FAILS")")
+            return isClipped
         }
     }
 
@@ -103,9 +185,12 @@ final class JovraSmokeUITests: XCTestCase {
     }
 
     @MainActor
-    private func launch(appearance: String) -> XCUIApplication {
+    private func launch(appearance: String, contentSize: String? = nil) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments += ["-\(appearanceKey)", appearance]
+        if let contentSize {
+            app.launchArguments += ["-UIPreferredContentSizeCategoryName", contentSize]
+        }
         app.launch()
         return app
     }

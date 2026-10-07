@@ -46,7 +46,7 @@ enum BrandGeometry {
             center: CGPoint(x: 24.2, y: 50),
             radius: 18.9,
             startAngle: .pi,
-            endAngle: -0.25,
+            endAngle: -0.45,
             clockwise: true
         )
         let bowlStroked = bowl.copy(strokingWithWidth: markStroke, lineCap: .butt, lineJoin: .round, miterLimit: 4)
@@ -54,7 +54,20 @@ enum BrandGeometry {
         gapBand.move(to: CGPoint(x: corner.x - down.x * 30, y: corner.y - down.y * 30))
         gapBand.addLine(to: vertex)
         let gapStroked = gapBand.copy(strokingWithWidth: markStroke + markGap * 2, lineCap: .butt, lineJoin: .miter, miterLimit: 4)
-        let j = bowlStroked.subtracting(gapStroked)
+        // Everything of the bowl on the V's side of the gap goes too, so no sliver of the hook is
+        // left hugging the V's first stroke (the logo board's V edge is clean).
+        let toV = CGPoint(x: down.y, y: -down.x) // unit normal pointing from the J side to the V side
+        let edge = markStroke / 2 + markGap
+        func onJEdge(_ along: CGFloat, out: CGFloat) -> CGPoint {
+            CGPoint(
+                x: vertex.x + down.x * along + toV.x * (out - edge),
+                y: vertex.y + down.y * along + toV.y * (out - edge)
+            )
+        }
+        let beyondGap = CGMutablePath()
+        beyondGap.addLines(between: [onJEdge(-90, out: 0), onJEdge(30, out: 0), onJEdge(30, out: 60), onJEdge(-90, out: 60)])
+        beyondGap.closeSubpath()
+        let j = bowlStroked.subtracting(gapStroked).subtracting(beyondGap)
 
         return j.union(vClipped)
     }()
@@ -71,7 +84,7 @@ enum BrandGeometry {
     // MARK: Wordmark
 
     private static let capHeight: CGFloat = 20
-    private static let wordStroke: CGFloat = 3.8
+    private static let wordStroke: CGFloat = 4.4
     private static let letterGap: CGFloat = 6.2
 
     /// "JOVRA" with a crossbar-less A, geometric and wide.

@@ -54,18 +54,36 @@ Single package directly: `swift test --package-path ios/Packages/JovraCore`.
 `JovraSmokeUITests` launches the app with `-appearance light|dark|system` (the Profile → Appearance
 preference, read from `UserDefaults`), visits every tab, asserts the heading, the selected state and
 44 pt targets, attaches a screenshot, and runs `performAccessibilityAudit()` on each tab and on the
-full-screen capture route.
+full-screen capture route. `testEveryTabAtLargestAccessibilityTextSize` repeats the tour at the
+largest accessibility text size (AX5, launched with `-UIPreferredContentSizeCategoryName
+UICTContentSizeCategoryAccessibilityXXXL`). It asserts that the tab bar stays one compact row with
+every title on one line, and that the Sessions filter pills stack instead of breaking words. It
+attaches `ax5-*` screenshots and audits every tab.
 
-One audit exception exists and is documented in the test: a **contrast** issue on an element whose
-frame reaches into the opaque tab bar (or within 6 pt of its top edge) is ignored. Such elements are
-scrolled out of sight behind the bar (SwiftUI keeps off-screen scroll content in the accessibility tree)
-and the audit samples the bar's pixels, not the element. Text contrast for every colour role is
-enforced independently by `ColorRoleContrastTests` (≥ 4.5:1 in light, dark and Increase Contrast).
-The test logs every ignored issue.
+Each audit runs on the screen as first shown, then again one, two, and more slow swipes further
+down, until the end of the screen. Content first seen cut off at the bottom is therefore audited
+fully visible at a later step.
+
+There are two documented audit exceptions, and the test logs every issue it ignores:
+
+- **Dynamic Type on tab bar titles.** Like the system tab bar, `JovraTabBar` caps its titles at
+  `xxxLarge` and offers the Large Content Viewer (touch and hold) beyond that. Only text inside the tab
+  bar's frame is exempt.
+- **Contrast on clipped content.** This covers a non-tab-bar element under the status-bar backdrop, or
+  one reaching into the tab bar or within 16 pt of it. The audit's sampling there takes in the bar
+  and the chartreuse Record circle, not the element. SwiftUI keeps off-screen scroll content in the
+  tree. Tab bar items are always checked. Each slow swipe moves the page by more than 16 pt and by
+  less than the visible height, and every screen ends with 32 pt of padding. So every element is
+  audited clear of the bar at some step.
+
+Text contrast for every colour role is also enforced independently by `ColorRoleContrastTests`
+(≥ 4.5:1 in light, dark and Increase Contrast).
 
 ## Simulator hygiene
 
-UI tests need the simulator to themselves. If another session (for example a Maestro driver) is using
+UI tests need the simulator to themselves. Evidence screenshots show the simulator's real status bar.
+If another app on a shared simulator opened ours, a stray "◀ <other app>" back-link can appear in it.
+Check the exported screenshots before posting them. If another session (for example a Maestro driver) is using
 the default simulator, create a dedicated one and point the scripts at it:
 
 ```sh

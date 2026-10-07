@@ -25,7 +25,11 @@ struct ContrastTests {
         #expect(forest.contrastRatio(with: chartreuse) == chartreuse.contrastRatio(with: forest))
     }
 
-    @Test("malformed hex strings are rejected", arguments: ["", "#FFF", "#GGGGGG", "#1234567", "12 456"])
+    @Test("malformed hex strings are rejected", arguments: [
+        "", "#FFF", "#GGGGGG", "#1234567", "12 456",
+        // UInt32(_:radix:) alone accepts a leading sign; these must still be rejected.
+        "+12345", "#+FFFFF", "-00000", "##12345", "0x1234", "１２３４５６",
+    ])
     func malformedHex(_ input: String) {
         #expect(SRGBColor(hex: input) == nil)
     }
