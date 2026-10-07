@@ -1,0 +1,40 @@
+import SwiftUI
+
+@main
+struct JovraApp: App {
+    /// "system", "light" or "dark". UI tests pass `-appearance dark` as a launch argument.
+    @AppStorage(AppearancePreference.storageKey) private var appearance = AppearancePreference.system
+
+    var body: some Scene {
+        WindowGroup {
+            AppShell()
+                .preferredColorScheme(appearance.colorScheme)
+                .tint(.jovra(.textPrimary))
+        }
+    }
+}
+
+/// The player's appearance choice (Profile → Appearance).
+enum AppearancePreference: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    static let storageKey = "appearance"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .system: "System"
+        case .light: "Light"
+        case .dark: "Dark"
+        }
+    }
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+}
