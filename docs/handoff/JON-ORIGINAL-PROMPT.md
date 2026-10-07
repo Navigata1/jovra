@@ -19,3 +19,14 @@ I need to create an application call Jon's vision or Jon vision or Jonathan visi
 - "pushed into my GitHub repo and then automatically merged" = one GitHub issue per ticket, one PR per
   ticket against `main`, merged after required checks pass.
 - GitHub destination: the `Navigata1` account.
+
+## Studio addendum (2026-10-07, second message, verbatim excerpt of decisions)
+
+> native on each is perfect, local first yes, and then icloud, google drive, box, dropbox, etc all type of storage options can be added and available to have as optional integrations afterwards, - agreed on scoring calculation - agreed on metric labeling - ok, with no backend, i follow in v1, however, i do like the backend to be kept in mind ... i have a supabase and cloudflare connection, and whatever else might be necessary, pinecone vector database or whatever i might need to consider ... i would like to have all that rls and thoughtfulness in place and built in, so the app has completeness in v1 however the auth can simply be tester items and example credentials until the wired up backends ... is in place provisioned and live
+
+Summary of the rest of that message: a **"Build your match"** super-premium feature — up to six phones around the court
+(both baselines, all four corners) building a broadcast-like, metric-rich, interactive match; one feed analysed live;
+the angles uploaded and processed in the cloud by a JOVRA engine (Opus 5.5 or GPT "Astra" as the planner) that
+analyses, cuts, adds B-roll, angles and metrics, and returns a download link; the user chooses a storyline mode
+(4–5 template profiles, e.g. instructional vs high-energy). Jon calls this the moat. He has an old match video for
+testing, and his video-editing skills are on GitHub. The Studio handoff in `docs/handoff/studio/` structures this.

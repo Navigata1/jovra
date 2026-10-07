@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "jovra.edit-plan/1",
+  "projectId": "sample-court-day",
+  "sample": true,
+  "sourceManifestRevision": 1,
+  "syncRevision": 1,
+  "eventRevision": 2,
+  "profileId": "court-memories",
+  "profileRevision": 1,
+  "output": {"fps": {"num": 30, "den": 1}, "width": 1920, "height": 1080, "totalFrames": 240, "container": "mp4", "videoCodec": "h264", "audioCodec": "aac"},
+  "sources": [
+    {"id": "camera-a", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "fps": {"num": 30, "den": 1}, "width": 1920, "height": 1080, "frameCount": 600, "hasAudio": true},
+    {"id": "camera-b", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "fps": {"num": 30, "den": 1}, "width": 1920, "height": 1080, "frameCount": 600, "hasAudio": false}
+  ],
+  "segments": [
+    {"id": "arrival", "sourceId": "camera-a", "sourceInFrame": 30, "sourceOutFrame": 150, "outputInFrame": 0, "outputOutFrame": 120, "speed": 1, "transition": "cut", "overlayRefs": []},
+    {"id": "exchange", "sourceId": "camera-b", "sourceInFrame": 90, "sourceOutFrame": 210, "outputInFrame": 120, "outputOutFrame": 240, "speed": 1, "transition": "cut", "overlayRefs": []}
+  ],
+  "audio": {"mode": "primary-bed", "sourceId": "camera-a", "sourceInFrame": 30, "sourceOutFrame": 270}
+}

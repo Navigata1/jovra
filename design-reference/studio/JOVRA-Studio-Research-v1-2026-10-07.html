@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JOVRA Studio feasibility — October 7, 2026</title><style>
+    :root {
+      color-scheme: dark;
+      --bg:#070f1c; --paper:#0d1b2f; --paper-2:#10243b;
+      --ink:#eef6ff; --muted:#a9bdd3; --line:rgba(169,189,211,.18);
+      --accent:#58d7b3; --blue:#77b7ff; --amber:#ffd166; --red:#ff8f8f;
+      --good:#8ef2c0; --violet:#c4a7ff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:
+      radial-gradient(circle at top left,rgba(88,215,179,.16),transparent 30rem),
+      radial-gradient(circle at top right,rgba(119,183,255,.14),transparent 32rem),
+      var(--bg);color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+    main{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:42px 0 64px}
+    h1,h2,h3{margin:0;line-height:1.12}
+    h1{max-width:950px;margin-top:10px;font-size:clamp(2.2rem,5.4vw,4.4rem);letter-spacing:-.04em}
+    h2{margin-bottom:16px;font-size:clamp(1.5rem,3vw,2.2rem)}
+    h3{margin-bottom:8px;font-size:1.05rem;color:#fff}
+    p{margin:0} a{color:var(--blue)}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;color:#dff7ef}
+    .eyebrow{color:var(--accent);font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    .hero{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:26px;align-items:end;padding:24px 0 34px;border-bottom:1px solid var(--line)}
+    .hero .summary{max-width:780px;margin-top:18px;color:var(--muted);font-size:1.08rem}
+    .panel,.verdict-card,.task,.lane,.finding,.phase-card,.metric{border:1px solid var(--line);border-radius:16px;
+      background:linear-gradient(180deg,var(--paper-2),var(--paper));box-shadow:0 18px 46px rgba(0,0,0,.25)}
+    .verdict-card{padding:22px}
+    .task,.lane,.metric{padding:18px}
+    .verdict-card strong{display:block;color:var(--accent);font-size:1.9rem;line-height:1.1}
+    .verdict-card span{display:block;margin-top:10px;color:var(--muted);font-size:.95rem}
+    section{padding-top:38px}
+    .grid{display:grid;gap:16px}
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .panel{padding:20px}
+    .panel p,li,.muted{color:var(--muted)}
+    .metric strong{display:block;margin-bottom:6px;color:#fff;font-size:1.9rem;line-height:1}
+    .chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:4px 10px;margin:2px 4px 2px 0;background:rgba(255,255,255,.05);color:var(--muted);font-size:.78rem;font-weight:800}
+    .chip.red{color:var(--red);border-color:rgba(255,143,143,.4)}
+    .chip.amber{color:var(--amber);border-color:rgba(255,209,102,.4)}
+    .chip.green{color:var(--good);border-color:rgba(142,242,192,.4)}
+    .chip.blue{color:var(--blue);border-color:rgba(119,183,255,.4)}
+    .chip.violet{color:var(--violet);border-color:rgba(196,167,255,.4)}
+    ul{margin:10px 0 0;padding-left:20px}
+    li+li{margin-top:7px}
+    table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.92rem}
+    th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+    th{background:rgba(255,255,255,.05);color:#fff;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}
+    td{color:var(--muted)} td b,td strong{color:#fff}
+    .table-wrap{overflow-x:auto;border-radius:12px}
+    .finding{padding:16px 18px;margin-top:10px}
+    .finding .sev{font-weight:900;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
+    .sev.critical,.sev.high{color:var(--red)} .sev.med,.sev.medium{color:var(--amber)} .sev.low{color:var(--blue)}
+    .finding h3{display:inline;font-size:.98rem}
+    .finding p{margin-top:6px;font-size:.92rem}
+    .finding code{color:var(--blue);font-size:.82rem}
+    .phase-card{display:grid;grid-template-columns:92px 1fr;gap:18px;padding:22px;margin-top:14px}
+    .phase-num{display:grid;place-items:center;width:72px;height:72px;border-radius:18px;background:rgba(88,215,179,.12);color:var(--accent);font-weight:950;font-size:1.5rem}
+    .phase-card.p0 .phase-num{background:rgba(255,143,143,.12);color:var(--red)}
+    .phase-card.p1 .phase-num{background:rgba(255,209,102,.12);color:var(--amber)}
+    .phase-card.p2 .phase-num{background:rgba(88,215,179,.12);color:var(--accent)} /* default accent, explicit */
+    .phase-card.p3 .phase-num{background:rgba(119,183,255,.12);color:var(--blue)}
+    .phase-card.p4 .phase-num{background:rgba(196,167,255,.12);color:var(--violet)}
+    .timeline{display:grid;gap:10px}
+    .tl-item{display:grid;grid-template-columns:72px 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.035)}
+    .tl-item time{color:var(--accent);font-size:.8rem;font-weight:900}
+    .tl-item p{color:var(--muted)}
+    .phase-meta{margin-top:4px;font-size:.85rem;color:var(--accent);font-weight:800}
+    .code-block{display:block;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#081120;color:#dff7ef;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;overflow-x:auto;white-space:pre}
+    .footer-note{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:.92rem}
+    .kicker{color:var(--muted);margin-bottom:14px;max-width:860px}
+    @media(max-width:900px){
+      main{width:min(100% - 24px,760px);padding-top:24px}
+      .hero,.grid.two,.grid.three,.grid.four{grid-template-columns:1fr}
+      .phase-card{grid-template-columns:1fr}
+      .tl-item{grid-template-columns:56px 1fr}
+    }
+  
+:root{--bg:#092a25;--paper:#0c3028;--paper-2:#123c33;--ink:#f4f1e8;--muted:#bfd0c7;--accent:#d7f56a;--line:#36574b;--blue:#d7f56a}body{background:var(--bg)}a{overflow-wrap:anywhere}.hero h1{font-size:clamp(2.3rem,5vw,4rem)}.route{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.route div{padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}.route b{display:block;margin-bottom:10px}.route p{color:var(--muted);font-size:14px;margin:0}th,td{min-width:150px}@media(max-width:700px){.route{grid-template-columns:1fr}}@media print{body{background:#fff;color:#182f29}:root{--muted:#182f29;--ink:#182f29;--line:#bbb;--blue:#092a25}.panel,.verdict-card,.route div{background:#eee;box-shadow:none}}
+</style></head><body><main><header class="hero"><div><p class="eyebrow">JOVRA Studio · Research and integration direction · October 7, 2026</p><h1>Keep the match.<br>Build the story from evidence.</h1><p class="summary">Start with one real match and five verified film styles. Add reviewed two-camera synchronization before six-device field capture and optional cloud processing.</p><div><span class="chip green">17 archive files read</span><span class="chip blue">20 new reference screens</span><span class="chip amber">Backend proposed</span></div></div><aside class="verdict-card"><strong>The vision is plausible as a staged build.</strong><span>The attached suite supplies an editing workflow. A separate existing FFmpeg/Remotion editor supplies real assembly interfaces. Neither proves six-camera JOVRA synchronization, automatic analysis or live cloud delivery.</span></aside></header>
+<section aria-labelledby="evidence-title"><h2 id="evidence-title">What was inspected</h2><div class="grid two"><article class="panel"><h3>Attached source</h3><p>Every ZIP text/config/license member and the landing HTML were read. The archive has 17 files totaling 15,324 uncompressed bytes; original text and hashes are retained. Its assembly seat builds a hook followed by a frozen image and audio. No instructions were executed.</p><p><a href="brief/source-assessment.md">Read the source assessment</a></p></article><article class="panel"><h3>Existing workspace</h3><p>Live source inspection located the separate garnet-remotion editor and read its README, package, pipeline and mapping code. JOVRA’s current instructions and local-first/provenance ADRs were also read. No app builds, media renders or editor tests were run in this reference task.</p><p>The old tennis video was reported by Jon but is not in these attachments.</p></article></div></section>
+<section aria-labelledby="findings-title"><h2 id="findings-title">Findings that survived refutation</h2><article class="finding high"><h3>Workflow text needs a tennis renderer</h3><p>Confirmed by the archive manifest and assembly seat. Preserve project lock, keepers, B-roll and edit planning. Replace the still/audio assembly recipe for action video. Contrary evidence: the separate existing editor does contain executable FFmpeg assembly; “no reusable editor exists” was refuted.</p></article><article class="finding high"><h3>Phone recordings need normalization and clock maps</h3><p>The existing mapped assembler imposes constant-frame clocks, common dimensions/FPS, square pixels and no rotation. Rereading its source confirmed the limits. Preserve its validation; build compatible proxies, original-time mappings and synchronization rather than silently relaxing it.</p></article><article class="finding high"><h3>Private database rows do not secure R2 objects</h3><p>The signing service needs separate project/object authorization. Direct signed URLs remain usable until expiry, so use short capabilities and checking application links. <a href="https://developers.cloudflare.com/r2/api/s3/presigned-urls/">R2 access documentation</a>.</p></article><article class="finding medium"><h3>Record the new backend scope in an ADR</h3><p>Current ADR 0002 excludes a v1 backend. Jon’s latest request adds backend readiness and optional live cloud. Preserve the old decision and offline behavior; add a new decision documenting the change and activation gates.</p></article><p>Review method: sequential evidence passes, followed by separate refute-first rereads. This is not an independent multi-agent audit.</p></section>
+<section aria-labelledby="preserve-title"><h2 id="preserve-title">Strengths to preserve</h2><div class="grid three"><article class="panel"><h3>Player-owned capture</h3><p>Native apps, local originals, event-derived scores, metric provenance and capture that survives unavailable analysis or cloud.</p></article><article class="panel"><h3>Source-bound editing</h3><p>The real editor binds each segment to media, source time and hash. Imports do not transfer approval. Dry-run planning and full export checks are useful integration foundations.</p></article><article class="panel"><h3>A simple emotional product</h3><p>Five stories share one design: Coach’s Cut, Match Broadcast, Rally Pulse, Progress Story and Court Memories. Lessons and films remain linked to actual recorded moments.</p></article></div></section>
+<section aria-labelledby="architecture-title"><h2 id="architecture-title">Recommended architecture</h2><div class="route"><div><b>Native local project</b><p>Independent capture, original video, points, lessons and offline playback.</p></div><div><b>Authorized cloud control</b><p>Supabase metadata/auth; Worker authorization; private R2 sources; queued job references.</p></div><div><b>Analysis and edit plan</b><p>Measured vision and configurable model planner produce source-linked, validated data.</p></div><div><b>Deterministic film delivery</b><p>Separate FFmpeg/Remotion render host, full verification, private preview and downloadable film.</p></div></div><p>Workers coordinate; they are not the proposed long-video renderer. The published isolate memory limit is 128 MB. <a href="https://developers.cloudflare.com/workers/platform/limits/">Worker limits</a> and <a href="https://www.remotion.dev/docs/renderer/render-media">Remotion render API</a>.</p><p>Supabase policies secure metadata. The R2 gateway checks media separately. Optional lesson retrieval can use permissioned pgvector after ordinary search proves insufficient; Pinecone is not required. <a href="https://supabase.com/docs/guides/ai/rag-with-permissions">Permissioned vector retrieval</a>.</p></section>
+<section aria-labelledby="decision-title"><h2 id="decision-title">Backend decision against JOVRA’s values</h2><div class="table-wrap"><table><thead><tr><th>Criterion</th><th>Local + user archive only</th><th>Supabase + R2 + separate renderer</th><th>All media in Supabase Storage</th></tr></thead><tbody>
+<tr><th>Offline ownership</th><td>Strong foundation</td><td>Preserved through optional adapters</td><td>Preserved only if optional</td></tr>
+<tr><th>Six-source cloud films</th><td>Needs a later compute service</td><td>Explicit durable processing design</td><td>Still needs a separate renderer</td></tr>
+<tr><th>Private access</th><td>Local/provider permissions</td><td>RLS + independently authorized objects</td><td>Storage policies + RLS</td></tr>
+<tr><th>Large-video cost</th><td>User storage plan; no shared-job quote</td><td>R2 egress advantage; compute separate</td><td>Additional storage/egress meters</td></tr>
+<tr><th>Maintenance</th><td>Fewest live services</td><td>More moving parts; fits requested stack</td><td>Simpler storage integration; compute still separate</td></tr>
+<tr><th>Verdict</th><td>Keep as offline foundation</td><td><strong>Recommended optional Studio backend</strong></td><td>Viable alternative; do not duplicate originals</td></tr></tbody></table></div><p>Recommendation is an engineering judgment, not evidence of provisioned services. <a href="https://supabase.com/pricing">Supabase plans</a> and <a href="https://developers.cloudflare.com/r2/pricing/">R2 rates</a>.</p></section>
+<section aria-labelledby="cost-title"><h2 id="cost-title">Upload time is an early constraint</h2><p>Planning assumption: 60 minutes per source at 8 Mbps, decimal units, excluding audio/container overhead. These are arithmetic scenarios, not measured footage or invoices.</p><div class="table-wrap"><table><thead><tr><th>Sources</th><th>Raw size</th><th>20 Mbps transfer lower bound</th><th>Unrounded 7-day R2 list storage usage</th></tr></thead><tbody><tr><td>1 camera</td><td>3.6 GB</td><td>24 min</td><td>$0.0126</td></tr><tr><td>3 cameras</td><td>10.8 GB</td><td>72 min</td><td>$0.0378</td></tr><tr><td>6 cameras</td><td>21.6 GB</td><td>144 min</td><td>$0.0756</td></tr></tbody></table></div>
+<p>Formula: Mbps × seconds ÷ 8 ÷ 1,000 = GB. Seven-day storage: GB × 7/30 × $0.015. Six-camera transfer at 100 Mbps is at least 28.8 minutes. Retries and protocol overhead increase the transfer time.</p><p>R2 bills account-level usage with allowances and rounding; the tiny scenario fractions are not exact charges. Model/vision/render usage, proxies, films, operations, connected-provider transfer and licensing are extra. The $4–$8 sample quote and $12 cap in the UI illustrate a preflight interaction, not a product price. <a href="https://developers.cloudflare.com/r2/pricing/">R2 pricing and rounding</a>.</p><p>Supabase Pro starts at $25/month; Workers Paid has a $5/month minimum. Existing subscriptions and incremental cost were not checked. These fees do not buy video rendering. <a href="https://supabase.com/pricing">Supabase pricing</a>, <a href="https://developers.cloudflare.com/workers/platform/pricing/">Workers pricing</a>.</p><p><a href="brief/backend-media-design.md">Detailed assumption-based cost model and budget controls</a>.</p></section>
+<section aria-labelledby="ladder-title"><h2 id="ladder-title">Baseline to verifiable target</h2><div class="table-wrap"><table><thead><tr><th>Dimension</th><th>Inspected baseline</th><th>Required target evidence</th><th>Stage</th></tr></thead><tbody>
+<tr><td>Editing reuse</td><td>Source mapping and bounded assembler inspected; JOVRA bridge not demonstrated</td><td>One old match yields five fully decoded source-bound films</td><td>S1</td></tr>
+<tr><td>Phone normalization</td><td>Strict constant-frame assembler constraints</td><td>VFR/rotation/HDR fixtures normalize with original-time mapping and preserved hashes</td><td>S2</td></tr>
+<tr><td>Synchronization</td><td>No supplied multi-view test video</td><td>Reviewed two-view visible anchors within one output frame, or explicitly flagged</td><td>S2</td></tr>
+<tr><td>Six-device capture</td><td>No physical-device run in this task</td><td>Six-device endurance, disconnect, restart, storage and thermal evidence</td><td>S3</td></tr>
+<tr><td>Cloud isolation</td><td>Architecture and roles proposed</td><td>Real auth-role tests block wrong-tenant metadata and media; retry/cancel/deletion verified</td><td>S4</td></tr>
+<tr><td>Metric quality</td><td>Capability-provenance ADR preserved</td><td>Labelled real-footage benchmark per capability, method and calibration condition</td><td>S5</td></tr>
+<tr><td>Commercial cost</td><td>Storage math sourced; compute inputs assumed</td><td>Measured actual jobs, refreshed rates, worst-case budget/retry checks and priced margin model</td><td>S4–S5</td></tr></tbody></table></div></section>
+<section aria-labelledby="phases-title"><h2 id="phases-title">Build in the order that removes uncertainty</h2><div class="grid two"><article class="phase-card p0"><h3>S0–S1 · One camera, a complete film</h3><p>Reconcile scope and contracts while the existing foundation continues. Import an old match, choose keepers, link a lesson and render all five profiles locally.</p><p>Planning allocation: first prototype week; estimate only, dependent on foundation and footage. Gate: real source-bound files and full decode/timing/audio evidence.</p></article><article class="phase-card p1"><h3>S2 · Reviewed two-view sync</h3><p>Add proxy normalization, offset/drift maps, missing coverage and manual review. Keep audio continuous across camera cuts.</p><p>Planning allocation: next prototype week; not a release promise. Gate: real two-view anchors plus deliberately difficult synthetic fixtures.</p></article><article class="phase-card p2"><h3>S3 · Six-device field capture</h3><p>Pairing, independent recordings, honest device acknowledgements and recovery. Capture stays independent of a host or network.</p><p>Effort unestimated until two-view/device results. Gate: actual six-phone tests, not simulator success.</p></article><article class="phase-card p3"><h3>S4–S5 · Cloud and measured capability</h3><p>Provision isolated services, role tests, bounded jobs, usage reservations, private delivery and deletion. Benchmark richer inference before new metric claims. Add native Android and providers by dependency.</p><p>Effort unestimated until rendering/model benchmarks and access. Gate: tenant, budget, reliability, device and capability evidence.</p></article></div></section>
+<section aria-labelledby="board-title"><h2 id="board-title">Initial ticket board</h2><div class="grid three"><article class="task"><span class="chip red">P0 · Week 1 proposal</span><h3>Scope and contracts</h3><p>New ADR; source/sync/EDL schemas; truthful demo identity and cloud capability flags.</p></article><article class="task"><span class="chip red">P0 · Week 1 proposal</span><h3>Golden one-camera film</h3><p>Explicit source mapping, five story profiles, lesson link, output verification; no old approved media overwritten.</p></article><article class="task"><span class="chip amber">P1 · Week 2 proposal</span><h3>Two-view alignment</h3><p>Real anchors, drift/gap review, normalized proxies and stable alternate-angle playback.</p></article></div></section>
+<section aria-labelledby="limits-title"><h2 id="limits-title">Unverified and deliberately staged</h2><p>Professional advantage, six-phone endurance, trained tracking accuracy, active backend/model access, live editor integration, cloud price and current foundation CI were not verified. The generated footage is not test evidence. Three-dimensional reconstruction and ball speed need calibration/timing/correspondence benchmarks; a planar court map alone cannot measure an airborne ball.</p><p>An interactive multi-angle project keeps the sources and timeline. A downloaded MP4 is the chosen flattened story. The film, thumbnail and description can be prepared for YouTube; actual upload is separate and may be private-only for an unverified API project. <a href="https://developers.google.com/youtube/v3/docs/videos/insert">YouTube upload documentation</a>.</p></section>
+<footer class="footer-note"><p>Evidence: complete attached archive/HTML inspection, read-only source inspection of the existing editor and JOVRA ADRs, current official cloud/render/upload documentation, recomputed arithmetic, and visual reference review. Historical editor tests were not rerun or treated as current JOVRA proof. This report adds to the original JOVRA research; it does not supersede it.</p><p><a href="index.html">Return to all 40 visual references</a> · <a href="../../docs/handoff/CLAUDE-STUDIO-EXPANSION-PROMPT.md">Claude expansion prompt</a> · <a href="brief/feasibility-findings.json">Structured findings</a></p></footer>
+</main></body></html>

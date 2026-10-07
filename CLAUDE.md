@@ -10,6 +10,8 @@ own your video. Tagline: **See your game.** iOS first (SwiftUI + AVFoundation + 
 - `docs/spec/`: the product spec. `GLOSSARY.md`: the domain language; use its terms in code, tests and copy.
 - `docs/adr/`: decisions you must not silently undo. `docs/research/`: competitor and feasibility research.
 - `design-reference/`: 20 screen references, the brief (`design-reference/brief/screens.json` holds exact copy) and logos.
+- JOVRA Studio (premium film/multi-camera layer): `docs/handoff/studio/README.md`, references 21–40 in
+  `design-reference/studio/`, and the `jovra-*` skills in `.claude/skills/` (route through `jovra-studio-director`).
 - `docs/DEVELOPING.md`: commands, toolchain and how to verify.
 
 ## Hard rules

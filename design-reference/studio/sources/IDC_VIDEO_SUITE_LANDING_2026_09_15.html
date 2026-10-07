@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IDC Video Suite — Ingest the Tree. Then Cut. | Island Development Crew</title>
+<meta name="description" content="Theme-aware video studio for Island Dev Crew. One conductor. Seven seats. The first seat reads the whole project folder. Lime is not the default.">
+<meta property="og:title" content="IDC Video Suite — ingest the tree, then cut">
+<meta property="og:description" content="Walk the project. Lock the theme. Cut, spec, hook, assemble, cut down. You upload.">
+<meta property="og:url" content="https://islanddevcrew.com/video-suite">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#07070a; --slate:#101018; --card:#14141c; --line:#2a2418;
+    --ink:#E9E7E4; --muted:#9aa3a6; --gold:#C9A227; --garnet:#9B1B30;
+    --ruby:#C41E3A; --jade:#3DDC97;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;background:var(--void);color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.55}
+  a{color:var(--gold);text-decoration:none} a:hover{color:#e0c35a}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 22px 96px}
+  nav{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  nav b{color:var(--gold);font-weight:500}
+  .links a{margin-left:16px}
+
+  .hero{position:relative;padding:72px 0 36px;overflow:hidden}
+  .field{
+    position:absolute;inset:-40px -80px auto auto;width:420px;height:420px;
+    pointer-events:none;opacity:.9
+  }
+  .gem{
+    width:210px;height:280px;margin-left:auto;
+    background:
+      radial-gradient(circle at 42% 38%, #ff6b6b 0%, #9B1B30 38%, #3a0a12 72%, #120308 100%);
+    clip-path:polygon(50% 0%, 92% 22%, 100% 62%, 70% 100%, 30% 100%, 0% 62%, 8% 22%);
+    filter:drop-shadow(0 30px 50px rgba(155,27,48,.35));
+    animation:pulse 6.5s ease-in-out infinite;
+  }
+  .gem::after{
+    content:"";position:absolute;inset:18% 28% 40% 28%;
+    background:radial-gradient(circle, rgba(255,220,180,.85), transparent 70%);
+    animation:core 6.5s ease-in-out infinite;
+  }
+  .dust{
+    position:absolute;inset:0;background:
+      radial-gradient(2px 2px at 20% 30%, rgba(201,162,39,.4), transparent),
+      radial-gradient(1px 1px at 70% 60%, rgba(196,30,58,.35), transparent),
+      radial-gradient(1.5px 1.5px at 40% 80%, rgba(233,231,228,.2), transparent);
+    animation:drift 18s linear infinite;
+  }
+  @keyframes pulse{0%,100%{transform:scale(1)} 48%{transform:scale(1.03)} 62%{transform:scale(1.06)}}
+  @keyframes core{0%,100%{opacity:.35} 55%{opacity:1} 70%{opacity:.4}}
+  @keyframes drift{to{transform:translateY(-24px)}}
+
+  .kicker{color:var(--gold);font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:clamp(40px,7vw,72px);
+    line-height:.98;margin:14px 0 18px;max-width:16ch}
+  h1 em{font-style:normal;color:var(--ruby)}
+  .lede{max-width:38rem;color:#c9c6c0;font-size:18px}
+  .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+  .btn{border:1px solid var(--gold);color:var(--void);background:var(--gold);
+    padding:10px 16px;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+  .btn.ghost{background:transparent;color:var(--gold)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:32px 0 0}
+  .chip{border:1px solid var(--line);background:var(--slate);padding:8px 12px;font-size:12px}
+  .chip b{display:block;color:var(--gold);font-size:18px;font-family:Fraunces,serif}
+
+  .rail{display:flex;flex-wrap:wrap;gap:6px;margin:28px 0 8px}
+  .step{flex:1 1 90px;min-width:90px;border:1px solid var(--line);background:#0c0c12;
+    padding:12px 10px;text-align:center;font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+    position:relative;overflow:hidden}
+  .step b{display:block;color:var(--gold);font-family:Fraunces,serif;font-size:13px;letter-spacing:0;text-transform:none;margin-bottom:4px}
+  .step::after{
+    content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--gold);
+    animation:fill 8s linear infinite
+  }
+  .step:nth-child(2)::after{animation-delay:1s}
+  .step:nth-child(3)::after{animation-delay:2s}
+  .step:nth-child(4)::after{animation-delay:3s}
+  .step:nth-child(5)::after{animation-delay:4s}
+  .step:nth-child(6)::after{animation-delay:5s}
+  .step:nth-child(7)::after{animation-delay:6s}
+  @keyframes fill{0%{width:0} 12%{width:100%} 100%{width:100%}}
+
+  h2{font-family:Fraunces,serif;font-weight:500;font-size:clamp(28px,4vw,42px);margin:64px 0 14px;line-height:1.12}
+  h2 span{color:var(--ruby)}
+  p.note{color:var(--muted);max-width:46rem}
+  .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:24px 0}
+  .card{background:var(--card);border:1px solid var(--line);padding:18px}
+  .card h3{margin:0 0 8px;font-size:16px;color:var(--gold);font-weight:500}
+  .card p,.card li{margin:0;color:var(--muted);font-size:14px}
+  .card ol{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0}
+  th,td{text-align:left;padding:11px 8px;border-bottom:1px solid #1c1c24;vertical-align:top}
+  th{color:var(--gold);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+  code,.pre{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  .pre{background:#0b0b10;border:1px solid var(--line);padding:16px 18px;overflow:auto;
+    font-size:12.5px;color:#d7d2c8;white-space:pre-wrap}
+  .warn{border-left:3px solid var(--garnet);padding:12px 16px;background:#12080c;margin:20px 0;color:#d7c4c6}
+  .ok{border-left:3px solid var(--jade);padding:12px 16px;background:#07110c;margin:20px 0}
+  footer{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .mono{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <div><b>Island Dev Crew</b> · Huntsville</div>
+  <div class="links">
+    <a href="https://islanddevcrew.com/forge-50">Forge 50</a>
+    <a href="https://github.com/Island-Dev-Crew/uncle-bob-skills">Uncle Bob</a>
+    <a href="https://garnet-lang.org">Garnet</a>
+    <a href="https://github.com/Island-Dev-Crew/idc-video-suite">Repo</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="field" aria-hidden="true">
+    <div class="dust"></div>
+    <div class="gem"></div>
+  </div>
+  <div class="kicker">Video studio · theme first · you still upload</div>
+  <h1>Ingest the tree.<br>Then <em>cut</em>.</h1>
+  <p class="lede">
+    One conductor. Seven seats. The first seat walks the whole project folder —
+    HTML, tokens, stills, raw, B-roll, audio, last ship copy —
+    and writes a lock. Every later seat reads that lock.
+    Lime is not the default. Oracle here is a spec, not a World Cup recipe.
+  </p>
+  <div class="cta">
+    <a class="btn" href="https://github.com/Island-Dev-Crew/idc-video-suite">Open the repo</a>
+    <a class="btn ghost" href="#call">The first message</a>
+  </div>
+  <div class="chips">
+    <div class="chip"><b>1</b> conductor</div>
+    <div class="chip"><b>7</b> seats</div>
+    <div class="chip"><b>lock</b> before pixels</div>
+    <div class="chip"><b>warehouse</b> is YouTube</div>
+    <div class="chip"><b>MIT</b> IDC original</div>
+  </div>
+</header>
+
+<section>
+  <h2>The rail</h2>
+  <p class="note">Named seats. Call one, or run the warehouse line.</p>
+  <div class="rail">
+    <div class="step"><b>ingest</b>project</div>
+    <div class="step"><b>cut</b>keepers</div>
+    <div class="step"><b>b-roll</b>catalog</div>
+    <div class="step"><b>oracle</b>spec</div>
+    <div class="step"><b>hook</b>8–10s</div>
+    <div class="step"><b>assemble</b>warehouse</div>
+    <div class="step"><b>cutdowns</b>storefronts</div>
+  </div>
+</section>
+
+<section>
+  <h2>How a session <span>runs</span></h2>
+  <div class="row">
+    <article class="card">
+      <h3>1. Load the conductor</h3>
+      <p>Point the agent skills path at the repo. The agent reads <span class="mono">SKILL.md</span>. It does not post.</p>
+    </article>
+    <article class="card">
+      <h3>2. Ingest the folder</h3>
+      <p>Not one HTML file. The whole tree. Writes <span class="mono">project.lock.json</span>. Palette, wordmark, A-roll, B-roll, banned claims.</p>
+    </article>
+    <article class="card">
+      <h3>3. Warehouse or a seat</h3>
+      <p>Say warehouse and the rail runs. Name a seat and only that seat runs. Resume from the last finished file.</p>
+    </article>
+    <article class="card">
+      <h3>4. You upload</h3>
+      <p>YouTube gets the warehouse file. X and Reels get the hook. LinkedIn and Facebook point at YouTube. Whatnot plays the hook live.</p>
+    </article>
+  </div>
+</section>
+
+<section id="seats">
+  <h2>The seven seats</h2>
+  <table>
+    <thead><tr><th>Seat</th><th>Reads</th><th>Writes</th><th>Job</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="mono">ingest-project</td>
+        <td>The workdir</td>
+        <td>project.lock.json</td>
+        <td>Walk HTML, CSS tokens, README, stills/, raw/, broll/, garage-broll/, screen/, audio. Map what exists. Do not invent a palette when tokens or a gem still already live in the tree.</td>
+      </tr>
+      <tr>
+        <td class="mono">cut</td>
+        <td>lock + A-roll</td>
+        <td>keepers.json</td>
+        <td>Documentary keepers. Spine only. Optional 1.25× once on voice and picture. Listen-along audio is not cut except for name-garble Jon names.</td>
+      </tr>
+      <tr>
+        <td class="mono">ingest-broll</td>
+        <td>lock + keepers</td>
+        <td>broll.catalog.json</td>
+        <td>Prefer real terminal and shop captures. Generated art last, and only in lock colors.</td>
+      </tr>
+      <tr>
+        <td class="mono">oracle-spec</td>
+        <td>lock + catalogs</td>
+        <td>edit.spec.md</td>
+        <td>The useful part of an oracle edit: a written plan before pixels move. If a beat has no proof, delete the beat. Assemble waits for SHIP.</td>
+      </tr>
+      <tr>
+        <td class="mono">hook</td>
+        <td>lock + spec</td>
+        <td>thumb + 8–10s</td>
+        <td>One still. Frozen type. Locked camera, 3% push-in, one core pulse. 9:16 is a rerun from the still, not a crop of the landscape file.</td>
+      </tr>
+      <tr>
+        <td class="mono">assemble</td>
+        <td>hook + audio</td>
+        <td>WAREHOUSE.mp4</td>
+        <td>Hook, then freeze the last frame under the full listen or voice master. Speech does not ride the motion. This file does not go to X.</td>
+      </tr>
+      <tr>
+        <td class="mono">cutdowns</td>
+        <td>warehouse + lock</td>
+        <td>paste-ready posts</td>
+        <td>Storefronts only. Tags live in the X reply with the YouTube URL.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>What the lock <span>holds</span></h2>
+  <p class="note">Every later seat stops if this file is missing or stale.</p>
+<pre class="pre">project          Garnet | Forge 50 | Uncle Bob | listen-along | other
+wordmark         exact string + which letter is ruby
+palette          CSS tokens first, still second, IDC default last
+stills_preferred hero, gem, terminal, last thumb
+a_roll / broll / audio_master
+claims_allowed   only what the public page will still defend
+banned           lime unless this tree actually uses it
+phrase_fix       garnett→Garnet · MEPR→METR · diff caps→diff-caps
+lime_detected    recorded, never applied to Garnet / Forge / Uncle Bob</pre>
+</section>
+
+<section>
+  <h2>BuildLoop, honestly</h2>
+  <div class="row">
+    <article class="card">
+      <h3>Kept as moves</h3>
+      <p>Cut keepers. Catalog B-roll. Write a spec before the edit. Grade. Assemble a warehouse file.</p>
+    </article>
+    <article class="card">
+      <h3>Not in this repo</h3>
+      <p>Luuk’s LUTs. Neo-lime #CFFF05 as a lock. The subscribe-bug card. The World Cup oracle recipe. His Remotion graph.</p>
+    </article>
+    <article class="card">
+      <h3>Two packs, two names</h3>
+      <p>Keep buildloop-video-skills on disk if you want that exact machine. Call this suite by name so they do not merge and paint Garnet lime.</p>
+    </article>
+  </div>
+  <div class="warn">
+    A green render is not a ship. This suite does not post. A persuasive hook is not evidence that the essay said what the title card claims.
+  </div>
+  <div class="ok">
+    Default brand: void #0A0A0F · garnet #9B1B30 · gold #C9A227 · ruby T. The gem is an image, never a letter inside the wordmark.
+  </div>
+</section>
+
+<section id="call">
+  <h2>Install, then the first line</h2>
+<pre class="pre">git clone https://github.com/Island-Dev-Crew/idc-video-suite.git
+# Point Claude / Codex / Grokbot skills path at that folder.</pre>
+<pre class="pre">Load IDC Video Suite.
+Ingest this project folder.
+Workdir: /path/to/the/job
+Then run the warehouse pipeline.</pre>
+  <p class="note">
+    Or name a seat: <span class="mono">Run hook.</span>
+    <span class="mono">Run oracle-spec.</span>
+    <span class="mono">SHIP</span> / <span class="mono">KILL</span>.
+  </p>
+</section>
+
+<section>
+  <h2>Sister boards</h2>
+  <div class="row">
+    <article class="card">
+      <h3>Forge 50</h3>
+      <p>Fifty fused operating skills, welded to proof.<br><a href="https://islanddevcrew.com/forge-50">islanddevcrew.com/forge-50</a></p>
+    </article>
+    <article class="card">
+      <h3>Uncle Bob Pack</h3>
+      <p>Human intent. Agent work. Then evidence.<br><a href="https://github.com/Island-Dev-Crew/uncle-bob-skills">github.com/Island-Dev-Crew/uncle-bob-skills</a></p>
+    </article>
+    <article class="card">
+      <h3>Garnet</h3>
+      <p>check · diff-caps · seal.<br><a href="https://garnet-lang.org">garnet-lang.org</a></p>
+    </article>
+  </div>
+</section>
+
+<footer>
+  Island Development Crew · Huntsville, Alabama<br>
+  Source: <a href="https://github.com/Island-Dev-Crew/idc-video-suite">Island-Dev-Crew/idc-video-suite</a><br>
+  MIT — LICENSE + NOTICE.md. BuildLoop remains prior art, not a bundled engine.<br>
+  <b style="color:#C9A227">The lock first. Then the cut.</b>
+</footer>
+</div>
+</body>
+</html>
