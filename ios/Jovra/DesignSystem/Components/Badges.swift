@@ -1,0 +1,96 @@
+import JovraCore
+import SwiftUI
+
+/// Labels where a number came from (ADR-0004). Meaning is carried by text and a distinct
+/// symbol/outline, never by colour alone; sample data always says "Sample".
+struct ProvenanceBadge: View {
+    enum Kind: Hashable {
+        case sample
+        case provenance(Provenance)
+    }
+
+    var kind: Kind
+
+    var body: some View {
+        HStack(spacing: Space.half) {
+            Image(systemName: symbol)
+                .imageScale(.small)
+                .accessibilityHidden(true)
+            Text(title)
+        }
+        .font(.caption.weight(.semibold))
+        .foregroundStyle(.jovra(.textPrimary))
+        .padding(.horizontal, Space.x1 + 2)
+        .padding(.vertical, Space.half)
+        .background(Color.jovra(.surfaceSunken), in: Capsule())
+        .overlay {
+            if kind == .sample {
+                Capsule().strokeBorder(Color.jovra(.textPrimary), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityText)
+    }
+
+    var title: String {
+        switch kind {
+        case .sample: "Sample"
+        case .provenance(.manual): "Manual"
+        case .provenance(.estimated): "Estimated"
+        case .provenance(.reviewed): "Reviewed"
+        case .provenance(.validated): "Validated"
+        }
+    }
+
+    private var symbol: String {
+        switch kind {
+        case .sample: "square.dashed"
+        case .provenance(.manual): "hand.point.up.left"
+        case .provenance(.estimated): "plusminus"
+        case .provenance(.reviewed): "checkmark"
+        case .provenance(.validated): "checkmark.seal"
+        }
+    }
+
+    private var accessibilityText: String {
+        switch kind {
+        case .sample: "Sample data"
+        default: "\(title) value"
+        }
+    }
+}
+
+/// A short status with an icon and text ("On device · Backed up", "Needs review").
+struct StatusPill: View {
+    enum Tone {
+        case positive, attention, neutral
+    }
+
+    var text: String
+    var tone: Tone
+
+    var body: some View {
+        Label {
+            Text(text).foregroundStyle(.jovra(tone == .attention ? .attentionInk : .textPrimary))
+        } icon: {
+            Image(systemName: symbol).foregroundStyle(iconColor)
+        }
+        .font(.subheadline.weight(.medium))
+    }
+
+    private var symbol: String {
+        switch tone {
+        case .positive: "checkmark.circle.fill"
+        case .attention: "exclamationmark.circle.fill"
+        case .neutral: "circle.dotted"
+        }
+    }
+
+    private var iconColor: Color {
+        switch tone {
+        case .positive: .jovra(.positiveInk)
+        case .attention: .jovra(.attentionInk)
+        case .neutral: .jovra(.textSecondary)
+        }
+    }
+}
