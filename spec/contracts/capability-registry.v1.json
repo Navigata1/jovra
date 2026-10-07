@@ -1,0 +1,277 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.capabilityRegistry",
+  "registryVersion": 1,
+  "updatedAt": "2026-10-07T01:30:00Z",
+  "capabilities": [
+    {
+      "id": "scoring.manual",
+      "title": "Manual scoring and Mark point",
+      "status": "manual",
+      "inV1": true,
+      "method": "Player taps point winners, end types and bookmarks; the score is folded from the log.",
+      "version": "1.0.0",
+      "uiLabel": "Manual",
+      "outputsNeedReview": false,
+      "requires": {"calibration": false, "microphone": false, "video": false},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "points.review",
+      "title": "Fast Point Review",
+      "status": "manual",
+      "inV1": true,
+      "method": "Player confirms or corrects each point; corrections supersede, never overwrite.",
+      "version": "1.0.0",
+      "uiLabel": "Reviewed",
+      "outputsNeedReview": false,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "checkpoint.autofill",
+      "title": "Changeover checkpoint auto-fill",
+      "status": "estimated",
+      "inV1": true,
+      "method": "Bounded enumeration of point winners consistent with as-called game scores and legal game lengths.",
+      "version": "1.0.0",
+      "uiLabel": "Estimated",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": false},
+      "gate": null,
+      "lastBenchmark": null,
+      "notes": "Not yet in spec/reference; needs its own fixtures before either platform ships it."
+    },
+    {
+      "id": "audio.hitDetection",
+      "title": "Racket-ball hit detection (audio)",
+      "status": "disabled",
+      "inV1": true,
+      "method": "Spectral-flux onsets on the audio track with travel-time correction (vDSP / Accelerate).",
+      "version": "1.0.0",
+      "uiLabel": "Estimated",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": true, "video": true},
+      "gate": {
+        "promotesTo": "estimated",
+        "metrics": [
+          {"name": "own-court hit precision", "comparator": ">=", "threshold": "0.95"},
+          {"name": "own-court hit recall", "comparator": ">=", "threshold": "0.90"},
+          {"name": "onset MAE", "comparator": "<=", "threshold": "10", "unit": "ms"}
+        ],
+        "minimumData": "Synthetic sample video benchmark plus >= 10 real sessions at >= 3 venues"
+      },
+      "lastBenchmark": null,
+      "notes": "D10: suggestions always start as Needs review. Unavailable when the microphone is off (D5)."
+    },
+    {
+      "id": "rally.segmentation",
+      "title": "Rally segmentation",
+      "status": "disabled",
+      "inV1": true,
+      "method": "Rallies = hits with gaps < ~3 s; point gaps > ~5 s; motion corroboration.",
+      "version": "1.0.0",
+      "uiLabel": "Estimated",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": true, "video": true, "capabilities": ["audio.hitDetection"]},
+      "gate": {
+        "promotesTo": "estimated",
+        "metrics": [
+          {"name": "hits inside kept clips", "comparator": ">=", "threshold": "0.99"},
+          {"name": "boundary F1 at 1 s", "comparator": ">=", "threshold": "0.90"}
+        ],
+        "minimumData": "Same benchmark set as audio.hitDetection"
+      },
+      "lastBenchmark": null
+    },
+    {
+      "id": "court.calibration",
+      "title": "Court calibration (4 taps)",
+      "status": "manual",
+      "inV1": true,
+      "method": "Player taps four singles-court corners; homography from ITF dimensions.",
+      "version": "1.0.0",
+      "uiLabel": "Manual",
+      "outputsNeedReview": false,
+      "requires": {"calibration": true, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "camera.movedDetection",
+      "title": "Camera-moved detection",
+      "status": "disabled",
+      "inV1": true,
+      "method": "Homographic registration of frames against the calibration frame.",
+      "version": "1.0.0",
+      "uiLabel": "Estimated",
+      "outputsNeedReview": true,
+      "requires": {"calibration": true, "microphone": false, "video": true},
+      "gate": {
+        "promotesTo": "estimated",
+        "metrics": [
+          {"name": "1-degree nudge detected", "comparator": ">=", "threshold": "0.99"},
+          {"name": "false alarms per hour", "comparator": "<=", "threshold": "1"}
+        ],
+        "minimumData": "Bench and court footage"
+      },
+      "lastBenchmark": null
+    },
+    {
+      "id": "pose.overlay2d",
+      "title": "2D pose overlay (Stroke Lab)",
+      "status": "estimated",
+      "inV1": true,
+      "method": "Apple Vision / ML Kit 2D body pose on demand on selected frames; never scored.",
+      "version": "1.0.0",
+      "uiLabel": "2D pose estimate",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": {
+        "promotesTo": "validated",
+        "metrics": [{"name": "keypoint agreement on labelled frames", "comparator": ">=", "threshold": "0.90"}],
+        "minimumData": "Labelled side-on clips incl. left-handers"
+      },
+      "lastBenchmark": null
+    },
+    {
+      "id": "serveSpeed.manualAssisted",
+      "title": "Serve speed (manual-assisted)",
+      "status": "estimated",
+      "inV1": true,
+      "method": "Player marks contact and bounce frames and taps the bounce on the calibrated court; average speed = distance / time from an assumed contact point above the server's baseline position.",
+      "version": "1.0.0",
+      "uiLabel": "Estimated average speed, contact→bounce",
+      "outputsNeedReview": true,
+      "requires": {"calibration": true, "microphone": false, "video": true, "capabilities": ["court.calibration"]},
+      "gate": {
+        "promotesTo": "validated",
+        "metrics": [
+          {"name": "MAPE vs radar", "comparator": "<=", "threshold": "7", "unit": "%"},
+          {"name": "within 10% of radar", "comparator": ">=", "threshold": "0.90"}
+        ],
+        "minimumData": "Radar-paired serves on >= 3 courts"
+      },
+      "lastBenchmark": null
+    },
+    {
+      "id": "shotPlacement.manual",
+      "title": "Shot placement (manual taps)",
+      "status": "manual",
+      "inV1": true,
+      "method": "Player taps bounces on the court diagram or the calibrated frame.",
+      "version": "1.0.0",
+      "uiLabel": "Manual",
+      "outputsNeedReview": false,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "strokeClassification",
+      "title": "Automatic stroke classification",
+      "status": "unsupported",
+      "inV1": false,
+      "method": "Out of v1 (backlog Later).",
+      "version": "1.0.0",
+      "uiLabel": "Not available",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "ballTrajectory",
+      "title": "Ball tracking",
+      "status": "unsupported",
+      "inV1": false,
+      "method": "Out of v1 (backlog Later).",
+      "version": "1.0.0",
+      "uiLabel": "Not available",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "bouncePlacement.auto",
+      "title": "Automatic bounce maps",
+      "status": "unsupported",
+      "inV1": false,
+      "method": "Out of v1 (backlog Later).",
+      "version": "1.0.0",
+      "uiLabel": "Not available",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "pointOutcome.auto",
+      "title": "Automatic point winners",
+      "status": "unsupported",
+      "inV1": false,
+      "method": "Out of v1 (backlog Later). The log format already separates detected from reviewed outcomes.",
+      "version": "1.0.0",
+      "uiLabel": "Not available",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "lineCalling",
+      "title": "Line calls",
+      "status": "unsupported",
+      "inV1": false,
+      "method": "Never: far-baseline resolution is 0.2-0.4 m per pixel against 5 cm lines.",
+      "version": "1.0.0",
+      "uiLabel": "Not available",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "spinRpm",
+      "title": "Spin RPM",
+      "status": "unsupported",
+      "inV1": false,
+      "method": "Never from a single phone camera.",
+      "version": "1.0.0",
+      "uiLabel": "Not available",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "biomechanics3d",
+      "title": "3D biomechanics",
+      "status": "unsupported",
+      "inV1": false,
+      "method": "Never from a single phone camera.",
+      "version": "1.0.0",
+      "uiLabel": "Not available",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null
+    },
+    {
+      "id": "stringBed.pitchCheck",
+      "title": "String-bed pitch check",
+      "status": "unsupported",
+      "inV1": false,
+      "method": "Relative acoustic estimate; P2 candidate pending bench gate and patent review.",
+      "version": "1.0.0",
+      "uiLabel": "Not available",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": true, "video": false},
+      "gate": null,
+      "lastBenchmark": null
+    }
+  ]
+}

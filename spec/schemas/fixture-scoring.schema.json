@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA scoring conformance fixture",
+  "description": "Input: a match setup and an append-only log. For each checkpoint, fold the log prefix with seq <= afterSeq; fold and stats must deep-equal 'expected'. 'changes' compares with the previous checkpoint. 'assertions' are the hand-derived subset the expected output was checked against. A fixture with expectError must be rejected with that code.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "covers", "input"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.scoring"},
+    "id": {"type": "string", "pattern": "^[A-Z][0-9]{2}-[a-z0-9-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "covers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "input": {"$ref": "#/$defs/engineInput"},
+    "assertions": {"type": "array", "items": {"$ref": "#/$defs/assertion"}},
+    "checkpoints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["afterSeq", "expected"],
+        "additionalProperties": false,
+        "properties": {
+          "afterSeq": {"type": "integer", "minimum": 0},
+          "expected": {
+            "type": "object",
+            "required": ["fold", "stats"],
+            "additionalProperties": false,
+            "properties": {
+              "fold": {"$ref": "engine-output.schema.json#/$defs/foldResult"},
+              "stats": {"$ref": "engine-output.schema.json#/$defs/statsResult"}
+            }
+          }
+        }
+      }
+    },
+    "expectError": {
+      "type": "object",
+      "required": ["code"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {"enum": ["duplicateId", "seqNotIncreasing", "unknownEventType", "voidTargetMissing", "voidTargetNotEarlier", "supersedeTargetMissing", "supersedeTypeMismatch", "insertTargetMissing", "doublesOrderMissing", "doublesOrderInvalid", "unknownPlayer"]}
+      }
+    }
+  },
+  "oneOf": [
+    {"required": ["checkpoints", "assertions"], "not": {"required": ["expectError"]}},
+    {"required": ["expectError"], "not": {"anyOf": [{"required": ["checkpoints"]}, {"required": ["assertions"]}]}}
+  ],
+  "$defs": {
+    "engineInput": {
+      "type": "object",
+      "required": ["format", "players", "sides", "toss", "log"],
+      "additionalProperties": false,
+      "properties": {
+        "format": {"$ref": "session.schema.json#/$defs/matchFormat"},
+        "players": {"type": "array", "minItems": 2, "maxItems": 4, "items": {"$ref": "session.schema.json#/$defs/player"}},
+        "sides": {"$ref": "session.schema.json#/$defs/sides"},
+        "toss": {"$ref": "session.schema.json#/$defs/toss"},
+        "log": {"type": "array", "items": {"$ref": "session.schema.json#/$defs/logEvent"}}
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "required": ["path", "equals"],
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint": {"type": "integer", "minimum": 0},
+        "path": {"type": "string", "pattern": "^[A-Za-z0-9_+.\\[\\]-]+$"},
+        "equals": true
+      }
+    }
+  }
+}

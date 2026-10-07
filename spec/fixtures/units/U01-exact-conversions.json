@@ -1,0 +1,236 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.units",
+  "id": "U01-exact-conversions",
+  "title": "Exact factors, one half-up rounding for display, stored values never round-tripped, gauge is a hint",
+  "covers": ["§7 rule 6", "raw/equipment-stringing.md §4, §4a"],
+  "cases": [
+    {
+      "op": "convert",
+      "value": "52",
+      "from": "lb",
+      "to": "kg",
+      "places": 8,
+      "expected": {"value": "23.58680324"}
+    },
+    {
+      "op": "convert",
+      "value": "104",
+      "from": "mph",
+      "to": "km/h",
+      "places": 3,
+      "expected": {"value": "167.372"}
+    },
+    {
+      "op": "convert",
+      "value": "23",
+      "from": "kg",
+      "to": "lb",
+      "places": 6,
+      "expected": {"value": "50.706320"}
+    },
+    {
+      "op": "convert",
+      "value": "1",
+      "from": "mph",
+      "to": "m/s",
+      "places": 5,
+      "expected": {"value": "0.44704"}
+    },
+    {
+      "op": "convert",
+      "value": "1",
+      "from": "lb",
+      "to": "N",
+      "places": 13,
+      "expected": {"value": "4.4482216152605"}
+    },
+    {
+      "op": "convert",
+      "value": "98",
+      "from": "in2",
+      "to": "cm2",
+      "places": 4,
+      "expected": {"value": "632.2568"}
+    },
+    {
+      "op": "convert",
+      "value": "1",
+      "from": "oz",
+      "to": "g",
+      "places": 9,
+      "expected": {"value": "28.349523125"}
+    },
+    {
+      "op": "convert",
+      "value": "40",
+      "from": "ft",
+      "to": "m",
+      "places": 3,
+      "expected": {"value": "12.192"}
+    },
+    {
+      "op": "convert",
+      "value": "27",
+      "from": "in",
+      "to": "cm",
+      "places": 2,
+      "expected": {"value": "68.58"}
+    },
+    {
+      "op": "display",
+      "value": "52",
+      "unit": "lb",
+      "preferredUnit": "lb",
+      "expected": {"value": "52", "unit": "lb", "converted": false}
+    },
+    {
+      "op": "display",
+      "value": "52.0",
+      "unit": "lb",
+      "preferredUnit": "lb",
+      "expected": {"value": "52.0", "unit": "lb", "converted": false}
+    },
+    {
+      "op": "display",
+      "value": "52",
+      "unit": "lb",
+      "preferredUnit": "kg",
+      "expected": {"value": "23.6", "unit": "kg", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "50",
+      "unit": "lb",
+      "preferredUnit": "kg",
+      "expected": {"value": "22.7", "unit": "kg", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "55",
+      "unit": "lb",
+      "preferredUnit": "kg",
+      "expected": {"value": "24.9", "unit": "kg", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "60",
+      "unit": "lb",
+      "preferredUnit": "kg",
+      "expected": {"value": "27.2", "unit": "kg", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "52.5",
+      "unit": "lb",
+      "preferredUnit": "kg",
+      "expected": {"value": "23.8", "unit": "kg", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "23",
+      "unit": "kg",
+      "preferredUnit": "lb",
+      "expected": {"value": "50.5", "unit": "lb", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "25",
+      "unit": "kg",
+      "preferredUnit": "lb",
+      "expected": {"value": "55", "unit": "lb", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "28",
+      "unit": "kg",
+      "preferredUnit": "lb",
+      "expected": {"value": "61.5", "unit": "lb", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "52",
+      "unit": "lb",
+      "preferredUnit": "N",
+      "expected": {"value": "231", "unit": "N", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "104",
+      "unit": "mph",
+      "preferredUnit": "km/h",
+      "expected": {"value": "167", "unit": "km/h", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "1.25",
+      "unit": "m/s",
+      "preferredUnit": "km/h",
+      "expected": {"value": "5", "unit": "km/h", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "120",
+      "unit": "mph",
+      "preferredUnit": "m/s",
+      "expected": {"value": "53.6", "unit": "m/s", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "98",
+      "unit": "in2",
+      "preferredUnit": "cm2",
+      "expected": {"value": "632.3", "unit": "cm2", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "645",
+      "unit": "cm2",
+      "preferredUnit": "in2",
+      "expected": {"value": "100", "unit": "in2", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "11.3",
+      "unit": "oz",
+      "preferredUnit": "g",
+      "expected": {"value": "320", "unit": "g", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "1.30",
+      "unit": "mm",
+      "preferredUnit": "in",
+      "expected": {"value": "0.05", "unit": "in", "converted": true}
+    },
+    {
+      "op": "display",
+      "value": "12.2",
+      "unit": "m",
+      "preferredUnit": "ft",
+      "expected": {"value": "40", "unit": "ft", "converted": true}
+    },
+    {
+      "op": "gaugeHint",
+      "label": "17",
+      "expected": {
+        "label": "17",
+        "known": true,
+        "ranges": [
+          {"source": "tennisCompanion", "minMm": "1.16", "maxMm": "1.24"},
+          {"source": "tennisWarehouse", "minMm": "1.20", "maxMm": "1.25"}
+        ]
+      }
+    },
+    {
+      "op": "gaugeHint",
+      "label": "16L",
+      "expected": {
+        "label": "16L",
+        "known": true,
+        "ranges": [{"source": "tennisCompanion", "minMm": "1.22", "maxMm": "1.30"}]
+      }
+    },
+    {"op": "gaugeHint", "label": "1.25", "expected": {"label": "1.25", "known": false, "ranges": []}}
+  ]
+}

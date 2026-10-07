@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA CSV column contract",
+  "description": "Defines one exported CSV table: column order, types, nullability and byte-level conventions. Both platforms must produce byte-identical CSV for the same fold.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "name", "version", "description", "encoding", "byteOrderMark", "delimiter", "lineEnding", "header", "quoting", "null", "booleans", "columns"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.csvContract"},
+    "name": {"enum": ["points", "stats"]},
+    "version": {"type": "integer", "minimum": 1},
+    "description": {"type": "string", "minLength": 1},
+    "encoding": {"const": "utf-8"},
+    "byteOrderMark": {"const": false},
+    "delimiter": {"const": ","},
+    "lineEnding": {"const": "\n"},
+    "header": {"const": true},
+    "quoting": {"const": "minimal", "description": "Quote a field only if it contains the delimiter, a double quote, CR or LF; double embedded quotes."},
+    "null": {"const": ""},
+    "booleans": {"type": "array", "prefixItems": [{"const": "true"}, {"const": "false"}], "minItems": 2, "maxItems": 2},
+    "columns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "nullable"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "type": {"enum": ["integer", "string", "enum", "boolean"]},
+          "values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "nullable": {"type": "boolean"},
+          "description": {"type": "string"}
+        },
+        "if": {"properties": {"type": {"const": "enum"}}},
+        "then": {"required": ["values"]}
+      }
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stat", "scope"],
+        "additionalProperties": false,
+        "properties": {
+          "stat": {"type": "string", "pattern": "^[a-zA-Z0-9.+-]+$"},
+          "scope": {"enum": ["side", "match"]}
+        }
+      }
+    }
+  }
+}

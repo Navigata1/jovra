@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.scoring",
+  "id": "E03-doubles-order-missing",
+  "title": "Rejected: doubles needs a doublesOrder for set 0",
+  "covers": ["§2.4"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "ann", "displayName": "Ann", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "amy", "displayName": "Amy", "handedness": "left", "backhand": "twoHanded", "isSelf": false},
+      {"id": "ben", "displayName": "Ben", "handedness": "right", "backhand": "oneHanded", "isSelf": false},
+      {"id": "bob", "displayName": "Bob", "handedness": "right", "backhand": "twoHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["ann", "amy"], "B": ["ben", "bob"]},
+    "toss": {"firstServer": "ann", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "e001", "seq": 1, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "e002", "seq": 2, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}}
+    ]
+  },
+  "expectError": {"code": "doublesOrderMissing"}
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA integer-percentage conformance vectors",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "covers", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.pct"},
+    "id": {"type": "string", "pattern": "^T[0-9]{2}-[a-z0-9-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "covers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["op", "n", "d", "expected"],
+            "additionalProperties": false,
+            "properties": {
+              "op": {"const": "ratio"},
+              "n": {"type": "integer", "minimum": 0},
+              "d": {"type": "integer", "minimum": 0},
+              "expected": {"$ref": "common.schema.json#/$defs/ratio"}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["op", "current", "prior", "expected"],
+            "additionalProperties": false,
+            "properties": {
+              "op": {"const": "delta"},
+              "current": {"$ref": "#/$defs/pair"},
+              "prior": {"$ref": "#/$defs/pair"},
+              "expected": {
+                "type": "object",
+                "required": ["text"],
+                "additionalProperties": false,
+                "properties": {"text": {"type": "string"}}
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["op", "parts", "expected"],
+            "additionalProperties": false,
+            "properties": {
+              "op": {"const": "pool"},
+              "parts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/pair"}},
+              "expected": {"$ref": "common.schema.json#/$defs/ratio"}
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "pair": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}], "minItems": 2, "maxItems": 2}
+  }
+}

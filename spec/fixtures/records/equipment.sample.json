@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.equipment",
+  "updatedAt": "2026-10-07T01:30:00Z",
+  "sample": {"label": "Sample"},
+  "frameModels": [
+    {
+      "id": "2a3496d0-2d72-5f1f-8104-66a6e4c2ce9e",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "brand": "Head",
+      "model": "Prestige",
+      "source": "userEntered"
+    },
+    {
+      "id": "142b696d-774e-58c7-98b3-ea41838255d6",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "brand": "Wilson",
+      "model": "Pro Staff 85",
+      "source": "userEntered"
+    }
+  ],
+  "rackets": [
+    {
+      "id": "69d4aa05-fb98-5e6c-a83d-9d3cc723b7cc",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "ownerPlayerId": "e75faf7e-1ce8-5d45-b003-af3f331b1082",
+      "frameModelId": "2a3496d0-2d72-5f1f-8104-66a6e4c2ce9e",
+      "nickname": "Head Prestige",
+      "status": "active"
+    },
+    {
+      "id": "04a522a5-6aad-526c-b332-700266b87a37",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "ownerPlayerId": "e75faf7e-1ce8-5d45-b003-af3f331b1082",
+      "frameModelId": "142b696d-774e-58c7-98b3-ea41838255d6",
+      "nickname": "Classic frame",
+      "status": "retired"
+    }
+  ],
+  "stringProducts": [
+    {
+      "id": "f557726d-5e72-541f-8b14-33092d8f2d5d",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "brand": "Solinco",
+      "model": "Hyper-G",
+      "material": "polyester",
+      "construction": "shaped",
+      "gaugeLabel": "17",
+      "nominalDiameterMm": "1.20",
+      "color": "green"
+    },
+    {
+      "id": "a41d4c00-34e6-52d3-a25f-96780e539db6",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "brand": "Tier One",
+      "model": "Ghost Wire",
+      "material": "polyester",
+      "construction": "round",
+      "gaugeLabel": "17",
+      "nominalDiameterMm": "1.20",
+      "color": "white"
+    },
+    {
+      "id": "9544ff82-0e20-5949-a6c3-ff4028b6db87",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "brand": "WeissCANNON",
+      "model": "Silverstring",
+      "material": "polyester",
+      "construction": "round",
+      "gaugeLabel": "1.25",
+      "nominalDiameterMm": "1.25"
+    }
+  ],
+  "stringInventory": [
+    {
+      "id": "e6c00131-36b5-5d1e-91f2-3ab4c8591ae1",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "stringProductId": "9544ff82-0e20-5949-a6c3-ff4028b6db87",
+      "form": "set",
+      "initialLength": {"value": "12.2", "unit": "m"}
+    }
+  ],
+  "stringJobs": [
+    {
+      "id": "518aa030-ca9f-5eba-ae73-e5dbf3ace34d",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "racketId": "69d4aa05-fb98-5e6c-a83d-9d3cc723b7cc",
+      "strungOn": "2026-09-28",
+      "timeZone": "America/Chicago",
+      "strungBy": {"kind": "self"},
+      "machine": {"type": "crankLockout"},
+      "layout": "hybrid",
+      "mains": {
+        "stringProductId": "f557726d-5e72-541f-8b14-33092d8f2d5d",
+        "productSnapshot": {"brand": "Solinco", "model": "Hyper-G", "gaugeLabel": "17", "nominalDiameterMm": "1.20"},
+        "tension": {"value": "52", "unit": "lb"}
+      },
+      "crosses": {
+        "stringProductId": "a41d4c00-34e6-52d3-a25f-96780e539db6",
+        "productSnapshot": {"brand": "Tier One", "model": "Ghost Wire", "gaugeLabel": "17", "nominalDiameterMm": "1.20"},
+        "tension": {"value": "50", "unit": "lb"}
+      },
+      "method": "twoPiece",
+      "notes": "Sample setup"
+    }
+  ],
+  "setupRatings": [
+    {
+      "id": "70f81718-7b37-5cbe-967a-b4a4727cbbb6",
+      "createdAt": "2026-09-28T18:00:00Z",
+      "updatedAt": "2026-09-28T18:00:00Z",
+      "stringJobId": "518aa030-ca9f-5eba-ae73-e5dbf3ace34d",
+      "ratedAt": "2026-10-07T01:00:00Z",
+      "stage": "fresh",
+      "axes": {"control": 4, "comfort": 3, "spin": 4}
+    }
+  ],
+  "courtKit": [
+    {"id": "d0aa74dd-34dd-561e-9fa2-fbd669215219", "kind": "bag", "label": "Dunlop bag"},
+    {"id": "401fdc25-4104-585b-8461-e15a8760ec1b", "kind": "balls", "label": "Grand Prix balls"}
+  ],
+  "reminders": [
+    {
+      "id": "75529394-b064-5e81-ad8a-e03c30e8c5d0",
+      "racketId": "69d4aa05-fb98-5e6c-a83d-9d3cc723b7cc",
+      "afterLoggedHours": 20,
+      "afterDays": 60
+    }
+  ]
+}

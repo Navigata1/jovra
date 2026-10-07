@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.archiveManifest",
+  "sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a",
+  "provider": "googleDrive",
+  "scope": "https://www.googleapis.com/auth/drive.file",
+  "createdAt": "2026-10-07T01:30:00Z",
+  "updatedAt": "2026-10-07T01:30:00Z",
+  "sample": true,
+  "spaceSaver": false,
+  "includesAudio": false,
+  "remoteFolder": {"displayPath": "JOVRA/2026/2026-10-06 Jon vs Alex"},
+  "files": [
+    {
+      "role": "sidecar",
+      "localPath": "jon-vs-alex.session.json",
+      "mimeType": "application/json",
+      "bytes": 48446,
+      "md5": "738a8ddb7862de44b96a49a87b0422a6",
+      "sha256": "c5da79e506047fff01645e86acc8137d181eb33917f1318ce32b6e2c66265a7f",
+      "remote": {
+        "name": "session.jovra.json",
+        "fileId": "SAMPLE-not-a-drive-id-0001",
+        "appProperties": {"jovraSessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a", "jovraRole": "sidecar"}
+      },
+      "upload": {
+        "state": "sessionCreated",
+        "lastConfirmedOffset": 0,
+        "attempts": 1,
+        "wifiOnly": true,
+        "resumable": {"secretRef": "keychain:jovra.drive.resumable.SAMPLE", "createdAt": "2026-10-07T01:30:00Z"},
+        "updatedAt": "2026-10-07T01:30:00Z"
+      }
+    }
+  ]
+}

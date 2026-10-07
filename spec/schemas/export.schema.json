@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA export bundle manifest (export.json)",
+  "description": "The manifest at the root of an export folder/zip (P1-11, P1-09 Share Pack, 'Export video + analysis'). Sessions travel as their own session.json (same schema as the sidecar); tables as CSV per the contracts in spec/contracts/csv. D5: shared exports exclude audio unless the user turned 'Include audio' on.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "exportedAt", "app", "scope", "includesAudio", "includesOriginals", "sessions", "files", "csvContracts"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.export"},
+    "exportedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "app": {"$ref": "common.schema.json#/$defs/appInfo"},
+    "scope": {"enum": ["session", "allData", "sharePack"]},
+    "includesAudio": {"type": "boolean"},
+    "includesOriginals": {"type": "boolean"},
+    "sessions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "path"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"$ref": "common.schema.json#/$defs/id"},
+          "title": {"type": "string", "minLength": 1, "maxLength": 120},
+          "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "sample": {"type": "boolean"}
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "role", "bytes", "sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+          "role": {"enum": ["sessionJson", "equipmentJson", "pointsCsv", "statsCsv", "original", "clip", "voiceNote", "readme"]},
+          "mimeType": {"type": "string", "pattern": "^[a-z]+/[a-z0-9.+-]+$"},
+          "bytes": {"type": "integer", "minimum": 0},
+          "sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+          "sessionId": {"$ref": "common.schema.json#/$defs/id"}
+        }
+      }
+    },
+    "csvContracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"enum": ["points", "stats"]},
+          "version": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "contact": {"const": "hello@islanddevcrew.com", "description": "IDC Rule 07: the only public contact, as text."}
+  }
+}

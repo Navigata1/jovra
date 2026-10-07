@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.pct",
+  "id": "T01-integer-percentages",
+  "title": "pct(n, d) = (200n + d) div 2d, half-up, integers only; d = 0 shows '—'; deltas from displayed integers; pooling",
+  "covers": ["§0 rule 4", "§7 rules 1-4", "§6.10 pooling"],
+  "cases": [
+    {"op": "ratio", "n": 72, "d": 124, "expected": {"n": 72, "d": 124, "pct": 58, "display": "58%"}},
+    {"op": "ratio", "n": 40, "d": 60, "expected": {"n": 40, "d": 60, "pct": 67, "display": "67%"}},
+    {"op": "ratio", "n": 28, "d": 40, "expected": {"n": 28, "d": 40, "pct": 70, "display": "70%"}},
+    {"op": "ratio", "n": 116, "d": 124, "expected": {"n": 116, "d": 124, "pct": 94, "display": "94%"}},
+    {"op": "ratio", "n": 1, "d": 8, "expected": {"n": 1, "d": 8, "pct": 13, "display": "13%"}},
+    {"op": "ratio", "n": 5, "d": 8, "expected": {"n": 5, "d": 8, "pct": 63, "display": "63%"}},
+    {"op": "ratio", "n": 3, "d": 8, "expected": {"n": 3, "d": 8, "pct": 38, "display": "38%"}},
+    {"op": "ratio", "n": 0, "d": 0, "expected": {"n": 0, "d": 0, "pct": null, "display": "—"}},
+    {"op": "ratio", "n": 0, "d": 5, "expected": {"n": 0, "d": 5, "pct": 0, "display": "0%"}},
+    {"op": "ratio", "n": 5, "d": 5, "expected": {"n": 5, "d": 5, "pct": 100, "display": "100%"}},
+    {"op": "ratio", "n": 1, "d": 3, "expected": {"n": 1, "d": 3, "pct": 33, "display": "33%"}},
+    {"op": "ratio", "n": 2, "d": 3, "expected": {"n": 2, "d": 3, "pct": 67, "display": "67%"}},
+    {"op": "ratio", "n": 1, "d": 200, "expected": {"n": 1, "d": 200, "pct": 1, "display": "1%"}},
+    {"op": "ratio", "n": 1, "d": 201, "expected": {"n": 1, "d": 201, "pct": 0, "display": "0%"}},
+    {"op": "ratio", "n": 199, "d": 200, "expected": {"n": 199, "d": 200, "pct": 100, "display": "100%"}},
+    {"op": "ratio", "n": 38, "d": 60, "expected": {"n": 38, "d": 60, "pct": 63, "display": "63%"}},
+    {"op": "ratio", "n": 31, "d": 50, "expected": {"n": 31, "d": 50, "pct": 62, "display": "62%"}},
+    {"op": "ratio", "n": 12, "d": 50, "expected": {"n": 12, "d": 50, "pct": 24, "display": "24%"}},
+    {"op": "ratio", "n": 7, "d": 50, "expected": {"n": 7, "d": 50, "pct": 14, "display": "14%"}},
+    {"op": "ratio", "n": 52, "d": 124, "expected": {"n": 52, "d": 124, "pct": 42, "display": "42%"}},
+    {"op": "ratio", "n": 20, "d": 60, "expected": {"n": 20, "d": 60, "pct": 33, "display": "33%"}},
+    {"op": "ratio", "n": 13, "d": 21, "expected": {"n": 13, "d": 21, "pct": 62, "display": "62%"}},
+    {"op": "ratio", "n": 5, "d": 21, "expected": {"n": 5, "d": 21, "pct": 24, "display": "24%"}},
+    {"op": "ratio", "n": 3, "d": 21, "expected": {"n": 3, "d": 21, "pct": 14, "display": "14%"}},
+    {
+      "op": "delta",
+      "current": [40, 60],
+      "prior": [38, 60],
+      "expected": {"text": "+4 percentage points"}
+    },
+    {
+      "op": "delta",
+      "current": [38, 60],
+      "prior": [40, 60],
+      "expected": {"text": "-4 percentage points"}
+    },
+    {"op": "delta", "current": [1, 8], "prior": [12, 100], "expected": {"text": "+1 percentage point"}},
+    {"op": "delta", "current": [3, 8], "prior": [38, 100], "expected": {"text": "0 percentage points"}},
+    {"op": "delta", "current": [3, 8], "prior": [0, 0], "expected": {"text": "—"}},
+    {
+      "op": "pool",
+      "parts": [[1, 8], [30, 40]],
+      "expected": {"n": 31, "d": 48, "pct": 65, "display": "65%"}
+    },
+    {"op": "pool", "parts": [[0, 0], [3, 4]], "expected": {"n": 3, "d": 4, "pct": 75, "display": "75%"}},
+    {"op": "pool", "parts": [[0, 0], [0, 0]], "expected": {"n": 0, "d": 0, "pct": null, "display": "—"}}
+  ]
+}

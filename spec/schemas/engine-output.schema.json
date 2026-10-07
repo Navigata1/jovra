@@ -1,0 +1,391 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA engine outputs",
+  "description": "The shape of what the scoring fold and the stat engine return. Both platforms' domain modules must produce exactly these values (deep-equal) for every fixture. Integers only: no floating point in any output.",
+  "$defs": {
+    "foldResult": {
+      "type": "object",
+      "required": ["match", "sets", "games", "points", "next", "checkpoints", "conflicts", "history"],
+      "additionalProperties": false,
+      "properties": {
+        "match": {"$ref": "#/$defs/matchSummary"},
+        "sets": {"type": "array", "items": {"$ref": "#/$defs/setRecord"}},
+        "games": {"type": "array", "items": {"$ref": "#/$defs/gameRecord"}},
+        "points": {"type": "array", "items": {"$ref": "#/$defs/pointRecord"}},
+        "next": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/pointState"}]},
+        "checkpoints": {"type": "array", "items": {"$ref": "#/$defs/checkpointResult"}},
+        "conflicts": {"type": "array", "items": {"$ref": "#/$defs/conflict"}},
+        "history": {"$ref": "#/$defs/history"},
+        "changes": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/changes"}]}
+      }
+    },
+    "sideOrNull": {"enum": ["A", "B", null]},
+    "idOrNull": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/id"}]},
+    "sideList": {"type": "array", "uniqueItems": true, "maxItems": 2, "items": {"$ref": "common.schema.json#/$defs/side"}},
+    "matchSummary": {
+      "type": "object",
+      "required": ["status", "doubles", "winner", "provisional", "setsWon", "scoreline", "pointsPlayed", "rallyLets"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {"enum": ["notStarted", "inProgress", "completed", "retired", "defaulted", "walkover"]},
+        "doubles": {"type": "boolean"},
+        "winner": {"$ref": "#/$defs/sideOrNull"},
+        "provisional": {"type": "boolean", "description": "True once any effective point has an unknown winner: later scores are not derived."},
+        "setsWon": {"$ref": "common.schema.json#/$defs/sideCounts"},
+        "scoreline": {"type": ["string", "null"], "description": "Winner first when there is a winner, else side A first. 7-6(x): x = tie-break loser's points; match tie-break [10-8]; ret., def., w/o."},
+        "pointsPlayed": {"type": "integer", "minimum": 0},
+        "rallyLets": {"type": "integer", "minimum": 0}
+      }
+    },
+    "setRecord": {
+      "type": "object",
+      "required": ["index", "rule", "games", "tiebreak", "winner", "complete", "byPenalty"],
+      "additionalProperties": false,
+      "properties": {
+        "index": {"type": "integer", "minimum": 0},
+        "rule": {"enum": ["tiebreakSet", "advantageSet", "matchTiebreak"]},
+        "games": {"$ref": "common.schema.json#/$defs/sideCounts"},
+        "tiebreak": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/sideCounts"}]},
+        "winner": {"$ref": "#/$defs/sideOrNull"},
+        "complete": {"type": "boolean"},
+        "byPenalty": {"type": "boolean"}
+      }
+    },
+    "gameRecord": {
+      "type": "object",
+      "required": ["index", "set", "gameInSet", "kind", "server", "serverSide", "winner", "points", "byPenalty", "complete", "break"],
+      "additionalProperties": false,
+      "properties": {
+        "index": {"type": "integer", "minimum": 0, "description": "0-based match game index; a set tie-break counts as one game."},
+        "set": {"type": "integer", "minimum": 0},
+        "gameInSet": {"type": "integer", "minimum": 0},
+        "kind": {"enum": ["standard", "tiebreak", "matchTiebreak"]},
+        "server": {"$ref": "common.schema.json#/$defs/id", "description": "The server of the game's first point."},
+        "serverSide": {"$ref": "common.schema.json#/$defs/side"},
+        "winner": {"$ref": "#/$defs/sideOrNull"},
+        "points": {"$ref": "common.schema.json#/$defs/sideCounts"},
+        "byPenalty": {"type": "boolean"},
+        "complete": {"type": "boolean"},
+        "break": {"type": "boolean"}
+      }
+    },
+    "scoreState": {
+      "type": "object",
+      "required": ["sets", "games", "points"],
+      "additionalProperties": false,
+      "properties": {
+        "sets": {"$ref": "common.schema.json#/$defs/sideCounts"},
+        "games": {"$ref": "common.schema.json#/$defs/sideCounts"},
+        "points": {"$ref": "common.schema.json#/$defs/sideCounts"}
+      }
+    },
+    "call": {
+      "description": "Score call before the point, server first. Labels are localized by the platform.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "server", "receiver"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"const": "points"},
+            "server": {"enum": ["0", "15", "30", "40"]},
+            "receiver": {"enum": ["0", "15", "30", "40"]}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {"kind": {"enum": ["deuce", "decidingPoint"]}}
+        },
+        {
+          "type": "object",
+          "required": ["kind", "side"],
+          "additionalProperties": false,
+          "properties": {"kind": {"const": "advantage"}, "side": {"$ref": "common.schema.json#/$defs/side"}}
+        },
+        {
+          "type": "object",
+          "required": ["kind", "server", "receiver"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"const": "tiebreak"},
+            "server": {"type": "integer", "minimum": 0},
+            "receiver": {"type": "integer", "minimum": 0}
+          }
+        }
+      ]
+    },
+    "pressure": {
+      "description": "Hypothetical folding: which side closes the game / set / match by winning this point.",
+      "type": "object",
+      "required": ["gamePointFor", "breakPoint", "setPointFor", "matchPointFor"],
+      "additionalProperties": false,
+      "properties": {
+        "gamePointFor": {"$ref": "#/$defs/sideList"},
+        "breakPoint": {"type": "boolean"},
+        "setPointFor": {"$ref": "#/$defs/sideList"},
+        "matchPointFor": {"$ref": "#/$defs/sideList"}
+      }
+    },
+    "ends": {
+      "type": "object",
+      "required": ["A", "B"],
+      "additionalProperties": false,
+      "properties": {"A": {"enum": ["near", "far"]}, "B": {"enum": ["near", "far"]}}
+    },
+    "pointState": {
+      "description": "The rules-derived state before a point (also used for 'next').",
+      "type": "object",
+      "required": ["set", "game", "gameInSet", "tiebreak", "pointInGame", "server", "receiver", "serverSide", "courtSide", "ends", "before", "call", "pressure"],
+      "additionalProperties": false,
+      "properties": {
+        "set": {"type": "integer", "minimum": 0},
+        "game": {"type": "integer", "minimum": 0},
+        "gameInSet": {"type": "integer", "minimum": 0},
+        "tiebreak": {"enum": ["set", "match", null]},
+        "pointInGame": {"type": "integer", "minimum": 1},
+        "server": {"$ref": "common.schema.json#/$defs/id"},
+        "receiver": {"$ref": "#/$defs/idOrNull"},
+        "serverSide": {"$ref": "common.schema.json#/$defs/side"},
+        "courtSide": {"enum": ["deuce", "ad", null]},
+        "ends": {"$ref": "#/$defs/ends"},
+        "before": {"$ref": "#/$defs/scoreState"},
+        "call": {"$ref": "#/$defs/call"},
+        "pressure": {"$ref": "#/$defs/pressure"}
+      }
+    },
+    "pointRecord": {
+      "type": "object",
+      "required": ["id", "index", "kind", "determined", "afterMatchEnd", "set", "game", "gameInSet", "tiebreak", "pointInGame", "server", "receiver", "serverSide", "courtSide", "ends", "before", "call", "pressure", "winner", "endType", "serveNumber", "strokeCount", "rallyLength", "provenance", "reviewState", "after"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "index": {"type": "integer", "minimum": 0},
+        "kind": {"enum": ["point", "penaltyPoint"]},
+        "determined": {"type": "boolean"},
+        "afterMatchEnd": {"type": "boolean"},
+        "set": {"type": ["integer", "null"], "minimum": 0},
+        "game": {"type": ["integer", "null"], "minimum": 0},
+        "gameInSet": {"type": ["integer", "null"], "minimum": 0},
+        "tiebreak": {"enum": ["set", "match", null]},
+        "pointInGame": {"type": ["integer", "null"], "minimum": 1},
+        "server": {"$ref": "#/$defs/idOrNull"},
+        "receiver": {"$ref": "#/$defs/idOrNull"},
+        "serverSide": {"$ref": "#/$defs/sideOrNull"},
+        "courtSide": {"enum": ["deuce", "ad", null]},
+        "ends": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/ends"}]},
+        "before": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/scoreState"}]},
+        "call": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/call"}]},
+        "pressure": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/pressure"}]},
+        "winner": {"$ref": "#/$defs/sideOrNull"},
+        "endType": {"enum": ["ace", "serviceWinner", "doubleFault", "winner", "forcedError", "unforcedError", "hindrance", "penalty", "unknown"]},
+        "serveNumber": {"enum": [1, 2, null]},
+        "strokeCount": {"type": ["integer", "null"], "minimum": 0},
+        "rallyLength": {"type": ["integer", "null"], "minimum": 0},
+        "provenance": {"$ref": "common.schema.json#/$defs/provenanceStatus"},
+        "reviewState": {"enum": ["unreviewed", "needsReview", "reviewed"]},
+        "tStartMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "tEndMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "after": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["gameWon", "setWon", "matchWon", "endChange", "rest"],
+              "additionalProperties": false,
+              "properties": {
+                "gameWon": {"type": "boolean"},
+                "setWon": {"type": "boolean"},
+                "matchWon": {"type": "boolean"},
+                "endChange": {"type": "boolean"},
+                "rest": {"enum": ["point", "changeoverNoRest", "changeover", "setBreak", "matchEnd"], "description": "ITF ceilings: point 25 s, changeover 90 s, set break 120 s; no rest after game 1 of a set or inside a tie-break."}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "checkpointResult": {
+      "type": "object",
+      "required": ["id", "set", "called", "derived", "agrees"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "set": {"type": "integer", "minimum": 0},
+        "called": {"$ref": "common.schema.json#/$defs/sideCounts"},
+        "derived": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/sideCounts"}]},
+        "agrees": {"type": ["boolean", "null"]}
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {"enum": ["serverMismatch", "pointsAfterMatchEnd", "checkpointConflict", "outcomeInconsistent", "eventAfterMatchEnd", "walkoverAfterPlay", "doublesOrderConflict", "decidingPointSideIgnored"], "description": "decidingPointSideIgnored: a point recorded decidingPointSide where the receiver does not choose the half; recorded = the stored side, derived = the side used."},
+        "pointId": {"$ref": "common.schema.json#/$defs/id"},
+        "eventId": {"$ref": "common.schema.json#/$defs/id"},
+        "checkpointId": {"$ref": "common.schema.json#/$defs/id"},
+        "pointIds": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+        "recorded": {"$ref": "common.schema.json#/$defs/id"},
+        "derived": {"$ref": "common.schema.json#/$defs/id"}
+      }
+    },
+    "history": {
+      "type": "object",
+      "required": ["voided", "superseded"],
+      "additionalProperties": false,
+      "properties": {
+        "voided": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+        "superseded": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "by"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "common.schema.json#/$defs/id"},
+              "by": {"$ref": "common.schema.json#/$defs/id"}
+            }
+          }
+        }
+      }
+    },
+    "changes": {
+      "description": "Relative conflicts versus the previous checkpoint (needs a baseline).",
+      "type": "object",
+      "required": ["tiebreakAppeared", "tiebreakVanished", "matchIncomplete", "recalculatedPointIds"],
+      "additionalProperties": false,
+      "properties": {
+        "tiebreakAppeared": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "tiebreakVanished": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "matchIncomplete": {"type": "boolean"},
+        "recalculatedPointIds": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}}
+      }
+    },
+    "serveBlock": {
+      "type": "object",
+      "required": ["servicePoints", "firstServeIn", "firstServePointsWon", "secondServePointsWon", "secondServeIn", "aces", "doubleFaults", "serviceWinners", "servicePointsWon"],
+      "additionalProperties": false,
+      "properties": {
+        "servicePoints": {"type": "integer", "minimum": 0},
+        "firstServeIn": {"$ref": "common.schema.json#/$defs/ratio"},
+        "firstServePointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "secondServePointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "secondServeIn": {"$ref": "common.schema.json#/$defs/ratio"},
+        "aces": {"type": "integer", "minimum": 0},
+        "doubleFaults": {"type": "integer", "minimum": 0},
+        "serviceWinners": {"type": "integer", "minimum": 0},
+        "servicePointsWon": {"$ref": "common.schema.json#/$defs/ratio"}
+      }
+    },
+    "sideStats": {
+      "allOf": [
+        {"$ref": "#/$defs/sideStatsShape"},
+        {
+          "type": "object",
+          "required": ["totalPointsWon", "penaltyPointsAwarded", "servicePoints", "firstServeIn", "firstServePointsWon", "secondServePointsWon", "secondServeIn", "aces", "doubleFaults", "serviceWinners", "servicePointsWon", "serviceGamesWon", "returnPointsWon", "returnFirstServePointsWon", "returnSecondServePointsWon", "returnGamesWon", "breakPointsSaved", "breakPointsConverted", "winners", "forcedErrors", "unforcedErrors", "longestPointStreak", "longestGameStreak"]
+        }
+      ]
+    },
+    "sideStatsShape": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "totalPointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "penaltyPointsAwarded": {"type": "integer", "minimum": 0},
+        "servicePoints": {"type": "integer", "minimum": 0},
+        "firstServeIn": {"$ref": "common.schema.json#/$defs/ratio"},
+        "firstServePointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "secondServePointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "secondServeIn": {"$ref": "common.schema.json#/$defs/ratio"},
+        "aces": {"type": "integer", "minimum": 0},
+        "doubleFaults": {"type": "integer", "minimum": 0},
+        "serviceWinners": {"type": "integer", "minimum": 0},
+        "servicePointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "serviceGamesWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "returnPointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "returnFirstServePointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "returnSecondServePointsWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "returnGamesWon": {"$ref": "common.schema.json#/$defs/ratio"},
+        "breakPointsSaved": {"$ref": "common.schema.json#/$defs/ratio"},
+        "breakPointsConverted": {"$ref": "common.schema.json#/$defs/ratio"},
+        "winners": {"type": "integer", "minimum": 0, "description": "Excludes aces."},
+        "forcedErrors": {"type": "integer", "minimum": 0, "description": "Committed by this side."},
+        "unforcedErrors": {"type": "integer", "minimum": 0, "description": "Committed by this side."},
+        "longestPointStreak": {"type": "integer", "minimum": 0},
+        "longestGameStreak": {"type": "integer", "minimum": 0}
+      }
+    },
+    "statsResult": {
+      "type": "object",
+      "required": ["provisional", "countedPoints", "excludedPoints", "sides", "servers", "shots", "rallyLength", "review", "durationMs", "momentum"],
+      "additionalProperties": false,
+      "properties": {
+        "provisional": {"type": "boolean"},
+        "countedPoints": {"type": "integer", "minimum": 0},
+        "excludedPoints": {"type": "integer", "minimum": 0},
+        "sides": {
+          "type": "object",
+          "required": ["A", "B"],
+          "additionalProperties": false,
+          "properties": {"A": {"$ref": "#/$defs/sideStats"}, "B": {"$ref": "#/$defs/sideStats"}}
+        },
+        "servers": {
+          "description": "Doubles only: serve stats per server.",
+          "type": "object",
+          "propertyNames": {"$ref": "common.schema.json#/$defs/id"},
+          "additionalProperties": {"$ref": "#/$defs/serveBlock"}
+        },
+        "shots": {
+          "type": "object",
+          "required": ["total", "pointsWithStrokeCount"],
+          "additionalProperties": false,
+          "properties": {
+            "total": {"type": "integer", "minimum": 0},
+            "pointsWithStrokeCount": {"type": "integer", "minimum": 0}
+          }
+        },
+        "rallyLength": {
+          "description": "ATP buckets over derived rally length (serve counts, final error does not).",
+          "type": "object",
+          "required": ["0-4", "5-8", "9+", "unknown"],
+          "additionalProperties": false,
+          "properties": {
+            "0-4": {"type": "integer", "minimum": 0},
+            "5-8": {"type": "integer", "minimum": 0},
+            "9+": {"type": "integer", "minimum": 0},
+            "unknown": {"type": "integer", "minimum": 0}
+          }
+        },
+        "review": {
+          "type": "object",
+          "required": ["reviewed", "needsReview", "unreviewed", "completion"],
+          "additionalProperties": false,
+          "properties": {
+            "reviewed": {"type": "integer", "minimum": 0},
+            "needsReview": {"type": "integer", "minimum": 0},
+            "unreviewed": {"type": "integer", "minimum": 0},
+            "completion": {"$ref": "common.schema.json#/$defs/ratio"}
+          }
+        },
+        "durationMs": {"type": ["integer", "null"], "minimum": 0, "description": "First counted point start to last counted point end; null unless every counted point is timed."},
+        "momentum": {
+          "type": "object",
+          "required": ["window", "side", "series"],
+          "additionalProperties": false,
+          "properties": {
+            "window": {"type": "integer", "minimum": 1},
+            "side": {"const": "A"},
+            "series": {
+              "description": "Per counted point: [points side A won in the trailing window, window size].",
+              "type": "array",
+              "items": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 1}], "minItems": 2, "maxItems": 2}
+            }
+          }
+        }
+      }
+    }
+  }
+}

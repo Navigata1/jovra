@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA equipment document (equipment.json)",
+  "description": "User-entered equipment only (D6: no catalog in v1). Manufacturer names are free text typed by the user (CLAUDE.md hard rule 6). Tension is stored as entered and never round-tripped. Derived values such as logged court time are computed from session equipmentUse rows, never stored.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "updatedAt", "rackets", "stringProducts", "stringJobs"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.equipment"},
+    "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "sample": {
+      "type": "object",
+      "required": ["label"],
+      "additionalProperties": false,
+      "properties": {"label": {"const": "Sample"}}
+    },
+    "frameModels": {"type": "array", "items": {"$ref": "#/$defs/frameModel"}},
+    "rackets": {"type": "array", "items": {"$ref": "#/$defs/racket"}},
+    "stringProducts": {"type": "array", "items": {"$ref": "#/$defs/stringProduct"}},
+    "stringInventory": {"type": "array", "items": {"$ref": "#/$defs/stringInventoryItem"}},
+    "stringJobs": {"type": "array", "items": {"$ref": "#/$defs/stringJob"}},
+    "measurements": {"type": "array", "items": {"$ref": "#/$defs/measurement"}},
+    "setupRatings": {"type": "array", "items": {"$ref": "#/$defs/setupRating"}},
+    "courtKit": {"type": "array", "items": {"$ref": "#/$defs/kitItem"}},
+    "reminders": {"type": "array", "items": {"$ref": "#/$defs/reminder"}}
+  },
+  "$defs": {
+    "entity": {
+      "type": "object",
+      "required": ["id", "createdAt", "updatedAt"],
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "deletedAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    },
+    "text": {"type": "string", "minLength": 1, "maxLength": 80},
+    "frameModel": {
+      "allOf": [{"$ref": "#/$defs/entity"}],
+      "type": "object",
+      "required": ["brand", "model"],
+      "additionalProperties": false,
+      "properties": {
+        "id": true, "createdAt": true, "updatedAt": true, "deletedAt": true,
+        "brand": {"$ref": "#/$defs/text"},
+        "model": {"$ref": "#/$defs/text"},
+        "variant": {"$ref": "#/$defs/text"},
+        "year": {"type": "integer", "minimum": 1950, "maximum": 2100},
+        "headSize": {"$ref": "common.schema.json#/$defs/area"},
+        "stringPattern": {
+          "type": "object",
+          "required": ["mains", "crosses"],
+          "additionalProperties": false,
+          "properties": {
+            "mains": {"type": "integer", "minimum": 10, "maximum": 24},
+            "crosses": {"type": "integer", "minimum": 10, "maximum": 26}
+          }
+        },
+        "length": {"$ref": "common.schema.json#/$defs/length"},
+        "recommendedTension": {
+          "type": "object",
+          "required": ["min", "max"],
+          "additionalProperties": false,
+          "properties": {
+            "min": {"$ref": "common.schema.json#/$defs/tension"},
+            "max": {"$ref": "common.schema.json#/$defs/tension"}
+          }
+        },
+        "source": {"enum": ["userEntered"]}
+      }
+    },
+    "racket": {
+      "allOf": [{"$ref": "#/$defs/entity"}],
+      "type": "object",
+      "required": ["ownerPlayerId", "nickname", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": true, "createdAt": true, "updatedAt": true, "deletedAt": true,
+        "ownerPlayerId": {"$ref": "common.schema.json#/$defs/id"},
+        "frameModelId": {"$ref": "common.schema.json#/$defs/id"},
+        "nickname": {"$ref": "#/$defs/text"},
+        "gripSize": {"type": "string", "maxLength": 12},
+        "purchasedAt": {"$ref": "common.schema.json#/$defs/date"},
+        "price": {"$ref": "common.schema.json#/$defs/money"},
+        "measuredSpecs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "value", "unit", "measuredAt", "strung"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["weight", "balance", "swingweight", "stiffnessRA"]},
+              "value": {"$ref": "common.schema.json#/$defs/decimalString"},
+              "unit": {"enum": ["g", "oz", "mm", "cm", "in", "ptsHL", "kgcm2", "RA"]},
+              "measuredAt": {"$ref": "common.schema.json#/$defs/date"},
+              "strung": {"type": "boolean"}
+            }
+          }
+        },
+        "customizations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["leadTape", "grip", "overgrip", "dampener", "other"]},
+              "position": {"type": "string", "maxLength": 40},
+              "mass": {"$ref": "common.schema.json#/$defs/mass"},
+              "note": {"type": "string", "maxLength": 200}
+            }
+          }
+        },
+        "status": {"enum": ["active", "retired"]},
+        "photos": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/fileRef"}},
+        "notes": {"type": "string", "maxLength": 1000}
+      }
+    },
+    "stringProduct": {
+      "allOf": [{"$ref": "#/$defs/entity"}],
+      "type": "object",
+      "required": ["brand", "model", "material"],
+      "additionalProperties": false,
+      "properties": {
+        "id": true, "createdAt": true, "updatedAt": true, "deletedAt": true,
+        "brand": {"$ref": "#/$defs/text"},
+        "model": {"$ref": "#/$defs/text"},
+        "material": {"enum": ["naturalGut", "syntheticGut", "multifilament", "polyester", "aramid", "hybridSet", "other"]},
+        "construction": {"enum": ["round", "shaped", "textured", "multifilament", "solidCoreWrap", "other"]},
+        "gaugeLabel": {"type": "string", "maxLength": 12, "description": "As printed on the packet (16L, 17, 1.25). Display text only."},
+        "nominalDiameterMm": {"$ref": "common.schema.json#/$defs/decimalString", "description": "The value any maths uses."},
+        "color": {"type": "string", "maxLength": 30}
+      }
+    },
+    "stringInventoryItem": {
+      "allOf": [{"$ref": "#/$defs/entity"}],
+      "type": "object",
+      "required": ["stringProductId", "form"],
+      "additionalProperties": false,
+      "properties": {
+        "id": true, "createdAt": true, "updatedAt": true, "deletedAt": true,
+        "stringProductId": {"$ref": "common.schema.json#/$defs/id"},
+        "form": {"enum": ["set", "halfSet", "reel"]},
+        "initialLength": {"$ref": "common.schema.json#/$defs/length"},
+        "remainingLength": {"$ref": "common.schema.json#/$defs/length"},
+        "purchasedAt": {"$ref": "common.schema.json#/$defs/date"},
+        "cost": {"$ref": "common.schema.json#/$defs/money"}
+      }
+    },
+    "stringSegment": {
+      "type": "object",
+      "required": ["productSnapshot", "tension"],
+      "additionalProperties": false,
+      "properties": {
+        "stringProductId": {"$ref": "common.schema.json#/$defs/id"},
+        "productSnapshot": {
+          "description": "Denormalized so history renders after product edits.",
+          "type": "object",
+          "required": ["brand", "model"],
+          "additionalProperties": false,
+          "properties": {
+            "brand": {"$ref": "#/$defs/text"},
+            "model": {"$ref": "#/$defs/text"},
+            "gaugeLabel": {"type": "string", "maxLength": 12},
+            "nominalDiameterMm": {"$ref": "common.schema.json#/$defs/decimalString"}
+          }
+        },
+        "tension": {"$ref": "common.schema.json#/$defs/tension"},
+        "prestretch": {
+          "type": "object",
+          "required": ["method"],
+          "additionalProperties": false,
+          "properties": {
+            "method": {"enum": ["none", "machinePercent", "manual", "unknown"]},
+            "percent": {"type": "integer", "minimum": 0, "maximum": 30}
+          }
+        }
+      }
+    },
+    "stringJob": {
+      "allOf": [{"$ref": "#/$defs/entity"}],
+      "type": "object",
+      "required": ["racketId", "strungOn", "layout", "mains", "crosses"],
+      "additionalProperties": false,
+      "properties": {
+        "id": true, "createdAt": true, "updatedAt": true, "deletedAt": true,
+        "racketId": {"$ref": "common.schema.json#/$defs/id"},
+        "strungOn": {"$ref": "common.schema.json#/$defs/date"},
+        "timeZone": {"$ref": "common.schema.json#/$defs/timeZone"},
+        "strungBy": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"enum": ["self", "person", "shop"]},
+            "displayName": {"type": "string", "maxLength": 60}
+          }
+        },
+        "machine": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "makeModel": {"type": "string", "maxLength": 60},
+            "type": {"enum": ["dropWeight", "crankLockout", "electronicConstantPull", "electronicLockout", "unknown"]}
+          }
+        },
+        "layout": {"enum": ["fullBed", "hybrid"]},
+        "mains": {"$ref": "#/$defs/stringSegment"},
+        "crosses": {"$ref": "#/$defs/stringSegment"},
+        "method": {"enum": ["twoPiece", "onePiece", "onePieceATW", "unknown"]},
+        "clonedFromJobId": {"$ref": "common.schema.json#/$defs/id"},
+        "endedOn": {"$ref": "common.schema.json#/$defs/date"},
+        "endReason": {"enum": ["broke", "cutOut", "plannedRestring", "retired", "unknown"]},
+        "breakage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "segment": {"enum": ["mains", "crosses", "unknown"]},
+            "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+            "videoTimeMs": {"$ref": "common.schema.json#/$defs/timeMs"}
+          }
+        },
+        "cost": {"$ref": "common.schema.json#/$defs/money"},
+        "notes": {"type": "string", "maxLength": 1000},
+        "photos": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/fileRef"}}
+      }
+    },
+    "measurement": {
+      "allOf": [{"$ref": "#/$defs/entity"}],
+      "type": "object",
+      "required": ["stringJobId", "takenAt", "method", "raw", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": true, "createdAt": true, "updatedAt": true, "deletedAt": true,
+        "stringJobId": {"$ref": "common.schema.json#/$defs/id"},
+        "takenAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "method": {"enum": ["ertDT", "rdc", "stringmeter", "other"], "description": "Manual devices only in v1 (pitch check is unsupported)."},
+        "raw": {
+          "type": "object",
+          "required": ["value", "unit"],
+          "additionalProperties": false,
+          "properties": {
+            "value": {"$ref": "common.schema.json#/$defs/decimalString"},
+            "unit": {"type": "string", "maxLength": 12}
+          }
+        },
+        "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
+      }
+    },
+    "setupRating": {
+      "allOf": [{"$ref": "#/$defs/entity"}],
+      "type": "object",
+      "required": ["stringJobId", "ratedAt", "axes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": true, "createdAt": true, "updatedAt": true, "deletedAt": true,
+        "stringJobId": {"$ref": "common.schema.json#/$defs/id"},
+        "ratedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "stage": {"enum": ["fresh", "mid", "removal", "other"]},
+        "axes": {
+          "description": "User feel, 1-5. Entered by the user; never inferred.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "control": {"type": "integer", "minimum": 1, "maximum": 5},
+            "comfort": {"type": "integer", "minimum": 1, "maximum": 5},
+            "spin": {"type": "integer", "minimum": 1, "maximum": 5},
+            "power": {"type": "integer", "minimum": 1, "maximum": 5},
+            "feel": {"type": "integer", "minimum": 1, "maximum": 5},
+            "durability": {"type": "integer", "minimum": 1, "maximum": 5}
+          }
+        },
+        "note": {"type": "string", "maxLength": 500}
+      }
+    },
+    "kitItem": {
+      "type": "object",
+      "required": ["id", "kind", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "kind": {"enum": ["bag", "balls", "shoes", "grip", "other"]},
+        "label": {"$ref": "#/$defs/text"}
+      }
+    },
+    "reminder": {
+      "description": "User-set thresholds, never predictions.",
+      "type": "object",
+      "required": ["id", "racketId"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "racketId": {"$ref": "common.schema.json#/$defs/id"},
+        "afterLoggedHours": {"type": "integer", "minimum": 1, "maximum": 500},
+        "afterDays": {"type": "integer", "minimum": 1, "maximum": 730}
+      }
+    }
+  }
+}

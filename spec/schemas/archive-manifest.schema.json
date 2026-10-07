@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA archive manifest (archive.json, per session folder)",
+  "description": "The persisted upload journal for one session's optional Google Drive archive (D3, ADR-0002). Written atomically before any network I/O. The uploaded sidecar is the session document itself (session.jovra.json). 'backedUp' requires remote size AND md5 to match local (plus sha256 when Drive returns it). No tokens or resumable session URIs are stored here: the resumable URI lives in Keychain / EncryptedSharedPreferences under resumable.secretRef.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "sessionId", "provider", "createdAt", "updatedAt", "remoteFolder", "files"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.archiveManifest"},
+    "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+    "provider": {"const": "googleDrive"},
+    "scope": {"const": "https://www.googleapis.com/auth/drive.file", "description": "The only scope JOVRA requests."},
+    "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "sample": {"type": "boolean", "description": "True for demo state (screen 19 'Connected · Demo'); never a real connection."},
+    "spaceSaver": {"type": "boolean", "description": "Rally-only passthrough copy archived instead of the full original."},
+    "includesAudio": {"type": "boolean"},
+    "remoteFolder": {
+      "type": "object",
+      "required": ["displayPath"],
+      "additionalProperties": false,
+      "properties": {
+        "displayPath": {"type": "string", "minLength": 1, "maxLength": 300, "description": "e.g. JOVRA/2026/2026-10-06 Jon vs Alex"},
+        "folderId": {"$ref": "#/$defs/driveId"},
+        "rootFolderId": {"$ref": "#/$defs/driveId", "description": "Re-discovered after reinstall by appProperties jovraRole=archiveRoot."}
+      }
+    },
+    "files": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/archivedFile"}}
+  },
+  "$defs": {
+    "driveId": {"type": "string", "pattern": "^[A-Za-z0-9_-]{10,128}$"},
+    "appProperties": {
+      "description": "Drive private app properties (max 30 per file; key+value at most 124 bytes).",
+      "type": "object",
+      "maxProperties": 30,
+      "propertyNames": {"pattern": "^jovra[A-Za-z]{1,30}$"},
+      "additionalProperties": {"type": "string", "maxLength": 90}
+    },
+    "archivedFile": {
+      "type": "object",
+      "required": ["role", "localPath", "mimeType", "bytes", "remote", "upload"],
+      "additionalProperties": false,
+      "properties": {
+        "role": {"enum": ["original", "spaceSaver", "sidecar", "clip", "voiceNote", "export"]},
+        "localPath": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "mimeType": {"type": "string", "pattern": "^[a-z]+/[a-z0-9.+-]+$"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "md5": {"$ref": "common.schema.json#/$defs/md5"},
+        "sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "remote": {
+          "type": "object",
+          "required": ["name"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {"type": "string", "minLength": 1, "maxLength": 255},
+            "fileId": {"$ref": "#/$defs/driveId", "description": "Pre-generated with files.generateIds so retries return 409, never duplicates."},
+            "appProperties": {"$ref": "#/$defs/appProperties"}
+          }
+        },
+        "upload": {"$ref": "#/$defs/uploadState"},
+        "verification": {
+          "type": "object",
+          "required": ["checkedAt", "remoteBytes", "remoteMd5", "ok"],
+          "additionalProperties": false,
+          "properties": {
+            "checkedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+            "remoteBytes": {"type": "integer", "minimum": 0},
+            "remoteMd5": {"$ref": "common.schema.json#/$defs/md5"},
+            "remoteSha256": {"$ref": "common.schema.json#/$defs/sha256"},
+            "ok": {"type": "boolean"}
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"upload": {"properties": {"state": {"enum": ["queued", "hashing"]}}}}},
+          "else": {"required": ["md5", "sha256"]}
+        },
+        {
+          "if": {"properties": {"upload": {"properties": {"state": {"const": "backedUp"}}}}},
+          "then": {"required": ["verification"], "properties": {"verification": {"properties": {"ok": {"const": true}}}}}
+        }
+      ]
+    },
+    "uploadState": {
+      "description": "queued -> hashing -> sessionCreated -> uploading -> verifying -> backedUp | failed | needsReconnect | quotaBlocked. 308 Range bytes=0-N means resume at N+1.",
+      "type": "object",
+      "required": ["state", "lastConfirmedOffset", "attempts", "updatedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["queued", "hashing", "sessionCreated", "uploading", "verifying", "backedUp", "failed", "needsReconnect", "quotaBlocked"]},
+        "lastConfirmedOffset": {"type": "integer", "minimum": 0, "description": "Bytes the server has confirmed; the next byte to send."},
+        "attempts": {"type": "integer", "minimum": 0},
+        "wifiOnly": {"type": "boolean"},
+        "resumable": {
+          "type": "object",
+          "required": ["secretRef", "createdAt"],
+          "additionalProperties": false,
+          "properties": {
+            "secretRef": {"type": "string", "pattern": "^keychain:[A-Za-z0-9._-]{1,100}$"},
+            "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+          }
+        },
+        "lastError": {
+          "type": "object",
+          "required": ["code"],
+          "additionalProperties": false,
+          "properties": {
+            "code": {"enum": ["network", "rateLimited", "serverError", "sessionExpired", "invalidGrant", "storageQuotaExceeded", "checksumMismatch", "sizeMismatch", "localFileMissing", "cancelled", "other"]},
+            "httpStatus": {"type": "integer", "minimum": 100, "maximum": 599},
+            "message": {"type": "string", "maxLength": 300}
+          }
+        },
+        "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    }
+  }
+}

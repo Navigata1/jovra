@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA capability registry",
+  "description": "Every analysis capability and its status (ADR-0004). A capability is promoted to validated only by a recorded benchmark run that passes its gate. Shipped with the app; both platforms read the same file.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "registryVersion", "updatedAt", "capabilities"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.capabilityRegistry"},
+    "registryVersion": {"type": "integer", "minimum": 1},
+    "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "capabilities": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/capability"}}
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "required": ["id", "title", "status", "inV1", "method", "version", "uiLabel", "outputsNeedReview", "requires", "gate", "lastBenchmark"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/capabilityId"},
+        "title": {"type": "string", "minLength": 1, "maxLength": 80},
+        "status": {"enum": ["manual", "estimated", "validated", "disabled", "unsupported"]},
+        "inV1": {"type": "boolean"},
+        "method": {"type": "string", "minLength": 1, "maxLength": 400},
+        "version": {"type": "string", "minLength": 1, "maxLength": 32},
+        "uiLabel": {"type": "string", "minLength": 1, "maxLength": 60, "description": "Exact badge/label wording."},
+        "outputsNeedReview": {"type": "boolean", "description": "Suggestions start as 'Needs review' (D10)."},
+        "requires": {
+          "type": "object",
+          "required": ["calibration", "microphone", "video"],
+          "additionalProperties": false,
+          "properties": {
+            "calibration": {"type": "boolean"},
+            "microphone": {"type": "boolean"},
+            "video": {"type": "boolean"},
+            "capabilities": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/capabilityId"}}
+          }
+        },
+        "gate": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["promotesTo", "metrics", "minimumData"],
+              "additionalProperties": false,
+              "properties": {
+                "promotesTo": {"enum": ["estimated", "validated"]},
+                "metrics": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "comparator", "threshold"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {"type": "string", "minLength": 1, "maxLength": 80},
+                      "comparator": {"enum": [">=", "<="]},
+                      "threshold": {"$ref": "common.schema.json#/$defs/decimalString"},
+                      "unit": {"type": "string", "maxLength": 16}
+                    }
+                  }
+                },
+                "minimumData": {"type": "string", "minLength": 1, "maxLength": 300}
+              }
+            }
+          ]
+        },
+        "lastBenchmark": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["runId", "at", "dataset", "passed", "results"],
+              "additionalProperties": false,
+              "properties": {
+                "runId": {"$ref": "common.schema.json#/$defs/id"},
+                "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+                "dataset": {"type": "string", "maxLength": 120},
+                "passed": {"type": "boolean"},
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "value"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {"type": "string", "maxLength": 80},
+                      "value": {"$ref": "common.schema.json#/$defs/decimalString"}
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "notes": {"type": "string", "maxLength": 600}
+      }
+    }
+  }
+}

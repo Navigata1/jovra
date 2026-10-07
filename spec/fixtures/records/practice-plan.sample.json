@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.practicePlan",
+  "id": "89ae3b26-07d6-53e0-b488-f940e1e7c6ba",
+  "createdAt": "2026-10-07T01:30:00Z",
+  "updatedAt": "2026-10-07T01:30:00Z",
+  "title": "One focus for next time",
+  "label": "Suggested practice",
+  "sample": true,
+  "playerId": "e75faf7e-1ce8-5d45-b003-af3f331b1082",
+  "basedOnSessions": ["b75c57d3-04df-5b4d-b969-32ed5cbfd97a"],
+  "items": [
+    {
+      "id": "876bd7ba-c312-5c5e-a0d7-90880b6a575e",
+      "focus": "Build a repeatable toss",
+      "drill": {
+        "title": "Toss-and-catch ladder",
+        "instructions": "Toss without hitting; let it land on the racket placed in front of the baseline. Ten in a row, then add serves at 70% pace.",
+        "durationMinutes": 15,
+        "reps": 50
+      },
+      "origin": {
+        "kind": "rule",
+        "ruleId": "practice.firstServePointsWon",
+        "ruleVersion": "1.0.0",
+        "condition": "firstServePointsWon.pct < 72"
+      },
+      "evidence": [
+        {"sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a", "stat": "firstServePointsWon", "side": "A", "value": {"n": 28, "d": 40, "pct": 70, "display": "70%"}, "text": "28 of 40 first-serve points won", "pointIds": ["4beb855c-0d41-593b-92cc-78a576bce01b", "def54247-84ec-5d3d-8280-97b3368d89ac", "8c80d57d-24bb-5cda-b4cf-c0e61bb073ef", "cb74f57a-3101-5e38-b935-4ebe8d1961d5", "765ebd89-1630-5451-8994-a04047f744b7", "f481e70c-96e6-5a12-8f45-ec59a9603748", "cfe00826-60f8-50cf-a6c8-b5d7d45ba7b7", "3cd0a5e5-3b98-5b46-8a9a-a176c1fe14f9", "06da30b9-469e-5d78-9ee3-ed395fdef815", "e58459da-fc48-5ef3-94cb-8b47ab9e2c6a", "6a441437-546e-5455-bad4-0e05c0b9a973", "a5dba45e-fc29-5133-8d0d-a055e9a6433b"], "provenance": {"status": "reviewed", "source": "rule:practice.firstServePointsWon@1.0.0", "denominator": 40, "sample": true}, "availability": "videoUnavailable"}
+      ],
+      "status": "planned",
+      "userEdited": false
+    }
+  ],
+  "goals": [
+    {
+      "id": "a019eea3-164f-571c-b71f-114affc69d45",
+      "stat": "firstServeIn",
+      "target": 70,
+      "sessionKind": "match"
+    }
+  ]
+}

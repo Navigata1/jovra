@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA stats conformance fixture",
+  "description": "Fold the whole log, then compute stats: the result must deep-equal 'expected'.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "covers", "input", "assertions", "expected"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.stats"},
+    "id": {"type": "string", "pattern": "^T[0-9]{2}-[a-z0-9-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "covers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "input": {"$ref": "fixture-scoring.schema.json#/$defs/engineInput"},
+    "assertions": {"type": "array", "items": {"$ref": "fixture-scoring.schema.json#/$defs/assertion"}},
+    "expected": {"$ref": "engine-output.schema.json#/$defs/statsResult"}
+  }
+}

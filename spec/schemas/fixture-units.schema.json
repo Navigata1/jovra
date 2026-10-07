@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA unit-conversion conformance vectors",
+  "description": "convert: exact rational conversion, half-up at 'places'. display: preferred-unit display, half-up once to the unit's step, stored value untouched when units match. gaugeHint: help ranges only, never a conversion.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "covers", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.units"},
+    "id": {"type": "string", "pattern": "^U[0-9]{2}-[a-z0-9-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "covers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["op", "value", "from", "to", "places", "expected"],
+            "additionalProperties": false,
+            "properties": {
+              "op": {"const": "convert"},
+              "value": {"$ref": "common.schema.json#/$defs/decimalString"},
+              "from": {"$ref": "#/$defs/unit"},
+              "to": {"$ref": "#/$defs/unit"},
+              "places": {"type": "integer", "minimum": 0, "maximum": 15},
+              "expected": {
+                "type": "object",
+                "required": ["value"],
+                "additionalProperties": false,
+                "properties": {"value": {"$ref": "common.schema.json#/$defs/decimalString"}}
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["op", "value", "unit", "preferredUnit", "expected"],
+            "additionalProperties": false,
+            "properties": {
+              "op": {"const": "display"},
+              "value": {"$ref": "common.schema.json#/$defs/decimalString"},
+              "unit": {"$ref": "#/$defs/unit"},
+              "preferredUnit": {"$ref": "#/$defs/unit"},
+              "expected": {
+                "type": "object",
+                "required": ["value", "unit", "converted"],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {"$ref": "common.schema.json#/$defs/decimalString"},
+                  "unit": {"$ref": "#/$defs/unit"},
+                  "converted": {"type": "boolean"}
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["op", "label", "expected"],
+            "additionalProperties": false,
+            "properties": {
+              "op": {"const": "gaugeHint"},
+              "label": {"type": "string", "minLength": 1, "maxLength": 12},
+              "expected": {
+                "type": "object",
+                "required": ["label", "known", "ranges"],
+                "additionalProperties": false,
+                "properties": {
+                  "label": {"type": "string"},
+                  "known": {"type": "boolean"},
+                  "ranges": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["source", "minMm", "maxMm"],
+                      "additionalProperties": false,
+                      "properties": {
+                        "source": {"enum": ["tennisCompanion", "tennisWarehouse"]},
+                        "minMm": {"$ref": "common.schema.json#/$defs/decimalString"},
+                        "maxMm": {"$ref": "common.schema.json#/$defs/decimalString"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "unit": {"enum": ["lb", "kg", "N", "mph", "km/h", "m/s", "mm", "cm", "m", "in", "ft", "cm2", "in2", "g", "oz"]}
+  }
+}

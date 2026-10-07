@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.export",
+  "exportedAt": "2026-10-07T01:30:00Z",
+  "app": {"name": "JOVRA", "version": "0.0.0", "platform": "reference"},
+  "scope": "session",
+  "includesAudio": false,
+  "includesOriginals": false,
+  "sessions": [
+    {
+      "id": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a",
+      "title": "Jon vs Alex",
+      "path": "jon-vs-alex.session.json",
+      "sample": true
+    }
+  ],
+  "files": [
+    {
+      "path": "jon-vs-alex.session.json",
+      "role": "sessionJson",
+      "mimeType": "application/json",
+      "bytes": 48446,
+      "sha256": "c5da79e506047fff01645e86acc8137d181eb33917f1318ce32b6e2c66265a7f",
+      "sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a"
+    },
+    {
+      "path": "jon-vs-alex.points.csv",
+      "role": "pointsCsv",
+      "mimeType": "text/csv",
+      "bytes": 19629,
+      "sha256": "f2558c528bb714c187d05bdadf99dcc2b215e03bf0b38f96747c7af7322f0245",
+      "sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a"
+    },
+    {
+      "path": "jon-vs-alex.stats.csv",
+      "role": "statsCsv",
+      "mimeType": "text/csv",
+      "bytes": 1761,
+      "sha256": "e6a55f73d7e67fec83169bb3b904b7d6cd48cece8cd649b06f86f7b7530dcf2a",
+      "sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a"
+    }
+  ],
+  "csvContracts": [{"name": "points", "version": 1}, {"name": "stats", "version": 1}],
+  "contact": "hello@islanddevcrew.com"
+}

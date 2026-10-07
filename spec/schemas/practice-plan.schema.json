@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA practice plan",
+  "description": "Evidence-linked practice (P1-06): deterministic rules over computed stats, each item carrying the evidence row and clips that triggered it. Labelled 'Suggested practice'; fully editable.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "createdAt", "updatedAt", "title", "label", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.practicePlan"},
+    "id": {"$ref": "common.schema.json#/$defs/id"},
+    "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 80},
+    "label": {"const": "Suggested practice"},
+    "sample": {"type": "boolean"},
+    "playerId": {"$ref": "common.schema.json#/$defs/id"},
+    "basedOnSessions": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+    "items": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "goals": {"type": "array", "items": {"$ref": "#/$defs/goal"}}
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "required": ["id", "focus", "drill", "origin", "status", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "focus": {"type": "string", "minLength": 1, "maxLength": 80, "description": "e.g. 'Build a repeatable toss'."},
+        "drill": {
+          "type": "object",
+          "required": ["title", "instructions"],
+          "additionalProperties": false,
+          "properties": {
+            "title": {"type": "string", "minLength": 1, "maxLength": 80},
+            "instructions": {"type": "string", "minLength": 1, "maxLength": 1000},
+            "durationMinutes": {"type": "integer", "minimum": 1, "maximum": 180},
+            "reps": {"type": "integer", "minimum": 1, "maximum": 1000}
+          }
+        },
+        "origin": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": ["kind", "ruleId", "ruleVersion", "condition"],
+              "additionalProperties": false,
+              "properties": {
+                "kind": {"const": "rule"},
+                "ruleId": {"$ref": "common.schema.json#/$defs/capabilityId"},
+                "ruleVersion": {"type": "string", "minLength": 1, "maxLength": 16},
+                "condition": {"type": "string", "minLength": 1, "maxLength": 200, "description": "Human-readable, e.g. 'firstServePointsWon.pct < 72'."}
+              }
+            },
+            {
+              "type": "object",
+              "required": ["kind"],
+              "additionalProperties": false,
+              "properties": {"kind": {"const": "user"}}
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sessionId", "stat", "value", "provenance", "availability"],
+            "additionalProperties": false,
+            "properties": {
+              "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+              "stat": {"type": "string", "minLength": 1, "maxLength": 80},
+              "side": {"$ref": "common.schema.json#/$defs/side"},
+              "value": {"$ref": "common.schema.json#/$defs/ratio"},
+              "text": {"type": "string", "maxLength": 120, "description": "e.g. '28 of 40 first-serve points won'."},
+              "pointIds": {"type": "array", "maxItems": 50, "items": {"$ref": "common.schema.json#/$defs/id"}},
+              "provenance": {"$ref": "common.schema.json#/$defs/provenance"},
+              "availability": {"enum": ["available", "videoUnavailable", "sessionDeleted"]}
+            }
+          }
+        },
+        "status": {"enum": ["planned", "done", "skipped"]},
+        "userEdited": {"type": "boolean"}
+      }
+    },
+    "goal": {
+      "type": "object",
+      "required": ["id", "stat", "target", "sessionKind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "stat": {"type": "string", "minLength": 1, "maxLength": 80},
+        "target": {"type": "integer", "minimum": 0, "maximum": 100, "description": "Target displayed percentage."},
+        "sessionKind": {"enum": ["match", "tiebreakOnly", "practiceSet", "servePractice", "strokePractice", "rally", "lesson", "drill"]},
+        "achievedAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    }
+  }
+}

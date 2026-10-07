@@ -1,0 +1,632 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA session document (session.json / session.jovra.json)",
+  "description": "One session folder's document (ADR-0002). The same JSON is the Drive sidecar and the export format. Scores are never stored: the match log is folded by the scoring engine (ADR-0003).",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "sport", "createdAt", "updatedAt", "title", "sessionKind", "players", "recording", "storage", "archive"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.session"},
+    "id": {"$ref": "common.schema.json#/$defs/id"},
+    "sport": {"$ref": "common.schema.json#/$defs/sport"},
+    "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 120},
+    "sample": {"$ref": "#/$defs/sampleInfo"},
+    "sessionKind": {"enum": ["match", "tiebreakOnly", "practiceSet", "servePractice", "strokePractice", "rally", "lesson", "drill"]},
+    "capturePurpose": {"enum": ["match", "sideOnTechnique"]},
+    "players": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"$ref": "#/$defs/player"}},
+    "sides": {"$ref": "#/$defs/sides"},
+    "match": {"$ref": "#/$defs/match"},
+    "recording": {"$ref": "#/$defs/recording"},
+    "marks": {"type": "array", "items": {"$ref": "#/$defs/mark"}},
+    "shots": {"type": "array", "items": {"$ref": "#/$defs/shot"}},
+    "calibrations": {"type": "array", "items": {"$ref": "#/$defs/calibration"}},
+    "annotations": {"type": "array", "items": {"$ref": "#/$defs/annotation"}},
+    "voiceNotes": {"type": "array", "items": {"$ref": "#/$defs/voiceNote"}},
+    "comparisons": {"type": "array", "items": {"$ref": "#/$defs/comparison"}},
+    "derivedValues": {"type": "array", "items": {"$ref": "#/$defs/derivedValue"}},
+    "analysis": {"$ref": "#/$defs/analysis"},
+    "review": {"$ref": "#/$defs/review"},
+    "archive": {"$ref": "#/$defs/archiveState"},
+    "storage": {"$ref": "#/$defs/storagePolicy"},
+    "equipmentUse": {"type": "array", "items": {"$ref": "#/$defs/equipmentUse"}},
+    "consent": {"$ref": "#/$defs/consent"},
+    "notes": {"type": "string", "maxLength": 4000}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"sessionKind": {"enum": ["match", "tiebreakOnly", "practiceSet"]}}},
+      "then": {"required": ["sides", "match"]}
+    }
+  ],
+  "$defs": {
+    "sampleInfo": {
+      "description": "Present only on demo/sample content. The UI must badge it 'Sample' (CLAUDE.md hard rule 1).",
+      "type": "object",
+      "required": ["label", "synthetic", "generator"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"const": "Sample"},
+        "synthetic": {"type": "boolean"},
+        "generator": {"type": "string", "minLength": 1, "maxLength": 120}
+      }
+    },
+    "player": {
+      "type": "object",
+      "required": ["id", "displayName", "handedness", "backhand", "isSelf"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "displayName": {"type": "string", "minLength": 1, "maxLength": 60},
+        "handedness": {"enum": ["right", "left", "unknown"]},
+        "backhand": {"enum": ["oneHanded", "twoHanded", "unknown"]},
+        "isSelf": {"type": "boolean"},
+        "level": {"type": "string", "maxLength": 40},
+        "profileId": {"$ref": "common.schema.json#/$defs/id"}
+      }
+    },
+    "sides": {
+      "description": "Who plays on which side. Singles: one id each; doubles: two each. Practice may leave B empty.",
+      "type": "object",
+      "required": ["A", "B"],
+      "additionalProperties": false,
+      "properties": {
+        "A": {"type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "common.schema.json#/$defs/id"}},
+        "B": {"type": "array", "minItems": 0, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "common.schema.json#/$defs/id"}}
+      }
+    },
+    "match": {
+      "type": "object",
+      "required": ["format", "toss", "log"],
+      "additionalProperties": false,
+      "properties": {
+        "format": {"$ref": "#/$defs/matchFormat"},
+        "toss": {"$ref": "#/$defs/toss"},
+        "log": {"type": "array", "items": {"$ref": "#/$defs/logEvent"}}
+      }
+    },
+    "matchFormat": {
+      "description": "Explicit format parameters (tennis-rules-and-stats.md §1.4-§1.5). presetId is a label; the engine reads only the parameters.",
+      "type": "object",
+      "required": ["presetId", "setsToWin", "gameScoring", "set", "lets"],
+      "additionalProperties": false,
+      "properties": {
+        "presetId": {"enum": ["club_bo3", "usta_mtb", "noad_mtb", "slam_bo5", "slam_bo3", "pro_set_8", "short_sets", "fast4", "tb_only_7", "tb_only_10", "best_of_1", "custom"]},
+        "setsToWin": {"enum": [1, 2, 3]},
+        "gameScoring": {"enum": ["ad", "noAd"]},
+        "set": {"$ref": "#/$defs/setRule"},
+        "finalSet": {"$ref": "#/$defs/setRule"},
+        "lets": {"enum": ["let", "noLet"]},
+        "ruleStatus": {
+          "description": "UNVERIFIED presets (Fast4, tour doubles) are parameters, not confirmed rules.",
+          "enum": ["observed", "unverified"]
+        }
+      }
+    },
+    "setRule": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "games", "tiebreakAt", "tiebreak"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"const": "tiebreakSet"},
+            "games": {"type": "integer", "minimum": 1, "maximum": 12},
+            "tiebreakAt": {"type": "integer", "minimum": 1, "maximum": 12},
+            "tiebreak": {"$ref": "#/$defs/tiebreakRule"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "games"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"const": "advantageSet"},
+            "games": {"type": "integer", "minimum": 1, "maximum": 12}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["kind", "tiebreak"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"const": "matchTiebreak"},
+            "tiebreak": {"$ref": "#/$defs/tiebreakRule"}
+          }
+        }
+      ]
+    },
+    "tiebreakRule": {
+      "type": "object",
+      "required": ["points"],
+      "additionalProperties": false,
+      "properties": {
+        "points": {"type": "integer", "minimum": 3, "maximum": 21},
+        "suddenDeathAt": {"type": "integer", "minimum": 2, "maximum": 20, "description": "At this score all, the next point wins (Fast4 / short-set TB: 4)."},
+        "endChange": {"enum": ["every6", "coman", "after4"], "description": "Default every6."},
+        "suddenDeathSide": {"enum": ["alternate", "receiverChooses"], "description": "Only with suddenDeathAt. The half served to on the sudden-death point: alternate (default) keeps the tie-break parity; receiverChooses treats it like the No-Ad deciding point (the point's decidingPointSide, null when unrecorded). ITF App VI.2 leaves serve order to the sanctioning body."}
+      }
+    },
+    "toss": {
+      "type": "object",
+      "required": ["firstServer", "startingEnds"],
+      "additionalProperties": false,
+      "properties": {
+        "firstServer": {"$ref": "common.schema.json#/$defs/id"},
+        "startingEnds": {
+          "type": "object",
+          "required": ["A", "B"],
+          "additionalProperties": false,
+          "properties": {
+            "A": {"enum": ["near", "far"]},
+            "B": {"enum": ["near", "far"]}
+          }
+        },
+        "tossWinner": {"$ref": "common.schema.json#/$defs/side"},
+        "tossChoice": {"enum": ["serve", "receive", "end", "deferred"]}
+      }
+    },
+    "logEvent": {
+      "oneOf": [
+        {"$ref": "#/$defs/pointEvent"},
+        {"$ref": "#/$defs/voidEvent"},
+        {"$ref": "#/$defs/doublesOrderEvent"},
+        {"$ref": "#/$defs/checkpointEvent"},
+        {"$ref": "#/$defs/penaltyEvent"},
+        {"$ref": "#/$defs/endEvent"},
+        {"$ref": "#/$defs/rallyLetEvent"}
+      ]
+    },
+    "seq": {"type": "integer", "minimum": 1, "description": "Append order; strictly increasing within a log."},
+    "pointEvent": {
+      "description": "One played point. detected = automatic suggestion (kept for benchmarking); reviewed = the user's decision. The effective outcome is reviewed when present (whole block).",
+      "type": "object",
+      "required": ["id", "seq", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "seq": {"$ref": "#/$defs/seq"},
+        "type": {"const": "point"},
+        "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "supersedes": {"$ref": "common.schema.json#/$defs/id"},
+        "insertBefore": {"$ref": "common.schema.json#/$defs/id"},
+        "recordedServer": {"$ref": "common.schema.json#/$defs/id", "description": "Observed server (tag or video). A mismatch with the rules-derived server raises serverMismatch."},
+        "decidingPointSide": {"enum": ["deuce", "ad"], "description": "No-Ad deciding point (or a receiverChooses sudden-death tie-break point): the side the receiver(s) chose. Observed, never derived. Recorded on any other point it is ignored and raises decidingPointSideIgnored."},
+        "tStartMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "tEndMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "detected": {"$ref": "#/$defs/outcome"},
+        "reviewed": {"$ref": "#/$defs/outcome"},
+        "reviewState": {"enum": ["unreviewed", "needsReview", "reviewed"]},
+        "note": {"type": "string", "maxLength": 500}
+      },
+      "anyOf": [{"required": ["detected"]}, {"required": ["reviewed"]}],
+      "not": {"required": ["supersedes", "insertBefore"]}
+    },
+    "outcome": {
+      "type": "object",
+      "required": ["winner", "endType", "provenance", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "winner": {"enum": ["A", "B", "unknown"], "description": "unknown makes every later score provisional."},
+        "endType": {"enum": ["ace", "serviceWinner", "doubleFault", "winner", "forcedError", "unforcedError", "hindrance", "unknown"]},
+        "serves": {"type": "array", "maxItems": 12, "items": {"$ref": "#/$defs/serveAttempt"}},
+        "strokeCount": {"type": "integer", "minimum": 0, "description": "Racket-ball contacts in live play ('Shots'): DF 0, ace 1, missed return 2."},
+        "rallyLength": {"type": "integer", "minimum": 0, "description": "Only when observed directly; otherwise derived (serve counts, final error does not)."},
+        "errorDirection": {"enum": ["net", "long", "wide", "unknown"]},
+        "provenance": {"$ref": "common.schema.json#/$defs/provenanceStatus"},
+        "source": {"$ref": "common.schema.json#/$defs/source"},
+        "capabilityId": {"$ref": "common.schema.json#/$defs/capabilityId"},
+        "capabilityVersion": {"type": "string", "minLength": 1, "maxLength": 64},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "serveAttempt": {
+      "type": "object",
+      "required": ["result"],
+      "additionalProperties": false,
+      "properties": {
+        "result": {"enum": ["in", "fault", "let"], "description": "A let is not an attempt and does not cancel an earlier fault."},
+        "faultType": {"enum": ["net", "long", "wide", "footFault", "hitFixture", "other"]},
+        "cause": {"enum": ["timeViolation"]},
+        "tMs": {"$ref": "common.schema.json#/$defs/timeMs"}
+      }
+    },
+    "voidEvent": {
+      "description": "Undo: removes target. Voiding a void restores its target (redo).",
+      "type": "object",
+      "required": ["id", "seq", "type", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "seq": {"$ref": "#/$defs/seq"},
+        "type": {"const": "void"},
+        "target": {"$ref": "common.schema.json#/$defs/id"},
+        "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "source": {"$ref": "common.schema.json#/$defs/source"}
+      }
+    },
+    "doublesOrderEvent": {
+      "description": "Per set: rotation [firstServer, secondServer, partner(firstServer), partner(secondServer)] and each team's deuce-court receiver. Missing sets carry the previous set's choices. The servers must be on different teams and deuceReceivers.A / .B must be a player of side A / B (Rule 15), else the log is rejected with doublesOrderInvalid; an id outside sides is unknownPlayer.",
+      "type": "object",
+      "required": ["id", "seq", "type", "setIndex", "firstServer", "secondServer", "deuceReceivers"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "seq": {"$ref": "#/$defs/seq"},
+        "type": {"const": "doublesOrder"},
+        "setIndex": {"type": "integer", "minimum": 0, "maximum": 4},
+        "firstServer": {"$ref": "common.schema.json#/$defs/id"},
+        "secondServer": {"$ref": "common.schema.json#/$defs/id"},
+        "deuceReceivers": {
+          "type": "object",
+          "required": ["A", "B"],
+          "additionalProperties": false,
+          "properties": {
+            "A": {"$ref": "common.schema.json#/$defs/id"},
+            "B": {"$ref": "common.schema.json#/$defs/id"}
+          }
+        },
+        "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "source": {"$ref": "common.schema.json#/$defs/source"}
+      }
+    },
+    "checkpointEvent": {
+      "description": "An as-called game score entered at a changeover. Compared with the rules-derived score; never overrides it.",
+      "type": "object",
+      "required": ["id", "seq", "type", "setIndex", "games"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "seq": {"$ref": "#/$defs/seq"},
+        "type": {"const": "checkpoint"},
+        "setIndex": {"type": "integer", "minimum": 0, "maximum": 4},
+        "games": {"$ref": "common.schema.json#/$defs/sideCounts"},
+        "supersedes": {"$ref": "common.schema.json#/$defs/id"},
+        "insertBefore": {"$ref": "common.schema.json#/$defs/id"},
+        "tMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "source": {"$ref": "common.schema.json#/$defs/source"}
+      },
+      "not": {"required": ["supersedes", "insertBefore"]}
+    },
+    "penaltyEvent": {
+      "description": "Point penalty: occupies a point slot won by the opponent (counts in total points, not service/return points). Game penalty: opponent awarded the game; in a set tie-break the penalised side loses the set.",
+      "type": "object",
+      "required": ["id", "seq", "type", "kind", "player"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "seq": {"$ref": "#/$defs/seq"},
+        "type": {"const": "penalty"},
+        "kind": {"enum": ["point", "game"]},
+        "player": {"$ref": "common.schema.json#/$defs/id"},
+        "reason": {"enum": ["codeViolation", "timeViolation", "other"]},
+        "supersedes": {"$ref": "common.schema.json#/$defs/id"},
+        "insertBefore": {"$ref": "common.schema.json#/$defs/id"},
+        "tMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "source": {"$ref": "common.schema.json#/$defs/source"}
+      },
+      "not": {"required": ["supersedes", "insertBefore"]}
+    },
+    "endEvent": {
+      "description": "Terminations (USTA Table 10). player is the one who retires / is defaulted / gives the walkover.",
+      "type": "object",
+      "required": ["id", "seq", "type", "player"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "seq": {"$ref": "#/$defs/seq"},
+        "type": {"enum": ["retirement", "default", "walkover"]},
+        "player": {"$ref": "common.schema.json#/$defs/id"},
+        "reason": {"enum": ["injury", "illness", "personalCircumstances", "pointPenaltySystem", "late", "noShow", "other"]},
+        "supersedes": {"$ref": "common.schema.json#/$defs/id"},
+        "tMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "source": {"$ref": "common.schema.json#/$defs/source"}
+      }
+    },
+    "rallyLetEvent": {
+      "description": "Whole point replayed (Rule 23). Consumes no point slot; kept for the timeline.",
+      "type": "object",
+      "required": ["id", "seq", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "seq": {"$ref": "#/$defs/seq"},
+        "type": {"const": "rallyLet"},
+        "tStartMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "tEndMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "insertBefore": {"$ref": "common.schema.json#/$defs/id"},
+        "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "source": {"$ref": "common.schema.json#/$defs/source"}
+      }
+    },
+    "recording": {
+      "type": "object",
+      "required": ["mode", "segments", "gaps", "microphone", "mediaAvailable"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {"enum": ["camera", "import", "simulatorFixture", "none"]},
+        "importSource": {"enum": ["photos", "files", "googleDrive"]},
+        "startedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "timeZone": {"$ref": "common.schema.json#/$defs/timeZone"},
+        "durationMs": {"type": "integer", "minimum": 0},
+        "segments": {"type": "array", "items": {"$ref": "#/$defs/segment"}},
+        "gaps": {"type": "array", "items": {"$ref": "#/$defs/gap"}},
+        "microphone": {"enum": ["granted", "denied", "notRequested", "unavailable"], "description": "Optional (D5); recording works without it."},
+        "mediaAvailable": {"type": "boolean", "description": "False when the session has no playable original (sample fixtures, archived-only, manual log)."},
+        "device": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "model": {"type": "string", "maxLength": 60},
+            "osVersion": {"type": "string", "maxLength": 30},
+            "cameraPreset": {"type": "string", "maxLength": 40}
+          }
+        }
+      }
+    },
+    "segment": {
+      "description": "A durable recording fragment file. startMs places it on the session timeline.",
+      "type": "object",
+      "required": ["id", "index", "file", "startMs", "durationMs", "frameRate", "width", "height", "codec", "hasAudio", "finalized"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "index": {"type": "integer", "minimum": 0},
+        "file": {"$ref": "common.schema.json#/$defs/fileRef"},
+        "startMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "durationMs": {"type": "integer", "minimum": 0},
+        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate"},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "codec": {"enum": ["hevc", "h264", "prores", "other"]},
+        "hasAudio": {"type": "boolean"},
+        "rotationDegrees": {"enum": [0, 90, 180, 270]},
+        "finalized": {"type": "boolean"},
+        "recoveredAfterInterruption": {"type": "boolean"}
+      }
+    },
+    "gap": {
+      "type": "object",
+      "required": ["startMs", "endMs", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "startMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "endMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "reason": {"enum": ["interruption", "thermal", "backgrounded", "lowStorage", "cameraError", "userPaused", "other"]}
+      }
+    },
+    "mark": {
+      "type": "object",
+      "required": ["id", "tMs", "kind", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "tMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "kind": {"enum": ["point", "note", "highlight", "stringBroke", "cameraMoved"]},
+        "note": {"type": "string", "maxLength": 500},
+        "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
+      }
+    },
+    "shot": {
+      "type": "object",
+      "required": ["id", "hitter", "stroke", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "pointId": {"$ref": "common.schema.json#/$defs/id"},
+        "tMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "hitter": {"$ref": "common.schema.json#/$defs/id"},
+        "stroke": {"enum": ["serve", "forehand", "backhand", "volley", "overhead", "dropShot", "lob", "other", "unknown"]},
+        "placement": {
+          "type": "object",
+          "required": ["court", "inOut"],
+          "additionalProperties": false,
+          "properties": {
+            "court": {"$ref": "common.schema.json#/$defs/point2"},
+            "zone": {"enum": ["deep", "mid", "short"]},
+            "inOut": {"enum": ["in", "out", "needsReview"]},
+            "calibrationId": {"$ref": "common.schema.json#/$defs/id"}
+          }
+        },
+        "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
+      }
+    },
+    "calibration": {
+      "description": "Manual 4-tap court calibration (singles court corners). Camera-moved detection may invalidate it.",
+      "type": "object",
+      "required": ["id", "method", "frameMs", "imagePoints", "courtPoints", "status", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "method": {"enum": ["fourTap"]},
+        "frameMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "imagePoints": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "common.schema.json#/$defs/point2"}},
+        "courtPoints": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "common.schema.json#/$defs/point2"}},
+        "homography": {"type": "array", "minItems": 9, "maxItems": 9, "items": {"type": "number"}},
+        "residualPx": {"type": "number", "minimum": 0},
+        "status": {"enum": ["valid", "needsReview", "invalid", "cameraMoved"]},
+        "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "required": ["id", "kind", "fromMs", "toMs", "points", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "kind": {"enum": ["line", "arrow", "circle", "angle", "freehand", "text", "spotlight", "stopwatch"]},
+        "fromMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "toMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "points": {"type": "array", "maxItems": 512, "items": {"$ref": "common.schema.json#/$defs/point2"}},
+        "text": {"type": "string", "maxLength": 200},
+        "colorRole": {"enum": ["accent", "clay", "ivory", "charcoal"]},
+        "comparisonId": {"$ref": "common.schema.json#/$defs/id"},
+        "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
+      }
+    },
+    "voiceNote": {
+      "type": "object",
+      "required": ["id", "file", "durationMs", "createdAt"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "file": {"$ref": "common.schema.json#/$defs/fileRef"},
+        "durationMs": {"type": "integer", "minimum": 0},
+        "pinnedAtMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "comparisonId": {"$ref": "common.schema.json#/$defs/id"},
+        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "transcript": {
+          "type": "object",
+          "required": ["text", "provenance"],
+          "additionalProperties": false,
+          "properties": {
+            "text": {"type": "string", "maxLength": 4000},
+            "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
+          }
+        }
+      }
+    },
+    "comparison": {
+      "description": "Two personal recordings aligned by a sync event time (never a frame index).",
+      "type": "object",
+      "required": ["id", "left", "right", "syncedAt", "createdAt"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "title": {"type": "string", "maxLength": 120},
+        "left": {"$ref": "#/$defs/comparisonSide"},
+        "right": {"$ref": "#/$defs/comparisonSide"},
+        "syncedAt": {"enum": ["contact", "custom", "unsynced"]},
+        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    },
+    "comparisonSide": {
+      "type": "object",
+      "required": ["sessionId", "syncTimeMs"],
+      "additionalProperties": false,
+      "properties": {
+        "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+        "syncTimeMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "nudgeFrames": {"type": "integer", "minimum": -600, "maximum": 600}
+      }
+    },
+    "derivedValue": {
+      "description": "Any stored analysis output (estimated serve speed, detected hit times, camera-moved flags). Provenance is mandatory and names its capability.",
+      "type": "object",
+      "required": ["id", "key", "value", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "key": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*(\\.[a-z][a-zA-Z0-9]*)*$"},
+        "value": {"type": ["string", "integer", "number", "boolean"]},
+        "unit": {"type": "string", "maxLength": 16},
+        "label": {"type": "string", "maxLength": 80, "description": "Exact UI wording, e.g. 'Estimated average speed, contact→bounce'."},
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pointId": {"$ref": "common.schema.json#/$defs/id"},
+            "shotId": {"$ref": "common.schema.json#/$defs/id"},
+            "fromMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+            "toMs": {"$ref": "common.schema.json#/$defs/timeMs"}
+          }
+        },
+        "provenance": {
+          "allOf": [
+            {"$ref": "common.schema.json#/$defs/provenance"},
+            {"required": ["capabilityId"]}
+          ]
+        }
+      }
+    },
+    "analysis": {
+      "description": "Analysis state is independent of the video, review and archive states (P0-07).",
+      "type": "object",
+      "required": ["state", "runs"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["notRequested", "queued", "running", "done", "partial", "failed"]},
+        "runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["capabilityId", "capabilityVersion", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "capabilityId": {"$ref": "common.schema.json#/$defs/capabilityId"},
+              "capabilityVersion": {"type": "string", "minLength": 1, "maxLength": 64},
+              "status": {"enum": ["queued", "running", "done", "failed", "skipped"]},
+              "startedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+              "finishedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+              "error": {"type": "string", "maxLength": 500}
+            }
+          }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["notStarted", "inProgress", "complete"]},
+        "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    },
+    "archiveState": {
+      "description": "Archive axis of the library (P0-07, D3). 'backedUp' only after size + MD5 (+ SHA-256) verification.",
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["localOnly", "awaitingSetup", "queued", "hashing", "uploading", "verifying", "backedUp", "failed", "needsReconnect", "quotaBlocked"]},
+        "provider": {"enum": ["googleDrive"]},
+        "manifest": {"$ref": "common.schema.json#/$defs/relativePath"},
+        "backedUpAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "lastError": {"type": "string", "maxLength": 500}
+      }
+    },
+    "storagePolicy": {
+      "type": "object",
+      "required": ["originals", "includeInDeviceBackup"],
+      "additionalProperties": false,
+      "properties": {
+        "originals": {"enum": ["onDevice", "archivedOnly", "removed", "none"], "description": "none = the session never had media (manual log, sample)."},
+        "includeInDeviceBackup": {"type": "boolean", "description": "D7: false by default (isExcludedFromBackup)."},
+        "removeAfterVerifiedBackup": {"type": "boolean"}
+      }
+    },
+    "equipmentUse": {
+      "description": "Session to setup link. The label snapshot keeps history readable after edits.",
+      "type": "object",
+      "required": ["id", "playerId", "racketId", "setupLabelSnapshot", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "playerId": {"$ref": "common.schema.json#/$defs/id"},
+        "racketId": {"$ref": "common.schema.json#/$defs/id"},
+        "stringJobId": {"$ref": "common.schema.json#/$defs/id"},
+        "setupLabelSnapshot": {"type": "string", "minLength": 1, "maxLength": 120},
+        "activeMinutes": {"type": "integer", "minimum": 0},
+        "fromMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "toMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "source": {"enum": ["recordedVideo", "importedVideo", "manualLog"]}
+      }
+    },
+    "consent": {
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {"enum": ["informed", "writtenFormAttached", "notRequired", "notRecorded"]},
+        "competitionMode": {"type": "boolean"},
+        "note": {"type": "string", "maxLength": 500}
+      }
+    }
+  }
+}

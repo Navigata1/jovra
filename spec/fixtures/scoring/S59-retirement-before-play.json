@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.scoring",
+  "id": "S59-retirement-before-play",
+  "title": "Retirement logged before the first point is a walkover: Wo [inj], no score",
+  "covers": ["§1.6 USTA Table 10"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "jon", "displayName": "Jon", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "alex", "displayName": "Alex", "handedness": "left", "backhand": "oneHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["jon"], "B": ["alex"]},
+    "toss": {"firstServer": "jon", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [{"id": "e001", "seq": 1, "type": "retirement", "player": "alex", "reason": "injury"}]
+  },
+  "assertions": [
+    {"checkpoint": 0, "path": "fold.match.status", "equals": "walkover"},
+    {"checkpoint": 0, "path": "fold.match.winner", "equals": "A"},
+    {"checkpoint": 0, "path": "fold.match.scoreline", "equals": "w/o"},
+    {"checkpoint": 0, "path": "fold.sets", "equals": []},
+    {
+      "checkpoint": 0,
+      "path": "stats.sides.A.totalPointsWon",
+      "equals": {"n": 0, "d": 0, "pct": null, "display": "—"}
+    }
+  ],
+  "checkpoints": [
+    {
+      "afterSeq": 1,
+      "expected": {
+        "fold": {
+          "match": {
+            "status": "walkover",
+            "doubles": false,
+            "winner": "A",
+            "provisional": false,
+            "setsWon": {"A": 0, "B": 0},
+            "scoreline": "w/o",
+            "pointsPlayed": 0,
+            "rallyLets": 0
+          },
+          "sets": [],
+          "games": [],
+          "points": [],
+          "next": null,
+          "checkpoints": [],
+          "conflicts": [],
+          "history": {"voided": [], "superseded": []},
+          "changes": null
+        },
+        "stats": {
+          "provisional": false,
+          "countedPoints": 0,
+          "excludedPoints": 0,
+          "sides": {
+            "A": {
+              "totalPointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "penaltyPointsAwarded": 0,
+              "servicePoints": 0,
+              "firstServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "firstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "aces": 0,
+              "doubleFaults": 0,
+              "serviceWinners": 0,
+              "servicePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "serviceGamesWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnPointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnFirstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnSecondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnGamesWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "breakPointsSaved": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "breakPointsConverted": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "winners": 0,
+              "forcedErrors": 0,
+              "unforcedErrors": 0,
+              "longestPointStreak": 0,
+              "longestGameStreak": 0
+            },
+            "B": {
+              "totalPointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "penaltyPointsAwarded": 0,
+              "servicePoints": 0,
+              "firstServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "firstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "aces": 0,
+              "doubleFaults": 0,
+              "serviceWinners": 0,
+              "servicePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "serviceGamesWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnPointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnFirstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnSecondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnGamesWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "breakPointsSaved": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "breakPointsConverted": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "winners": 0,
+              "forcedErrors": 0,
+              "unforcedErrors": 0,
+              "longestPointStreak": 0,
+              "longestGameStreak": 0
+            }
+          },
+          "servers": {},
+          "shots": {"total": 0, "pointsWithStrokeCount": 0},
+          "rallyLength": {"0-4": 0, "5-8": 0, "9+": 0, "unknown": 0},
+          "review": {
+            "reviewed": 0,
+            "needsReview": 0,
+            "unreviewed": 0,
+            "completion": {"n": 0, "d": 0, "pct": null, "display": "—"}
+          },
+          "durationMs": null,
+          "momentum": {"window": 10, "side": "A", "series": []}
+        }
+      }
+    }
+  ]
+}

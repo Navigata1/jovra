@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.stats",
+  "id": "T03-doubles-per-server",
+  "title": "Doubles: serve stats per server as well as per team",
+  "covers": ["§6.8"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "ann", "displayName": "Ann", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "amy", "displayName": "Amy", "handedness": "left", "backhand": "twoHanded", "isSelf": false},
+      {"id": "ben", "displayName": "Ben", "handedness": "right", "backhand": "oneHanded", "isSelf": false},
+      {"id": "bob", "displayName": "Bob", "handedness": "right", "backhand": "twoHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["ann", "amy"], "B": ["ben", "bob"]},
+    "toss": {"firstServer": "ann", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "e001", "seq": 1, "type": "doublesOrder", "setIndex": 0, "firstServer": "ann", "secondServer": "ben", "deuceReceivers": {"A": "amy", "B": "bob"}},
+      {"id": "e002", "seq": 2, "type": "point", "reviewed": {"winner": "A", "endType": "ace", "serves": [{"result": "in"}], "strokeCount": 1, "provenance": "manual", "source": "user"}},
+      {"id": "e003", "seq": 3, "type": "point", "reviewed": {"winner": "B", "endType": "doubleFault", "serves": [{"result": "fault"}, {"result": "fault"}], "strokeCount": 0, "provenance": "manual", "source": "user"}},
+      {"id": "e004", "seq": 4, "type": "point", "reviewed": {"winner": "A", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}},
+      {"id": "e005", "seq": 5, "type": "point", "reviewed": {"winner": "A", "endType": "winner", "serves": [{"result": "fault"}, {"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}},
+      {"id": "e006", "seq": 6, "type": "point", "reviewed": {"winner": "A", "endType": "ace", "serves": [{"result": "in"}], "strokeCount": 1, "provenance": "manual", "source": "user"}},
+      {"id": "e007", "seq": 7, "type": "point", "reviewed": {"winner": "B", "endType": "ace", "serves": [{"result": "in"}], "strokeCount": 1, "provenance": "manual", "source": "user"}},
+      {"id": "e008", "seq": 8, "type": "point", "reviewed": {"winner": "B", "endType": "ace", "serves": [{"result": "in"}], "strokeCount": 1, "provenance": "manual", "source": "user"}},
+      {"id": "e009", "seq": 9, "type": "point", "reviewed": {"winner": "B", "endType": "ace", "serves": [{"result": "in"}], "strokeCount": 1, "provenance": "manual", "source": "user"}},
+      {"id": "e010", "seq": 10, "type": "point", "reviewed": {"winner": "B", "endType": "ace", "serves": [{"result": "in"}], "strokeCount": 1, "provenance": "manual", "source": "user"}}
+    ]
+  },
+  "assertions": [
+    {"path": "servers.ann.servicePoints", "equals": 5},
+    {"path": "servers.ann.firstServeIn", "equals": {"n": 3, "d": 5, "pct": 60, "display": "60%"}},
+    {
+      "path": "servers.ann.firstServePointsWon",
+      "equals": {"n": 3, "d": 3, "pct": 100, "display": "100%"}
+    },
+    {
+      "path": "servers.ann.secondServePointsWon",
+      "equals": {"n": 1, "d": 2, "pct": 50, "display": "50%"}
+    },
+    {"path": "servers.ann.aces", "equals": 2},
+    {"path": "servers.ann.doubleFaults", "equals": 1},
+    {"path": "servers.ben.servicePoints", "equals": 4},
+    {"path": "servers.ben.aces", "equals": 4},
+    {"path": "servers.ben.servicePointsWon", "equals": {"n": 4, "d": 4, "pct": 100, "display": "100%"}},
+    {"path": "sides.B.aces", "equals": 4}
+  ],
+  "expected": {
+    "provisional": false,
+    "countedPoints": 9,
+    "excludedPoints": 0,
+    "sides": {
+      "A": {
+        "totalPointsWon": {"n": 4, "d": 9, "pct": 44, "display": "44%"},
+        "penaltyPointsAwarded": 0,
+        "servicePoints": 5,
+        "firstServeIn": {"n": 3, "d": 5, "pct": 60, "display": "60%"},
+        "firstServePointsWon": {"n": 3, "d": 3, "pct": 100, "display": "100%"},
+        "secondServePointsWon": {"n": 1, "d": 2, "pct": 50, "display": "50%"},
+        "secondServeIn": {"n": 1, "d": 2, "pct": 50, "display": "50%"},
+        "aces": 2,
+        "doubleFaults": 1,
+        "serviceWinners": 0,
+        "servicePointsWon": {"n": 4, "d": 5, "pct": 80, "display": "80%"},
+        "serviceGamesWon": {"n": 1, "d": 1, "pct": 100, "display": "100%"},
+        "returnPointsWon": {"n": 0, "d": 4, "pct": 0, "display": "0%"},
+        "returnFirstServePointsWon": {"n": 0, "d": 4, "pct": 0, "display": "0%"},
+        "returnSecondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "returnGamesWon": {"n": 0, "d": 1, "pct": 0, "display": "0%"},
+        "breakPointsSaved": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "breakPointsConverted": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "winners": 2,
+        "forcedErrors": 0,
+        "unforcedErrors": 0,
+        "longestPointStreak": 3,
+        "longestGameStreak": 1
+      },
+      "B": {
+        "totalPointsWon": {"n": 5, "d": 9, "pct": 56, "display": "56%"},
+        "penaltyPointsAwarded": 0,
+        "servicePoints": 4,
+        "firstServeIn": {"n": 4, "d": 4, "pct": 100, "display": "100%"},
+        "firstServePointsWon": {"n": 4, "d": 4, "pct": 100, "display": "100%"},
+        "secondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "secondServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "aces": 4,
+        "doubleFaults": 0,
+        "serviceWinners": 0,
+        "servicePointsWon": {"n": 4, "d": 4, "pct": 100, "display": "100%"},
+        "serviceGamesWon": {"n": 1, "d": 1, "pct": 100, "display": "100%"},
+        "returnPointsWon": {"n": 1, "d": 5, "pct": 20, "display": "20%"},
+        "returnFirstServePointsWon": {"n": 0, "d": 3, "pct": 0, "display": "0%"},
+        "returnSecondServePointsWon": {"n": 1, "d": 2, "pct": 50, "display": "50%"},
+        "returnGamesWon": {"n": 0, "d": 1, "pct": 0, "display": "0%"},
+        "breakPointsSaved": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "breakPointsConverted": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "winners": 0,
+        "forcedErrors": 0,
+        "unforcedErrors": 0,
+        "longestPointStreak": 4,
+        "longestGameStreak": 1
+      }
+    },
+    "servers": {
+      "ann": {
+        "servicePoints": 5,
+        "firstServeIn": {"n": 3, "d": 5, "pct": 60, "display": "60%"},
+        "firstServePointsWon": {"n": 3, "d": 3, "pct": 100, "display": "100%"},
+        "secondServePointsWon": {"n": 1, "d": 2, "pct": 50, "display": "50%"},
+        "secondServeIn": {"n": 1, "d": 2, "pct": 50, "display": "50%"},
+        "aces": 2,
+        "doubleFaults": 1,
+        "serviceWinners": 0,
+        "servicePointsWon": {"n": 4, "d": 5, "pct": 80, "display": "80%"}
+      },
+      "ben": {
+        "servicePoints": 4,
+        "firstServeIn": {"n": 4, "d": 4, "pct": 100, "display": "100%"},
+        "firstServePointsWon": {"n": 4, "d": 4, "pct": 100, "display": "100%"},
+        "secondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "secondServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "aces": 4,
+        "doubleFaults": 0,
+        "serviceWinners": 0,
+        "servicePointsWon": {"n": 4, "d": 4, "pct": 100, "display": "100%"}
+      }
+    },
+    "shots": {"total": 12, "pointsWithStrokeCount": 9},
+    "rallyLength": {"0-4": 9, "5-8": 0, "9+": 0, "unknown": 0},
+    "review": {
+      "reviewed": 0,
+      "needsReview": 0,
+      "unreviewed": 9,
+      "completion": {"n": 0, "d": 9, "pct": 0, "display": "0%"}
+    },
+    "durationMs": null,
+    "momentum": {
+      "window": 10,
+      "side": "A",
+      "series": [[1, 1], [1, 2], [2, 3], [3, 4], [4, 5], [4, 6], [4, 7], [4, 8], [4, 9]]
+    }
+  }
+}

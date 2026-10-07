@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.scoring",
+  "id": "E02-supersede-target-missing",
+  "title": "Rejected: supersedes an event that is not in the effective log",
+  "covers": ["log contract"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "jon", "displayName": "Jon", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "alex", "displayName": "Alex", "handedness": "left", "backhand": "oneHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["jon"], "B": ["alex"]},
+    "toss": {"firstServer": "jon", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "e001", "seq": 1, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "e002", "seq": 2, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "e003", "seq": 3, "type": "point", "supersedes": "missing", "reviewed": {"winner": "B", "endType": "unknown", "provenance": "manual", "source": "user"}}
+    ]
+  },
+  "expectError": {"code": "supersedeTargetMissing"}
+}
