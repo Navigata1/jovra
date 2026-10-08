@@ -205,8 +205,7 @@ language sql stable security definer set search_path = '' as $$
                     and (b.expires_at is null or b.expires_at > now())
                     -- the activity predicate of project_role on both sides: a pending (unapproved) coach shares
                     -- nothing, so a stranger awaiting approval cannot read members' display names (T-DB-63)
-                    and (a.role = 'owner' or a.approved_at is not null)
-                    and (b.role = 'owner' or b.approved_at is not null))
+                    )   -- MUTATION (temporary, reverted next commit): approval predicate removed
 $$;
 
 -- A project whose deletion has started is hidden everywhere (T-DB-31), also from a camera that cannot read it.
