@@ -286,8 +286,8 @@ def lint(profiles: dict, plan: dict, context: dict) -> list:
                 hit("hidden-location", beat)
         previous = beat
     for c in plan["comparisons"]:
-        shown = " ".join(c["display"].values()).lower()
-        if "improv" in shown or "%" in c["display"]["delta"]:
+        shown = " ".join(v for v in c["display"].values() if isinstance(v, str)).lower()
+        if "improv" in shown or "%" in str(c["display"]["delta"]):
             hit("comparison-claim")
         elif c["claim"] == "change" and not (c["before"]["provenance"] in AT_LEAST_REVIEWED
                                              and c["after"]["provenance"] in AT_LEAST_REVIEWED):

@@ -117,9 +117,9 @@ def card(role, template, reason, note=None, overlays=()):
     return beat(role, "title-card", reason, note=note, template=template, overlays=overlays)
 
 
-def _ranked(d: Draft, options: dict) -> list:
-    got = keeper_rules.rank(d.profile["id"], d.context["keepers"], options)
-    return got
+def _ranked(d: Draft, options: dict) -> dict:
+    """The profile's keeper ranking (keepers.rank) over the context's keepers."""
+    return keeper_rules.rank(d.profile["id"], d.context["keepers"], options)
 
 
 # ----- the five profiles ------------------------------------------------------------------------------------------

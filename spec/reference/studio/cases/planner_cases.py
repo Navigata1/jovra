@@ -17,7 +17,7 @@ import copy
 from studio import director, planner
 from studio import keepers as keeper_rules
 from studio.cases.progress_cases import sample_scopes
-from studio.core import apply_patch, canonical_bytes
+from studio.core import Reject, apply_patch, canonical_bytes, require
 
 DIRECTOR = "director"
 PLANNER = "planner"
@@ -206,8 +206,23 @@ def resolve(case: dict, base: dict, planned: dict, record) -> dict:
         if "fromRecord" in case:
             inp["plan"] = copy.deepcopy(record(case["fromRecord"]))
         else:
-            inp["plan"] = apply_patch(planned[case["fromCase"]]["expect"]["plan"], case["planPatch"])
+            source = planned.get(case["fromCase"], {}).get("expect", {})
+            require("plan" in source, "badVector", f"fromCase {case['fromCase']!r} is not a planner case with a plan")
+            inp["plan"] = _patched(source["plan"], case["planPatch"])
     return {"op": case["op"], "input": inp}
+
+
+def _patched(doc: dict, patch: list) -> dict:
+    try:
+        return apply_patch(doc, patch)
+    except (IndexError, KeyError, TypeError, ValueError) as exc:
+        raise Reject("badVector", f"planPatch does not apply to its source plan ({exc!r})") from None
+
+
+def beat_of(case: dict, index: int):
+    """A planned beat of a case, for a patch that moves it (None when a broken reference planned nothing)."""
+    beats = case["expect"].get("plan", {}).get("beats", [])
+    return beats[index] if index < len(beats) else None
 
 
 def context_case(base: dict) -> dict:
@@ -223,7 +238,11 @@ def build_vectors(records: dict, profiles: dict) -> tuple[dict, dict]:
     planned: dict = {}
 
     def run(module, c):
-        return module.run_vector(profiles, resolve(c, base, planned, lambda rel: records[rel]))
+        try:
+            resolved = resolve(c, base, planned, lambda rel: records[rel])
+        except Reject as exc:   # a broken reference cannot crash the generator (the validator regenerates too)
+            return {"rejectCode": exc.code}
+        return module.run_vector(profiles, resolved)
 
     def plan(cid, why, profile, options, assertions, patch=()):
         c = {"id": cid, "why": why, "op": "plan", "contextPatch": list(patch),
@@ -535,8 +554,8 @@ def build_vectors(records: dict, profiles: dict) -> tuple[dict, dict]:
                      {"op": "replace", "path": "/beats/4/keeperId", "value": "k-02"}])
     lint("broadcast-replay-after-the-next-point", "A replay must end before the next point's serve: k-01's replay "
          "(b03) moved after k-02's point", rules(("strict-chronology", "b03")), from_case=b5,
-         plan_patch=[{"op": "replace", "path": "/beats/2", "value": b5["expect"]["plan"]["beats"][3]},
-                     {"op": "replace", "path": "/beats/3", "value": b5["expect"]["plan"]["beats"][2]}])
+         plan_patch=[{"op": "replace", "path": "/beats/2", "value": beat_of(b5, 3)},
+                     {"op": "replace", "path": "/beats/3", "value": beat_of(b5, 2)}])
     lint("final-score-on-incomplete-coverage", "A final score card only when every point is recorded",
          rules(("final-score-incomplete", "b08")), from_case=b5,
          plan_patch=[{"op": "add", "path": "/beats/-", "value": {

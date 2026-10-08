@@ -1,0 +1,46 @@
+delete-body:planner.plan: RESULT: FAIL; 24 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#coach-cut-3min: reference output differs from the stored expectation
+    FAIL spec/studio/fixtures/vectors/planner.json#coach-cut-5min: reference output differs from the stored expectation
+delete-body:director.lint (regenerated): RESULT: FAIL; 20 FAIL lines
+    FAIL spec/studio/fixtures/vectors/director.json#sample-progress-brief-replay-first: findings [], hand value [['replay-before-live', 'b04']]
+    FAIL spec/studio/fixtures/vectors/director.json#replay-at-one-eighth: findings [], hand value [['replay-speed', 'b04']]
+full-ignores-coverage (regenerated): RESULT: FAIL; 4 FAIL lines
+    FAIL spec/studio/fixtures/vectors/director.json#full-match-broadcast: refused: {'code': 'lengthUnavailable', 'message': 'The recording is shorter than 120 min.'}
+    FAIL spec/studio/fixtures/vectors/director.json#short-recording-full: refused: {'code': 'lengthUnavailable', 'message': 'The recording is shorter than 10 min.'}
+over-maximum-length-allowed (regenerated): RESULT: FAIL; 6 FAIL lines
+    FAIL spec/studio/fixtures/vectors/director.json#default-length-rally-pulse: target: 300, hand value 180
+    FAIL spec/studio/fixtures/vectors/director.json#default-length-rally-pulse: length: '5min', hand value '3min'
+no-keepers-not-refused (regenerated): RESULT: FAIL; 5 FAIL lines
+    FAIL spec/studio/fixtures/vectors/director.json#no-keepers-coach-cut: refusal {}, hand value ['noKeepers', 'Mark a few moments first']
+    FAIL spec/studio/fixtures/vectors/director.json#no-keepers-match-broadcast: refusal {}, hand value ['noKeepers', 'Mark a few moments first']
+music-without-rights-played (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#rally-pulse-court-sound: rejected with grammarViolation
+estimated-cue-instructs (regenerated): RESULT: FAIL; 2 FAIL lines
+    FAIL spec/studio/fixtures/vectors/director.json#instruction-without-reviewed-cue: badVector: fromCase 'coach-cut-your-examples' is not a planner case with a plan
+    FAIL spec/studio/fixtures/vectors/planner.json#coach-cut-your-examples: rejected with grammarViolation
+pad-past-the-target (regenerated): RESULT: FAIL; 3 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#progress-story-3min: beats: ['goal title-card card.goal', 'early-evidence live k-02 near-baseline', 'lesson title-card card.lesson', 'lesson title-card card.lesson', 'recent-evidence 
+    FAIL spec/studio/fixtures/vectors/planner.json#progress-story-3min: estimateMs: 218000, hand value 202000
+no-pass-to-the-minimum (regenerated): RESULT: FAIL; 12 FAIL lines
+    FAIL spec/studio/fixtures/vectors/director.json#estimated-cue-as-instruction: findings [['overlay-not-allowed', 'b03'], ['instruction-without-cue', 'b06'], ['instruction-without-cue', 'b07']], hand value [['overlay-not-allowed', '
+    FAIL spec/studio/fixtures/vectors/planner.json#coach-cut-3min: beats: ['goal title-card card.goal', 'example live k-02 near-baseline', 'cue freeze k-02 near-baseline', 'replay replay k-02 near-baseline 1/2', 'example live k-01 nea
+compare-across-method-change (regenerated): RESULT: FAIL; 9 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#progress-story-method-change: beats: ['goal title-card card.goal', 'early-evidence live k-02 near-baseline', 'lesson title-card card.lesson', 'lesson title-card card.lesson', 'recent-
+    FAIL spec/studio/fixtures/vectors/planner.json#progress-story-method-change: estimateMs: 218000, hand value 88000
+no-arrival-card-without-broll (regenerated): RESULT: FAIL; 4 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#court-memories-no-broll: beats: ['match-moment live k-01 near-baseline', 'highlight live k-02 near-baseline', 'match-moment live k-03 near-baseline'], hand value ['arrival title-card 
+    FAIL spec/studio/fixtures/vectors/planner.json#court-memories-no-broll: estimateMs: 162500, hand value 166500
+broadcast-replay-from-primary (regenerated): RESULT: FAIL; 2 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#match-broadcast-5min: beats: ['intro title-card card.match-intro', 'point live k-01 near-baseline', 'replay replay k-01 near-baseline 1/2', 'point live k-02 near-baseline', 'point liv
+    FAIL spec/studio/fixtures/vectors/planner.json#match-broadcast-full: beats: ['intro title-card card.match-intro', 'point live k-01 near-baseline', 'replay replay k-01 near-baseline 1/2', 'point live k-02 near-baseline', 'point liv
+strict-chronology-off (regenerated): RESULT: FAIL; 2 FAIL lines
+    FAIL spec/studio/fixtures/vectors/director.json#broadcast-out-of-order: findings [], hand value [['strict-chronology', 'b05']]
+    FAIL spec/studio/fixtures/vectors/director.json#broadcast-replay-after-the-next-point: findings [], hand value [['strict-chronology', 'b03']]
+free-text-card-accepted (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#card-with-free-text: expected unknownField, got {'beats': 8}
+unknown-keeper-accepted (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#unknown-keeper: expected untrustedReference, got {'beats': 8}
+nondeterministic-order: RESULT: FAIL; 20 FAIL lines
+    FAIL spec/studio/fixtures/vectors/planner.json#coach-cut-3min: reference output differs from the stored expectation
+    FAIL spec/studio/fixtures/vectors/planner.json#coach-cut-5min: reference output differs from the stored expectation
+caught 16 of 16 mutations
