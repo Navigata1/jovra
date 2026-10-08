@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/receipt.pending-offline.json",
+  "cases": [
+    {
+      "id": "pending-with-revision",
+      "why": "A pending draft has not advanced the canonical revision",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/canonicalEventRevision",
+          "value": 43
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "pendingRevision"
+      },
+      "acceptanceRows": [
+        13
+      ]
+    },
+    {
+      "id": "pending-with-record",
+      "why": "A pending draft created nothing",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/appliedRecordId",
+          "value": "evt-43"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "recordWithoutAcceptance"
+      },
+      "acceptanceRows": [
+        13
+      ]
+    }
+  ]
+}

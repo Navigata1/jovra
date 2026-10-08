@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "display",
+  "status": "Status-row semantics; remote elapsed durations are never extrapolated",
+  "cases": [
+    {
+      "id": "c3-silent-recording",
+      "why": "Camera reported Recording, then nothing for 18 s: 12:26 stays frozen, 'May still be recording'",
+      "acceptanceRows": [
+        6
+      ],
+      "device": {
+        "deviceId": "c3",
+        "captureState": "Recording",
+        "lastReportedElapsedMs": 746000
+      },
+      "freshness": "Unknown",
+      "ageMs": 18000,
+      "isLocal": false,
+      "localElapsedMs": null,
+      "expect": {
+        "deviceId": "c3",
+        "freshness": "Unknown",
+        "elapsedMs": 746000,
+        "elapsedSource": "last-reported",
+        "extrapolated": false,
+        "stale": true,
+        "lastHeardAgeMs": 18000,
+        "mayStillBeRecording": true,
+        "captureState": "Recording"
+      }
+    },
+    {
+      "id": "delayed-recording",
+      "why": "9 s since the last report: delayed, frozen, may still be recording",
+      "acceptanceRows": [
+        6
+      ],
+      "device": {
+        "deviceId": "c2",
+        "captureState": "Recording",
+        "lastReportedElapsedMs": 746000
+      },
+      "freshness": "Delayed",
+      "ageMs": 9000,
+      "isLocal": false,
+      "localElapsedMs": null,
+      "expect": {
+        "deviceId": "c2",
+        "freshness": "Delayed",
+        "elapsedMs": 746000,
+        "elapsedSource": "last-reported",
+        "extrapolated": false,
+        "stale": true,
+        "lastHeardAgeMs": 9000,
+        "mayStillBeRecording": true,
+        "captureState": "Recording"
+      }
+    },
+    {
+      "id": "fresh-not-extrapolated",
+      "why": "Even a fresh remote row shows the reported value, not a running clock",
+      "device": {
+        "deviceId": "c1",
+        "captureState": "Recording",
+        "lastReportedElapsedMs": 746000
+      },
+      "freshness": "Fresh",
+      "ageMs": 1000,
+      "isLocal": false,
+      "localElapsedMs": null,
+      "expect": {
+        "deviceId": "c1",
+        "freshness": "Fresh",
+        "elapsedMs": 746000,
+        "elapsedSource": "last-reported",
+        "extrapolated": false,
+        "stale": false,
+        "lastHeardAgeMs": 1000,
+        "mayStillBeRecording": false,
+        "captureState": "Recording"
+      }
+    },
+    {
+      "id": "unknown-no-age",
+      "why": "After a restart the last-heard age is not known either",
+      "acceptanceRows": [
+        3
+      ],
+      "device": {
+        "deviceId": "c3",
+        "captureState": "Recording",
+        "lastReportedElapsedMs": 746000
+      },
+      "freshness": "Unknown",
+      "ageMs": null,
+      "isLocal": false,
+      "localElapsedMs": null,
+      "expect": {
+        "deviceId": "c3",
+        "freshness": "Unknown",
+        "elapsedMs": 746000,
+        "elapsedSource": "last-reported",
+        "extrapolated": false,
+        "stale": true,
+        "lastHeardAgeMs": null,
+        "mayStillBeRecording": true,
+        "captureState": "Recording"
+      }
+    },
+    {
+      "id": "saved-stale",
+      "why": "A saved camera that falls silent is not 'may still be recording'",
+      "device": {
+        "deviceId": "c3",
+        "captureState": "Saved",
+        "lastReportedElapsedMs": 746000
+      },
+      "freshness": "Unknown",
+      "ageMs": 30000,
+      "isLocal": false,
+      "localElapsedMs": null,
+      "expect": {
+        "deviceId": "c3",
+        "freshness": "Unknown",
+        "elapsedMs": 746000,
+        "elapsedSource": "last-reported",
+        "extrapolated": false,
+        "stale": true,
+        "lastHeardAgeMs": 30000,
+        "mayStillBeRecording": false,
+        "captureState": "Saved"
+      }
+    },
+    {
+      "id": "local-timer",
+      "why": "Only the device's own UI runs its local capture timer",
+      "device": {
+        "deviceId": "c4",
+        "captureState": "Recording",
+        "lastReportedElapsedMs": 746000
+      },
+      "freshness": "Fresh",
+      "ageMs": 0,
+      "isLocal": true,
+      "localElapsedMs": 760500,
+      "expect": {
+        "deviceId": "c4",
+        "freshness": "Local",
+        "elapsedMs": 760500,
+        "elapsedSource": "local-timer",
+        "extrapolated": false,
+        "stale": false,
+        "lastHeardAgeMs": 0,
+        "mayStillBeRecording": false,
+        "captureState": "Recording"
+      }
+    }
+  ]
+}

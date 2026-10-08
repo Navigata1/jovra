@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/command.stop-all.json",
+  "cases": [
+    {
+      "id": "unconfirmed-stop-all",
+      "why": "An all-device stop needs explicit confirmation",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/payload/confirmed",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    },
+    {
+      "id": "stop-all-without-label",
+      "why": "Stop-all names its concrete target",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/payload/targetLabel"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    },
+    {
+      "id": "long-capture-ttl",
+      "why": "Capture requests live at most 30 s",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/expiry/ttlMs",
+          "value": 60000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "ttlTooLong"
+      }
+    },
+    {
+      "id": "stop-all-with-revision",
+      "why": "Capture requests do not touch the event log",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/baseEventRevision",
+          "value": 42
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

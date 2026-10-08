@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "jovra.room.snapshot/1",
+  "sample": true,
+  "sessionId": "sample-jon-alex",
+  "hostDeviceId": "c1",
+  "hostEpoch": 3,
+  "hostKeySha256": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+  "snapshotSeq": 8,
+  "eventRevision": 42,
+  "freshnessPolicy": {
+    "freshMaxMs": 5000,
+    "delayedMaxMs": 15000,
+    "proposalOnly": true
+  },
+  "capabilities": {
+    "recordingHealth": true,
+    "manualScore": true,
+    "markForReview": true,
+    "liveServeSpeed": false,
+    "automatedLineCalls": false
+  },
+  "score": {
+    "eventRevision": 42,
+    "label": "manual",
+    "players": [
+      {
+        "playerId": "jon",
+        "games": 5,
+        "point": "30"
+      },
+      {
+        "playerId": "alex",
+        "games": 4,
+        "point": "15"
+      }
+    ]
+  },
+  "roster": {
+    "rosterRevision": 1,
+    "cameraDeviceIds": [
+      "c1",
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6"
+    ]
+  },
+  "devices": [
+    {
+      "deviceId": "c1",
+      "captureInstanceId": "sample-c1-take1",
+      "segmentId": "s1",
+      "deviceSeq": 12,
+      "captureState": "Recording",
+      "captureRole": "primary",
+      "lastReportedElapsedMs": 754000,
+      "observations": {
+        "storageFreeBytes": 41000000000,
+        "estimatedMinutesLeft": 182,
+        "batteryPercent": 71,
+        "charging": false,
+        "lowPowerMode": false,
+        "thermal": "fair"
+      },
+      "ageAtHostMs": 500
+    },
+    {
+      "deviceId": "c2",
+      "captureInstanceId": "sample-c2-take1",
+      "segmentId": "s1",
+      "deviceSeq": 11,
+      "captureState": "Recording",
+      "captureRole": "camera",
+      "lastReportedElapsedMs": 753000,
+      "observations": {
+        "storageFreeBytes": 41000000000,
+        "estimatedMinutesLeft": 182,
+        "batteryPercent": 71,
+        "charging": false,
+        "lowPowerMode": false,
+        "thermal": "fair"
+      },
+      "ageAtHostMs": 1500
+    },
+    {
+      "deviceId": "c3",
+      "captureInstanceId": "sample-c3-take1",
+      "segmentId": "s1",
+      "deviceSeq": 7,
+      "captureState": "Recording",
+      "captureRole": "camera",
+      "lastReportedElapsedMs": 746000,
+      "observations": {
+        "storageFreeBytes": 41000000000,
+        "estimatedMinutesLeft": 182,
+        "batteryPercent": 71,
+        "charging": false,
+        "lowPowerMode": false,
+        "thermal": "fair"
+      },
+      "ageAtHostMs": 17500
+    },
+    {
+      "deviceId": "c4",
+      "captureInstanceId": "sample-c4-take1",
+      "segmentId": "s1",
+      "deviceSeq": 12,
+      "captureState": "Recording",
+      "captureRole": "camera",
+      "lastReportedElapsedMs": 752000,
+      "observations": {
+        "storageFreeBytes": 41000000000,
+        "estimatedMinutesLeft": 182,
+        "batteryPercent": 71,
+        "charging": false,
+        "lowPowerMode": false,
+        "thermal": "fair"
+      },
+      "ageAtHostMs": 500
+    },
+    {
+      "deviceId": "c5",
+      "captureInstanceId": "sample-c5-take1",
+      "segmentId": "s1",
+      "deviceSeq": 12,
+      "captureState": "Recording",
+      "captureRole": "camera",
+      "lastReportedElapsedMs": 754000,
+      "observations": {
+        "storageFreeBytes": 41000000000,
+        "estimatedMinutesLeft": 182,
+        "batteryPercent": 71,
+        "charging": false,
+        "lowPowerMode": false,
+        "thermal": "fair"
+      },
+      "ageAtHostMs": 500
+    },
+    {
+      "deviceId": "c6",
+      "captureInstanceId": "sample-c6-take1",
+      "segmentId": "s1",
+      "deviceSeq": 11,
+      "captureState": "Recording",
+      "captureRole": "camera",
+      "lastReportedElapsedMs": 751000,
+      "observations": {
+        "storageFreeBytes": 41000000000,
+        "estimatedMinutesLeft": 182,
+        "batteryPercent": 71,
+        "charging": false,
+        "lowPowerMode": false,
+        "thermal": "fair"
+      },
+      "ageAtHostMs": 1500
+    }
+  ],
+  "receipts": [
+    {
+      "schemaVersion": "jovra.room.receipt/1",
+      "commandId": "sample-marker-42",
+      "sessionId": "sample-jon-alex",
+      "hostEpoch": 3,
+      "type": "MarkForReview",
+      "status": "Accepted",
+      "reason": null,
+      "canonicalEventRevision": 42,
+      "appliedRecordId": "sample-mark-42",
+      "conflict": null,
+      "deviceResults": []
+    }
+  ]
+}

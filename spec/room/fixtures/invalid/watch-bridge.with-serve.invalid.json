@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/watch-bridge.with-serve.json",
+  "cases": [
+    {
+      "id": "serve-validated-label",
+      "why": "A forwarded result keeps its true label",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/latestServe/label",
+          "value": "validated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "labelExceedsCapability"
+      },
+      "acceptanceRows": [
+        20
+      ]
+    },
+    {
+      "id": "bounce-as-serve",
+      "why": "Only a serve result fills latestServe",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/latestServe",
+          "value": {
+            "schemaVersion": "jovra.room.analysis-result/1",
+            "sample": true,
+            "sessionId": "sample-jon-alex",
+            "sourceRefs": [
+              {
+                "deviceId": "c1",
+                "captureInstanceId": "sample-c1-take1",
+                "segmentId": "s1",
+                "frameRange": {
+                  "startFrame": 45210,
+                  "endFrame": 45330
+                }
+              }
+            ],
+            "producedAt": "2026-10-07T21:28:40Z",
+            "producedAtEventRevision": 42,
+            "reviewState": "reviewNeeded",
+            "scoreEffect": "none",
+            "resultId": "sample-bounce-43",
+            "capabilityId": "bouncePlacement.auto",
+            "kind": "bounceHint",
+            "pointEventId": "sample-point-43",
+            "label": "estimated",
+            "modelVersion": null,
+            "calibrationId": null,
+            "value": null,
+            "units": null,
+            "uncertainty": null,
+            "unavailableReason": "capabilityUnsupported"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "notServeResult"
+      },
+      "acceptanceRows": [
+        22
+      ]
+    },
+    {
+      "id": "live-serve",
+      "why": "v1 never claims live serve speed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/capabilities/liveServeSpeed",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        20
+      ]
+    },
+    {
+      "id": "serve-other-session",
+      "why": "A forwarded result belongs to this session",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/latestServe/sessionId",
+          "value": "other-room"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "sessionMismatch"
+      },
+      "acceptanceRows": [
+        21
+      ]
+    }
+  ]
+}

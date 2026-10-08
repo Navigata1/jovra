@@ -1,0 +1,395 @@
+{
+  "schemaVersion": "jovra.room-fixture.acceptance-map/1",
+  "source": "design-reference/adaptive/brief/acceptance-matrix.md",
+  "rows": [
+    {
+      "row": 1,
+      "scenario": "Phone↔fold inner/outer; rotation; split screen",
+      "protocolTestable": "partial",
+      "covers": [
+        "vectors/ledger.json#restart-no-duplicate"
+      ],
+      "note": "Protocol part only: an identical command retried after recreation applies once. Pane layout, playhead and render/charge continuity are native UI gates."
+    },
+    {
+      "row": 2,
+      "scenario": "Hinge/occlusion/compact height",
+      "protocolTestable": "no",
+      "covers": [],
+      "note": "Layout and window-size behaviour: native UI, emulator and device gates."
+    },
+    {
+      "row": 3,
+      "scenario": "Process death",
+      "protocolTestable": "partial",
+      "covers": [
+        "vectors/bridge.json#watch-restart-keeps-marks",
+        "vectors/display.json#unknown-no-age",
+        "vectors/freshness.json#baseline-lost",
+        "vectors/ledger.json#restart-no-duplicate",
+        "vectors/outbox.json#epoch-mismatch-keeps-drafts",
+        "vectors/outbox.json#epoch-change-reconcile",
+        "vectors/phone-status.json#phone-restart",
+        "vectors/snapshot.json#restart-keeps-replay-protection",
+        "vectors/watch-sample.json#watch-process-restart",
+        "vectors/watch-sample.json#reboot-reused-baseline"
+      ],
+      "note": "Protocol part: monotonic baseline loss makes cached status Unknown; replay marks persist on phone and watch; outbox drafts reconcile after an epoch change. Restoring the draft and the screen after real process death is a native gate."
+    },
+    {
+      "row": 4,
+      "scenario": "Expired/replayed invite",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/invitation.json#replayed-invite",
+        "vectors/invitation.json#join-in-progress",
+        "vectors/invitation.json#expired-invite",
+        "vectors/invitation.json#expired-while-waiting",
+        "vectors/invitation.json#guessed-token",
+        "vectors/invitation.json#proof-bound-to-guest-key",
+        "vectors/invitation.json#proof-bound-to-commitment",
+        "vectors/invitation.json#commitment-mismatch",
+        "vectors/invitation.json#attempts-exhausted",
+        "vectors/invitation.json#display-code-lookup",
+        "vectors/invitation.json#display-code-guessing",
+        "vectors/invitation.json#lookup-ignores-expired",
+        "vectors/invitation.json#joiner-side-checks",
+        "invalid/invitation.invalid.json#long-invite",
+        "invalid/invitation.invalid.json#multi-use",
+        "invalid/invitation.invalid.json#used-without-device",
+        "invalid/invitation-payload.invalid.json#short-token",
+        "invalid/invitation-payload.invalid.json#long-lifetime",
+        "invalid/join-request.invalid.json#bad-proof-format",
+        "invalid/join-request.invalid.json#no-commitment"
+      ],
+      "note": "Host-side expiry, single use, proof, commit-then-reveal verification code, attempt limit, per-source display-code throttling; rejected joins grant nothing."
+    },
+    {
+      "row": 5,
+      "scenario": "Wrong host/session/epoch; arbitrary QR endpoint",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/bridge.json#replayed-payload",
+        "vectors/bridge.json#not-paired-bridge",
+        "vectors/bridge.json#bridge-restart",
+        "vectors/bridge.json#session-regression",
+        "vectors/invitation.json#wrong-session",
+        "vectors/invitation.json#wrong-epoch",
+        "vectors/invitation.json#impostor-host",
+        "vectors/invitation.json#codes-not-confirmed",
+        "vectors/invitation.json#commitment-mismatch",
+        "vectors/invitation.json#host-nonce-binds-code",
+        "vectors/invitation.json#host-transfer-revokes",
+        "vectors/invitation.json#joiner-side-checks",
+        "vectors/invitation.json#strict-qr",
+        "vectors/invitation.json#dnssd-resolved-endpoint",
+        "vectors/ledger.json#forged-issuer",
+        "vectors/ledger.json#epoch-rejection-not-cached",
+        "vectors/ledger.json#session-and-epoch",
+        "vectors/snapshot.json#replay-and-order",
+        "vectors/snapshot.json#wrong-session",
+        "vectors/snapshot.json#old-epoch",
+        "vectors/snapshot.json#wrong-host-key",
+        "vectors/snapshot.json#host-device-changed",
+        "vectors/snapshot.json#unauthenticated-device",
+        "vectors/snapshot.json#device-seq-regression",
+        "vectors/snapshot.json#capture-instance-rollback",
+        "vectors/snapshot.json#event-revision-rollback",
+        "vectors/snapshot.json#device-seq-reused",
+        "vectors/snapshot.json#roster-grows",
+        "vectors/snapshot.json#forged-higher-epoch-ignored",
+        "vectors/snapshot.json#epoch-change-reconcile",
+        "invalid/invitation-payload.invalid.json#web-url-endpoint",
+        "invalid/invitation-payload.invalid.json#hostname-endpoint",
+        "invalid/invitation-payload.invalid.json#public-ip-endpoint",
+        "invalid/invitation-payload.invalid.json#loopback-endpoint",
+        "invalid/invitation-payload.invalid.json#cgnat-endpoint",
+        "invalid/invitation-payload.invalid.json#other-service-type",
+        "invalid/invitation-payload.invalid.json#callback-url",
+        "invalid/invitation-payload.hotspot.invalid.json#open-network",
+        "invalid/invitation-payload.hotspot.invalid.json#short-passphrase",
+        "invalid/invitation-payload.hotspot.invalid.json#network-url",
+        "invalid/invitation-payload.hotspot.invalid.json#public-ip-on-hotspot",
+        "invalid/join-request.invalid.json#guest-equals-host",
+        "invalid/room-snapshot.invalid.json#duplicate-device",
+        "invalid/room-snapshot.invalid.json#device-other-session",
+        "invalid/room-snapshot.invalid.json#no-roster",
+        "invalid/room-snapshot.invalid.json#roster-duplicate",
+        "invalid/room-snapshot.invalid.json#device-not-in-roster",
+        "invalid/watch-bridge.sample.invalid.json#no-bridge-instance"
+      ],
+      "note": "Session, epoch, host key, host device, roster, issuer-to-channel binding and endpoint rules for snapshots, bridge payloads, invitations and commands; strict QR decoding. The real TLS pin and peer binding are native transport gates."
+    },
+    {
+      "row": 6,
+      "scenario": "Camera reports Recording but receiver hears nothing",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/alerts.json#raise-after-3s",
+        "vectors/disconnect.json#host-or-network-lost",
+        "vectors/display.json#c3-silent-recording",
+        "vectors/display.json#delayed-recording",
+        "vectors/freshness.json#unknown-just-over",
+        "vectors/phone-status.json#phone-at-accept",
+        "vectors/phone-status.json#phone-held-4600",
+        "vectors/phone-status.json#phone-local-camera",
+        "vectors/watch-sample.json#design-sample-raw",
+        "vectors/watch-sample.json#missing-camera-row",
+        "invalid/device-status.invalid.json#sender-asserted-fresh",
+        "invalid/device-status.invalid.json#sender-asserted-unknown",
+        "invalid/device-status.invalid.json#sender-asserted-connected",
+        "invalid/device-status.invalid.json#sender-asserted-age",
+        "invalid/room-snapshot.invalid.json#missing-host-age"
+      ],
+      "note": "Freshness thresholds, frozen last-reported elapsed time and 'may still be recording' row semantics."
+    },
+    {
+      "row": 7,
+      "scenario": "Phone sees fresh camera but watch bridge is stale",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/freshness.json#delayed-by-watch-time",
+        "vectors/freshness.json#unknown-by-watch-time",
+        "vectors/watch-sample.json#bridge-stale",
+        "vectors/watch-sample.json#missing-camera-row",
+        "invalid/room-snapshot.invalid.json#device-freshness-field",
+        "invalid/watch-bridge.sample.invalid.json#bridge-device-not-in-roster"
+      ],
+      "note": "Chained ages: a stale bridge makes every camera Unknown on the watch and blocks the aggregate claim."
+    },
+    {
+      "row": 8,
+      "scenario": "Queued watch snapshot arrives after suspension",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/bridge.json#replayed-payload",
+        "vectors/freshness.json#queued-arrives-now",
+        "vectors/freshness.json#interactive-refresh",
+        "vectors/ledger.json#delivery-fails-closed",
+        "vectors/outbox.json#queued-capture-expires",
+        "vectors/phone-status.json#phone-queued",
+        "vectors/watch-sample.json#queued-after-suspension",
+        "vectors/watch-sample.json#interactive-refresh",
+        "invalid/watch-bridge.sample.invalid.json#bounded-without-bound",
+        "invalid/watch-bridge.sample.invalid.json#unbounded-with-bound",
+        "invalid/watch-bridge.sample.invalid.json#queued-but-bounded",
+        "invalid/watch-bridge.sample.invalid.json#interactive-unbounded",
+        "invalid/watch-local.echo-request.invalid.json#echo-without-time"
+      ],
+      "note": "Unbounded (queued) transit is Unknown until an interactive bounded exchange."
+    },
+    {
+      "row": 9,
+      "scenario": "Duplicate identical command",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/ledger.json#duplicate-identical",
+        "vectors/ledger.json#honest-retry-refreshes-age",
+        "invalid/receipt.accepted-point.invalid.json#accepted-without-event"
+      ],
+      "note": "Idempotent identical retry returns the original receipt; one event."
+    },
+    {
+      "row": 10,
+      "scenario": "Same command ID, different payload",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/ledger.json#same-id-different-payload",
+        "vectors/ledger.json#honest-retry-refreshes-age",
+        "vectors/ledger.json#unauthenticated-not-cached"
+      ],
+      "note": "Same id, different payload: rejected and security-logged; the stored receipt stands."
+    },
+    {
+      "row": 11,
+      "scenario": "Two scores against the same revision",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/ledger.json#two-scorers-same-revision",
+        "vectors/outbox.json#offline-conflict",
+        "vectors/outbox.json#chain-broken-held",
+        "invalid/command.point-won.invalid.json#point-without-base",
+        "invalid/receipt.conflicted.invalid.json#conflict-without-detail"
+      ],
+      "note": "Base-revision conflict, including an offline scorer's late flush."
+    },
+    {
+      "row": 12,
+      "scenario": "Undo/correct earlier point",
+      "protocolTestable": "partial",
+      "covers": [
+        "vectors/bridge.json#session-regression",
+        "vectors/ledger.json#undo-recomputes",
+        "vectors/snapshot.json#event-revision-rollback",
+        "invalid/room-snapshot.invalid.json#score-revision-mismatch"
+      ],
+      "note": "The ledger records undo as an event and recomputes the tally from the log; full score/stat/export recomputation is pinned by the core spec/fixtures scoring cases."
+    },
+    {
+      "row": 13,
+      "scenario": "Offline score/marker",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/outbox.json#offline-point",
+        "vectors/outbox.json#offline-conflict",
+        "vectors/outbox.json#chained-drafts",
+        "vectors/outbox.json#chain-broken-held",
+        "vectors/outbox.json#offline-marker",
+        "vectors/outbox.json#epoch-mismatch-keeps-drafts",
+        "invalid/receipt.pending-offline.invalid.json#pending-with-revision",
+        "invalid/receipt.pending-offline.invalid.json#pending-with-record"
+      ],
+      "note": "Offline drafts stay Pending with no canonical revision until a receipt."
+    },
+    {
+      "row": 14,
+      "scenario": "Viewer attempts stop-all/score",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/invitation.json#role-escalation",
+        "vectors/invitation.json#already-member",
+        "vectors/invitation.json#host-is-member",
+        "vectors/ledger.json#viewer-denied",
+        "vectors/ledger.json#forged-issuer",
+        "vectors/ledger.json#host-holds-two-roles",
+        "vectors/ledger.json#watch-cannot-control-capture",
+        "invalid/invitation.invalid.json#camera-with-controls",
+        "invalid/watch-bridge.sample.invalid.json#no-participant",
+        "invalid/watch-bridge.sample.invalid.json#watch-stop-all",
+        "invalid/watch-bridge.sample.invalid.json#watch-exceeds-grant"
+      ],
+      "note": "Role grants come from membership; viewers and claimed roles are refused; invitations cannot escalate."
+    },
+    {
+      "row": 15,
+      "scenario": "Start with camera permission denied/phone backgrounded",
+      "protocolTestable": "partial",
+      "covers": [
+        "vectors/ledger.json#start-denied-or-background",
+        "vectors/ledger.json#start-while-finalizing",
+        "vectors/outbox.json#queued-capture-expires",
+        "invalid/command.point-won.invalid.json#force-record",
+        "invalid/device-status.invalid.json#failed-without-reason"
+      ],
+      "note": "Protocol part: start is a request; permission, background or a still-finalizing take yields Denied per device; no fictitious Recording. Real OS camera, permission and background behaviour is a device gate."
+    },
+    {
+      "row": 16,
+      "scenario": "Stop one/all fan-out partially fails",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/ledger.json#watch-cannot-control-capture",
+        "vectors/ledger.json#stop-all-partial",
+        "vectors/ledger.json#stop-all-no-cameras",
+        "vectors/ledger.json#stop-one",
+        "invalid/command.stop-all.invalid.json#unconfirmed-stop-all",
+        "invalid/command.stop-all.invalid.json#stop-all-without-label",
+        "invalid/command.stop-one.invalid.json#stop-one-two-targets",
+        "invalid/command.stop-one.invalid.json#stop-one-no-target",
+        "invalid/receipt.stop-all-partial.invalid.json#blanket-success",
+        "invalid/receipt.stop-all-partial.invalid.json#stopped-result",
+        "invalid/receipt.stop-all-partial.invalid.json#duplicate-result",
+        "invalid/watch-local.stop-own-phone.invalid.json#stop-other-phone",
+        "invalid/watch-local.stop-own-phone.invalid.json#stop-all-from-watch",
+        "invalid/watch-local.stop-own-phone.invalid.json#unconfirmed-stop"
+      ],
+      "note": "Per-device Accepted/Denied/Failed/TimedOut/Unknown results; no blanket success banner; confirmed, labelled stop-all."
+    },
+    {
+      "row": 17,
+      "scenario": "Host/network disappears",
+      "protocolTestable": "partial",
+      "covers": [
+        "vectors/disconnect.json#host-or-network-lost",
+        "vectors/invitation.json#host-transfer-revokes",
+        "vectors/ledger.json#epoch-rejection-not-cached",
+        "vectors/ledger.json#link-lost-no-stop",
+        "vectors/outbox.json#epoch-mismatch-keeps-drafts",
+        "vectors/outbox.json#epoch-change-reconcile",
+        "vectors/snapshot.json#forged-higher-epoch-ignored",
+        "vectors/snapshot.json#epoch-change-reconcile"
+      ],
+      "note": "Protocol part: disconnect issues no commands; a new host epoch needs an authenticated reconciliation and revokes invitations. That local originals survive and capture keeps running is a native/physical gate."
+    },
+    {
+      "row": 18,
+      "scenario": "Watch rectangular vs round; large fonts",
+      "protocolTestable": "no",
+      "covers": [],
+      "note": "Watch shapes, fonts and accessibility labels: native UI gates."
+    },
+    {
+      "row": 19,
+      "scenario": "Haptics/always-on/low-power",
+      "protocolTestable": "partial",
+      "covers": [
+        "vectors/alerts.json#raise-after-3s",
+        "vectors/alerts.json#blip-under-3s",
+        "vectors/alerts.json#never-recording",
+        "vectors/alerts.json#deferral-45s",
+        "vectors/alerts.json#collapse",
+        "vectors/alerts.json#clear-after-4s",
+        "vectors/alerts.json#one-per-outage-and-5-min-cap",
+        "vectors/alerts.json#ack-closes-outage",
+        "vectors/alerts.json#own-recording-failed-critical",
+        "invalid/watch-bridge.sample.invalid.json#camera-unknown-critical",
+        "invalid/watch-bridge.sample.invalid.json#own-failure-deferred",
+        "invalid/watch-local.ack-alert.invalid.json#ack-without-alert",
+        "invalid/watch-local.ack-alert.invalid.json#ack-with-stop"
+      ],
+      "note": "Protocol part: the AlertPolicy (3 s raise, 4 s clear, one alert per outage, 5 min re-alert cap, deferral to the next point or 45 s, collapse, critical own-phone alerts, acknowledgement) and alert severity. Real haptics, always-on and low-power behaviour are watchOS/Wear OS runtime gates."
+    },
+    {
+      "row": 20,
+      "scenario": "Serve capability absent/calibration missing",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/analysis.json#serve-capability-absent",
+        "vectors/analysis.json#serve-calibration-missing",
+        "vectors/analysis.json#serve-uncalibrated-value",
+        "invalid/analysis-result.serve-previous.invalid.json#no-uncertainty",
+        "invalid/analysis-result.serve-previous.invalid.json#value-and-reason",
+        "invalid/analysis-result.serve-previous.invalid.json#unknown-capability",
+        "invalid/analysis-result.serve-previous.invalid.json#wrist-speed",
+        "invalid/room-snapshot.invalid.json#live-serve-speed",
+        "invalid/watch-bridge.sample.invalid.json#serve-without-capability",
+        "invalid/watch-bridge.with-serve.invalid.json#serve-validated-label",
+        "invalid/watch-bridge.with-serve.invalid.json#live-serve"
+      ],
+      "note": "Absent capability or missing calibration is an explicit unavailable reason; v1 schema forbids live serve speed."
+    },
+    {
+      "row": 21,
+      "scenario": "Result older than current point",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/analysis.json#serve-previous-point",
+        "vectors/analysis.json#serve-current-point",
+        "invalid/watch-bridge.with-serve.invalid.json#serve-other-session"
+      ],
+      "note": "A result keeps its own point and timestamp and is labelled previous."
+    },
+    {
+      "row": 22,
+      "scenario": "Bounce ambiguous/occluded/uncalibrated",
+      "protocolTestable": "yes",
+      "covers": [
+        "vectors/analysis.json#bounce-review-only",
+        "vectors/ledger.json#marker-and-bounce-marks",
+        "invalid/analysis-result.bounce-review.invalid.json#line-call-value",
+        "invalid/analysis-result.serve-previous.invalid.json#score-effect",
+        "invalid/command.mark-for-review.watch.invalid.json#mark-without-reference",
+        "invalid/room-snapshot.invalid.json#automated-line-calls",
+        "invalid/watch-bridge.with-serve.invalid.json#bounce-as-serve"
+      ],
+      "note": "Bounce hints are review marks or unavailable; results have scoreEffect none; v1 forbids automated line calls."
+    },
+    {
+      "row": 23,
+      "scenario": "Six-device endurance",
+      "protocolTestable": "no",
+      "covers": [],
+      "note": "Six-device endurance needs physical devices."
+    }
+  ]
+}

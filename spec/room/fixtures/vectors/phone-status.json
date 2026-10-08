@@ -1,0 +1,193 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "phone-status",
+  "status": "D18: the phone participant path, age = ageAtHostMs + host-to-phone transit + time since accept, over records/room-snapshot.json",
+  "cases": [
+    {
+      "id": "phone-at-accept",
+      "why": "40 ms transit, read at accept: c3 (17.5 s at the host) is Unknown",
+      "snapshotPatch": [],
+      "observation": {
+        "transitBounded": true,
+        "transitMs": 40,
+        "processBaselineId": "sample-phone-boot-1",
+        "acceptedAtMonoMs": 1000
+      },
+      "nowMonoMs": 1000,
+      "currentBaselineId": "sample-phone-boot-1",
+      "localDeviceId": null,
+      "expect": {
+        "freshness": {
+          "c1": "Fresh",
+          "c2": "Fresh",
+          "c3": "Unknown",
+          "c4": "Fresh",
+          "c5": "Fresh",
+          "c6": "Fresh"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 5,
+          "delayed": 0,
+          "unknown": 1,
+          "reportedRecording": 6,
+          "freshRecording": 5,
+          "canClaimAllRecording": false
+        }
+      },
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "phone-held-4600",
+      "why": "4.6 s later every row has aged past 5 s",
+      "snapshotPatch": [],
+      "observation": {
+        "transitBounded": true,
+        "transitMs": 40,
+        "processBaselineId": "sample-phone-boot-1",
+        "acceptedAtMonoMs": 1000
+      },
+      "nowMonoMs": 5600,
+      "currentBaselineId": "sample-phone-boot-1",
+      "localDeviceId": null,
+      "expect": {
+        "freshness": {
+          "c1": "Delayed",
+          "c2": "Delayed",
+          "c3": "Unknown",
+          "c4": "Delayed",
+          "c5": "Delayed",
+          "c6": "Delayed"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 0,
+          "delayed": 5,
+          "unknown": 1,
+          "reportedRecording": 6,
+          "freshRecording": 0,
+          "canClaimAllRecording": false
+        }
+      },
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "phone-local-camera",
+      "why": "The phone is c1; its own capture is Local and counts as fresh, so six recording cameras can be claimed",
+      "snapshotPatch": [
+        {
+          "op": "replace",
+          "path": "/devices/2/ageAtHostMs",
+          "value": 500
+        }
+      ],
+      "observation": {
+        "transitBounded": true,
+        "transitMs": 40,
+        "processBaselineId": "sample-phone-boot-1",
+        "acceptedAtMonoMs": 1000
+      },
+      "nowMonoMs": 1000,
+      "currentBaselineId": "sample-phone-boot-1",
+      "localDeviceId": "c1",
+      "expect": {
+        "freshness": {
+          "c1": "Local",
+          "c2": "Fresh",
+          "c3": "Fresh",
+          "c4": "Fresh",
+          "c5": "Fresh",
+          "c6": "Fresh"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 6,
+          "delayed": 0,
+          "unknown": 0,
+          "reportedRecording": 6,
+          "freshRecording": 6,
+          "canClaimAllRecording": true
+        }
+      },
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "phone-queued",
+      "why": "A snapshot whose transit cannot be bounded is Unknown",
+      "snapshotPatch": [],
+      "observation": {
+        "transitBounded": false,
+        "transitMs": null,
+        "processBaselineId": "sample-phone-boot-1",
+        "acceptedAtMonoMs": 1000
+      },
+      "nowMonoMs": 1000,
+      "currentBaselineId": "sample-phone-boot-1",
+      "localDeviceId": null,
+      "expect": {
+        "freshness": {
+          "c1": "Unknown",
+          "c2": "Unknown",
+          "c3": "Unknown",
+          "c4": "Unknown",
+          "c5": "Unknown",
+          "c6": "Unknown"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 0,
+          "delayed": 0,
+          "unknown": 6,
+          "reportedRecording": 6,
+          "freshRecording": 0,
+          "canClaimAllRecording": false
+        }
+      },
+      "acceptanceRows": [
+        8
+      ]
+    },
+    {
+      "id": "phone-restart",
+      "why": "A restarted phone process has no valid baseline",
+      "snapshotPatch": [],
+      "observation": {
+        "transitBounded": true,
+        "transitMs": 40,
+        "processBaselineId": "sample-phone-boot-1",
+        "acceptedAtMonoMs": 1000
+      },
+      "nowMonoMs": 1000,
+      "currentBaselineId": "sample-phone-boot-2",
+      "localDeviceId": null,
+      "expect": {
+        "freshness": {
+          "c1": "Unknown",
+          "c2": "Unknown",
+          "c3": "Unknown",
+          "c4": "Unknown",
+          "c5": "Unknown",
+          "c6": "Unknown"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 0,
+          "delayed": 0,
+          "unknown": 6,
+          "reportedRecording": 6,
+          "freshRecording": 0,
+          "canClaimAllRecording": false
+        }
+      },
+      "acceptanceRows": [
+        3
+      ]
+    }
+  ]
+}

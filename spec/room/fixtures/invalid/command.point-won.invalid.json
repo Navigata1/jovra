@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/command.point-won.json",
+  "cases": [
+    {
+      "id": "point-without-base",
+      "why": "Score commands carry the base revision",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/baseEventRevision",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        11
+      ]
+    },
+    {
+      "id": "point-with-device-target",
+      "why": "Score commands target the session",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/target",
+          "value": {
+            "scope": "device",
+            "deviceIds": [
+              "c1"
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "force-record",
+      "why": "There is no command that forces remote capture",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/payload",
+          "value": {
+            "type": "ForceRecord"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        15
+      ]
+    },
+    {
+      "id": "watch-without-bridge",
+      "why": "A watch command names its paired-phone bridge",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/issuer/surface",
+          "value": "watch"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "phone-with-bridge",
+      "why": "Only a watch goes through a bridge",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/issuer/bridgeDeviceId",
+          "value": "p-other"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "no-expiry",
+      "why": "Every command expires",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/expiry"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

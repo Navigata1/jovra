@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/invitation-payload.hotspot.json",
+  "cases": [
+    {
+      "id": "open-network",
+      "why": "The court Wi-Fi is never an open network",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/network/security",
+          "value": "open"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "short-passphrase",
+      "why": "WPA passphrases are 8 to 63 characters",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/network/passphrase",
+          "value": "short"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "network-url",
+      "why": "No URL fields at all, including in the network block",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/network/captivePortal",
+          "value": "https://jovra.example/wifi"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "public-ip-on-hotspot",
+      "why": "The hotspot endpoint still passes the LAN allow-list",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/endpoints/0/address",
+          "value": "8.8.4.4"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "endpointNotAllowed"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    }
+  ]
+}

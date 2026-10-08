@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/command.stop-one.json",
+  "cases": [
+    {
+      "id": "stop-one-two-targets",
+      "why": "Stop one targets exactly one device",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/target/deviceIds/-",
+          "value": "c2"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    },
+    {
+      "id": "stop-one-no-target",
+      "why": "Stop one targets exactly one device",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/target/deviceIds",
+          "value": []
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    }
+  ]
+}

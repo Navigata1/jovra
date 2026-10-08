@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "analysis",
+  "status": "Presentation of records/analysis-result.*.json; the registry is spec/contracts/capability-registry.v1.json (read-only)",
+  "cases": [
+    {
+      "id": "serve-capability-absent",
+      "why": "No active capability, no value",
+      "acceptanceRows": [
+        20
+      ],
+      "record": "records/analysis-result.serve-previous.json",
+      "resultPatch": [],
+      "capabilities": {
+        "recordingHealth": true,
+        "manualScore": true,
+        "markForReview": true,
+        "liveServeSpeed": false,
+        "automatedLineCalls": false
+      },
+      "currentPointEventId": "sample-point-42",
+      "expect": {
+        "show": "unavailable",
+        "reason": "capabilityAbsent",
+        "value": null,
+        "scoreEffect": "none"
+      }
+    },
+    {
+      "id": "serve-calibration-missing",
+      "why": "The result explains that calibration is missing",
+      "acceptanceRows": [
+        20
+      ],
+      "record": "records/analysis-result.serve-unavailable.json",
+      "resultPatch": [],
+      "capabilities": {
+        "recordingHealth": true,
+        "manualScore": true,
+        "markForReview": true,
+        "liveServeSpeed": false,
+        "automatedLineCalls": false,
+        "serveSpeedResults": true
+      },
+      "currentPointEventId": "sample-point-43",
+      "expect": {
+        "show": "unavailable",
+        "reason": "calibrationMissing",
+        "value": null,
+        "scoreEffect": "none"
+      }
+    },
+    {
+      "id": "serve-uncalibrated-value",
+      "why": "A value without its calibration is not shown",
+      "acceptanceRows": [
+        20
+      ],
+      "record": "records/analysis-result.serve-previous.json",
+      "resultPatch": [
+        {
+          "op": "replace",
+          "path": "/calibrationId",
+          "value": null
+        }
+      ],
+      "capabilities": {
+        "recordingHealth": true,
+        "manualScore": true,
+        "markForReview": true,
+        "liveServeSpeed": false,
+        "automatedLineCalls": false,
+        "serveSpeedResults": true
+      },
+      "currentPointEventId": "sample-point-42",
+      "expect": {
+        "show": "unavailable",
+        "reason": "calibrationMissing",
+        "value": null,
+        "scoreEffect": "none"
+      }
+    },
+    {
+      "id": "serve-previous-point",
+      "why": "A result from point 42 shown while point 43 is current stays labelled previous",
+      "acceptanceRows": [
+        21
+      ],
+      "record": "records/analysis-result.serve-previous.json",
+      "resultPatch": [],
+      "capabilities": {
+        "recordingHealth": true,
+        "manualScore": true,
+        "markForReview": true,
+        "liveServeSpeed": false,
+        "automatedLineCalls": false,
+        "serveSpeedResults": true
+      },
+      "currentPointEventId": "sample-point-43",
+      "expect": {
+        "show": "previous",
+        "reason": null,
+        "value": "74",
+        "units": "mph",
+        "label": "estimated",
+        "pointEventId": "sample-point-42",
+        "producedAt": "2026-10-07T21:28:40Z",
+        "scoreEffect": "none"
+      }
+    },
+    {
+      "id": "serve-current-point",
+      "why": "Same result while its own point is current",
+      "acceptanceRows": [
+        21
+      ],
+      "record": "records/analysis-result.serve-previous.json",
+      "resultPatch": [],
+      "capabilities": {
+        "recordingHealth": true,
+        "manualScore": true,
+        "markForReview": true,
+        "liveServeSpeed": false,
+        "automatedLineCalls": false,
+        "serveSpeedResults": true
+      },
+      "currentPointEventId": "sample-point-42",
+      "expect": {
+        "show": "current",
+        "value": "74",
+        "units": "mph",
+        "scoreEffect": "none"
+      }
+    },
+    {
+      "id": "bounce-review-only",
+      "why": "An ambiguous bounce is a review bookmark; no line call and no score change",
+      "acceptanceRows": [
+        22
+      ],
+      "record": "records/analysis-result.bounce-review.json",
+      "resultPatch": [],
+      "capabilities": {
+        "recordingHealth": true,
+        "manualScore": true,
+        "markForReview": true,
+        "liveServeSpeed": false,
+        "automatedLineCalls": false,
+        "serveSpeedResults": true
+      },
+      "currentPointEventId": "sample-point-43",
+      "expect": {
+        "show": "unavailable",
+        "reason": "capabilityAbsent",
+        "value": null,
+        "scoreEffect": "none"
+      }
+    },
+    {
+      "id": "reviewed-serve-needs-review",
+      "why": "A result flagged for review is not shown as a number",
+      "record": "records/analysis-result.serve-previous.json",
+      "resultPatch": [
+        {
+          "op": "replace",
+          "path": "/reviewState",
+          "value": "reviewNeeded"
+        }
+      ],
+      "capabilities": {
+        "recordingHealth": true,
+        "manualScore": true,
+        "markForReview": true,
+        "liveServeSpeed": false,
+        "automatedLineCalls": false,
+        "serveSpeedResults": true
+      },
+      "currentPointEventId": "sample-point-42",
+      "expect": {
+        "show": "reviewNeeded",
+        "value": null,
+        "scoreEffect": "none"
+      }
+    }
+  ]
+}

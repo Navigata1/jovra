@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/invitation.json",
+  "cases": [
+    {
+      "id": "long-invite",
+      "why": "Invitations expire within 10 minutes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/expiresAt",
+          "value": "2026-10-07T21:20:01Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteLifetime"
+      },
+      "acceptanceRows": [
+        4
+      ]
+    },
+    {
+      "id": "camera-with-controls",
+      "why": "A camera invitation never carries capture controls (Studio: cameras never get host controls)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/commandRole",
+          "value": "capture-controller"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "cameraCannotControl"
+      },
+      "acceptanceRows": [
+        14
+      ]
+    },
+    {
+      "id": "token-in-record",
+      "why": "The host record stores only a hash of the join token",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/joinToken",
+          "value": "oPNN0f-PlTyYoMPexe5KKg"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "weak-secret",
+      "why": "At least 128 bits of entropy",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/secretBits",
+          "value": 64
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "multi-use",
+      "why": "Single use",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/singleUse",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        4
+      ]
+    },
+    {
+      "id": "no-host-approval",
+      "why": "The host approves every join",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/hostApprovalRequired",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "url-display-code",
+      "why": "The display code is lookup data, never a URL",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/displayCode",
+          "value": "https://jovra.example/j/482"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "used-without-device",
+      "why": "A used invitation names the device and time",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/status",
+          "value": "used"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "usedFields"
+      },
+      "acceptanceRows": [
+        4
+      ]
+    },
+    {
+      "id": "revoked-without-reason",
+      "why": "Revocation states why",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/status",
+          "value": "revoked"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "revokedFields"
+      }
+    }
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/room-snapshot.json",
+  "cases": [
+    {
+      "id": "seven-cameras",
+      "why": "One to six cameras",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/devices/-",
+          "value": {
+            "deviceId": "c7",
+            "captureInstanceId": "sample-c7-take1",
+            "segmentId": "s1",
+            "deviceSeq": 1,
+            "captureState": "Recording",
+            "captureRole": "camera",
+            "lastReportedElapsedMs": 1000,
+            "observations": {
+              "storageFreeBytes": 41000000000,
+              "estimatedMinutesLeft": 182,
+              "batteryPercent": 71,
+              "charging": false,
+              "lowPowerMode": false,
+              "thermal": "fair"
+            },
+            "ageAtHostMs": 500
+          }
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "duplicate-device",
+      "why": "A device appears once",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/devices/5/deviceId",
+          "value": "c1"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "duplicateDevice"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "two-primaries",
+      "why": "One primary camera",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/devices/1/captureRole",
+          "value": "primary"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "primaryCount"
+      }
+    },
+    {
+      "id": "live-serve-speed",
+      "why": "v1 has no live serve speed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/capabilities/liveServeSpeed",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        20
+      ]
+    },
+    {
+      "id": "automated-line-calls",
+      "why": "v1 makes no line calls",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/capabilities/automatedLineCalls",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        22
+      ]
+    },
+    {
+      "id": "score-revision-mismatch",
+      "why": "The score summary is derived at the envelope's revision",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/score/eventRevision",
+          "value": 41
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "scoreRevisionMismatch"
+      },
+      "acceptanceRows": [
+        12
+      ]
+    },
+    {
+      "id": "device-freshness-field",
+      "why": "No sender-asserted freshness inside a snapshot",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/devices/0/freshness",
+          "value": "Fresh"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        7
+      ]
+    },
+    {
+      "id": "missing-host-age",
+      "why": "The host states each device's age",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/devices/0/ageAtHostMs"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "device-other-session",
+      "why": "Embedded entries cannot name another session",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/devices/2/sessionId",
+          "value": "other-room"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "sessionMismatch"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "stale-policy",
+      "why": "Thresholds are the proposed product defaults",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/freshnessPolicy/freshMaxMs",
+          "value": 30000
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "no-roster",
+      "why": "Enrolment comes from the host's roster, never from the rows present (D8)",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/roster"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "roster-duplicate",
+      "why": "A roster lists a camera once",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/roster/cameraDeviceIds/1",
+          "value": "c1"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "device-not-in-roster",
+      "why": "Every device row is on the roster (D8)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/roster/cameraDeviceIds",
+          "value": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "deviceNotInRoster"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    }
+  ]
+}

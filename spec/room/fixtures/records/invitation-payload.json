@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "jovra.room.invitation-payload/1",
+  "sample": true,
+  "inviteId": "inv-c2",
+  "sessionId": "sample-jon-alex",
+  "hostEpoch": 3,
+  "hostKeySha256": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+  "joinToken": "oPNN0f-PlTyYoMPexe5KKg",
+  "nonce": "2V2bl9x1tlTmFxQnwkpQqg",
+  "issuedAt": "2026-10-07T21:10:00Z",
+  "expiresAt": "2026-10-07T21:20:00Z",
+  "captureRole": "camera",
+  "commandRole": "viewer",
+  "displayCode": "JVR-482",
+  "endpoints": [
+    {
+      "kind": "dnssd",
+      "serviceType": "_jovra-room._tcp",
+      "instanceName": "JOVRA Court 3"
+    },
+    {
+      "kind": "lan",
+      "address": "192.168.1.20",
+      "port": 47100
+    }
+  ]
+}
