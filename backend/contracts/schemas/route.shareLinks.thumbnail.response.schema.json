@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GET /s/{token}/thumbnail response",
+  "description": "shareLinks.thumbnail: a response descriptor (status, headers, body). Success body: bytes (image/jpeg). Every response carries X-Request-Id; a JSON body's requestId equals it.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/success"
+    },
+    {
+      "$ref": "#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "success": {
+      "description": "Success: 200 with the whole object's bytes (not in the descriptor). No Set-Cookie, ever.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": 200
+        },
+        "headers": {
+          "type": "object",
+          "required": [
+            "X-Request-Id",
+            "Content-Type",
+            "Content-Length"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "X-Request-Id": {
+              "$ref": "common.schema.json#/$defs/requestIdHeader"
+            },
+            "Content-Type": {
+              "enum": [
+                "image/jpeg"
+              ]
+            },
+            "Content-Length": {
+              "$ref": "common.schema.json#/$defs/contentLengthHeader"
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "description": "An error: the §5 envelope with one of this route's codes at its HTTP status.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            404,
+            429,
+            500
+          ]
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "$ref": "common.schema.json#/$defs/errorBody"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": 404
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "not_found"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 429
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "rate_limited"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 500
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "internal"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

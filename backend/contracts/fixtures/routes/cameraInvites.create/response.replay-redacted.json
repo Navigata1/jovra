@@ -1,0 +1,18 @@
+{
+  "status": 409,
+  "headers": {
+    "X-Request-Id": "00000000-0000-4000-8000-000000000c08",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "secret_not_replayable",
+      "message": "This response carried a secret and is not replayed.",
+      "retryable": false,
+      "details": {
+        "resourceId": "00000000-0000-4000-8000-000000000201"
+      }
+    },
+    "requestId": "00000000-0000-4000-8000-000000000c08"
+  }
+}

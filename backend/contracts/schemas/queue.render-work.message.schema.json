@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "render-work queue message",
+  "description": "A render-work queue message: the attempt id and nothing else (architecture §7.3, security-model §8.4, ADR-0018). No media, URL, user text, token, input or output list: a forged or replayed message can only name an attempt that already exists and is fenced. Any other field is invalid.",
+  "type": "object",
+  "required": [
+    "attemptId"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "attemptId": {
+      "$ref": "common.schema.json#/$defs/uuid"
+    }
+  }
+}

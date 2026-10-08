@@ -1,0 +1,13 @@
+{
+  "headers": {
+    "Authorization": "Bearer sample-access-token-owner-tester",
+    "Idempotency-Key": "00000000-0000-4000-8000-000000000d22",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "kind": "film_view",
+    "inviteeEmail": "viewer.tester@example.test",
+    "artifactId": "00000000-0000-4000-8000-000000000601",
+    "expiresInSec": 604800
+  }
+}

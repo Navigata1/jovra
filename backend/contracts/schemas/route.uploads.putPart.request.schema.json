@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PUT /v1/uploads/{sessionId}/parts/{n} request",
+  "description": "uploads.putPart (jovra-gateway; caller: session holder). Raw bytes; exact Content-Length; the streamed SHA-256 must equal X-Jovra-Part-Sha256. A request descriptor: pathParams, query, headers and body. Raw bytes body (not in the descriptor). Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "sessionId",
+        "n"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sessionId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        },
+        "n": {
+          "description": "Part number, 1 to 10,000.",
+          "type": "string",
+          "pattern": "^([1-9][0-9]{0,3}|10000)$"
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "Authorization",
+        "Content-Type",
+        "Content-Length",
+        "X-Jovra-Part-Sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Authorization": {
+          "$ref": "common.schema.json#/$defs/sessionAuthorization"
+        },
+        "Content-Type": {
+          "const": "application/octet-stream"
+        },
+        "Content-Length": {
+          "$ref": "common.schema.json#/$defs/contentLengthHeader"
+        },
+        "X-Jovra-Part-Sha256": {
+          "description": "SHA-256 of this part's bytes.",
+          "$ref": "common.schema.json#/$defs/sha256"
+        },
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1231 @@
+{
+  "schemaVersion": "jovra.backend-contracts/1",
+  "status": "contract for S82 (gateway) and S97 (iOS client); nothing is provisioned (ADR-0014)",
+  "source": "docs/backend/architecture.md §5 and §5.1; docs/backend/security-model.md §8",
+  "basePath": "/v1 (user gateway), /internal/v1 (jovra-internal), /s (share links)",
+  "descriptors": "Fixtures are HTTP exchange descriptors: a request is {pathParams?, query?, headers, body?}, a response is {status, headers, body?}. Bytes bodies are not in descriptors.",
+  "errorCodes": [
+    {
+      "code": "unauthorized",
+      "status": 401,
+      "basis": "INFERRED from P0401; missing, malformed, expired or wrong-environment credential"
+    },
+    {
+      "code": "demo_not_accepted",
+      "status": 401,
+      "basis": "architecture §2 rule 1 (T-GW-03)"
+    },
+    {
+      "code": "reauth_required",
+      "status": 401,
+      "basis": "architecture §5.1 deletion-requests; security-model §2.2"
+    },
+    {
+      "code": "budget_exceeded",
+      "status": 402,
+      "basis": "INFERRED from P0402"
+    },
+    {
+      "code": "not_found",
+      "status": 404,
+      "basis": "architecture §5 envelope: also returned for an object the caller may not see"
+    },
+    {
+      "code": "conflict",
+      "status": 409,
+      "basis": "INFERRED from P0409; wrong state, slot taken, stale or fenced"
+    },
+    {
+      "code": "already_claimed",
+      "status": 409,
+      "basis": "architecture §5.1 attempt claim"
+    },
+    {
+      "code": "parts_mismatch",
+      "status": 409,
+      "basis": "architecture §6.3 rule 4"
+    },
+    {
+      "code": "requote_required",
+      "status": 409,
+      "basis": "architecture §5.1 job review"
+    },
+    {
+      "code": "dependents",
+      "status": 409,
+      "basis": "architecture §5.1 deletion-requests"
+    },
+    {
+      "code": "secret_not_replayable",
+      "status": 409,
+      "basis": "architecture §5 idempotency"
+    },
+    {
+      "code": "expired",
+      "status": 410,
+      "basis": "INFERRED from P0410"
+    },
+    {
+      "code": "range_not_satisfiable",
+      "status": 416,
+      "basis": "INFERRED; RFC 9110 §15.5.17 for a Range outside the object"
+    },
+    {
+      "code": "invalid",
+      "status": 422,
+      "basis": "INFERRED from P0422; the request does not match its schema or a server-held expectation"
+    },
+    {
+      "code": "idempotency_key_reused",
+      "status": 422,
+      "basis": "architecture §5 idempotency"
+    },
+    {
+      "code": "rate_limited",
+      "status": 429,
+      "basis": "INFERRED from the §5 rate limits and P0429 quotas"
+    },
+    {
+      "code": "internal",
+      "status": 500,
+      "basis": "INFERRED; never carries detail"
+    }
+  ],
+  "queues": [
+    {
+      "name": "render-work",
+      "schema": "queue.render-work.message.schema.json",
+      "description": "Wake-up hint for a render host (architecture §7.3 step 2). Consumed at least once."
+    },
+    {
+      "name": "render-work-dlq",
+      "schema": "queue.render-work.message.schema.json",
+      "description": "Dead letters of render-work (architecture §7.4); the same message, replayed by an operator."
+    }
+  ],
+  "routes": [
+    {
+      "id": "health",
+      "method": "GET",
+      "path": "/v1/health",
+      "worker": "jovra-gateway",
+      "caller": "anyone",
+      "auth": [
+        "none"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.health.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.health.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "internal"
+      ]
+    },
+    {
+      "id": "me",
+      "method": "GET",
+      "path": "/v1/me",
+      "worker": "jovra-gateway",
+      "caller": "user",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.me.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.me.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "internal"
+      ]
+    },
+    {
+      "id": "sources.declare",
+      "method": "POST",
+      "path": "/v1/projects/{projectId}/sources",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.sources.declare.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.sources.declare.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "cameraInvites.create",
+      "method": "POST",
+      "path": "/v1/projects/{projectId}/camera-invites",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.cameraInvites.create.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.cameraInvites.create.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "secret_not_replayable",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "cameraInvites.revoke",
+      "method": "DELETE",
+      "path": "/v1/projects/{projectId}/camera-invites/{inviteId}",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.cameraInvites.revoke.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.cameraInvites.revoke.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "internal"
+      ]
+    },
+    {
+      "id": "cameraInvites.redeem",
+      "method": "POST",
+      "path": "/v1/camera-invites/redeem",
+      "worker": "jovra-gateway",
+      "caller": "guest",
+      "auth": [
+        "none",
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.cameraInvites.redeem.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.cameraInvites.redeem.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "expired",
+        "invalid",
+        "idempotency_key_reused",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "cameraInvites.approve",
+      "method": "POST",
+      "path": "/v1/projects/{projectId}/camera-invites/{inviteId}/approve",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.cameraInvites.approve.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.cameraInvites.approve.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "cameraInvites.capability",
+      "method": "POST",
+      "path": "/v1/camera-invites/redemptions/{redemptionId}/capability",
+      "worker": "jovra-gateway",
+      "caller": "guest",
+      "auth": [
+        "none"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.cameraInvites.capability.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.cameraInvites.capability.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "conflict",
+        "secret_not_replayable",
+        "expired",
+        "invalid",
+        "idempotency_key_reused",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "guestSources.declare",
+      "method": "POST",
+      "path": "/v1/guest/sources",
+      "worker": "jovra-gateway",
+      "caller": "guest capability",
+      "auth": [
+        "guest-signed"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.guestSources.declare.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.guestSources.declare.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "conflict",
+        "expired",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "uploads.open",
+      "method": "POST",
+      "path": "/v1/sources/{sourceId}/uploads",
+      "worker": "jovra-gateway",
+      "caller": "owner or guest",
+      "auth": [
+        "user",
+        "guest-signed"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.uploads.open.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.uploads.open.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "secret_not_replayable",
+        "expired",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "uploads.status",
+      "method": "GET",
+      "path": "/v1/uploads/{sessionId}",
+      "worker": "jovra-gateway",
+      "caller": "session holder",
+      "auth": [
+        "session"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.uploads.status.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.uploads.status.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "expired",
+        "internal"
+      ]
+    },
+    {
+      "id": "uploads.putPart",
+      "method": "PUT",
+      "path": "/v1/uploads/{sessionId}/parts/{n}",
+      "worker": "jovra-gateway",
+      "caller": "session holder",
+      "auth": [
+        "session"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.uploads.putPart.request.schema.json",
+        "body": "bytes"
+      },
+      "response": {
+        "schema": "route.uploads.putPart.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "conflict",
+        "expired",
+        "invalid",
+        "internal"
+      ]
+    },
+    {
+      "id": "uploads.complete",
+      "method": "POST",
+      "path": "/v1/uploads/{sessionId}/complete",
+      "worker": "jovra-gateway",
+      "caller": "session holder",
+      "auth": [
+        "session"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.uploads.complete.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.uploads.complete.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "conflict",
+        "parts_mismatch",
+        "expired",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "uploads.abort",
+      "method": "DELETE",
+      "path": "/v1/uploads/{sessionId}",
+      "worker": "jovra-gateway",
+      "caller": "session holder or owner",
+      "auth": [
+        "session",
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.uploads.abort.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.uploads.abort.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "internal"
+      ]
+    },
+    {
+      "id": "quotes.create",
+      "method": "POST",
+      "path": "/v1/projects/{projectId}/quotes",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.quotes.create.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.quotes.create.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "quotes.accept",
+      "method": "POST",
+      "path": "/v1/quotes/{quoteId}/accept",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.quotes.accept.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.quotes.accept.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "budget_exceeded",
+        "not_found",
+        "conflict",
+        "expired",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "jobs.get",
+      "method": "GET",
+      "path": "/v1/jobs/{jobId}",
+      "worker": "jovra-gateway",
+      "caller": "owner, coach",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.jobs.get.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.jobs.get.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "internal"
+      ]
+    },
+    {
+      "id": "jobs.cancel",
+      "method": "POST",
+      "path": "/v1/jobs/{jobId}/cancel",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.jobs.cancel.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.jobs.cancel.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "jobs.pause",
+      "method": "POST",
+      "path": "/v1/jobs/{jobId}/pause",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.jobs.pause.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.jobs.pause.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "jobs.resume",
+      "method": "POST",
+      "path": "/v1/jobs/{jobId}/resume",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.jobs.resume.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.jobs.resume.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "budget_exceeded",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "jobs.review",
+      "method": "POST",
+      "path": "/v1/jobs/{jobId}/review",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.jobs.review.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.jobs.review.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "requote_required",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "jobs.retry",
+      "method": "POST",
+      "path": "/v1/jobs/{jobId}/retry",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.jobs.retry.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.jobs.retry.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "budget_exceeded",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "artifacts.content",
+      "method": "GET",
+      "path": "/v1/artifacts/{artifactId}/content",
+      "worker": "jovra-gateway",
+      "caller": "owner, coach, granted viewer",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.artifacts.content.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.artifacts.content.response.schema.json",
+        "body": "bytes"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "range_not_satisfiable",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "shareLinks.create",
+      "method": "POST",
+      "path": "/v1/artifacts/{artifactId}/share-links",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.shareLinks.create.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.shareLinks.create.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "secret_not_replayable",
+        "invalid",
+        "idempotency_key_reused",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "shareLinks.revoke",
+      "method": "DELETE",
+      "path": "/v1/share-links/{shareLinkId}",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.shareLinks.revoke.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.shareLinks.revoke.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "internal"
+      ]
+    },
+    {
+      "id": "shareLinks.open",
+      "method": "GET",
+      "path": "/s/{token}",
+      "worker": "jovra-gateway",
+      "caller": "anyone with the link",
+      "auth": [
+        "none"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.shareLinks.open.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.shareLinks.open.response.schema.json",
+        "body": "bytes"
+      },
+      "errors": [
+        "not_found",
+        "range_not_satisfiable",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "shareLinks.thumbnail",
+      "method": "GET",
+      "path": "/s/{token}/thumbnail",
+      "worker": "jovra-gateway",
+      "caller": "anyone with the link",
+      "auth": [
+        "none"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.shareLinks.thumbnail.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.shareLinks.thumbnail.response.schema.json",
+        "body": "bytes"
+      },
+      "errors": [
+        "not_found",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "grants.create",
+      "method": "POST",
+      "path": "/v1/grants",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.grants.create.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.grants.create.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "secret_not_replayable",
+        "invalid",
+        "idempotency_key_reused",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "grants.redeem",
+      "method": "POST",
+      "path": "/v1/grants/redeem",
+      "worker": "jovra-gateway",
+      "caller": "user",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.grants.redeem.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.grants.redeem.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "invalid",
+        "idempotency_key_reused",
+        "rate_limited",
+        "internal"
+      ]
+    },
+    {
+      "id": "members.approve",
+      "method": "POST",
+      "path": "/v1/projects/{projectId}/members/{userId}/approve",
+      "worker": "jovra-gateway",
+      "caller": "owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.members.approve.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.members.approve.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "lessonClips.approveShare",
+      "method": "POST",
+      "path": "/v1/lesson-clips/{clipId}/share-approval",
+      "worker": "jovra-gateway",
+      "caller": "project owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.lessonClips.approveShare.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.lessonClips.approveShare.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "lessonClips.revokeShare",
+      "method": "DELETE",
+      "path": "/v1/lesson-clips/{clipId}/share-approval",
+      "worker": "jovra-gateway",
+      "caller": "project owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.lessonClips.revokeShare.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.lessonClips.revokeShare.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "internal"
+      ]
+    },
+    {
+      "id": "grants.revoke",
+      "method": "DELETE",
+      "path": "/v1/grants/{grantId}",
+      "worker": "jovra-gateway",
+      "caller": "grant creator or footage owner",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.grants.revoke.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.grants.revoke.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "internal"
+      ]
+    },
+    {
+      "id": "account.appleLink",
+      "method": "POST",
+      "path": "/v1/account/apple-link",
+      "worker": "jovra-gateway",
+      "caller": "user (SIWA)",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.account.appleLink.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.account.appleLink.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "deletionRequests.create",
+      "method": "POST",
+      "path": "/v1/deletion-requests",
+      "worker": "jovra-gateway",
+      "caller": "user",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.deletionRequests.create.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.deletionRequests.create.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "reauth_required",
+        "not_found",
+        "conflict",
+        "dependents",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "deletionRequests.get",
+      "method": "GET",
+      "path": "/v1/deletion-requests/{id}",
+      "worker": "jovra-gateway",
+      "caller": "requester",
+      "auth": [
+        "user"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.deletionRequests.get.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.deletionRequests.get.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "demo_not_accepted",
+        "not_found",
+        "internal"
+      ]
+    },
+    {
+      "id": "internal.claim",
+      "method": "POST",
+      "path": "/internal/v1/attempts/{attemptId}/claim",
+      "worker": "jovra-internal",
+      "caller": "render host",
+      "auth": [
+        "host"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.internal.claim.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.internal.claim.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "already_claimed",
+        "secret_not_replayable",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "internal.heartbeat",
+      "method": "POST",
+      "path": "/internal/v1/attempts/{attemptId}/heartbeat",
+      "worker": "jovra-internal",
+      "caller": "render host",
+      "auth": [
+        "host-lease"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.internal.heartbeat.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.internal.heartbeat.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "internal.input",
+      "method": "GET",
+      "path": "/internal/v1/attempts/{attemptId}/inputs/{inputRef}",
+      "worker": "jovra-internal",
+      "caller": "render host",
+      "auth": [
+        "host-lease"
+      ],
+      "idempotencyKey": "none",
+      "request": {
+        "schema": "route.internal.input.request.schema.json",
+        "body": "none"
+      },
+      "response": {
+        "schema": "route.internal.input.response.schema.json",
+        "body": "bytes"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "range_not_satisfiable",
+        "internal"
+      ]
+    },
+    {
+      "id": "internal.outputs",
+      "method": "POST",
+      "path": "/internal/v1/attempts/{attemptId}/outputs",
+      "worker": "jovra-internal",
+      "caller": "render host",
+      "auth": [
+        "host-lease"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.internal.outputs.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.internal.outputs.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "conflict",
+        "secret_not_replayable",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    },
+    {
+      "id": "internal.result",
+      "method": "POST",
+      "path": "/internal/v1/attempts/{attemptId}/result",
+      "worker": "jovra-internal",
+      "caller": "render host",
+      "auth": [
+        "host-lease"
+      ],
+      "idempotencyKey": "required",
+      "request": {
+        "schema": "route.internal.result.request.schema.json",
+        "body": "json"
+      },
+      "response": {
+        "schema": "route.internal.result.response.schema.json",
+        "body": "json"
+      },
+      "errors": [
+        "unauthorized",
+        "not_found",
+        "conflict",
+        "invalid",
+        "idempotency_key_reused",
+        "internal"
+      ]
+    }
+  ]
+}

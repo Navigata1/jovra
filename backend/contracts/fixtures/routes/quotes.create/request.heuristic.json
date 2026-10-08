@@ -1,0 +1,34 @@
+{
+  "pathParams": {
+    "projectId": "00000000-0000-4000-8000-000000000101"
+  },
+  "headers": {
+    "Authorization": "Bearer sample-access-token-owner-tester",
+    "Idempotency-Key": "00000000-0000-4000-8000-000000000d0b",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "storyPlanId": "00000000-0000-4000-8000-000000000401",
+    "storyPlanVersionId": "00000000-0000-4000-8000-000000000402",
+    "plannerChoice": "heuristic",
+    "outputSpec": {
+      "fps": {
+        "num": 30,
+        "den": 1
+      },
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "container": "mp4",
+      "videoCodec": "h264",
+      "audioCodec": "aac",
+      "audioSampleRate": 48000,
+      "durationTargetSec": 180
+    },
+    "sourceIds": [
+      "00000000-0000-4000-8000-000000000301",
+      "00000000-0000-4000-8000-000000000303"
+    ],
+    "retentionDays": 7
+  }
+}
