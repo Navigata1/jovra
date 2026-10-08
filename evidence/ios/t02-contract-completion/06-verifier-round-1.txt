@@ -1,0 +1,105 @@
+# T02 verifier round 1 fixes: evidence captured 2026-10-08T00:45:32Z on 00e13cf+working tree
+
+## RED: new tests before the implementation (stub jovra_ref/references.py, schema without sample.mediaIds)
+(the pattern tests were red one step earlier: ImportError, jsonschema_subset had no ecma_pattern)
+ERROR: test_the_contract_example_references_media_that_exist_in_the_manifest
+FAIL: test_an_export_cannot_claim_a_log_version_its_session_never_had
+FAIL: test_drill_logs_must_name_an_item_and_goals_of_their_plan
+FAIL: test_validator_fails_a_tree_whose_session_points_at_a_missing_calibration
+FAIL: test_a_manifest_session_may_only_reference_its_own_media
+FAIL: test_the_session_schema_has_a_place_for_sample_media_ids
+FAIL: test_a_typed_speed_that_disagrees_with_the_mark_is_reported
+FAIL: test_defaulted_contact_sits_on_the_centre_mark_of_the_servers_baseline
+FAIL: test_the_estimate_is_the_ground_distance_over_the_flight_time
+FAIL: test_a_session_without_a_log_has_event_log_version_zero
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='junior player')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='written consent player')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='serve mark calibration')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='serve mark point')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='serve mark shot')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='swing serve mark')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='swing shot')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='swing mark')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='rally clip target')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='export log version')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='export point')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='export range')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='swing clip range')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='shot point')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='shot hitter')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='placement calibration')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='derived value scope')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='derived value calibration')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='truncated segment')
+FAIL: test_each_dangling_reference_or_inverted_range_is_reported (mutation='sample media id')
+FAILED (failures=29, errors=1)
+
+## GREEN: python3 -m unittest discover -s scripts/spec -p 'test_*.py'
+Ran 32 tests in 6.730s
+
+OK
+
+## python3 spec/reference/generate_fixtures.py; git status --porcelain spec/fixtures spec/contracts
+scoring_cases 74, stats_cases 4, units_cases 1, sample_cases 1, records 5, sample_media 1, contract_examples 4
+ M spec/fixtures/records/archive.all-fields.json
+ M spec/fixtures/records/export.all-fields.json
+ M spec/fixtures/records/session.all-fields.json
+(only the three T02 contract examples changed, all added by this PR; no file on main changes)
+
+## python3 scripts/spec/validate.py
+---- spec validation summary ----
+closed-object rejections           152
+cross-references                   1
+csv byte-for-byte                  2
+file hashes                        6
+hand assertions                    527
+instances valid                    93
+jovra.sampleMediaManifest checks   1
+kind-to-schema names               13
+pct fixtures                       1
+pct vectors                        32
+reference-integrity documents      93
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  17
+schemas                            15
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: PASS
+
+## python3 scripts/spec/validate_studio.py (self-tests)
+schema self-tests                   5
+RESULT: PASS
+
+## Probe from the verifier: id/createdAt + newline against session.schema.json
+id REJECTED ["$.id: 'ex-session-all-fields\\n' does not match '^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$'"]
+createdAt REJECTED ["$.createdAt: '2026-10-07T18:00:00Z\\n' does not match '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\\\.[0-9]{1,3})?Z$'"]
+
+## Mutation check: checker reverted to re.compile(pattern) (no ECMA anchors)
+FAIL schema self-test: id ending in a newline: expected fail
+FAIL schema self-test: createdAt ending in a newline: expected fail
+FAIL schema self-test: sha256 ending in a newline: expected fail
+RESULT: FAIL (3 failure(s))
+FAIL schema self-test: pattern anchors are not ECMA-262 ('$' must not accept a trailing newline)
+FAIL schema self-test: project-lock projectId ending in a newline passed
+FAIL schema self-test: project-lock createdAt ending in a newline passed
+RESULT: FAIL
+(restored)
+RESULT: PASS
+
+## Verifier's dangling-reference mutations, now through validate.py on a copy of the tree
+(each mutation also changes the session file's bytes, so the export/archive hash check fails too; the lines below
+ are the reference-integrity failures, every other FAIL line filtered out)
+consent.juniorPlayerIds ['nobody'] -> exit 1: ["FAIL spec/fixtures/records/session.all-fields.json: $.consent.juniorPlayerIds[0] 'nobody' names no player"]
+serveMarks[0].calibrationId 'nope' -> exit 1: ["FAIL spec/fixtures/records/session.all-fields.json: $.serveMarks[0].calibrationId 'nope' names no calibration"]
+swings[0].serveMarkId 'nope' -> exit 1: ["FAIL spec/fixtures/records/session.all-fields.json: $.swings[0].serveMarkId 'nope' names no serve mark"]
+rallyPlayback.clips[0].targetId 'nope' -> exit 1: ["FAIL spec/fixtures/records/session.all-fields.json: $.rallyPlayback.clips[0].targetId 'nope' names no point or mark"]
+exports[0].eventLogVersion 7 (log max seq 6) -> exit 1: ['FAIL spec/fixtures/records/session.all-fields.json: $.exports[0].eventLogVersion 7 is later than the log (highest seq 6)']
+exports[0].range fromMs > toMs -> exit 1: ['FAIL spec/fixtures/records/session.all-fields.json: $.exports[0].range runs backwards (40000 > 26500)']
+sample.mediaIds unknown -> exit 1: ["FAIL spec/fixtures/records/session.all-fields.json: $.sample.mediaIds[0] 'sample-media.nope' names no entry in the sample media manifest"]
+derivedValues speed typed as 104 -> exit 1: ['FAIL spec/fixtures/records/session.all-fields.json: $.derivedValues[0]: serve speed 104 mph is not computed from serve mark ex-serve-mark-1 (96 mph)']
+drillLogs[0].itemId 'nope' -> exit 1: ["FAIL spec/fixtures/records/practice-plan.all-fields.json: $.drillLogs[0].itemId 'nope' names no item of this plan"]
+drillLogs[0].goalIds ['nope'] -> exit 1: ["FAIL spec/fixtures/records/practice-plan.all-fields.json: $.drillLogs[0].goalIds[0] 'nope' names no goal of this plan"]
+unmutated copy -> exit 0 []
