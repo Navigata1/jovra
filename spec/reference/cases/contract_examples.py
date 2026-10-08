@@ -2,8 +2,9 @@
 
 They are the documents T03 round-trips and the validator's closed-object self-test mutates. They are labelled
 Sample and are not demo content: no screen shows them. Times, ids and positions are illustrative but consistent:
-the match log folds, every id resolves (jovra_ref/references.py), the serve speed is computed from its serve mark
-(CLAUDE.md hard rule 1), and file sizes and hashes match the files they name. The generator refuses to write a
+the match log folds, every id resolves and every 1.1 time sits inside the recording (jovra_ref/references.py), the
+serve speed and its range are computed from its serve mark (CLAUDE.md hard rule 1), and file sizes and hashes match
+the files they name. The generator refuses to write a
 session that breaks any of these.
 """
 
@@ -125,7 +126,7 @@ def session() -> dict:
         }],
         "derivedValues": [
             {"id": "ex-derived-speed", "key": "serveSpeed.estimate", "value": references.serve_speed_mph(SERVE_MARK),
-             "unit": "mph",
+             "unit": "mph", "range": None,
              "label": "Estimated average speed, contact→bounce",
              "scope": {"pointId": "ex-point-1", "serveMarkId": "ex-serve-mark-1"},
              "provenance": {"status": "estimated", "source": "model:serveSpeed.manualAssisted@1.0.0",
@@ -139,6 +140,7 @@ def session() -> dict:
         "archive": {"state": "backedUp", "provider": "googleDrive", "manifest": "archive.json", "backedUpAt": T,
                     "copy": "rallyOnlyCopy", "restoredAt": T},
         "storage": {"originals": "onDevice", "includeInDeviceBackup": False},
+        "original": {"state": "partial", "reason": "The last 2 seconds could not be decoded.", "updatedAt": T},
         "consent": {
             "status": "writtenFormAttached", "competitionMode": True, "juniorPlayerIds": [MIA],
             "writtenConsents": [{"id": "ex-consent-1",
@@ -154,7 +156,7 @@ def session() -> dict:
         "serveMarks": [dict(SERVE_MARK, calibrationId=calibration_id, outlierConfirmed=False, provenance=mark_prov)],
         "swings": [
             {"id": "ex-swing-serve", "kind": "serve", "stroke": "serve", "serveMarkId": "ex-serve-mark-1",
-             "clip": {"fromMs": 29_500, "toMs": 31_500},
+             "clip": {"fromMs": 29_000, "toMs": 31_500},  # -1.0 / +1.0 s around contact, nudged 0.5 s earlier
              "keyMoments": [{"name": n, "time": {"value": v, "timescale": 60}, "provenance": mark_prov}
                             for n, v in (("tossRelease", 1759), ("trophy", 1801), ("racketDrop", 1822),
                                          ("contact", 1830), ("landing", 1846))]
@@ -180,6 +182,8 @@ def session() -> dict:
              "status": "failed", "failureReason": "Not enough space on this iPhone."},
         ],
     }
+    speed = doc["derivedValues"][0]
+    speed["range"] = references.estimate_range(speed["value"], references.serve_range_pct(doc, SERVE_MARK))
     fixture_input = {"format": doc["match"]["format"], "players": doc["players"], "sides": doc["sides"],
                      "toss": doc["match"]["toss"], "log": log}
     scoring.fold(fixture_input, log)  # the example's log must stay foldable

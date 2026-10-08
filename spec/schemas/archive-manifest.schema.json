@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA archive manifest (archive.json, per session folder)",
   "description": "The persisted upload journal for one session's optional Google Drive archive (D3, ADR-0002). Written atomically before any network I/O. The uploaded sidecar is the session document itself (session.jovra.json). 'backedUp' requires remote size AND md5 to match local (plus sha256 when Drive returns it). No tokens or resumable session URIs are stored here: the resumable URI lives in Keychain / EncryptedSharedPreferences under resumable.secretRef.",
-  "$comment": "Schema 1.1.0 (T02) added, all optional: the rallyOnlyCopy file role (with eventLogVersion), upload states waitingForNetwork and cancelled.",
+  "$comment": "Schema 1.1.0 (T02) added, all optional: the rallyOnlyCopy file role (with eventLogVersion), upload states waitingForNetwork and cancelled. A document stamped 1.0.x may carry none of them ($defs/v1_0).",
   "type": "object",
   "required": ["schemaVersion", "kind", "sessionId", "provider", "createdAt", "updatedAt", "remoteFolder", "files"],
   "additionalProperties": false,
@@ -29,7 +29,23 @@
     },
     "files": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/archivedFile"}}
   },
+  "allOf": [
+    {
+      "if": {"required": ["schemaVersion"], "properties": {"schemaVersion": {"pattern": "^1\\.0\\."}}},
+      "then": {"$ref": "#/$defs/v1_0"}
+    }
+  ],
   "$defs": {
+    "v1_0": {
+      "description": "What a document stamped 1.0.x may not hold: every field and enum value added in 1.1.0. A 1.0 reader decodes closed objects and rejects them, so a writer that uses any of them stamps 1.1.0 or later.",
+      "properties": {
+        "files": {"items": {"properties": {
+          "role": {"not": {"const": "rallyOnlyCopy"}},
+          "eventLogVersion": false,
+          "upload": {"properties": {"state": {"not": {"enum": ["waitingForNetwork", "cancelled"]}}}}
+        }}}
+      }
+    },
     "driveId": {"type": "string", "pattern": "^[A-Za-z0-9_-]{10,128}$"},
     "appProperties": {
       "description": "Drive private app properties (max 30 per file; key+value at most 124 bytes).",

@@ -1,0 +1,108 @@
+# T02 verifier round 2: red/green, mutation probes and suite runs on JOVRA-T02 (18D4F325-4E94-456C-9A10-5C24F7019BF3), 2026-10-07
+# Only JOVRA-T02 was booted or used. git diff origin/main...HEAD -- ios scripts/ios: 0 lines.
+
+## RED: the new tests against the round-1 code (before any schema or reference change)
+Ran 52 tests in 7.702s
+
+FAILED (failures=92, errors=5)
+   1 ERROR: test_a_speed_without_its_serve_mark_or_calibration_fails_schema_and_references 
+   1 ERROR: test_a_wrong_range_or_a_low_frame_rate_range_is_reported 
+   1 ERROR: test_the_example_records_a_partial_recovery_on_the_original_facet 
+   1 ERROR: test_the_example_stores_its_range 
+   1 ERROR: test_the_original_facet_takes_exactly_the_spec_states 
+   3 FAIL: test_a_clip_whose_date_kind_or_angle_disagrees_with_its_session_video_is_reported 
+   5 FAIL: test_a_dangling_self_later_or_unvoided_parent_is_reported 
+   2 FAIL: test_a_frame_rate_change_needs_its_frame_rate_and_a_thermal_event_its_state 
+   2 FAIL: test_a_speed_without_its_serve_mark_or_calibration_fails_schema_and_references 
+   1 FAIL: test_a_typed_km_per_hour_value_is_reported 
+   1 FAIL: test_a_wrong_range_or_a_low_frame_rate_range_is_reported 
+   1 FAIL: test_any_other_unit_is_rejected 
+   1 FAIL: test_consent_is_not_withdrawn_before_it_was_attached 
+   1 FAIL: test_each_dangling_reference_or_inverted_range_is_reported 
+   8 FAIL: test_each_time_past_the_recording_or_outside_its_clip_is_reported 
+   4 FAIL: test_every_all_fields_example_fails_when_stamped_1_0_0 
+   1 FAIL: test_every_key_moment_of_the_example_sits_inside_its_swing_clip 
+  50 FAIL: test_every_since_1_1_field_is_named_by_the_1_0_rejection 
+   1 FAIL: test_juniors_mean_consent_is_required 
+   1 FAIL: test_the_calibration_must_be_the_marks_own 
+   1 FAIL: test_the_km_per_hour_value_is_recomputed_through_the_exact_factor 
+   9 FAIL: test_values_added_to_1_0_enums_are_rejected_in_a_1_0_document 
+
+## GREEN
+$ python3 -m unittest discover -s scripts/spec -p 'test_*.py'
+Ran 52 tests in 7.404s
+
+OK
+$ python3 scripts/spec/validate.py
+---- spec validation summary ----
+closed-object rejections           154
+cross-references                   1
+csv byte-for-byte                  2
+file hashes                        6
+hand assertions                    527
+instances valid                    93
+jovra.sampleMediaManifest checks   1
+kind-to-schema names               13
+pct fixtures                       1
+pct vectors                        32
+reference-integrity documents      93
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  26
+schemas                            15
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: PASS
+$ python3 spec/reference/generate_fixtures.py   (a second run changes no file; CI checks git status --porcelain spec)
+scoring_cases 74, stats_cases 4, units_cases 1, sample_cases 1, records 5, sample_media 1, contract_examples 4
+
+## The verifier's probes, each on a scratch copy of the tree (python3 scripts/spec/validate.py; hash cascade lines omitted)
+- typed 999 km/h: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.derivedValues[0]: serve speed 999 km/h is not computed from serve mark ex-serve-mark-1 (154 km/h)
+    FAIL spec/fixtures/records/session.all-fields.json: $.derivedValues[0]: range {'low': 86, 'high': 106, 'pct': 10} is not ±10% of 154 km/h ({'low': 139, 'high': 169, 'pct': 10})
+- typed 150 mph, scope.serveMarkId removed: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: schema session.schema.json: $.derivedValues[0].scope: missing required property 'serveMarkId'
+- unit m/s: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: schema session.schema.json: $.derivedValues[0].unit: 'm/s' not in ['mph', 'km/h']
+- range removed: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: schema session.schema.json: $.derivedValues[0]: missing required property 'range'
+- parentIds ['nope-123']: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.match.log[4].parentIds[0] 'nope-123' names no point event
+- parentIds naming the point itself: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.match.log[4].parentIds[0] 'ex-point-3a' names the point itself
+- schemaVersion 1.0.0 with the 1.1 fields: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: schema session.schema.json: $.sample.mediaIds: no value is allowed here; $.match.log[4].parentIds: no value is allowed here; $.match.log[5].parentIds: no value is allowed here; $.recording
+- frameRateChange without frameRate: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: schema session.schema.json: $.recording.captureEvents[2]: missing required property 'frameRate'
+- thermalState without thermalState: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: schema session.schema.json: $.recording.captureEvents[0]: missing required property 'thermalState'
+- second clip for ex-point-1: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.rallyPlayback.clips[2].targetId 'ex-point-1' already has a clip override
+- consent notRequired with juniors: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.consent.status is notRequired but juniorPlayerIds is not empty (junior consent is required)
+- withdrawnAt 2020-01-01: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.consent.withdrawnAt 2020-01-01T00:00:00Z is before writtenConsents[0].attachedAt 2026-10-07T16:55:00Z
+- key moment at 999999/60 s: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.swings[0].keyMoments[0] at 16666650 ms is outside the swing clip 29000-31500 ms
+    FAIL spec/fixtures/records/session.all-fields.json: $.swings[0].keyMoments[0].time at 16666650 ms is past the end of the recording (600000 ms)
+- staleFromMs 99999999: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.calibrations[0].staleFromMs at 99999999 ms is past the end of the recording (600000 ms)
+- captureEvents tMs past durationMs: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.recording.captureEvents[0].tMs at 600001 ms is past the end of the recording (600000 ms)
+- exports[0].range past durationMs: exit 1
+    FAIL spec/fixtures/records/session.all-fields.json: $.exports[0].range.toMs at 600001 ms is past the end of the recording (600000 ms)
+- Sep 28 serve clip sessionKind servePractice (manifest): exit 1
+    FAIL spec/fixtures/sample/media-manifest.json: sample-media.2026-09-28-serve-clip: sessionKind 'servePractice' disagrees with its session video ('match')
+
+## App and package suites on JOVRA-T02 (SIMULATOR_ID=18D4F325-4E94-456C-9A10-5C24F7019BF3)
+$ scripts/ios/test.sh   -> exit 0
+  ✔ Test run with 15 tests in 4 suites passed after 0.001 seconds.
+  ✔ Test run with 5 tests in 1 suite passed after 0.001 seconds.
+  JovraTests: Passed 10/10 on 18D4F325-4E94-456C-9A10-5C24F7019BF3
+$ scripts/ios/ui-test.sh t02-contract-completion   -> exit 0
+  ui-system-dark: Passed 1/1 on 18D4F325-4E94-456C-9A10-5C24F7019BF3
+  ui-system-light: Passed 1/1 on 18D4F325-4E94-456C-9A10-5C24F7019BF3
+  ui-tests: Passed 6/6 on 18D4F325-4E94-456C-9A10-5C24F7019BF3
+No UI changed in this round (no ios/ diff), so no screenshot was refreshed; the run's exported PNGs were not committed.

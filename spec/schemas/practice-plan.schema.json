@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA practice plan",
   "description": "Evidence-linked practice (P1-06): deterministic rules over computed stats, each item carrying the evidence row and clips that triggered it. Labelled 'Suggested practice'; fully editable.",
-  "$comment": "Schema 1.1.0 (T02) added, all optional: drillLogs (drill session logs), goals[].window / targetDate / createdAt, items[].drill.sets.",
+  "$comment": "Schema 1.1.0 (T02) added, all optional: drillLogs (drill session logs), goals[].window / targetDate / createdAt, items[].drill.sets. A document stamped 1.0.x may carry none of them ($defs/v1_0).",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "createdAt", "updatedAt", "title", "label", "items"],
   "additionalProperties": false,
@@ -21,7 +21,21 @@
     "goals": {"type": "array", "items": {"$ref": "#/$defs/goal"}},
     "drillLogs": {"type": "array", "items": {"$ref": "#/$defs/drillLog"}, "description": "Since 1.1.0. One entry per drill session (S15 drillSession)."}
   },
+  "allOf": [
+    {
+      "if": {"required": ["schemaVersion"], "properties": {"schemaVersion": {"pattern": "^1\\.0\\."}}},
+      "then": {"$ref": "#/$defs/v1_0"}
+    }
+  ],
   "$defs": {
+    "v1_0": {
+      "description": "What a document stamped 1.0.x may not hold: every field and enum value added in 1.1.0. A 1.0 reader decodes closed objects and rejects them, so a writer that uses any of them stamps 1.1.0 or later.",
+      "properties": {
+        "items": {"items": {"properties": {"drill": {"properties": {"sets": false}}}}},
+        "goals": {"items": {"properties": {"window": false, "targetDate": false, "createdAt": false}}},
+        "drillLogs": false
+      }
+    },
     "item": {
       "type": "object",
       "required": ["id", "focus", "drill", "origin", "status", "evidence"],
@@ -96,7 +110,7 @@
         "achievedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
         "window": {"enum": ["fourWeeks", "threeMonths", "year"], "description": "Since 1.1.0. The progress window the goal is evaluated over ('over 4 weeks')."},
         "targetDate": {"$ref": "common.schema.json#/$defs/date", "description": "Since 1.1.0 (story 285: a goal with a target and date)."},
-        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime", "description": "Since 1.1.0. When the goal was set; its progress window starts here."}
       }
     },
     "drillLog": {

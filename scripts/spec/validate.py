@@ -10,7 +10,9 @@
    hand-written assertions must hold, the sample match must satisfy C1-C16, CSV exports must match
    byte-for-byte, and file sizes/hashes quoted in export/archive examples must match the files.
 5. Reference integrity (jovra_ref/references.py): every id a record holds names a record that exists, ranges run
-   forwards, event-log versions are not later than the log, sample media ids exist in the sample media manifest.
+   forwards, 1.1 times fall inside the recording, event-log versions are not later than the log, a stored serve speed
+   and its range are recomputed from its mark, consent fields agree, and sample media ids exist in the sample media
+   manifest.
 
 Exit status is non-zero on any failure.  Usage:  python3 scripts/spec/validate.py [-v]
 """
@@ -129,6 +131,27 @@ def schema_self_tests(schemas: SchemaSet, rep: Report) -> None:
     cases.append(("session.schema.json", dict(session, createdAt=session["createdAt"] + "\n"), False,
                   "createdAt ending in a newline"))
     cases.append(("common.schema.json#sha256", "a" * 64 + "\n", False, "sha256 ending in a newline"))
+    # a document stamped 1.0.x carries nothing added in 1.1.0 (each schema's $defs/v1_0)
+    for name, schema in (("session", "session.schema.json"), ("practice-plan", "practice-plan.schema.json"),
+                         ("export", "export.schema.json"), ("archive", "archive-manifest.schema.json")):
+        example = json.loads((SPEC / f"fixtures/records/{name}.all-fields.json").read_text(encoding="utf-8"))
+        cases.append((schema, dict(example, schemaVersion="1.0.0"), False, f"{name} 1.1 fields stamped 1.0.0"))
+    example = json.loads((SPEC / "fixtures/records/session.all-fields.json").read_text(encoding="utf-8"))
+    bad = json.loads(canon(example))
+    bad["derivedValues"][0]["scope"].pop("serveMarkId", None)
+    cases.append(("session.schema.json", bad, False, "serve speed naming no serve mark"))
+    bad = json.loads(canon(example))
+    bad["derivedValues"][0]["unit"] = "m/s"
+    cases.append(("session.schema.json", bad, False, "serve speed in a unit other than mph or km/h"))
+    bad = json.loads(canon(example))
+    bad["derivedValues"][0].pop("range", None)
+    cases.append(("session.schema.json", bad, False, "serve speed without its range"))
+    bad = json.loads(canon(example))
+    next(e for e in bad["recording"]["captureEvents"] if e["kind"] == "frameRateChange").pop("frameRate", None)
+    cases.append(("session.schema.json", bad, False, "frameRateChange without its frame rate"))
+    bad = json.loads(canon(example))
+    next(e for e in bad["recording"]["captureEvents"] if e["kind"] == "thermalState").pop("thermalState", None)
+    cases.append(("session.schema.json", bad, False, "thermalState event without its state"))
     for schema, instance, must_pass, label in cases:
         file, _, definition = schema.partition("#")
         target = {"$ref": f"{file}#/$defs/{definition}"} if definition else schemas.files[file]

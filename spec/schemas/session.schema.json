@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA session document (session.json / session.jovra.json)",
   "description": "One session folder's document (ADR-0002). The same JSON is the Drive sidecar and the export format. Scores are never stored: the match log is folded by the scoring engine (ADR-0003).",
-  "$comment": "Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, sample.mediaIds (sample media manifest ids), analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt. Bookmark notes reuse marks[].note. Ids these fields hold must resolve inside the document (jovra_ref/references.py).",
+  "$comment": "Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, sample.mediaIds (sample media manifest ids), analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt, derivedValues[].range (an estimate's range), original (the original facet). Bookmark notes reuse marks[].note. A document stamped 1.0.x may carry none of them ($defs/v1_0). Ids these fields hold must resolve inside the document, and their times fall inside the recording (jovra_ref/references.py).",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "sport", "createdAt", "updatedAt", "title", "sessionKind", "players", "recording", "storage", "archive"],
   "additionalProperties": false,
@@ -38,12 +38,17 @@
     "rallyPlayback": {"$ref": "#/$defs/rallyPlayback"},
     "serveMarks": {"type": "array", "items": {"$ref": "#/$defs/serveMark"}},
     "swings": {"type": "array", "items": {"$ref": "#/$defs/swing"}},
-    "exports": {"type": "array", "items": {"$ref": "#/$defs/exportRecord"}}
+    "exports": {"type": "array", "items": {"$ref": "#/$defs/exportRecord"}},
+    "original": {"$ref": "#/$defs/originalState"}
   },
   "allOf": [
     {
       "if": {"properties": {"sessionKind": {"enum": ["match", "tiebreakOnly", "practiceSet"]}}},
       "then": {"required": ["sides", "match"]}
+    },
+    {
+      "if": {"required": ["schemaVersion"], "properties": {"schemaVersion": {"pattern": "^1\\.0\\."}}},
+      "then": {"$ref": "#/$defs/v1_0"}
     }
   ],
   "$defs": {
@@ -556,7 +561,7 @@
       }
     },
     "derivedValue": {
-      "description": "Any stored analysis output (estimated serve speed, detected hit times, camera-moved flags). Provenance is mandatory and names its capability.",
+      "description": "Any stored analysis output (estimated serve speed, detected hit times, camera-moved flags). Provenance is mandatory and names its capability. A serve speed (key serveSpeed.estimate) is computed, never typed: it names its serve mark and calibration, is a whole mph or km/h, and carries its range (jovra_ref/references.py recomputes all three).",
       "type": "object",
       "required": ["id", "key", "value", "provenance"],
       "additionalProperties": false,
@@ -582,8 +587,34 @@
             {"$ref": "common.schema.json#/$defs/provenance"},
             {"required": ["capabilityId"]}
           ]
+        },
+        "range": {
+          "description": "Since 1.1.0. The estimate's range, in the value's unit: low and high are the displayed bounds ('104 mph (94–114)'), pct the half-width as a percentage of the value when the range is a ± percentage ('±10%', screens.md S12).",
+          "type": "object",
+          "required": ["low", "high"],
+          "additionalProperties": false,
+          "properties": {
+            "low": {"type": "number"},
+            "high": {"type": "number"},
+            "pct": {"type": "integer", "minimum": 0, "maximum": 100}
+          }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {"required": ["key"], "properties": {"key": {"const": "serveSpeed.estimate"}}},
+          "then": {
+            "required": ["unit", "scope", "range"],
+            "properties": {
+              "value": {"type": "integer", "minimum": 0},
+              "unit": {"enum": ["mph", "km/h"]},
+              "scope": {"required": ["serveMarkId"]},
+              "provenance": {"required": ["calibrationId"]},
+              "range": {"required": ["pct"]}
+            }
+          }
+        }
+      ]
     },
     "analysis": {
       "description": "Analysis state is independent of the video, review and archive states (P0-07).",
@@ -812,9 +843,13 @@
       "properties": {
         "tMs": {"$ref": "common.schema.json#/$defs/timeMs"},
         "kind": {"enum": ["thermalState", "frameRateChange", "courtModeOn", "courtModeOff", "lowStorageStop", "lowBatteryStop"]},
-        "thermalState": {"enum": ["nominal", "fair", "serious", "critical", "shutdown"]},
-        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate"}
-      }
+        "thermalState": {"enum": ["nominal", "fair", "serious", "critical", "shutdown"], "description": "Required when kind is thermalState: the state it changed to."},
+        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate", "description": "Required when kind is frameRateChange: the rate capture continued at."}
+      },
+      "allOf": [
+        {"if": {"required": ["kind"], "properties": {"kind": {"const": "frameRateChange"}}}, "then": {"required": ["frameRate"]}},
+        {"if": {"required": ["kind"], "properties": {"kind": {"const": "thermalState"}}}, "then": {"required": ["thermalState"]}}
+      ]
     },
     "recoveryReport": {
       "description": "Since 1.1.0. What crash recovery kept and what it could not (story 100): every playable segment is kept; anything unrecoverable is named with its reason.",
@@ -838,6 +873,37 @@
             }
           }
         }
+      }
+    },
+    "originalState": {
+      "description": "Since 1.1.0. The original facet (ios-v1-spec SessionStore), independent of the analysis, review and archive facets: where the original recording is in its life. storage.originals says where the file is kept; this says whether it is whole. T16 sets savedWithGaps when recovery kept every playable segment and partial when something was unrecoverable (recording.recovery names it).",
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["recording", "recovering", "saved", "savedWithGaps", "partial", "importing", "archiveOnly", "missing", "trashed"]},
+        "reason": {"type": "string", "maxLength": 300, "description": "Why the original is partial or missing, in the words the UI shows."},
+        "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    },
+    "v1_0": {
+      "description": "What a document stamped 1.0.x may not hold: every field and enum value added in 1.1.0. A 1.0 reader decodes closed objects and rejects them, so a writer that uses any of them stamps 1.1.0 or later.",
+      "properties": {
+        "sample": {"properties": {"mediaIds": false}},
+        "match": {"properties": {"log": {"items": {"properties": {"parentIds": false}}}}},
+        "recording": {"properties": {"captureEvents": false, "recovery": false}},
+        "shots": {"items": {"properties": {"shotIndex": false}}},
+        "calibrations": {"items": {"properties": {"staleFromMs": false, "camera": false}}},
+        "comparisons": {"items": {"properties": {"note": false}}},
+        "derivedValues": {"items": {"properties": {"scope": {"properties": {"serveMarkId": false}}, "range": false}}},
+        "analysis": {"properties": {"state": {"not": {"enum": ["paused", "unavailable"]}}, "reason": false, "excludedSide": false}},
+        "archive": {"properties": {"state": {"not": {"const": "waitingForWiFi"}}, "copy": false, "restoredAt": false}},
+        "consent": {"properties": {"juniorPlayerIds": false, "writtenConsents": false, "withdrawnAt": false}},
+        "rallyPlayback": false,
+        "serveMarks": false,
+        "swings": false,
+        "exports": false,
+        "original": false
       }
     }
   }

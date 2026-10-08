@@ -148,6 +148,7 @@
       "key": "serveSpeed.estimate",
       "value": 96,
       "unit": "mph",
+      "range": {"low": 86, "high": 106, "pct": 10},
       "label": "Estimated average speed, contact→bounce",
       "scope": {"pointId": "ex-point-1", "serveMarkId": "ex-serve-mark-1"},
       "provenance": {
@@ -176,6 +177,11 @@
     "restoredAt": "2026-10-07T18:00:00Z"
   },
   "storage": {"originals": "onDevice", "includeInDeviceBackup": false},
+  "original": {
+    "state": "partial",
+    "reason": "The last 2 seconds could not be decoded.",
+    "updatedAt": "2026-10-07T18:00:00Z"
+  },
   "consent": {
     "status": "writtenFormAttached",
     "competitionMode": true,
@@ -216,7 +222,7 @@
       "kind": "serve",
       "stroke": "serve",
       "serveMarkId": "ex-serve-mark-1",
-      "clip": {"fromMs": 29500, "toMs": 31500},
+      "clip": {"fromMs": 29000, "toMs": 31500},
       "keyMoments": [
         {"name": "tossRelease", "time": {"value": 1759, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}},
         {"name": "trophy", "time": {"value": 1801, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}},

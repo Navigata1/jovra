@@ -64,6 +64,16 @@ and validates with no other edit, and deleting its schema makes validation fail.
 | `sample-media-manifest` | 1.0.0 | T02: new |
 | all others | 1.0.0 | |
 
+A document stamped `1.0.x` may not carry anything added in 1.1.0: a 1.0 reader decodes closed objects and would reject
+it. Each 1.1 schema says so in `$defs/v1_0` (applied by an `if` on `schemaVersion`), which forbids every field whose
+description starts "Since 1.1.0" and every enum value added in 1.1.0. A writer that uses any of them stamps 1.1.0.
+`test_contracts.py` walks the schemas for "Since 1.1.0" fields and fails if `v1_0` misses one.
+
+Session 1.1.0 also carries the **original facet** (`original.state`: `recording | recovering | saved | savedWithGaps |
+partial | importing | archiveOnly | missing | trashed`, ios-v1-spec SessionStore), beside the analysis, review and
+archive facets. `storage.originals` says where the file is kept; `original.state` says whether it is whole. T16 sets
+`savedWithGaps` or `partial` after recovery, so T08 and T16 need no contract-fix PR for it.
+
 The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) and `faceBlur` (ungated) were added at
 `disabled`; no other status changed.
 
@@ -78,7 +88,7 @@ The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) a
 | `capability-registry.schema.json` | `contracts/capability-registry.v1.json` | status, label, requirements and benchmark gate per capability (ADR-0004, D10) |
 | `practice-plan.schema.json` | practice plan | every item carries its evidence row, rule id and availability |
 | `export.schema.json` | `export.json` at the root of an export | `includesAudio` false by default (D5); each session names the event-log version it was built from |
-| `sample-media-manifest.schema.json` | `fixtures/sample/media-manifest.json` | the synthetic sample media: stable media id, file name, duration, frame rate, size and session coverage for each of the 8 sample sessions and the 3 lab clips. The sample library (T09) and the renderer (T11) both read it; a sample session names its media in `session.sample.mediaIds`; files are rendered, never committed |
+| `sample-media-manifest.schema.json` | `fixtures/sample/media-manifest.json` | the synthetic sample media: stable media id, file name, duration, frame rate, size and session coverage for each of the 8 sample sessions and the 3 lab clips. The sample library (T09) and the renderer (T11) both read it; a sample session names its media in `session.sample.mediaIds`; every entry of one session shares its session video's date, kind and angle; files are rendered, never committed |
 | `csv-contract.schema.json` | `contracts/csv/*.v1.json` | column order, nullability, quoting, line endings |
 | `engine-output.schema.json` | fold and stats outputs | the exact shape both platforms must produce |
 | `fixture-*.schema.json` | the fixtures themselves | |
@@ -102,8 +112,20 @@ ports' decoders (T03) apply them too:
   `recording.recovery.truncatedSegmentIds` name records in the same document; `exports[].eventLogVersion` is at most
   the log's highest `seq` (0 without a log); `sample.mediaIds` name entries of the sample media manifest, and a session
   the manifest lists names only its own media.
-- A `contactDefaulted` serve mark sits on the centre mark of a baseline (x 0, y ±11.885), and a stored
-  `serveSpeed.estimate` in mph equals the mark's ground distance over its flight time (`serve_speed_mph`).
+- A `contactDefaulted` serve mark sits on the centre mark of a baseline (x 0, y ±11.885). A stored
+  `serveSpeed.estimate` is computed, never typed: the schema requires `scope.serveMarkId`,
+  `provenance.calibrationId` (the mark's own calibration), a whole-number `value`, `unit` `mph` or `km/h` and a
+  `range`; the reference recomputes the value (the mark's ground distance over its flight time, converted by the exact
+  unit factor, `serve_speed`) and the range (±10%, ±15% when the frame rate at contact is below 60 fps, screens.md S12;
+  each bound half-up to a whole unit: 104 mph gives 94–114, `estimate_range`).
+- Point `parentIds` name earlier point events, never the point itself, that the log voids (a split or merge).
+- `rallyPlayback.clips[].targetId` is unique: one override per point or mark.
+- Consent: `status` is not `notRequired` while `juniorPlayerIds` is non-empty, and `withdrawnAt` is not before any
+  `writtenConsents[].attachedAt`.
+- When `recording.durationMs` is known, 1.1 times fall inside it: swing clips and key moments, serve-mark frames,
+  `calibrations[].staleFromMs`, `recording.captureEvents[].tMs`, `exports[].range` and the times of rally-playback
+  targets. Every key moment falls inside its swing's clip.
+- Capture events: a `frameRateChange` carries its `frameRate` and a `thermalState` event its `thermalState` (schema).
 - Practice plan: `drillLogs[].itemId` and `goalIds` name the plan's items and goals. Export and archive manifests:
   no session or file claims a later event-log version than its session's log; export files name a listed session.
 - Every `{fromMs, toMs}` range in any document runs forwards (`fromMs <= toMs`; an empty half-open range is allowed).

@@ -329,6 +329,8 @@ class SessionReferenceTests(unittest.TestCase):
             "swing shot": lambda d: d["swings"][1].update(shotId="nope"),
             "swing mark": lambda d: d["swings"][1].update(markId="nope"),
             "rally clip target": lambda d: d["rallyPlayback"]["clips"][0].update(targetId="nope"),
+            "rally clip duplicate target": lambda d: d["rallyPlayback"]["clips"].append(
+                {"targetId": "ex-point-1", "preRollMs": 0}),
             "export log version": lambda d: d["exports"][0].update(eventLogVersion=7),
             "export point": lambda d: d["exports"][0].update(pointIds=["nope"]),
             "export range": lambda d: d["exports"][0].update(range={"fromMs": 40_000, "toMs": 26_500}),
@@ -444,6 +446,284 @@ class PracticePlanAndManifestReferenceTests(unittest.TestCase):
             self.assertIn("serveMarks[0].calibrationId 'nope'", result.stdout)
         finally:
             shutil.rmtree(tmp)
+
+
+def frame_ms(value: int, timescale: int) -> float:
+    return value * 1000 / timescale
+
+
+class ServeSpeedContractTests(SchemasFixture):
+    """Hard rule 1: a serve speed is computed from its mark in any unit, never typed (verifier round 2, finding 1),
+    and it carries its range (finding 4: screens.md S12 '104 mph (94–114)', ±10%, ±15% below 60 fps)."""
+
+    def speed(self, doc: dict) -> dict:
+        return next(v for v in doc["derivedValues"] if v["key"] == "serveSpeed.estimate")
+
+    def both(self, mutate) -> tuple[list[str], list[str]]:
+        doc = load(ALL_FIELDS_SESSION)
+        mutate(doc)
+        return self.errors(doc, "session.schema.json"), session_problems(doc)
+
+    def test_a_typed_km_per_hour_value_is_reported(self):
+        def typed(d):
+            self.speed(d).update(unit="km/h", value=999, range={"low": 899, "high": 1099, "pct": 10})
+        _, problems = self.both(typed)
+        self.assertTrue(any("999" in p for p in problems), problems)
+
+    def test_the_km_per_hour_value_is_recomputed_through_the_exact_factor(self):
+        # by hand: 17.1537 m / 0.400 s = 42.884 m/s x 3.6 = 154.38 km/h -> 154; ±10% = 138.6 -> 139, 169.4 -> 169
+        def converted(d):
+            self.speed(d).update(unit="km/h", value=154, range={"low": 139, "high": 169, "pct": 10})
+        errors, problems = self.both(converted)
+        self.assertEqual((errors, problems), ([], []))
+
+    def test_a_speed_without_its_serve_mark_or_calibration_fails_schema_and_references(self):
+        def no_mark(d):
+            self.speed(d)["scope"].pop("serveMarkId")
+            self.speed(d).update(value=150)
+        def no_calibration(d):
+            self.speed(d)["provenance"].pop("calibrationId")
+        def no_range(d):
+            self.speed(d).pop("range")
+        for label, mutate in (("no serve mark", no_mark), ("no calibration", no_calibration), ("no range", no_range)):
+            with self.subTest(label):
+                errors, problems = self.both(mutate)
+                self.assertNotEqual(errors, [], label)
+                self.assertNotEqual(problems, [], label)
+
+    def test_any_other_unit_is_rejected(self):
+        errors, problems = self.both(lambda d: self.speed(d).update(unit="m/s"))
+        self.assertNotEqual(errors, [])
+        self.assertNotEqual(problems, [])
+
+    def test_the_calibration_must_be_the_marks_own(self):
+        def other(d):
+            d["calibrations"].append(dict(d["calibrations"][0], id="ex-calibration-2"))
+            self.speed(d)["provenance"]["calibrationId"] = "ex-calibration-2"
+        self.assertTrue(any("calibration" in p for p in self.both(other)[1]))
+
+    def test_the_example_stores_its_range(self):
+        # 96 mph ±10% (60 fps at contact): 86.4 -> 86, 105.6 -> 106. The S12 demo: 104 -> 93.6 -> 94, 114.4 -> 114.
+        self.assertEqual(self.speed(load(ALL_FIELDS_SESSION))["range"], {"low": 86, "high": 106, "pct": 10})
+        self.assertEqual(references.estimate_range(104, 10), {"low": 94, "high": 114, "pct": 10})
+
+    def test_a_wrong_range_or_a_low_frame_rate_range_is_reported(self):
+        wrong = lambda d: self.speed(d)["range"].update(low=90)
+        slow = lambda d: d["recording"]["segments"][0].update(frameRate={"num": 30, "den": 1})
+        for label, mutate in (("wrong low", wrong), ("30 fps at contact needs ±15%", slow)):
+            with self.subTest(label):
+                self.assertTrue(any("range" in p for p in self.both(mutate)[1]), label)
+
+
+class CaptureEventTests(SchemasFixture):
+    """Story 99 / T25: the metadata records the change itself (verifier round 2, finding 5)."""
+
+    def test_a_frame_rate_change_needs_its_frame_rate_and_a_thermal_event_its_state(self):
+        for kind, field in (("frameRateChange", "frameRate"), ("thermalState", "thermalState")):
+            with self.subTest(kind):
+                doc = load(ALL_FIELDS_SESSION)
+                event = next(e for e in doc["recording"]["captureEvents"] if e["kind"] == kind)
+                self.assertEqual(self.errors(doc, "session.schema.json"), [])
+                event.pop(field)
+                self.assertNotEqual(self.errors(doc, "session.schema.json"), [])
+
+
+class ParentIdTests(unittest.TestCase):
+    """Point parentIds (1.1.0) resolve: an earlier, voided point other than itself (verifier round 2, finding 2)."""
+
+    def problems(self, parents: list[str], index: int = 4) -> list[str]:
+        doc = load(ALL_FIELDS_SESSION)
+        doc["match"]["log"][index]["parentIds"] = parents
+        return session_problems(doc)
+
+    def test_the_example_split_resolves(self):
+        self.assertEqual(self.problems(["ex-point-3"]), [])
+
+    def test_a_dangling_self_later_or_unvoided_parent_is_reported(self):
+        cases = {"missing": ["nope-123"], "itself": ["ex-point-3a"], "later point": ["ex-point-3b"],
+                 "not voided": ["ex-point-1"], "not a point": ["ex-void-3"]}
+        for label, parents in cases.items():
+            with self.subTest(label):
+                self.assertNotEqual(self.problems(parents), [], label)
+
+
+class ConsentConsistencyTests(unittest.TestCase):
+    """Verifier round 2, finding 7."""
+
+    def test_juniors_mean_consent_is_required(self):
+        doc = load(ALL_FIELDS_SESSION)
+        doc["consent"]["status"] = "notRequired"
+        doc["consent"].pop("writtenConsents")
+        self.assertTrue(any("notRequired" in p for p in session_problems(doc)))
+
+    def test_consent_is_not_withdrawn_before_it_was_attached(self):
+        doc = load(ALL_FIELDS_SESSION)
+        doc["consent"]["withdrawnAt"] = "2020-01-01T00:00:00Z"
+        self.assertTrue(any("withdrawnAt" in p for p in session_problems(doc)))
+
+
+class RecordingBoundsTests(unittest.TestCase):
+    """1.1 times fall inside the recording (verifier round 2, finding 8). The example records 600,000 ms."""
+
+    def test_each_time_past_the_recording_or_outside_its_clip_is_reported(self):
+        mutations = {
+            "key moment past the end": lambda d: d["swings"][0]["keyMoments"][0].update(
+                time={"value": 999_999, "timescale": 60}),
+            "key moment outside its swing clip": lambda d: d["swings"][0]["keyMoments"][0].update(
+                time={"value": 60, "timescale": 60}),
+            "stale calibration past the end": lambda d: d["calibrations"][0].update(staleFromMs=99_999_999),
+            "capture event past the end": lambda d: d["recording"]["captureEvents"][0].update(tMs=600_001),
+            "export range past the end": lambda d: d["exports"][0].update(range={"fromMs": 0, "toMs": 600_001}),
+            "rally target mark past the end": lambda d: d["marks"][0].update(tMs=600_001),
+            "rally target point past the end": lambda d: d["match"]["log"][0].update(tEndMs=600_001),
+            "serve mark bounce past the end": lambda d: d["serveMarks"][0].update(
+                bounceFrame={"value": 36_001, "timescale": 60}),
+            "swing clip past the end": lambda d: d["swings"][1].update(clip={"fromMs": 30_400, "toMs": 600_001}),
+        }
+        self.assertEqual(session_problems(load(ALL_FIELDS_SESSION)), [])
+        for label, mutate in mutations.items():
+            with self.subTest(label):
+                doc = load(ALL_FIELDS_SESSION)
+                mutate(doc)
+                self.assertNotEqual(session_problems(doc), [], label)
+
+    def test_every_key_moment_of_the_example_sits_inside_its_swing_clip(self):
+        for swing in load(ALL_FIELDS_SESSION)["swings"]:
+            for moment in swing["keyMoments"]:
+                t = frame_ms(moment["time"]["value"], moment["time"]["timescale"])
+                self.assertTrue(swing["clip"]["fromMs"] <= t <= swing["clip"]["toMs"], (swing["id"], moment))
+
+
+class OriginalFacetTests(SchemasFixture):
+    """ios-v1-spec SessionStore: four independent facets, original among them (verifier round 2, finding 9)."""
+
+    STATES = ["recording", "recovering", "saved", "savedWithGaps", "partial", "importing", "archiveOnly", "missing",
+              "trashed"]
+
+    def test_the_original_facet_takes_exactly_the_spec_states(self):
+        original = load(SPEC / "schemas/session.schema.json")["$defs"]["originalState"]
+        self.assertEqual(original["properties"]["state"]["enum"], self.STATES)
+
+    def test_the_example_records_a_partial_recovery_on_the_original_facet(self):
+        doc = load(ALL_FIELDS_SESSION)
+        self.assertEqual(doc["original"]["state"], "partial")  # T16: an unrecoverable segment -> partial
+        doc["original"]["state"] = "lost"
+        self.assertNotEqual(self.errors(doc, "session.schema.json"), [])
+
+
+def since_paths(doc, schemas: SchemaSet, schema_file: str) -> set[str]:
+    """Instance paths of every property whose schema says 'Since 1.1.0' (on the property, its $ref or its items)."""
+    found = set()
+
+    def resolved(node, file):
+        while isinstance(node, dict) and "$ref" in node:
+            node, file = schemas.resolve(node["$ref"], file)
+        return node, file
+
+    def is_new(node, file) -> bool:
+        nodes = [node]
+        target, target_file = resolved(node, file)
+        nodes.append(target)
+        if isinstance(target, dict) and "items" in target:
+            nodes.append(resolved(target["items"], target_file)[0])
+        return any(isinstance(n, dict) and n.get("description", "").startswith("Since 1.1.0") for n in nodes)
+
+    def branches(node, file):
+        node, file = resolved(node, file)
+        if not isinstance(node, dict):
+            return
+        yield node, file
+        for key in ("allOf", "anyOf", "oneOf"):
+            for sub in node.get(key, []):
+                yield from branches(sub, file)
+
+    def walk(value, node, file, path):
+        for branch, bfile in branches(node, file):
+            if isinstance(value, dict):
+                for key, item in value.items():
+                    if key in branch.get("properties", {}):
+                        sub = branch["properties"][key]
+                        if is_new(sub, bfile):
+                            found.add(f"{path}.{key}")
+                        walk(item, sub, bfile, f"{path}.{key}")
+            elif isinstance(value, list) and "items" in branch:
+                for i, item in enumerate(value):
+                    walk(item, branch["items"], bfile, f"{path}[{i}]")
+
+    walk(doc, schemas.files[schema_file], schema_file, "$")
+    return found
+
+
+class SchemaVersionGateTests(SchemasFixture):
+    """A document stamped 1.0.x carries nothing added in 1.1.0 (verifier round 2, finding 3)."""
+
+    DOCS = ((ALL_FIELDS_SESSION, "session.schema.json"), (ALL_FIELDS_PLAN, "practice-plan.schema.json"),
+            (ALL_FIELDS_EXPORT, "export.schema.json"), (ALL_FIELDS_ARCHIVE, "archive-manifest.schema.json"))
+
+    def test_every_all_fields_example_fails_when_stamped_1_0_0(self):
+        for path, schema in self.DOCS:
+            with self.subTest(path.name):
+                doc = dict(load(path), schemaVersion="1.0.0")
+                self.assertNotEqual(self.errors(doc, schema), [])
+
+    def test_every_since_1_1_field_is_named_by_the_1_0_rejection(self):
+        for path, schema in self.DOCS:
+            doc = dict(load(path), schemaVersion="1.0.0")
+            errors = self.errors(doc, schema)
+            new = since_paths(doc, self.schemas, schema)
+            self.assertGreaterEqual(len(new), 1, path.name)
+            for where in sorted(new):
+                with self.subTest(file=path.name, field=where):
+                    self.assertTrue(any(e.startswith(where + ":") or e.startswith(where + ".")
+                                        or e.startswith(where + "[") or where.startswith(e.split(":")[0] + ".")
+                                        or where.startswith(e.split(":")[0] + "[") for e in errors),
+                                    f"{where} is accepted in a 1.0.0 document")
+
+    def test_values_added_to_1_0_enums_are_rejected_in_a_1_0_document(self):
+        session = load(SPEC / "fixtures/sample/jon-vs-alex.session.json")
+        archive = load(SPEC / "fixtures/sample/archive.json")
+        export = load(SPEC / "fixtures/sample/export.json")
+        cases = [
+            (session, "session.schema.json", lambda d: d["analysis"].update(state="paused")),
+            (session, "session.schema.json", lambda d: d["analysis"].update(state="unavailable")),
+            (session, "session.schema.json", lambda d: d["archive"].update(state="waitingForWiFi")),
+            (archive, "archive-manifest.schema.json", lambda d: d["files"][0].update(role="rallyOnlyCopy")),
+            (archive, "archive-manifest.schema.json", lambda d: d["files"][0]["upload"].update(state="cancelled")),
+            (archive, "archive-manifest.schema.json",
+             lambda d: d["files"][0]["upload"].update(state="waitingForNetwork")),
+            (export, "export.schema.json", lambda d: d["files"][0].update(role="viewerHtml")),
+            (export, "export.schema.json", lambda d: d["files"][0].update(role="condensedMatch")),
+            (export, "export.schema.json", lambda d: d["files"][0].update(role="highlightReel")),
+        ]
+        for base, schema, mutate in cases:
+            self.assertEqual(base["schemaVersion"], "1.0.0")
+            doc = copy.deepcopy(base)
+            mutate(doc)
+            with self.subTest(schema=schema, doc=canon_short(doc, base)):
+                self.assertNotEqual(self.errors(doc, schema), [])
+                self.assertEqual(self.errors(dict(doc, schemaVersion="1.1.0"), schema), [])
+
+
+def canon_short(doc: dict, base: dict) -> str:
+    return next((f"{k}" for k in doc if doc[k] != base.get(k)), "")
+
+
+class SampleMediaConsistencyTests(unittest.TestCase):
+    """Entries for one session agree with its sessionVideo (verifier round 2, finding 10)."""
+
+    def check(self, manifest: dict) -> list[str]:
+        from cases import sample_media
+        jon_vs_alex = SPEC / "fixtures/sample/jon-vs-alex.session.json"
+        return sample_media.check_manifest(MEDIA_MANIFEST, manifest, {jon_vs_alex: load(jon_vs_alex)})
+
+    def test_a_clip_whose_date_kind_or_angle_disagrees_with_its_session_video_is_reported(self):
+        self.assertEqual(self.check(load(MEDIA_MANIFEST)), [])
+        for field, value in (("sessionKind", "servePractice"), ("sessionDate", "2026-09-27"), ("angle", "sideOn")):
+            with self.subTest(field):
+                manifest = load(MEDIA_MANIFEST)
+                clip = next(m for m in manifest["media"] if m["mediaId"] == "sample-media.2026-09-28-serve-clip")
+                clip[field] = value
+                self.assertTrue(any(field in p for p in self.check(manifest)), field)
 
 
 class ValidatorTests(unittest.TestCase):

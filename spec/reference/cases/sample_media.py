@@ -91,6 +91,11 @@ def check_manifest(path, doc: dict, docs: dict) -> list[str]:
             problems.append(f"{m['mediaId']}: durationMs is not a whole number of frames")
         if m["role"] == "practiceClip" and m["sessionId"] not in videos:
             problems.append(f"{m['mediaId']}: practice clip names a session with no sessionVideo")
+        video = videos.get(m["sessionId"])
+        for field in ("sessionDate", "sessionKind", "angle"):  # one session, one date, kind and camera position
+            if video is not None and m[field] != video[field]:
+                problems.append(f"{m['mediaId']}: {field} {m[field]!r} disagrees with its session video "
+                                f"({video[field]!r})")
         session = sessions.get(m["sessionId"])
         if session is not None and rng["toMs"] > session["recording"].get("durationMs", 0):
             problems.append(f"{m['mediaId']}: covers time past the end of session {session['title']}")
