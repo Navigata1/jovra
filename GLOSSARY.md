@@ -492,9 +492,10 @@ _Avoid_: Fake camera, mock camera, demo recording
 ## Studio
 
 The language of JOVRA Studio, the optional premium layer: building a match from up to six phones, aligning their
-recordings, turning them into story films, and linking films to lessons and progress. Decisions behind these terms
-are in ADR-0014 to ADR-0022. Core terms above keep their meaning; where a Studio term sits next to a core one, the
-definition says how they differ.
+recordings, turning them into story films, and linking films to lessons and progress. Decisions behind these terms are
+in ADR-0014 to ADR-0023, with the room terms (Camera lobby, Camera slot, Join code) in ADR-0027. The list comes from
+the Studio spec's "Domain language" (`docs/spec/studio-v1-spec.md`, Further Notes). Core terms above keep their meaning;
+where a Studio term sits next to a core one, the definition says how they differ.
 
 ### Projects and cameras
 
@@ -508,7 +509,8 @@ _Avoid_: Session (a session is one sitting of tennis), job, workspace, Studio se
 The placement a phone fills in a Studio project: Primary baseline, Opposite baseline, or one of the four corners, all
 outside the playing area. A camera role is about where the phone stands; what a person may see or do is their
 project role.
-_Avoid_: Camera slot, position (alone), angle (the angle is the recorded view)
+_Avoid_: Position (alone), angle (the angle is the recorded view), camera slot (the lobby place a phone is invited
+into)
 
 **Project role**:
 What a person may do in a Studio project: owner, camera uploader, coach/editor or viewer. It is held in database
@@ -519,6 +521,30 @@ _Avoid_: Permission level, user type, camera role
 The source recorded from the Primary baseline. It is the one live analysis feed, it anchors the match clock, and it
 supplies the primary audio bed by default. One angle is a complete project.
 _Avoid_: Main camera, master angle, host camera (the host is the phone running the lobby, which may differ)
+
+**Camera source**:
+One angle's recording within a Studio project, recorded or imported for one camera role and listed in the source
+manifest. Its media is a session's original, untouched; proxies are derived from it and never replace it.
+_Avoid_: Feed, file, camera (alone), original (the original is the media; the camera source is its place in a project)
+
+**Camera lobby**:
+The screen and local room in which the host phone invites phones into camera slots, approves each one and checks that
+every camera is ready before recording. It coordinates only: it never synchronizes the recordings (that is the sync
+map's job), and capture never waits on it (ADR-0017, ADR-0027).
+_Avoid_: Room (alone, in UI copy), session, pairing screen
+
+**Camera slot**:
+One place in a camera lobby that one invitation fills with one phone. A slot carries the camera role the phone will
+fill and, in the room contract, a slot role (`primary` or `camera`) saying what it records. Neither is a grant: what a
+participant may do (view, mark, score, control capture) is granted separately by the host (ADR-0027).
+_Avoid_: Seat, position, camera role (where the phone stands), grant
+
+**Join code**:
+The single-use invitation to one camera slot, shown as a QR and as a short display code (such as "JVR-482"). It
+expires within 10 minutes and is bound to that slot; the QR also pins the host's key. The display code is a lookup
+label, never a secret. Joining still needs the host's approval after both phones show the same six-digit comparison
+code (ADR-0027).
+_Avoid_: Password, PIN, invite link, comparison code (the six-digit code both phones show at approval)
 
 ### Sources and synchronization
 
@@ -536,6 +562,7 @@ _Avoid_: Session clock (one recording's clock), timecode, wall clock
 **Sync map**:
 The versioned mapping of each source's time onto the match clock. It holds piecewise maps with offset and drift, the
 anchors with their residuals, coverage gaps, discontinuities and a review status. It is not a comparison's sync point.
+In code and contracts it is `SyncMap` (`jovra.sync-map/1`).
 _Avoid_: Sync point, alignment (alone), timecode sync
 
 **Anchor**:
@@ -570,6 +597,21 @@ timestamps. A render proxy is constant frame rate, rotation-baked, SDR and zero-
 from original PTS to proxy frame. A proxy is never treated as the original.
 _Avoid_: Original, Space Saver copy, transcode, low-res copy
 
+**Analysis proxy**:
+A proxy made for alignment and observation that keeps the original's timestamps, so every time read from it is a time
+in the original.
+_Avoid_: Preview, render proxy
+
+**Render proxy**:
+A proxy made for cutting films: constant frame rate, rotation applied once, SDR and starting at zero, with a PTS table
+back to the original.
+_Avoid_: Export, analysis proxy, Space Saver copy
+
+**PTS table**:
+The hashed table, kept with a render proxy, from each original presentation timestamp to the proxy frame made from it.
+It is how a frame cut from a proxy is traced back to the exact frame of the original.
+_Avoid_: Timecode, frame index (alone), sync map (that maps sources onto the match clock)
+
 ### Story and edit
 
 **Keeper**:
@@ -593,6 +635,28 @@ The readable editorial proposal for one film: profile and version, intended feel
 targets, ordered beats with keeper IDs, audio policy, cue and metric references, and unresolved decisions. Its typed
 form is the story plan. Neither is ever executed.
 _Avoid_: Script, prompt, treatment (alone)
+
+**Story plan**:
+The typed, validated form of a story brief: beats made only of IDs and fixed choices, checked against the project
+before anything is compiled. The planner proposes it, the user may change it, and code compiles it into an edit
+decision list; it is never executed itself. The shipped contract keeps the name `jovra.story-brief/1`.
+_Avoid_: Script, timeline, edit decision list (the compiled form)
+
+**Observation**:
+One source-grounded record about a moment in a camera source, such as a cue, a contact, an occlusion or a ball or body
+position, with its source and match time, the capability or person that produced it, its provenance and confidence.
+A rejected observation stays on record and is never shown as instruction.
+_Avoid_: Insight, detection, analysis result, annotation (a drawn shape on a clip)
+
+**Cue**:
+A short instruction for the player, taken from an observation or a note. It counts as instruction only when it is
+Manual or Reviewed: an Estimated cue must be confirmed first. Lessons keep cues, and Coach's Cut needs a reviewed one.
+_Avoid_: Tip, advice, coaching point, key moment (a named instant in a swing)
+
+**Clean alternate**:
+The calm version of a film's edit: the same cuts, with dissolves turned into cuts, no shake and static titles. With
+Reduce Motion on it is the default output and the effects version is opt-in.
+_Avoid_: Lite version, accessible version (alone), no-effects export
 
 **Edit decision list**:
 The renderer-facing typed plan (EDL), compiled by code from a validated story plan. It holds exact rational source
@@ -618,12 +682,25 @@ AVFoundation renderer or the cloud FFmpeg renderer with Remotion overlays. Every
 conformance fixtures.
 _Avoid_: Exporter (alone), editor, engine
 
+**Film**:
+A story rendered from a validated edit decision list and passed by full verification, kept as film revisions. A
+highlight reel is the core app's set of clips with the scoreboard burned in; a film follows a story profile and
+records what it was built from.
+_Avoid_: Highlight reel (the core feature), video (alone), movie, export
+
 ### Jobs, money and delivery
 
 **Render job**:
 One authorized unit of rendering for one EDL and output spec, on the device or in the cloud. It moves through
 explicit states to ready or a terminal state, and is ready only after full-decode verification.
+Job, unqualified in Studio, means a render job; the core's archive job and string job are different things.
 _Avoid_: Task, export (alone), processing
+
+**Stage**:
+One named step of a render job with its own state and progress, shown to the player as Upload, Align angles, Build
+film and Verify export. Any percentage belongs to one stage, and a stage's credits are consumed at most once, when an
+attempt at it succeeds.
+_Avoid_: Step (alone), phase, progress (alone)
 
 **Quote**:
 The server-computed preflight estimate for a cloud render job, made from the actual sources, story profile, output
@@ -631,10 +708,15 @@ spec, retention and current rates. It has an expiry and a cap (the maximum autho
 says "Sample quote".
 _Avoid_: Price, estimate (alone), invoice
 
+**Spending limit**:
+The player-facing name of a quote's cap: the most a cloud render job may use. A job that would pass it stops and asks;
+it is never raised automatically, only by a new explicit entry.
+_Avoid_: Budget (alone), maximum price, allowance
+
 **Usage reservation**:
 The idempotent hold, up to a quote's cap, placed before cloud work starts. It is keyed by project, plan revision and
 output spec, consumed by actual usage and released on failure or cancellation. A retry under the same key never
-charges twice.
+charges twice. Reservation, unqualified, always means a usage reservation.
 _Avoid_: Charge, payment, hold (alone), credit (that is the unit)
 
 **Delivered artifact**:
@@ -669,6 +751,16 @@ The items to do before the next lesson, such as drill repetitions and clips to r
 by the user or coach. A practice plan is different: it is suggested by rules over stats.
 _Avoid_: Practice plan, homework, to-do list
 
+**Focus line**:
+A lesson's short line of what to concentrate on, such as "Find the rhythm". The progress journey shows it as the
+lesson's caption; it is not the lesson's title.
+_Avoid_: Lesson title, goal (the next goal is separate), slogan
+
+**Drill target**:
+The count a practice-checklist item aims for, in repetitions, clips or minutes, beside the count done so far. It is
+not a drill's target on the court model.
+_Avoid_: Goal, quota, court target
+
 ### Identity, environments and storage
 
 **Demo profile**:
@@ -685,6 +777,11 @@ _Avoid_: Demo account, fake user, test password
 A real JOVRA cloud account in the live environment, created with Sign in with Apple or an email code. It exists only
 after activation, it is never required for the core app, and only it can accept a real quote.
 _Avoid_: Account (for the demo profile or a tester), login, subscription
+
+**Cloud mode**:
+Which environment the Studio cloud is running in, always shown: Local demo, Test or Connected (the live environment),
+or unavailable with its reason. It is chosen by build configuration, never by a switch the user can flip (ADR-0014).
+_Avoid_: Online/offline, signed in, server mode
 
 **Storage provider**:
 A user-owned storage service behind one adapter interface (Files/iCloud Drive, Google Drive, Box, Dropbox). It
