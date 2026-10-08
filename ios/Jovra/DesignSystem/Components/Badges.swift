@@ -34,11 +34,11 @@ struct ProvenanceBadge: View {
 
     var title: String {
         switch kind {
-        case .sample: "Sample"
-        case .provenance(.manual): "Manual"
-        case .provenance(.estimated): "Estimated"
-        case .provenance(.reviewed): "Reviewed"
-        case .provenance(.validated): "Validated"
+        case .sample: String(localized: "Sample", table: "DesignSystem.Components")
+        case .provenance(.manual): String(localized: "Manual", table: "DesignSystem.Components")
+        case .provenance(.estimated): String(localized: "Estimated", table: "DesignSystem.Components")
+        case .provenance(.reviewed): String(localized: "Reviewed", table: "DesignSystem.Components")
+        case .provenance(.validated): String(localized: "Validated", table: "DesignSystem.Components")
         }
     }
 
@@ -54,8 +54,8 @@ struct ProvenanceBadge: View {
 
     private var accessibilityText: String {
         switch kind {
-        case .sample: "Sample data"
-        default: "\(title) value"
+        case .sample: String(localized: "Sample data", table: "DesignSystem.Components")
+        default: String(localized: "\(title) value", table: "DesignSystem.Components", comment: "VoiceOver: a provenance badge, e.g. “Estimated value”")
         }
     }
 }

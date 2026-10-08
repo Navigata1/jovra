@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/room-transcript.st24-director.json",
+  "cases": [
+    {
+      "id": "ack-counted-without-recording-started",
+      "why": "Recording on n of m counts recordingStarted acknowledgements for this intent, not a local start",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/11/message/body/intentId",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/steps/11/length",
+          "value": 395
+        },
+        {
+          "op": "replace",
+          "path": "/steps/12/message/body/perDevice/2/result",
+          "value": "Pending"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "recordingCountMismatch"
+      }
+    },
+    {
+      "id": "blanket-start-receipt",
+      "why": "A start is an intent: per-device results stay Pending until acknowledged",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/7/message/body/perDevice/2/result",
+          "value": "Accepted"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "receiptMismatch"
+      }
+    },
+    {
+      "id": "still-age-not-chained",
+      "why": "A still's age chains the sender's capture lag and the host's own clock",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/19/display/devices/1/stillAgeMs",
+          "value": 7900
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "stillAgeMismatch"
+      }
+    },
+    {
+      "id": "still-is-a-video-frame",
+      "why": "A preview still is small (at most 256 KiB)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/15/message/body/bytes",
+          "value": 5000000
+        },
+        {
+          "op": "replace",
+          "path": "/steps/15/length",
+          "value": 359
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

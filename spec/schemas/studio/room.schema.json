@@ -1,0 +1,487 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room v1 messages (jovra.room/1) and host-side transcripts (jovra.room-transcript/1)",
+  "description": "SD10 and ADR-0027 (as amended 2026-10-07). A jovra.room/1 message travels as one 4-byte big-endian length-prefixed UTF-8 JSON frame over TLS 1.3/TCP on the local network. Every message carries roomId, hostEpoch, the sender's deviceId, a per-sender increasing seq and the sender's own monotonic sentMonoNs (never compared with another device's clock). The receiver attributes a message by its authenticated TLS peer, never by the deviceId inside it. The QR join payload is spec/room's jovra.room.invitation-payload/1, unchanged. A transcript is one host's ordered view of a room: invitations it issued, frames it received (with the verdict the host must reach), frames it sent, approval comparisons, restarts and what its screen showed. Everything here is a proposal plus checked fixtures; nothing was exercised on a device.",
+  "oneOf": [{"$ref": "#/$defs/message"}, {"$ref": "#/$defs/transcript"}],
+  "$defs": {
+    "id": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "sha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+    "nonNegInt": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+    "posInt": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+    "nonce": {"description": "128-bit unpadded base64url nonce (spec/room nonce).", "type": "string", "pattern": "^[A-Za-z0-9_-]{22}$"},
+    "displayCode": {"description": "Lookup label beside the QR (e.g. JVR-482). Never a secret; same pattern as jovra.camera-invite/1.", "type": "string", "pattern": "^JVR-[0-9]{3}$"},
+    "sixDigits": {"type": "string", "pattern": "^[0-9]{6}$"},
+    "roomHint": {"description": "The DNS-SD instance name the host advertises: an opaque random hint, never a player, project or device name (ADR-0027 section 2).", "type": "string", "pattern": "^jovra-[0-9a-z]{10}$"},
+    "commandGrant": {"description": "What a participant may do. viewer is everyone's default; the camera-invite roster permission host-controls maps to capture-controller.", "enum": ["viewer", "marker", "scorer", "capture-controller"]},
+    "capability": {"description": "What a slot lets a phone do with its own capture. A camera guest starts with record-local and view-own-preview only.", "enum": ["record-local", "view-own-preview", "upload-own-source"]},
+    "slotRole": {"enum": ["primary", "camera"]},
+    "thermal": {"description": "iOS ProcessInfo.thermalState names; Android maps PowerManager thermal status onto them.", "enum": ["nominal", "fair", "serious", "critical"]},
+    "captureState": {"enum": ["Ready", "Starting", "Recording", "Paused", "Finalizing", "Stopped", "Failed"]},
+    "batteryPct": {"type": "integer", "minimum": 0, "maximum": 100},
+    "permission": {"enum": ["granted", "denied", "undetermined"]},
+    "grants": {"type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/commandGrant"}},
+    "capabilities": {"type": "array", "maxItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/capability"}},
+    "deviceIds": {"type": "array", "maxItems": 6, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "messageType": {"enum": ["hello", "join", "approvalRequest", "joinReveal", "approve", "decline", "revoke", "roleAssigned", "grantChanged", "readiness", "recordingIntent", "recordingStarted", "heartbeat", "still", "segmentEvent", "recordingStopped", "stopOne", "stopAll", "bookmark", "commandResult", "receipt"]},
+
+    "message": {
+      "type": "object",
+      "required": ["schemaVersion", "roomId", "hostEpoch", "deviceId", "seq", "sentMonoNs", "type", "body"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.room/1"},
+        "roomId": {"$ref": "#/$defs/id"},
+        "hostEpoch": {"description": "Rises every time a room host starts, restarts or changes. A previous epoch is never fresh authority.", "$ref": "#/$defs/posInt"},
+        "deviceId": {"description": "The sender's claim. The receiver checks it against the device bound to the authenticated TLS peer.", "$ref": "#/$defs/id"},
+        "seq": {"description": "Strictly increasing per sender within one hostEpoch.", "$ref": "#/$defs/posInt"},
+        "sentMonoNs": {"description": "The sender's own monotonic clock that keeps counting during sleep. Only the sender may subtract its own values.", "$ref": "#/$defs/nonNegInt"},
+        "type": {"$ref": "#/$defs/messageType"},
+        "body": {"type": "object"}
+      },
+      "allOf": [
+        {"if": {"properties": {"type": {"const": "hello"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/hello"}}}},
+        {"if": {"properties": {"type": {"const": "join"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/join"}}}},
+        {"if": {"properties": {"type": {"const": "approvalRequest"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/approvalRequest"}}}},
+        {"if": {"properties": {"type": {"const": "joinReveal"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/joinReveal"}}}},
+        {"if": {"properties": {"type": {"const": "approve"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/approve"}}}},
+        {"if": {"properties": {"type": {"const": "decline"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/decline"}}}},
+        {"if": {"properties": {"type": {"const": "revoke"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/revoke"}}}},
+        {"if": {"properties": {"type": {"const": "roleAssigned"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/roleAssigned"}}}},
+        {"if": {"properties": {"type": {"const": "grantChanged"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/grantChanged"}}}},
+        {"if": {"properties": {"type": {"const": "readiness"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/readiness"}}}},
+        {"if": {"properties": {"type": {"const": "recordingIntent"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/recordingIntent"}}}},
+        {"if": {"properties": {"type": {"const": "recordingStarted"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/recordingStarted"}}}},
+        {"if": {"properties": {"type": {"const": "heartbeat"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/heartbeat"}}}},
+        {"if": {"properties": {"type": {"const": "still"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/still"}}}},
+        {"if": {"properties": {"type": {"const": "segmentEvent"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/segmentEvent"}}}},
+        {"if": {"properties": {"type": {"const": "recordingStopped"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/recordingStopped"}}}},
+        {"if": {"properties": {"type": {"const": "stopOne"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/stopOne"}}}},
+        {"if": {"properties": {"type": {"const": "stopAll"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/stopAll"}}}},
+        {"if": {"properties": {"type": {"const": "bookmark"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/bookmark"}}}},
+        {"if": {"properties": {"type": {"const": "commandResult"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/commandResult"}}}},
+        {"if": {"properties": {"type": {"const": "receipt"}}}, "then": {"properties": {"body": {"$ref": "#/$defs/receipt"}}}}
+      ]
+    },
+
+    "hello": {
+      "type": "object",
+      "required": ["role", "appVersion", "platform", "protocols", "roomHint"],
+      "additionalProperties": false,
+      "properties": {
+        "role": {"enum": ["host", "guest"]},
+        "appVersion": {"type": "string", "pattern": "^[0-9]{1,3}\\.[0-9]{1,3}(\\.[0-9]{1,3})?$"},
+        "platform": {"enum": ["ios", "android"]},
+        "protocols": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"const": 1}},
+        "roomHint": {"description": "The host's advertised hint; null from a guest.", "oneOf": [{"type": "null"}, {"$ref": "#/$defs/roomHint"}]}
+      }
+    },
+    "join": {
+      "description": "The guest's join request over the TLS channel. QR path: proves the QR secret with HMAC-SHA256(joinToken, roomId|inviteId|nonce|guestKeySha256|guestCommitment) (spec/room's proof with sessionId = roomId) and commits to its guest nonce. Typed-code path: looks the invitation up by its display code; it has no pinned host key, so its comparison code must come from the TLS channel binding (channelBinding tls-exporter) or the host refuses it. displayName is the guest's own claim, shown as unverified text and never the basis of approval.",
+      "type": "object",
+      "required": ["path", "inviteId", "displayCode", "guestKeySha256", "guestCommitment", "observedHostKeySha256", "proof", "channelBinding", "displayName", "deviceModel", "consent"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"enum": ["qr", "typedCode"]},
+        "inviteId": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+        "displayCode": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/displayCode"}]},
+        "guestKeySha256": {"$ref": "#/$defs/sha256"},
+        "guestCommitment": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+        "observedHostKeySha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+        "proof": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+        "channelBinding": {"oneOf": [{"type": "null"}, {"const": "tls-exporter"}]},
+        "displayName": {"$ref": "studio-common.schema.json#/$defs/userText"},
+        "deviceModel": {"type": "string", "minLength": 1, "maxLength": 80},
+        "consent": {"type": "object", "required": ["shareCaptureMetadata"], "additionalProperties": false, "properties": {"shareCaptureMetadata": {"const": true}}}
+      },
+      "allOf": [
+        {"if": {"properties": {"path": {"const": "qr"}}},
+         "then": {"properties": {"inviteId": {"$ref": "#/$defs/id"}, "displayCode": {"type": "null"}, "guestCommitment": {"$ref": "#/$defs/sha256"}, "observedHostKeySha256": {"$ref": "#/$defs/sha256"}, "proof": {"$ref": "#/$defs/sha256"}, "channelBinding": {"type": "null"}}},
+         "else": {"properties": {"inviteId": {"type": "null"}, "displayCode": {"$ref": "#/$defs/displayCode"}, "guestCommitment": {"type": "null"}, "observedHostKeySha256": {"type": "null"}, "proof": {"type": "null"}}}}
+      ]
+    },
+    "approvalRequest": {
+      "description": "The host accepted the join checks and now waits for the human comparison. QR path: carries the host's fresh nonce, sent only after the guest committed. Typed-code path: no nonce (the code comes from the channel binding).",
+      "type": "object",
+      "required": ["inviteId", "hostNonce"],
+      "additionalProperties": false,
+      "properties": {"inviteId": {"$ref": "#/$defs/id"}, "hostNonce": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/nonce"}]}}
+    },
+    "joinReveal": {
+      "type": "object",
+      "required": ["inviteId", "guestNonce"],
+      "additionalProperties": false,
+      "properties": {"inviteId": {"$ref": "#/$defs/id"}, "guestNonce": {"$ref": "#/$defs/nonce"}}
+    },
+    "approve": {
+      "description": "Sent after the host tapped 'Codes match · Allow'. It names the guest's key, never its display name.",
+      "type": "object",
+      "required": ["inviteId", "deviceId", "guestKeySha256", "basis"],
+      "additionalProperties": false,
+      "properties": {
+        "inviteId": {"$ref": "#/$defs/id"},
+        "deviceId": {"$ref": "#/$defs/id"},
+        "guestKeySha256": {"$ref": "#/$defs/sha256"},
+        "basis": {"enum": ["comparisonCode", "channelBindingCode"]}
+      }
+    },
+    "decline": {
+      "type": "object",
+      "required": ["inviteId", "reason"],
+      "additionalProperties": false,
+      "properties": {"inviteId": {"$ref": "#/$defs/id"}, "reason": {"enum": ["codesDidNotMatch", "hostDeclined", "attemptsExhausted"]}}
+    },
+    "revoke": {
+      "description": "Removes a member (its connection closes and the code it used is void) or withdraws an open code.",
+      "type": "object",
+      "required": ["deviceId", "inviteId", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "deviceId": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+        "inviteId": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+        "reason": {"enum": ["hostRemoved", "codeWithdrawn"]}
+      }
+    },
+    "roleAssigned": {
+      "type": "object",
+      "required": ["deviceId", "slot", "slotRole", "commandGrants", "capabilities"],
+      "additionalProperties": false,
+      "properties": {
+        "deviceId": {"$ref": "#/$defs/id"},
+        "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+        "slotRole": {"$ref": "#/$defs/slotRole"},
+        "commandGrants": {"$ref": "#/$defs/grants"},
+        "capabilities": {"$ref": "#/$defs/capabilities"}
+      }
+    },
+    "grantChanged": {
+      "type": "object",
+      "required": ["deviceId", "commandGrants"],
+      "additionalProperties": false,
+      "properties": {"deviceId": {"$ref": "#/$defs/id"}, "commandGrants": {"$ref": "#/$defs/grants"}}
+    },
+    "readiness": {
+      "description": "A camera's own preflight (multicam-sync section 2.7). Ready when the camera is allowed, the preset is supported, minutesLeft covers the planned length, battery is at least 20 % or charging, and thermal is nominal or fair.",
+      "type": "object",
+      "required": ["cameraPermission", "microphonePermission", "presetSupported", "batteryPct", "charging", "lowPowerMode", "freeBytes", "minutesLeft", "thermal"],
+      "additionalProperties": false,
+      "properties": {
+        "cameraPermission": {"$ref": "#/$defs/permission"},
+        "microphonePermission": {"$ref": "#/$defs/permission"},
+        "presetSupported": {"type": "boolean"},
+        "batteryPct": {"$ref": "#/$defs/batteryPct"},
+        "charging": {"type": "boolean"},
+        "lowPowerMode": {"type": "boolean"},
+        "freeBytes": {"$ref": "#/$defs/nonNegInt"},
+        "minutesLeft": {"$ref": "#/$defs/nonNegInt"},
+        "thermal": {"$ref": "#/$defs/thermal"}
+      }
+    },
+    "commandCommon": {
+      "type": "object",
+      "required": ["commandId", "issuer", "claimedGrant", "expiry", "target", "baseEventRevision"],
+      "properties": {
+        "commandId": {"description": "From a CSPRNG (at least 96 bits); unique per issuer.", "$ref": "#/$defs/id"},
+        "issuer": {"type": "object", "required": ["deviceId"], "additionalProperties": false, "properties": {"deviceId": {"$ref": "#/$defs/id"}}},
+        "claimedGrant": {"$ref": "#/$defs/commandGrant"},
+        "expiry": {
+          "description": "ttlMs is the command's lifetime; ageAtSendMs is recomputed by the issuer on every send from its own monotonic clock, and is left out of the idempotency hash.",
+          "type": "object", "required": ["ttlMs", "ageAtSendMs"], "additionalProperties": false,
+          "properties": {"ttlMs": {"type": "integer", "minimum": 1, "maximum": 600000}, "ageAtSendMs": {"$ref": "#/$defs/nonNegInt"}}
+        },
+        "target": {
+          "type": "object", "required": ["scope", "deviceIds"], "additionalProperties": false,
+          "properties": {"scope": {"enum": ["one", "all", "room"]}, "deviceIds": {"$ref": "#/$defs/deviceIds"}}
+        },
+        "baseEventRevision": {"description": "The room capture revision the issuer saw; capture commands against an older revision are Conflicted. null for a bookmark.", "oneOf": [{"type": "null"}, {"$ref": "#/$defs/nonNegInt"}]}
+      }
+    },
+    "recordingIntent": {
+      "description": "An intent to start, never proof. Only recordingStarted acknowledgements count (ADR-0017).",
+      "allOf": [{"$ref": "#/$defs/commandCommon"}],
+      "type": "object",
+      "required": ["intentId"],
+      "additionalProperties": false,
+      "properties": {"commandId": true, "issuer": true, "claimedGrant": true, "expiry": true, "target": true, "baseEventRevision": true, "intentId": {"$ref": "#/$defs/id"}}
+    },
+    "stopOne": {
+      "allOf": [{"$ref": "#/$defs/commandCommon"}],
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {"commandId": true, "issuer": true, "claimedGrant": true, "expiry": true, "target": true, "baseEventRevision": true}
+    },
+    "stopAll": {
+      "description": "A deliberate, confirmed fan-out that names its targets; reported per device, never as a blanket success.",
+      "allOf": [{"$ref": "#/$defs/commandCommon"}],
+      "type": "object",
+      "required": ["confirmed", "targetLabel"],
+      "additionalProperties": false,
+      "properties": {"commandId": true, "issuer": true, "claimedGrant": true, "expiry": true, "target": true, "baseEventRevision": true,
+                     "confirmed": {"const": true}, "targetLabel": {"type": "string", "pattern": "^Stop all cameras \\([1-6]\\)$"}}
+    },
+    "bookmark": {
+      "description": "Mark point: a match-clock hint and an optional note on the shared timeline. It never moves the capture revision.",
+      "allOf": [{"$ref": "#/$defs/commandCommon"}],
+      "type": "object",
+      "required": ["matchClockHintMs", "note"],
+      "additionalProperties": false,
+      "properties": {"commandId": true, "issuer": true, "claimedGrant": true, "expiry": true, "target": true, "baseEventRevision": true,
+                     "matchClockHintMs": {"$ref": "#/$defs/nonNegInt"}, "note": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/userText"}]}}
+    },
+    "recordingStarted": {
+      "description": "A camera's acknowledgement that it is recording: the only evidence 'Recording on n of m' counts. intentId is null for a start the operator made on that phone.",
+      "type": "object",
+      "required": ["intentId", "segmentId", "fileZeroHostNs", "wallClockAtStart", "preset", "fps", "timescale", "orientationLock"],
+      "additionalProperties": false,
+      "properties": {
+        "intentId": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+        "segmentId": {"$ref": "#/$defs/id"},
+        "fileZeroHostNs": {"description": "The sender's monotonic clock at the file's first sample (multicam-sync section 3.2): a capture-time hint, never alignment evidence.", "$ref": "#/$defs/nonNegInt"},
+        "wallClockAtStart": {"$ref": "studio-common.schema.json#/$defs/dateTime"},
+        "preset": {"type": "object", "required": ["width", "height"], "additionalProperties": false, "properties": {"width": {"$ref": "#/$defs/posInt"}, "height": {"$ref": "#/$defs/posInt"}}},
+        "fps": {"$ref": "studio-common.schema.json#/$defs/fps"},
+        "timescale": {"$ref": "#/$defs/posInt"},
+        "orientationLock": {"enum": ["portrait", "landscapeLeft", "landscapeRight", "none"]}
+      }
+    },
+    "heartbeat": {
+      "description": "Every 2 s. Its absence is never read as a stop: the receiver ages it.",
+      "type": "object",
+      "required": ["captureState", "segmentId", "savedThroughMs", "segmentIndex", "freeBytes", "batteryPct", "thermal", "droppedFrames"],
+      "additionalProperties": false,
+      "properties": {
+        "captureState": {"$ref": "#/$defs/captureState"},
+        "segmentId": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+        "savedThroughMs": {"$ref": "#/$defs/nonNegInt"},
+        "segmentIndex": {"$ref": "#/$defs/nonNegInt"},
+        "freeBytes": {"$ref": "#/$defs/nonNegInt"},
+        "batteryPct": {"$ref": "#/$defs/batteryPct"},
+        "thermal": {"$ref": "#/$defs/thermal"},
+        "droppedFrames": {"$ref": "#/$defs/nonNegInt"}
+      }
+    },
+    "still": {
+      "description": "Preview still metadata (the image follows as its own blob): every 5 s, or every 2 s while framing, and only at thermal nominal or fair. Its age is chained from the sender's capture time; it is never 'live'.",
+      "type": "object",
+      "required": ["stillId", "captureMonoNs", "framing", "format", "width", "height", "bytes", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "stillId": {"$ref": "#/$defs/id"},
+        "captureMonoNs": {"$ref": "#/$defs/nonNegInt"},
+        "framing": {"type": "boolean"},
+        "format": {"enum": ["jpeg", "heic"]},
+        "width": {"type": "integer", "minimum": 1, "maximum": 1280},
+        "height": {"type": "integer", "minimum": 1, "maximum": 1280},
+        "bytes": {"type": "integer", "minimum": 1, "maximum": 262144},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "segmentEvent": {
+      "type": "object",
+      "required": ["segmentId", "event", "reason", "mediaMs", "nextSegmentId"],
+      "additionalProperties": false,
+      "properties": {
+        "segmentId": {"$ref": "#/$defs/id"},
+        "event": {"enum": ["interruption", "gapStart", "gapEnd", "rollover"]},
+        "reason": {"oneOf": [{"type": "null"}, {"enum": ["call", "siri", "thermal", "storage", "background", "other"]}]},
+        "mediaMs": {"$ref": "#/$defs/nonNegInt"},
+        "nextSegmentId": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}
+      }
+    },
+    "recordingStopped": {
+      "description": "A camera's acknowledgement that it stopped. commandId is null for a stop made on that phone.",
+      "type": "object",
+      "required": ["commandId", "segments"],
+      "additionalProperties": false,
+      "properties": {
+        "commandId": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+        "segments": {"type": "array", "minItems": 1, "maxItems": 64, "items": {"type": "object", "required": ["segmentId", "durationMs", "bytes"], "additionalProperties": false, "properties": {"segmentId": {"$ref": "#/$defs/id"}, "durationMs": {"$ref": "#/$defs/nonNegInt"}, "bytes": {"$ref": "#/$defs/nonNegInt"}}}}
+      }
+    },
+    "commandResult": {
+      "description": "A target camera's refusal or failure of a relayed capture command.",
+      "type": "object",
+      "required": ["commandId", "result", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "commandId": {"$ref": "#/$defs/id"},
+        "result": {"enum": ["Failed", "Denied"]},
+        "reason": {"enum": ["cameraPermissionDenied", "foregroundRequired", "finalizing", "finalizeFailed", "notRecording", "storageFull"]}
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "required": ["commandId", "issuerDeviceId", "status", "reason", "securityEvent", "eventRevision", "perDevice"],
+      "additionalProperties": false,
+      "properties": {
+        "commandId": {"$ref": "#/$defs/id"},
+        "issuerDeviceId": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["Pending", "Accepted", "Rejected", "Expired", "Conflicted"]},
+        "reason": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-z][A-Za-z]{1,40}$"}]},
+        "securityEvent": {"type": "boolean"},
+        "eventRevision": {"$ref": "#/$defs/nonNegInt"},
+        "perDevice": {
+          "type": "array", "maxItems": 6,
+          "items": {"type": "object", "required": ["deviceId", "result", "reason"], "additionalProperties": false,
+                    "properties": {"deviceId": {"$ref": "#/$defs/id"}, "result": {"enum": ["Pending", "Accepted", "Failed", "Denied", "Unknown"]},
+                                   "reason": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-z][A-Za-z]{1,40}$"}]}}}
+        }
+      }
+    },
+
+    "transcript": {
+      "type": "object",
+      "required": ["schemaVersion", "transcriptId", "sample", "screen", "title", "room", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.room-transcript/1"},
+        "transcriptId": {"$ref": "#/$defs/id"},
+        "sample": {"const": true},
+        "screen": {"enum": ["23-camera-lobby", "24-director-capture"]},
+        "title": {"type": "string", "minLength": 1, "maxLength": 200},
+        "room": {"$ref": "#/$defs/room"},
+        "steps": {"type": "array", "minItems": 1, "maxItems": 400, "items": {"$ref": "#/$defs/step"}}
+      }
+    },
+    "member": {
+      "type": "object",
+      "required": ["deviceId", "keySha256", "label", "slot", "slotRole", "commandGrants", "capabilities"],
+      "additionalProperties": false,
+      "properties": {
+        "deviceId": {"$ref": "#/$defs/id"},
+        "keySha256": {"$ref": "#/$defs/sha256"},
+        "label": {"$ref": "studio-common.schema.json#/$defs/userText"},
+        "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+        "slotRole": {"$ref": "#/$defs/slotRole"},
+        "commandGrants": {"$ref": "#/$defs/grants"},
+        "capabilities": {"$ref": "#/$defs/capabilities"}
+      }
+    },
+    "room": {
+      "description": "The host's state when the transcript starts. members[0] is the host itself.",
+      "type": "object",
+      "required": ["roomId", "projectId", "hostDeviceId", "hostKeySha256", "hostEpoch", "roomHint", "maxCameras", "plannedMinutes", "eventRevision", "members"],
+      "additionalProperties": false,
+      "properties": {
+        "roomId": {"$ref": "#/$defs/id"},
+        "projectId": {"$ref": "#/$defs/id"},
+        "hostDeviceId": {"$ref": "#/$defs/id"},
+        "hostKeySha256": {"$ref": "#/$defs/sha256"},
+        "hostEpoch": {"$ref": "#/$defs/posInt"},
+        "roomHint": {"$ref": "#/$defs/roomHint"},
+        "maxCameras": {"const": 6},
+        "plannedMinutes": {"$ref": "#/$defs/posInt"},
+        "eventRevision": {"$ref": "#/$defs/nonNegInt"},
+        "members": {"type": "array", "minItems": 1, "maxItems": 6, "items": {"$ref": "#/$defs/member"}}
+      }
+    },
+    "stepNote": {"description": "A fixture label the room vectors use to name this step.", "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+    "verdict": {
+      "oneOf": [
+        {"type": "object", "required": ["accepted"], "additionalProperties": false, "properties": {"accepted": {"const": true}}},
+        {"type": "object", "required": ["accepted", "code"], "additionalProperties": false, "properties": {"accepted": {"const": false}, "code": {"type": "string", "pattern": "^[a-z][A-Za-z]{1,40}$"}}}
+      ]
+    },
+    "atMs": {"description": "The host's own monotonic clock, in ms (continuous across sleep).", "$ref": "#/$defs/nonNegInt"},
+    "frameLength": {"description": "The 4-byte big-endian length prefix: the byte length of the message's canonical UTF-8 JSON (sorted keys, no whitespace).", "type": "integer", "minimum": 0, "maximum": 4294967295},
+    "step": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["step", "atMs", "inviteId", "slot", "displayCode", "lifetimeS", "qr"],
+          "additionalProperties": false,
+          "properties": {
+            "note": {"$ref": "#/$defs/stepNote"}, "step": {"const": "invite"}, "atMs": {"$ref": "#/$defs/atMs"}, "inviteId": {"$ref": "#/$defs/id"},
+            "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"}, "displayCode": {"$ref": "#/$defs/displayCode"},
+            "lifetimeS": {"type": "integer", "minimum": 1, "maximum": 86400},
+            "qr": {"description": "The QR text the host displays: spec/room's jovra.room.invitation-payload/1. Sample secrets only.", "type": "string", "pattern": "^[a-z-]+:[0-9]+:[A-Za-z0-9_=+/-]{1,2048}$"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["step", "atMs", "peerKeySha256", "length", "transitMs", "exporter", "verdict", "message"],
+          "additionalProperties": false,
+          "properties": {
+            "note": {"$ref": "#/$defs/stepNote"}, "step": {"const": "in"}, "atMs": {"$ref": "#/$defs/atMs"},
+            "peerKeySha256": {"description": "The TLS-authenticated peer key of the channel the frame arrived on.", "$ref": "#/$defs/sha256"},
+            "length": {"$ref": "#/$defs/frameLength"},
+            "transitMs": {"description": "A transport-observed bound on transit (from an acknowledged exchange); null when it cannot be bounded.", "oneOf": [{"type": "null"}, {"$ref": "#/$defs/nonNegInt"}]},
+            "exporter": {"description": "The host side's TLS exporter value for this channel (label EXPORTER-jovra-room-sas), present when the channel offers one. Sample value.", "oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+            "verdict": {"$ref": "#/$defs/verdict"},
+            "message": {"$ref": "#/$defs/message"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["step", "atMs", "toPeerKeys", "length", "message"],
+          "additionalProperties": false,
+          "properties": {
+            "note": {"$ref": "#/$defs/stepNote"}, "step": {"const": "out"}, "atMs": {"$ref": "#/$defs/atMs"},
+            "toPeerKeys": {"type": "array", "minItems": 1, "maxItems": 6, "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}},
+            "length": {"$ref": "#/$defs/frameLength"},
+            "message": {"$ref": "#/$defs/message"}
+          }
+        },
+        {
+          "description": "The host phone's own action or capture report (its own UI, its own camera); it never crosses the network.",
+          "type": "object",
+          "required": ["step", "atMs", "message"],
+          "additionalProperties": false,
+          "properties": {"note": {"$ref": "#/$defs/stepNote"}, "step": {"const": "local"}, "atMs": {"$ref": "#/$defs/atMs"}, "message": {"$ref": "#/$defs/message"}}
+        },
+        {
+          "description": "The human comparison: the six digits each screen showed and the host's tap. guestView is what the guest's side of the channel saw (a different host key or exporter means a man in the middle); null when it saw the same.",
+          "type": "object",
+          "required": ["step", "atMs", "inviteId", "hostScreenCode", "guestScreenCode", "decision", "guestView"],
+          "additionalProperties": false,
+          "properties": {
+            "note": {"$ref": "#/$defs/stepNote"}, "step": {"const": "comparison"}, "atMs": {"$ref": "#/$defs/atMs"}, "inviteId": {"$ref": "#/$defs/id"},
+            "hostScreenCode": {"$ref": "#/$defs/sixDigits"}, "guestScreenCode": {"$ref": "#/$defs/sixDigits"},
+            "decision": {"enum": ["allow", "decline"]},
+            "guestView": {"oneOf": [{"type": "null"}, {"type": "object", "required": ["hostKeySha256", "guestKeySha256", "exporter"], "additionalProperties": false,
+                                                        "properties": {"hostKeySha256": {"$ref": "#/$defs/sha256"}, "guestKeySha256": {"$ref": "#/$defs/sha256"}, "exporter": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]}}}]}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["step", "atMs", "kind", "newHostEpoch", "newHostDeviceId", "newHostKeySha256"],
+          "additionalProperties": false,
+          "properties": {
+            "note": {"$ref": "#/$defs/stepNote"}, "step": {"const": "restart"}, "atMs": {"$ref": "#/$defs/atMs"},
+            "kind": {"enum": ["hostRestart", "hostTransfer"]},
+            "newHostEpoch": {"$ref": "#/$defs/posInt"}, "newHostDeviceId": {"$ref": "#/$defs/id"}, "newHostKeySha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        {
+          "description": "What the host's screen showed at atMs. The reference recomputes every field.",
+          "type": "object",
+          "required": ["step", "atMs", "display"],
+          "additionalProperties": false,
+          "properties": {
+            "note": {"$ref": "#/$defs/stepNote"}, "step": {"const": "observe"}, "atMs": {"$ref": "#/$defs/atMs"},
+            "display": {
+              "type": "object", "required": ["recordingOn", "devices"], "additionalProperties": false,
+              "properties": {
+                "recordingOn": {"oneOf": [{"type": "null"}, {"type": "object", "required": ["n", "m"], "additionalProperties": false, "properties": {"n": {"$ref": "#/$defs/nonNegInt"}, "m": {"$ref": "#/$defs/nonNegInt"}}}]},
+                "devices": {"type": "array", "maxItems": 6, "items": {
+                  "type": "object",
+                  "required": ["deviceId", "slot", "freshness", "contactAgeMs", "state", "label", "ready", "stillAgeMs"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "deviceId": {"$ref": "#/$defs/id"},
+                    "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+                    "freshness": {"enum": ["Local", "Fresh", "Delayed", "Unknown"]},
+                    "contactAgeMs": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/nonNegInt"}]},
+                    "state": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/captureState"}]},
+                    "label": {"oneOf": [{"type": "null"}, {"type": "string", "minLength": 1, "maxLength": 80}]},
+                    "ready": {"oneOf": [{"type": "null"}, {"type": "boolean"}]},
+                    "stillAgeMs": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/nonNegInt"}]}
+                  }
+                }}
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

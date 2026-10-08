@@ -1,0 +1,14 @@
+$ xcodebuild build -project ios/Jovra.xcodeproj -scheme Jovra -destination generic/platform=iOS -derivedDataPath .derivedData CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM= -quiet
+# 2026-10-08, merged tree; device SDK compile only. No signing identity on this Mac, so nothing is installed on hardware.
+exit 0
+$ lipo -info Jovra.app/Jovra
+Jovra.app/Jovra is architecture: arm64
+$ plutil MinimumOSVersion / DTPlatformName / DTSDKName
+18.0
+iphoneos
+iphoneos26.5
+$ security find-identity -v -p codesigning
+     0 valid identities found
+$ xcrun devicectl list devices (names redacted)
+iPhone16,2 (iPhone 15 Pro Max, iOS 27.0): available (paired)
+iPhone18,5 (iOS 26.6.1): unavailable

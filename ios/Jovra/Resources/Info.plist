@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.islanddevcrew.jovra.processing.overnight</string>
+		<string>com.islanddevcrew.jovra.continued.*</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -18,14 +23,47 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>com.islanddevcrew.jovra.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>jovra</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>com.islanddevcrew.jovra.drive-oauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(JOVRA_DRIVE_REVERSED_CLIENT_ID)</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>JovraAppleSignInEnabled</key>
+	<string>$(JOVRA_APPLE_SIGN_IN_ENABLED)</string>
+	<key>JovraDriveClientID</key>
+	<string>$(JOVRA_DRIVE_CLIENT_ID)</string>
+	<key>JovraDriveRedirectScheme</key>
+	<string>$(JOVRA_DRIVE_REVERSED_CLIENT_ID)</string>
+	<key>JovraDriveXcconfigLoaded</key>
+	<string>$(JOVRA_DRIVE_XCCONFIG_LOADED)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>JOVRA uses the camera to record your tennis sessions. Videos are saved on this device.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>If you turn on Apple Health in Settings, JOVRA saves each tennis session as a workout with only its start time, end time and session reference, nothing else.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Optional. JOVRA can use the microphone to capture audio for hit detection and voice notes. Recording works without it.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -35,6 +73,10 @@
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
