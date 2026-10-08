@@ -48,6 +48,28 @@ final class HarnessUITests: XCTestCase {
         }
     }
 
+    // MARK: Screenshot names
+
+    func testScreenshotNamesAreLowerCaseWordsJoinedByHyphens() {
+        XCTAssertTrue(Screenshots.isValidName("s04-dark-setup"))
+        XCTAssertTrue(Screenshots.isValidName("ax5-1-home"))
+        XCTAssertFalse(Screenshots.isValidName("Home Screen"))
+        XCTAssertFalse(Screenshots.isValidName("home--screen"))
+        XCTAssertFalse(Screenshots.isValidName(""))
+    }
+
+    /// A bad name records a test failure; it must not crash the runner (which would lose the other
+    /// tests and every attachment of the run).
+    @MainActor
+    func testABadScreenshotNameFailsTheTestInsteadOfCrashing() {
+        continueAfterFailure = true
+        let options = XCTExpectedFailure.Options()
+        options.issueMatcher = { $0.compactDescription.contains("lower-case words joined by hyphens") }
+        XCTExpectFailure("a bad screenshot name is a recorded failure", options: options) {
+            attachScreenshot(XCUIApplication(), name: "Bad Name")
+        }
+    }
+
     // MARK: Copy from the brief, with the honesty corrections
 
     func testBriefCopyIsTheQuotedCopyOfEachScreen() throws {

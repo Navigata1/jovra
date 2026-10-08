@@ -62,9 +62,10 @@ final class JovraSmokeUITests: XCTestCase {
         try auditScreen(app)
     }
 
-    /// The largest accessibility text size (AX5). The tab bar must stay one compact row with every
-    /// title on one line (its labels cap at xxxLarge and hand over to the Large Content Viewer), the
-    /// Sessions filter pills must stack instead of breaking words, and every tab must pass the audit.
+    /// The largest accessibility text size (AX5). The tab bar must stay one compact row, and every
+    /// English title one line high (its labels cap at xxxLarge and hand over to the Large Content
+    /// Viewer; only a long translation wraps, which PseudoLocaleUITests covers). The Sessions filter
+    /// pills must stack instead of breaking words, and every tab must pass the audit.
     @MainActor
     func testEveryTabAtLargestAccessibilityTextSize() throws {
         let app = launch(appearance: .light, contentSize: .accessibility5)
@@ -78,9 +79,11 @@ final class JovraSmokeUITests: XCTestCase {
 
             XCTAssertLessThanOrEqual(tabBar.frame.height, app.frame.height * 0.15, "tab bar (overhang strip and home-indicator inset included) stays compact at AX5 (\(tabBar.frame))")
             let frames = tabs.map { app.buttons[$0.identifier].frame }
+            print("ax5: tab item heights \(frames.map(\.height)) pt; one-line limit \(TabItem.maximumOneLineHeight) pt")
             for (other, frame) in zip(tabs, frames) {
                 XCTAssertEqual(frame.minY, frames[0].minY, accuracy: 0.5, "\(other.identifier) sits on the same row")
-                XCTAssertEqual(frame.height, frames[0].height, accuracy: 0.5, "\(other.identifier) title stays on one line")
+                XCTAssertLessThan(frame.height, TabItem.maximumOneLineHeight,
+                                  "\(other.identifier) title stays on one line at AX5 (\(frame.height) pt; a second line adds \(TabItem.titleLineHeight) pt)")
                 XCTAssertGreaterThanOrEqual(frame.height, 44, "\(other.identifier) is at least 44 pt tall")
             }
 
@@ -98,6 +101,16 @@ final class JovraSmokeUITests: XCTestCase {
     }
 
     // MARK: Helpers (the audit, screenshots and launch helpers live in Support/)
+
+    /// A tab item's layout (JovraTabBar's TabLabel): a 28 pt icon slot, 3 pt, the title (caption,
+    /// capped at xxxLarge), 3 pt, a 5 pt selection dot. One title line keeps the item below
+    /// `maximumOneLineHeight`; a second line adds a whole `titleLineHeight`.
+    private enum TabItem {
+        static let titleLineHeight = UIFont.preferredFont(
+            forTextStyle: .caption1, compatibleWith: UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)
+        ).lineHeight
+        static let maximumOneLineHeight = 28 + 3 + 3 + 5 + titleLineHeight * 1.5
+    }
 
     @MainActor
     private func visitEveryTab(appearance: LaunchConfiguration.Appearance) throws {
