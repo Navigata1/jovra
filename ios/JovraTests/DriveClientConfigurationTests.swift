@@ -13,8 +13,28 @@ struct DriveClientConfigurationTests {
         // is about the default chain, which CI and a clean checkout always use.
         try #require(info["JovraDriveXcconfigLoaded"] as? String != "YES", "built with a local Drive.xcconfig")
         #expect(info["JovraDriveClientID"] as? String == "")
+        #expect(info["JovraDriveRedirectScheme"] as? String == DriveClientConfiguration.unconfiguredScheme)
         #expect(DriveClientConfiguration(infoDictionary: info) == .notConfigured)
         #expect(DriveClientConfiguration.bundled == .notConfigured)
+    }
+
+    @Test("every URL scheme the app registers is a valid, non-empty scheme (RFC 3986), Drive placeholder included")
+    func registeredSchemesAreValid() throws {
+        let info = try #require(Bundle.main.infoDictionary)
+        let types = try #require(info["CFBundleURLTypes"] as? [[String: Any]])
+        let schemes = types.flatMap { $0["CFBundleURLSchemes"] as? [String] ?? [] }
+        #expect(schemes.count == types.count, "every URL type registers exactly one scheme")
+        let valid = /[A-Za-z][A-Za-z0-9+.\-]*/
+        for scheme in schemes {
+            #expect(scheme.wholeMatch(of: valid) != nil, "invalid URL scheme '\(scheme)'")
+        }
+    }
+
+    @Test("the inert placeholder scheme without a client id is not configured")
+    func placeholderSchemeIsNotConfigured() {
+        let info = ["JovraDriveClientID": "", "JovraDriveRedirectScheme": DriveClientConfiguration.unconfiguredScheme]
+        #expect(DriveClientConfiguration(infoDictionary: info) == .notConfigured)
+        #expect(DriveClientConfiguration.unconfiguredScheme.wholeMatch(of: /[a-z][a-z0-9.\-]*/) != nil)
     }
 
     @Test("an empty, blank, missing or unexpanded client id is not configured", arguments: [

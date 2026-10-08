@@ -4,8 +4,9 @@ import Foundation
 ///
 /// The values come from the git-ignored `ios/Config/Drive.xcconfig` through two Info.plist keys
 /// (`JovraDriveClientID`, `JovraDriveRedirectScheme`); the redirect scheme is also registered as a URL
-/// type. Without that file both are empty and Drive reads as `.notConfigured`, which the UI shows as
-/// "Awaiting Google Drive setup", never as a fake "Connected".
+/// type. Without that file the client id is empty and the redirect scheme is the inert placeholder
+/// `unconfiguredScheme` (an empty CFBundleURLSchemes entry is invalid), so Drive reads as
+/// `.notConfigured`, which the UI shows as "Awaiting Google Drive setup", never as a fake "Connected".
 enum DriveClientConfiguration: Equatable, Sendable {
     case notConfigured
     case configured(clientID: String, redirectScheme: String)
@@ -14,6 +15,9 @@ enum DriveClientConfiguration: Equatable, Sendable {
 
     static let clientIDKey = "JovraDriveClientID"
     static let redirectSchemeKey = "JovraDriveRedirectScheme"
+    /// The default of JOVRA_DRIVE_REVERSED_CLIENT_ID in ios/Config/Jovra.xcconfig: a valid URL scheme
+    /// that no Google client uses, registered only so the Drive URL type is never an empty scheme.
+    static let unconfiguredScheme = "com.islanddevcrew.jovra.drive-unconfigured"
     private static let clientIDSuffix = ".apps.googleusercontent.com"
     private static let schemePrefix = "com.googleusercontent.apps."
 
