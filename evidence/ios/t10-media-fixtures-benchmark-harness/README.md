@@ -20,7 +20,7 @@ runs with the new JovraMedia manifest.
 | `frame-counter-240fps-frame137.jpg` | 240 fps counter at frame 137: code bits 8, 12 and 15, the digits 0137 and scan cell 9 |
 | `import-portrait-rotated-as-displayed.jpg` | The iPhone-style portrait clip with its 90-degree matrix applied: the arrow points up |
 | `import-native-portrait-frame5.jpg` | The native 720x1280 portrait clip |
-| `app-smoke-{light,dark}-1-home.jpg` | JovraUITests on JOVRA-T10 after the manifest change (6/6 and 2 system-appearance passes) |
+| `app-smoke-{light,dark,ax5}-1-home.jpg` | JovraUITests on JOVRA-T10 after the manifest change and the main merge (6/6 and 2 system-appearance passes, 2026-10-08) |
 
 Test counts on JOVRA-T10 after verifier round 2 (2026-10-07): `scripts/ios/test.sh` (`render.py --check` first: 19
 clips, 1,068,590 bytes, PASS) gave JovraCore 15 tests, JovraMedia 63 tests (129 cases) in 13 suites and
@@ -29,5 +29,17 @@ was 5/6 because `testEveryTabAtLargestAccessibilityTextSize` hit "Audit failed t
 accessibility-audit timeout), and an immediate re-run of the full suite gave 6/6. Round 2 changed no app code or
 screen, so the app-smoke JPEGs were not replaced. Real-footage results are build-Mac only (CI skips them);
 simulator, device and ML validation are separate and none is claimed here.
+
+Re-verification on 2026-10-08, after merging `origin/main` (docs and spec only; no change under `ios/` or
+`scripts/ios/`): `render-check.txt`, `validate.txt` and `swift-test-jovramedia.txt` were regenerated. A forced
+re-encode of all 19 clips into an empty scratch cache passed `--check` with byte-identical media (1,068,590
+bytes). `validate.py` passed (19 ground truths, 3 benchmark records, 1 binding set, 37 media self-tests).
+`scripts/ios/test.sh` on JOVRA-T10 gave JovraCore 15 tests, JovraMedia 63 tests in 13 suites and JovraTests 10/10.
+The first `scripts/ios/ui-test.sh` run, at a machine load average near 60 with other sessions building, failed 4/6 on
+"Contrast failed" for the "This week" and "Your sessions" headings. The audit's element screenshots show dark text
+on the light background, a sampling false positive. That code is the unchanged foundation harness, not T10 code.
+The immediate re-run passed 6/6, with system light 1/1 and system dark 1/1. `app-smoke-{light,dark,ax5}-1-home.jpg`
+come from that passing run. Real devices: an iPhone 15 Pro Max is paired with the build Mac, but this Mac has no
+code-signing identity, so nothing was run on it. Device results remain unverified.
 
 Round 1 counts, for the record: JovraMedia 52 tests (117 cases), JovraTests 10/10, JovraUITests 6/6.
