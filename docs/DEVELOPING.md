@@ -92,6 +92,10 @@ CPU path). Each is a lead decision if a ticket needs it.
 ad-hoc signature; Xcode writes the entitlements into the executable's `__TEXT,__entitlements` section,
 which the simulator grants. `scripts/ios/check-build-config.sh` reads them back and launches the app.
 Device builds need a team with both capabilities enabled (not exercised yet: UNVERIFIED on device).
+An unsigned device-SDK compile does work (`xcodebuild build -destination generic/platform=iOS
+CODE_SIGNING_ALLOWED=NO`, an arm64 `iphoneos` binary with `MinimumOSVersion` 18.0, see
+`evidence/ios/06-ui-harness-l10n-plist/device-sdk-build.log`), but it proves only that the code compiles
+for hardware. It cannot be installed: the build Mac has no signing identity.
 
 ### Google Drive client configuration (ADR-0008)
 

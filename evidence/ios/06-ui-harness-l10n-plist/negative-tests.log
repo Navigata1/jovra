@@ -181,3 +181,53 @@ Ran 31 tests in 0.212s
 OK
 Ran 6 tests in 0.008s
 OK
+
+=== Round 3 (2026-10-08, after merging origin/main dd2d0c3; HEAD 2fe3037, simulator JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22) ===
+
+=== Negative 1 (round 3): literal lint on a copy of the shell with a seeded Text literal
+Jovra/Features/Home/HomeView.swift:36: hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:)): Text("Seeded literal")
+literal lint: 1 violation(s) in 27 Swift file(s)
+exit 1  (expected 1)
+--- the unmodified shell
+literal lint: 0 violation(s) in 27 Swift file(s)
+exit 0  (expected 0)
+
+=== Negative 2 (round 3): copy lint on a copy of Home.xcstrings with a seeded "line call" string
+Home.xcstrings: “Line call: out”: line-call: “Line call: out” (no officiating-grade line calls (CLAUDE.md rule 1))
+copy lint: 1 finding(s) in 1 catalog(s) and 0 Swift file(s)
+exit 1  (expected 1)
+--- every catalog and Swift file in the app
+copy lint: 0 finding(s) in 9 catalog(s) and 27 Swift file(s)
+exit 0  (expected 0)
+
+=== Negative 3 (round 3): String Catalog ownership on the PR fixture, against the merged docs/spec/tickets.json
+--- pr-edits-another-areas-table (ticket/t23-framing-calibration)
+ios/Jovra/Resources/Localization/Home.xcstrings: table Home belongs to T19 (ios/Jovra/Features/Home), not T23
+catalog ownership: 2 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 1 problem(s)
+exit 1  (expected 1)
+--- pr-edits-its-own-table (ticket/t23-framing-calibration)
+catalog ownership: 1 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 0 problem(s)
+exit 0  (expected 0)
+--- this branch against origin/main
+catalog ownership: 9 changed catalog(s) on ticket/t06-ui-harness-l10n-plist (ticket T06), 0 problem(s)
+exit 0  (expected 0)
+
+=== Negative 4 (round 3): side-by-side generator with a pair lacking a reviewer line (incl. adaptive screen 71)
+side-by-side: 1 of 3 pair(s) have no reviewer line in /private/evidence/ios/t19-home-dashboard/reviews.txt.
+Compare each pair, then add one line per screenshot, for example:
+  s03-dark-home: <reviewer> — <verdict and notes against 03-home.png>
+exit 2  (expected 2)
+files: reviews.txt s03-dark-home.png s03-light-home.png s71-light-ios-fold-studio.png 
+--- after adding the missing line
+side-by-side: 3 reviewed pair(s) -> /private/evidence/ios/t19-home-dashboard/side-by-side.html
+exit 0  (expected 0)
+files: reviews.txt s03-dark-home.png s03-light-home.png s71-light-ios-fold-studio.png side-by-side.html 
+design-reference/adaptive/screens/71-ios-fold-studio.png
+design-reference/screens/03-home.png
+
+=== Tool tests, round 3
+Ran 31 tests in 0.217s
+
+OK
+Ran 6 tests in 0.008s
+OK
