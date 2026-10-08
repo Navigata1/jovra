@@ -55,9 +55,9 @@ All scripts live in `scripts/ios/` and keep derived data in `.derivedData/` at t
 | `scripts/ios/generate.sh` | Generates `ios/Jovra.xcodeproj` from `ios/project.yml`. |
 | `scripts/ios/test.sh` | `swift test` for JovraCore and JovraMedia, then `xcodebuild test` for `JovraTests` on the simulator; prints per-class counts and the `.xcresult` path. |
 | `scripts/ios/ui-test.sh [-only-testing JovraUITests/<Class>[/<test>]]... [ticket]` | With `-only-testing` (repeatable), runs only those classes or tests, so a ticket shows exactly its own. Without it, runs all of `JovraUITests`, then a system-appearance pass with the simulator in light and in dark (restored afterwards). Prints per-class counts and the `.xcresult` path, and exports every named screenshot to `evidence/ios/<ticket>/` (default: branch name minus `ticket/` and the `t` before the number, so `ticket/t06-x` gives `06-x`). |
-| `scripts/ios/check-build-config.sh` | Builds the app unsigned (no team) without and with a test Drive xcconfig; checks the entitlements in the binary, every v1 Info.plist key, the empty and the configured Drive client, and that the unsigned build installs and runs. |
+| `scripts/ios/check-build-config.sh` | Builds the app unsigned (no team) without and with a test Drive xcconfig; checks the entitlements in the binary, every v1 Info.plist key, that every URL type registers one valid (non-empty) scheme, the unconfigured (placeholder) and the configured Drive client, and that the unsigned build installs and runs. |
 | `scripts/ios/side_by_side.py evidence/ios/<ticket>` | Pairs `sNN-*` screenshots with reference PNG NN and writes `side-by-side.html`; exits non-zero until every pair has a reviewer line in `reviews.txt`. |
-| `scripts/ios/xcresult-summary.py <bundle.xcresult>` | Per-class passed/failed/skipped counts, the device and the bundle path. |
+| `scripts/ios/xcresult-summary.py <bundle.xcresult>` | Per-class passed/failed/skipped/expected-failure (XCTExpectFailure) counts, so every test case is counted; the device and the bundle path. |
 | `scripts/l10n/check.sh` | The localization tools' tests, the literal-string lint, the copy lint and (with `BRANCH` and `BASE`) the String Catalog ownership check. CI job `l10n`. |
 | `scripts/ios/render-app-icon.sh [proof.png]` | Re-renders `AppIcon-1024.png` from `BrandGeometry.swift` (and optionally a brand proof sheet). Run after changing the mark. |
 
@@ -78,7 +78,7 @@ the project. **After T06, only the Live Activity follow-up ticket (if the T60 sp
 | `NSHealthUpdateUsageDescription` | usage string | opt-in tennis workouts (start, end, session reference only) |
 | `BGTaskSchedulerPermittedIdentifiers` | `com.islanddevcrew.jovra.processing.overnight`, `com.islanddevcrew.jovra.continued.*` | the overnight processing task (iOS 18+) and user-started continued-processing tasks (iOS 26+; submit as `com.islanddevcrew.jovra.continued.<job>`) |
 | `UIBackgroundModes` | `processing` | the overnight processing task |
-| `CFBundleURLTypes` | `jovra` (deep links) and `$(JOVRA_DRIVE_REVERSED_CLIENT_ID)` (Drive OAuth redirect) | App Intents / Shortcuts deep links; ADR-0008 |
+| `CFBundleURLTypes` | `jovra` (deep links) and `$(JOVRA_DRIVE_REVERSED_CLIENT_ID)` (Drive OAuth redirect; the inert placeholder `com.islanddevcrew.jovra.drive-unconfigured` until Drive.xcconfig exists) | App Intents / Shortcuts deep links; ADR-0008 |
 | `JovraDriveClientID`, `JovraDriveRedirectScheme`, `JovraDriveXcconfigLoaded` | from the xcconfig chain | `DriveClientConfiguration` |
 | `JovraAppleSignInEnabled` | `$(JOVRA_APPLE_SIGN_IN_ENABLED)`, `YES` by default | the "Continue with Apple" switch (screen spec open question 1) |
 | Entitlements | `com.apple.developer.applesignin = [Default]`, `com.apple.developer.healthkit = true`, `healthkit.access = []` | Sign in with Apple, HealthKit |
@@ -95,10 +95,12 @@ Device builds need a team with both capabilities enabled (not exercised yet: UNV
 
 ### Google Drive client configuration (ADR-0008)
 
-`ios/Config/Jovra.xcconfig` sets `JOVRA_DRIVE_CLIENT_ID` and `JOVRA_DRIVE_REVERSED_CLIENT_ID` to empty
-and then `#include?`s `ios/Config/Drive.xcconfig`, which is git-ignored. Without it the built Info.plist
-has an empty client id, `DriveClientConfiguration.bundled` is `.notConfigured`, and the UI says
-"Awaiting Google Drive setup". To configure a build, copy `Drive.xcconfig.example` to `Drive.xcconfig`
+`ios/Config/Jovra.xcconfig` sets `JOVRA_DRIVE_CLIENT_ID` to empty and `JOVRA_DRIVE_REVERSED_CLIENT_ID` to
+the inert placeholder `com.islanddevcrew.jovra.drive-unconfigured` (`DriveClientConfiguration.unconfiguredScheme`;
+the Drive URL type always exists and an empty `CFBundleURLSchemes` entry is invalid), and then
+`#include?`s `ios/Config/Drive.xcconfig`, which is git-ignored. Without it the built Info.plist has an
+empty client id and the placeholder scheme, `DriveClientConfiguration.bundled` is `.notConfigured`, and
+the UI says "Awaiting Google Drive setup". To configure a build, copy `Drive.xcconfig.example` to `Drive.xcconfig`
 and fill in the iOS OAuth client; never commit it (CLAUDE.md rule 5). A client id whose redirect scheme
 is not its reversed form reads as `.misconfigured`, never as configured.
 
@@ -140,19 +142,24 @@ English ships; Spanish is the first translation and ships after native review (s
 - **Format numbers, dates, durations, timecodes and speeds with `JovraFormat`** (FormatStyle, locale
   aware). Percentages come from `pct(n, d)` and are only formatted there.
 - **Do not commit auto-extracted changes to other tables.** Building in Xcode can add or mark keys in
-  any catalog; commit only your own table's changes. The `l10n` CI job fails a PR that changes a table
-  outside the ticket's owned areas (`scripts/l10n/catalog_ownership.py`: the most specific owned area
+  any catalog; commit only your own table's changes. The `l10n` CI job fails a PR that changes, deletes
+  or renames a table outside the ticket's owned areas (a rename counts as deleting the old table) (`scripts/l10n/catalog_ownership.py`: the most specific owned area
   in `docs/spec/tickets.json` owns a table; the branch `ticket/tNN-slug` names the ticket; the
   localization owner, T06, may edit any table).
 - **Literal-string lint** (`scripts/l10n/literal_lint.py`): flags string literals passed to SwiftUI text
-  views, accessibility labels, display arguments (`title:`, `message:`, …), display properties and
-  `String(localized:)` without a table. `#Preview` blocks are skipped. A line may end in
+  views and controls (`NavigationLink` included), `.accessibilityLabel`/`Hint`/`Value`, `.navigationTitle`,
+  `.help`, `.alert`, `.confirmationDialog` and `.badge`, display arguments (`title:`, `message:`, …),
+  display properties, `LocalizedStringKey("…")`, and `String(localized:)` without a table. Only a
+  `tableName:`/`table:` that is a top-level argument of the call counts, never one inside a nested call,
+  closure or interpolation: `Text("Shots \(String(localized: "rally", table: "Home"))")` is flagged. `#Preview` blocks are skipped. A line may end in
   `// l10n-lint: ignore (reason)`; a preview-only file may start with
   `// l10n-lint: ignore-file (reason)`.
-- **Copy lint** (`scripts/l10n/copy_lint.py`) over every catalog key and value: no spin rate or RPM, line
-  calls, injury, calories, "Fastest serve" (say "Fastest marked serve"), "Advantage" as a format label,
-  "Reference concept", `mailto:` or the sample "3.2 GB". A string that states what JOVRA does *not* do
-  may carry `copy-lint: allow <rule> — <reason>` in its catalog comment.
+- **Copy lint** (`scripts/l10n/copy_lint.py`) over every catalog key and value and every string literal in
+  the app's Swift sources (`ios/Jovra`, so `Text(verbatim:)` and accessibility labels too; comments and
+  the test targets are not copy): no spin rate or RPM, line calls, injury, calories, "Fastest serve" (say
+  "Fastest marked serve"), "Advantage" as a format label, "Reference concept", `mailto:` or the sample
+  "3.2 GB". A string that states what JOVRA does *not* do may carry `copy-lint: allow <rule> — <reason>`
+  in its catalog comment, or as a trailing `// copy-lint: allow <rule> — <reason>` on its Swift line.
 - **Pseudo-locale**: `-pseudoLocale accented` wraps every catalog string in `[# … #]` with accents;
   anything that bypassed the catalogs shows up unchanged. `PseudoLocaleUITests` runs all five tabs this
   way and asserts the textClipped audit (tab bar titles included) and that every visible text with
@@ -169,7 +176,7 @@ English ships; Spanish is the first translation and ships after native review (s
 | `XCUIApplication.launchJovra(contentSize:_:)` | launch with a `LaunchConfiguration` and an optional Dynamic Type size |
 | `auditScreen(app, for:)` | `performAccessibilityAudit` over the whole scrolling screen with the documented exceptions below |
 | `assertHitTargets(in:exempt:)` | every hittable control at least 44 × 44 pt |
-| `attachScreenshot(app, name:)` | a named screenshot, exported by `ui-test.sh`; name reference pairs `sNN-<appearance>-<what>` |
+| `attachScreenshot(app, name:)` | a named screenshot, exported by `ui-test.sh`; name reference pairs `sNN-<appearance>-<what>`; a bad name is a recorded test failure, not a crash |
 | `assertBriefCopy(screen:in:corrections:excluding:)`, `BriefCopy.expected(screen:)` | copy from `design-reference/brief/screens.json` with the spec's honesty corrections (Photos "Not needed for import" / "Add-only", "Best of 3 · Ad · Tie-break at 6–6", "+4 percentage points", "Fastest marked serve", provider "Demo", no "Reference concept", no "3.2 GB", no "Estimated from calibrated video"); add a screen's own deliberate differences through `corrections` |
 
 ### Side-by-side evidence
@@ -186,13 +193,24 @@ preference, read from `UserDefaults`), visits every tab, asserts the heading, th
 44 pt targets, attaches a screenshot, and runs `performAccessibilityAudit()` on each tab and on the
 full-screen capture route. `testEveryTabAtLargestAccessibilityTextSize` repeats the tour at the
 largest accessibility text size (AX5, launched with `-UIPreferredContentSizeCategoryName
-UICTContentSizeCategoryAccessibilityXXXL`). It asserts that the tab bar stays one compact row with
-every title on one line, and that the Sessions filter pills stack instead of breaking words. It
-attaches `ax5-*` screenshots and audits every tab.
+UICTContentSizeCategoryAccessibilityXXXL`). It asserts that the tab bar stays one compact row, that each
+English tab title is one line high (an item shorter than icon, gaps, dot and 1.5 caption lines at the
+xxxLarge cap; a second line would add a whole line), and that the Sessions filter pills stack instead of
+breaking words. Long translations may wrap a tab title onto up to three lines; `PseudoLocaleUITests`
+covers those. It attaches `ax5-*` screenshots and audits every tab.
 
 Each audit runs on the screen as first shown, then again one, two, and more slow swipes further
 down, until the end of the screen. Content first seen cut off at the bottom is therefore audited
 fully visible at a later step.
+
+The audit scrolls the page by itself (in the T06 run by 22 pt to 2,017 pt; at AX5 it often returns to
+the top). A contrast or element-detection issue found while it moved the page was sampled from pixels
+that no longer sit under the reported frames: on `JOVRA-T06`, Home's "This week", the stat tiles and
+Profile's "Preferences" all failed contrast this way (`evidence/ios/06-ui-harness-l10n-plist/ui-test-full-suite.log`).
+So when the page moved during an audit, those issues are set aside, logged, and the audit is repeated
+once at the settled position, where every issue counts. Limitation: a set-aside element is judged again
+only where that repeat finds it; it may be clipped there (and so exempt), in which case its verdict comes
+from another step's audit.
 
 There are two documented audit exceptions, and the test logs every issue it ignores:
 
@@ -200,9 +218,11 @@ There are two documented audit exceptions, and the test logs every issue it igno
   `xxxLarge` and offers the Large Content Viewer (touch and hold). The audit reports the cap as a Dynamic
   Type issue. Only the dynamicType audit, and only inside the tab bar's frame, is exempt: text clipping
   on a tab title always fails.
-- **Contrast on clipped content.** This covers a non-tab-bar element under the status-bar backdrop, or
-  one reaching into the tab bar or within 16 pt of it. The audit's sampling there takes in the bar
-  and the chartreuse Record circle, not the element. SwiftUI keeps off-screen scroll content in the
+- **Contrast and element detection on clipped content.** This covers a non-tab-bar element under the
+  status-bar backdrop, or one reaching into the tab bar or within 16 pt of it. The audit's sampling
+  there takes in the backdrop, the bar and the chartreuse Record circle, not the element, and its text
+  recognition reports text it cannot match to an element ("Potentially inaccessible text", as on Home's
+  "Your game, in focus." under the status bar). Every other audit type fails wherever the element is. SwiftUI keeps off-screen scroll content in the
   tree. Tab bar items are always checked. Each slow swipe moves the page by more than 16 pt and by
   less than the visible height, and every screen ends with 32 pt of padding. So every element is
   audited clear of the bar at some step.
@@ -217,18 +237,17 @@ If another app on a shared simulator opened ours, a stray "◀ <other app>" back
 Check the exported screenshots before posting them. If another session (for example a Maestro driver) is using
 the default simulator, create a dedicated one and point the scripts at it:
 
-Known issue (found in T06, UNRESOLVED): on a freshly created iPhone 17 Pro / iOS 26.5 simulator
-(`JOVRA-T06`), `performAccessibilityAudit` reports a contrast failure on high-contrast text such as
-Home's "This week" heading after a scroll step, so `JovraSmokeUITests`' full audits fail there. The same
-failure occurs on `main` (foundation code, unchanged) on that simulator; the foundation's evidence was
-captured on the build Mac's original simulator. Audits limited to other types (for example
-`auditScreen(app, for: .textClipped)`) are unaffected.
-
 ```sh
 UDID=$(xcrun simctl create "Jovra iPhone 17 Pro" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5)
 SIMULATOR_ID=$UDID scripts/ios/ui-test.sh
 xcrun simctl delete "$UDID"   # when done
 ```
+
+Resolved in T06: on a freshly created iPhone 17 Pro / iOS 26.5 simulator (`JOVRA-T06`),
+`performAccessibilityAudit` reported contrast failures on high-contrast text such as Home's "This week"
+after a scroll step, on `main` as well. The audit had scrolled the page itself while sampling; the
+repeat-after-move rule above removes those false failures (evidence: `main-baseline-smoke.log`, the
+full class on `main`, against `ui-test-full-suite.log`).
 
 ## Disk hygiene
 
