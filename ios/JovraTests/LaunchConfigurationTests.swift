@@ -96,4 +96,16 @@ struct LaunchConfigurationTests {
         #expect(unknown.startFullScreenRoute == nil)
         #expect(unknown.unresolvedStartRoute == "nowhere")
     }
+
+    @Test("every problem the app logs at launch, an unknown start route included")
+    func reportedProblems() {
+        let unknown = LaunchConfiguration(arguments: ["Jovra", "-startRoute", "nowhere", "-reduceMotion", "sometimes"])
+        #expect(unknown.reportedProblems == [
+            "-reduceMotion: unknown value “sometimes” (expected YES or NO)",
+            "-startRoute: unknown route “nowhere” (expected home, sessions, record, insights, profile, capturePreview)",
+        ])
+        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "insights"]).reportedProblems.isEmpty)
+        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "capturePreview"]).reportedProblems.isEmpty)
+        #expect(LaunchConfiguration(arguments: ["Jovra"]).reportedProblems.isEmpty)
+    }
 }

@@ -44,7 +44,7 @@ enum AppTab: String, CaseIterable, Identifiable, Hashable {
 
 /// Focused flows that take over the whole screen and hide the tab bar
 /// (capture, replay and compare arrive in later tickets).
-enum FullScreenRoute: String, Identifiable, Hashable {
+enum FullScreenRoute: String, CaseIterable, Identifiable, Hashable {
     case capturePreview
 
     var id: String { rawValue }

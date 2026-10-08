@@ -6,7 +6,7 @@ extension LaunchConfiguration {
     static let current: LaunchConfiguration = {
         let configuration = LaunchConfiguration(arguments: ProcessInfo.processInfo.arguments)
         let logger = Logger(subsystem: "com.islanddevcrew.jovra", category: "LaunchConfiguration")
-        for problem in configuration.problems {
+        for problem in configuration.reportedProblems {
             logger.error("Ignored launch argument. \(problem, privacy: .public)")
         }
         return configuration
@@ -20,6 +20,14 @@ extension LaunchConfiguration {
     /// The full-screen route named by the start route, if it names one.
     var startFullScreenRoute: FullScreenRoute? {
         startRoute.flatMap(FullScreenRoute.init(rawValue:))
+    }
+
+    /// Every problem logged at launch: the parser's `problems` and, since only the app knows its
+    /// routes, a start route that names neither a tab nor a full-screen route.
+    var reportedProblems: [String] {
+        guard let unresolvedStartRoute else { return problems }
+        let routes = AppTab.allCases.map(\.rawValue) + FullScreenRoute.allCases.map(\.rawValue)
+        return problems + ["\(Key.startRoute): unknown route “\(unresolvedStartRoute)” (expected \(routes.joined(separator: ", ")))"]
     }
 
     /// A start route that names neither a tab nor a full-screen route.
