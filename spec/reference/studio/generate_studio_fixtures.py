@@ -13,6 +13,7 @@ import json
 import sys
 from fractions import Fraction
 from pathlib import Path
+from types import SimpleNamespace
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
@@ -23,6 +24,8 @@ from studio.core import frame_at_us, round_half_up  # noqa: E402
 ROOT = HERE.parents[2]
 OUT = ROOT / "spec" / "studio" / "fixtures"
 CONTRACTS = ROOT / "spec" / "studio" / "contracts"
+MODULES = ROOT / "spec" / "studio" / "modules"
+MODULE_INDEX = MODULES / "README.md"
 DESIGN_PROFILES = ROOT / "design-reference" / "studio" / "brief" / "story-profiles.json"
 
 PROJECT = "sample-court-day"
@@ -597,17 +600,18 @@ def match_broadcast(P):
 
 # ----- main ---------------------------------------------------------------------------------------
 
-def build() -> dict:
-    """Every fixture document, keyed by its path relative to spec/studio/fixtures."""
-    import generate_studio_cases as cases
+def sample_project() -> SimpleNamespace:
+    """The Sample project every cases module builds from: its records (keyed by path relative to
+    spec/studio/fixtures), the edit plans, the plan helper P, the trusted EDL context and the story profiles."""
     import generate_studio_records as rec
+    from studio import bundle as studio_bundle
     manifest = source_manifest()
     smap = sync_map()
     keepers = keeper_catalog()
     P = Plan(manifest, smap, keepers)
     plans = {"storyboard": storyboard(P), "final": final_film_plan(P), "coach": coach_cut(P),
              "rally": rally_pulse(P), "broadcast": match_broadcast(P)}
-    docs = {
+    records = {
         "records/source-manifest.json": manifest,
         "records/sync-map.json": smap,
         "records/keeper-catalog.json": keepers,
@@ -627,34 +631,60 @@ def build() -> dict:
         "records/delivered-artifact.film.json": rec.delivered_artifact(plans["final"]),
     }
     for name, doc in rec.observations().items():
-        docs[f"records/{name}.json"] = doc
+        records[f"records/{name}.json"] = doc
     for name, doc in rec.lessons().items():
-        docs[f"records/{name}.json"] = doc
-    docs["records/reference-catalog.json"] = rec.reference_catalog()
+        records[f"records/{name}.json"] = doc
+    records["records/reference-catalog.json"] = rec.reference_catalog()
     for name, doc in rec.quotes(plans["final"], plans["storyboard"]).items():
-        docs[f"records/{name}.json"] = doc
+        records[f"records/{name}.json"] = doc
     for name, doc in rec.reservations(plans["final"], plans["storyboard"]).items():
-        docs[f"records/{name}.json"] = doc
+        records[f"records/{name}.json"] = doc
     for name, doc in rec.render_jobs(plans["final"], plans["storyboard"]).items():
-        docs[f"records/{name}.json"] = doc
-    docs["vectors/sync-fit.json"] = cases.sync_vectors()
-    docs["vectors/sound-delay.json"] = cases.sound_vectors()
-    docs["vectors/job-transitions.json"] = cases.job_vectors()
-    docs["vectors/ledger.json"] = cases.ledger_vectors()
-    docs["vectors/quote-credits.json"] = cases.quote_credit_vectors()
-    docs["vectors/sample-truth.json"] = cases.sample_truth_vectors()
-    from studio import bundle as studio_bundle
+        records[f"records/{name}.json"] = doc
     trusted = studio_bundle.edl_context({"manifest": manifest, "syncMap": smap, "keepers": keepers,
-                                         "brolls": docs["records/broll-catalog.json"],
-                                         "references": docs["records/reference-catalog.json"]})
-    by_name = {"coach-cut-serve": plans["coach"]}
-    docs["vectors/edl-context.json"] = cases.edl_context_vectors(P, by_name, trusted,
-                                                                 {p["id"]: p for p in profile_catalog()["profiles"]})
+                                         "brolls": records["records/broll-catalog.json"],
+                                         "references": records["records/reference-catalog.json"]})
     plans["syncmap"] = smap
     plans["manifest"] = manifest
-    for name, doc in cases.invalid_sets(P, plans).items():
-        docs[f"invalid/{name}.invalid.json"] = doc
+    return SimpleNamespace(manifest=manifest, smap=smap, keepers=keepers, P=P, plans=plans, records=records,
+                           trusted=trusted, profiles={p["id"]: p for p in profile_catalog()["profiles"]})
+
+
+class DeclarationError(ValueError):
+    """Two cases modules declare the same fixture path."""
+
+
+def build() -> dict:
+    """Every fixture document, keyed by its path relative to spec/studio/fixtures: whatever each discovered cases
+    module (spec/reference/studio/cases/*_cases.py) declares, written once."""
+    from studio import cases
+    sample = sample_project()
+    docs: dict = {}
+    owner: dict = {}
+    for module in cases.discover():
+        declare = getattr(module, "fixtures", None)
+        if declare is None:
+            continue
+        for rel, doc in declare(sample).items():
+            if rel in docs:
+                raise DeclarationError(f"{rel} is declared by {owner[rel]} and by {cases.repo_path(module)}")
+            docs[rel] = doc
+            owner[rel] = cases.repo_path(module)
     return docs
+
+
+def module_index() -> str:
+    """spec/studio/modules/README.md: a link to every module page in the folder (names only, so a page's status
+    changes never touch the index)."""
+    pages = sorted(p.stem for p in MODULES.glob("*.md") if p.name != MODULE_INDEX.name)
+    lines = ["# Studio module pages", "",
+             "Generated by `spec/reference/studio/generate_studio_fixtures.py` from the pages in this folder; do not",
+             "edit it by hand. A new page appears here when the generator runs. Each page's front matter (`kinds`,",
+             "`coverage`, `swift`, `kotlin`) is checked by `scripts/spec/validate_studio.py`, and",
+             "`python3 scripts/spec/validate_studio.py --list` prints every registered kind with its module and status.",
+             ""]
+    lines += [f"- [{name}]({name}.md)" for name in pages]
+    return "\n".join(lines) + "\n"
 
 
 def main() -> None:
@@ -666,7 +696,8 @@ def main() -> None:
             old.unlink()
     for rel, doc in docs.items():
         dump(OUT / rel, doc)
-    print(f"wrote {len(docs)} fixture files and the story-profile catalog")
+    MODULE_INDEX.write_text(module_index(), encoding="utf-8")
+    print(f"wrote {len(docs)} fixture files, the story-profile catalog and the module index")
 
 
 if __name__ == "__main__":

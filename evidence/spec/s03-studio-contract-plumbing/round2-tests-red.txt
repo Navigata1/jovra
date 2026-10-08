@@ -1,0 +1,49 @@
+# Round 2 RED (2026-10-08): new test test_list_count_comes_from_the_vector_files adds a ninth quote-credits case
+# in the sandbox; the shared list assertion still hard-coded "8".
+$ python3 -m unittest scripts/spec/test_validate_studio.py -v
+test_checker_that_neither_passes_nor_fails_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_checker_that_neither_passes_nor_fails_fails) ... ok
+test_committed_tree_passes (scripts.spec.test_validate_studio.StudioPlumbingTest.test_committed_tree_passes) ... ok
+test_kind_with_checker_and_page_passes (scripts.spec.test_validate_studio.StudioPlumbingTest.test_kind_with_checker_and_page_passes) ... ok
+test_list_count_comes_from_the_vector_files (scripts.spec.test_validate_studio.StudioPlumbingTest.test_list_count_comes_from_the_vector_files) ... FAIL
+test_list_prints_kinds_modules_and_status (scripts.spec.test_validate_studio.StudioPlumbingTest.test_list_prints_kinds_modules_and_status) ... ok
+test_missing_generated_file_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_missing_generated_file_fails) ... ok
+test_module_specific_checks_live_in_their_cases_modules (scripts.spec.test_validate_studio.StudioPlumbingTest.test_module_specific_checks_live_in_their_cases_modules) ... ok
+test_new_page_appears_in_generated_index_without_readme_edit (scripts.spec.test_validate_studio.StudioPlumbingTest.test_new_page_appears_in_generated_index_without_readme_edit) ... ok
+test_page_naming_an_unregistered_kind_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_page_naming_an_unregistered_kind_fails) ... ok
+test_readme_holds_no_dated_counts (scripts.spec.test_validate_studio.StudioPlumbingTest.test_readme_holds_no_dated_counts) ... ok
+test_readme_names_no_module (scripts.spec.test_validate_studio.StudioPlumbingTest.test_readme_names_no_module) ... ok
+test_readme_with_a_module_bullet_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_readme_with_a_module_bullet_fails) ... ok
+test_readme_with_a_per_module_line_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_readme_with_a_per_module_line_fails) ... ok
+test_registered_kind_without_module_page_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_registered_kind_without_module_page_fails) ... ok
+test_self_test_registered_twice_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_self_test_registered_twice_fails) ... ok
+test_self_tests_registered_by_a_cases_module_run (scripts.spec.test_validate_studio.StudioPlumbingTest.test_self_tests_registered_by_a_cases_module_run) ... ok
+test_stale_module_index_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_stale_module_index_fails) ... ok
+test_vector_kind_without_checker_fails (scripts.spec.test_validate_studio.StudioPlumbingTest.test_vector_kind_without_checker_fails) ... ok
+
+======================================================================
+FAIL: test_list_count_comes_from_the_vector_files (scripts.spec.test_validate_studio.StudioPlumbingTest.test_list_count_comes_from_the_vector_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/jv/.claude/worktrees/s03-studio-contract-plumbing/scripts/spec/test_validate_studio.py", line 275, in test_list_count_comes_from_the_vector_files
+    self.assertListRows()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/IDC2.5/jv/.claude/worktrees/s03-studio-contract-plumbing/scripts/spec/test_validate_studio.py", line 259, in assertListRows
+    self.assertEqual(rows["quote-credits"][1:3], ["vector", "8"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['vector', '9'] != ['vector', '8']
+
+First differing element 1:
+'9'
+'8'
+
+- ['vector', '9']
+?             ^
+
++ ['vector', '8']
+?             ^
+
+
+----------------------------------------------------------------------
+Ran 18 tests in 7.830s
+
+FAILED (failures=1)
