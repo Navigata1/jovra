@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "sample": true,
+  "sessionId": "sample-jon-alex",
+  "hostEpoch": 3,
+  "snapshotSeq": 8,
+  "eventRevision": 42,
+  "freshnessPolicy": {"freshMaxMs": 5000, "delayedMaxMs": 15000, "proposalOnly": true},
+  "transportObservation": {"transitBounded": true, "baselineValid": true, "fixtureOnly": true},
+  "score": {"jonGames": 5, "alexGames": 4, "jonPoint": "30", "alexPoint": "15", "label": "Manual"},
+  "capabilities": {"recordingHealth": true, "manualScore": true, "markForReview": true, "liveServeSpeed": false, "automatedLineCalls": false},
+  "devices": [
+    {"deviceId": "c1", "captureInstanceId": "sample-c1-take1", "segmentId": "s1", "deviceSeq": 12, "captureState": "Recording", "ageAtBridgeMs": 1000, "lastReportedElapsedMs": 754000},
+    {"deviceId": "c2", "captureInstanceId": "sample-c2-take1", "segmentId": "s1", "deviceSeq": 11, "captureState": "Recording", "ageAtBridgeMs": 2000, "lastReportedElapsedMs": 753000},
+    {"deviceId": "c3", "captureInstanceId": "sample-c3-take1", "segmentId": "s1", "deviceSeq": 7, "captureState": "Recording", "ageAtBridgeMs": 18000, "lastReportedElapsedMs": 746000},
+    {"deviceId": "c4", "captureInstanceId": "sample-c4-take1", "segmentId": "s1", "deviceSeq": 12, "captureState": "Recording", "ageAtBridgeMs": 1000, "lastReportedElapsedMs": 752000},
+    {"deviceId": "c5", "captureInstanceId": "sample-c5-take1", "segmentId": "s1", "deviceSeq": 12, "captureState": "Recording", "ageAtBridgeMs": 1000, "lastReportedElapsedMs": 754000},
+    {"deviceId": "c6", "captureInstanceId": "sample-c6-take1", "segmentId": "s1", "deviceSeq": 11, "captureState": "Recording", "ageAtBridgeMs": 2000, "lastReportedElapsedMs": 751000}
+  ],
+  "illustrativeLaterResult": {"enabledInV1": false, "resultId": "sample-serve-42", "pointEventId": "sample-point-42", "sourceDeviceId": "c1", "sourceSegmentId": "s1", "value": 74, "units": "mph", "label": "Estimated", "ageMs": 8000},
+  "receipts": [{"commandId": "sample-marker-42", "type": "MarkForReview", "status": "Accepted", "pointEventId": "sample-point-42"}]
+}
