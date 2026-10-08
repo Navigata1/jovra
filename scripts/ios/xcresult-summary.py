@@ -59,9 +59,9 @@ def main():
     failed = sum(counts["Failed"] for _, counts in rows)
     passed = sum(counts["Passed"] for _, counts in rows)
     skipped = sum(counts["Skipped"] for _, counts in rows)
-    runs = summary.get("passedTests", 0) + summary.get("failedTests", 0) + summary.get("skippedTests", 0)
     print(f"Total: {passed} passed, {failed} failed, {skipped} skipped in {len(rows)} classes "
-          f"(xcresult counts {runs} runs, including parameterized arguments)")
+          f"(xcresult summary: {summary.get('passedTests', 0)} passed, {summary.get('failedTests', 0)} failed, "
+          f"{summary.get('skippedTests', 0)} skipped; result {summary.get('result')})")
     for failure in summary.get("testFailures", []):
         print(f"FAILED {failure.get('testIdentifierString', '?')}: {failure.get('failureText', '')}")
     device = (summary.get("devicesAndConfigurations") or [{}])[0].get("device", {})

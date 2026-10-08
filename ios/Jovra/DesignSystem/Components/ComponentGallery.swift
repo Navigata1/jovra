@@ -1,3 +1,4 @@
+// l10n-lint: ignore-file (Xcode previews only; never shown in the app)
 import JovraCore
 import SwiftUI
 

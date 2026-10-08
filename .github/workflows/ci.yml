@@ -26,6 +26,22 @@ jobs:
         working-directory: ios/Packages/JovraCore
         run: swift test
 
+  # Localization and copy checks (T06): the tools' own negative tests, the literal-string lint, the
+  # copy lint over every String Catalog and, on pull requests, the String Catalog ownership check.
+  l10n:
+    name: l10n
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Localization checks
+        env:
+          BRANCH: ${{ github.head_ref }}
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
+        run: scripts/l10n/check.sh
+
   # Manual only: macOS minutes on a private repo are scarce (ADR-0006). Simulator UI suites run on
   # the build Mac and their evidence is attached to the PR instead.
   ios-app:
