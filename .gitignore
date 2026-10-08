@@ -35,6 +35,15 @@ captures/
 ios/Config/Secrets.xcconfig
 android/secrets.properties
 
+# Backend local config and secrets (S75): Wrangler dev vars, the local JWT signing key, Supabase CLI state and the
+# real tester allow-list (format: backend/supabase/seed/testers.allowlist.example). .env files are covered above.
+.dev.vars
+.dev.vars.*
+backend/supabase/signing_keys.json
+backend/supabase/.temp/
+backend/supabase/.branches/
+backend/supabase/seed/testers.allowlist
+
 # Agent scratch
 .claude/worktrees/
 .scratch/
