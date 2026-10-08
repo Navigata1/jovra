@@ -8,11 +8,10 @@ import XCTest
 /// off by the tab bar is audited fully visible at a later step.
 ///
 /// Exceptions, each logged when used:
-/// - *Dynamic Type and text clipping on tab bar titles*: they cap at xxxLarge, shrink to fit their
-///   column (minimum scale 0.75, like the system tab bar), and the Large Content Viewer takes over
-///   (JovraTabBar). The audit reports a capped or shrunk title as "may be clipped at larger Dynamic
-///   Type sizes". Only text inside the tab bar's frame is exempt; callers that care (the pseudo-locale
-///   run) assert the titles separately.
+/// - *Dynamic Type on tab bar titles*: they cap at xxxLarge and the Large Content Viewer takes over
+///   (JovraTabBar), like the system tab bar. The audit reports a capped title as "may be clipped at
+///   larger Dynamic Type sizes". Only the dynamicType audit, and only inside the tab bar's frame, is
+///   exempt: a tab title that is actually clipped or truncated still fails the textClipped audit.
 /// - *Contrast on clipped content*: an element that is not a tab bar item, under the status-bar
 ///   backdrop, or reaching into the tab bar or within `edgeBand` of it, where the audit samples the
 ///   bar and the chartreuse Record circle instead of the element. Each slow swipe moves the page by
@@ -62,11 +61,11 @@ extension XCTestCase {
         let tabBarFrame = tabBar.exists ? tabBar.frame : .null
         try app.performAccessibilityAudit(for: types) { issue in
             guard let element = issue.element else { return false }
-            // Tab bar titles stop growing at xxxLarge and shrink to fit their column, like the system
-            // tab bar; the Large Content Viewer shows them enlarged. The audit reports both as Dynamic
-            // Type issues ("may be clipped at larger Dynamic Type sizes"): exempt inside the bar only.
-            if issue.auditType == .dynamicType || issue.auditType == .textClipped, tabBarFrame.contains(element.frame) {
-                print("audit: ignored \(issue.auditType == .dynamicType ? "dynamic type" : "text clipped") on tab bar “\(element.label)” (capped titles, Large Content Viewer)")
+            // Tab bar titles stop growing at xxxLarge, like the system tab bar; the Large Content
+            // Viewer shows them enlarged. The audit reports the cap as a Dynamic Type issue: exempt
+            // inside the bar only. Text clipping is never exempt.
+            if issue.auditType == .dynamicType, tabBarFrame.contains(element.frame) {
+                print("audit: ignored dynamic type on tab bar “\(element.label)” (capped titles, Large Content Viewer)")
                 return true
             }
             guard issue.auditType == .contrast else {
