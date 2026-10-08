@@ -266,11 +266,20 @@ class StudioPlumbingTest(unittest.TestCase):
         self.assertEqual(rows["quote-credits"][4:7], ["ledger", "covered", "pending"])
         self.assertEqual(rows["sync-fit"][4], "sync")
         self.assertEqual(rows["jovra.edit-plan/2"][1], "schema")
-        self.assertEqual(rows["normalization"][1:], ["page", "-", "-", "normalization", "not-covered", "pending",
-                                                     "pending"])
+        self.assertEqual(rows["normalization"][1:], ["vector", str(self.box.vector_cases("normalization")), "-",
+                                                     "normalization", "covered", "pending", "pending"])
 
     def test_list_prints_kinds_modules_and_status(self):
         self.assertListRows()
+
+    def test_list_shows_a_not_covered_page_as_a_page_row(self):
+        # a planned module with no fixtures yet owns no kind; --list still shows its page
+        self.box.write("spec/studio/modules/temp-probe.md", TEMP_PAGE.replace("[temp-probe]", "[]")
+                       .replace("covered", "not-covered").replace("[spec/reference/studio/cases/temp_probe_cases.py]", "[]"))
+        result = self.box.validate("--list")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        rows = {line.split()[0]: line.split() for line in result.stdout.splitlines() if line.strip()}
+        self.assertEqual(rows["temp-probe"][1:], ["page", "-", "-", "temp-probe", "not-covered", "pending", "pending"])
 
     def test_list_count_comes_from_the_vector_files(self):
         # AC2: no test hard-codes a pre-change count; a later ticket that adds a quote-credits case edits no test
