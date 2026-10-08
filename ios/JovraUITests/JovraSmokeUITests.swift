@@ -1,8 +1,9 @@
 import XCTest
 
 /// Smoke test for the app shell: every tab renders its heading, reports its selected state, passes
-/// Xcode's automated accessibility audit, and is captured as a screenshot attachment, in light and
-/// dark appearance. Screenshots are exported to evidence/ios/ by scripts/ios/ui-test.sh.
+/// Xcode's automated accessibility audit (Support/AccessibilityAuditing.swift), and is captured as a
+/// screenshot attachment, in light and dark appearance. Screenshots are exported to evidence/ios/ by
+/// scripts/ios/ui-test.sh.
 final class JovraSmokeUITests: XCTestCase {
     private let tabs: [(identifier: String, slug: String, label: String, heading: String)] = [
         ("tab.home", "home", "Home", "Home"),
@@ -18,24 +19,24 @@ final class JovraSmokeUITests: XCTestCase {
 
     @MainActor
     func testEveryTabInLightAppearance() throws {
-        try visitEveryTab(appearance: "light")
+        try visitEveryTab(appearance: .light)
     }
 
     @MainActor
     func testEveryTabInDarkAppearance() throws {
-        try visitEveryTab(appearance: "dark")
+        try visitEveryTab(appearance: .dark)
     }
 
     @MainActor
     func testFullScreenRouteHidesTabsAndReturns() throws {
-        let app = launch(appearance: "light")
+        let app = launch(appearance: .light)
         app.buttons["tab.record"].tap()
         app.buttons["record.previewCapture"].tap()
 
         XCTAssertTrue(app.staticTexts["capture.title"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["tab.home"].waitForNonExistence(timeout: 5), "tab bar should be hidden by a full-screen route")
         attachScreenshot(app, name: "light-6-capture-route")
-        try audit(app)
+        try auditScreen(app)
 
         app.buttons["capture.close"].tap()
         XCTAssertTrue(app.buttons["tab.record"].waitForExistence(timeout: 5))
@@ -45,7 +46,7 @@ final class JovraSmokeUITests: XCTestCase {
 
     @MainActor
     func testHomeHeroOpensRecordTab() {
-        let app = launch(appearance: "light")
+        let app = launch(appearance: .light)
         app.buttons["home.recordSession"].tap()
         XCTAssertTrue(app.buttons["tab.record"].isSelected)
         XCTAssertTrue(heading("Set up your session", in: app).waitForExistence(timeout: 5))
@@ -55,10 +56,10 @@ final class JovraSmokeUITests: XCTestCase {
     /// runs this once with the simulator in light and once in dark.
     @MainActor
     func testSystemAppearanceIsFollowed() throws {
-        let app = launch(appearance: "system")
+        let app = launch(appearance: .system)
         XCTAssertTrue(heading("Home", in: app).waitForExistence(timeout: 5))
         attachScreenshot(app, name: "system-home")
-        try audit(app)
+        try auditScreen(app)
     }
 
     /// The largest accessibility text size (AX5). The tab bar must stay one compact row with every
@@ -66,7 +67,7 @@ final class JovraSmokeUITests: XCTestCase {
     /// Sessions filter pills must stack instead of breaking words, and every tab must pass the audit.
     @MainActor
     func testEveryTabAtLargestAccessibilityTextSize() throws {
-        let app = launch(appearance: "light", contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
+        let app = launch(appearance: .light, contentSize: .accessibility5)
         let tabBar = app.otherElements["tabBar"]
         XCTAssertTrue(tabBar.waitForExistence(timeout: 5))
         for (index, tab) in tabs.enumerated() {
@@ -92,82 +93,14 @@ final class JovraSmokeUITests: XCTestCase {
             }
 
             attachScreenshot(app, name: "ax5-\(index + 1)-\(tab.slug)")
-            try audit(app)
+            try auditScreen(app)
         }
     }
 
-    // MARK: Helpers
-
-    /// Runs Xcode's full accessibility audit on what is on screen, then audits again one, two, …
-    /// slow swipes further down (each swipe shorter than the viewport) until the end of the screen,
-    /// so anything first seen cut off by the tab bar is audited fully visible at a later step.
-    ///
-    /// Two narrow exceptions. A *dynamic type* issue on tab bar text is ignored: its titles cap at
-    /// xxxLarge and the Large Content Viewer takes over (JovraTabBar). A *contrast* issue on an element
-    /// that is not a tab bar item is ignored in one audit pass when the element is clipped (under the
-    /// status-bar backdrop, or reaching into the tab bar and the strip reserved for the Record circle)
-    /// or ends within `edgeBand` of the bar, where the audit's sampling takes in the bar and the
-    /// chartreuse circle. SwiftUI keeps off-screen scroll content in the tree, so such elements are
-    /// sampled against pixels that are not theirs. Every ignored issue is logged.
-    ///
-    /// Nothing escapes the audit this way. Each slow swipe moves the page by more than `edgeBand` and
-    /// less than the visible height, so an element in the band at one step is fully visible and clear
-    /// of the band at the next; and the last step (the end of the screen, always audited) leaves the
-    /// final element Space.x4 (32 pt, twice `edgeBand`) above the bar, as JovraScreen pads its end.
-    @MainActor
-    private func audit(_ app: XCUIApplication) throws {
-        // On a tab screen the lockup is the first row, Space.x1 (8 pt) below the status-bar backdrop.
-        let lockup = app.descendants(matching: .any).matching(identifier: "brand.lockup").firstMatch
-        let onTabScreen = app.otherElements["tabBar"].exists && lockup.exists
-        let visibleTop = onTabScreen ? lockup.frame.minY - 8 : 0
-        let title = app.staticTexts.matching(identifier: "screen.title").firstMatch
-        let scrollView = app.scrollViews.firstMatch
-        try auditVisibleScreen(app, visibleTop: visibleTop)
-        guard scrollView.exists, title.exists else { return }
-        // The audit itself may move the scroll position, so each step starts again from the top
-        // and scrolls `step` slow swipes down; it stops once another swipe no longer moves the page.
-        var previousTitleY = title.frame.minY
-        for step in 1...6 {
-            scrollToTop(scrollView)
-            for _ in 0..<step { scrollView.swipeUp(velocity: .slow) }
-            let titleY = title.frame.minY
-            guard abs(titleY - previousTitleY) > 1 else { break }
-            previousTitleY = titleY
-            try auditVisibleScreen(app, visibleTop: visibleTop)
-        }
-        scrollToTop(scrollView)
-    }
+    // MARK: Helpers (the audit, screenshots and launch helpers live in Support/)
 
     @MainActor
-    private func scrollToTop(_ scrollView: XCUIElement) {
-        for _ in 0..<3 { scrollView.swipeDown(velocity: .fast) }
-    }
-
-    /// Height of the band above the tab bar in which contrast sampling is unreliable (see `audit`).
-    private static let edgeBand: CGFloat = 16
-
-    @MainActor
-    private func auditVisibleScreen(_ app: XCUIApplication, visibleTop: CGFloat) throws {
-        let tabBar = app.otherElements["tabBar"]
-        let visibleBottom = tabBar.exists ? tabBar.frame.minY : app.frame.maxY
-        let tabBarFrame = tabBar.exists ? tabBar.frame : .null
-        try app.performAccessibilityAudit { issue in
-            guard let element = issue.element else { return false }
-            if issue.auditType == .dynamicType, tabBarFrame.contains(element.frame) {
-                print("audit: ignored dynamic type on tab bar “\(element.label)” (Large Content Viewer)")
-                return true
-            }
-            guard issue.auditType == .contrast else { return false }
-            let frame = element.frame
-            let isTabBarItem = element.identifier.hasPrefix("tab.")
-            let isClipped = !isTabBarItem && (frame.maxY > visibleBottom - Self.edgeBand || frame.minY < visibleTop)
-            print("audit: contrast issue on “\(element.label)” at \(frame), visible \(visibleTop)–\(visibleBottom): \(isClipped ? "ignored (clipped or in the edge band)" : "FAILS")")
-            return isClipped
-        }
-    }
-
-    @MainActor
-    private func visitEveryTab(appearance: String) throws {
+    private func visitEveryTab(appearance: LaunchConfiguration.Appearance) throws {
         let app = launch(appearance: appearance)
         XCTAssertTrue(app.otherElements["brand.lockup"].exists || app.images["brand.lockup"].exists, "brand lockup is visible")
         for (index, tab) in tabs.enumerated() {
@@ -179,34 +112,18 @@ final class JovraSmokeUITests: XCTestCase {
             XCTAssertTrue(button.isSelected, "\(tab.identifier) reports selected")
             XCTAssertGreaterThanOrEqual(button.frame.height, 44, "\(tab.identifier) is at least 44 pt tall")
             XCTAssertGreaterThanOrEqual(button.frame.width, 44, "\(tab.identifier) is at least 44 pt wide")
-            attachScreenshot(app, name: "\(appearance)-\(index + 1)-\(tab.slug)")
-            try audit(app)
+            attachScreenshot(app, name: "\(appearance.rawValue)-\(index + 1)-\(tab.slug)")
+            try auditScreen(app)
         }
     }
 
     @MainActor
-    private func launch(appearance: String, contentSize: String? = nil) -> XCUIApplication {
-        let app = XCUIApplication()
-        app.launchArguments += ["-\(appearanceKey)", appearance]
-        if let contentSize {
-            app.launchArguments += ["-UIPreferredContentSizeCategoryName", contentSize]
-        }
-        app.launch()
-        return app
+    private func launch(appearance: LaunchConfiguration.Appearance, contentSize: ContentSize? = nil) -> XCUIApplication {
+        XCUIApplication.launchJovra(contentSize: contentSize) { $0.appearance = appearance }
     }
-
-    private var appearanceKey: String { "appearance" }
 
     @MainActor
     private func heading(_ text: String, in app: XCUIApplication) -> XCUIElement {
-        app.staticTexts.matching(identifier: "screen.title").matching(NSPredicate(format: "label == %@", text)).firstMatch
-    }
-
-    @MainActor
-    private func attachScreenshot(_ app: XCUIApplication, name: String) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = name
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        app.heading(text)
     }
 }
