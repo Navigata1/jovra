@@ -488,9 +488,9 @@ _Avoid_: Fake camera, mock camera, demo recording
 
 The language of JOVRA Studio, the optional premium layer: building a match from up to six phones, aligning their
 recordings, turning them into story films, and linking films to lessons and progress. Decisions behind these terms are
-in ADR-0014 to ADR-0023, with the room and layout terms in ADR-0025 and ADR-0027. The list comes from the Studio spec's
-"Domain language" (`docs/spec/studio-v1-spec.md`, Further Notes). Core terms above keep their meaning; where a Studio
-term sits next to a core one, the definition says how they differ.
+in ADR-0014 to ADR-0023, with the room terms (Camera lobby, Camera slot, Join code) in ADR-0027. The list comes from
+the Studio spec's "Domain language" (`docs/spec/studio-v1-spec.md`, Further Notes). Core terms above keep their meaning;
+where a Studio term sits next to a core one, the definition says how they differ.
 
 ### Projects and cameras
 
