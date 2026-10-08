@@ -1,0 +1,10 @@
+$ # negative test: one committed decodedFramesSha256 altered (frameCounter/fc-240)
+$ python3 scripts/media/render.py --check
+  copied   import/duplicate-b                          31,725 B    0.1 s  frames 60  sig 299d5cbc6926
+==> 18 clips, total rendered size 1,034,778 bytes (0.99 MiB)
+FAIL spec/fixtures/media/frameCounter/fc-240.truth.json differs from the render (fields: signature)
+decoded-frame hash check: FAIL
+exit 1
+$ swift test --filter DecodedFrameHashTests
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "frameCounter/fc-240" at DecodedFrameHashTests.swift:21:9: Expectation failed: (decoded.sha256 → "458109604fba20e3417ab18e7eb779ba456c8336370ad19b8f8b431b3c73d858") == (truth.signature.decodedFramesSha256 → "058109604fba20e3417ab18e7eb779ba456c8336370ad19b8f8b431b3c73d858")
+✘ Test run with 3 tests in 1 suite failed after 1.177 seconds with 1 issue.

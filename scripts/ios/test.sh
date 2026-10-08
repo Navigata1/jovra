@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
-# Runs every non-UI test: JovraCore and JovraMedia with `swift test`, then the hosted JovraTests
-# bundle on the simulator.
+# Runs every non-UI test: renders the media fixtures if needed, JovraCore and JovraMedia with `swift test`,
+# then the hosted JovraTests bundle on the simulator.
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
+
+# JovraMedia's fixture tests decode rendered media (cached under .cache/media; only missing clips render).
+echo "==> render media fixtures"
+python3 "$ROOT/scripts/media/render.py"
 
 for package in JovraCore JovraMedia; do
   echo "==> swift test ($package)"

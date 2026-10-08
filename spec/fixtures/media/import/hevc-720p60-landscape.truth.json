@@ -1,0 +1,70 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 96000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "description": "HEVC Main, 1280x720 landscape, 60 fps, AAC audio.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 57,
+      "sample": 46360,
+      "time": {
+        "timescale": 1200,
+        "value": 1159
+      },
+      "type": "hit"
+    }
+  ],
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "import/hevc-720p60-landscape",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mov",
+    "path": ".cache/media/import-42b01b33ed1276b8/hevc-720p60-landscape.mov"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "42b01b33ed1276b822798430cb014eebda953cfceae8ca392213f8b4142f651a"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 102,
+  "set": "import",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "534d24a1e2c3f0a5659b302c47c26d9c9d1a4f5885798bd03c2a174abcb75c55",
+    "frameCount": 120,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 24,
+    "rows": 9
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "hevc",
+    "codedHeight": 720,
+    "codedWidth": 1280,
+    "displayHeight": 720,
+    "displayWidth": 1280,
+    "duration": {
+      "timescale": 1,
+      "value": 2
+    },
+    "fourCC": "hvc1",
+    "frameCount": 120,
+    "frameRate": {
+      "den": 1,
+      "num": 60
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "at" : "2026-10-08T00:44:39Z",
+  "band" : "synthetic",
+  "capabilityId" : null,
+  "clips" : [
+    {
+      "outputs" : [
+
+      ],
+      "seed" : 23,
+      "split" : "heldOut",
+      "truthEventsSha256" : "3443e2e2ffbe6db1083447d0a669869bdd936ace010261b3caa4aaefb37807dc",
+      "truthId" : "harness/events-s23"
+    }
+  ],
+  "estimator" : {
+    "id" : "null.eventTimes",
+    "methodVersion" : "1.0.0",
+    "role" : "null"
+  },
+  "floor" : {
+    "metrics" : [
+      {
+        "comparator" : ">=",
+        "name" : "precision",
+        "threshold" : "0.95"
+      },
+      {
+        "comparator" : ">=",
+        "name" : "recall",
+        "threshold" : "0.90"
+      },
+      {
+        "comparator" : "<=",
+        "name" : "onset MAE",
+        "threshold" : "10",
+        "unit" : "ms"
+      }
+    ],
+    "source" : "harness self-test (values of the audio.hitDetection gate; promotes nothing)"
+  },
+  "harness" : {
+    "version" : "1.0.0"
+  },
+  "kind" : "jovra.benchmarkRecord",
+  "metrics" : [
+    {
+      "exact" : null,
+      "name" : "precision",
+      "value" : null
+    },
+    {
+      "exact" : {
+        "d" : 1,
+        "n" : 0
+      },
+      "name" : "recall",
+      "value" : "0.0000"
+    },
+    {
+      "exact" : null,
+      "name" : "onset MAE",
+      "unit" : "ms",
+      "value" : null
+    }
+  ],
+  "mode" : "gate",
+  "runId" : "null.eventTimes-gate-20261008T004439Z",
+  "schemaVersion" : "1.0.0",
+  "task" : {
+    "id" : "eventTimes",
+    "tolerance" : {
+      "timescale" : 1000,
+      "value" : 50
+    },
+    "version" : "1.0.0"
+  },
+  "verdict" : {
+    "checks" : [
+      {
+        "comparator" : ">=",
+        "name" : "precision",
+        "passed" : false,
+        "threshold" : "0.95",
+        "value" : null
+      },
+      {
+        "comparator" : ">=",
+        "name" : "recall",
+        "passed" : false,
+        "threshold" : "0.90",
+        "value" : "0.0000"
+      },
+      {
+        "comparator" : "<=",
+        "name" : "onset MAE",
+        "passed" : false,
+        "threshold" : "10",
+        "unit" : "ms",
+        "value" : null
+      }
+    ],
+    "passed" : false
+  }
+}

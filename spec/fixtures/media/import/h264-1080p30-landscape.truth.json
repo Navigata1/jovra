@@ -1,0 +1,79 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 144000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "description": "H.264 High, 1920x1080 landscape, 30 fps, AAC audio.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 32,
+      "sample": 52022,
+      "time": {
+        "timescale": 24000,
+        "value": 26011
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 66,
+      "sample": 105848,
+      "time": {
+        "timescale": 6000,
+        "value": 13231
+      },
+      "type": "hit"
+    }
+  ],
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "import/h264-1080p30-landscape",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/import-42b01b33ed1276b8/h264-1080p30-landscape.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "42b01b33ed1276b822798430cb014eebda953cfceae8ca392213f8b4142f651a"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 101,
+  "set": "import",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "e0b281007c865ffd6d55860b2e6f4c0224f62720e0a50f12b44382c29cde493e",
+    "frameCount": 90,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 32,
+    "rows": 9
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 1080,
+    "codedWidth": 1920,
+    "displayHeight": 1080,
+    "displayWidth": 1920,
+    "duration": {
+      "timescale": 1,
+      "value": 3
+    },
+    "fourCC": "avc1",
+    "frameCount": 90,
+    "frameRate": {
+      "den": 1,
+      "num": 30
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true
+  }
+}

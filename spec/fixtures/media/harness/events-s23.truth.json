@@ -1,0 +1,150 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 480000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "court": {
+    "order": "topLeft,topRight,bottomRight,bottomLeft",
+    "points": [
+      {
+        "x": 80,
+        "y": 80
+      },
+      {
+        "x": 560,
+        "y": 80
+      },
+      {
+        "x": 560,
+        "y": 320
+      },
+      {
+        "x": 80,
+        "y": 320
+      }
+    ],
+    "space": "displayPixels"
+  },
+  "description": "Harness clip, seed 23 (heldOut): hit clicks with exact onsets and a flash cell.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 30,
+      "sample": 49406,
+      "time": {
+        "timescale": 24000,
+        "value": 24703
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 58,
+      "sample": 94110,
+      "time": {
+        "timescale": 1600,
+        "value": 3137
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 97,
+      "sample": 156077,
+      "time": {
+        "timescale": 48000,
+        "value": 156077
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 137,
+      "sample": 219926,
+      "time": {
+        "timescale": 24000,
+        "value": 109963
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 185,
+      "sample": 296932,
+      "time": {
+        "timescale": 12000,
+        "value": 74233
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 235,
+      "sample": 376920,
+      "time": {
+        "timescale": 400,
+        "value": 3141
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 265,
+      "sample": 424738,
+      "time": {
+        "timescale": 24000,
+        "value": 212369
+      },
+      "type": "hit"
+    }
+  ],
+  "flashCell": {
+    "column": 15,
+    "row": 8
+  },
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "harness/events-s23",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/harness-f43dfc6629624337/events-seed23.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "f43dfc66296243376ec614fb4ede93b12d15687cfba25d853d4b1230bdbbdbe7"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 23,
+  "set": "harness",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "d7e18ccf01a41eb2c21391cf31b2529965901b41c2e854ed5d12e337d761ec0e",
+    "frameCount": 300,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 24,
+    "rows": 9
+  },
+  "split": "heldOut",
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 360,
+    "codedWidth": 640,
+    "displayHeight": 360,
+    "displayWidth": 640,
+    "duration": {
+      "timescale": 1,
+      "value": 10
+    },
+    "fourCC": "avc1",
+    "frameCount": 300,
+    "frameRate": {
+      "den": 1,
+      "num": 30
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true
+  }
+}

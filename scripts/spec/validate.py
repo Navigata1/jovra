@@ -7,6 +7,8 @@
 4. The reference engine (spec/reference) is re-run on every fixture: expected outputs must match exactly,
    hand-written assertions must hold, the sample match must satisfy C1-C16, CSV exports must match
    byte-for-byte, and file sizes/hashes quoted in export/archive examples must match the files.
+5. Media ground truth is internally consistent, and every benchmark record is re-scored from its outputs and
+   the committed ground truth (spec/reference/jovra_ref/benchmark.py); gating runs use held-out seeds only.
 
 Exit status is non-zero on any failure.  Usage:  python3 scripts/spec/validate.py [-v]
 """
@@ -16,6 +18,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
+from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -25,7 +28,7 @@ sys.path.insert(0, str(SPEC / "reference"))
 
 from jsonschema_subset import SchemaSet  # noqa: E402
 
-from jovra_ref import conformance, csv_export, sample_match, scoring, stats  # noqa: E402
+from jovra_ref import benchmark, conformance, csv_export, sample_match, scoring, stats  # noqa: E402
 
 KIND_TO_SCHEMA = {
     "jovra.session": "session.schema.json",
@@ -40,6 +43,8 @@ KIND_TO_SCHEMA = {
     "jovra.fixture.pct": "fixture-pct.schema.json",
     "jovra.fixture.units": "fixture-units.schema.json",
     "jovra.fixture.sample": "fixture-sample.schema.json",
+    "jovra.groundTruth": "ground-truth.schema.json",
+    "jovra.benchmarkRecord": "benchmark-record.schema.json",
 }
 
 
@@ -147,7 +152,8 @@ def schema_self_tests(schemas: SchemaSet, rep: Report) -> None:
 
 def validate_instances(schemas: SchemaSet, rep: Report) -> dict[Path, dict]:
     docs = {}
-    for path in sorted(list((SPEC / "fixtures").rglob("*.json")) + list((SPEC / "contracts").rglob("*.json"))):
+    for path in sorted(list((SPEC / "fixtures").rglob("*.json")) + list((SPEC / "contracts").rglob("*.json"))
+                       + list((SPEC / "benchmarks").rglob("*.json"))):
         rel = path.relative_to(ROOT)
         doc = json.loads(path.read_text(encoding="utf-8"))
         kind = doc.get("kind")
@@ -294,7 +300,7 @@ def check_registry(doc: dict, docs: dict, rep: Report) -> None:
 
     def walk(node):
         if isinstance(node, dict):
-            if "capabilityId" in node:
+            if node.get("capabilityId") is not None:   # a benchmark record may name no capability
                 referenced.add(node["capabilityId"])
             for v in node.values():
                 walk(v)
@@ -342,6 +348,150 @@ def check_references(docs: dict, rep: Report) -> None:
     rep.ok("cross-references")
 
 
+# ----- 5: media ground truth and benchmark records ------------------------------------------------
+
+def check_ground_truth(path: Path, doc: dict, docs: dict, rep: Report) -> None:
+    where = str(path.relative_to(ROOT))
+    problems = []
+    set_name, _, clip_id = doc["id"].partition("/")
+    if set_name != doc["set"] or path.parent.name != doc["set"] or path.name != f"{clip_id}.truth.json":
+        problems.append("id, set, folder and file name disagree")
+    v, sig = doc["video"], doc["signature"]
+    rotated = v["rotationDegrees"] in (90, 270)
+    if (v["displayWidth"], v["displayHeight"]) != ((v["codedHeight"], v["codedWidth"]) if rotated else (v["codedWidth"], v["codedHeight"])):
+        problems.append("display size does not follow the coded size and rotation")
+    w, h = v["displayWidth"], v["displayHeight"]
+    if v["orientation"] != ("portrait" if h > w else "landscape" if w > h else "square"):
+        problems.append("orientation does not follow the display size")
+    rate = Fraction(v["frameRate"]["num"], v["frameRate"]["den"])
+    duration = Fraction(v["frameCount"]) / rate
+    if benchmark.rt(v["duration"]) != duration or benchmark.rt(v["duration"]).denominator != v["duration"]["timescale"]:
+        problems.append("duration is not frameCount / frameRate in lowest terms")
+    if sig["frameCount"] != v["frameCount"]:
+        problems.append("decoded frame count differs from the encoded frame count")
+    if v["codedWidth"] % sig["columns"] or v["codedHeight"] % sig["rows"] or sig["columns"] * sig["rows"] < doc["frameCode"]["cells"]:
+        problems.append("signature grid does not divide the coded picture or cannot hold the frame code")
+    if doc["audio"] is not None and doc["audio"]["sampleCount"] != duration * doc["audio"]["sampleRate"]:
+        problems.append("audio sample count does not match the duration")
+    folder, _, file = doc["media"]["path"].split("/", 2)[2].partition("/")
+    if folder != f"{doc['set']}-{doc['renderer']['sourceHash'][:16]}" or not file.endswith("." + doc["media"]["container"]):
+        problems.append("media path is not <set>-<sourceHash[:16]>/<file>.<container>")
+    previous = Fraction(-1)
+    for e in doc.get("events", []):
+        t = benchmark.rt(e["time"])
+        if t != Fraction(e["sample"], 48000) or t.denominator != e["time"]["timescale"]:
+            problems.append(f"event at sample {e['sample']}: time is not sample / 48000 in lowest terms")
+        if e["frame"] != int(t * rate) or not (previous < t < duration):
+            problems.append(f"event at sample {e['sample']}: frame or order wrong, or outside the clip")
+        previous = t
+        if doc["audio"] is None:
+            problems.append("events need an audio track")
+            break
+    if doc["duplicateOf"]:
+        original = next((d for d in docs.values() if d.get("kind") == "jovra.groundTruth" and d["id"] == doc["duplicateOf"]), None)
+        if original is None or original["set"] != doc["set"] or original["video"] != v \
+                or original["signature"]["decodedFramesSha256"] != sig["decodedFramesSha256"]:
+            problems.append(f"duplicateOf {doc['duplicateOf']} is missing or not the same media")
+    for p in problems:
+        rep.fail(where, p)
+    if not problems:
+        rep.ok("media ground truth")
+
+
+def check_benchmark_record(path: Path, doc: dict, docs: dict, rep: Report) -> None:
+    where = str(path.relative_to(ROOT)) if path.is_absolute() else str(path)
+    truths = {d["id"]: d for d in docs.values() if d.get("kind") == "jovra.groundTruth"}
+    problems = []
+    for clip in doc["clips"]:
+        truth = truths.get(clip["truthId"])
+        if truth is None:
+            problems.append(f"{clip['truthId']}: no committed ground truth")
+            continue
+        if (clip["seed"], clip["split"]) != (truth["seed"], truth["split"]):
+            problems.append(f"{clip['truthId']}: seed/split differ from the ground truth")
+        if clip["truthEventsSha256"] != benchmark.truth_events_sha256(truth):
+            problems.append(f"{clip['truthId']}: truthEventsSha256 does not match the committed events")
+        if doc["mode"] == "gate" and truth["split"] != "heldOut":
+            problems.append(f"{clip['truthId']}: a gating run used a {truth['split']} seed")
+        if doc["estimator"]["role"] == "oracle" and clip["outputs"] != [e["time"] for e in truth.get("events", [])]:
+            problems.append(f"{clip['truthId']}: oracle outputs are not the truth events")
+        if doc["estimator"]["role"] == "null" and clip["outputs"]:
+            problems.append(f"{clip['truthId']}: null estimator produced outputs")
+    scorer = benchmark.SCORERS.get(doc["task"]["id"])
+    if scorer is None:
+        problems.append(f"no reference scorer for task {doc['task']['id']!r}")
+    elif not problems:
+        metrics = scorer(doc, truths)
+        if canon(metrics) != canon(doc["metrics"]):
+            problems.append("metrics differ from the reference re-score: " + first_difference(metrics, doc["metrics"]))
+        expected = benchmark.verdict(metrics, doc["floor"]) if doc["mode"] == "gate" else None
+        if canon(expected) != canon(doc["verdict"]):
+            problems.append("verdict differs from the floor applied to the re-scored metrics")
+    for p in problems:
+        rep.fail(where, p)
+    if not problems:
+        rep.ok("benchmark records")
+
+
+def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
+    """Known-bad media documents must fail and known-good ones pass (the new checks are not vacuous)."""
+    truth = next((d for d in docs.values() if d.get("kind") == "jovra.groundTruth" and d["split"] == "heldOut"), None)
+    record = next((d for d in docs.values() if d.get("kind") == "jovra.benchmarkRecord" and d["mode"] == "gate"), None)
+    if truth is None or record is None:
+        rep.fail("media self-test", "needs a held-out ground truth and a gating benchmark record")
+        return
+    tuning = next(d for d in docs.values() if d.get("kind") == "jovra.groundTruth" and d["split"] == "tuning")
+    schema_cases = []
+    bad = json.loads(canon(truth)); bad["video"]["rotationDegrees"] = 45
+    schema_cases.append(("ground-truth.schema.json", bad, False, "rotation that is not a right angle"))
+    bad = json.loads(canon(truth)); bad["video"]["hdr"] = {"transfer": "hlg", "primaries": "bt2020", "matrix": "bt2020nc"}
+    schema_cases.append(("ground-truth.schema.json", bad, False, "HDR on 8-bit H.264"))
+    bad = json.loads(canon(truth)); bad["seed"] = None
+    schema_cases.append(("ground-truth.schema.json", bad, False, "benchmark split without a seed"))
+    bad = json.loads(canon(record)); bad["clips"][0]["split"] = "tuning"
+    schema_cases.append(("benchmark-record.schema.json", bad, False, "gating run on a tuning seed"))
+    bad = json.loads(canon(record)); bad["mode"] = "tuning"
+    schema_cases.append(("benchmark-record.schema.json", bad, False, "tuning run carrying a verdict"))
+    ok = json.loads(canon(record)); ok["mode"] = "tuning"; ok["verdict"] = None
+    schema_cases.append(("benchmark-record.schema.json", ok, True, "tuning run without a verdict"))
+    for schema, instance, must_pass, label in schema_cases:
+        errors = schemas.validate(instance, schema)
+        if (not errors) != must_pass:
+            rep.fail("media self-test", f"{label}: expected {'pass' if must_pass else 'fail'}")
+        else:
+            rep.ok("media self-tests")
+    check_cases = []
+    bad = json.loads(canon(record)); bad["metrics"][1]["value"] = "1.0000"; bad["metrics"][1]["exact"] = {"n": 1, "d": 1}
+    check_cases.append((bad, "a metric that the reference re-score disagrees with"))
+    bad = json.loads(canon(record)); bad["verdict"]["passed"] = not bad["verdict"]["passed"]
+    check_cases.append((bad, "a verdict that contradicts the floor"))
+    bad = json.loads(canon(record)); bad["clips"][0]["truthId"] = tuning["id"]
+    bad["clips"][0]["seed"], bad["clips"][0]["split"] = tuning["seed"], "heldOut"
+    check_cases.append((bad, "a tuning clip relabelled heldOut"))
+    for instance, label in check_cases:
+        probe = Report(False)
+        check_benchmark_record(Path("media self-test"), instance, docs, probe)
+        if not probe.failures:
+            rep.fail("media self-test", f"{label}: expected the record check to fail")
+        else:
+            rep.ok("media self-tests")
+    truth_path = next(p for p, d in docs.items() if d is truth)
+    truth_cases = []
+    bad = json.loads(canon(truth)); bad["events"][0]["frame"] += 1
+    truth_cases.append((bad, "an event on the wrong video frame"))
+    bad = json.loads(canon(truth)); bad["video"]["duration"]["value"] += 1
+    truth_cases.append((bad, "a duration that is not frameCount / frameRate"))
+    bad = json.loads(canon(truth)); bad["video"]["displayWidth"], bad["video"]["displayHeight"] = 360, 640
+    truth_cases.append((bad, "a display size that ignores the rotation"))
+    for instance, label in truth_cases:
+        probe = Report(False)
+        check_ground_truth(truth_path, instance, docs, probe)
+        if not probe.failures:
+            rep.fail("media self-test", f"{label}: expected the ground-truth check to fail")
+        else:
+            rep.ok("media self-tests")
+
+
 def main() -> int:
     rep = Report("-v" in sys.argv)
     schemas = SchemaSet(SPEC / "schemas")
@@ -350,6 +500,7 @@ def main() -> int:
     rep.counts["schemas"] = len(schemas.files)
     schema_self_tests(schemas, rep)
     docs = validate_instances(schemas, rep)
+    media_self_tests(schemas, docs, rep)
     for path, doc in docs.items():
         kind = doc["kind"]
         if kind == "jovra.fixture.scoring":
@@ -366,6 +517,10 @@ def main() -> int:
             check_file_facts(path, doc, rep)
         elif kind == "jovra.capabilityRegistry":
             check_registry(doc, docs, rep)
+        elif kind == "jovra.groundTruth":
+            check_ground_truth(path, doc, docs, rep)
+        elif kind == "jovra.benchmarkRecord":
+            check_benchmark_record(path, doc, docs, rep)
     check_references(docs, rep)
 
     for line in rep.failures:

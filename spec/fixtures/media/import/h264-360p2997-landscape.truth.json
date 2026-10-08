@@ -1,0 +1,54 @@
+{
+  "audio": null,
+  "band": "synthetic",
+  "description": "H.264 High, 640x360 landscape, 30000/1001 fps (29.97), no audio track.",
+  "duplicateOf": null,
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "import/h264-360p2997-landscape",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/import-42b01b33ed1276b8/h264-360p29.97-landscape.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "42b01b33ed1276b822798430cb014eebda953cfceae8ca392213f8b4142f651a"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": null,
+  "set": "import",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "4f614267b1c099feeb5601f7c9668985e08f2e335cb85db97ab2e64ba2b8c3c5",
+    "frameCount": 60,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 32,
+    "rows": 9
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 360,
+    "codedWidth": 640,
+    "displayHeight": 360,
+    "displayWidth": 640,
+    "duration": {
+      "timescale": 500,
+      "value": 1001
+    },
+    "fourCC": "avc1",
+    "frameCount": 60,
+    "frameRate": {
+      "den": 1001,
+      "num": 30000
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true
+  }
+}

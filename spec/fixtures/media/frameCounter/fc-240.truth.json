@@ -1,0 +1,54 @@
+{
+  "audio": null,
+  "band": "synthetic",
+  "description": "Frame counter at 240 fps: frame N shows the 16-bit code N, the digits and a scan cell.",
+  "duplicateOf": null,
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "frameCounter/fc-240",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/frameCounter-fe3c59ca9092f3c7/frame-counter-240fps.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "fe3c59ca9092f3c7a2070cad26b0f249d67d7df8da873c9e1c44fcc3ab5b534b"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": null,
+  "set": "frameCounter",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "458109604fba20e3417ab18e7eb779ba456c8336370ad19b8f8b431b3c73d858",
+    "frameCount": 480,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 24,
+    "rows": 9
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 360,
+    "codedWidth": 640,
+    "displayHeight": 360,
+    "displayWidth": 640,
+    "duration": {
+      "timescale": 1,
+      "value": 2
+    },
+    "fourCC": "avc1",
+    "frameCount": 480,
+    "frameRate": {
+      "den": 1,
+      "num": 240
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA benchmark record",
+  "description": "One run of the benchmark harness (JovraBenchmark): which estimator and method version ran on which ground-truth clips, every output it produced, the metrics, and, for a gating run, the floor and the verdict. Capability status changes only through a committed record (ADR-0004). A gating run uses held-out seeds only; a tuning run carries no verdict. scripts/spec/validate.py re-scores every record from its outputs and the committed ground truth.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "runId", "at", "harness", "task", "estimator", "capabilityId", "mode", "band", "clips", "metrics", "floor", "verdict"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.benchmarkRecord"},
+    "runId": {"$ref": "common.schema.json#/$defs/id"},
+    "at": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "harness": {
+      "type": "object",
+      "required": ["version"],
+      "additionalProperties": false,
+      "properties": {"version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}}
+    },
+    "task": {
+      "type": "object",
+      "required": ["id", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$"},
+        "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "tolerance": {"$ref": "#/$defs/rationalTime"}
+      },
+      "allOf": [
+        {"if": {"properties": {"id": {"const": "eventTimes"}}}, "then": {"required": ["tolerance"]}}
+      ]
+    },
+    "estimator": {
+      "type": "object",
+      "required": ["id", "methodVersion", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*(\\.[a-z][a-zA-Z0-9]*)*$"},
+        "methodVersion": {"type": "string", "minLength": 1, "maxLength": 32},
+        "role": {"enum": ["candidate", "oracle", "null"], "description": "oracle and null are harness self-test estimators; only a candidate record can back a capability's lastBenchmark."}
+      }
+    },
+    "capabilityId": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/capabilityId"}]},
+    "mode": {"enum": ["gate", "tuning"]},
+    "band": {"enum": ["synthetic", "real"]},
+    "clips": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["truthId", "seed", "split", "truthEventsSha256", "outputs"],
+        "additionalProperties": false,
+        "properties": {
+          "truthId": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*/[a-z0-9][a-z0-9-]{0,63}$"},
+          "seed": {"type": "integer", "minimum": 0},
+          "split": {"enum": ["tuning", "heldOut"]},
+          "truthEventsSha256": {"$ref": "common.schema.json#/$defs/sha256", "description": "SHA-256 of the clip's truth event times, one 'value/timescale' line each."},
+          "outputs": {"type": "array"}
+        }
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "exact", "value"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string", "minLength": 1, "maxLength": 80},
+          "unit": {"type": "string", "maxLength": 16},
+          "exact": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/fraction"}]},
+          "value": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/decimalString"}], "description": "exact, rounded half-up (4 places for ratios, 3 for milliseconds); null when undefined (0/0)."}
+        }
+      }
+    },
+    "floor": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["source", "metrics"],
+          "additionalProperties": false,
+          "properties": {
+            "source": {"type": "string", "minLength": 1, "maxLength": 200},
+            "metrics": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/floorMetric"}}
+          }
+        }
+      ]
+    },
+    "verdict": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["passed", "checks"],
+          "additionalProperties": false,
+          "properties": {
+            "passed": {"type": "boolean"},
+            "checks": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["name", "comparator", "threshold", "value", "passed"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {"type": "string", "minLength": 1, "maxLength": 80},
+                  "comparator": {"enum": [">=", "<="]},
+                  "threshold": {"$ref": "common.schema.json#/$defs/decimalString"},
+                  "unit": {"type": "string", "maxLength": 16},
+                  "value": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/decimalString"}]},
+                  "passed": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"mode": {"const": "gate"}}},
+      "then": {
+        "properties": {
+          "floor": {"type": "object"},
+          "verdict": {"type": "object"},
+          "clips": {"items": {"properties": {"split": {"const": "heldOut"}}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"mode": {"const": "tuning"}}},
+      "then": {"properties": {"verdict": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"task": {"properties": {"id": {"const": "eventTimes"}}}}},
+      "then": {"properties": {"clips": {"items": {"properties": {"outputs": {"items": {"$ref": "#/$defs/rationalTime"}}}}}}}
+    }
+  ],
+  "$defs": {
+    "rationalTime": {"$ref": "ground-truth.schema.json#/$defs/rationalTime"},
+    "fraction": {
+      "type": "object",
+      "required": ["n", "d"],
+      "additionalProperties": false,
+      "properties": {"n": {"type": "integer", "minimum": 0}, "d": {"type": "integer", "minimum": 1}}
+    },
+    "floorMetric": {
+      "type": "object",
+      "required": ["name", "comparator", "threshold"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 80},
+        "comparator": {"enum": [">=", "<="]},
+        "threshold": {"$ref": "common.schema.json#/$defs/decimalString"},
+        "unit": {"type": "string", "maxLength": 16}
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+$ swift test --package-path ios/Packages/JovraMedia
+◇ Test run started.
+✔ Test "no predictions: precision and MAE are undefined (null), recall is 0" passed after 0.016 seconds.
+✔ Test "clips pool: matches, predictions and truth events add up across clips" passed after 0.017 seconds.
+✔ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" passed after 0.016 seconds.
+✔ Test "a tie in distance goes to the earlier prediction, which is then consumed" passed after 0.017 seconds.
+✔ Test "one prediction serves only one truth event" passed after 0.017 seconds.
+✔ Test "an exact tolerance boundary matches; one tick past it does not" passed after 0.017 seconds.
+✔ Test "invalid and negative times map to frame 0" passed after 0.017 seconds.
+✔ Test "every frame start round-trips to its frame index" with 6 test cases passed after 0.017 seconds.
+✔ Test "frame 120 at 240 fps is half a second" passed after 0.017 seconds.
+✔ Test "a time between frames maps to the frame on screen" passed after 0.017 seconds.
+✔ Test "oracle gate, null gate and a tuning run are committed" passed after 0.017 seconds.
+✔ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps and an unsupported codec" passed after 0.017 seconds.
+✔ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" passed after 0.017 seconds.
+✔ Test "the committed gate records pass and fail as the self-test requires" passed after 0.017 seconds.
+✔ Test "the fixture set covers capture, playback, import and the harness" passed after 0.017 seconds.
+✔ Test "the duplicate pair is byte-identical under two names" passed after 0.017 seconds.
+✔ Test "re-running the estimator reproduces the record" with 3 test cases passed after 0.017 seconds.
+✔ Test "gating on a tuning seed is refused before the estimator runs" passed after 0.017 seconds.
+✔ Test "the oracle passes the floor on the held-out seed" passed after 0.017 seconds.
+✔ Test "the record carries the truth-events digest the reference validator recomputes" passed after 0.017 seconds.
+✔ Test "a clip with no benchmark split cannot be gated on" passed after 0.017 seconds.
+✔ Test "a gating run needs a floor" passed after 0.017 seconds.
+✔ Test "tuning runs use tuning seeds only and carry no verdict" passed after 0.017 seconds.
+✔ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" passed after 0.017 seconds.
+✔ Suite "eventTimes scoring" passed after 0.018 seconds.
+✔ Suite "Frame-accurate CMTime" passed after 0.018 seconds.
+✔ Suite "Committed benchmark records are reproducible" passed after 0.018 seconds.
+✔ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" passed after 0.019 seconds.
+✔ Suite "Benchmark harness" passed after 0.019 seconds.
+✔ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" with 10 test cases passed after 0.062 seconds.
+✔ Suite "MediaProbe reports every import fixture's ground truth" passed after 0.063 seconds.
+✔ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" with 5 test cases passed after 0.853 seconds.
+✔ Test "every decoded frame N shows counter N at presentation time N / fps" with 5 test cases passed after 1.295 seconds.
+✔ Suite "Frame-counter fixtures decode to their own frame index" passed after 1.296 seconds.
+✔ Test "every clip burns in its own frame index" with 17 test cases passed after 1.337 seconds.
+✔ Test "decoded-frame signature hash equals the ground truth" with 17 test cases passed after 1.386 seconds.
+✔ Suite "AVFoundation decodes every supported fixture to its committed signature hash" passed after 1.386 seconds.
+✔ Test run with 30 tests in 7 suites passed after 1.386 seconds.
+exit 0

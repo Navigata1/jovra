@@ -1,0 +1,32 @@
+$ jovra-benchmark list
+estimators: null.eventTimes, oracle.eventTimes
+floors: harnessSelfTest
+
+$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s23 --mode gate --floor harnessSelfTest --out spec/fixtures/media/benchmark/oracle.gate.json
+wrote spec/fixtures/media/benchmark/oracle.gate.json: oracle.eventTimes 1.0.0, gate on harness/events-s23
+metrics: precision 1.0000, recall 1.0000, onset MAE 0.000 ms
+  PASS precision 1.0000 >= 0.95
+  PASS recall 1.0000 >= 0.90
+  PASS onset MAE 0.000 <= 10
+verdict: PASSED the floor (harness self-test (values of the audio.hitDetection gate; promotes nothing))
+exit 0
+
+$ jovra-benchmark run --estimator null.eventTimes --clip harness/events-s23 --mode gate --floor harnessSelfTest --out spec/fixtures/media/benchmark/null.gate.json
+wrote spec/fixtures/media/benchmark/null.gate.json: null.eventTimes 1.0.0, gate on harness/events-s23
+metrics: precision undefined, recall 0.0000, onset MAE undefined ms
+  FAIL precision undefined >= 0.95
+  FAIL recall 0.0000 >= 0.90
+  FAIL onset MAE undefined <= 10
+verdict: FAILED the floor (harness self-test (values of the audio.hitDetection gate; promotes nothing))
+exit 3
+
+$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s11 --mode tuning --out spec/fixtures/media/benchmark/oracle.tuning.json
+wrote spec/fixtures/media/benchmark/oracle.tuning.json: oracle.eventTimes 1.0.0, tuning on harness/events-s11
+metrics: precision 1.0000, recall 1.0000, onset MAE 0.000 ms
+verdict: none (tuning run; gates nothing)
+exit 0
+
+$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s11 --mode gate --floor harnessSelfTest --out <scratch>/refused.json   # negative: gate on the tuning seed
+jovra-benchmark: Refusing to gate on tuning seeds: harness/events-s11. Gate on held-out seeds only.
+exit 2
+no record written

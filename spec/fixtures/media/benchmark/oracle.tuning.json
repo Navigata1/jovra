@@ -1,0 +1,92 @@
+{
+  "at" : "2026-10-08T00:44:39Z",
+  "band" : "synthetic",
+  "capabilityId" : null,
+  "clips" : [
+    {
+      "outputs" : [
+        {
+          "timescale" : 48000,
+          "value" : 49721
+        },
+        {
+          "timescale" : 16000,
+          "value" : 42391
+        },
+        {
+          "timescale" : 12000,
+          "value" : 43691
+        },
+        {
+          "timescale" : 48000,
+          "value" : 248869
+        },
+        {
+          "timescale" : 2400,
+          "value" : 14621
+        },
+        {
+          "timescale" : 24000,
+          "value" : 183923
+        },
+        {
+          "timescale" : 16000,
+          "value" : 144589
+        }
+      ],
+      "seed" : 11,
+      "split" : "tuning",
+      "truthEventsSha256" : "4106dab02b7be0ea309a830567c69705f483f2b895a605a2d67836edfdf66b89",
+      "truthId" : "harness/events-s11"
+    }
+  ],
+  "estimator" : {
+    "id" : "oracle.eventTimes",
+    "methodVersion" : "1.0.0",
+    "role" : "oracle"
+  },
+  "floor" : null,
+  "harness" : {
+    "version" : "1.0.0"
+  },
+  "kind" : "jovra.benchmarkRecord",
+  "metrics" : [
+    {
+      "exact" : {
+        "d" : 1,
+        "n" : 1
+      },
+      "name" : "precision",
+      "value" : "1.0000"
+    },
+    {
+      "exact" : {
+        "d" : 1,
+        "n" : 1
+      },
+      "name" : "recall",
+      "value" : "1.0000"
+    },
+    {
+      "exact" : {
+        "d" : 1,
+        "n" : 0
+      },
+      "name" : "onset MAE",
+      "unit" : "ms",
+      "value" : "0.000"
+    }
+  ],
+  "mode" : "tuning",
+  "runId" : "oracle.eventTimes-tuning-20261008T004439Z",
+  "schemaVersion" : "1.0.0",
+  "task" : {
+    "id" : "eventTimes",
+    "tolerance" : {
+      "timescale" : 1000,
+      "value" : 50
+    },
+    "version" : "1.0.0"
+  },
+  "verdict" : null
+}

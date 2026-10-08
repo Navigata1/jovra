@@ -1,0 +1,70 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 96000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "description": "H.264, 640x360, 30 fps with audio: first file of a duplicate pair.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 20,
+      "sample": 33104,
+      "time": {
+        "timescale": 3000,
+        "value": 2069
+      },
+      "type": "hit"
+    }
+  ],
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "import/duplicate-a",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/import-42b01b33ed1276b8/duplicate-a.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "42b01b33ed1276b822798430cb014eebda953cfceae8ca392213f8b4142f651a"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 109,
+  "set": "import",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "299d5cbc6926cb05937a1a945b5c59fde9b7c43af4aa124f5ee123b48b3e8139",
+    "frameCount": 60,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 32,
+    "rows": 9
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 360,
+    "codedWidth": 640,
+    "displayHeight": 360,
+    "displayWidth": 640,
+    "duration": {
+      "timescale": 1,
+      "value": 2
+    },
+    "fourCC": "avc1",
+    "frameCount": 60,
+    "frameRate": {
+      "den": 1,
+      "num": 30
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true
+  }
+}
