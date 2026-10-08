@@ -3,7 +3,7 @@
   "title": "JOVRA Studio Quote (jovra.quote/1)",
   "description": "A server-computed preflight quote in Studio Credits: estimate, cap, retention and expiry, from actual source bytes, angles, profile and output. capCredits = max(class minimum, ceil(estimatedMaxCostMicroUsd / creditCostBudgetMicroUsd)) per spec/studio/contracts/credit-classes.v1.json (a proposal, not a price). An illustrative quote (the screen-37 $4-$8 estimate and $12 cap) is Sample UX only and can never be accepted. Timestamps are ordered by parsing, never as text. No live charging exists (ADR-0013).",
   "type": "object",
-  "required": ["schemaVersion", "quoteId", "projectId", "environment", "sample", "illustrative", "planRevision", "outputSpecSha256", "inputsSha256", "filmClass", "estimate", "capCredits", "estimatedMaxCostMicroUsd", "creditCostBudgetMicroUsd", "lineItems", "retentionDays", "displayAmounts", "createdAt", "expiresAt", "status", "acceptedAt", "consent"],
+  "required": ["schemaVersion", "quoteId", "projectId", "environment", "sample", "illustrative", "planRevision", "outputSpecSha256", "inputsSha256", "plannerChoice", "filmClass", "estimate", "capCredits", "estimatedMaxCostMicroUsd", "creditCostBudgetMicroUsd", "lineItems", "retentionDays", "displayAmounts", "createdAt", "expiresAt", "status", "acceptedAt", "consent"],
   "additionalProperties": false,
   "properties": {
     "schemaVersion": {"const": "jovra.quote/1"},
@@ -15,6 +15,7 @@
     "planRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
     "outputSpecSha256": {"description": "Binds the quote (and the consent recorded in it) to one output: canonical SHA-256 of (projectId, planRevision, output) of the stored plan version, computed by the server (core.output_spec_sha256), never taken from the client. A reservation funded by this quote must carry the same value, and an accepted quote funds at most one reservation.", "$ref": "studio-common.schema.json#/$defs/sha256"},
     "inputsSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+    "plannerChoice": {"description": "Who plans the story for this quote (spec D-5, ADR-0016). 'heuristic': the rules planner, no model call, plannerTokensEstimate 0, consent.modelProvider false. 'model': the player switched on 'Plan the story in the cloud' (ST37); an accepted model quote needs consent.modelProvider true. A film funded by this quote binds the same planner kind.", "enum": ["heuristic", "model"]},
     "filmClass": {"enum": ["story-1", "story-2-3", "story-4-6", "broadcast-1", "broadcast-2-3", "broadcast-4-6", "revision"]},
     "estimate": {
       "type": "object",
@@ -38,7 +39,7 @@
         "plannerTokensEstimate": {"type": "integer", "minimum": 0}
       }
     },
-    "retentionDays": {"description": "Temporary staging media; 7 is the proposed default, confirmed at preflight.", "type": "integer", "minimum": 1, "maximum": 30},
+    "retentionDays": {"description": "Days the work-bucket media (staged originals, proxies, frames, PTS tables, contact sheets, previews) is kept (spec D-3, SD23): 7 by default, 1 or 30 by the player's choice at preflight; equals lineItems.storageDays and consent.retentionDays.", "enum": [1, 7, 30]},
     "displayAmounts": {
       "oneOf": [
         {"type": "null"},
@@ -65,11 +66,15 @@
         {"type": "null"},
         {
           "type": "object",
-          "required": ["consentRecordId", "uploadSelectedSources", "at"],
+          "required": ["consentRecordId", "uploadSelectedSources", "modelProvider", "textClasses", "retentionDays", "consentTextVersion", "at"],
           "additionalProperties": false,
           "properties": {
             "consentRecordId": {"$ref": "studio-common.schema.json#/$defs/id"},
             "uploadSelectedSources": {"const": true},
+            "modelProvider": {"description": "The explicit consent that sampled frames, structured events and the ticked note classes go to the planning model provider (D-5, SD19). Required true for plannerChoice 'model'; false for 'heuristic'.", "type": "boolean"},
+            "textClasses": {"description": "Note text classes that may reach the model (security-model section 13.14). Empty unless modelProvider is true.", "type": "array", "maxItems": 3, "uniqueItems": true, "items": {"enum": ["ownerNotes", "ownerLessonNotes", "coachNotes"]}},
+            "retentionDays": {"description": "The retention the player confirmed; equals the quote's retentionDays.", "enum": [1, 7, 30]},
+            "consentTextVersion": {"description": "Version of the consent copy shown (ST37), e.g. studio-cloud-consent@1.0.0.", "type": "string", "pattern": "^[a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"},
             "at": {"$ref": "studio-common.schema.json#/$defs/dateTime"}
           }
         }

@@ -1,6 +1,7 @@
 # Studio films: a planner proposes, code validates, a deterministic renderer executes
 
-Status: accepted (2026-10-07).
+Status: accepted (2026-10-07); amended 2026-10-07 (review round 3): the freeze method, export audio and the round-2
+validator rules below (spec D-1, D-2).
 
 A JOVRA Studio film is made in three separate roles that never collapse into one:
 
@@ -48,7 +49,20 @@ filtergraph, or used as a path, URL or price.
 - **Clean-frame rule:** a replay at speed *s* is allowed only if `sourceFPS × s ≥ outputFPS`. No interpolated frames
   are ever made.
 - One continuous primary court audio bed plays during live action. Replays and freezes sit over real dead time
-  between points.
+  between points. A change of bed source happens only on a segment boundary, with fades at a cut and an audio dip
+  spanning a dissolve or dip, so two sources never sound at once.
+- **A moment is shown at 1× once.** A second `live` segment over the same session interval is an unlabelled replay
+  and is rejected in every profile; replays carry their label.
+- **Contact is protected from the stored record, not the plan.** Every stored contact inside a live window is
+  protected and no transition handle may cover one, whatever keeper the plan names.
+- **Audio leaving the device (spec D-1).** The private in-app film keeps the court bed. Every exported or shared file
+  defaults to no audio behind an "Include audio" switch (on by default, and always shown, for Rally Pulse and Court
+  Memories; junior mode never has audio). A no-audio file is its own verified artifact, never a muted player.
+- **Freeze (spec D-2).** On the device a freeze is an exact still: `AVAssetImageGenerator` with zero time tolerance
+  extracts the source frame, and a Core Animation layer shows it for exactly the freeze's output range over the
+  source track held paused for that duration. The cloud renderer holds the same frame with `tpad` clone. Both must
+  pass the barcode test (every held frame equals the source frame); until then the freeze path is UNVERIFIED on that
+  renderer (film-engine R4).
 - A film is **ready** only after it passes a full decode with exact frame count, PTS grid, audio sample count,
   boundary-frame mapping, provenance checks and atomic custody. A process that exited successfully is not ready.
 - Both renderers, and Android later, must reproduce the same barcode-and-click conformance fixtures frame for frame.
@@ -69,14 +83,16 @@ filtergraph, or used as a path, URL or price.
 
 ## Consequences
 
-The iOS 18 composition branch is **unverified locally**, because only the iOS 26.5 simulator exists (ADR-0007).
-Cloud Remotion renders wait on Jon's licence decision. The free licence covers companies of up to 3 people,
-contractors count from 5.0, and Automators costs $0.01 per render with a $100/month minimum (OBSERVED,
-backend-architecture F9). Until then, the first cloud slice is FFmpeg-only. Corrections to point events mark existing
-film revisions stale; they are never silently re-rendered.
+The iOS 18 composition branch, including its freeze layer, is **unverified locally**, because only the iOS 26.5
+simulator exists (ADR-0007). Cloud Remotion renders wait on Jon's licence decision. The free licence covers companies
+of up to 3 people, contractors count from 5.0, and Automators costs $0.01 per render with a $100/month minimum
+(OBSERVED, backend-architecture F9). Until then, the first cloud slice is FFmpeg-only. Corrections to point events
+mark existing film revisions stale; they are never silently re-rendered.
 
-Sources: `docs/handoff/studio/ENGINE-BOUNDARY.md`; `docs/research/studio/film-engine.md` §§0–4, 7;
-`.claude/skills/jovra-edit-plan/SKILL.md`; https://developer.apple.com/documentation/avfoundation/avvideocomposition ;
-https://developer.apple.com/documentation/avfoundation/avassetwriter ; https://ffmpeg.org/ffmpeg-filters.html ;
+Sources: `docs/handoff/studio/ENGINE-BOUNDARY.md`; `docs/spec/studio-v1-spec.md` (Further Notes → Decisions D-1, D-2);
+`docs/research/studio/film-engine.md` §§0–4, 7; `.claude/skills/jovra-edit-plan/SKILL.md`;
+https://developer.apple.com/documentation/avfoundation/avvideocomposition ;
+https://developer.apple.com/documentation/avfoundation/avassetwriter ;
+https://developer.apple.com/documentation/avfoundation/avassetimagegenerator ; https://ffmpeg.org/ffmpeg-filters.html ;
 https://www.remotion.dev/docs/renderer/render-media ; https://github.com/remotion-dev/remotion/blob/main/LICENSE.md ;
 https://www.remotion.pro/license .

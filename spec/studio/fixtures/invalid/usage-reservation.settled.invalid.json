@@ -222,6 +222,47 @@
         "layer": "reference",
         "code": "badEntryKey"
       }
+    },
+    {
+      "id": "topup-from-initial-quote",
+      "why": "One accepted quote funds one hold: a top-up keyed by the quote that funded the initial hold is a second hold from the same quote",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/0/credits",
+          "value": 2
+        },
+        {
+          "op": "add",
+          "path": "/entries/1",
+          "value": {
+            "entryId": "e-1b",
+            "kind": "reserve",
+            "credits": 2,
+            "key": "reserve:sample-court-day:2:8e10e6614d128e6380090e9b206cac5e6ee800e17cce73cc23e823114efffb99:topup:quote-test-01",
+            "at": "2026-10-07T22:50:06Z"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "quote-is-not-initial",
+      "why": "Without a top-up the funding quote is the initial quote",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/initialQuoteId",
+          "value": "quote-test-00"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
     }
   ]
 }

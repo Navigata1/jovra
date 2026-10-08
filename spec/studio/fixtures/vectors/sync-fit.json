@@ -2123,7 +2123,8 @@
           "state": "needs-review",
           "reasons": [
             "fewer than 8 inlier anchors",
-            "anchors do not cover the first, middle and last thirds"
+            "anchors do not cover the first, middle and last thirds",
+            "drift above the 300 ppm stress ceiling for phone clocks (about 8 ppm measured)"
           ]
         }
       ],
@@ -2137,7 +2138,7 @@
     },
     {
       "id": "implausible-drift-1500ppm",
-      "why": "1500 ppm is inside the 0.9-1.1 schema range but far beyond phone clocks (about 8 ppm): flagged for review and never reviewable without re-anchoring",
+      "why": "1500 ppm is inside the 0.9-1.1 schema range but far beyond phone clocks (about 8 ppm) and above 1000 ppm (30 vs 29.97 fps): flagged as a likely timebase mislabel; a person may confirm it at the checkpoints (reviewable reason, not a rejection)",
       "input": {
         "pieces": [
           {
@@ -2352,7 +2353,7 @@
           ],
           "state": "needs-review",
           "reasons": [
-            "drift above 1000 ppm is implausible for phone clocks"
+            "drift above 1000 ppm suggests a frame-rate or timebase mislabel"
           ]
         }
       ],
@@ -2365,7 +2366,470 @@
           1501000
         ],
         "reasonsInclude": "drift above 1000 ppm",
-        "reviewable": false
+        "reviewable": true
+      }
+    },
+    {
+      "id": "drift-400ppm-above-stress-ceiling",
+      "why": "400 ppm with ten exact anchors over the hour: everything else would be estimated, but the drift is above the 300 ppm stress fixture plus the 3 ppm S2 tolerance (multicam-sync.md 4.6), so it needs review; a person may confirm it (the old 1000 ppm gate let it through as estimated)",
+      "input": {
+        "pieces": [
+          {
+            "segmentId": "seg-0",
+            "sourceDurationUs": 3600000000,
+            "anchors": [
+              {
+                "id": "d4-01",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 49580168,
+                "referenceTimeUs": 50000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-02",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 389444222,
+                "referenceTimeUs": 390000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-03",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 729308277,
+                "referenceTimeUs": 730000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-04",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1069172331,
+                "referenceTimeUs": 1070000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-05",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1409036385,
+                "referenceTimeUs": 1410000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-06",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1748900440,
+                "referenceTimeUs": 1750000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-07",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2088764494,
+                "referenceTimeUs": 2090000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-08",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2428628549,
+                "referenceTimeUs": 2430000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-09",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2768492603,
+                "referenceTimeUs": 2770000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d4-10",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 3108356657,
+                "referenceTimeUs": 3110000000,
+                "eventPositionMm": null
+              }
+            ]
+          }
+        ],
+        "sourcePosition": {
+          "xMm": 8535,
+          "yMm": -17365,
+          "zMm": 1500
+        },
+        "referencePosition": {
+          "xMm": 0,
+          "yMm": -17365,
+          "zMm": 1500
+        },
+        "mmPerSecond": 343000,
+        "outputFps": {
+          "num": 30,
+          "den": 1
+        },
+        "hints": {}
+      },
+      "expect": [
+        {
+          "segmentId": "seg-0",
+          "transform": {
+            "offsetUs": 400000,
+            "rate": {
+              "num": 1000400000,
+              "den": 1000000000
+            }
+          },
+          "fit": {
+            "method": "robust-trimmed-ols/1",
+            "nInliers": 10,
+            "nOutliers": 0,
+            "residualRmsUs": 0,
+            "residualMaxUs": 0,
+            "driftPpb": 400000,
+            "thirdsCovered": [
+              true,
+              true,
+              true
+            ],
+            "uncorrectedAudio": false
+          },
+          "anchors": [
+            {
+              "id": "d4-01",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-02",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-03",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-04",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-05",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-06",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-07",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-08",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-09",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d4-10",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            }
+          ],
+          "state": "needs-review",
+          "reasons": [
+            "drift above the 300 ppm stress ceiling for phone clocks (about 8 ppm measured)"
+          ]
+        }
+      ],
+      "assert": {
+        "state": [
+          "needs-review"
+        ],
+        "driftPpbWithin": [
+          399000,
+          401000
+        ],
+        "reasonsInclude": "drift above the 300 ppm stress ceiling",
+        "reviewable": true
+      }
+    },
+    {
+      "id": "drift-303ppm-at-ceiling",
+      "why": "Exactly 303 ppm (the stress fixture plus the S2 tolerance) is still plausible: estimated",
+      "input": {
+        "pieces": [
+          {
+            "segmentId": "seg-0",
+            "sourceDurationUs": 3600000000,
+            "anchors": [
+              {
+                "id": "d3-01",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 49584976,
+                "referenceTimeUs": 50000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-02",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 389481987,
+                "referenceTimeUs": 390000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-03",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 729378998,
+                "referenceTimeUs": 730000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-04",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1069276009,
+                "referenceTimeUs": 1070000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-05",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1409173021,
+                "referenceTimeUs": 1410000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-06",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1749070032,
+                "referenceTimeUs": 1750000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-07",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2088967043,
+                "referenceTimeUs": 2090000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-08",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2428864054,
+                "referenceTimeUs": 2430000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-09",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2768761065,
+                "referenceTimeUs": 2770000000,
+                "eventPositionMm": null
+              },
+              {
+                "id": "d3-10",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 3108658077,
+                "referenceTimeUs": 3110000000,
+                "eventPositionMm": null
+              }
+            ]
+          }
+        ],
+        "sourcePosition": {
+          "xMm": 8535,
+          "yMm": -17365,
+          "zMm": 1500
+        },
+        "referencePosition": {
+          "xMm": 0,
+          "yMm": -17365,
+          "zMm": 1500
+        },
+        "mmPerSecond": 343000,
+        "outputFps": {
+          "num": 30,
+          "den": 1
+        },
+        "hints": {}
+      },
+      "expect": [
+        {
+          "segmentId": "seg-0",
+          "transform": {
+            "offsetUs": 400000,
+            "rate": {
+              "num": 1000303000,
+              "den": 1000000000
+            }
+          },
+          "fit": {
+            "method": "robust-trimmed-ols/1",
+            "nInliers": 10,
+            "nOutliers": 0,
+            "residualRmsUs": 0,
+            "residualMaxUs": 0,
+            "driftPpb": 303000,
+            "thirdsCovered": [
+              true,
+              true,
+              true
+            ],
+            "uncorrectedAudio": false
+          },
+          "anchors": [
+            {
+              "id": "d3-01",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-02",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-03",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-04",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-05",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-06",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-07",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-08",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-09",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            },
+            {
+              "id": "d3-10",
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 0,
+              "inlier": true
+            }
+          ],
+          "state": "estimated",
+          "reasons": []
+        }
+      ],
+      "assert": {
+        "state": [
+          "estimated"
+        ],
+        "driftPpbWithin": [
+          303000,
+          303000
+        ],
+        "reviewable": true
       }
     },
     {

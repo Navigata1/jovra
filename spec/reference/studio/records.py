@@ -268,6 +268,9 @@ def check_profile_catalog(doc: dict) -> dict:
         require(not g["transitions"] or g["maxTransitionMs"] > 0, "profileMismatch", "transition length")
         require("cue" not in g["overlays"] or "estimated" not in g["overlays"]["cue"], "profileMismatch",
                 "an estimated cue is never shown as instruction")
+        # spec D-1 / SD5: exports default to no audio (core D5) except Rally Pulse and Court Memories
+        require(p["exportAudio"]["includeByDefault"] == (p["id"] in ("rally-pulse", "court-memories")),
+                "profileMismatch", f"{p['id']}: Include audio starts on only for Rally Pulse and Court Memories (D-1)")
     return by_id
 
 
@@ -349,6 +352,19 @@ def check_quote(doc: dict, classes: dict) -> None:
         require(doc["acceptedAt"] is None, "badQuote", "only accepted quotes have acceptedAt")
     if doc["environment"] != "live":
         require(doc["sample"], "sampleRequired", "demo and test quotes are Sample")
+    require(doc["lineItems"]["storageDays"] == doc["retentionDays"], "badQuote",
+            "the storage line item is priced for the chosen retention")
+    if doc["plannerChoice"] == "heuristic":
+        require(doc["lineItems"]["plannerTokensEstimate"] == 0, "plannerMismatch",
+                "a rules-planned quote estimates no model tokens")
+    consent = doc["consent"]
+    if consent is not None:
+        require(consent["retentionDays"] == doc["retentionDays"], "badQuote",
+                "the consent confirms the quote's retention")
+        require(consent["modelProvider"] == (doc["plannerChoice"] == "model"), "consentMissing",
+                "model planning needs the explicit model-provider consent, and a rules-planned quote records none")
+        require(consent["modelProvider"] or consent["textClasses"] == [], "badQuote",
+                "note text classes are consented only together with model planning")
 
 
 def check_artifact(doc: dict) -> None:

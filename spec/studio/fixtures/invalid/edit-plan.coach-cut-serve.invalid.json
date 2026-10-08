@@ -169,22 +169,69 @@
     },
     {
       "id": "hold-bed-over-live",
-      "why": "Hold-bed continues under live play",
+      "why": "Hold-bed continues under live play (c05)",
       "patch": [
         {
           "op": "replace",
           "path": "/audio/bed/2/outputOutFrame",
-          "value": 2300
+          "value": 5520
         },
         {
+          "op": "remove",
+          "path": "/audio/bed/3"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "holdBedOverLive"
+      }
+    },
+    {
+      "id": "primary-bed-under-replay",
+      "why": "The replay of k-02 soundtracked by camera-1 court audio from k-03's contact (frame 121000), starting with a 0 ms jump: primary court audio plays only under live play",
+      "patch": [
+        {
           "op": "replace",
+          "path": "/audio/bed/2/outputOutFrame",
+          "value": 2010
+        },
+        {
+          "op": "add",
           "path": "/audio/bed/3",
           "value": {
             "route": "primary-bed",
             "sourceId": "camera-1",
-            "sourceInFrame": 150000,
-            "outputInFrame": 2300,
-            "outputOutFrame": 5520,
+            "sourceInFrame": 120900,
+            "outputInFrame": 2010,
+            "outputOutFrame": 2250,
+            "fadeInMs": 0,
+            "fadeOutMs": 20
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "courtBedOffLive"
+      }
+    },
+    {
+      "id": "alt-court-bed-under-replay",
+      "why": "Another angle's court audio under the replay is unchecked court audio too",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/2/outputOutFrame",
+          "value": 2010
+        },
+        {
+          "op": "add",
+          "path": "/audio/bed/3",
+          "value": {
+            "route": "alt-bed",
+            "sourceId": "camera-2",
+            "sourceInFrame": 149000,
+            "outputInFrame": 2010,
+            "outputOutFrame": 2250,
             "fadeInMs": 20,
             "fadeOutMs": 20
           }
@@ -192,7 +239,47 @@
       ],
       "expect": {
         "layer": "reference",
-        "code": "holdBedOverLive"
+        "code": "courtBedOffLive"
+      }
+    },
+    {
+      "id": "score-of-another-point",
+      "why": "The score of p-090 (keeper k-04) over k-02's rally (point p-041)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/overlayRefs/0",
+          "value": {
+            "kind": "score",
+            "refId": "p-090",
+            "eventRevision": 3,
+            "provenance": "manual"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "overlayOutsideMoment"
+      }
+    },
+    {
+      "id": "score-over-another-rally",
+      "why": "The score of p-041 (keeper k-02) over the k-04 rally on camera-2",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/4/overlayRefs/0",
+          "value": {
+            "kind": "score",
+            "refId": "p-041",
+            "eventRevision": 3,
+            "provenance": "reviewed"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "overlayOutsideMoment"
       }
     },
     {
@@ -217,6 +304,11 @@
         {
           "op": "replace",
           "path": "/segments/4/protectedFrames",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/overlayRefs",
           "value": []
         }
       ],

@@ -62,6 +62,8 @@ def dump(path: Path, value) -> None:
 
 # ----- story profiles -----------------------------------------------------------------------------
 
+EXPORT_AUDIO_ON = ("rally-pulse", "court-memories")   # spec D-1: Include audio starts on only for these
+
 GRAMMAR = {
     "coach-cut": {
         "chronology": "free", "ops": ["live", "replay", "freeze", "title-card"], "replaySpeedDens": [2, 4],
@@ -106,9 +108,13 @@ def profile_catalog() -> dict:
         lo, hi = p["recommendedDurationSeconds"]
         grammar = {"durationSeconds": {"min": lo, "max": hi}}
         grammar.update(GRAMMAR[p["id"]])
-        profiles.append(dict(p, revision=1, grammar=grammar))
+        # D-1 / SD5: exported files default to no audio, except Rally Pulse and Court Memories (switch always shown)
+        export_audio = {"includeByDefault": p["id"] in EXPORT_AUDIO_ON, "switchShown": True,
+                        "juniorMode": "no-audio-no-switch"}
+        profiles.append(dict(p, revision=1, grammar=grammar, exportAudio=export_audio))
         profiles[-1] = {k: profiles[-1][k] for k in ("id", "revision", "name", "intent", "recommendedDurationSeconds",
-                                                     "beats", "editing", "mustNot", "fallback", "grammar")}
+                                                     "beats", "editing", "mustNot", "fallback", "exportAudio",
+                                                     "grammar")}
     return {
         "schemaVersion": "jovra.story-profile-catalog/1",
         "derivedFrom": "design-reference/studio/brief/story-profiles.json#jovra.story-profiles/1",
@@ -554,8 +560,9 @@ def rally_pulse(P):
              "music": {"assetId": "track-01", "rightsRecordId": "rights-track-01", "rightsScope": ["private-film"],
                        "windows": [{"outputInFrame": 0, "outputOutFrame": 1350}]},
              "bed": [
-                 bed("primary-bed", "camera-1", 72300, 0, 420),
-                 bed("primary-bed", "camera-1", 120000, 420, 900),
+                 # r01 -> r02 jumps to another moment of camera-1 at a dissolve: a switch, so an audio dip spans it
+                 bed("primary-bed", "camera-1", 72300, 0, 420, fade_out=100),
+                 bed("primary-bed", "camera-1", 120000, 420, 900, fade_in=100),
                  bed("hold-bed", "camera-1", 120960, 900, 945),
                  bed("alt-bed", "camera-2", 150700, 945, 1350),
              ]}
@@ -579,8 +586,9 @@ def match_broadcast(P):
     audio = {"primarySourceId": "camera-1", "narration": None, "music": None, "bed": [
         bed("silence", None, None, 0, 150),
         bed("primary-bed", "camera-1", 6000, 150, 4650),
-        bed("hold-bed", "camera-1", 15000, 4650, 4890),
-        bed("primary-bed", "camera-1", 15600, 4890, 9000),
+        # the hold-bed ends at 15480; m04's bed starts at 15600 (a jump) at a dissolve: an audio dip spans it
+        bed("hold-bed", "camera-1", 15000, 4650, 4890, fade_out=134),
+        bed("primary-bed", "camera-1", 15600, 4890, 9000, fade_in=134),
     ]}
     return plan_doc("match-broadcast-set-1", 1, "match-broadcast", out_spec(1920, 1080, "16:9", 9000),
                     ["camera-1", "camera-2"], s, [chapter("ch-intro", 0, "chapter.intro"),
@@ -643,6 +651,7 @@ def build() -> dict:
     docs["vectors/edl-context.json"] = cases.edl_context_vectors(P, by_name, trusted,
                                                                  {p["id"]: p for p in profile_catalog()["profiles"]})
     plans["syncmap"] = smap
+    plans["manifest"] = manifest
     for name, doc in cases.invalid_sets(P, plans).items():
         docs[f"invalid/{name}.invalid.json"] = doc
     return docs

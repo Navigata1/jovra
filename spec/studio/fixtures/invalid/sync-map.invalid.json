@@ -211,6 +211,246 @@
       }
     },
     {
+      "id": "no-overlap-state",
+      "why": "There is no no-overlap state: no shared coverage is a failed piece",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/2/pieces/0/state",
+          "value": "no-overlap"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "hint-offset-invented",
+      "why": "A from-hints piece must carry the capture hint the SourceManifest journal gives, never an offset of its own",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/2/pieces/0",
+          "value": {
+            "segmentId": "seg-0",
+            "sourceDurationUs": 3600000000,
+            "matchCoverage": {
+              "startUs": 5200,
+              "endUs": 3600005200
+            },
+            "transform": {
+              "offsetUs": 5200,
+              "rate": {
+                "num": 1000000000,
+                "den": 1000000000
+              }
+            },
+            "fit": null,
+            "anchors": [],
+            "state": "from-hints",
+            "reasons": [
+              "no anchors; capture hint only"
+            ],
+            "checkpoints": [],
+            "reviewedAt": null
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "syncFitMismatch"
+      }
+    },
+    {
+      "id": "implausible-drift-stored-estimated",
+      "why": "Ten exact anchors at 400 ppm stored as estimated (what the old 1000 ppm gate gave): above the 303 ppm plausibility ceiling the fitter says needs-review",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/2/pieces/0",
+          "value": {
+            "segmentId": "seg-0",
+            "sourceDurationUs": 3600000000,
+            "matchCoverage": {
+              "startUs": 2350000,
+              "endUs": 3603790000
+            },
+            "transform": {
+              "offsetUs": 2350000,
+              "rate": {
+                "num": 1000400000,
+                "den": 1000000000
+              }
+            },
+            "fit": {
+              "method": "robust-trimmed-ols/1",
+              "nInliers": 10,
+              "nOutliers": 0,
+              "residualRmsUs": 0,
+              "residualMaxUs": 0,
+              "driftPpb": 400000,
+              "thirdsCovered": [
+                true,
+                true,
+                true
+              ],
+              "uncorrectedAudio": false
+            },
+            "anchors": [
+              {
+                "id": "c3d-01",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 47630948,
+                "referenceTimeUs": 50000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-02",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 387495002,
+                "referenceTimeUs": 390000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-03",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 727359056,
+                "referenceTimeUs": 730000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-04",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1067223111,
+                "referenceTimeUs": 1070000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-05",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1407087165,
+                "referenceTimeUs": 1410000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-06",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 1746951220,
+                "referenceTimeUs": 1750000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-07",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2086815274,
+                "referenceTimeUs": 2090000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-08",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2426679328,
+                "referenceTimeUs": 2430000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-09",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 2766543383,
+                "referenceTimeUs": 2770000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              },
+              {
+                "id": "c3d-10",
+                "kind": "serve-contact",
+                "modality": "visual",
+                "sourceTimeUs": 3106407437,
+                "referenceTimeUs": 3110000000,
+                "eventPositionMm": null,
+                "sourceDelayUs": 0,
+                "referenceDelayUs": 0,
+                "corrected": true,
+                "residualUs": 0,
+                "inlier": true,
+                "reviewed": false
+              }
+            ],
+            "state": "estimated",
+            "reasons": [],
+            "checkpoints": [],
+            "reviewedAt": null
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "syncStateMismatch"
+      }
+    },
+    {
       "id": "reference-restart-invented",
       "why": "A restarted reference segment with an invented offset and a 1.09 rate: its placement comes from the capture journal (from-hints, rate 1) or it has none",
       "patch": [

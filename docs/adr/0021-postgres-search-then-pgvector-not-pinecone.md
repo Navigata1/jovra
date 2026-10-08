@@ -4,7 +4,10 @@ Status: accepted (2026-10-07).
 
 Jon asked whether he needs "pinecone vector database or whatever" (Studio addendum, OBSERVED). Scoring, replay,
 sync and editing need no vectors at all. Search over lesson notes, cues and clip descriptions starts as ordinary
-Postgres full-text search, under the same RLS as everything else (ADR-0018).
+Postgres full-text search, under the same RLS as everything else (ADR-0018). The search text travels in a request
+body (`POST /rest/v1/rpc/search_lessons`), never in a URL query string, because vendor gateway logs record paths and
+query strings and a search over notes would put the player's own words there (amended 2026-10-07, review round 3;
+`docs/backend/security-model.md` §13.13).
 
 Embeddings are added only once a measured retrieval need exists. When they are, they use **Supabase pgvector** in
 the same database:
@@ -28,6 +31,6 @@ transaction.
 The planner's evidence retrieval (ADR-0016) reads authorized rows by ID and filter, not by similarity. Adding pgvector
 later is a migration plus a backfill job.
 
-Sources: https://supabase.com/docs/guides/ai/rag-with-permissions ;
+Sources: `docs/backend/security-model.md` §13.13; https://supabase.com/docs/guides/ai/rag-with-permissions ;
 https://supabase.com/docs/guides/database/extensions/pgvector ; https://github.com/pgvector/pgvector ;
 `docs/research/studio/backend-architecture.md` §5.
