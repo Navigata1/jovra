@@ -1,0 +1,42 @@
+backend-db	supabase test db	﻿2026-10-08T18:46:44.7507857Z ##[group]Run supabase test db
+backend-db	supabase test db	2026-10-08T18:46:44.7508436Z ^[[36;1msupabase test db^[[0m
+backend-db	supabase test db	2026-10-08T18:46:44.7581168Z shell: /usr/bin/bash -e {0}
+backend-db	supabase test db	2026-10-08T18:46:44.7581473Z env:
+backend-db	supabase test db	2026-10-08T18:46:44.7581725Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase test db	2026-10-08T18:46:44.7582041Z ##[endgroup]
+backend-db	supabase test db	2026-10-08T18:46:45.1601074Z Connecting to local database...
+backend-db	supabase test db	2026-10-08T18:46:47.3088643Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+backend-db	supabase test db	2026-10-08T18:46:47.3436127Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .............. ok
+backend-db	supabase test db	2026-10-08T18:46:47.3979916Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ..... ok
+backend-db	supabase test db	2026-10-08T18:46:47.4761675Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ... ok
+backend-db	supabase test db	2026-10-08T18:46:47.5772907Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ...... ok
+backend-db	supabase test db	2026-10-08T18:46:47.7479782Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .. 
+backend-db	supabase test db	2026-10-08T18:46:47.7482008Z # Failed test 28: "T-DB-63: owner sees self and the approved coach; not the pending, revoked or expired coaches"
+backend-db	supabase test db	2026-10-08T18:46:47.7483203Z #     Results differ beginning at row 2:
+backend-db	supabase test db	2026-10-08T18:46:47.7484547Z #         have: (c1e6db66-40be-4c8c-9613-281df719d52b)
+backend-db	supabase test db	2026-10-08T18:46:47.7485325Z #         want: (c4b08c3f-76bf-4ca2-922f-b915689daba0)
+backend-db	supabase test db	2026-10-08T18:46:47.7486163Z # Failed test 45: "coach sees self and the project owner (co-member); not the pending coach"
+backend-db	supabase test db	2026-10-08T18:46:47.7486981Z #     Results differ beginning at row 2:
+backend-db	supabase test db	2026-10-08T18:46:47.7487529Z #         have: (c1e6db66-40be-4c8c-9613-281df719d52b)
+backend-db	supabase test db	2026-10-08T18:46:47.7488135Z #         want: (c4b08c3f-76bf-4ca2-922f-b915689daba0)
+backend-db	supabase test db	2026-10-08T18:46:47.7488821Z # Failed test 52: "T-DB-63: a pending coach sees only their own profile"
+backend-db	supabase test db	2026-10-08T18:46:47.7491118Z #     Results differ beginning at row 1:
+backend-db	supabase test db	2026-10-08T18:46:47.7491754Z #         have: (bcf7c4ba-f3bc-47d8-a05f-fc9fccbbb5d9)
+backend-db	supabase test db	2026-10-08T18:46:47.7492385Z #         want: (c1e6db66-40be-4c8c-9613-281df719d52b)
+backend-db	supabase test db	2026-10-08T18:46:47.7493167Z # Failed test 55: "T-DB-63: shares_project_with is false while the coach is pending"
+backend-db	supabase test db	2026-10-08T18:46:47.7494532Z #         have: true
+backend-db	supabase test db	2026-10-08T18:46:47.7494908Z #         want: false
+backend-db	supabase test db	2026-10-08T18:46:47.7495315Z # Looks like you failed 4 tests of 74
+backend-db	supabase test db	2026-10-08T18:46:47.7495795Z Failed 4/74 subtests 
+backend-db	supabase test db	2026-10-08T18:46:47.8413020Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ....... ok
+backend-db	supabase test db	2026-10-08T18:46:47.8417464Z 
+backend-db	supabase test db	2026-10-08T18:46:47.8417856Z Test Summary Report
+backend-db	supabase test db	2026-10-08T18:46:47.8418557Z -------------------
+backend-db	supabase test db	2026-10-08T18:46:47.8426132Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql (Wstat: 0 Tests: 74 Failed: 4)
+backend-db	supabase test db	2026-10-08T18:46:47.8436363Z   Failed tests:  28, 45, 52, 55
+backend-db	supabase test db	2026-10-08T18:46:47.8438051Z Files=6, Tests=179,  0 wallclock secs ( 0.05 usr  0.02 sys +  0.07 cusr  0.03 csys =  0.17 CPU)
+backend-db	supabase test db	2026-10-08T18:46:47.8439072Z Result: FAIL
+backend-db	supabase test db	2026-10-08T18:46:47.9951483Z 
+backend-db	supabase test db	2026-10-08T18:46:47.9951894Z error running container: exit 1
+backend-db	supabase test db	2026-10-08T18:46:47.9952536Z Try rerunning the command with --debug to troubleshoot the error.
+backend-db	supabase test db	2026-10-08T18:46:48.0125631Z ##[error]Process completed with exit code 1.
