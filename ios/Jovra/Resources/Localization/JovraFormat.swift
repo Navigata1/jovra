@@ -24,7 +24,7 @@ enum JovraFormat {
     /// Time on court: "6h 42m", "54m" / "6 h 42 min". Truncated to whole minutes, never rounded up,
     /// so a total is never overstated.
     static func duration(seconds: Double, locale: Locale = .autoupdatingCurrent) -> String {
-        let minutes = seconds.isFinite && seconds > 0 ? Int(seconds) / 60 : 0
+        let minutes = wholeSeconds(seconds) / 60
         let style = Duration.UnitsFormatStyle(allowedUnits: [.hours, .minutes], width: .narrow)
             .locale(locale)
         return Duration.seconds(minutes * 60).formatted(style)
@@ -32,9 +32,20 @@ enum JovraFormat {
 
     /// Timecodes: "12:46", and "1:02:03" past an hour.
     static func clock(seconds: Double, locale: Locale = .autoupdatingCurrent) -> String {
-        let whole = seconds.isFinite && seconds > 0 ? Int(seconds) : 0
+        let whole = wholeSeconds(seconds)
         let pattern: Duration.TimeFormatStyle.Pattern = whole >= 3_600 ? .hourMinuteSecond : .minuteSecond
         return Duration.seconds(whole).formatted(Duration.TimeFormatStyle(pattern: pattern).locale(locale))
+    }
+
+    /// The largest value `duration` and `clock` format: about 31.7 years, far past any recording, and
+    /// small enough that `Duration.seconds` and the minute arithmetic cannot overflow.
+    static let maximumSeconds = 1_000_000_000
+
+    /// Whole seconds, truncated; 0 for negative, NaN or infinite input; clamped to `maximumSeconds`, so
+    /// converting to `Int` can never trap.
+    private static func wholeSeconds(_ seconds: Double) -> Int {
+        guard seconds.isFinite, seconds > 0 else { return 0 }
+        return Int(min(seconds, Double(maximumSeconds)))
     }
 
     /// "12,345" / "12.345".

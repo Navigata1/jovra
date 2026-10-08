@@ -40,6 +40,18 @@ struct JovraFormatTests {
         #expect(JovraFormat.clock(seconds: 3_723, locale: spanish) == "1:02:03")
     }
 
+    @Test("a huge value is clamped and an infinite or NaN one reads as zero, never a trap", arguments: [
+        9.3e18, 1e300, Double.greatestFiniteMagnitude, .infinity, -.infinity, .nan,
+    ])
+    func hugeValuesDoNotTrap(seconds: Double) {
+        let expected = seconds.isFinite && seconds > 0
+            ? (JovraFormat.duration(seconds: Double(JovraFormat.maximumSeconds), locale: english),
+               JovraFormat.clock(seconds: Double(JovraFormat.maximumSeconds), locale: english))
+            : ("0m", "0:00")
+        #expect(JovraFormat.duration(seconds: seconds, locale: english) == expected.0)
+        #expect(JovraFormat.clock(seconds: seconds, locale: english) == expected.1)
+    }
+
     @Test("counts use the locale's grouping")
     func counts() {
         #expect(JovraFormat.count(386, locale: english) == "386")
