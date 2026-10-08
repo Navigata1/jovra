@@ -1,0 +1,15 @@
+supabase test db	##[endgroup]
+supabase test db	psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+supabase test db	/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql ............. ok
+supabase test db	/home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql .... ok
+supabase test db	/home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql .. ok
+supabase test db	/home/runner/work/jovra/jovra/backend/supabase/tests/database/999_deliberate_red.test.sql ...... 
+supabase test db	# Failed test 1: "deliberately wrong: claims an unknown address may sign up"
+supabase test db	#         have: {"error": {"message": "signup_not_allowed", "http_code": 403}}
+supabase test db	#         want: {}
+supabase test db	# Looks like you failed 1 test of 1
+supabase test db	Failed 1/1 subtests 
+supabase test db	/home/runner/work/jovra/jovra/backend/supabase/tests/database/999_deliberate_red.test.sql    (Wstat: 0 Tests: 1 Failed: 1)
+supabase test db	  Failed test:  1
+supabase test db	Result: FAIL
+supabase test db	##[error]Process completed with exit code 1.
