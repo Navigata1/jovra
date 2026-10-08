@@ -95,8 +95,9 @@ begin
 end
 $$;
 
+-- pgTAP's own functions call each other unqualified, so this helper needs `extensions` on its search_path.
 create or replace function tests.rls_enabled(testing_schema text)
-returns text language sql stable set search_path = '' as $$
+returns text language sql volatile set search_path = extensions as $$
   select extensions.is(
     (select count(*)::int
        from pg_catalog.pg_class c
