@@ -111,3 +111,73 @@ Total: 4 passed, 1 failed, 0 skipped in 2 classes (xcresult summary: 4 passed, 1
 FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): Contrast failed
 (the remaining failure is the documented Contrast issue on this simulator; same test with the contrast audit temporarily excluded, not committed:)
 Total: 1 passed, 0 failed, 0 skipped in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+
+=== Verifier round 2 fixes (2026-10-07, simulator JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22) ===
+
+--- RED: the new l10n tool tests against the HEAD (ae20ecb) scripts ---
+ERROR: test_a_renamed_catalog_reports_the_deleted_table_too (tests.test_catalog_ownership.ChangedFilesTests.test_a_renamed_catalog_reports_the_deleted_table_too)
+ERROR: test_a_verbatim_text_with_a_banned_claim_fails (tests.test_copy_lint.SwiftCopyLintTests.test_a_verbatim_text_with_a_banned_claim_fails)
+ERROR: test_an_accessibility_label_with_a_banned_claim_fails (tests.test_copy_lint.SwiftCopyLintTests.test_an_accessibility_label_with_a_banned_claim_fails)
+ERROR: test_comments_are_not_copy_and_a_line_can_allow_one_rule_with_a_reason (tests.test_copy_lint.SwiftCopyLintTests.test_comments_are_not_copy_and_a_line_can_allow_one_rule_with_a_reason)
+ERROR: test_the_app_sources_pass_and_the_cli_covers_them (tests.test_copy_lint.SwiftCopyLintTests.test_the_app_sources_pass_and_the_cli_covers_them)
+FAIL: test_a_table_inside_a_nested_call_or_interpolation_does_not_count (tests.test_literal_lint.LiteralLintTests.test_a_table_inside_a_nested_call_or_interpolation_does_not_count)
+FAIL: test_flags_a_localized_string_key_built_from_a_literal (tests.test_literal_lint.LiteralLintTests.test_flags_a_localized_string_key_built_from_a_literal)
+FAIL: test_flags_alert_and_confirmation_dialog_titles (tests.test_literal_lint.LiteralLintTests.test_flags_alert_and_confirmation_dialog_titles)
+FAIL: test_flags_navigation_links_and_badges (tests.test_literal_lint.LiteralLintTests.test_flags_navigation_links_and_badges)
+Ran 31 tests in 0.189s
+FAILED (failures=4, errors=5)
+
+=== Negative 5: rename another ticket's table (scratch repo; git mv Home.xcstrings Capture.Framing.xcstrings on ticket/t23-framing-calibration)
+--- before (HEAD ae20ecb script, git's default rename detection):
+catalog ownership: 1 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 0 problem(s)
+exit 0  (the defect: 0)
+--- after (--no-renames):
+ios/Jovra/Resources/Localization/Home.xcstrings: table Home belongs to T19 (ios/Jovra/Features/Home), not T23
+catalog ownership: 2 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 1 problem(s)
+exit 1  (expected 1)
+
+=== Negative 6: copy lint on Swift verbatim text
+literal lint: 0 violation(s) in 1 Swift file(s)
+exit 0  (literal lint accepts verbatim text)
+Seeded.swift: “line 1”: rpm: “"Automatic line call, spin RPM 3000"” (no spin RPM (CLAUDE.md rule 1))
+Seeded.swift: “line 1”: line-call: “"Automatic line call, spin RPM 3000"” (no officiating-grade line calls (CLAUDE.md rule 1))
+copy lint: 2 finding(s) in 0 catalog(s) and 1 Swift file(s)
+exit 1  (expected 1)
+
+=== Negative 7: literal lint on the APIs it used to miss
+Missed.swift:1: hard-coded accessibility or title literal (pass a String(localized:table:) or Text): .alert("Delete session?", isPresented: $shown)
+Missed.swift:2: hard-coded accessibility or title literal (pass a String(localized:table:) or Text): .confirmationDialog("Discard clip?", isPresented: $shown)
+Missed.swift:3: hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:)): NavigationLink("Open settings")
+Missed.swift:4: hard-coded accessibility or title literal (pass a String(localized:table:) or Text): .badge("New")
+Missed.swift:5: LocalizedStringKey from a literal without a table (pass tableName: to the view): LocalizedStringKey("Literal key")
+Missed.swift:6: hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:)): Text("Shots \(String(localized: "rally", table: "Home"))")
+literal lint: 6 violation(s) in 1 Swift file(s)
+exit 1  (expected 1)
+
+=== Shell: lints after round 2
+literal lint: 0 violation(s) in 27 Swift file(s)
+copy lint: 0 finding(s) in 9 catalog(s) and 27 Swift file(s)
+Ran 31 tests in 0.261s
+
+OK
+
+=== Negative 8: the URL-scheme validity check in check-build-config.sh on a synthetic Info.plist
+--- with an empty Drive scheme (what HEAD ae20ecb built without Drive.xcconfig):
+FAIL: URL schemes: com.islanddevcrew.jovra.drive-oauth: invalid scheme ''
+failures 1
+--- with the placeholder scheme:
+ok:   URL schemes valid: 2 URL type(s), all valid
+failures 0
+
+=== RED (Swift): JovraFormatTests.hugeValuesDoNotTrap before the clamp: the test host trapped converting 9.3e18 to Int
+Failing tests: -[JovraFormatTests hugeValuesDoNotTrap(seconds:)]  ** TEST FAILED ** (result bundle not kept)
+
+=== RED: scripts/ios/tests/test_xcresult_summary.py before format_table/totals existed
+ERROR: test_an_expected_failure_is_counted_in_its_own_column  (AttributeError; Ran 6 tests, FAILED (errors=1))
+
+=== Tool tests after round 2
+Ran 31 tests in 0.212s
+
+OK
+Ran 6 tests in 0.008s
+OK

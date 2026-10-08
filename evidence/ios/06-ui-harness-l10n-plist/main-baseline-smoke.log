@@ -1,8 +1,20 @@
-Baseline: origin/main (eb99384, foundation code) JovraSmokeUITests on the same simulator JOVRA-T06, run 2026-10-07:
+Baseline: origin/main 11db157 (iOS sources identical to eb99384 and 6ef7c3d; main's later commits are docs and spec only).
+Full JovraSmokeUITests class (all 6 tests), simulator JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS 26.5), 2026-10-07.
+$ (detached worktree of origin/main in the session scratchpad) scripts/ios/generate.sh
+$ xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -only-testing:JovraUITests/JovraSmokeUITests -destination id=$SIMULATOR_ID -derivedDataPath <t06 worktree>/.derivedData -resultBundlePath .derivedData/main-smoke.xcresult
+exit 65
 Test class                      passed  failed  skipped
-JovraUITests/JovraSmokeUITests       0       2        0
-Total: 0 passed, 2 failed, 0 skipped in 1 classes (xcresult summary: 0 passed, 2 failed, 0 skipped; result Failed)
+JovraUITests/JovraSmokeUITests       2       4        0
+Total: 2 passed, 4 failed, 0 skipped in 1 classes (xcresult summary: 2 passed, 4 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): Contrast failed
+FAILED JovraSmokeUITests/testEveryTabInDarkAppearance(): Contrast failed
 FAILED JovraSmokeUITests/testEveryTabInLightAppearance(): Contrast failed
 FAILED JovraSmokeUITests/testSystemAppearanceIsFollowed(): Contrast failed
 Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
-Result bundle: .derivedData/main-check.xcresult
+Result bundle: .derivedData/main-smoke.xcresult
+
+--- the failing audit issue in each test (test stdout from the result bundle; main's audit has no repeat-after-move rule)
+audit: contrast issue on “Your sessions” at (20.0, 133.99951171875, 257.0, 155.33333333333331), visible 62.0–759.3333129882812: FAILS
+audit: contrast issue on “This week” at (20.0, 340.33333333333326, 92.33333333333333, 24.0), visible 68.0–766.6666870117188: FAILS
+audit: contrast issue on “This week” at (20.0, 340.33333333333326, 92.33333333333333, 24.0), visible 68.0–766.6666870117188: FAILS
+audit: contrast issue on “This week” at (20.0, 340.33333333333326, 92.33333333333333, 24.0), visible 68.0–766.6666870117188: FAILS

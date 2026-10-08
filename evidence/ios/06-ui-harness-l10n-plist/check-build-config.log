@@ -1,3 +1,4 @@
+$ SIMULATOR_ID=5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 DERIVED_DATA=$PWD/.derivedData scripts/ios/check-build-config.sh   (2026-10-07, verifier round 2)
 ==> xcodebuild build (no Drive.xcconfig), DEVELOPMENT_TEAM empty
     team: ''
     entitlements (__TEXT,__entitlements): {"application-identifier": "FAKETEAMID.com.islanddevcrew.jovra", "com.apple.developer.applesignin": ["Default"], "com.apple.developer.healthkit": true, "com.apple.developer.healthkit.access": []}
@@ -10,13 +11,15 @@ ok:   NSHealthUpdateUsageDescription: If you turn on Apple Health in Settings, J
 ok:   BGTaskSchedulerPermittedIdentifiers: ["com.islanddevcrew.jovra.processing.overnight","com.islanddevcrew.jovra.continued.*"]
 ok:   UIBackgroundModes: processing
 ok:   JovraDriveClientID is empty
-ok:   JovraDriveRedirectScheme is empty
-    URL schemes: 'jovra '
-ok:   no Drive URL scheme registered
+ok:   JovraDriveRedirectScheme is the inert placeholder
+    URL schemes: 'jovra com.islanddevcrew.jovra.drive-unconfigured'
+ok:   URL schemes valid: 2 URL type(s), all valid
+ok:   no Google Drive URL scheme registered
+ok:   the Drive URL type carries the placeholder scheme
 ==> install and launch the unsigned build on 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22
-com.islanddevcrew.jovra: 91218
+com.islanddevcrew.jovra: 15315
 ok:   launched on the simulator
-ok:   still running after 3 s (pid 91218)
+ok:   still running after 3 s (pid 15315)
 ==> xcodebuild build (with scripts/ios/fixtures/Drive.test.xcconfig as Drive.xcconfig), DEVELOPMENT_TEAM empty
     team: ''
     entitlements (__TEXT,__entitlements): {"application-identifier": "FAKETEAMID.com.islanddevcrew.jovra", "com.apple.developer.applesignin": ["Default"], "com.apple.developer.healthkit": true, "com.apple.developer.healthkit.access": []}
@@ -29,6 +32,7 @@ ok:   NSHealthUpdateUsageDescription: If you turn on Apple Health in Settings, J
 ok:   BGTaskSchedulerPermittedIdentifiers: ["com.islanddevcrew.jovra.processing.overnight","com.islanddevcrew.jovra.continued.*"]
 ok:   UIBackgroundModes: processing
     URL schemes: 'jovra com.googleusercontent.apps.000000000000-jovratest'
+ok:   URL schemes valid: 2 URL type(s), all valid
 ok:   reversed client id is a URL scheme
 ok:   JovraDriveClientID is the test client id
 ==> rebuild without Drive.xcconfig so later runs use the default chain
@@ -36,3 +40,4 @@ ok:   JovraDriveClientID is the test client id
     team: ''
 ok:   back to an empty client id
 ==> 0 failure(s)
+exit 0

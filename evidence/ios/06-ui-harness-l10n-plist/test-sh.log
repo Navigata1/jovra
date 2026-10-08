@@ -1,124 +1,157 @@
+$ SIMULATOR_ID=5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 DERIVED_DATA=$PWD/.derivedData scripts/ios/test.sh   (2026-10-07, verifier round 2)
 ==> swift test (JovraCore)
-[0/1] Planning build
 Building for debugging...
-[0/2] Write swift-version--58304C5D6DBC2206.txt
-Build complete! (0.12s)
-Test Suite 'All tests' started at 2026-10-07 20:16:56.647.
-Test Suite 'All tests' passed at 2026-10-07 20:16:56.648.
+[0/7] .derivedData/spm-JovraCore/arm64-apple-macosx/debug/JovraCorePackageTests.derived/runner.swift
+[1/7] Write sources
+[4/7] Write swift-version--58304C5D6DBC2206.txt
+[6/13] Compiling JovraCore SRGBColor.swift
+[7/13] Compiling JovraCore DurationLabel.swift
+[8/13] Compiling JovraCore Provenance.swift
+[9/13] Emitting module JovraCore
+[10/13] Compiling JovraCore FrameRate.swift
+[11/13] Compiling JovraCore ContrastRequirement.swift
+[12/18] Compiling JovraCoreTests DurationLabelTests.swift
+[13/18] Emitting module JovraCoreTests
+[14/18] Compiling JovraCoreTests ContrastTests.swift
+[15/18] Compiling JovraCoreTests ProvenanceTests.swift
+[16/18] Compiling JovraCoreTests FrameRateTests.swift
+[17/20] Compiling JovraCorePackageTests runner.swift
+[18/20] Emitting module JovraCorePackageTests
+[18/20] Write Objects.LinkFileList
+[19/20] Linking JovraCorePackageTests
+Build complete! (7.01s)
+Test Suite 'All tests' started at 2026-10-07 21:27:57.782.
+Test Suite 'All tests' passed at 2026-10-07 21:27:57.783.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
 ◇ Test run started.
 ↳ Testing Library Version: 1902
 ↳ Target Platform: arm64e-apple-macos14.0
-◇ Suite "Duration labels" started.
 ◇ Suite "Provenance" started.
 ◇ Suite "Frame rate" started.
+◇ Suite "Duration labels" started.
 ◇ Suite "WCAG contrast" started.
-◇ Test "contrast ratio is symmetric" started.
-◇ Test "under an hour shows whole minutes" started.
-◇ Test "rejects values outside the contract" started.
-◇ Test "an hour or more shows hours and minutes" started.
+◇ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" started.
 ◇ Test "integer rates: frame 60 at 60 fps starts at exactly one second" started.
+◇ Test "under an hour shows whole minutes" started.
 ◇ Test "negative and non-finite durations are treated as zero" started.
 ◇ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" started.
-◇ Test "negative times clamp to frame 0" started.
-◇ Test "decodes the four persisted provenance values" started.
-◇ Test "normal text needs 4.5:1, large text and UI parts need 3:1" started.
-◇ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" started.
-◇ Test "malformed hex strings are rejected" started.
-◇ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" started.
+◇ Test "rejects values outside the contract" started.
 ◇ Test "encodes to the same lowercase strings" started.
+◇ Test "black on white is the maximum 21:1" started.
+◇ Test "an hour or more shows hours and minutes" started.
+◇ Test "contrast ratio is symmetric" started.
+◇ Test "negative times clamp to frame 0" started.
+◇ Test case passing 1 argument seconds → -5.0 to "negative and non-finite durations are treated as zero" started.
+◇ Test "decodes the four persisted provenance values" started.
 ◇ Test case passing 2 arguments seconds → 0.0, expected → "0 min" to "under an hour shows whole minutes" started.
+◇ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" started.
+◇ Test case passing 2 arguments seconds → 3599.0, expected → "59 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 3270.0, expected → "54 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 60.0, expected → "1 min" to "under an hour shows whole minutes" started.
 ◇ Test case passing 2 arguments seconds → 3600.0, expected → "1h 0m" to "an hour or more shows hours and minutes" started.
 ◇ Test case passing 2 arguments seconds → 24120.0, expected → "6h 42m" to "an hour or more shows hours and minutes" started.
-◇ Test case passing 2 arguments seconds → 90359.0, expected → "25h 5m" to "an hour or more shows hours and minutes" started.
-◇ Test case passing 2 arguments seconds → 59.0, expected → "0 min" to "under an hour shows whole minutes" started.
-◇ Test case passing 2 arguments seconds → 60.0, expected → "1 min" to "under an hour shows whole minutes" started.
-◇ Test case passing 2 arguments seconds → 3270.0, expected → "54 min" to "under an hour shows whole minutes" started.
-◇ Test "black on white is the maximum 21:1" started.
-◇ Test case passing 1 argument seconds → -5.0 to "negative and non-finite durations are treated as zero" started.
-◇ Test case passing 2 arguments seconds → 3599.0, expected → "59 min" to "under an hour shows whole minutes" started.
-◇ Test case passing 1 argument input → "" to "malformed hex strings are rejected" started.
-◇ Test case passing 1 argument seconds → inf to "negative and non-finite durations are treated as zero" started.
-◇ Test case passing 1 argument input → "#+FFFFF" to "malformed hex strings are rejected" started.
-◇ Test case passing 1 argument input → "#1234567" to "malformed hex strings are rejected" started.
-◇ Test case passing 1 argument input → "-00000" to "malformed hex strings are rejected" started.
-◇ Test case passing 1 argument input → "12 456" to "malformed hex strings are rejected" started.
-◇ Test case passing 1 argument input → "##12345" to "malformed hex strings are rejected" started.
-◇ Test case passing 1 argument input → "#FFF" to "malformed hex strings are rejected" started.
+◇ Test "normal text needs 4.5:1, large text and UI parts need 3:1" started.
 ◇ Test case passing 1 argument seconds → nan to "negative and non-finite durations are treated as zero" started.
-◇ Test case passing 1 argument input → "１２３４５６" to "malformed hex strings are rejected" started.
-✔ Test "integer rates: frame 60 at 60 fps starts at exactly one second" passed after 0.001 seconds.
 ✔ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" passed after 0.001 seconds.
 ✔ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" passed after 0.001 seconds.
-✔ Test "contrast ratio is symmetric" passed after 0.001 seconds.
-✔ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" passed after 0.001 seconds.
-✔ Test "decodes the four persisted provenance values" passed after 0.001 seconds.
-✔ Test "rejects values outside the contract" passed after 0.001 seconds.
-✔ Test "normal text needs 4.5:1, large text and UI parts need 3:1" passed after 0.001 seconds.
-✔ Test "an hour or more shows hours and minutes" with 3 test cases passed after 0.001 seconds.
+◇ Test case passing 2 arguments seconds → 90359.0, expected → "25h 5m" to "an hour or more shows hours and minutes" started.
 ✔ Test "black on white is the maximum 21:1" passed after 0.001 seconds.
-✔ Test "negative and non-finite durations are treated as zero" with 3 test cases passed after 0.001 seconds.
-✔ Test "negative times clamp to frame 0" passed after 0.001 seconds.
-◇ Test case passing 1 argument input → "0x1234" to "malformed hex strings are rejected" started.
-✔ Test "under an hour shows whole minutes" with 5 test cases passed after 0.001 seconds.
-◇ Test case passing 1 argument input → "+12345" to "malformed hex strings are rejected" started.
-✔ Suite "Frame rate" passed after 0.001 seconds.
-✔ Suite "Duration labels" passed after 0.001 seconds.
-◇ Test case passing 1 argument input → "#GGGGGG" to "malformed hex strings are rejected" started.
 ✔ Test "encodes to the same lowercase strings" passed after 0.001 seconds.
-✔ Test "malformed hex strings are rejected" with 11 test cases passed after 0.001 seconds.
+◇ Test "malformed hex strings are rejected" started.
+✔ Test "integer rates: frame 60 at 60 fps starts at exactly one second" passed after 0.001 seconds.
+✔ Test "decodes the four persisted provenance values" passed after 0.001 seconds.
+◇ Test case passing 2 arguments seconds → 59.0, expected → "0 min" to "under an hour shows whole minutes" started.
+✔ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" passed after 0.001 seconds.
+◇ Test case passing 1 argument input → "" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#FFF" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#GGGGGG" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#1234567" to "malformed hex strings are rejected" started.
+✔ Test "normal text needs 4.5:1, large text and UI parts need 3:1" passed after 0.001 seconds.
+✔ Test "contrast ratio is symmetric" passed after 0.001 seconds.
+✔ Test "an hour or more shows hours and minutes" with 3 test cases passed after 0.001 seconds.
+◇ Test case passing 1 argument input → "12 456" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "+12345" to "malformed hex strings are rejected" started.
+✔ Test "under an hour shows whole minutes" with 5 test cases passed after 0.001 seconds.
+◇ Test case passing 1 argument input → "#+FFFFF" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "0x1234" to "malformed hex strings are rejected" started.
+✔ Test "rejects values outside the contract" passed after 0.001 seconds.
+◇ Test case passing 1 argument input → "１２３４５６" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "##12345" to "malformed hex strings are rejected" started.
+✔ Test "negative times clamp to frame 0" passed after 0.001 seconds.
 ✔ Suite "Provenance" passed after 0.001 seconds.
+✔ Suite "Frame rate" passed after 0.001 seconds.
+◇ Test case passing 1 argument input → "-00000" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument seconds → inf to "negative and non-finite durations are treated as zero" started.
+✔ Test "negative and non-finite durations are treated as zero" with 3 test cases passed after 0.001 seconds.
+✔ Test "malformed hex strings are rejected" with 11 test cases passed after 0.001 seconds.
+✔ Suite "Duration labels" passed after 0.001 seconds.
 ✔ Suite "WCAG contrast" passed after 0.001 seconds.
 ✔ Test run with 15 tests in 4 suites passed after 0.001 seconds.
 ==> swift test (JovraMedia)
-[0/1] Planning build
 Building for debugging...
-[0/2] Write swift-version--58304C5D6DBC2206.txt
-Build complete! (0.14s)
-Test Suite 'All tests' started at 2026-10-07 20:16:57.175.
-Test Suite 'All tests' passed at 2026-10-07 20:16:57.176.
+[0/8] .derivedData/spm-JovraMedia/arm64-apple-macosx/debug/JovraMediaPackageTests.derived/runner.swift
+[1/8] Write sources
+[5/8] Write swift-version--58304C5D6DBC2206.txt
+[7/14] Compiling JovraCore SRGBColor.swift
+[8/14] Compiling JovraCore DurationLabel.swift
+[9/14] Emitting module JovraCore
+[10/14] Compiling JovraCore Provenance.swift
+[11/14] Compiling JovraCore FrameRate.swift
+[12/14] Compiling JovraCore ContrastRequirement.swift
+[13/16] Compiling JovraMedia FrameTime.swift
+[14/16] Emitting module JovraMedia
+[15/18] Emitting module JovraMediaTests
+[16/18] Compiling JovraMediaTests FrameTimeTests.swift
+[17/20] Emitting module JovraMediaPackageTests
+[18/20] Compiling JovraMediaPackageTests runner.swift
+[18/20] Write Objects.LinkFileList
+[19/20] Linking JovraMediaPackageTests
+Build complete! (7.75s)
+Test Suite 'All tests' started at 2026-10-07 21:28:06.253.
+Test Suite 'All tests' passed at 2026-10-07 21:28:06.254.
 	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
 ◇ Test run started.
 ↳ Testing Library Version: 1902
 ↳ Target Platform: arm64e-apple-macos14.0
 ◇ Suite "Frame-accurate CMTime" started.
 ◇ Test "every frame start round-trips to its frame index" started.
-◇ Test "invalid and negative times map to frame 0" started.
-◇ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" started.
 ◇ Test "a time between frames maps to the frame on screen" started.
+◇ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" started.
+◇ Test "frame 120 at 240 fps is half a second" started.
+◇ Test "invalid and negative times map to frame 0" started.
 ◇ Test case passing 1 argument frame → 0 to "every frame start round-trips to its frame index" started.
 ◇ Test case passing 1 argument frame → 1 to "every frame start round-trips to its frame index" started.
-◇ Test "frame 120 at 240 fps is half a second" started.
+◇ Test case passing 1 argument frame → 3599 to "every frame start round-trips to its frame index" started.
 ◇ Test case passing 1 argument frame → 59 to "every frame start round-trips to its frame index" started.
 ◇ Test case passing 1 argument frame → 60 to "every frame start round-trips to its frame index" started.
 ◇ Test case passing 1 argument frame → 216000 to "every frame start round-trips to its frame index" started.
-✔ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" passed after 0.001 seconds.
 ✔ Test "frame 120 at 240 fps is half a second" passed after 0.001 seconds.
 ✔ Test "invalid and negative times map to frame 0" passed after 0.001 seconds.
 ✔ Test "a time between frames maps to the frame on screen" passed after 0.001 seconds.
-◇ Test case passing 1 argument frame → 3599 to "every frame start round-trips to its frame index" started.
+✔ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" passed after 0.001 seconds.
 ✔ Test "every frame start round-trips to its frame index" with 6 test cases passed after 0.001 seconds.
 ✔ Suite "Frame-accurate CMTime" passed after 0.001 seconds.
 ✔ Test run with 5 tests in 1 suite passed after 0.001 seconds.
 ⚙️  Generating plists...
 ⚙️  Generating project...
 ⚙️  Writing project...
-Created project at /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/ios/Jovra.xcodeproj
+Created project at ios/Jovra.xcodeproj
 ==> xcodebuild test (JovraTests) on 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22
 Writing result bundle at path:
-	/Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/.derivedData/unit-tests-20261007-201657.xcresult
+	.derivedData/unit-tests-20261007-212806.xcresult
 
-2026-10-07 20:17:01.259 xcodebuild[1852:119436585] [MT] IDETestOperationsObserverDebug: 2.295 elapsed -- Testing started completed.
-2026-10-07 20:17:01.259 xcodebuild[1852:119436585] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
-2026-10-07 20:17:01.259 xcodebuild[1852:119436585] [MT] IDETestOperationsObserverDebug: 2.295 sec, +2.295 sec -- end
+2026-10-07 21:28:13.660 xcodebuild[83247:120345799] [MT] IDETestOperationsObserverDebug: 2.400 elapsed -- Testing started completed.
+2026-10-07 21:28:13.660 xcodebuild[83247:120345799] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-07 21:28:13.660 xcodebuild[83247:120345799] [MT] IDETestOperationsObserverDebug: 2.400 sec, +2.400 sec -- end
 Testing started
 ==> JovraTests summary
 Test class                                                             passed  failed  skipped
 JovraTests/AppRouterTests (App router)                                      3       0        0
 JovraTests/ColorRoleContrastTests (Semantic colour contrast)                7       0        0
-JovraTests/DriveClientConfigurationTests (Drive client configuration)       5       0        0
-JovraTests/JovraFormatTests (Locale formatting)                             7       0        0
+JovraTests/DriveClientConfigurationTests (Drive client configuration)       7       0        0
+JovraTests/JovraFormatTests (Locale formatting)                             8       0        0
 JovraTests/LaunchConfigurationTests (Launch configuration)                  7       0        0
-Total: 29 passed, 0 failed, 0 skipped in 5 classes (xcresult summary: 29 passed, 0 failed, 0 skipped; result Passed)
+Total: 32 passed, 0 failed, 0 skipped in 5 classes (xcresult summary: 32 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
-Result bundle: /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/.derivedData/unit-tests-20261007-201657.xcresult
+Result bundle: .derivedData/unit-tests-20261007-212806.xcresult
+exit 0
