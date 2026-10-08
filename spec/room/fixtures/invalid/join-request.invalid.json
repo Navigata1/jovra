@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/join-request.json",
+  "cases": [
+    {
+      "id": "no-consent",
+      "why": "Joining records consent to share capture metadata",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/consent/shareCaptureMetadata",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "token-in-clear",
+      "why": "The guest proves possession; it never sends the token",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/joinToken",
+          "value": "oPNN0f-PlTyYoMPexe5KKg"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "bad-proof-format",
+      "why": "Proof is an HMAC-SHA256",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proof",
+          "value": "JVR-482"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        4
+      ]
+    },
+    {
+      "id": "no-commitment",
+      "why": "The guest commits to its key and nonce before the host's challenge (D3)",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/guestCommitment"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        4
+      ]
+    },
+    {
+      "id": "guest-equals-host",
+      "why": "A guest cannot present the host's key as its own",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/guestKeySha256",
+          "value": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "guestKeyEqualsHostKey"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    }
+  ]
+}

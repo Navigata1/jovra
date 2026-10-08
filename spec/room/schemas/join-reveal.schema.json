@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room join reveal (jovra.room.join-reveal/1)",
+  "description": "The guest opens its commitment after receiving hostNonce. The host checks SHA-256('jovra-room-commit|' + guestKeySha256 + '|' + guestNonce) against guestCommitment (reference code commitmentMismatch, which counts as a failed attempt) and derives the verification code from both keys, the QR nonce, hostNonce and guestNonce.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "inviteId",
+    "sessionId",
+    "hostEpoch",
+    "guestNonce"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "jovra.room.join-reveal/1"
+    },
+    "inviteId": {
+      "$ref": "room-common.schema.json#/$defs/id"
+    },
+    "sessionId": {
+      "$ref": "room-common.schema.json#/$defs/id"
+    },
+    "hostEpoch": {
+      "$ref": "room-common.schema.json#/$defs/hostEpoch"
+    },
+    "guestNonce": {
+      "$ref": "room-common.schema.json#/$defs/nonce"
+    }
+  }
+}

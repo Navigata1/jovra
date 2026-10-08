@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/watch-local.echo-request.json",
+  "cases": [
+    {
+      "id": "echo-without-time",
+      "why": "The echo carries the watch's own monotonic time",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/echoMonoMs"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        8
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1019 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "snapshot",
+  "status": "Envelope patches apply to records/room-snapshot.json; every patched envelope is schema-valid. Nothing unauthenticated changes receiver state",
+  "cases": [
+    {
+      "id": "replay-and-order",
+      "why": "Strictly increasing snapshotSeq; replays and reordering are rejected",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "replayOrOutOfOrder"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 11
+            }
+          ],
+          "expect": "replayOrOutOfOrder"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "lastSeq": 13,
+            "hostEpoch": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "wrong-session",
+      "why": "Another session's envelope",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/sessionId",
+              "value": "other-room"
+            }
+          ],
+          "expect": "wrongSession"
+        }
+      ]
+    },
+    {
+      "id": "old-epoch",
+      "why": "A previous host epoch is never fresh authority",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/hostEpoch",
+              "value": 2
+            }
+          ],
+          "expect": "staleEpoch"
+        }
+      ]
+    },
+    {
+      "id": "wrong-host-key",
+      "why": "Same epoch, different host key: an impostor host",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/hostKeySha256",
+              "value": "657c067cc572b54dfb0edd88541302816efd3d5e4327679a56a91401d9ec6eea"
+            }
+          ],
+          "expect": "hostKeyMismatch"
+        }
+      ]
+    },
+    {
+      "id": "host-device-changed",
+      "why": "D7: the host device cannot change under the same epoch and key",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/hostDeviceId",
+              "value": "c4"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "hostDeviceChanged"
+        }
+      ]
+    },
+    {
+      "id": "unauthenticated-device",
+      "why": "Identity is the roster, not a caller-supplied name",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/5/deviceId",
+              "value": "c7"
+            }
+          ],
+          "expect": "unauthenticatedDevice"
+        }
+      ]
+    },
+    {
+      "id": "device-seq-regression",
+      "why": "A device's sequence cannot go back within one capture instance; a new instance may restart it",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/0/deviceSeq",
+              "value": 3
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "deviceSeqRegressed"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/0/deviceSeq",
+              "value": 1
+            },
+            {
+              "op": "replace",
+              "path": "/devices/0/captureInstanceId",
+              "value": "sample-c1-take2"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        }
+      ]
+    },
+    {
+      "id": "capture-instance-rollback",
+      "why": "D7: a device never returns to a capture instance it has left",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/0/deviceSeq",
+              "value": 1
+            },
+            {
+              "op": "replace",
+              "path": "/devices/0/captureInstanceId",
+              "value": "sample-c1-take2"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/0/deviceSeq",
+              "value": 7
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 14
+            }
+          ],
+          "expect": "captureInstanceRetired"
+        }
+      ]
+    },
+    {
+      "id": "event-revision-rollback",
+      "why": "D7: a higher snapshotSeq cannot roll the score back",
+      "acceptanceRows": [
+        5,
+        12
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/eventRevision",
+              "value": 37
+            },
+            {
+              "op": "replace",
+              "path": "/score/eventRevision",
+              "value": 37
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "eventRevisionRegressed"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/eventRevision",
+              "value": 43
+            },
+            {
+              "op": "replace",
+              "path": "/score/eventRevision",
+              "value": 43
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        }
+      ]
+    },
+    {
+      "id": "device-seq-reused",
+      "why": "D7: one deviceSeq is one report; the host's age measurement may change, the content may not",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/0/captureState",
+              "value": "Saved"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "deviceSeqReused"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/0/ageAtHostMs",
+              "value": 4500
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        }
+      ]
+    },
+    {
+      "id": "roster-grows",
+      "why": "D8: an approved camera joins with a higher roster revision; the roster never changes without one",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "rosterChangedWithoutRevision"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/roster/rosterRevision",
+              "value": 2
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "rosterRegressed"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/roster/rosterRevision",
+              "value": 2
+            },
+            {
+              "op": "remove",
+              "path": "/devices/5"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "rosterRevision": 2,
+            "members": [
+              "c1",
+              "c2",
+              "c3",
+              "c4",
+              "c5",
+              "c6"
+            ],
+            "lastSeq": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "forged-higher-epoch-ignored",
+      "why": "D2: an unauthenticated higher-epoch envelope changes nothing; the receiver stays live and can still reconcile",
+      "acceptanceRows": [
+        5,
+        17
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/hostEpoch",
+              "value": 1003
+            },
+            {
+              "op": "replace",
+              "path": "/hostKeySha256",
+              "value": "0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 1
+            }
+          ],
+          "expect": "epochChangeRequiresReconciliation"
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "lastSeq": 12,
+            "hostEpoch": 3
+          }
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "reconcile",
+          "newEpoch": 4,
+          "hostKey": "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297",
+          "hostDeviceId": "c2",
+          "approvedHostKeys": [
+            "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297"
+          ],
+          "expect": "reconciled"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/hostEpoch",
+              "value": 4
+            },
+            {
+              "op": "replace",
+              "path": "/hostKeySha256",
+              "value": "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297"
+            },
+            {
+              "op": "replace",
+              "path": "/hostDeviceId",
+              "value": "c2"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 0
+            }
+          ],
+          "expect": "accepted"
+        }
+      ]
+    },
+    {
+      "id": "epoch-change-reconcile",
+      "why": "A new epoch is adopted only through reconcile() with an approved, authenticated host key",
+      "acceptanceRows": [
+        5,
+        17
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/hostEpoch",
+              "value": 4
+            },
+            {
+              "op": "replace",
+              "path": "/hostKeySha256",
+              "value": "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297"
+            },
+            {
+              "op": "replace",
+              "path": "/hostDeviceId",
+              "value": "c2"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 0
+            }
+          ],
+          "expect": "epochChangeRequiresReconciliation"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "reconcile",
+          "newEpoch": 4,
+          "hostKey": "657c067cc572b54dfb0edd88541302816efd3d5e4327679a56a91401d9ec6eea",
+          "hostDeviceId": "c2",
+          "approvedHostKeys": [
+            "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297"
+          ],
+          "expect": "hostNotAuthenticated"
+        },
+        {
+          "op": "reconcile",
+          "newEpoch": 3,
+          "hostKey": "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297",
+          "hostDeviceId": "c2",
+          "approvedHostKeys": [
+            "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297"
+          ],
+          "expect": "epochNotNewer"
+        },
+        {
+          "op": "reconcile",
+          "newEpoch": 4,
+          "hostKey": "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297",
+          "hostDeviceId": "c2",
+          "approvedHostKeys": [
+            "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297"
+          ],
+          "expect": "reconciled"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/hostEpoch",
+              "value": 4
+            },
+            {
+              "op": "replace",
+              "path": "/hostKeySha256",
+              "value": "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297"
+            },
+            {
+              "op": "replace",
+              "path": "/hostDeviceId",
+              "value": "c2"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 0
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 14
+            }
+          ],
+          "expect": "staleEpoch"
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "lastSeq": 0,
+            "hostEpoch": 4,
+            "hostDeviceId": "c2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "restart-keeps-replay-protection",
+      "why": "Sequence high-water marks and retired capture instances persist across process death",
+      "acceptanceRows": [
+        3
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "hostDeviceId": "c1",
+        "members": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "rosterRevision": 1
+      },
+      "steps": [
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 12
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/0/deviceSeq",
+              "value": 1
+            },
+            {
+              "op": "replace",
+              "path": "/devices/0/captureInstanceId",
+              "value": "sample-c1-take2"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "restart"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 13
+            }
+          ],
+          "expect": "replayOrOutOfOrder"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 14
+            }
+          ],
+          "expect": "captureInstanceRetired"
+        },
+        {
+          "op": "accept",
+          "envelopePatch": [
+            {
+              "op": "replace",
+              "path": "/devices/0/deviceSeq",
+              "value": 2
+            },
+            {
+              "op": "replace",
+              "path": "/devices/0/captureInstanceId",
+              "value": "sample-c1-take2"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 14
+            }
+          ],
+          "expect": "accepted"
+        }
+      ]
+    }
+  ]
+}

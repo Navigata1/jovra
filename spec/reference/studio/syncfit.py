@@ -18,10 +18,13 @@ Fit method "robust-trimmed-ols/1":
 3. a final exact OLS on the inliers (pooled slope, per-piece intercepts).
 A piece is fitted only when it keeps at least two inlier anchors; otherwise it is "failed" with no transform and no
 statistics (a fit never reports zero residuals over an empty inlier set). A fitted rate outside 0.9-1.1 (the schema
-range) fails the device. Inside that range, a drift above 1000 ppm is physically implausible for phone clocks (about
-8 ppm measured; 300 ppm is the stress fixture, multicam-sync.md section 4.6), so it adds a needs-review reason. A
-person may mark a piece reviewed only with at least three inlier anchors (with two, an outlier cannot be detected)
-and a plausible drift. Every anchor must lie inside its piece (0 <= sourceTimeUs < sourceDurationUs): an anchor from
+range) fails the device. Inside that range an implausible drift is a reviewable reason, never a rejection
+(multicam-sync.md section 4.6: phones measure about 8 ppm, realistic is 1-50 ppm, and 300 ppm, the UI sample's
+18 ms/min, is the stress fixture): above 303 ppm (the 300 ppm stress ceiling plus the 3 ppm drift tolerance of research
+S2) the piece needs review; above 1000 ppm (30 vs 29.97 fps is exactly 1000 ppm) the reason names a likely frame-rate or
+timebase mislabel. A person may still mark such a piece reviewed after the start, middle and end checkpoints, because
+a correct fit through a mislabelled timebase is a real map. A person may mark a piece reviewed only with at least
+three inlier anchors (with two, an outlier cannot be detected). Every anchor must lie inside its piece (0 <= sourceTimeUs < sourceDurationUs): an anchor from
 another restart segment or a mis-assigned file is rejected (badAnchor), never used as a high-leverage inlier.
 (The first method id, "trimmed-ols/1", started from plain OLS and is retired: one +2 s outlier among 12 clean anchors
 could trim every anchor and still leave a reviewable map.)
@@ -41,7 +44,12 @@ MIN_INLIERS_FOR_ESTIMATED = 8
 MIN_INLIERS_FOR_FIT = 2                  # below this a piece has no transform at all
 RATE_MIN, RATE_MAX = 900_000_000, 1_100_000_000   # the schema's rate range, in ppb units
 OUTLIER_FRAMES = 3                       # residuals beyond three output frames are trimmed
-MAX_PLAUSIBLE_DRIFT_PPB = 1_000_000      # 1000 ppm; real phones drift about 8 ppm, the stress fixture is 300 ppm
+STRESS_DRIFT_PPB = 300_000               # multicam-sync.md 4.6: the 300 ppm stress fixture (18 ms/min UI sample)
+DRIFT_TOLERANCE_PPB = 3_000              # research S2: a fitted drift is within 3 ppm of the truth
+PLAUSIBLE_DRIFT_PPB = STRESS_DRIFT_PPB + DRIFT_TOLERANCE_PPB   # 303 ppm; real phones drift about 8 ppm
+TIMEBASE_DRIFT_PPB = 1_000_000           # 1000 ppm = 30 vs 29.97 fps: a mislabelled frame rate, not a clock
+DRIFT_STRESS_REASON = "drift above the 300 ppm stress ceiling for phone clocks (about 8 ppm measured)"
+DRIFT_TIMEBASE_REASON = "drift above 1000 ppm suggests a frame-rate or timebase mislabel"
 MIN_INLIERS_FOR_REVIEW = 3               # with two anchors an outlier is indistinguishable from the line
 
 
@@ -236,8 +244,11 @@ def _piece_result(piece, rows, rate_num, offset, half_frame, hints, failure) -> 
         reasons.append("an inlier residual exceeds half an output frame")
     if n_out:
         reasons.append("outlier anchors were trimmed")
-    if abs(rate_num - RATE_DEN) > MAX_PLAUSIBLE_DRIFT_PPB:
-        reasons.append("drift above 1000 ppm is implausible for phone clocks")
+    drift = abs(rate_num - RATE_DEN)
+    if drift > TIMEBASE_DRIFT_PPB:
+        reasons.append(DRIFT_TIMEBASE_REASON)
+    elif drift > PLAUSIBLE_DRIFT_PPB:
+        reasons.append(DRIFT_STRESS_REASON)
     if manual_only:
         state = "manual"
     elif reasons:
@@ -268,8 +279,8 @@ def drift_ms_per_min(transform: dict) -> Fraction:
 
 def check_review_state(stored_state: str, fitted_state: str, checkpoints: list, fit: dict | None = None) -> None:
     """A stored state is acceptable when it equals the fitted one, or is 'reviewed' after a person confirmed the
-    start, middle and end checkpoints of a fit that did not fail, keeps at least three inlier anchors and has a
-    plausible drift."""
+    start, middle and end checkpoints of a fit that did not fail and keeps at least three inlier anchors. An
+    implausible drift is a needs-review reason that a person may confirm, not a reason to refuse the review."""
     if stored_state == fitted_state:
         return
     if stored_state == "reviewed":
@@ -278,8 +289,6 @@ def check_review_state(stored_state: str, fitted_state: str, checkpoints: list, 
         require(fit is not None and fit["nInliers"] >= MIN_INLIERS_FOR_REVIEW, "reviewOfWeakFit",
                 f"a map with fewer than {MIN_INLIERS_FOR_REVIEW} inlier anchors cannot be marked reviewed "
                 "(an outlier cannot be detected)")
-        require(abs(fit["driftPpb"]) <= MAX_PLAUSIBLE_DRIFT_PPB, "reviewOfWeakFit",
-                "a map with a drift above 1000 ppm cannot be marked reviewed; re-anchor it")
         require({"start", "middle", "end"} <= set(checkpoints), "reviewIncomplete",
                 "reviewed needs the start, middle and end checkpoints")
         return

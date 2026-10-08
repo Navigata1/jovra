@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "jovra.room.command/1",
+  "commandId": "cmd-mark-43",
+  "sessionId": "sample-jon-alex",
+  "hostEpoch": 3,
+  "issuer": {
+    "memberId": "m-marker",
+    "deviceId": "w-marker",
+    "surface": "watch",
+    "bridgeDeviceId": "p-marker"
+  },
+  "role": "marker",
+  "issuedAt": "2026-10-07T21:30:00Z",
+  "issuedFreshness": {
+    "basedOnSnapshotSeq": 8,
+    "basedOnFreshness": "Fresh"
+  },
+  "expiry": {
+    "ttlMs": 60000,
+    "ageAtSendMs": 200
+  },
+  "target": {
+    "scope": "session",
+    "deviceIds": []
+  },
+  "baseEventRevision": null,
+  "payload": {
+    "type": "MarkForReview",
+    "reason": "point",
+    "pointEventId": "sample-point-42",
+    "sourceRefs": [
+      {
+        "deviceId": "c1",
+        "captureInstanceId": "sample-c1-take1",
+        "segmentId": "s1",
+        "frameRange": {
+          "startFrame": 45210,
+          "endFrame": 45390
+        }
+      }
+    ],
+    "note": null
+  }
+}

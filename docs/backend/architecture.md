@@ -72,12 +72,12 @@ Labels follow the repo's research convention:
  │ (instance id = job id)    │  │ + DLQ render-work-dlq    │    or HTTP pull consumer → external host (fallback)
  │ verify→normalize→sync→    │  └──────────────────────────┘    Render host: ffprobe/FFmpeg (+Remotion overlays
  │ analyze→plan→validate→    │◄── stage results / heartbeats ───  only after licence decision). No DB credential,
- │ preview→review→final→     │    (via gateway callbacks)         no model key, no outbound network except gateway.
+ │ preview→review→final→     │    (jovra-internal host routes)    no model key, no outbound network except jovra-internal.
  │ verify→deliver            │    (stage results arrive on jovra-internal's host routes, not the user gateway)
  └──────────┬────────────────┘   Cron Trigger (jovra-internal): reconciler (outbox re-dispatch, lease expiry, cleanup, retention)
             │ planner step (server-held key; sampled frames + structured events only; consent required)
             ▼
-   Planner adapter: heuristic (default, no network) | Anthropic Messages API (claude-opus-5-5) | OpenAI "Astra" (UNVERIFIED access)
+   Planner adapter: heuristic (default, no network) | Anthropic Messages API (claude-opus-5-5; only with modelProvider consent) | OpenAI "Astra" (ships disabled, no model ID configured)
 ```
 
 ### 1.1 Component responsibilities
@@ -88,7 +88,7 @@ Labels follow the repo's research convention:
 | Supabase Auth | Users, sessions | Issues ES256 access JWTs (default 1 h, OBSERVED local config) | Carry project roles in claims (roles live in tables; see security-model §1) |
 | Postgres + RLS | Ledger of record | Deny-by-default row access; append-only revisions; command functions for privileged transitions | Trust client `owner_id`, roles, prices, R2 keys or provenance `validated` |
 | Gateway Worker (`jovra-gateway`) | Nothing durable | AuthN, authZ, upload/download capabilities, quote/consent/reservation, job creation (through `jovra-internal.startJob`), share links | Buffer whole originals or parts (it streams each part to R2 while hashing it); execute model output; use the Supabase secret key on request paths; read through a caching Hyperdrive config; hold the orchestrator binding or the host secret (security-model §13.1) |
-| Internal Worker (`jovra-internal`) | Nothing durable | Workflow, Queue consumer, reconciler, render-host routes, as `jovra_orchestrator` | Be reachable from a user route except through its two-method service binding |
+| Internal Worker (`jovra-internal`) | Nothing durable | Workflows (render, deletion), Queue consumers, reconciler, render-host routes, as `jovra_orchestrator` | Be reachable from a user route except through its two-method service binding; serve a `workers.dev` or preview URL |
 | R2 | Bytes | Private storage, lifecycle backstop, object events | Be reachable through a public bucket, custom-domain public access or `r2.dev` |
 | Workflow `RenderJob` | Orchestration state | Durable stage sequence, retries, waits for callbacks and review | Be the user-visible truth (each step mirrors state into Postgres) |
 | Queues | Attempt ids only | Dispatch to render hosts; DLQ | Carry media bytes, URLs, user text, lease tokens or input/output lists: a message is a wake-up hint, never authority (the host claims the attempt and the gateway reads inputs and outputs from `render_attempts`) |
@@ -229,15 +229,15 @@ create type public.source_state     as enum ('declared', 'uploading', 'uploaded_
                                              'rejected', 'deleted');
 create type public.provenance       as enum ('manual', 'estimated', 'reviewed', 'validated');
 create type public.review_state     as enum ('estimated', 'needs_review', 'reviewed', 'rejected');
-create type public.planner_kind     as enum ('manual', 'heuristic', 'llm');
+create type public.planner_kind     as enum ('heuristic', 'model', 'user');   -- the contract's planner.kind (story-brief, delivered-artifact); quotes.planner_choice is 'heuristic' | 'model'
 create type public.job_state        as enum ('consented', 'upload_pending', 'uploading', 'queued', 'normalizing',
                                              'syncing', 'analyzing', 'planning', 'preview_rendering',
                                              'awaiting_review', 'final_rendering', 'verifying', 'ready',
                                              'paused', 'canceled', 'failed_retryable', 'failed_terminal',
                                              'quote_expired', 'budget_exceeded', 'deleted');
 create type public.job_stage        as enum ('verify_sources', 'normalize', 'sync', 'analyze', 'plan', 'validate',
-                                             'preview_render', 'final_render', 'verify_output', 'deliver',
-                                             'cleanup');
+                                             'preview_render', 'final_render', 'remux_no_audio', 'verify_output',
+                                             'deliver', 'cleanup');   -- remux_no_audio: §9.1 audio variants
 create type public.artifact_kind    as enum ('analysis_proxy', 'render_proxy', 'pts_table', 'frame_set',
                                              'contact_sheet', 'preview', 'film', 'thumbnail', 'captions',
                                              'chapters', 'edit_manifest', 'project_bundle', 'clip_excerpt');
@@ -339,6 +339,7 @@ redeemed_at is null`. An index predicate cannot use `now()` (not immutable), so 
 | declared_sha256 | bytea CK octet_length = 32 | server-held expectation |
 | verified_sha256 | bytea null | written only by the verify stage |
 | verified_at | timestamptz null | |
+| retention_until | timestamptz null | set at quote acceptance from `retentionDays` (1, 7 or 30); the daily retention sweep deletes the staged original after it (§10) |
 | verified_etag | text null | R2 etag of the object the verify stage hashed; every later read uses `onlyIf: {etagMatches}` so bytes swapped after verification are never processed; column hidden from clients |
 | current_session_id | uuid null | the one open upload session; completion requires it and state `uploading` |
 | client_probe | jsonb CK ≤ 2 KB | the device's declaration, schema-allowlisted to codec, width, height, nominal fps, duration, rotation; never free-form tags (QuickTime location) |
@@ -461,6 +462,7 @@ null`. When both parents are set, policies require access to **both** (security-
 | source_id | uuid null; FK (project_id, source_id) → camera_sources(project_id, id) on delete set null (source_id) | a source of `project_id` only (no cross-project clip) |
 | share_approved_at | timestamptz null | set by the **project owner** (`app_gateway.approve_clip_share`), cleared by `revoke_clip_share` or by trigger `pin_shared_clip` when the window or keeper changes; a clip whose lesson owner is only a coach of the project can be granted to anyone else only after this; null for clips of the lesson owner's own projects (implicitly approved) |
 | match_start_us, match_end_us | bigint | CK 0 < end − start ≤ 600,000,000 (10 min) |
+| share_approved_sha256 | bytea null | `clip_share_fingerprint` of the clip at approval (project, source, window, keeper, bound revisions); a viewer sees a coach's clip only while it still equals the current fingerprint (security-model §13.8) |
 | sync_map_revision, event_revision | int null | |
 | keeper_ref | text null CK ≤ 96 | KeeperCatalog id |
 | excerpt_artifact_id | uuid null FK → artifacts(id) on delete set null | the rendered `clip_excerpt` a viewer may stream; trigger `check_clip_excerpt` requires its kind, `lesson_clip_id` and `project_id` to match this clip; the artifact is deleted with the clip (objects first, by the deletion job) |
@@ -491,7 +493,7 @@ null`. When both parents are set, policies require access to **both** (security-
 | story_plan_id | uuid FK → story_plans(id) on delete cascade | U (story_plan_id, version); U (story_plan_id, id) |
 | project_id | uuid not null; FK (project_id, story_plan_id) → story_plans(project_id, id) on delete cascade | set by trigger from the plan, never by the client; U (project_id, id) |
 | version | int | trigger |
-| planner_kind | planner_kind | client path: `manual` or `heuristic` only |
+| planner_kind | planner_kind | client path: `user` or `heuristic` only (`model` only through `app_gateway`) |
 | planner_model_id | text null | pinned id, e.g. `claude-opus-5-5`; null for heuristic |
 | planner_adapter_version | text | |
 | story_plan | jsonb CK ≤ 256 KB | `jovra.story-plan/1`: ids and fixed choices only |
@@ -512,7 +514,8 @@ null`. When both parents are set, policies require access to **both** (security-
 | id | uuid PK | |
 | project_id | uuid FK → projects(id) on delete cascade | |
 | owner_id | uuid FK → profiles(id) on delete cascade | |
-| story_plan_version_id | uuid null; FK (project_id, story_plan_version_id) → story_plan_versions(project_id, id) | null when the plan will be produced by the job; `create_quote` asserts the plan and version belong to this project |
+| story_plan_id | uuid not null; FK (project_id, story_plan_id) → story_plans(project_id, id) | the plan this quote is for, also when the version will be produced by the job |
+| story_plan_version_id | uuid null; FK (story_plan_id, story_plan_version_id) → story_plan_versions(story_plan_id, id) | null when the plan will be produced by the job; with the FK above the version is of this plan and this project; `create_quote` raises `P0404` otherwise |
 | output_spec_sha256 | bytea not null | canonical SHA-256 of `(projectId, planRevision, output)` computed in SQL from the stored plan version and output spec; the quote and the consent captured in it are bound to this one output (contract `jovra.quote/1`) |
 | supersedes_quote_id | uuid null FK → quotes(id) | a re-quote after `budget_exceeded`; its acceptance tops up the existing reservation instead of opening a second one |
 | inputs | jsonb CK ≤ 64 KB | source ids (resolved only from this project's current verified source manifest) and verified/declared bytes, angle count, profile, output spec, retention days, planner choice |
@@ -524,7 +527,7 @@ null`. When both parents are set, policies require access to **both** (security-
 | state | text CK in ('open','accepted','expired','superseded','declined') | `quote_expired` is surfaced from here |
 | expires_at | timestamptz | ≈ 30 min after creation (pricing research §7) |
 | accepted_at | timestamptz null | |
-| consent | jsonb null | `{cloudProcessing, modelProvider, textClasses, retentionDays, consentTextVersion}` captured at acceptance; `textClasses` names which note text may reach a model (coach-authored text excluded by default; security-model §13.14) |
+| consent | jsonb null | `{cloudProcessing, modelProvider, textClasses, retentionDays, consentTextVersion}` captured at acceptance (contract `jovra.quote/1` `consent`; `modelProvider` must be true exactly when `planner_choice = 'model'`); `textClasses` names which note text may reach a model (coach-authored text excluded by default; security-model §13.14) |
 | sample | boolean | test/demo quotes are always `true` until the paid ADR |
 | created_at | timestamptz | |
 
@@ -536,9 +539,10 @@ null`. When both parents are set, policies require access to **both** (security-
 | owner_id | uuid FK → profiles(id) on delete cascade | |
 | quote_id | uuid U FK → quotes(id) | the current funding quote; an accepted quote funds exactly one reservation; a top-up moves this to the re-quote and marks the old quote `superseded` |
 | job_id | uuid null U FK → render_jobs(id) | |
-| story_plan_version_id | uuid null; FK (project_id, story_plan_version_id) → story_plan_versions(project_id, id) | moved together with the job's version by an in-job revise (§7.1) |
+| story_plan_id | uuid not null; FK (project_id, story_plan_id) → story_plans(project_id, id) | |
+| story_plan_version_id | uuid null; FK (story_plan_id, story_plan_version_id) → story_plan_versions(story_plan_id, id) | moved together with the job's version by an in-job revise (§7.1) |
 | output_spec_sha256 | bytea | equals the quote's; moved by an in-job revise |
-| idempotency key | — | **U (project_id, story_plan_version_id, output_spec_sha256) NULLS NOT DISTINCT where state = 'held'**, the ADR-0019 / contract key `(project, plan revision, output spec)`. `NULLS NOT DISTINCT` makes two plan-by-job quotes for identical work collide too (security-model §13.6). The quote id is not part of it, so re-quoting identical work can never open a second hold; the client `Idempotency-Key` only deduplicates HTTP retries |
+| idempotency key | — | **U (project_id, story_plan_id, story_plan_version_id, output_spec_sha256) NULLS NOT DISTINCT where state = 'held'**, the ADR-0019 / contract key `(project, plan revision, output spec)` (a plan revision names its plan, so `story_plan_id` only matters while the version is null). `NULLS NOT DISTINCT` makes two plan-by-job quotes for identical work of one plan collide, while plan-by-job work for two different plans of a project does not (security-model §13.6). The quote id is not part of it, so re-quoting identical work can never open a second hold; the client `Idempotency-Key` only deduplicates HTTP retries |
 | cap_credits | int | |
 | cap_cost_micro_usd | bigint | always real micro-USD, also in test (Sample applies to the credits shown, never to this cap) |
 | reserved_cost_micro_usd | bigint | running sum of stage reservations |
@@ -551,13 +555,17 @@ null`. When both parents are set, policies require access to **both** (security-
 CK: `reserved_cost_micro_usd <= cap_cost_micro_usd`; `consumed + released <= reserved`.
 
 **app_ops.spend_limits** `(scope ('owner','environment'), owner_id null, max_open_cap_micro_usd bigint not null CK > 0,
-daily_ceiling_micro_usd bigint not null CK > 0, updated_by_operator_at)`: `accept_quote` refuses (`P0402`) when the
-owner's open (held) caps plus the new cap exceed `max_open_cap_micro_usd`, or the environment's spend today plus the
-new cap exceeds `daily_ceiling_micro_usd`; `reserve_stage` re-checks the environment ceiling. **Fail closed:** an
-owner without their own row uses the default owner row (`scope = 'owner', owner_id = null`); a missing default or
-environment row is `P0402`. "Spend today" is the sum of `reserved_cost_micro_usd` added today (UTC) by reservations
-created or topped up today (security-model §13.7). In test the environment row is set by Jon and bounds real model and
-container spend even though no credits are charged.
+daily_ceiling_micro_usd bigint not null CK > 0, updated_by_operator_at)`, with partial unique indexes so there is at
+most one environment row, one default owner row (`owner_id is null`) and one row per owner. **app_ops.spend_commitments**
+`(id, at timestamptz default now(), owner_id, reservation_id, kind ('cap_open','cap_topup','stage_reserve'),
+amount_micro_usd bigint CK > 0)` is append-only and written in the same transaction as the reservation change it
+records. `accept_quote` refuses (`P0402`) when the owner's held caps plus the new cap exceed the owner's
+`max_open_cap_micro_usd`, or when today's `cap_open` + `cap_topup` commitments (UTC day) plus the new cap (or top-up
+delta) exceed the environment's `daily_ceiling_micro_usd`; `reserve_stage` refuses when today's `stage_reserve`
+commitments plus the stage estimate exceed it. **Fail closed:** an owner without their own row uses the default owner
+row; a missing default or environment row, or a NULL limit reached through any path, is `P0402` (the SQL in
+security-model §13.7 compares with `coalesce(limit, -1)`, so NULL can never pass). In test the environment row is set
+by Jon and bounds real model and container spend even though no credits are charged.
 
 **render_jobs**
 | Column | Type | Notes |
@@ -570,7 +578,7 @@ container spend even though no credits are charged.
 | quote_id | uuid FK → quotes(id) | the accepting quote (a top-up re-quote is recorded on the reservation) |
 | reservation_id | uuid U FK → usage_reservations(id) | |
 | requested_by | uuid null FK → profiles(id) on delete set null | must be owner at request time |
-| output_spec_sha256 | bytea | U (project_id, story_plan_version_id, output_spec_sha256) NULLS NOT DISTINCT where state is not terminal: identical work never runs as two jobs |
+| output_spec_sha256 | bytea | U (project_id, story_plan_id, story_plan_version_id, output_spec_sha256) NULLS NOT DISTINCT where state is not terminal: identical work never runs as two jobs |
 | idempotency_key | text | the accept request's HTTP key (deduplicates retries only; never the domain key) |
 | state | job_state | |
 | stage | job_stage null | current stage |
@@ -600,7 +608,8 @@ container spend even though no credits are charged.
 | input_hash | bytea | hash of the stage's canonical inputs |
 | output_refs | jsonb CK ≤ 64 KB | artifact ids actually written by this attempt (⊆ `output_plan`) |
 | measurements | jsonb CK ≤ 64 KB | wall time, CPU, bytes in/out, planner tokens (input, cache, output); not granted to clients (cost is derivable from it) |
-| reserved_cost_micro_usd, actual_cost_micro_usd | bigint | the reservation is computed in SQL from `rates_version` and the inputs with a floor (never a caller estimate); the host's wall-time limit is derived from it |
+| reserved_cost_micro_usd, actual_cost_micro_usd | bigint | the reservation is computed in SQL from `rates_version` and the inputs with a floor (never a caller estimate); the host's wall-time limit is derived from it, and for the `plan` stage so are the planner's `max_tokens`, image count, effort and the one repair call (§7.6, security-model §13.7); an actual cost above the reservation is committed as `stage_overrun` and stops the job at `budget_exceeded` |
+| planner_budget | jsonb null CK ≤ 4 KB | `plan` stage only, written by `reserve_stage`: `{maxImages, maxInputTokens, maxOutputTokens, effort, repairAllowed}` derived from `reserved_cost_micro_usd`; the Workflow's planner step reads it back and passes exactly these to the provider |
 | error_code | text null | |
 | retryable | boolean null | |
 | created_at, started_at, finished_at | | |
@@ -628,7 +637,7 @@ container spend even though no credits are charged.
 | profile_id, profile_revision | text, int null | |
 | renderer_version | text null | |
 | stale | boolean default false | true once a newer event revision exists; still downloadable, labelled "older version" |
-| retention_until | timestamptz null | films: user's explicit choice; work: lifecycle date |
+| retention_until | timestamptz null | films: user's explicit choice; work: the accepted quote's `retentionDays` after creation (1, 7 or 30), executed by the daily retention sweep |
 | display_title | text CK ≤ 120 | what a viewer sees |
 | sample | boolean | |
 | created_at, verified_at, deleted_at | | |
@@ -774,15 +783,20 @@ transport remains the primary capture coordination path.
 | `create_owner_membership` | INSERT on `projects` | inserts the `owner` row |
 | `handle_new_user` | INSERT on `auth.users` | inserts `profiles` |
 | `force_actor_columns` | INSERT/UPDATE | sets `created_by`/`reviewed_by` to `auth.uid()` when called through PostgREST |
-| `check_story_plan_lessons` | INSERT/UPDATE on `story_plans` | every `lesson_ids` entry has `lesson_access in ('owner','coach')` for the caller and its owner is the project owner |
-| `enforce_quota` | BEFORE INSERT on every client-insertable table | per-project and per-user daily limits and stored-bytes limits; `P0429 quota_exceeded` (security-model §13.10) |
-| `pin_shared_clip` | BEFORE UPDATE on `lesson_clips` | a change of window or keeper clears `share_approved_at` and unlinks the excerpt (security-model §13.8) |
+| `check_story_plan_lessons` | INSERT/UPDATE on `story_plans` | on the client path (`app_private.is_client_path()`), every `lesson_ids` entry **added** by this statement (in `new.lesson_ids` and not in `old.lesson_ids`) has `lesson_access in ('owner','coach')` for the caller, and every entry's owner is the project owner. On the server path (`auth.uid()` is null: the lesson-scope deletion step's `array_remove`, server stages) the caller check is skipped, because removing an id never grants access; the same-owner check still runs (security-model §13.9 (b), T-DB-73) |
+| `a00_rls_guard` | BEFORE INSERT on every client-insertable table | the INSERT policy's predicate, evaluated first; `42501` (security-model §13.11) |
+| `enforce_quota` | BEFORE INSERT on every client-insertable table | per-project and per-user daily rows and bytes, lifetime bytes; a table without a limits row refuses; `P0429 quota_exceeded` (security-model §13.10) |
+| `pin_shared_clip` | BEFORE UPDATE on `lesson_clips` | a change of the clip's fingerprint (source, window, keeper, revisions) clears `share_approved_at`/`share_approved_sha256` and unlinks and hides the excerpt (security-model §13.8) |
 | `check_clip_excerpt` | BEFORE INSERT/UPDATE of `excerpt_artifact_id` (server path) | the excerpt is a `clip_excerpt` of this clip and project |
 | `validate_lengths` | BEFORE INSERT/UPDATE on every client-written table | checks every length/size limit and raises a coded error (`P0422 field_too_long:<column>`) before a CHECK or NOT NULL constraint can fire, so Postgres never emits a `Failing row contains (…)` DETAIL holding row values (hashes, thumbprints, notes, bodies) into logs or PostgREST responses |
 
-Every BEFORE trigger on a client-written table starts by checking the caller's role on `new.project_id` (or the lesson)
-and raises the same `42501` as RLS before any lock, lookup or update: PostgreSQL enforces `WITH CHECK` after BEFORE
-triggers fire, so a trigger that ran first would otherwise be an existence and revision oracle (security-model §13.11).
+Order is by name (PostgreSQL fires same-event triggers alphabetically), so BEFORE triggers carry sort prefixes
+(security-model §13.0): `a00_rls_guard` first, then `a05_set_parent_project`, `a10_validate_lengths`,
+`a20_enforce_quota`, `a30_force_actor_columns`, `a40_assign_next_revision`/`a40_check_event_parent`, then the `b20_`
+clip triggers. `a00_rls_guard` calls the same predicate as the table's INSERT policy and raises RLS's own `42501`
+before any lock, lookup or update: PostgreSQL enforces `WITH CHECK` after BEFORE triggers fire, so a trigger that ran
+first would otherwise be an existence and revision oracle (security-model §13.11). Server stages are recognised by
+`app_private.is_client_path()` and skip the guard and quotas.
 All trigger functions are `security definer`, `set search_path = ''`, fully qualified, live in `app_private`, and have
 EXECUTE revoked from `public`, `anon` and `authenticated` (also for functions added by later migrations, through
 `alter default privileges for role jovra_owner`, security-model §3).
@@ -807,7 +821,7 @@ object the caller may not see returns `404 not_found`, identical to a missing on
 the same key with a different body returns `422 idempotency_key_reused`. Responses that carry a bearer secret are
 stored redacted and their replay is `409 secret_not_replayable` (§4.3 `idempotency_records`). Domain-level uniqueness
 backs it up and is the real guarantee: one held reservation and one non-terminal job per
-`(project, story plan version, output spec hash)` whatever the HTTP key or quote, Workflow instance id = job id,
+`(project, story plan, story plan version, output spec hash)` (NULLS NOT DISTINCT) whatever the HTTP key or quote, Workflow instance id = job id,
 attempt rows unique per `(job, stage, attempt)`, consumption once per `(job, stage)`.
 
 **Database access.** The gateway reaches Postgres through Hyperdrive with **query caching disabled**
@@ -826,7 +840,8 @@ read 2026-10-07), which would put `/s/<token>` paths, client IPs and headers int
 Only the allowlisted app logger writes logs (security-model §9).
 
 **Rate limits** (INFERRED starting values, enforced with Cloudflare rate-limiting bindings or a Durable Object
-counter; tune after measurement): invite redemption 10/min per IP-hash and 5 failures per invite; quote creation
+counter; tune after measurement): invite redemption 10/min per IP-hash and 5 failures per invite; grant redemption (`/v1/grants/redeem`) 10/hour and 5
+failures/hour per user; quote creation
 20/hour per user; share-link creation 50/day per user; job acceptance 10/hour per user; `/s/<token>` 60 requests/min
 per token hash with a byte budget of 3× the artifact size per hour (security-model §13.15).
 
@@ -849,14 +864,14 @@ per token hash with a byte budget of 3× the artifact size per hour (security-mo
 | `POST /v1/uploads/{sessionId}/complete` | session holder | `{parts:[{n, etag}]}` | `{sourceState:"uploaded_unverified"}` | section 6.3 |
 | `DELETE /v1/uploads/{sessionId}` | session holder or owner | — | `{state:"aborted"}` | |
 | `POST /v1/projects/{projectId}/quotes` | owner | `{storyPlanId, storyPlanVersionId?, plannerChoice:"heuristic"|"model", outputSpec, sourceIds, retentionDays}` | quote (all `quotes` columns except internal cost) | owner; every `sourceId` resolves through **this** project's current verified source manifest (a foreign or unknown id is `404`); inputs and `output_spec_sha256` computed server-side from rows, not from the request's numbers |
-| `POST /v1/quotes/{quoteId}/accept` | owner | `{inputsSha256, consent:{cloudProcessing:true, modelProvider:bool, retentionDays, consentTextVersion}, acceptedCapCredits}` | `{jobId, reservationId, state:"consented"}` (a re-quote after `budget_exceeded` returns the existing job and the topped-up reservation) | owner; quote open and unexpired; hash and cap equal stored; real user; owner open-cap and environment ceilings (`app_ops.spend_limits`); no held reservation for the same `(project, plan version, output spec)` unless this quote supersedes its quote |
+| `POST /v1/quotes/{quoteId}/accept` | owner | `{inputsSha256, consent:{cloudProcessing:true, modelProvider:bool, textClasses:[…], retentionDays, consentTextVersion}, acceptedCapCredits}` | `{jobId, reservationId, state:"consented"}` (a re-quote after `budget_exceeded` returns the existing job and the topped-up reservation) | owner; quote open and unexpired; hash and cap equal stored; real user; owner open-cap and environment ceilings (`app_ops.spend_limits`); no held reservation for the same `(project, plan, plan version, output spec)` unless this quote supersedes its quote |
 | `GET /v1/jobs/{jobId}` | owner, coach | — | `{state, stage, stageProgressMilli, stages:[…], artifacts:[…]}` plus `usage:{estimate, cap, actual}` for the owner only | role; coaches never see money (T-DB-25) |
 | `POST /v1/jobs/{jobId}/cancel` | owner | — | `{state}` | owner; not terminal |
 | `POST /v1/jobs/{jobId}/pause`, `/resume` | owner | — | `{state}` | owner |
 | `POST /v1/jobs/{jobId}/review` | owner | `{decision:"approve"|"revise", storyPlanVersionId?}` | `{state}` | owner; job `awaiting_review`; a revision over the remaining reservation returns `409 requote_required` |
 | `POST /v1/jobs/{jobId}/retry` | owner | — | `{state}` | `failed_retryable`; budget check |
-| `GET /v1/artifacts/{artifactId}/content` | owner, coach, granted viewer | `Range` header optional | bytes (206/200) | section 9 |
-| `POST /v1/artifacts/{artifactId}/share-links` | owner | `{expiresInSec ≤ 86400}` | `{shareLinkId, url, expiresAt}` (token in URL, returned once; a replay is `409 secret_not_replayable`) | owner; artifact kind shareable; state ready |
+| `GET /v1/artifacts/{artifactId}/content` | owner, coach, granted viewer | `Range` header optional; `?audio=include|none` for a download of a film (default from the profile's `exportAudio.includeByDefault`; `none` forced in junior mode); in-app playback omits it and streams the film itself | bytes (206/200) of the artifact actually chosen: the film, or its verified no-audio child | section 9 |
+| `POST /v1/artifacts/{artifactId}/share-links` | owner | `{expiresInSec ≤ 86400, includeAudio: bool}` (`includeAudio` required for a film; false forced in junior mode) | `{shareLinkId, url, expiresAt}` (token in URL, returned once; a replay is `409 secret_not_replayable`) | owner; artifact kind shareable; state ready; the link stores the id of the artifact it serves (the film, or its verified no-audio child, created on demand by `remux_no_audio` + `verify_output` before the link is returned) |
 | `DELETE /v1/share-links/{shareLinkId}` | owner | — | `{revokedAt}` | owner |
 | `GET /s/{token}` | anyone with the link | `Range` optional | bytes of the linked artifact | section 9.2 |
 | `GET /s/{token}/thumbnail` | anyone with the link | — | bytes of the linked artifact's thumbnail (`parent_artifact_id` = linked artifact) | section 9.2; no other artifact is addressable under a token |
@@ -867,7 +882,7 @@ per token hash with a byte budget of 3× the artifact size per hour (security-mo
 | `DELETE /v1/lesson-clips/{clipId}/share-approval` | project owner | — | `{shareApprovedAt:null}` | owner of the clip's project (`revoke_clip_share`) |
 | `DELETE /v1/grants/{grantId}` | grant creator, or owner of the project whose footage a clip grant reaches | — | `{revokedAt}` | a `project_coach` grant revokes the membership it created in the same transaction |
 | `POST /v1/account/apple-link` | user (SIWA) | `{authorizationCode}` | `{linked:true}` | real user; exchanged once for the refresh token needed to revoke at deletion (security-model §2.3) |
-| `POST /v1/deletion-requests` | user | `{scope, targetId, confirmDependents?}` | `{deletionRequestId, state}` or `409 dependents` (a source used in films: lists them; resend with `confirmDependents:true`) | owner of target; account scope needs an **authentication** within 10 minutes (the `amr` time or a bound re-authentication; a refreshed token's `iat` is not enough; `401 reauth_required`; security-model §2.2) |
+| `POST /v1/deletion-requests` | user | `{scope, targetId, confirmDependents?}` | `{deletionRequestId, state}` or `409 dependents` (a source used in films: lists them; resend with `confirmDependents:true`) | owner of target; account scope needs an **authentication** within 10 minutes: the JWT's `session_id` must name an Auth session created ≤ 10 min ago (a new sign-in; a refresh keeps the old session, and a refreshed token's `iat` is never enough; `401 reauth_required`; security-model §2.2, §13.4) |
 | `GET /v1/deletion-requests/{id}` | requester | — | `{state, counts}` | requester |
 | *Internal routes below are served by `jovra-internal`, never by the user gateway (security-model §13.1).* | | | | |
 | `POST /internal/v1/attempts/{attemptId}/claim` | render host | — | `{leaseToken, leasedUntil, inputRefs, outputPlan}` (token minted now; only its hash is stored) | host credential; attempt `dispatched` and unclaimed; a second claim → `409 already_claimed` (fenced) |
@@ -957,7 +972,8 @@ studio-v1-spec "Conflicts recorded") that keeps one authorization point until th
 `app_gateway.complete_upload_check(p_actor, p_session, p_parts)` refuses completion unless every check passes:
 
 1. Session state `open`, `expires_at > now()`, and the actor is still authorized right now (owner still owns the
-   project; guest invite not revoked and capability unexpired; render attempt lease current).
+   project; guest invite not revoked and capability unexpired). Render outputs use
+   `complete_upload_check_for_attempt`, whose step 1 is instead "attempt lease current" (orchestrator role only).
 2. The source row belongs to the session's project, is not deleted, and its project is not deleted (rejects a session
    reused against another project or source: "wrong-project completion").
 3. Part numbers are exactly `1..part_count` with no gaps; `part_count = ceil(expected_bytes / part_size)`; every part
@@ -1015,6 +1031,10 @@ Rules (INFERRED, implementing the brief and the pricing guardrails):
 - **A revision** that fits in the remaining reservation continues the same job; the same transaction moves the
   reservation's `story_plan_version_id` and `output_spec_sha256` to the new version, so the domain key follows the
   work (security-model §13.6). Otherwise `409 requote_required`: a new quote and job with `parent_job_id`.
+- **A plan-by-job job's planning stage** does the same when it produces its version: the job and its held
+  reservation, created under `(plan, NULL, hash of the unplanned output)`, move to `(plan, V, hash of V)` in the
+  transaction that records the stage's success, so a later quote naming V with the same output meets the existing
+  hold (`409` or a top-up), never a second hold and job (security-model §13.6, T-DB-68).
 - **`ready`** only after the `verify_output` stage passes full decode, frame count against the EDL's rational clock,
   audio sample count, frame-map and provenance checks, and the artifact is atomically exposed (film-engine §3.10). A
   process exit is never `ready`.
@@ -1023,13 +1043,16 @@ Rules (INFERRED, implementing the brief and the pricing guardrails):
 
 1. `app_gateway.accept_quote` runs one transaction: lock the quote; check state/expiry/inputs hash/cap; check the
    owner open-cap and environment ceilings; then either insert `usage_reservations` (unique held key
-   `(project, story plan version, output spec hash)`), `render_jobs` (state `consented`) and a `job_outbox` row
+   `(project, story plan, story plan version, output spec hash)` (NULLS NOT DISTINCT)), `render_jobs` (state `consented`) and a `job_outbox` row
    `kind = 'start_workflow'`, or, when the quote supersedes the held reservation's quote after `budget_exceeded`, top
    that reservation up (raise `cap`, mark the old quote `superseded`) and move the existing job to `consented`; write
    `audit_events`.
-2. The gateway then calls `RENDER_JOB.createBatch([{id: jobId, params:{jobId}}])`; `createBatch()` skips existing ids
-   while `create()` throws on a reused id (OBSERVED, https://developers.cloudflare.com/workflows/build/workers-api/),
-   so a retry is harmless. On success it marks the outbox row dispatched.
+2. The gateway then calls `INTERNAL.startJob(jobId)` over the service binding (it holds no Workflow binding); in
+   `jovra-internal`, `startJob` re-reads the job row and outbox row as `jovra_orchestrator` and, only if the job is
+   `consented` and the outbox row undispatched, calls `RENDER_JOB.createBatch([{id: jobId, params:{jobId}}])`;
+   `createBatch()` skips existing ids while `create()` throws on a reused id (OBSERVED,
+   https://developers.cloudflare.com/workflows/build/workers-api/), so a retry is harmless. On success it marks the
+   outbox row dispatched.
 3. The reconciler (Cron Trigger, every minute) re-dispatches any outbox row not marked dispatched after 60 s through the
    same idempotent call. Supabase Queues (pgmq) is the fallback if this dual-write proves fragile (OBSERVED option,
    https://supabase.com/docs/guides/queues).
@@ -1063,9 +1086,9 @@ The consumer is idempotent on `attemptId`: a push consumer Worker starts or addr
 returns (a 15-minute consumer cannot babysit a long render; OBSERVED consumer limits); an external host consumes by
 HTTP pull with a visibility timeout (OBSERVED, https://developers.cloudflare.com/queues/configuration/pull-consumers/).
 
-The host heartbeats every 60 s; the gateway extends `leased_until` only if the token matches the current attempt and
+The host heartbeats every 60 s; `jovra-internal` extends `leased_until` only if the token matches the current attempt and
 its state is `running`, and answers `{cancel: true}` when the job is canceling. Results come back through
-`/internal/v1/attempts/{id}/result`; the gateway applies them with `app_gateway.finish_attempt`, which **fences**:
+`/internal/v1/attempts/{id}/result`; `jovra-internal` applies them with `app_gateway.finish_attempt`, which **fences**:
 a result whose token is not the current attempt's, or arrives after `lease_expired`, is rejected and its outputs are
 never registered. Outputs go to new keys derived from `(job, stage, inputHash, attempt)` and are registered as
 `writing` until verified, so a zombie attempt cannot overwrite a good artifact.
@@ -1093,7 +1116,9 @@ configured (OBSERVED, https://developers.cloudflare.com/queues/configuration/dea
 mandatory. Every retry passes through `reserve_stage`, so retries cannot exceed the cap. Credits are consumed when a
 stage attempt **succeeds** (`finish_attempt`), once per `(job, stage)`: a failed attempt consumes no credits (its real
 cost is still recorded in `actual_cost_micro_usd`, bounded by the internal cap, the environment ceiling and
-`maxAttempts`), and a later attempt of an already-charged stage is a replay (contract vector
+`maxAttempts`; for the planner this bound holds because its `max_tokens`, image count, effort and repair call are
+derived from the stage reservation before the call and an overrun is committed against the ceiling, §7.6), and a
+later attempt of an already-charged stage is a replay (contract vector
 `retry-not-charged-twice`). The pricing research's 10–50% retry overhead is therefore operator cost inside the
 internal cap, never a second user charge.
 
@@ -1125,10 +1150,20 @@ internal cap, never a second user charge.
   bytes (contact sheets from proxies, sized per film-engine §4). Never R2 keys, URLs, emails or secrets.
 - Providers: `heuristic` (default; deterministic; no network), `anthropic` (model id pinned in config, currently
   `claude-opus-5-5`, image input only, no video; OBSERVED https://platform.claude.com/docs/en/build-with-claude/vision),
-  `openai-astra` (GPT-6 Astra, `gpt-6-astra` per film-engine research; access for Jon's account **UNVERIFIED**).
+  `openai-astra` (**ships disabled with no model ID configured**: the research names `gpt-6-astra`, but account access,
+  structured-output limits and image pricing are **UNVERIFIED**; the adapter returns `unavailable: model not
+  configured` until the founder configures a real model ID that its capability probe accepts; spec D-5, SD18,
+  ADR-0016). No model becomes the default planner by configuration alone (spec story 248).
   The adapter version and model id are pinned on the plan version and never changed mid-job.
 - Model use requires the owner's `consent.modelProvider = true` at quote acceptance; without it the heuristic planner
-  runs. Sending frames to a provider changes App Privacy answers (ADR-0013 targets "Data Not Collected"); the
+  runs.
+- **Spend bound.** The planner step never chooses its own budget. It reads `render_attempts.planner_budget`, written by
+  `reserve_stage` from the stage's reservation, and passes those numbers as the provider's `max_tokens`, image count
+  and effort. Before the call it checks that the request's worst case (input tokens counted from the built request,
+  plus `max_tokens`) fits the reservation, else it makes no call and the heuristic planner runs. The one repair call
+  is made only when the reservation still covers its worst case. Measured tokens go into `measurements` and
+  `actual_cost_micro_usd` at `finish_attempt`; an overrun is committed as `stage_overrun` (security-model §13.7,
+  T-DB-72, and the planner fixture test in §12). Sending frames to a provider changes App Privacy answers (ADR-0013 targets "Data Not Collected"); the
   privacy-label update is an activation gate (G7).
 - The API key is a Worker secret available only to the Workflow's planner step. Model output is data: the validator
   rejects shell strings, filter strings, URLs, unknown operations, out-of-window cuts and invented numbers.
@@ -1165,6 +1200,20 @@ the UI never promises instant revocation for it; such a URL signs `response-cach
 Stale versions: when a correction creates a new event revision, existing films stay downloadable and are labelled
 "Older version: points corrected since"; new films bind the new revision.
 
+**Audio variants of downloads and links (spec D-1, SD5).** Private
+playback streams the film with its court audio. Every file that leaves the app is chosen with or without audio when
+the download, share link or YouTube package is created (`includeAudio`, default from the profile's contract field
+`exportAudio.includeByDefault`; junior-mode projects are always without audio). A without-audio file is never the
+film with a muted player: it is a separate verified artifact of the same plan (`kind = 'film'`, `media.audioCodec
+= null`, `parent_artifact_id` = the film), made by a `remux_no_audio` step (stream copy of the video, no audio track;
+no re-encode) and passed through `verify_output` (same frame count and video hash as the parent, no audio track).
+`create_share_link` and `/content` name the artifact actually served, so a link created without audio can never
+serve the audio variant. The child is created once per film on first request (idempotent on `(parent_artifact_id,
+'no-audio')`), counted as a delivery step inside the job's existing reservation (a stream copy costs seconds), and
+deleted with its film. "Prepare for YouTube" packages whichever variant the player chose. Tests: T-GW-38 (a link
+created with `includeAudio: false` serves a file with no audio track and the parent's frame count and video hash, and
+can never serve the parent; junior mode refuses `includeAudio: true` with 422).
+
 ### 9.2 24-hour share links
 
 - Created only by the owner, for one `film`, `preview` or `clip_excerpt` (never a source or proxy, never a whole
@@ -1193,10 +1242,10 @@ user-initiated, verified integration (brief).
 
 | Class | Where | Default retention | Mechanism |
 |---|---|---|---|
-| Staged originals | `jovra-<env>-work/staging/` | 7 days (confirmed at preflight; user may choose shorter) | lifecycle rule by prefix; acts within ~24 h, so copy says "removed within about 8 days" (OBSERVED timing, https://developers.cloudflare.com/r2/buckets/object-lifecycles/) |
+| Staged originals | `jovra-<env>-work/staging/` | **7 days by default; 1 or 30 days by the player's choice at preflight** (the accepted quote's `retentionDays`, spec D-3/SD23) | per job: `camera_sources.retention_until` and each work artifact's `retention_until` are set from the accepted quote; the daily `jovra-internal` retention sweep deletes objects past that date (objects first, then the row state); a **31-day** prefix lifecycle rule is only the backstop for a missed sweep (it must outlive the longest choice; R2 lifecycle acts within ~24 h, OBSERVED https://developers.cloudflare.com/r2/buckets/object-lifecycles/), so copy says "removed within about a day after the N days you chose" |
 | Incomplete multipart uploads | work bucket | abort after 2 days | lifecycle abort rule + session expiry |
-| Proxies, frames, PTS tables, contact sheets | `work/proxies/`, `work/frames/` | 7 days | lifecycle + job cleanup |
-| Previews | `work/previews/` | 7 days after the job ends | lifecycle |
+| Proxies, frames, PTS tables, contact sheets | `work/proxies/`, `work/frames/` | the job's chosen retention (1, 7 or 30 days) | `retention_until` + daily sweep; job cleanup; 31-day lifecycle backstop |
+| Previews | `work/previews/` | the job's chosen retention after the job ends | `retention_until` + daily sweep; 31-day lifecycle backstop |
 | Films and their thumbnails/captions/chapters/manifests | `jovra-<env>-films` | user's explicit choice: "until I delete" (default), 30 or 90 days | no lifecycle rule on this bucket; the deletion job executes `retention_until` |
 | Metadata rows | Postgres | until the user deletes the project or account | deletion job |
 | Audit events | `app_ops.audit_events` | 400 days, then purged | cron |
@@ -1315,7 +1364,7 @@ FFmpeg/ffprobe 9.0.1. Wrangler is not installed globally; it becomes a gateway d
 | Auth flows | Local Auth + Mailpit (`127.0.0.1:54324`) for OTP; local ES256 signing key (`supabase gen signing-key --algorithm ES256`, `signing_keys_path`) | OTP allow-list rejects unknown emails; gateway verifies local JWKS |
 | Gateway Worker | `@cloudflare/vitest-plugin` (Miniflare; renamed from `vitest-pool-workers`, OBSERVED https://developers.cloudflare.com/workers/testing/vitest-integration/), R2 binding simulated, Queue and Workflow test APIs (`mockStepError`, `forceStepTimeout`, `mockEvent`), Hyperdrive `localConnectionString` to the local stack's Postgres | Section 12.1 list |
 | Render host | Same Docker image locally; storage adapter pointed at a local directory or the Miniflare R2; ADR-0012 synthetic sample video and the barcode/click conformance fixtures (film-engine §6, multicam-sync §8) | Hash mismatch rejects; probe allowlist rejects oversize/rotated-odd/HDR-without-tonemap inputs; normalization PTS table matches embedded frame ids; SIGTERM mid-stage restarts cleanly; outputs keyed by input hash; FFmpeg args built only from templates (adversarial EDL fixtures fail) |
-| Planner | Recorded fixture responses only; no API calls | Shell strings, unknown ops, URLs, out-of-window cuts and invented metric numbers are rejected; heuristic fallback after one failed repair |
+| Planner | Recorded fixture responses only; no API calls | Shell strings, unknown ops, URLs, out-of-window cuts and invented metric numbers are rejected; heuristic fallback after one failed repair; a fixture whose worst case (images, input, `max_tokens`, repair) exceeds the stage reservation is refused before any provider call (the fake provider records zero requests) and the request carries exactly `planner_budget` (T-DB-72) |
 | Native client | `URLProtocol` stub of the gateway (ADR-0008 pattern); DemoBackend unit tests | Resume after kill; part retry clears confirmation; conflict UI paths; sign-out keeps offline playback; demo never opens a socket |
 
 ### 12.1 Gateway tests (minimum list)
@@ -1333,7 +1382,9 @@ cleanup enqueued. T-GW-15 share link after revoke → 404; after 24 h → 404; s
 created. T-GW-16 viewer with a lesson-clip grant can stream that clip excerpt and gets 404 for the match film and every
 other artifact. T-GW-17 outbox re-dispatch after a simulated crash creates exactly one Workflow instance. T-GW-18 DLQ
 message marks the attempt `dead_lettered` and the job `failed_retryable`. T-GW-19 logs captured during the whole
-suite contain no JWT, capability, share token, invite code, email or display name (log-scrubber assertion).
+suite contain no JWT, capability, share token, invite code, email or display name (log-scrubber assertion), and every
+refusal the suite provokes on a user route **and on a `jovra-internal` host route** has its `app_ops.audit_events`
+denial row (`audit_denial` / `audit_denial_for_attempt`).
 T-GW-20 deletion request removes every object under the project's prefixes in the simulated buckets and leaves no
 artifact rows. T-GW-20b deleting the account of a coach who authored observations, plans and sync reviews in another
 owner's project finishes `done`; those rows remain with actor columns null. T-GW-21 with the Hyperdrive local
@@ -1344,16 +1395,23 @@ EDL naming another project's source → 404 / `untrustedSource`. T-GW-25 two con
 source: the first is aborted and cannot complete; completing the current one after verification of an earlier object
 is refused. T-GW-26 coach `GET /jobs/{id}` has no `usage`. T-GW-27 `/s/{token}/thumbnail` streams only the linked
 film's thumbnail; a signed-in holder has no grant afterwards. T-GW-28 a second `claim` of an attempt → 409; a queue
-message naming another project's input → that input is never readable (also T-R2-08b). Review round 2 (security-model
+message naming another project's input → that input is never readable (also T-R2-08b); each such refusal, a forged or
+stale lease token and an output over its cap leave one `audit_events` row with `actor_kind = 'render_attempt'`
+written by `audit_denial_for_attempt`. Review round 2 (security-model
 §13): T-GW-29 the user gateway's Wrangler config has no orchestrator Hyperdrive binding, no host secret and no
 `/internal/` route, and its service binding exposes only `startJob`/`notifyReview`; T-GW-30 an OTP request with
 `create_user: true` for an unknown email is refused (local `enable_signup = false` plus the hook; hosted at G1);
-T-GW-31 account deletion with a freshly refreshed token whose authentication is old → 401 `reauth_required`; T-GW-32
-each deletion gap (source with dependent films, lesson in a Progress plan, coach account with excerpts in another
-owner's project, an open multipart session, a film's thumbnail/captions/chapters) leaves no object behind; T-GW-33 a
+T-GW-31 account deletion with a freshly refreshed token whose Auth session is old → 401 `reauth_required`, and a new
+sign-in then passes; T-GW-32
+each deletion gap (source with dependent films, lesson in a Progress plan, including one lesson of a two-lesson
+Progress plan, which must reach `done` on the server path, coach account with excerpts in another owner's project, an
+open multipart session, a film's thumbnail/captions/chapters) leaves no object behind; T-GW-33 a
 stranger redeeming a forwarded invitation → 404; T-GW-34 `/s/` beyond its rate limit or byte budget → 429; T-GW-35
 the app's PostgREST request builder never puts user text in a query string; T-GW-36 a render output declared above its
-kind's cap → 422.
+kind's cap → 422; T-GW-37 a sixth failed grant redemption within an hour by one user → 429, and a correct code after
+that still 429 until the window passes. T-GW-38 audio variants (§9.1): a share link or download chosen without audio
+serves the verified no-audio child (no audio track, same frame count and video hash as the film) and never the film;
+junior mode refuses `includeAudio: true` (422).
 
 ### 12.2 What stays UNVERIFIED until activation
 
@@ -1368,7 +1426,7 @@ live model behaviour and spend, push notifications. Each is reported separately 
 | Gate | What | Evidence before "live" |
 |---|---|---|
 | G0 | ADR accepting the backend-ready scope change (B-00) | ADR merged |
-| G1 | Test Supabase project created by Jon; publishable key and URL in test config | pgTAP suite and advisors pass against the hosted test project; sign-ups disabled and the `before_user_created` allow-list hook active (an OTP with `create_user: true` for an unknown email is refused, T-GW-30); the `amr` claim shape recorded for re-authentication (T-GW-31) |
+| G1 | Test Supabase project created by Jon; publishable key and URL in test config | pgTAP suite and advisors pass against the hosted test project; sign-ups disabled and the `before_user_created` allow-list hook active (an OTP with `create_user: true` for an unknown email is refused, T-GW-30); the `session_id` claim, `auth.sessions` columns and `amr` shape recorded for re-authentication (T-GW-31) |
 | G2 | Cloudflare account, test Worker env, R2 buckets, Queues, Workflow | Gateway suite passes against hosted bindings; lifecycle rules listed; Hyperdrive config shows caching disabled; `invocation_logs = false`; zone Logpush and WAF/Security Events logging off for the gateway hostname or excluding `/s/*`; two Worker scripts with the orchestrator binding only on `jovra-internal` (T-GW-29); Workflows and platform log retention recorded; test environment ceiling and default owner row (`app_ops.spend_limits`) set by Jon |
 | G3 | Render host (Containers test instance) | Synthetic fixture film fully verified in the cloud; measured runtime per stage |
 | G3b | Remote push (APNs key, later FCM) for "film ready" on cloud jobs | Device receives a push from the test environment; until then cloud jobs show status only in the app (local notifications for on-device films need no gate) |
@@ -1427,7 +1485,7 @@ rule 9). Hosted verification is reported separately at activation.
 | B-22 | Privacy: App Privacy answers, consent copy (cloud, model provider, retention), participant acknowledgement, minors question | B-00 | Draft reviewed by Jon (G7) |
 | B-23 | Review-round-1 hardening (D1–D24): Hyperdrive caching off, invocation logs off, redacted idempotency, claim-minted leases, attempt input/output lists, composite source FKs, clip share approval, actor `set null`, lesson deletion routing, one upload session per source with etag pinning, spend ceilings and SQL estimates, orchestrator role, coach approval, length triggers | B-03…B-11 | T-DB-45…56, T-GW-20b…28, T-R2-08b, T-R2-15 |
 | B-24 | JOVRA editor adapter (spec SD22): `jovra.edit-plan/2` → `production-lab.video-editor.v1`, `idc.production-handoff/1`, `production-lab.editor-plan.v1`, `production-lab.editor-media-map.v1`, silent segment audio plus a verified JOVRA bed; run only on a copy of the editor | B-13, B-14 | Synthetic barcode match passes the editor's preview checks on a copy and FilmVerifier |
-| B-25 | Review-round-2 hardening (security-model §13): two Worker scripts and `*_for_attempt` commands; email-bound invitations; server-enforced test sign-up; authentication-time check for deletion; plan/version composite FKs; `NULLS NOT DISTINCT` keys and revise moves the key; fail-closed spend limits; pinned clip approvals, `revoke_clip_share`, `lesson_clip` scope; pending coaches share nothing; deletion gaps a–f with `artifact_sources`; PostgREST quotas; role-first BEFORE triggers; race-free reconciler; one owner role; log, header, presigned and rate-limit fixes; consent text classes; artifact composite FKs; hidden measurements and output caps | B-03…B-17, B-23 | T-DB-57…66, T-GW-29…36, T-R2-13/14 (extended), T-R2-16/17 |
+| B-25 | Review-round-2 hardening (security-model §13): two Worker scripts and `*_for_attempt` commands; email-bound invitations; server-enforced test sign-up; authentication-time check for deletion; plan/version composite FKs; `NULLS NOT DISTINCT` keys and revise moves the key; fail-closed spend limits; pinned clip approvals, `revoke_clip_share`, `lesson_clip` scope; pending coaches share nothing; deletion gaps a–f with `artifact_sources`; PostgREST quotas; role-first BEFORE triggers; race-free reconciler; one owner role; log, header, presigned and rate-limit fixes; consent text classes; artifact composite FKs; hidden measurements and output caps | B-03…B-17, B-23 | T-DB-57…71, T-GW-29…37, T-R2-10/13/14 (extended), T-R2-16/17 |
 
 ## Sources
 

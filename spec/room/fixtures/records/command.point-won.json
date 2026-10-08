@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "jovra.room.command/1",
+  "commandId": "cmd-point-43",
+  "sessionId": "sample-jon-alex",
+  "hostEpoch": 3,
+  "issuer": {
+    "memberId": "m-scorer",
+    "deviceId": "p-scorer",
+    "surface": "phone",
+    "bridgeDeviceId": null
+  },
+  "role": "scorer",
+  "issuedAt": "2026-10-07T21:30:00Z",
+  "issuedFreshness": {
+    "basedOnSnapshotSeq": 8,
+    "basedOnFreshness": "Fresh"
+  },
+  "expiry": {
+    "ttlMs": 60000,
+    "ageAtSendMs": 200
+  },
+  "target": {
+    "scope": "session",
+    "deviceIds": []
+  },
+  "baseEventRevision": 42,
+  "payload": {
+    "type": "PointWon",
+    "winnerPlayerId": "jon"
+  }
+}

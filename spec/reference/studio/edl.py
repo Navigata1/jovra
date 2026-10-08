@@ -198,7 +198,9 @@ def validate(plan: dict, profiles: dict, context: dict) -> dict:
                     (a match source appears only with a reviewed or reference sync map, its coverage from that map)
       "keepers":    [keeperId], "brolls": [brollId]
       "contacts":   {sourceId: [proxy frame]} every stored keeper contact, whatever keeper a plan names (or none)
-      "references": {refId: {"kind", "provenance", "eventRevision"}}  overlay targets and notes (textRefs, scripts)
+      "references": {refId: {"kind", "provenance", "eventRevision", "pointWindows"}}  overlay targets and notes
+                    (textRefs, scripts); pointWindows is None unless the target is a point event, else the session
+                    windows of the keepers that carry that point (a point's score is shown only over that point)
       "consents":   {consentRecordId: {"participantId", "scope": [...], "granted"}}
       "rights":     {rightsRecordId: {"assetId", "scope": [...]}}
     """
@@ -379,7 +381,7 @@ def validate(plan: dict, profiles: dict, context: dict) -> dict:
 
         if op in VIDEO_OPS:
             motion |= _check_framing(seg["framing"], seg_info, sources[seg["sourceId"]], out, grammar, out_len)
-        _check_overlays(seg["overlayRefs"], bindings, grammar, sid, context)
+        _check_overlays(seg["overlayRefs"], bindings, grammar, sid, context, seg_info, sources)
         motion |= _check_transition(seg["transitionIn"], seg_info, order, grammar, out["fps"], index, context)
         seen[sid] = seg_info
         order.append(seg_info)
@@ -497,7 +499,19 @@ def _resolve_note(ref, context, label) -> None:
     require(stored["kind"] == "note", "kindMismatch", f"{label} {ref!r} is a {stored['kind']}, not a note")
 
 
-def _check_overlays(refs, bindings, grammar, sid, context) -> None:
+def _shown_session(info, sources):
+    """The session interval of match play a segment shows, or None (a card, B-roll)."""
+    if info["op"] in ("live", "replay"):
+        return info["session"]
+    if info["op"] == "freeze":
+        src = sources[info["seg"]["sourceId"]]
+        if src.role == "match":
+            frame = info["seg"]["sourceFrame"]
+            return (src.session_us(frame), src.session_us(frame + 1))
+    return None
+
+
+def _check_overlays(refs, bindings, grammar, sid, context, info=None, sources=None) -> None:
     require(type(refs) is list and len(refs) <= MAX_OVERLAYS, "badOverlays", "at most 8 overlay refs")
     annotations = 0
     for ref in refs:
@@ -527,6 +541,19 @@ def _check_overlays(refs, bindings, grammar, sid, context) -> None:
                 f"segment {sid}: {ref['refId']!r} is stored as {stored['provenance']}, the plan says {ref['provenance']}")
         require(stored["eventRevision"] == bindings["eventRevision"], "staleRevision",
                 f"segment {sid}: {ref['refId']!r} was resolved at another event revision")
+        # a point's score or metric is bound to that point's moment: over live, replayed or frozen match play it is
+        # shown only when the play lies inside the session window of a keeper that carries the point (a film cannot
+        # put another point's score over a rally). The key is required: a context without it cannot bind the moment.
+        require("pointWindows" in stored, "contextMissing",
+                f"segment {sid}: the trusted reference {ref['refId']!r} carries no pointWindows binding")
+        windows = stored["pointWindows"]
+        shown = _shown_session(info, sources) if info is not None else None
+        if ref["kind"] in ("score", "metric") and windows is not None and shown is not None:
+            half = frame_duration_us(info["src"].fps_raw) / 2   # half a source frame of rounding at each edge
+            lo, hi = shown
+            require(any(w0 - half <= lo and hi <= w1 + half for w0, w1 in windows), "overlayOutsideMoment",
+                    f"segment {sid}: {ref['kind']} {ref['refId']!r} belongs to a point whose keeper windows "
+                    f"{windows} do not contain the session time {float(lo) / 1e6:.3f}-{float(hi) / 1e6:.3f} s shown")
 
 
 def _check_transition(tr, info, order, grammar, out_fps_raw, index, context) -> bool:
@@ -634,6 +661,14 @@ def _check_audio(audio, sources, order, total, out_fps, out_fps_raw, grammar, co
                     "hold-bed continues the primary bed without a jump")
         pieces.append(piece)
     require(cursor == total, "bedCoverage", "the bed must cover every output frame")
+    for p in pieces:
+        if p["route"] == "primary-bed" or (p["route"] == "alt-bed" and p["src"].role == "match"):
+            # court audio that is not held dead time plays only under live play, where it is checked for sync: under a
+            # replay, freeze, card or B-roll it would be unchecked court audio from any moment (another point's hit
+            # under a replay). There, the bed is hold-bed (real dead time), B-roll audio, or silence.
+            require(all(o["op"] == "live" for o in order if o["in"] < p["out"] and p["in"] < o["out"]),
+                    "courtBedOffLive", f"{p['route']} from {p['raw']['sourceId']} at output frames {p['in']}-{p['out']} "
+                    "plays under a non-live segment; use hold-bed over real dead time, or silence")
     _check_bed_switches(pieces, order, out_fps)
 
     lives = [o for o in order if o["op"] == "live"]
@@ -711,13 +746,15 @@ def _check_bed_switches(pieces, order, out_fps) -> None:
     or dip, the switch becomes an audio dip across the picture transition: the outgoing bed has faded out by the
     boundary over at least the frames before it that already show the incoming picture, and the incoming bed fades in
     over at least the frames after it, so two sources' court audio never play at once and nothing switches hard in
-    the middle of a blend. The same source continuing (primary to hold-bed, or primary to primary at a cut between
-    live segments) is not a switch."""
+    the middle of a blend. The same source continuing (primary to hold-bed, or primary to primary between live
+    segments) is not a switch only when it continues without a jump (the next piece starts on the source frame where
+    the previous one ended, as primary to hold-bed must); a jump to another position of the same source is a switch
+    like any other: on a boundary, with fades."""
     starts = {o["in"]: o for o in order}
     for a, b in zip(pieces, pieces[1:]):
         src_a = None if a["route"] == "silence" else a["raw"]["sourceId"]
         src_b = None if b["route"] == "silence" else b["raw"]["sourceId"]
-        if src_a == src_b:
+        if src_a == src_b and (src_a is None or a["s_in"] + a["n"] == b["s_in"]):
             continue
         seg = starts.get(b["in"])
         require(seg is not None, "bedSwitchNotAtBoundary",

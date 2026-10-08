@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room invitation record (jovra.room.invitation/1)",
+  "description": "The host's persisted record of one invitation. It stores a hash of the single-use join token, never the token (the token lives only in the QR payload and the host's secure store). Single use, at most 10 minutes, bound to one session, one host epoch and the host's TLS key; revoked on host transfer. The display code is lookup data only.",
+  "type": "object",
+  "required": ["schemaVersion", "sample", "inviteId", "sessionId", "hostDeviceId", "hostEpoch", "hostKeySha256", "displayCode", "joinTokenSha256", "secretBits", "issuedAt", "expiresAt", "singleUse", "hostApprovalRequired", "captureRole", "commandRole", "studioSlot", "status", "usedByDeviceId", "usedAt", "revokedReason"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.room.invitation/1"},
+    "sample": {"$ref": "room-common.schema.json#/$defs/sample"},
+    "inviteId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "hostDeviceId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "hostEpoch": {"$ref": "room-common.schema.json#/$defs/hostEpoch"},
+    "hostKeySha256": {"$ref": "room-common.schema.json#/$defs/sha256"},
+    "displayCode": {"$ref": "room-common.schema.json#/$defs/displayCode"},
+    "joinTokenSha256": {"$ref": "room-common.schema.json#/$defs/sha256"},
+    "secretBits": {"description": "Entropy of the join token; at least 128.", "type": "integer", "minimum": 128, "maximum": 256},
+    "issuedAt": {"$ref": "room-common.schema.json#/$defs/dateTime"},
+    "expiresAt": {"$ref": "room-common.schema.json#/$defs/dateTime"},
+    "singleUse": {"const": true},
+    "hostApprovalRequired": {"const": true},
+    "captureRole": {"enum": ["camera", "none"]},
+    "commandRole": {"$ref": "room-common.schema.json#/$defs/commandRole"},
+    "studioSlot": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/studioSlot"}]},
+    "status": {"enum": ["issued", "used", "expired", "revoked"]},
+    "usedByDeviceId": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/id"}]},
+    "usedAt": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/dateTime"}]},
+    "revokedReason": {"oneOf": [{"type": "null"}, {"enum": ["hostTransfer", "hostRevoked", "slotFilled", "attemptsExhausted"]}]}
+  }
+}

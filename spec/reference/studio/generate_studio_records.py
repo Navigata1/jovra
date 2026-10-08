@@ -247,7 +247,7 @@ def quotes(final_plan, queue_plan):
     sample_quote = {
         "schemaVersion": "jovra.quote/1", "quoteId": "quote-sample-37", "projectId": PROJECT, "environment": "demo",
         "sample": True, "illustrative": True, "planRevision": 1, "outputSpecSha256": output_spec_hash(queue_plan),
-        "inputsSha256": fake_sha("quote-37-inputs"),
+        "inputsSha256": fake_sha("quote-37-inputs"), "plannerChoice": "model",
         "filmClass": "story-2-3", "estimate": {"minCredits": 2, "maxCredits": 4}, "capCredits": 4,
         "estimatedMaxCostMicroUsd": 1_290_000, "creditCostBudgetMicroUsd": 800_000,
         "lineItems": {"sourceCount": 3, "uploadBytes": 10_800_000_000, "storageDays": 7, "outputSeconds": 300,
@@ -260,10 +260,12 @@ def quotes(final_plan, queue_plan):
     accepted = dict(sample_quote, quoteId="quote-test-01", environment="test", illustrative=False,
                     displayAmounts=None, inputsSha256=fake_sha("quote-01-inputs"), planRevision=2,
                     outputSpecSha256=output_spec_hash(final_plan),
-                    lineItems=dict(sample_quote["lineItems"], outputSeconds=258), status="accepted",
-                    acceptedAt="2026-10-07T22:50:00Z",
+                    plannerChoice="heuristic",
+                    lineItems=dict(sample_quote["lineItems"], outputSeconds=258, plannerTokensEstimate=0),
+                    status="accepted", acceptedAt="2026-10-07T22:50:00Z",
                     consent={"consentRecordId": "consent-upload-01", "uploadSelectedSources": True,
-                             "at": "2026-10-07T22:49:30Z"})
+                             "modelProvider": False, "textClasses": [], "retentionDays": 7,
+                             "consentTextVersion": "studio-cloud-consent@1.0.0", "at": "2026-10-07T22:49:30Z"})
     queue = dict(accepted, quoteId="quote-test-00", planRevision=1, inputsSha256=fake_sha("quote-00-inputs"),
                  outputSpecSha256=output_spec_hash(queue_plan),
                  acceptedAt="2026-10-07T22:49:50Z",
@@ -274,7 +276,8 @@ def quotes(final_plan, queue_plan):
 def reservations(final_plan, queue_plan):
     settled = {
         "schemaVersion": "jovra.usage-reservation/1", "reservationId": "res-0002", "projectId": PROJECT,
-        "jobId": "job-film-01", "quoteId": "quote-test-01", "environment": "test", "sample": True,
+        "jobId": "job-film-01", "quoteId": "quote-test-01", "initialQuoteId": "quote-test-01", "environment": "test",
+        "sample": True,
         "idempotencyKey": {"projectId": PROJECT, "planRevision": 2, "outputSpecSha256": output_spec_hash(final_plan)},
         "capCredits": 4, "reservedCredits": 4, "consumedCredits": 3, "releasedCredits": 1, "status": "settled",
         "entries": [
@@ -289,7 +292,8 @@ def reservations(final_plan, queue_plan):
     }
     held = {
         "schemaVersion": "jovra.usage-reservation/1", "reservationId": "res-0001", "projectId": PROJECT,
-        "jobId": "job-queue-38", "quoteId": "quote-test-00", "environment": "test", "sample": True,
+        "jobId": "job-queue-38", "quoteId": "quote-test-00", "initialQuoteId": "quote-test-00", "environment": "test",
+        "sample": True,
         "idempotencyKey": {"projectId": PROJECT, "planRevision": queue_plan["planRevision"],
                            "outputSpecSha256": output_spec_hash(queue_plan)},
         "capCredits": 4, "reservedCredits": 4, "consumedCredits": 2, "releasedCredits": 0, "status": "held",

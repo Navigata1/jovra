@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA phone-to-own-watch local message (jovra.room.watch-local/1)",
+  "description": "Messages between a phone and its own paired watch only, over the OS companion channel. They carry no room authority and are never room commands: the echo that bounds transit for freshness, an alert acknowledgement, and the wearer's own-phone stop (A3c), which the phone executes through its own local capture stop path after the watch's confirmation sheet. A watch can never name another device as a stop target.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "messageId",
+    "sessionId",
+    "kind"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "jovra.room.watch-local/1"
+    },
+    "messageId": {
+      "$ref": "room-common.schema.json#/$defs/id"
+    },
+    "sessionId": {
+      "$ref": "room-common.schema.json#/$defs/id"
+    },
+    "kind": {
+      "enum": [
+        "echoRequest",
+        "echoReply",
+        "ackAlert",
+        "stopOwnPhone",
+        "stopOwnPhoneResult"
+      ]
+    },
+    "echoMonoMs": {
+      "description": "The watch's own monotonic time when it sent the echo request; returned unchanged in the reply, so round trip = now - echoMonoMs on the watch's clock.",
+      "$ref": "room-common.schema.json#/$defs/seq"
+    },
+    "bridgeSeq": {
+      "description": "echoReply only: the bridgeSeq of the snapshot sent with the reply.",
+      "$ref": "room-common.schema.json#/$defs/seq"
+    },
+    "alertId": {
+      "$ref": "room-common.schema.json#/$defs/id"
+    },
+    "confirmed": {
+      "description": "stopOwnPhone only: the watch's confirmation sheet was accepted.",
+      "const": true
+    },
+    "result": {
+      "description": "stopOwnPhoneResult only.",
+      "enum": [
+        "stopRequested",
+        "notRecording",
+        "finalizeFailed"
+      ]
+    },
+    "inReplyTo": {
+      "$ref": "room-common.schema.json#/$defs/id"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "echoRequest"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "echoMonoMs"
+        ],
+        "properties": {
+          "bridgeSeq": false,
+          "alertId": false,
+          "confirmed": false,
+          "result": false,
+          "inReplyTo": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "echoReply"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "echoMonoMs",
+          "bridgeSeq",
+          "inReplyTo"
+        ],
+        "properties": {
+          "alertId": false,
+          "confirmed": false,
+          "result": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "ackAlert"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "alertId"
+        ],
+        "properties": {
+          "echoMonoMs": false,
+          "bridgeSeq": false,
+          "confirmed": false,
+          "result": false,
+          "inReplyTo": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "stopOwnPhone"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "confirmed"
+        ],
+        "properties": {
+          "echoMonoMs": false,
+          "bridgeSeq": false,
+          "alertId": false,
+          "result": false,
+          "inReplyTo": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "stopOwnPhoneResult"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "result",
+          "inReplyTo"
+        ],
+        "properties": {
+          "echoMonoMs": false,
+          "bridgeSeq": false,
+          "alertId": false,
+          "confirmed": false
+        }
+      }
+    }
+  ]
+}

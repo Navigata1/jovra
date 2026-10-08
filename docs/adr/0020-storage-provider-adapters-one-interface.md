@@ -5,8 +5,11 @@ Status: accepted (2026-10-07); extends ADR-0008, which stands for Google Drive.
 Jon wants "icloud, google drive, box, dropbox, etc" as optional integrations added afterwards (Studio addendum,
 OBSERVED). Every user-owned storage service is a **storage provider** behind one `StorageProvider` interface:
 
-- **Capability status:** one of `available`, `awaiting setup`, `not connected`, `needs reconnect`, `planned` or
-  `unsupported`.
+- **Capability status:** one of the contract's values (`jovra.storage-providers/1`): `active`, `choose-folder`,
+  `not-connected`, `token-expired` (shown as "Needs reconnect"), `disconnected`, `planned` or `unavailable` (with a
+  reason; Google Drive's core "Awaiting Google Drive setup" is `unavailable` with the setup reason and keeps the core
+  copy). The first draft of this ADR used other words (`available`, `awaiting setup`, `unsupported`); the contract
+  names win (amended 2026-10-07, review round 3).
 - **Account and folder selection.**
 - **Resumable read and write**, with state persisted per ADR-0002.
 - **Quota.**
@@ -16,8 +19,9 @@ OBSERVED). Every user-owned storage service is a **storage provider** behind one
   local file, per ADR-0008's rule.
 
 A provider plays one or more of three roles: archive, import and export. It never acts as the database, the analysis
-engine or the cloud render store. Each role is a separate choice, and none of them is consent for cloud processing
-(ADR-0019).
+engine or the cloud render store (the contract pins `processing: false`), and JOVRA's servers never store or follow a
+provider URL or token: provider connections are status rows only, and tokens stay on the device. Each role is a
+separate choice, and none of them is consent for cloud processing (ADR-0019).
 
 **Order of work:**
 1. **Files / iCloud Drive** through the system document picker: folder export and import. This is not CloudKit sync,
@@ -31,7 +35,7 @@ Import is allowed from any provider the Files app can reach, without claiming a 
 identity (ADR-0022). Signing out of JOVRA does not disconnect an archive, and disconnecting an archive does not touch
 the JOVRA account. OAuth client IDs come from configuration (CLAUDE.md rule 5).
 
-A provider logo or row in Settings only means a wired integration when its status is `available`. Otherwise it shows
+A provider logo or row in Settings only means a wired integration when its status is `active`. Otherwise it shows
 "Planned" or "Awaiting setup".
 
 ## Considered Options

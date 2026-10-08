@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "jovra.room.receipt/1",
+  "commandId": "cmd-stop-all",
+  "sessionId": "sample-jon-alex",
+  "hostEpoch": 3,
+  "type": "StopAllRequest",
+  "status": "Accepted",
+  "reason": null,
+  "canonicalEventRevision": 42,
+  "appliedRecordId": null,
+  "conflict": null,
+  "deviceResults": [
+    {
+      "deviceId": "c1",
+      "status": "Accepted",
+      "reason": "stopRequested"
+    },
+    {
+      "deviceId": "c2",
+      "status": "TimedOut",
+      "reason": "unreachable"
+    },
+    {
+      "deviceId": "c3",
+      "status": "Unknown",
+      "reason": "noAcknowledgement"
+    },
+    {
+      "deviceId": "c4",
+      "status": "Failed",
+      "reason": "finalizeFailed"
+    },
+    {
+      "deviceId": "c5",
+      "status": "Accepted",
+      "reason": "stopRequested"
+    },
+    {
+      "deviceId": "c6",
+      "status": "Accepted",
+      "reason": "notRecording"
+    }
+  ]
+}

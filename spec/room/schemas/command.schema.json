@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room command (jovra.room.command/1)",
+  "description": "An acknowledged, idempotent action. The issuer persists the command and resends it unchanged on retry except for the volatile send field expiry.ageAtSendMs, which it recomputes from its own monotonic clock on every send; the idempotency fingerprint excludes that field. The host binds the issuer to the authenticated channel peer (the member's phone, or the member's registered watch through that phone as bridge), checks that the claimed role is one of the member's granted roles, refuses capture requests from a watch, authorizes the type for that role, checks expiry without comparing wall clocks across devices, checks the base revision, and returns a receipt. Expiry age = expiry.ageAtSendMs + transport-observed transit + host holding time; a capture request whose transit cannot be bounded expires. A local user's own stop is not a command and is always available. A disconnect never generates any command.",
+  "type": "object",
+  "required": ["schemaVersion", "commandId", "sessionId", "hostEpoch", "issuer", "role", "issuedAt", "issuedFreshness", "expiry", "target", "baseEventRevision", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.room.command/1"},
+    "commandId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "hostEpoch": {"$ref": "room-common.schema.json#/$defs/hostEpoch"},
+    "issuer": {
+      "type": "object",
+      "required": ["memberId", "deviceId", "surface", "bridgeDeviceId"],
+      "additionalProperties": false,
+      "properties": {
+        "memberId": {"$ref": "room-common.schema.json#/$defs/id"},
+        "deviceId": {"$ref": "room-common.schema.json#/$defs/id"},
+        "surface": {"enum": ["phone", "watch"]},
+        "bridgeDeviceId": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/id"}]}
+      },
+      "if": {"properties": {"surface": {"const": "watch"}}},
+      "then": {"properties": {"bridgeDeviceId": {"$ref": "room-common.schema.json#/$defs/id"}}},
+      "else": {"properties": {"bridgeDeviceId": {"type": "null"}}}
+    },
+    "role": {"$ref": "room-common.schema.json#/$defs/commandRole"},
+    "issuedAt": {"description": "Issuer wall clock, informational only.", "$ref": "room-common.schema.json#/$defs/dateTime"},
+    "issuedFreshness": {
+      "description": "What the issuer could see when it acted (audit context; never trusted for authorization).",
+      "type": "object",
+      "required": ["basedOnSnapshotSeq", "basedOnFreshness"],
+      "additionalProperties": false,
+      "properties": {
+        "basedOnSnapshotSeq": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/seq"}]},
+        "basedOnFreshness": {"$ref": "room-common.schema.json#/$defs/freshness"}
+      }
+    },
+    "expiry": {
+      "type": "object",
+      "required": ["ttlMs", "ageAtSendMs"],
+      "additionalProperties": false,
+      "properties": {
+        "ttlMs": {"description": "Capture requests at most 30 000 ms (reference rule ttlTooLong); score and marker commands at most 24 h.", "type": "integer", "minimum": 1000, "maximum": 86400000},
+        "ageAtSendMs": {"description": "Volatile send field: the issuer's monotonic age of the command at THIS send (now minus creation), so time queued in an outbox or on a bridge counts. Recomputed on every send and excluded from the idempotency fingerprint. A bridge that holds a watch command adds its own holding time before forwarding.", "$ref": "room-common.schema.json#/$defs/durationMs"}
+      }
+    },
+    "target": {
+      "type": "object",
+      "required": ["scope", "deviceIds"],
+      "additionalProperties": false,
+      "properties": {
+        "scope": {"enum": ["session", "device", "allCameras"]},
+        "deviceIds": {"type": "array", "maxItems": 6, "uniqueItems": true, "items": {"$ref": "room-common.schema.json#/$defs/id"}}
+      }
+    },
+    "baseEventRevision": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/revision"}]},
+    "payload": {
+      "oneOf": [
+        {"type": "object", "required": ["type", "winnerPlayerId"], "additionalProperties": false,
+         "properties": {"type": {"const": "PointWon"}, "winnerPlayerId": {"$ref": "room-common.schema.json#/$defs/id"}}},
+        {"type": "object", "required": ["type", "targetEventId"], "additionalProperties": false,
+         "properties": {"type": {"const": "Undo"}, "targetEventId": {"$ref": "room-common.schema.json#/$defs/id"}}},
+        {"type": "object", "required": ["type", "reason", "pointEventId", "sourceRefs", "note"], "additionalProperties": false,
+         "properties": {
+           "type": {"const": "MarkForReview"},
+           "reason": {"enum": ["point", "serve", "uncertainBounce", "other"]},
+           "pointEventId": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/id"}]},
+           "sourceRefs": {"type": "array", "maxItems": 6, "items": {"$ref": "room-common.schema.json#/$defs/sourceRef"}},
+           "note": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/userText"}]}
+         }},
+        {"type": "object", "required": ["type"], "additionalProperties": false,
+         "properties": {"type": {"const": "StartRequest"}}},
+        {"type": "object", "required": ["type", "targetLabel"], "additionalProperties": false,
+         "properties": {"type": {"const": "StopOne"}, "targetLabel": {"$ref": "room-common.schema.json#/$defs/userText"}}},
+        {"type": "object", "required": ["type", "targetLabel", "confirmed"], "additionalProperties": false,
+         "properties": {"type": {"const": "StopAllRequest"}, "targetLabel": {"$ref": "room-common.schema.json#/$defs/userText"}, "confirmed": {"const": true}}}
+      ]
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"payload": {"properties": {"type": {"enum": ["PointWon", "Undo"]}}}}},
+     "then": {"properties": {"baseEventRevision": {"type": "integer"}, "target": {"properties": {"scope": {"const": "session"}, "deviceIds": {"maxItems": 0}}}}}},
+    {"if": {"properties": {"payload": {"properties": {"type": {"const": "MarkForReview"}}}}},
+     "then": {"properties": {"target": {"properties": {"scope": {"const": "session"}, "deviceIds": {"maxItems": 0}}}}}},
+    {"if": {"properties": {"payload": {"properties": {"type": {"const": "StartRequest"}}}}},
+     "then": {"properties": {"baseEventRevision": {"type": "null"}, "target": {"properties": {"scope": {"const": "device"}, "deviceIds": {"minItems": 1}}}}}},
+    {"if": {"properties": {"payload": {"properties": {"type": {"const": "StopOne"}}}}},
+     "then": {"properties": {"baseEventRevision": {"type": "null"}, "target": {"properties": {"scope": {"const": "device"}, "deviceIds": {"minItems": 1, "maxItems": 1}}}}}},
+    {"if": {"properties": {"payload": {"properties": {"type": {"const": "StopAllRequest"}}}}},
+     "then": {"properties": {"baseEventRevision": {"type": "null"}, "target": {"properties": {"scope": {"const": "allCameras"}, "deviceIds": {"maxItems": 0}}}}}}
+  ]
+}

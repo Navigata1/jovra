@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "freshness",
+  "status": "Proposal thresholds (fresh <= 5 s, delayed <= 15 s); ported and extended from docs/handoff/adaptive-v3/scripts/verify_protocol_fixtures.py",
+  "cases": [
+    {
+      "id": "fresh-at-bridge",
+      "why": "1 s at the bridge, accepted now",
+      "input": {
+        "senderAgeMs": 1000,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": "Fresh"
+    },
+    {
+      "id": "fresh-boundary",
+      "why": "5 000 ms is still fresh",
+      "input": {
+        "senderAgeMs": 5000,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": "Fresh"
+    },
+    {
+      "id": "delayed-just-over",
+      "why": "5 001 ms is delayed",
+      "input": {
+        "senderAgeMs": 5001,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": "Delayed"
+    },
+    {
+      "id": "delayed-by-watch-time",
+      "why": "2 s at bridge + 4 s on the watch = 6 s",
+      "input": {
+        "senderAgeMs": 2000,
+        "sinceAcceptMs": 4000,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": "Delayed",
+      "acceptanceRows": [
+        7
+      ]
+    },
+    {
+      "id": "delayed-boundary",
+      "why": "15 000 ms is still delayed",
+      "input": {
+        "senderAgeMs": 15000,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": "Delayed"
+    },
+    {
+      "id": "unknown-just-over",
+      "why": "15 001 ms is Unknown",
+      "input": {
+        "senderAgeMs": 15001,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": "Unknown",
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "unknown-by-watch-time",
+      "why": "2 s at bridge + 14 s on the watch = 16 s",
+      "input": {
+        "senderAgeMs": 2000,
+        "sinceAcceptMs": 14000,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": "Unknown",
+      "acceptanceRows": [
+        7
+      ]
+    },
+    {
+      "id": "transit-counts",
+      "why": "Known transit is added: 3 000 + 2 500 = 5 500",
+      "input": {
+        "senderAgeMs": 3000,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 2500
+      },
+      "expect": "Delayed"
+    },
+    {
+      "id": "queued-arrives-now",
+      "why": "A queued delivery that arrived this instant is still Unknown",
+      "input": {
+        "senderAgeMs": 0,
+        "sinceAcceptMs": 0,
+        "transitBounded": false,
+        "baselineValid": true,
+        "transitMs": null
+      },
+      "expect": "Unknown",
+      "acceptanceRows": [
+        8
+      ]
+    },
+    {
+      "id": "baseline-lost",
+      "why": "A restarted process has no valid monotonic baseline",
+      "input": {
+        "senderAgeMs": 0,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": false,
+        "transitMs": 0
+      },
+      "expect": "Unknown",
+      "acceptanceRows": [
+        3
+      ]
+    },
+    {
+      "id": "interactive-refresh",
+      "why": "A bounded interactive exchange establishes freshness again",
+      "input": {
+        "senderAgeMs": 1000,
+        "sinceAcceptMs": 200,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 150
+      },
+      "expect": "Fresh",
+      "acceptanceRows": [
+        8
+      ]
+    },
+    {
+      "id": "negative-sender-age",
+      "why": "Negative ages are invalid input",
+      "input": {
+        "senderAgeMs": -1,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": {
+        "error": "negativeAge"
+      }
+    },
+    {
+      "id": "negative-since-accept",
+      "why": "Negative ages are invalid input",
+      "input": {
+        "senderAgeMs": 0,
+        "sinceAcceptMs": -5,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": 0
+      },
+      "expect": {
+        "error": "negativeAge"
+      }
+    },
+    {
+      "id": "bounded-without-bound",
+      "why": "A bounded transit must state its bound",
+      "input": {
+        "senderAgeMs": 0,
+        "sinceAcceptMs": 0,
+        "transitBounded": true,
+        "baselineValid": true,
+        "transitMs": null
+      },
+      "expect": {
+        "error": "transitBoundMissing"
+      }
+    }
+  ]
+}

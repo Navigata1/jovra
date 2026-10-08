@@ -109,11 +109,29 @@ def sync_vectors():
     a = g.synth_anchors(offset=400_000, rate=Fraction(10_015, 10_000), events=ev, src_pos=g.POS["CSE"],
                         ref_pos=g.POS["BS"], prefix="hd", noise=False)
     cases.append(_fit_case("implausible-drift-1500ppm",
-                           "1500 ppm is inside the 0.9-1.1 schema range but far beyond phone clocks (about 8 ppm): "
-                           "flagged for review and never reviewable without re-anchoring",
+                           "1500 ppm is inside the 0.9-1.1 schema range but far beyond phone clocks (about 8 ppm) and "
+                           "above 1000 ppm (30 vs 29.97 fps): flagged as a likely timebase mislabel; a person may confirm "
+                           "it at the checkpoints (reviewable reason, not a rejection)",
                            [{"segmentId": "seg-0", "sourceDurationUs": HOUR, "anchors": a}], src="CSE", ref="BS",
                            assertions={"state": ["needs-review"], "driftPpbWithin": [1_499_000, 1_501_000],
-                                       "reasonsInclude": "drift above 1000 ppm", "reviewable": False}))
+                                       "reasonsInclude": "drift above 1000 ppm", "reviewable": True}))
+    a = g.synth_anchors(offset=400_000, rate=Fraction(10_004, 10_000), events=ev, src_pos=g.POS["CSE"],
+                        ref_pos=g.POS["BS"], prefix="d4", noise=False)
+    cases.append(_fit_case("drift-400ppm-above-stress-ceiling",
+                           "400 ppm with ten exact anchors over the hour: everything else would be estimated, but the "
+                           "drift is above the 300 ppm stress fixture plus the 3 ppm S2 tolerance (multicam-sync.md 4.6), "
+                           "so it needs review; a person may confirm it (the old 1000 ppm gate let it through as "
+                           "estimated)",
+                           [{"segmentId": "seg-0", "sourceDurationUs": HOUR, "anchors": a}], src="CSE", ref="BS",
+                           assertions={"state": ["needs-review"], "driftPpbWithin": [399_000, 401_000],
+                                       "reasonsInclude": "drift above the 300 ppm stress ceiling", "reviewable": True}))
+    a = g.synth_anchors(offset=400_000, rate=Fraction(1_000_303, 1_000_000), events=ev, src_pos=g.POS["CSE"],
+                        ref_pos=g.POS["BS"], prefix="d3", noise=False)
+    cases.append(_fit_case("drift-303ppm-at-ceiling",
+                           "Exactly 303 ppm (the stress fixture plus the S2 tolerance) is still plausible: estimated",
+                           [{"segmentId": "seg-0", "sourceDurationUs": HOUR, "anchors": a}], src="CSE", ref="BS",
+                           assertions={"state": ["estimated"], "driftPpbWithin": [303_000, 303_000],
+                                       "reviewable": True}))
     ev = [(50_000_000 + i * 340_000_000, "visual", "serve-contact", None) for i in range(10)]
     a = g.synth_anchors(offset=700_000, rate=Fraction(1_000_010, 1_000_000), events=ev, src_pos=g.POS["CSE"],
                         ref_pos=g.POS["BS"], prefix="s7")
@@ -277,13 +295,13 @@ def _accept(n, q="q-1", at="2026-10-07T22:50:00Z", consent=True, expect=None):
     return _step(n, "accept", {"quoteId": q, "at": at, "consent": consent}, expect or {})
 
 
-def _reserve(n, credits, expect, q="q-1", rev=1, key=H, at="2026-10-07T22:51:00Z"):
+def _reserve(n, credits, expect, q="q-1", rev=1, key=H, at="2026-10-07T22:51:00Z", job="job-1"):
     return _step(n, "reserve", {"quoteId": q, "projectId": "p1", "planRevision": rev, "outputSpecSha256": key,
-                                "credits": credits, "at": at}, expect)
+                                "credits": credits, "at": at, "jobId": job}, expect)
 
 
-def _consume(n, stage, credits, expect, attempt=1, rid="res-0001"):
-    return _step(n, "consume", {"reservationId": rid, "jobId": "job-1", "stage": stage, "attempt": attempt,
+def _consume(n, stage, credits, expect, attempt=1, rid="res-0001", job="job-1"):
+    return _step(n, "consume", {"reservationId": rid, "jobId": job, "stage": stage, "attempt": attempt,
                                 "credits": credits}, expect)
 
 
@@ -342,7 +360,8 @@ def ledger_vectors():
         {"id": "new-revision-new-reservation", "environment": "test", "startBalance": 10,
          "quotes": [_quote("q-1"), _quote("q-2", rev=2)], "steps": [
              _accept(1), _accept(2, q="q-2"), _reserve(3, 4, ok4),
-             _reserve(4, 4, {"reservationId": "res-0002", "replayed": False, "balance": 2}, q="q-2", rev=2, key=H)],
+             _reserve(4, 4, {"reservationId": "res-0002", "replayed": False, "balance": 2}, q="q-2", rev=2, key=H,
+                      job="job-2")],
          "final": {"balance": 2, "reservations": {"res-0001": _res(4, 0, 0, "held"), "res-0002": _res(4, 0, 0, "held")}}},
         {"id": "cap-and-balance", "environment": "test", "startBalance": 3, "quotes": [_quote("q-1")], "steps": [
             _accept(1), _reserve(2, 5, {"rejectCode": "overCap"}), _reserve(3, 4, {"rejectCode": "insufficientCredits"}),
@@ -391,6 +410,28 @@ def ledger_vectors():
          "steps": [_accept(1, at="2026-10-07T23:15:00.500Z", expect={"rejectCode": "quoteExpired"}),
                    _reserve(2, 4, {"rejectCode": "quoteNotAccepted"})],
          "final": {"balance": 10, "reservations": {}}},
+        {"id": "consume-bound-to-job-and-stage", "environment": "test", "startBalance": 10, "quotes": [_quote("q-1")],
+         "steps": [_accept(1), _reserve(2, 4, ok4),
+                   _consume(3, "final_rendering", 1, {"consumedCredits": 1, "replayed": False}),
+                   _consume(4, "Final_Rendering", 1, {"rejectCode": "unknownStage"}, attempt=2),
+                   _consume(5, "final_rendering", 1, {"rejectCode": "jobMismatch"}, job="job-2"),
+                   _consume(6, "not_a_stage", 1, {"rejectCode": "unknownStage"}),
+                   _step(7, "attachJob", {"reservationId": "res-0001", "jobId": "job-2"}, {"rejectCode": "jobMismatch"}),
+                   _step(8, "attachJob", {"reservationId": "res-0001", "jobId": "job-1"},
+                         {"jobId": "job-1", "replayed": True})],
+         "final": {"balance": 6, "reservations": {"res-0001": _res(4, 1, 0, "held")}}},
+        {"id": "job-attached-after-reserve", "environment": "test", "startBalance": 10, "quotes": [_quote("q-1")],
+         "steps": [_accept(1), _reserve(2, 4, ok4, job=None),
+                   _consume(3, "normalizing", 1, {"rejectCode": "jobMismatch"}),
+                   _step(4, "attachJob", {"reservationId": "res-0001", "jobId": "job-1"},
+                         {"jobId": "job-1", "replayed": False}),
+                   _consume(5, "normalizing", 1, {"consumedCredits": 1, "replayed": False})],
+         "final": {"balance": 6, "reservations": {"res-0001": _res(4, 1, 0, "held")}}},
+        {"id": "topup-from-initial-quote-refused", "environment": "test", "startBalance": 10, "quotes": [_quote("q-1")],
+         "steps": [_accept(1), _reserve(2, 2, {"reservationId": "res-0001", "balance": 8}),
+                   _step(3, "topup", {"reservationId": "res-0001", "quoteId": "q-1", "credits": 4,
+                                      "at": "2026-10-07T22:52:00Z"}, {"rejectCode": "idempotencyConflict"})],
+         "final": {"balance": 8, "reservations": {"res-0001": _res(2, 0, 0, "held")}}},
         {"id": "boolean-credits-refused", "environment": "test", "startBalance": 10, "quotes": [_quote("q-1")],
          "steps": [_accept(1), _reserve(2, True, {"rejectCode": "badAmount"})],
          "final": {"balance": 10, "reservations": {}}},
@@ -475,7 +516,8 @@ def edl_context_vectors(P, plans_by_name, context, profiles):
         return [rep("/sources/1/coverage", [first, second]),
                 rep("/segments/4/sourceInFrame", s_in), rep("/segments/4/sourceOutFrame", s_in + n),
                 rep("/segments/4/sessionInUs", session), rep("/segments/4/keeperId", None),
-                rep("/segments/4/protectedFrames", []), rep("/audio/bed/3/sourceInFrame", s_in), *extra]
+                rep("/segments/4/protectedFrames", []), rep("/segments/4/overlayRefs", []),
+                rep("/audio/bed/3/sourceInFrame", s_in), *extra]
 
     src = edl.Source(dict(plans_by_name["coach-cut-serve"]["sources"][1], coverage=[first, second]),
                      Fraction(30))
@@ -522,8 +564,35 @@ def bad(cid, why, patch, code=None):
             "expect": {"layer": "schema"} if code is None else {"layer": "reference", "code": code}}
 
 
+def _hint_piece(plans, offset):
+    """Camera 3's piece with no anchors, placed from a capture hint at offset (stored from-hints)."""
+    piece = copy.deepcopy(plans["syncmap"]["sources"][2]["pieces"][0])
+    t = {"offsetUs": offset, "rate": {"num": syncfit.RATE_DEN, "den": syncfit.RATE_DEN}}
+    piece.update(anchors=[], fit=None, transform=t, state="from-hints", reasons=["no anchors; capture hint only"],
+                 matchCoverage={"startUs": syncfit.map_us(t, 0), "endUs": syncfit.map_us(t, piece["sourceDurationUs"])})
+    return piece
+
+
+def _drift_piece(plans, rate):
+    """Camera 3 re-anchored with ten exact visual anchors at the given rate, stored as 'estimated' with no reasons."""
+    smap = plans["syncmap"]
+    piece = smap["sources"][2]["pieces"][0]
+    pos = {p["sourceId"]: p["positionMm"] for p in smap["placements"]}
+    ev = [(50_000_000 + i * 340_000_000, "visual", "serve-contact", None) for i in range(10)]
+    raw = g.synth_anchors(offset=2_350_000, rate=rate, events=ev, src_pos=pos["camera-3"], ref_pos=pos["camera-1"],
+                          prefix="c3d", noise=False)
+    fitted = syncfit.fit_device([{"segmentId": piece["segmentId"], "sourceDurationUs": piece["sourceDurationUs"],
+                                  "anchors": raw}], source_position=pos["camera-3"], reference_position=pos["camera-1"],
+                                c_mm_per_s=smap["speedOfSound"]["mmPerSecond"], output_fps=smap["outputFps"])[0]
+    stored = g.stored_piece(piece["segmentId"], piece["sourceDurationUs"], fitted, raw, state="estimated")
+    stored["reasons"] = []
+    return stored
+
+
 def invalid_sets(P, plans):
     sb, cc, rp, mb = (plans[k] for k in ("storyboard", "coach", "rally", "broadcast"))
+    from studio.core import output_spec_sha256
+    _settled_hash = output_spec_sha256(plans["final"])
     s03_session = sb["segments"][2]["sessionInUs"]
     s02_bed = sb["audio"]["bed"][1]["sourceInFrame"]
     # coach: move c05 so it shows the session time the hold-bed plays under (1260-1271 s)
@@ -533,6 +602,9 @@ def invalid_sets(P, plans):
     c05_back = P.frame_for_session("camera-1", P.session("camera-2", 150000 + (4800 - 2250) * 2))
     # rally: an alternate bed from camera-2 in sync with r02 (camera-1 120000..), starting at r02's dissolve
     r02_alt = P.frame_for_session("camera-2", P.session("camera-1", 120000))
+    from studio import bundle as studio_bundle
+    cam3_hint = studio_bundle.capture_hints(plans["manifest"], plans["syncmap"])["camera-3"]["seg-0"]
+    drift400_estimated = _drift_piece(plans, Fraction(10_004, 10_000))
     sets = {}
     sets["edit-plan.court-memories-storyboard"] = [
         bad("executable-command", "An EDL never carries a command", [add("/command", "ffmpeg -i x")]),
@@ -609,14 +681,29 @@ def invalid_sets(P, plans):
         bad("two-annotations", "At most one annotation at a time",
             [add("/segments/2/overlayRefs/-", {"kind": "annotation", "refId": "ann-02", "eventRevision": 3,
                                                "provenance": "reviewed"})], "badOverlays"),
-        bad("hold-bed-over-live", "Hold-bed continues under live play",
-            [rep("/audio/bed/2/outputOutFrame", 2300),
-             rep("/audio/bed/3", {"route": "primary-bed", "sourceId": "camera-1", "sourceInFrame": 150000,
-                                  "outputInFrame": 2300, "outputOutFrame": 5520, "fadeInMs": 20, "fadeOutMs": 20})],
-            "holdBedOverLive"),
+        bad("hold-bed-over-live", "Hold-bed continues under live play (c05)",
+            [rep("/audio/bed/2/outputOutFrame", 5520), rm("/audio/bed/3")], "holdBedOverLive"),
+        bad("primary-bed-under-replay", "The replay of k-02 soundtracked by camera-1 court audio from k-03's contact "
+            "(frame 121000), starting with a 0 ms jump: primary court audio plays only under live play",
+            [rep("/audio/bed/2/outputOutFrame", 2010),
+             add("/audio/bed/3", {"route": "primary-bed", "sourceId": "camera-1", "sourceInFrame": 120900,
+                                  "outputInFrame": 2010, "outputOutFrame": 2250, "fadeInMs": 0, "fadeOutMs": 20})],
+            "courtBedOffLive"),
+        bad("alt-court-bed-under-replay", "Another angle's court audio under the replay is unchecked court audio too",
+            [rep("/audio/bed/2/outputOutFrame", 2010),
+             add("/audio/bed/3", {"route": "alt-bed", "sourceId": "camera-2", "sourceInFrame": 149000,
+                                  "outputInFrame": 2010, "outputOutFrame": 2250, "fadeInMs": 20, "fadeOutMs": 20})],
+            "courtBedOffLive"),
+        bad("score-of-another-point", "The score of p-090 (keeper k-04) over k-02's rally (point p-041)",
+            [rep("/segments/1/overlayRefs/0", {"kind": "score", "refId": "p-090", "eventRevision": 3,
+                                               "provenance": "manual"})], "overlayOutsideMoment"),
+        bad("score-over-another-rally", "The score of p-041 (keeper k-02) over the k-04 rally on camera-2",
+            [rep("/segments/4/overlayRefs/0", {"kind": "score", "refId": "p-041", "eventRevision": 3,
+                                               "provenance": "reviewed"})], "overlayOutsideMoment"),
         bad("hold-bed-not-dead-time", "The held court audio is session time a later live segment shows",
             [rep("/segments/4/sourceInFrame", c05_in), rep("/segments/4/sourceOutFrame", c05_in + 6540),
-             rep("/segments/4/sessionInUs", c05_session), rep("/segments/4/protectedFrames", [])], "holdBedNotDeadTime"),
+             rep("/segments/4/sessionInUs", c05_session), rep("/segments/4/protectedFrames", []),
+             rep("/segments/4/overlayRefs", [])], "holdBedNotDeadTime"),
         bad("hold-bed-jump", "Hold-bed must continue the primary bed without a jump", [rep("/audio/bed/2/sourceInFrame", 75000)],
             "holdBedNotContinuous"),
         bad("alt-bed-mid-segment", "Switching angle audio only at a segment boundary",
@@ -669,7 +756,16 @@ def invalid_sets(P, plans):
             [rep("/audio/narration/voice", "generated"), rep("/audio/narration/disclosureTemplateId", "label.narration-generated")],
             "consentMissing"),
     ]
+    r04_primary = P.frame_for_session("camera-1", P.session("camera-2", 150700))
     sets["edit-plan.rally-pulse-portrait"] = [
+        bad("primary-returns-hard-at-cut", "The primary bed returning at another position of camera-1 (in sync with "
+            "r04) after the held bed is a switch: it fades in for at least 20 ms even at a cut",
+            [rep("/audio/bed/3", {"route": "primary-bed", "sourceId": "camera-1", "sourceInFrame": r04_primary,
+                                  "outputInFrame": 945, "outputOutFrame": 1350, "fadeInMs": 0, "fadeOutMs": 20})],
+            "fadeTooShort"),
+        bad("same-source-jump-at-dissolve", "r01 -> r02 jumps to another moment of camera-1 at a dissolve: a switch, "
+            "so the fades must span the picture transition (100 ms each way at 6 frames)",
+            [rep("/audio/bed/0/fadeOutMs", 20), rep("/audio/bed/1/fadeInMs", 20)], "fadeTooShort"),
         bad("blind-portrait-crop", "Fill would blindly crop a landscape source into 9:16",
             [rep("/segments/3/framing", {"mode": "fill"})], "framingAspect"),
         bad("pan-too-fast", "1082 units in 10 frames", [rep("/segments/0/framing/windows/1",
@@ -739,6 +835,14 @@ def invalid_sets(P, plans):
                                          "matchCoverage": {"startUs": 3_700_000_000, "endUs": 4_300_000_000},
                                          "transform": None, "fit": None, "anchors": [], "state": "failed",
                                          "reasons": ["too few anchors to fit"], "checkpoints": [], "reviewedAt": None})]),
+        bad("no-overlap-state", "There is no no-overlap state: no shared coverage is a failed piece",
+            [rep("/sources/2/pieces/0/state", "no-overlap")]),
+        bad("hint-offset-invented", "A from-hints piece must carry the capture hint the SourceManifest journal gives, "
+            "never an offset of its own",
+            [rep("/sources/2/pieces/0", _hint_piece(plans, cam3_hint + 1000))], "syncFitMismatch"),
+        bad("implausible-drift-stored-estimated", "Ten exact anchors at 400 ppm stored as estimated (what the old "
+            "1000 ppm gate gave): above the 303 ppm plausibility ceiling the fitter says needs-review",
+            [rep("/sources/2/pieces/0", drift400_estimated)], "syncStateMismatch"),
         bad("reference-restart-invented", "A restarted reference segment with an invented offset and a 1.09 rate: its "
             "placement comes from the capture journal (from-hints, rate 1) or it has none",
             [add("/sources/0/pieces/-", {"segmentId": "seg-1", "sourceDurationUs": 600_000_000,
@@ -849,6 +953,14 @@ def invalid_sets(P, plans):
              rep("/consumedCredits", 2), rep("/releasedCredits", 3), rep("/entries/4/credits", 3)], "badEntryKey"),
         bad("release-outcome-mismatch", "A settled reservation was released as ready, not failed",
             [rep("/entries/4/key", "release:job-film-01:failed")], "badEntryKey"),
+        bad("topup-from-initial-quote", "One accepted quote funds one hold: a top-up keyed by the quote that funded the "
+            "initial hold is a second hold from the same quote",
+            [rep("/entries/0/credits", 2),
+             add("/entries/1", {"entryId": "e-1b", "kind": "reserve", "credits": 2,
+                                "key": "reserve:sample-court-day:2:" + _settled_hash + ":topup:quote-test-01",
+                                "at": "2026-10-07T22:50:06Z"})], "badEntryKey"),
+        bad("quote-is-not-initial", "Without a top-up the funding quote is the initial quote",
+            [rep("/initialQuoteId", "quote-test-00")], "badEntryKey"),
     ]
     sets["usage-reservation.held"] = [
         bad("demo-credits", "Demo identities never reserve", [rep("/environment", "demo")], "demoNeverReserves"),
@@ -856,7 +968,9 @@ def invalid_sets(P, plans):
     sets["quote.sample-illustrative"] = [
         bad("illustrative-accepted", "The screen-37 sample quote can never be accepted",
             [rep("/status", "accepted"), rep("/acceptedAt", "2026-10-07T22:50:00Z"),
-             rep("/consent", {"consentRecordId": "consent-x", "uploadSelectedSources": True, "at": "2026-10-07T22:49:00Z"})],
+             rep("/consent", {"consentRecordId": "consent-x", "uploadSelectedSources": True, "modelProvider": True,
+                              "textClasses": ["ownerNotes"], "retentionDays": 7,
+                              "consentTextVersion": "studio-cloud-consent@1.0.0", "at": "2026-10-07T22:49:00Z"})],
             "illustrativeQuote"),
         bad("long-lived-quote", "Quotes expire within 30 minutes", [rep("/expiresAt", "2026-10-08T00:45:00Z")], "quoteLifetime"),
         bad("client-set-cap", "The cap follows the class minimum and estimate", [rep("/capCredits", 3)], "quoteCapMismatch"),
@@ -871,6 +985,17 @@ def invalid_sets(P, plans):
         bad("accepted-half-second-late", "23:15:00.500Z is after 23:15:00Z (timestamps are parsed, not compared as text)",
             [rep("/acceptedAt", "2026-10-07T23:15:00.500Z")], "quoteExpired"),
         bad("unbound-quote", "A quote is bound to one output spec", [rm("/outputSpecSha256")]),
+        bad("heuristic-quote-with-planner-tokens", "A rules-planned quote estimates no model tokens",
+            [rep("/lineItems/plannerTokensEstimate", 120000)], "plannerMismatch"),
+        bad("model-planning-without-provider-consent", "Model planning needs the explicit model-provider consent",
+            [rep("/plannerChoice", "model"), rep("/lineItems/plannerTokensEstimate", 120000)], "consentMissing"),
+        bad("note-text-without-model-consent", "Note text classes go to a model only with model planning",
+            [rep("/consent/textClasses", ["ownerNotes"])], "badQuote"),
+        bad("consent-retention-differs", "The consent confirms the quote's retention",
+            [rep("/consent/retentionDays", 30)], "badQuote"),
+        bad("retention-not-offered", "Retention is 1, 7 or 30 days (D-3)", [rep("/retentionDays", 14),
+                                                                         rep("/lineItems/storageDays", 14)]),
+        bad("consent-without-model-field", "The consent records the model-provider choice", [rm("/consent/modelProvider")]),
         bad("hash-trailing-newline", "A sha256 with a trailing newline is not a sha256 (ECMA-262 anchors)",
             [rep("/outputSpecSha256", "8" * 64 + "\n")]),
     ]

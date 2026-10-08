@@ -28,7 +28,8 @@ never blur:
 live. The UI always shows which mode it is in: demo, test or live. Signing out keeps offline access to local projects.
 
 **Account deletion** is in-app (App Review 5.1.1(v)). It needs a fresh authentication (a sign-in within the last
-10 minutes, checked from the authentication time, never from a refreshed token's `iat`; `security-model.md` §2.2). It
+10 minutes: the token's Auth session must have been created by that sign-in, checked on the server; a silent refresh
+keeps the old session, and a refreshed token's `iat` is never accepted; `security-model.md` §2.2, §13.4). It
 deletes the Supabase user, every cloud row the user owns (their projects, lessons and everything under them) and every
 R2 object derived from them, including the clip excerpts of their lessons that live under another owner's project
 prefix (enumerated through their lessons' clips, not by project prefix), but never local originals unless the user

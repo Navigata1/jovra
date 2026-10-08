@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room snapshot envelope (jovra.room.snapshot/1)",
+  "description": "Latest-state replacement published by the elected host. Receivers reject the wrong session, an older host epoch, another host key or host device under the same epoch, any non-increasing snapshotSeq and any decreasing eventRevision; a newer epoch is refused without any state change until an authenticated host transfer is reconciled. Device entries must be on the roster, which changes only with a higher rosterRevision. No field asserts freshness: each receiver derives it from ageAtHostMs plus its own monotonic time.",
+  "type": "object",
+  "required": ["schemaVersion", "sample", "sessionId", "hostDeviceId", "hostEpoch", "hostKeySha256", "snapshotSeq", "eventRevision", "freshnessPolicy", "capabilities", "roster", "devices", "receipts"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.room.snapshot/1"},
+    "sample": {"$ref": "room-common.schema.json#/$defs/sample"},
+    "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "hostDeviceId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "hostEpoch": {"$ref": "room-common.schema.json#/$defs/hostEpoch"},
+    "hostKeySha256": {"$ref": "room-common.schema.json#/$defs/sha256"},
+    "snapshotSeq": {"$ref": "room-common.schema.json#/$defs/seq"},
+    "eventRevision": {"$ref": "room-common.schema.json#/$defs/revision"},
+    "freshnessPolicy": {"$ref": "room-common.schema.json#/$defs/freshnessPolicy"},
+    "capabilities": {"$ref": "room-common.schema.json#/$defs/capabilities"},
+    "score": {"$ref": "room-common.schema.json#/$defs/scoreSummary"},
+    "roster": {"$ref": "room-common.schema.json#/$defs/roster"},
+    "devices": {
+      "description": "One to six consenting camera phones.",
+      "type": "array", "maxItems": 6,
+      "items": {"$ref": "device-status.schema.json#/$defs/deviceStatus", "required": ["ageAtHostMs"]}
+    },
+    "receipts": {"type": "array", "maxItems": 64, "items": {"$ref": "receipt.schema.json#/$defs/receipt"}}
+  }
+}

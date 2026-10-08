@@ -53,7 +53,9 @@ the invite with a fresh device key, the host compares the six-digit code derived
 phones and approves, and the guest proves possession of the key (`docs/backend/architecture.md` §6.1,
 `security-model.md` §8.2). Redemption alone grants nothing. A
 guest can upload its assigned source but cannot browse anyone else's footage. Sharing one lesson clip shares that
-clip only, never the match.
+clip only, never the match, and a coach's clip of the owner's match is shareable only for the exact window the
+project owner approved (moving it withdraws the approval). Coach, lesson, film and clip invitations are bound to the
+invitee's confirmed email, so a forwarded code is useless to anyone else (`security-model.md` §13.2, §13.8).
 
 **Tenant isolation** covers every place data lives: metadata, originals, proxies, frames, thumbnails, vectors,
 films, queue messages and logs. Queue messages carry only an attempt ID, never media, signed URLs, lease tokens,

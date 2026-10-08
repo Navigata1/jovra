@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/receipt.accepted-point.json",
+  "cases": [
+    {
+      "id": "accepted-without-event",
+      "why": "An accepted point names the event it created exactly once",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/appliedRecordId",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "acceptedWithoutRecord"
+      },
+      "acceptanceRows": [
+        9
+      ]
+    }
+  ]
+}

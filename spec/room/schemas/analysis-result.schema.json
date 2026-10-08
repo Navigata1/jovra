@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room analysis result envelope (jovra.room.analysis-result/1)",
+  "description": "An optional, phone-produced metric forwarded to participants and watches only when its capability is active. It is source-linked (device, segment, frame range, point event), carries its provenance label, model/calibration version, units and uncertainty, or an unavailable reason instead of a value. It never changes the score (scoreEffect is always none) and keeps its own timestamp and point so an old result is never relabelled as current. v1 has no live serve speed and no automated line calls; wrist movement is not ball speed.",
+  "type": "object",
+  "required": ["schemaVersion", "sample", "resultId", "sessionId", "capabilityId", "kind", "sourceRefs", "pointEventId", "producedAt", "producedAtEventRevision", "label", "modelVersion", "calibrationId", "value", "units", "uncertainty", "unavailableReason", "reviewState", "scoreEffect"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.room.analysis-result/1"},
+    "sample": {"$ref": "room-common.schema.json#/$defs/sample"},
+    "resultId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "capabilityId": {"description": "An id in spec/contracts/capability-registry.v1.json (drift-checked).", "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*(\\.[a-z][a-zA-Z0-9]*)*$"},
+    "kind": {"enum": ["serveSpeed", "bounceHint"]},
+    "sourceRefs": {"type": "array", "minItems": 1, "maxItems": 6, "items": {"$ref": "room-common.schema.json#/$defs/sourceRef"}},
+    "pointEventId": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/id"}]},
+    "producedAt": {"$ref": "room-common.schema.json#/$defs/dateTime"},
+    "producedAtEventRevision": {"$ref": "room-common.schema.json#/$defs/revision"},
+    "label": {"$ref": "room-common.schema.json#/$defs/provenanceLabel"},
+    "modelVersion": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]{0,63}$"}]},
+    "calibrationId": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/id"}]},
+    "value": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/decimalString"}]},
+    "units": {"oneOf": [{"type": "null"}, {"enum": ["mph", "km/h", "m/s", "cm"]}]},
+    "uncertainty": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "required": ["lower", "upper", "level"], "additionalProperties": false,
+         "properties": {"lower": {"$ref": "room-common.schema.json#/$defs/decimalString"}, "upper": {"$ref": "room-common.schema.json#/$defs/decimalString"}, "level": {"enum": ["p90", "p95", "range"]}}}
+      ]
+    },
+    "unavailableReason": {"oneOf": [{"type": "null"}, {"enum": ["capabilityAbsent", "capabilityUnsupported", "calibrationMissing", "clockAlignmentMissing", "occluded", "lowConfidence", "notYetProduced"]}]},
+    "reviewState": {"enum": ["notRequired", "reviewNeeded", "reviewed"]},
+    "scoreEffect": {"const": "none"}
+  }
+}

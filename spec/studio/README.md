@@ -13,8 +13,8 @@ spec/schemas/studio/          JSON Schema 2020-12, one file per record; studio-c
 spec/studio/contracts/        data apps read: story-profiles.v1.json, render-job-transitions.v1.json, credit-classes.v1.json
 spec/studio/fixtures/
   records/                    31 valid records for one Sample project (sample-court-day)
-  invalid/                    25 files, 168 cases: patches to a valid record that must be rejected
-  vectors/                    7 files, 135 cases: sync fits, sound delays, job transitions, ledger, credits, sample
+  invalid/                    25 files, 172 cases: patches to a valid record that must be rejected
+  vectors/                    7 files, 137 cases: sync fits, sound delays, job transitions, ledger, credits, sample
                               truth, EDLs against a patched trusted context (edl-context)
 spec/reference/studio/        reference package `studio` (core, edl, syncfit, jobstate, ledger, records, bundle)
                               and the deterministic generator (generate_studio_fixtures.py + _records + _cases)
@@ -28,9 +28,9 @@ python3 spec/reference/studio/generate_studio_fixtures.py   # rewrites spec/stud
 python3 scripts/spec/validate_studio.py                      # add -v for detail
 ```
 
-Current result (2026-10-07, after review round 2): `RESULT: PASS`, with 20 schemas (ECMA-262 pattern anchors), 31
-records, 15 cross-record mutations rejected, 168 invalid cases rejected (141 by the reference with the expected code,
-27 by the schema), 135 vector cases, 4 trusted-context self-tests, 4 capture-hint self-tests and 64 generated files
+Current result (2026-10-07, after review round 3): `RESULT: PASS`, with 20 schemas (ECMA-262 pattern anchors), 31
+records, 15 cross-record mutations rejected, 172 invalid cases rejected (144 by the reference with the expected code,
+28 by the schema), 137 vector cases, 4 trusted-context self-tests, 4 capture-hint self-tests and 64 generated files
 current. The core gate `scripts/spec/validate.py` and its shared `jsonschema_subset.py` are untouched.
 
 **Why the fixtures are not in `spec/fixtures/studio/`.** The core validator walks every `spec/fixtures/**/*.json` and
@@ -69,13 +69,13 @@ owner of that file.
 | `observation` | Kind, source time, session time, sync/event revision, capability and version, provenance (producer, confidence, calibration dependency, benchmark), status, reviewer | Estimated needs a capability, producer and confidence; manual is a person with no confidence; reviewed names the reviewer; validated needs a benchmark; a calibration-dependent capability without a calibration is rejected; an accepted estimate is refused |
 | `keeper-catalog` | Keepers bound to point events at one event revision, with views per source, contact frames, selection and provenance | An event appears in at most one keeper (a second angle is a view); one primary view; contacts inside a view |
 | `broll-catalog` | Origin, `depictsThisMatch`, rights (holder, scope, record), disclosure label, location and people | Stock, generated or other-day footage never depicts this match; stock or generated material is labelled and has a rights record |
-| `story-profile` | The five profiles, with their text carried over unchanged from `design-reference/studio/brief/story-profiles.json`, plus a versioned machine grammar | Grammar duration equals the recommended range; replay speeds exist only where replays are allowed; an estimated cue is never instruction |
+| `story-profile` | The five profiles, with their text carried over unchanged from `design-reference/studio/brief/story-profiles.json`, plus `exportAudio` (D-1: the Include audio default for files that leave the app, always shown; junior mode forces no audio and no switch) and a versioned machine grammar | Grammar duration equals the recommended range; replay speeds exist only where replays are allowed; an estimated cue is never instruction; Include audio starts on only for Rally Pulse and Court Memories |
 | `story-brief` | The planner's proposal (the research's "StoryPlan"): profile/revision, bindings, planner kind and pinned model id, feeling, audience, aspect, audio policy, privacy, beats made of ids and enums, before/after comparisons, omitted ideas | Every beat has evidence (keeper, B-roll item or card template); ops and overlays allowed by the profile; a change claim needs reviewed evidence on both sides and no user-chosen selection; the comparison display is re-derived (`12 / 30 · 40%`, `+20 percentage points`) |
 | `edit-plan` | **`jovra.edit-plan/2`** (below) | `edl.validate` (requires the trusted context) |
 | `reference-catalog` | The trusted index of everything an EDL or brief names by id: score states, points and stats at one event revision, user and lesson notes, cues, annotations (kind, stored provenance, origin), narration consents (participant, scope, granted), music rights (asset, scope) | Unique ids; kind follows the origin; one event revision; bundle: cues and lesson notes carry their lesson's provenance, consents name a ProjectLock participant, brief overlays and notes resolve |
 | `render-job` | State, `resumeStage` (only a stage the state can return to), attempt, quote/reservation, idempotency key, per-stage progress, delivered artifacts, full history | `jobstate.Machine.replay` must reach the stored state, resume stage and attempt; `ready` only when every listed artifact resolves to a verified film of this job (bundle) |
-| `quote` | Film class, estimate and cap in credits, cost estimate, line items, retention, illustrative display amounts, expiry, status, consent, **`outputSpecSha256`** | Cap = `max(class minimum, ceil(cost / 800 000 µUSD))`; at most 30 min; an illustrative quote is Sample, never accepted, and is the only kind that shows dollars; acceptance needs consent before expiry (parsed times); the job, reservation and quote share one output-spec hash (bundle) |
-| `usage-reservation` | Idempotency key `(projectId, planRevision, outputSpecSha256)`, cap, reserved/consumed/released credits, keyed entries | Totals equal entries; keys unique; at most one consume entry per job and stage; within cap; closed reservations account for every credit; demo holds zero; demo/test are Sample; live is refused |
+| `quote` | Film class, **`plannerChoice`** (`heuristic` or `model`), estimate and cap in credits, cost estimate, line items, retention (1, 7 or 30 days, D-3), illustrative display amounts, expiry, status, consent (upload, `modelProvider`, `textClasses`, `retentionDays`, `consentTextVersion`), **`outputSpecSha256`** | Cap = `max(class minimum, ceil(cost / 800 000 µUSD))`; at most 30 min; an illustrative quote is Sample, never accepted, and is the only kind that shows dollars; acceptance needs consent before expiry (parsed times); the job, reservation and quote share one output-spec hash (bundle); a rules-planned quote estimates no model tokens and records `modelProvider: false`, a model quote needs `modelProvider: true`, the consent confirms the retention, and a film binds the planner kind its quote covered (bundle) |
+| `usage-reservation` | Idempotency key `(projectId, planRevision, outputSpecSha256)`, job, initial and current quote, cap, reserved/consumed/released credits, keyed entries | Totals equal entries; keys unique; at most one consume entry per job and stage; within cap; closed reservations account for every credit; demo holds zero; demo/test are Sample; live is refused |
 | `delivered-artifact` | Media facts, chapters, captions, full bindings (source hashes, revisions, profile, planner, edit-plan hash, story-brief revision), verification, private delivery and share link, retention, YouTube preparation (`published` const false), stale marker | Chapters tile the film; `passed` needs probe, full decode, frame count, audio and overlay provenance; share links last at most 24 h and only for verified films; demo stays on the device |
 | `lesson` | Date, focus, coach, notes, clips, source-linked cues with provenance, practice checklist, next goal, films, sharing | Notes and cues link this lesson's clips; coach notes need a coach; estimated cues come from an observation and are not reviewed; practice status follows done/target (a five-clip goal with three clips saved is valid) |
 | `camera-invite` | Roster (one primary plus up to five cameras, each with a slot, status, recording acknowledgement and permissions) and invitations (display code, single use, host approval, TLS fingerprint, at most 10 min) | One primary at the near baseline; cameras never get host controls; ready means joined and acknowledged; invites expire within 10 min, bind one device, never target a filled slot; the demo accepts none |
@@ -114,22 +114,30 @@ inside coverage, the current event revision on every overlay, and allowlists. Th
   window, also when `keeperId` is null (`contactUnprotected`).
 - **Overlays:** `score`, `metric`, `note`, `cue` and `annotation` are references to stored records, never values.
   Each is bound to the plan's event revision (an older one is `staleRevision`) and must carry a provenance the
-  profile allows. At most one annotation is shown at a time.
+  profile allows. At most one annotation is shown at a time. A point's `score` or `metric` (a ReferenceCatalog entry
+  whose origin is a point event) is bound to that point's moment: over live, replayed or frozen match play it is
+  shown only when the play's session time lies inside the session window of a keeper whose `eventRefs` carry the
+  point (`overlayOutsideMoment`; the context carries these windows as `references[refId].pointWindows`, and the
+  bundle also checks a live or replayed segment's named keeper). Score states and stats are not bound to one rally.
 - **Output and framing:** aspect `16:9`, `9:16`, `1:1` or `4:5`. `fill` only when the aspects match and with no
   upscale. `letterbox` always works. `reframe` only from a reviewed action-safe box, with keyframes in 1/10 000 of
   the frame, matching aspect, at most 2× upscale and a bounded pan speed. Match Broadcast letterboxes.
 - **Audio:** exactly one bed route per output frame:
   - `primary-bed` is the designated court source, in sync with every live frame to within half an output frame,
-    through the session clock.
+    through the session clock. It sits only under live segments, and so does an `alt-bed` from a match source
+    (`courtBedOffLive`): under a replay, freeze, card or B-roll, court audio is `hold-bed` over real dead time, B-roll
+    audio, or silence, never unchecked court audio from another moment.
   - `hold-bed` continues the primary without a jump under non-live segments, over real dead time that no live
     segment shows.
   - `alt-bed` is another source's audio, with fades of at least 20 ms.
-  - Every change of bed source (to or from an `alt-bed`, the return to the primary, or to or from silence) sits on a
-    segment boundary (`bedSwitchNotAtBoundary`). At a cut, each sounding side fades for at least 20 ms. At a
+  - Every change of bed source (to or from an `alt-bed`, the return to the primary, or to or from silence), and every
+    jump to another position of the same source, sits on a segment boundary (`bedSwitchNotAtBoundary`). At a cut, each sounding side fades for at least 20 ms. At a
     dissolve or dip, the switch is an audio dip across the picture transition: the outgoing bed fades out over at
     least the transition frames before the boundary and the incoming bed fades in over at least those after it
     (`fadeTooShort`), so two sources' court audio never play at once.
-  - `silence` is explicit. An all-silent plan is allowed: D5 exports default to no audio.
+  - `silence` is explicit. An all-silent plan is allowed (for example a junior-mode or silent-source film). A
+    no-audio export of a film with sound is not an all-silent plan: it is a separately verified no-audio artifact of
+    the same plan (spec D-1; the cloud side is `docs/backend/architecture.md` §9.1, the `remux_no_audio` step).
 
   Narration is optional and must be consented, ducked by 6–24 dB, grounded in notes and labelled when generated.
   Music needs a rights record covering the private film. Both are allowed only where the profile allows them.
@@ -159,8 +167,10 @@ inside coverage, the current event revision on every overlay, and allowlists. Th
   so far that every anchor was trimmed while the map stayed reviewable.)
 - **Guards:** every anchor lies inside its piece (`0 ≤ sourceTimeUs < sourceDurationUs`, else `badAnchor`); a piece
   with fewer than two inliers is `failed` with no transform and no statistics; a fitted rate outside 0.9–1.1 fails
-  the device; a drift above 1000 ppm (real phones: about 8 ppm; the stress fixture: 300 ppm) adds a needs-review
-  reason. A piece has `matchCoverage` exactly when it has a transform (schema `if`/`then` and the reference).
+  the device. Drift plausibility is a reviewable reason, never a rejection (multicam-sync.md §4.6: phones measure
+  about 8 ppm, realistic is 1–50 ppm, 300 ppm is the stress fixture): above 303 ppm (the 300 ppm stress ceiling plus
+  the ±3 ppm drift tolerance of research S2) the piece needs review; above 1000 ppm (exactly 30 vs 29.97 fps) the
+  reason names a likely frame-rate or timebase mislabel. The Sample Camera 2 (300.102 ppm) stays `estimated`. A piece has `matchCoverage` exactly when it has a transform (schema `if`/`then` and the reference).
 - **Speed of sound:** audio anchors subtract the sound travel from the event position to each phone before fitting.
   The delay, `sqrt(d²)·10⁶ / c`, is computed exactly with `isqrt`, with c = 343 m/s or `331.3·√(1 + T/273.15)` m/s
   rounded to mm/s.
@@ -175,7 +185,8 @@ inside coverage, the current event revision on every overlay, and allowlists. Th
   - On the reference device only `referenceSegmentId` is `reference` (rate 1). A restarted reference segment is
     `from-hints` from its own journal (rate 1, offset derived, never invented) or `failed`; it is shown, not cut.
   - Only a person sets `reviewed`, and only on a fit with at least three inliers (with two, an outlier is invisible)
-    and a drift of at most 1000 ppm (`reviewOfWeakFit`). `validated` is never given to a single map.
+    (`reviewOfWeakFit`). An implausible drift does not bar review: a correct fit through a mislabelled timebase is a
+    real map, and the checkpoints are the safeguard. `validated` is never given to a single map.
 
 ### Job state machine (`render-job-transitions.v1.json`, `jobstate.py`)
 
@@ -206,11 +217,17 @@ amounts **proposal, not a price**.
   **tops up** the held reservation (`topup`), and the old quote becomes `superseded`.
 - **Stage key:** consumption is written when a stage attempt succeeds and is keyed by `(jobId, stage)`; a later
   attempt of a charged stage replays instead of charging again, and a failed attempt writes nothing.
+- **One job per reservation:** the reservation names its job when the job is created (`reserve(job_id=…)` or
+  `attach_job`; another job is `jobMismatch`). `consume` must name that job (`jobMismatch`) and a charged stage of
+  the job contract spelled exactly (`unknownStage`), so one hold is never consumed by another job or under a
+  respelled or invented stage.
 - **Retries after a top-up:** a reservation remembers every `(quoteId, credits)` request it applied, so a
   redelivered original reserve or a redelivered top-up replays (no charge, no error).
 - **Stored entries are tied to the record** (`badEntryKey`): reserve keys are
   `reserve:<projectId>:<planRevision>:<outputSpecSha256>` (the record's own key, one initial entry, first) or that key
-  plus `:topup:<quoteId>` (the bundle requires an accepted quote for the same output); consume keys are
+  plus `:topup:<quoteId>`, where the top-up quote is neither the record's `initialQuoteId` (the quote that funded
+  the first hold) nor one an earlier top-up used, and without a top-up `quoteId` equals `initialQuoteId` (the bundle
+  requires an accepted quote for the same output, and every quote a top-up replaced to be `superseded`); consume keys are
   `consume:<jobId>:<stage>:<attempt>` with the record's job and a charged stage spelled exactly as in the job
   contract; release keys are `release:<jobId>:<outcome>` matching the status; the key prefix is the entry kind.
 - **Types and time:** credits are integers, never booleans (`badAmount`); timestamps are parsed, never compared as
@@ -242,7 +259,7 @@ amounts **proposal, not a price**.
     reservations (Sample credits; no money moves), two jobs (the screen-38 queue at a Sample 42% of `preview_rendering`, and a ready job with a pause
     and a retry) and the delivered film (412 MB illustrative, verified, 24 h private link, YouTube prepared but not
     published).
-- **Invalid (151 cases).** These include executable fields, approval or URL fields, unlabelled speeds, copied score
+- **Invalid (172 cases).** These include executable fields, approval or URL fields, unlabelled speeds, copied score
   digits, stale overlay/event/sync revisions, gaps, overruns, forged session time, integral floats, transitions
   that are too long, lack handles or cover a contact, audio that is out of sync or missing during live play,
   hold-bed over live or over shown time, alt-bed mid-segment, missing consent or disclosure, music outside the
@@ -258,10 +275,13 @@ amounts **proposal, not a price**.
   an unlabelled live re-showing of a moment, contact protection switched off by a null keeper, a plan of another
   project, a bed returning to the primary mid-segment, an alternate bed switching hard at a dissolve, a failed sync
   piece with coverage, an invented reference restart, reserve/consume/release entry keys of another output, job or
-  stage (or with the wrong prefix or outcome), and ids and hashes with a trailing newline.
-- **Vectors (135 cases).**
-  - Sync fits (15; research S1, S2, S5–S10, S14, hint-only, manual, a 2 s gross outlier recovered by the robust start,
-    two inconsistent clusters that fail, two anchors that cannot be reviewed, and a 1500 ppm drift flagged for review).
+  stage (or with the wrong prefix or outcome), and ids and hashes with a trailing newline. Review round 3 added: a
+  primary bed returning hard (0 ms fade) at a cut, a `no-overlap` sync state, a from-hints offset that is not the
+  journal's, and a 400 ppm map stored as `estimated`.
+- **Vectors (137 cases).**
+  - Sync fits (17; research S1, S2, S5–S10, S14, hint-only, manual, a 2 s gross outlier recovered by the robust start,
+    two inconsistent clusters that fail, two anchors that cannot be reviewed, 400 ppm and 1500 ppm drifts flagged for
+    review but still reviewable, and 303 ppm at the ceiling still estimated).
   - EDL against a patched trusted context (4): Camera 2 split into two adjacent coverage intervals (a restart).
   - Sound delays (48), reproducing the multicam research §4.4 tables within 0.1 ms, including pairwise biases and
     c(T).
@@ -287,7 +307,10 @@ amounts **proposal, not a price**.
    2× reframe upscale, 50 units per frame of pan) are INFERRED from film-engine §6 and must be tuned on footage.
 7. Credit minimums and the $0.80 credit budget are copied from the pricing research as a labelled proposal. Money
    amounts appear only in an illustrative Sample quote.
-8. Cross-record coverage checks (`bundle.trusted_sources`) offer single-segment sources only. The EDL validator's
+8. Cross-record coverage checks (`bundle.trusted_sources`) offer single-segment sources only: a match source is
+   offered only when its manifest records one segment and its one sync piece maps exactly that segment. The sync map
+   must carry exactly one piece per recorded segment of every match source (`unmappedSegment`), so a restarted
+   segment can never be dropped and its frames cut through the first piece's transform. The EDL validator's
    piecewise coverage is pinned by the `edl-context` vectors (a two-interval Camera 2), and the fitter by S8.
 9. Schema `pattern`s use ECMA-262 anchors: `validate_studio.py` runs the shared subset checker with `$` meaning end
    of input (Python's `$` also accepts a trailing newline). The core gate's `scripts/spec/jsonschema_subset.py` still
