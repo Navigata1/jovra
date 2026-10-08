@@ -5,14 +5,17 @@ Usage: scripts/l10n/literal_lint.py [path ...]      (default: ios/Jovra)
 
 Accepted forms: Text("key", tableName: "Home"), String(localized: "key", table: "Home"),
 LocalizedStringResource("key", table: "Home"), and Text(verbatim:) for text that is never translated
-(the brand, the public contact address). Flagged, unless the call names a table:
+(the brand, the public contact address); verbatim text is still checked by copy_lint.py. Flagged, unless the call names a table:
   - a string literal as the first argument of a SwiftUI text-taking view (Text, Button, Label, ...);
-  - a string literal passed to .accessibilityLabel/Hint/Value, .navigationTitle or .help;
+  - a string literal passed to .accessibilityLabel/Hint/Value, .navigationTitle, .help, .alert,
+    .confirmationDialog or .badge;
+  - LocalizedStringKey("literal") unless the call it is passed to names a table;
   - a string literal in a display argument (title:, subtitle:, message:, text:, label:, caption:, ...)
     or assigned to a display property (var title = "...");
   - String(localized:) / LocalizedStringResource without table:;
   - a literal returned from a switch case inside a display property (var title/label/...: String).
-Strings with no letters are ignored. `#Preview` blocks are skipped. A line ending in
+Only a tableName:/table: that is a top-level argument of the matched call counts, never one inside a
+nested call, a closure or an interpolation. Strings with no letters are ignored. `#Preview` blocks are skipped. A line ending in
 `// l10n-lint: ignore (reason)` is skipped; a file starting with `// l10n-lint: ignore-file (reason)`
 is skipped (the reason is required). Exit status 1 when anything is flagged.
 """
@@ -24,9 +27,13 @@ import sys
 from dataclasses import dataclass
 
 VIEWS = ("Text|Button|Label|Toggle|Link|TextField|SecureField|Picker|Section|Menu|LabeledContent|"
-         "Stepper|DatePicker|ProgressView|ContentUnavailableView|ShareLink|Tab|GroupBox|DisclosureGroup")
+         "Stepper|DatePicker|ProgressView|ContentUnavailableView|ShareLink|Tab|GroupBox|DisclosureGroup|NavigationLink")
 VIEW_CALL = re.compile(rf"(?<![\w.])(?:{VIEWS})\s*\(\s*(?=\")")
-MODIFIER_CALL = re.compile(r"\.(?:accessibilityLabel|accessibilityHint|accessibilityValue|navigationTitle|help)\s*\(\s*(?=\")")
+MODIFIER_CALL = re.compile(
+    r"\.(?:accessibilityLabel|accessibilityHint|accessibilityValue|navigationTitle|help|alert|confirmationDialog|badge)"
+    r"\s*\(\s*(?=\")")
+KEY_CALL = re.compile(r"(?<![\w.])LocalizedStringKey\s*\(\s*(?=\")")
+TABLE_LABEL = re.compile(r"^\s*(?:tableName|table)\s*:")
 DISPLAY_ARGUMENT = re.compile(
     r"(?<![\w.])(?:title|subtitle|message|text|label|caption|placeholder|prompt|hint|detail|headline|footnote)\s*:\s*(?=\")")
 LOCALIZED_CALL = re.compile(r"(?:String\s*\(\s*localized:\s*|LocalizedStringResource\s*\(\s*)(?=\")")
@@ -89,6 +96,33 @@ def _call_end(text: str, open_paren: int) -> int:
                 return index + 1
         index += 1
     return index
+
+
+def _top_level_arguments(text: str, span: tuple[int, int]) -> list[str]:
+    """The comma-separated arguments of the call at `span`, ignoring commas inside nested calls,
+    closures, collections and string literals (and so inside interpolations)."""
+    arguments, depth, start, index = [], 0, span[0] + 1, span[0] + 1
+    end = span[1] - 1
+    while index < end:
+        char = text[index]
+        if char == '"':
+            index = _string_end(text, index)
+            continue
+        if char in "([{":
+            depth += 1
+        elif char in ")]}":
+            depth -= 1
+        elif char == "," and depth == 0:
+            arguments.append(text[start:index])
+            start = index + 1
+        index += 1
+    arguments.append(text[start:end])
+    return arguments
+
+
+def _names_a_table(text: str, span: tuple[int, int] | None) -> bool:
+    """True when the call at `span` has a top-level tableName:/table: argument."""
+    return bool(span) and any(TABLE_LABEL.match(argument) for argument in _top_level_arguments(text, span))
 
 
 def _literal(text: str, start: int) -> str:
@@ -189,7 +223,7 @@ def lint_source(text: str, path: str) -> list[Violation]:
 
     seen: set[int] = set()
 
-    def check_call(pattern: re.Pattern[str], message: str, needs_table_in_call: bool) -> None:
+    def check_call(pattern: re.Pattern[str], message: str, needs_table_in_call: bool, outer: bool = False) -> None:
         for match in pattern.finditer(text):
             literal_start = match.end()
             if literal_start in seen or is_skipped(match.start()):
@@ -198,8 +232,9 @@ def lint_source(text: str, path: str) -> list[Violation]:
             if not LETTER.search(literal):
                 continue
             span = _enclosing_call(text, literal_start)
-            call_text = text[span[0]:span[1]] if span else literal
-            if needs_table_in_call and re.search(r"\b(?:tableName|table)\s*:", call_text):
+            # A LocalizedStringKey takes its table from the call it is passed to.
+            table_span = _enclosing_call(text, match.start()) if outer else span
+            if needs_table_in_call and _names_a_table(text, table_span):
                 continue
             seen.add(literal_start)
             head_start = match.start()
@@ -210,6 +245,7 @@ def lint_source(text: str, path: str) -> list[Violation]:
     check_call(VIEW_CALL, "hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:))", True)
     check_call(MODIFIER_CALL, "hard-coded accessibility or title literal (pass a String(localized:table:) or Text)", False)
     check_call(DISPLAY_ARGUMENT, "hard-coded display argument (pass String(localized:table:))", True)
+    check_call(KEY_CALL, "LocalizedStringKey from a literal without a table (pass tableName: to the view)", True, outer=True)
     check_call(DISPLAY_DEFAULT, "hard-coded display property value (use String(localized:table:))", False)
 
     display_property_open = False

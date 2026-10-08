@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Copy lint over String Catalogs: no claim one camera cannot back (story 371), no sample-only value.
+"""Copy lint: no claim one camera cannot back (story 371), no sample-only value, anywhere in the app.
 
-Usage: scripts/l10n/copy_lint.py [catalog.xcstrings | directory ...]   (default: every catalog in ios/)
+Usage: scripts/l10n/copy_lint.py [catalog.xcstrings | file.swift | directory ...]
+       (default: every String Catalog in ios/ and every Swift string literal in the app target ios/Jovra)
 
-Every key and every localized value (plural and device variations included) is checked against the
-banned terms below. An entry may allow one rule when it states what JOVRA does *not* do, by putting
-`copy-lint: allow <rule> — <reason>` in the entry's comment; the reason is required.
+Every catalog key and localized value (plural and device variations included), and every string literal
+in the app's Swift sources (Text(verbatim:), accessibility labels, anything else outside comments), is
+checked against the banned terms below. A catalog entry may allow one rule when it states what JOVRA
+does *not* do, by putting `copy-lint: allow <rule> — <reason>` in the entry's comment; a Swift line may
+do the same with a trailing `// copy-lint: allow <rule> — <reason>`. The reason is required.
+A directory argument covers its catalogs and its Swift files outside test folders (*Tests).
 Exit status 1 when anything is flagged.
 """
 from __future__ import annotations
@@ -15,6 +19,9 @@ import pathlib
 import re
 import sys
 from dataclasses import dataclass
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from literal_lint import _comment_spans, _string_end  # noqa: E402
 
 RULES: list[tuple[str, re.Pattern[str], str]] = [
     ("spin-rate", re.compile(r"\bspin[- ]rates?\b", re.I), "no spin measurement (CLAUDE.md rule 1)"),
@@ -81,19 +88,68 @@ def lint_catalog(path: pathlib.Path) -> list[Finding]:
     return findings
 
 
+def _string_literals(text: str):
+    """(offset, literal) for every string literal outside comments (interpolations stay inside)."""
+    comments = _comment_spans(text)
+    index = 0
+    while index < len(text):
+        if any(start <= index < end for start, end in comments):
+            index = next(end for start, end in comments if start <= index < end)
+            continue
+        if text[index] == '"':
+            end = _string_end(text, index)
+            yield index, text[index:end]
+            index = end
+            continue
+        index += 1
+
+
+def lint_swift(path: pathlib.Path) -> list[Finding]:
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    findings: list[Finding] = []
+    for offset, literal in _string_literals(text):
+        number = text.count("\n", 0, offset) + 1
+        allowed = {match.group("rule") for match in ALLOW.finditer(lines[number - 1])}
+        for rule, why in check_text(literal):
+            if rule not in allowed:
+                findings.append(Finding(str(path), f"line {number}", rule, literal, why))
+    return findings
+
+
+IGNORED_DIRECTORIES = {".derivedData", "DerivedData", ".build", "build"}
+
+
 def find_catalogs(root: pathlib.Path) -> list[pathlib.Path]:
-    ignored = {".derivedData", "DerivedData", ".build", "build"}
-    return sorted(p for p in root.rglob("*.xcstrings") if not ignored.intersection(p.parts))
+    return sorted(p for p in root.rglob("*.xcstrings") if not IGNORED_DIRECTORIES.intersection(p.parts))
+
+
+def find_swift_sources(root: pathlib.Path) -> list[pathlib.Path]:
+    """App Swift sources under `root`; test targets are skipped (their fixtures quote banned copy)."""
+    return sorted(p for p in root.rglob("*.swift")
+                  if not IGNORED_DIRECTORIES.intersection(p.parts)
+                  and not any(part.endswith("Tests") for part in p.relative_to(root).parts[:-1]))
+
+
+def default_targets(root: pathlib.Path) -> tuple[list[pathlib.Path], list[pathlib.Path]]:
+    """(catalog roots, Swift roots) linted when no argument is given."""
+    return [root / "ios"], [root / "ios" / "Jovra"]
 
 
 def main(argv: list[str]) -> int:
     root = pathlib.Path(__file__).resolve().parents[2]
-    targets = [pathlib.Path(arg) for arg in argv] or [root / "ios"]
-    catalogs = [c for t in targets for c in ([t] if t.is_file() else find_catalogs(t))]
+    if argv:
+        targets = [pathlib.Path(arg) for arg in argv]
+        catalog_roots, swift_roots = targets, targets
+    else:
+        catalog_roots, swift_roots = default_targets(root)
+    catalogs = [c for t in catalog_roots for c in ([t] if t.suffix == ".xcstrings" else [] if t.is_file() else find_catalogs(t))]
+    sources = [s for t in swift_roots for s in ([t] if t.suffix == ".swift" else [] if t.is_file() else find_swift_sources(t))]
     findings = [finding for catalog in catalogs for finding in lint_catalog(catalog)]
+    findings += [finding for source in sources for finding in lint_swift(source)]
     for finding in findings:
         print(finding)
-    print(f"copy lint: {len(findings)} finding(s) in {len(catalogs)} catalog(s)")
+    print(f"copy lint: {len(findings)} finding(s) in {len(catalogs)} catalog(s) and {len(sources)} Swift file(s)")
     return 1 if findings else 0
 
 

@@ -45,6 +45,26 @@ class LiteralLintTests(unittest.TestCase):
         '''
         self.assertEqual([v.line for v in lint(source)], [2, 3, 4, 5, 6, 7])
 
+    def test_flags_alert_and_confirmation_dialog_titles(self):
+        self.assertEqual(len(lint('view.alert("Delete session?", isPresented: $shown) { }')), 1)
+        self.assertEqual(len(lint('view.confirmationDialog("Discard clip?", isPresented: $shown) { }')), 1)
+
+    def test_flags_navigation_links_and_badges(self):
+        self.assertEqual(len(lint('NavigationLink("Open settings") { SettingsView() }')), 1)
+        self.assertEqual(len(lint('view.badge("New")')), 1)
+        self.assertEqual(lint('NavigationLink("Open settings", tableName: "Profile") { }'), [])
+
+    def test_flags_a_localized_string_key_built_from_a_literal(self):
+        self.assertEqual(len(lint('Text(LocalizedStringKey("Literal key"))')), 1)
+        self.assertEqual(lint('Text(LocalizedStringKey("Literal key"), tableName: "Home")'), [])
+
+    def test_a_table_inside_a_nested_call_or_interpolation_does_not_count(self):
+        violations = lint('Text("Shots \\(String(localized: "rally", table: "Home"))")')
+        self.assertEqual(len(violations), 1)
+        self.assertTrue(violations[0].snippet.startswith('Text("Shots'))
+        self.assertEqual(len(lint('Label("Rally", systemImage: icon(String(localized: "x", table: "Home")))')), 1)
+        self.assertEqual(len(lint('Button("Rally", action: { log(table: "Home") })')), 1)
+
     def test_flags_literals_returned_by_a_display_property(self):
         source = '''
             var title: String {

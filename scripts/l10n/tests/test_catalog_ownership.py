@@ -1,7 +1,9 @@
 """String Catalog ownership: a PR may edit only the tables of its ticket's owned areas."""
 import json
 import pathlib
+import subprocess
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
@@ -51,6 +53,32 @@ class CatalogOwnershipTests(unittest.TestCase):
 
     def test_changes_without_catalogs_always_pass(self):
         self.assertEqual(check("fix/typo", ["ios/Jovra/Features/Home/HomeView.swift"]), [])
+
+
+def _git(repo, *args):
+    subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args],
+                   cwd=repo, check=True, capture_output=True, text=True)
+
+
+class ChangedFilesTests(unittest.TestCase):
+    """changed_files must list both sides of a rename, so renaming another ticket's table is caught."""
+
+    def test_a_renamed_catalog_reports_the_deleted_table_too(self):
+        with tempfile.TemporaryDirectory() as repo:
+            folder = pathlib.Path(repo) / L10N
+            folder.mkdir(parents=True)
+            (folder / "Home.xcstrings").write_text('{"sourceLanguage":"en","strings":{"rally":{}},"version":"1.0"}\n')
+            _git(repo, "init", "-q", "-b", "main")
+            _git(repo, "add", ".")
+            _git(repo, "commit", "-q", "-m", "base")
+            _git(repo, "checkout", "-q", "-b", "ticket/t23-framing-calibration")
+            _git(repo, "mv", f"{L10N}/Home.xcstrings", f"{L10N}/Capture.Framing.xcstrings")
+            _git(repo, "commit", "-q", "-m", "rename")
+            changed = catalog_ownership.changed_files("main", cwd=repo)
+        self.assertIn(f"{L10N}/Home.xcstrings", changed)
+        self.assertIn(f"{L10N}/Capture.Framing.xcstrings", changed)
+        problems = check("ticket/t23-framing-calibration", changed)
+        self.assertEqual(problems, [f"{L10N}/Home.xcstrings: table Home belongs to T19 (ios/Jovra/Features/Home), not T23"])
 
 
 if __name__ == "__main__":

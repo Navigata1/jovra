@@ -76,5 +76,37 @@ class CopyLintTests(unittest.TestCase):
         self.assertEqual(findings, [])
 
 
+def lint_swift(source):
+    with tempfile.TemporaryDirectory() as temp:
+        path = pathlib.Path(temp) / "Fixture.swift"
+        path.write_text(source)
+        return [(f.key, f.rule) for f in copy_lint.lint_swift(path)]
+
+
+class SwiftCopyLintTests(unittest.TestCase):
+    """Story 371 says 'anywhere': the banned terms are banned in Swift literals too, verbatim text included."""
+
+    def test_a_verbatim_text_with_a_banned_claim_fails(self):
+        self.assertEqual(lint_swift('Text(verbatim: "Automatic line call, spin RPM 3000")'),
+                         [("line 1", "rpm"), ("line 1", "line-call")])
+
+    def test_an_accessibility_label_with_a_banned_claim_fails(self):
+        self.assertEqual(lint_swift('view\n    .accessibilityLabel(Text(verbatim: "Calories burned"))'),
+                         [("line 2", "calories")])
+
+    def test_comments_are_not_copy_and_a_line_can_allow_one_rule_with_a_reason(self):
+        self.assertEqual(lint_swift('// no line calls here\nlet x = 1'), [])
+        allowed = 'Text(verbatim: "No line calls") // copy-lint: allow line-call — states what JOVRA does not do'
+        self.assertEqual(lint_swift(allowed), [])
+        self.assertEqual(lint_swift('Text(verbatim: "No line calls") // copy-lint: allow line-call'),
+                         [("line 1", "line-call")])
+
+    def test_the_app_sources_pass_and_the_cli_covers_them(self):
+        sources = copy_lint.find_swift_sources(ROOT / "ios" / "Jovra")
+        self.assertTrue(sources)
+        self.assertEqual([str(f) for path in sources for f in copy_lint.lint_swift(path)], [])
+        self.assertIn(ROOT / "ios" / "Jovra", copy_lint.default_targets(ROOT)[1])
+
+
 if __name__ == "__main__":
     unittest.main()

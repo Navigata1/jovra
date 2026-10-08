@@ -96,8 +96,14 @@ def check(branch: str, changed: list[str], tickets: dict[str, list[str]]) -> lis
     return problems
 
 
-def changed_files(base: str) -> list[str]:
-    output = subprocess.run(["git", "diff", "--name-only", f"{base}...HEAD"], check=True, capture_output=True, text=True).stdout
+def changed_files(base: str, cwd: str | None = None) -> list[str]:
+    """Every path the branch touched since its merge base with `base`.
+
+    --no-renames lists a rename as a deletion plus an addition, so renaming another ticket's table
+    (deleting it) is checked like any other edit of that table.
+    """
+    output = subprocess.run(["git", "diff", "--name-only", "--no-renames", f"{base}...HEAD"],
+                            check=True, capture_output=True, text=True, cwd=cwd).stdout
     return [line for line in output.splitlines() if line]
 
 
