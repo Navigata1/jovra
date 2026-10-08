@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GET /v1/artifacts/{artifactId}/content request",
+  "description": "artifacts.content (jovra-gateway; caller: owner, coach, granted viewer). Bytes of the artifact actually chosen: the film, or its verified no-audio child. A request descriptor: pathParams, query, headers and body. No body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "artifactId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "artifactId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        }
+      }
+    },
+    "query": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "audio": {
+          "description": "Downloads of a film only; none is forced in junior mode.",
+          "enum": [
+            "include",
+            "none"
+          ]
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "Authorization"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Authorization": {
+          "$ref": "common.schema.json#/$defs/bearerAuthorization"
+        },
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        },
+        "Range": {
+          "$ref": "common.schema.json#/$defs/rangeHeader"
+        }
+      }
+    }
+  }
+}

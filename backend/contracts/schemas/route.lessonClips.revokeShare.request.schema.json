@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DELETE /v1/lesson-clips/{clipId}/share-approval request",
+  "description": "lessonClips.revokeShare (jovra-gateway; caller: project owner). A request descriptor: pathParams, query, headers and body. No body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "clipId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "clipId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "Authorization"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Authorization": {
+          "$ref": "common.schema.json#/$defs/bearerAuthorization"
+        },
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        }
+      }
+    }
+  }
+}

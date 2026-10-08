@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /v1/deletion-requests request",
+  "description": "deletionRequests.create (jovra-gateway; caller: user). Account scope needs an Auth session created ≤ 10 minutes ago (401 reauth_required). A request descriptor: pathParams, query, headers and body. JSON body: #/$defs/body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "headers",
+    "body"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "headers": {
+      "$ref": "#/$defs/headers"
+    },
+    "body": {
+      "$ref": "#/$defs/body"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "Authorization",
+        "Idempotency-Key",
+        "Content-Type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Authorization": {
+          "$ref": "common.schema.json#/$defs/bearerAuthorization"
+        },
+        "Idempotency-Key": {
+          "$ref": "common.schema.json#/$defs/idempotencyKeyHeader"
+        },
+        "Content-Type": {
+          "$ref": "common.schema.json#/$defs/jsonContentType"
+        },
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        }
+      }
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "scope",
+        "targetId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "$ref": "common.schema.json#/$defs/deletionScope"
+        },
+        "targetId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        },
+        "confirmDependents": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
