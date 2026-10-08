@@ -1,0 +1,482 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/room-transcript.st23-lobby.json",
+  "cases": [
+    {
+      "id": "expired-code",
+      "why": "A join after the invitation's 10 minutes on the host's clock is refused, not accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/0/atMs",
+          "value": 400000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteExpired"
+      }
+    },
+    {
+      "id": "role-bound-before-approval",
+      "why": "A slot role is never bound before the host approves the phone",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/steps/9"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "roleBeforeApproval"
+      }
+    },
+    {
+      "id": "approval-by-display-name",
+      "why": "Approval names a key and a comparison code, never a display name",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/9/message/body/basis",
+          "value": "displayName"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/9/length",
+          "value": 307
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "approval-names-other-key",
+      "why": "Approving a key other than the one that joined is refused, even with the same display name",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/9/message/body/guestKeySha256",
+          "value": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/9/length",
+          "value": 310
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "approvalKeyMismatch"
+      }
+    },
+    {
+      "id": "approval-without-comparison",
+      "why": "Approve needs both screens compared and Allow tapped",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/steps/8"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "approvalWithoutComparison"
+      }
+    },
+    {
+      "id": "comparison-code-wrong",
+      "why": "The host's screen shows the code the keys and nonces give",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/8/hostScreenCode",
+          "value": "000000"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "comparisonCodeWrong"
+      }
+    },
+    {
+      "id": "frame-over-max-length",
+      "why": "A declared frame length over 65,536 bytes is refused before the body is read",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/5/length",
+          "value": 70000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "frameTooLong"
+      }
+    },
+    {
+      "id": "frame-length-mismatch",
+      "why": "The 4-byte prefix is the body's exact byte length",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/5/length",
+          "value": 656
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "frameLengthMismatch"
+      }
+    },
+    {
+      "id": "bad-proof",
+      "why": "The join proof must be the HMAC of the QR secret",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/5/message/body/proof",
+          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/5/length",
+          "value": 655
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badProof"
+      }
+    },
+    {
+      "id": "host-key-mismatch",
+      "why": "The guest must have seen the host key the QR pins",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/5/message/body/observedHostKeySha256",
+          "value": "99249c4e7115b5402c60286a0cc21f9b8fb8c4bdbc04fff2cd9500420f37d5a2"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/5/length",
+          "value": 655
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "hostKeyMismatch"
+      }
+    },
+    {
+      "id": "guest-key-not-channel",
+      "why": "The join's key is the TLS channel's key",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/5/message/body/guestKeySha256",
+          "value": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/5/length",
+          "value": 655
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "guestKeyNotChannelKey"
+      }
+    },
+    {
+      "id": "commitment-mismatch",
+      "why": "The revealed nonce must open the commitment made before the host's nonce",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/7/message/body/guestNonce",
+          "value": "m6IGYIYNjLyLPclXTVoovQ"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/7/length",
+          "value": 218
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "commitmentMismatch"
+      }
+    },
+    {
+      "id": "camera-grant-exceeded",
+      "why": "A camera guest starts with record-local and view-own-preview only",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/10/message/body/commandGrants",
+          "value": [
+            "capture-controller",
+            "viewer"
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/steps/10/length",
+          "value": 328
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "cameraGrantExceeded"
+      }
+    },
+    {
+      "id": "camera-capability-exceeded",
+      "why": "upload-own-source is not part of a camera guest's start",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/10/message/body/capabilities",
+          "value": [
+            "record-local",
+            "upload-own-source",
+            "view-own-preview"
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/steps/10/length",
+          "value": 327
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "cameraGrantExceeded"
+      }
+    },
+    {
+      "id": "wrong-room",
+      "why": "A frame for another room is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/12/message/roomId",
+          "value": "room-other"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/12/length",
+          "value": 311
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "wrongRoom"
+      }
+    },
+    {
+      "id": "sender-not-channel-peer",
+      "why": "A message is attributed by its TLS peer, never by its deviceId",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/12/message/deviceId",
+          "value": "device-jon"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/12/length",
+          "value": 314
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "senderNotChannelPeer"
+      }
+    },
+    {
+      "id": "seq-not-increasing",
+      "why": "A replayed or non-increasing seq is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/12/message/seq",
+          "value": 1
+        },
+        {
+          "op": "replace",
+          "path": "/steps/12/length",
+          "value": 315
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "seqNotIncreasing"
+      }
+    },
+    {
+      "id": "still-while-hot",
+      "why": "Stills only at thermal nominal or fair",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/11/message/body/thermal",
+          "value": "serious"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/11/length",
+          "value": 362
+        },
+        {
+          "op": "replace",
+          "path": "/steps/12/message/body/thermal",
+          "value": "serious"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/12/length",
+          "value": 315
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "stillWhileHot"
+      }
+    },
+    {
+      "id": "still-cadence",
+      "why": "Stills while framing are at least 2 s apart",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/16/message/body/captureMonoNs",
+          "value": 8386900000000
+        },
+        {
+          "op": "replace",
+          "path": "/steps/16/length",
+          "value": 354
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "stillCadence"
+      }
+    },
+    {
+      "id": "qr-public-endpoint",
+      "why": "A QR whose endpoint is a public address is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/0/qr",
+          "value": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiOC44LjguOCIsImtpbmQiOiJsYW4iLCJwb3J0Ijo0NzEwMH1dLCJleHBpcmVzQXQiOiIyMDI2LTEwLTA3VDIwOjI2OjQwWiIsImhvc3RFcG9jaCI6MSwiaG9zdEtleVNoYTI1NiI6IjVjZDI1MmZiMGNlODkzMjQzNmZhZjhjY2QxMDQwOTgxYjg5ZWU0YWQ2YjlmZTllMmEyYjdlNzFhYWNiMjdjZDMiLCJpbnZpdGVJZCI6Imludi0yIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjE2OjQwWiIsImpvaW5Ub2tlbiI6InFsMzBmVmt2MFE3UDZnaVRpU0w2SVlhWEVGdDNfWkFvMTI4aERCc2VlRXciLCJub25jZSI6IlVWOWN6bWdNcG1fNzVqOTFOb3VxVkEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "endpointNotAllowed"
+      }
+    },
+    {
+      "id": "qr-lifetime-over-10-min",
+      "why": "An invitation lives at most 10 minutes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/0/qr",
+          "value": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6Mjc6NDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LTIiLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMDdUMjA6MTY6NDBaIiwiam9pblRva2VuIjoicWwzMGZWa3YwUTdQNmdpVGlTTDZJWWFYRUZ0M19aQW8xMjhoREJzZWVFdyIsIm5vbmNlIjoiVVY5Y3ptZ01wbV83NWo5MU5vdXFWQSIsInNhbXBsZSI6dHJ1ZSwic2NoZW1hVmVyc2lvbiI6ImpvdnJhLnJvb20uaW52aXRhdGlvbi1wYXlsb2FkLzEiLCJzZXNzaW9uSWQiOiJyb29tLWNvdXJ0LWRheSJ9"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/0/lifetimeS",
+          "value": 660
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteLifetime"
+      }
+    },
+    {
+      "id": "qr-names-the-room",
+      "why": "The advertised instance is the opaque room hint, never a name",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/0/qr",
+          "value": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJKb25zIGlQaG9uZSIsImtpbmQiOiJkbnNzZCIsInNlcnZpY2VUeXBlIjoiX2pvdnJhLXJvb20uX3RjcCJ9LHsiYWRkcmVzcyI6IjE5Mi4xNjguMS4yMCIsImtpbmQiOiJsYW4iLCJwb3J0Ijo0NzEwMH1dLCJleHBpcmVzQXQiOiIyMDI2LTEwLTA3VDIwOjI2OjQwWiIsImhvc3RFcG9jaCI6MSwiaG9zdEtleVNoYTI1NiI6IjVjZDI1MmZiMGNlODkzMjQzNmZhZjhjY2QxMDQwOTgxYjg5ZWU0YWQ2YjlmZTllMmEyYjdlNzFhYWNiMjdjZDMiLCJpbnZpdGVJZCI6Imludi0yIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjE2OjQwWiIsImpvaW5Ub2tlbiI6InFsMzBmVmt2MFE3UDZnaVRpU0w2SVlhWEVGdDNfWkFvMTI4aERCc2VlRXciLCJub25jZSI6IlVWOWN6bWdNcG1fNzVqOTFOb3VxVkEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "roomHintMismatch"
+      }
+    },
+    {
+      "id": "qr-secret-16-bytes",
+      "why": "The QR secret is 32 random bytes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/0/qr",
+          "value": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MjY6NDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LTIiLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMDdUMjA6MTY6NDBaIiwiam9pblRva2VuIjoiQndjSEJ3Y0hCd2NIQndjSEJ3Y0hCdyIsIm5vbmNlIjoiVVY5Y3ptZ01wbV83NWo5MU5vdXFWQSIsInNhbXBsZSI6dHJ1ZSwic2NoZW1hVmVyc2lvbiI6ImpvdnJhLnJvb20uaW52aXRhdGlvbi1wYXlsb2FkLzEiLCJzZXNzaW9uSWQiOiJyb29tLWNvdXJ0LWRheSJ9"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "secretLength"
+      }
+    },
+    {
+      "id": "room-hint-with-a-name",
+      "why": "The room hint is opaque random characters",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/room/roomHint",
+          "value": "Jons-court"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "frame-refusal-hidden",
+      "why": "A frame the host must accept is not declared refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/12/verdict",
+          "value": {
+            "accepted": false,
+            "code": "staleEpoch"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "unexpectedAccept"
+      }
+    },
+    {
+      "id": "lobby-ready-shown-wrongly",
+      "why": "Ready follows the camera's own readiness report",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/17/display/devices/1/ready",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "readyMismatch"
+      }
+    }
+  ]
+}

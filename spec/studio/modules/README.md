@@ -12,4 +12,5 @@ edit it by hand. A new page appears here when the generator runs. Each page's fr
 - [ledger](ledger.md)
 - [normalization](normalization.md)
 - [records](records.md)
+- [room](room.md)
 - [sync](sync.md)
