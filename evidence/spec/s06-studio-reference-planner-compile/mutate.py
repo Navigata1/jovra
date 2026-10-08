@@ -41,6 +41,9 @@ MUTATIONS = [
     ("free-text-card-accepted", P, "    fields(beat, BEAT_FIELDS, label)\n", "", True),
     ("unknown-keeper-accepted", P, '        k = keepers.get(beat["keeperId"])\n',
      '        k = keepers.get(beat["keeperId"]) or {"slots": [beat["angle"]]}\n', True),
+    ("comparison-not-rederived", P, '    _check_comparisons(plan_doc["comparisons"], context)\n', "", True),
+    ("broll-reason-collapsed", P, '_missing_broll(idea, d.context["brolls"]) or MISSING_TEXT[idea][1]',
+     "MISSING_TEXT[idea][1]", True),
     ("nondeterministic-order", P, '    return sorted(chosen, key=lambda g: g["key"])',
      '    import random\n    random.shuffle(chosen)\n    return chosen', False),
 ]

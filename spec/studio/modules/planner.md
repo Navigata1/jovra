@@ -152,7 +152,7 @@ only under the target, "About 3 min 5 s of real material, so this film is shorte
 | Match Broadcast | no keeper has a second angle | `one-angle-match`: every point on one angle; omitted "Replays from another angle" |
 | Rally Pulse | music was asked for without a rights record | `court-sound-highlights`: court sound, effects back to low, static titles; omitted "Licensed music" |
 | Progress Story | `progress.compare` finds the sides not comparable | `lesson-chronology`: lesson-linked dated examples and lesson cards by date, a `card.method-change` note (or `card.not-compared` for another reason), no metric and no comparison; omitted "Before and after comparison" with the reason |
-| Court Memories | no usable B-roll | `one-camera-excerpts`: the Arrival chapter shrinks to a 4 s date card, no after chapter; omitted "Arrival footage" and "After the match" |
+| Court Memories | no usable B-roll | `one-camera-excerpts`: the Arrival chapter shrinks to a 4 s date card, no after chapter; omitted "Arrival footage" and "After the match", each with the real reason (story 147): nothing is marked for the chapter, or the marked B-roll "is not from this match", or it "shows where you played, and the venue is hidden" |
 
 Any profile with no keepers is refused ("Mark a few moments first").
 
@@ -162,7 +162,11 @@ Strict fields on the plan, each beat and each overlay (`unknownField` for a card
 `missingField`); `projectMismatch`; `staleRevision` when the bindings differ from the context's; `profileMismatch`; a
 keeper, B-roll item, angle, note, overlay, card template, music rights record or consent that does not resolve is
 `untrustedReference`; a card whose note is missing, of the wrong use or not allowed is `badTemplateSlot`; a beat whose
-fields disagree with its treatment (a card naming a keeper) is `treatmentMismatch`.
+fields disagree with its treatment (a card naming a keeper) is `treatmentMismatch`. Comparisons are re-derived
+(stories 146 and 157): a plan may carry only the comparison `progress.compare` gives for the context's stored
+`progress`, equal field for field (strict fields, so a comparison with its own caption is `unknownField`; only its
+`comparisonId` label may differ). A comparison with no stored progress, from progress that is not comparable, or with
+any number or display text that differs from the derived one is `untrustedReference`.
 
 ## Vectors
 
@@ -179,13 +183,16 @@ catalog, and one lint case per bold rule plus the two Sample briefs.
 
 `planner` (ops `context`, `plan`, `check`): the five profiles × {3 min, 5 min, Full} on the unpatched Sample context
 (13 plans; Match Broadcast at 3 min and Rally Pulse at 5 min are lengths the profile refuses), the five fallbacks,
-licensed music, no keepers, the RulesPlanner's own plan through the trust check and eleven refused plans (an unknown
-keeper, a card with free text, an unknown template, a note of the wrong use or missing, an angle with no view, an
-overlay that is not stored, a card naming a keeper, a stale revision, another project, music without rights), and the
-two Sample briefs.
+licensed music, no keepers, Court Memories with B-roll marked but unusable (it shows the hidden venue, or is not from
+this match; and the same B-roll with the venue shown), the RulesPlanner's own Coach's Cut and Progress Story plans
+through the trust check, sixteen refused plans (an unknown keeper, a card with free text, an unknown template, a note
+of the wrong use or missing, an angle with no view, an overlay that is not stored, a card naming a keeper, a stale
+revision, another project, music without rights, a fabricated comparison number or delta, a comparison with its own
+caption, a comparison with no stored progress or across a method change), and the two Sample briefs.
 
 Every case stores `expect` (the reference output) and an `assert` block of hand-derived literals: beat lists as
-`role treatment id angle speed` strings, estimates summed from the keeper windows, omitted ideas, unresolved copy,
+`role treatment id angle speed` strings, estimates summed from the keeper windows, omitted ideas and their reasons,
+unresolved copy,
 refusal copy and lint rules. For each plan the checker also validates the plan against `story-brief.schema.json`,
 checks every id it names against the context and the card catalog independently of `planner.check`, requires a clean
 lint, checks the planner left its input unchanged, and plans the same brief a second time and compares the canonical

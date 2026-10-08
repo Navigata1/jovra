@@ -395,6 +395,36 @@ def build_vectors(records: dict, profiles: dict) -> tuple[dict, dict]:
          "estimateMs": 4000 + 7500 + 68000 + 87000, "arrivalMs": 4000, "belowMinimum": False,
          "omitted": ["Arrival footage", "After the match"], "unresolved": [shorter("2 min 47 s", "3 min")]},
         patch=[{"op": "replace", "path": "/brolls", "value": []}])
+    shows_venue = [{"op": "replace", "path": f"/brolls/{i}/revealsLocation", "value": True}
+                   for i in range(len(base["brolls"]))]
+    no_broll_beats = ["arrival title-card card.date", "match-moment live k-01 near-baseline",
+                      "highlight live k-02 near-baseline", "match-moment live k-03 near-baseline"]
+    plan("court-memories-broll-shows-venue", "Story 147: B-roll is marked for both chapters but every shot shows "
+         "where you played and the venue is hidden (the Court Memories default), so neither is used and the reason "
+         "says so instead of claiming nothing was marked", "court-memories", {"length": "3min"},
+         {"target": 180, "fallback": "one-camera-excerpts", "beats": no_broll_beats,
+          "omittedReasons": [
+              ["Arrival footage", "The B-roll marked for the arrival shows where you played, and the venue is hidden."],
+              ["After the match",
+               "The B-roll marked for after the match shows where you played, and the venue is hidden."]]},
+         patch=shows_venue)
+    plan("court-memories-broll-shows-venue-opted-in", "The same B-roll with the venue shown: both shots are used",
+         "court-memories", {"length": "3min", "venueVisible": True},
+         {"target": 180, "fallback": None, "beats": MEMORIES, "estimateMs": MEMORIES_MS, "omitted": []},
+         patch=shows_venue)
+    plan("court-memories-broll-not-this-match", "Story 147: the marked B-roll is not from this match, so it is not "
+         "used and the reason names that", "court-memories", {"length": "3min"},
+         {"target": 180, "fallback": "one-camera-excerpts", "beats": no_broll_beats,
+          "omittedReasons": [
+              ["Arrival footage", "The B-roll marked for the arrival is not from this match."],
+              ["After the match", "The B-roll marked for after the match is not from this match."]]},
+         patch=[{"op": "replace", "path": f"/brolls/{i}/depictsThisMatch", "value": False}
+                for i in range(len(base["brolls"]))])
+    plan("court-memories-no-broll-reasons", "With nothing marked the reason is that nothing is marked",
+         "court-memories", {"length": "3min"},
+         {"omittedReasons": [["Arrival footage", "No B-roll is marked for the arrival."],
+                             ["After the match", "No B-roll is marked for after the match."]]},
+         patch=[{"op": "replace", "path": "/brolls", "value": []}])
     plan("rally-pulse-court-sound", "Rally Pulse with a track that has no rights record and Medium effects: "
          "court-sound highlights with static titles (effects back to low), the track listed as missing",
          "rally-pulse", {"length": "3min", "music": {"assetId": "track-02"}, "effects": "medium"},
@@ -436,6 +466,25 @@ def build_vectors(records: dict, profiles: dict) -> tuple[dict, dict]:
     check("music-without-rights", "Music naming a rights record the project does not hold", m["rally-pulse-3min"],
           [{"op": "replace", "path": "/music", "value": {"assetId": "track-02", "rightsRecordId": "rights-track-02"}}],
           {"rejectCode": "untrustedReference"})
+    ps3 = m["progress-story-3min"]
+    check("check-progress-story-3min", "The RulesPlanner's progress plan, with its derived comparison, passes", ps3,
+          [], {"ok": True, "beats": 5})
+    check("fabricated-comparison", "Stories 146 and 157: a comparison whose numbers are not the ones derived from "
+          "the stored progress (30 / 30 claimed for 18 / 30)", ps3,
+          [{"op": "replace", "path": "/comparisons/0/display/after", "value": "30 / 30 · 100%"},
+           {"op": "replace", "path": "/comparisons/0/after/numerator", "value": 30}],
+          {"rejectCode": "untrustedReference"})
+    check("fabricated-comparison-delta", "A delta text that the stored progress does not give", ps3,
+          [{"op": "replace", "path": "/comparisons/0/display/delta", "value": "+70 percentage points"}],
+          {"rejectCode": "untrustedReference"})
+    check("comparison-with-free-text", "Story 157: a comparison carrying its own caption", ps3,
+          [{"op": "add", "path": "/comparisons/0/caption", "value": "Sample: Best serve ever!"}],
+          {"rejectCode": "unknownField"})
+    check("comparison-without-stored-progress", "A comparison when the context stores no progress for two dates",
+          ps3, [], {"rejectCode": "untrustedReference"}, patch=[{"op": "replace", "path": "/progress", "value": None}])
+    check("comparison-across-method-change", "A comparison the stored progress says is not comparable (method "
+          "version 2 on Oct 7)", ps3, [], {"rejectCode": "untrustedReference"},
+          patch=[{"op": "replace", "path": "/progress/later/methodVersion", "value": "2"}])
     check_record("check-sample-court-memories-brief", "The Sample court-memories brief resolves in the context",
                  "records/story-brief.court-memories.json", {"ok": True, "beats": 4})
     check_record("check-sample-progress-brief", "The Sample progress brief resolves in the context",
@@ -732,6 +781,7 @@ def _plan_problems(ctx, got: dict, a: dict, resolved) -> list:
     have = {"target": doc["durationTargetSeconds"], "beats": [compact(b) for b in doc["beats"]],
             "estimateMs": got["estimate"]["totalMs"], "fallback": got["fallback"], "belowMinimum": got["belowMinimum"],
             "omitted": [o["idea"] for o in doc["omitted"]], "unresolved": doc["unresolved"],
+            "omittedReasons": [[o["idea"], o["missingEvidence"]] for o in doc["omitted"]],
             "effectIntensity": doc["effectIntensity"], "cleanAlternate": doc["cleanAlternate"], "music": doc["music"],
             "comparisons": [list(c["display"].values()) for c in doc["comparisons"]]}
     p = [f"{k}: {have[k]!r}, hand value {a[k]!r}" for k in have if k in a and a[k] != have[k]]

@@ -12,7 +12,8 @@ plan(profiles, briefed, context) -> {"plan", "estimate", "fallback", "belowMinim
 check(profiles, plan, context) -> {"beats": n}
     The trust check every plan passes before compile, whichever planner wrote it: strict fields (unknownField,
     missingField), ids that resolve in the context (untrustedReference), card templates with typed slots
-    (badTemplateSlot), treatment/field agreement (treatmentMismatch), project and revision bindings.
+    (badTemplateSlot), treatment/field agreement (treatmentMismatch), project and revision bindings, and every
+    comparison equal to the one progress.compare derives from the stored progress (untrustedReference otherwise).
 """
 
 from __future__ import annotations
@@ -44,6 +45,9 @@ MISSING_TEXT = {
     "after-broll": ("After the match", "No B-roll is marked for after the match."),
     "match-moments": ("Match moments", "No marked, lesson-linked or pressure point is kept."),
 }
+BROLL_CHAPTERS = {"arrival-broll": ("arrival", "the arrival"), "after-broll": ("after", "after the match")}
+NOT_THIS_MATCH = "is not from this match"
+VENUE_HIDDEN = "shows where you played, and the venue is hidden"
 
 
 # ----- plan building helpers --------------------------------------------------------------------------------------
@@ -332,7 +336,7 @@ def _court_memories(d: Draft) -> None:
     if not usable:
         d.fallback = "one-camera-excerpts"
     for idea in got["missing"]:
-        d.omit(*MISSING_TEXT[idea])
+        d.omit(MISSING_TEXT[idea][0], _missing_broll(idea, d.context["brolls"]) or MISSING_TEXT[idea][1])
 
     def moment(kid, role):
         return beat(role, "live", f"{kid}, " + ("the top-ranked moment." if role == "highlight"
@@ -349,6 +353,21 @@ def _court_memories(d: Draft) -> None:
     if d.directions["dedication"]:
         d.add((3,), True, card("dedication", "card.dedication", "The player's dedication.",
                                note=d.directions["dedication"]))
+
+
+def _missing_broll(idea: str, brolls: list):
+    """Story 147: why a B-roll chapter is missing when B-roll is marked for it but none can be used (it is not from
+    this match, or it shows the venue while the venue is hidden). None when nothing is marked for the chapter."""
+    if idea not in BROLL_CHAPTERS:
+        return None
+    chapter, label = BROLL_CHAPTERS[idea]
+    marked = [b for b in brolls if b["chapter"] == chapter]
+    if not marked:
+        return None
+    causes = [c for c, hit in ((NOT_THIS_MATCH, any(not b["depictsThisMatch"] for b in marked)),
+                               (VENUE_HIDDEN, any(b["depictsThisMatch"] and b["revealsLocation"] for b in marked)))
+              if hit]
+    return f"The B-roll marked for {label} {', or '.join(causes)}."
 
 
 PROFILE_PLANNERS = {"coach-cut": _coach_cut, "match-broadcast": _match_broadcast, "rally-pulse": _rally_pulse,
@@ -484,7 +503,31 @@ def check(profiles: dict, plan_doc: dict, context: dict) -> dict:
     for c in plan_doc["comparisons"]:
         ref = refs.get(c["statId"])
         require(ref is not None and ref["kind"] == "metric", "untrustedReference", f"comparison stat {c['statId']!r}")
+    _check_comparisons(plan_doc["comparisons"], context)
     return {"beats": len(plan_doc["beats"])}
+
+
+def _check_comparisons(comparisons: list, context: dict) -> None:
+    """Stories 146 and 157: a comparison's numbers and text are never the planner's own. The only comparison a plan
+    may carry is the one progress.compare derives from the context's stored progress, field for field (its
+    comparisonId is a label and may differ)."""
+    if not comparisons:
+        return
+    p = context["progress"]
+    require(p is not None, "untrustedReference", "a comparison, but no progress is stored for two dated sessions")
+    try:
+        got = progress.compare(p["statDefinitionId"], p["earlier"], p["later"])
+    except Reject as exc:
+        raise Reject("untrustedReference", f"a comparison from stored progress that does not compare ({exc.code})") \
+            from None
+    require(got["comparable"], "untrustedReference",
+            f"a comparison the stored progress does not allow ({', '.join(got['reasons'])})")
+    derived = _comparison(p, got)
+    require(len(comparisons) == 1, "untrustedReference", "one stored progress gives one comparison")
+    fields(comparisons[0], " ".join(derived), "comparison")
+    shown = {k: v for k, v in comparisons[0].items() if k != "comparisonId"}   # the id is a label, never on screen
+    require(shown == {k: v for k, v in derived.items() if k != "comparisonId"}, "untrustedReference",
+            "a comparison that differs from the one derived from the stored progress")
 
 
 # ----- vectors ----------------------------------------------------------------------------------------------------

@@ -4149,6 +4149,715 @@
       }
     },
     {
+      "id": "court-memories-broll-shows-venue",
+      "why": "Story 147: B-roll is marked for both chapters but every shot shows where you played and the venue is hidden (the Court Memories default), so neither is used and the reason says so instead of claiming nothing was marked",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/brolls/0/revealsLocation",
+          "value": true
+        },
+        {
+          "op": "replace",
+          "path": "/brolls/1/revealsLocation",
+          "value": true
+        }
+      ],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "arrival",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.date",
+              "reasonForReview": "No arrival footage: a date card opens the day."
+            },
+            {
+              "beatId": "b02",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01, a real moment of the day."
+            },
+            {
+              "beatId": "b03",
+              "role": "highlight",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02, the top-ranked moment."
+            },
+            {
+              "beatId": "b04",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03, a real moment of the day."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Arrival footage",
+              "missingEvidence": "The B-roll marked for the arrival shows where you played, and the venue is hidden."
+            },
+            {
+              "idea": "After the match",
+              "missingEvidence": "The B-roll marked for after the match shows where you played, and the venue is hidden."
+            }
+          ],
+          "unresolved": [
+            "About 2 min 47 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 166500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            }
+          ]
+        },
+        "fallback": "one-camera-excerpts",
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "fallback": "one-camera-excerpts",
+        "beats": [
+          "arrival title-card card.date",
+          "match-moment live k-01 near-baseline",
+          "highlight live k-02 near-baseline",
+          "match-moment live k-03 near-baseline"
+        ],
+        "omittedReasons": [
+          [
+            "Arrival footage",
+            "The B-roll marked for the arrival shows where you played, and the venue is hidden."
+          ],
+          [
+            "After the match",
+            "The B-roll marked for after the match shows where you played, and the venue is hidden."
+          ]
+        ]
+      }
+    },
+    {
+      "id": "court-memories-broll-shows-venue-opted-in",
+      "why": "The same B-roll with the venue shown: both shots are used",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/brolls/0/revealsLocation",
+          "value": true
+        },
+        {
+          "op": "replace",
+          "path": "/brolls/1/revealsLocation",
+          "value": true
+        }
+      ],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "3min",
+          "venueVisible": true
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": true,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "arrival",
+              "treatment": "broll",
+              "keeperId": null,
+              "brollId": "b-01",
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "B-roll b-01 for the arrival."
+            },
+            {
+              "beatId": "b02",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01, a real moment of the day."
+            },
+            {
+              "beatId": "b03",
+              "role": "highlight",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02, the top-ranked moment."
+            },
+            {
+              "beatId": "b04",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03, a real moment of the day."
+            },
+            {
+              "beatId": "b05",
+              "role": "after",
+              "treatment": "broll",
+              "keeperId": null,
+              "brollId": "b-02",
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "B-roll b-02 for after the match."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 2 min 55 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 174500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 6000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            },
+            {
+              "beatId": "b05",
+              "ms": 6000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "fallback": null,
+        "beats": [
+          "arrival broll b-01",
+          "match-moment live k-01 near-baseline",
+          "highlight live k-02 near-baseline",
+          "match-moment live k-03 near-baseline",
+          "after broll b-02"
+        ],
+        "estimateMs": 174500,
+        "omitted": []
+      }
+    },
+    {
+      "id": "court-memories-broll-not-this-match",
+      "why": "Story 147: the marked B-roll is not from this match, so it is not used and the reason names that",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/brolls/0/depictsThisMatch",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/brolls/1/depictsThisMatch",
+          "value": false
+        }
+      ],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "arrival",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.date",
+              "reasonForReview": "No arrival footage: a date card opens the day."
+            },
+            {
+              "beatId": "b02",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01, a real moment of the day."
+            },
+            {
+              "beatId": "b03",
+              "role": "highlight",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02, the top-ranked moment."
+            },
+            {
+              "beatId": "b04",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03, a real moment of the day."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Arrival footage",
+              "missingEvidence": "The B-roll marked for the arrival is not from this match."
+            },
+            {
+              "idea": "After the match",
+              "missingEvidence": "The B-roll marked for after the match is not from this match."
+            }
+          ],
+          "unresolved": [
+            "About 2 min 47 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 166500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            }
+          ]
+        },
+        "fallback": "one-camera-excerpts",
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "fallback": "one-camera-excerpts",
+        "beats": [
+          "arrival title-card card.date",
+          "match-moment live k-01 near-baseline",
+          "highlight live k-02 near-baseline",
+          "match-moment live k-03 near-baseline"
+        ],
+        "omittedReasons": [
+          [
+            "Arrival footage",
+            "The B-roll marked for the arrival is not from this match."
+          ],
+          [
+            "After the match",
+            "The B-roll marked for after the match is not from this match."
+          ]
+        ]
+      }
+    },
+    {
+      "id": "court-memories-no-broll-reasons",
+      "why": "With nothing marked the reason is that nothing is marked",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/brolls",
+          "value": []
+        }
+      ],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "arrival",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.date",
+              "reasonForReview": "No arrival footage: a date card opens the day."
+            },
+            {
+              "beatId": "b02",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01, a real moment of the day."
+            },
+            {
+              "beatId": "b03",
+              "role": "highlight",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02, the top-ranked moment."
+            },
+            {
+              "beatId": "b04",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03, a real moment of the day."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Arrival footage",
+              "missingEvidence": "No B-roll is marked for the arrival."
+            },
+            {
+              "idea": "After the match",
+              "missingEvidence": "No B-roll is marked for after the match."
+            }
+          ],
+          "unresolved": [
+            "About 2 min 47 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 166500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            }
+          ]
+        },
+        "fallback": "one-camera-excerpts",
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "omittedReasons": [
+          [
+            "Arrival footage",
+            "No B-roll is marked for the arrival."
+          ],
+          [
+            "After the match",
+            "No B-roll is marked for after the match."
+          ]
+        ]
+      }
+    },
+    {
       "id": "rally-pulse-court-sound",
       "why": "Rally Pulse with a track that has no rights record and Medium effects: court-sound highlights with static titles (effects back to low), the track listed as missing",
       "op": "plan",
@@ -4757,6 +5466,132 @@
         }
       ],
       "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "check-progress-story-3min",
+      "why": "The RulesPlanner's progress plan, with its derived comparison, passes",
+      "op": "check",
+      "fromCase": "progress-story-3min",
+      "planPatch": [],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "beats": 5
+      },
+      "assert": {
+        "ok": true,
+        "beats": 5
+      }
+    },
+    {
+      "id": "fabricated-comparison",
+      "why": "Stories 146 and 157: a comparison whose numbers are not the ones derived from the stored progress (30 / 30 claimed for 18 / 30)",
+      "op": "check",
+      "fromCase": "progress-story-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/comparisons/0/display/after",
+          "value": "30 / 30 · 100%"
+        },
+        {
+          "op": "replace",
+          "path": "/comparisons/0/after/numerator",
+          "value": 30
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "fabricated-comparison-delta",
+      "why": "A delta text that the stored progress does not give",
+      "op": "check",
+      "fromCase": "progress-story-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/comparisons/0/display/delta",
+          "value": "+70 percentage points"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "comparison-with-free-text",
+      "why": "Story 157: a comparison carrying its own caption",
+      "op": "check",
+      "fromCase": "progress-story-3min",
+      "planPatch": [
+        {
+          "op": "add",
+          "path": "/comparisons/0/caption",
+          "value": "Sample: Best serve ever!"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "unknownField"
+      },
+      "assert": {
+        "rejectCode": "unknownField"
+      }
+    },
+    {
+      "id": "comparison-without-stored-progress",
+      "why": "A comparison when the context stores no progress for two dates",
+      "op": "check",
+      "fromCase": "progress-story-3min",
+      "planPatch": [],
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/progress",
+          "value": null
+        }
+      ],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "comparison-across-method-change",
+      "why": "A comparison the stored progress says is not comparable (method version 2 on Oct 7)",
+      "op": "check",
+      "fromCase": "progress-story-3min",
+      "planPatch": [],
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/progress/later/methodVersion",
+          "value": "2"
+        }
+      ],
       "input": {},
       "expect": {
         "rejectCode": "untrustedReference"
