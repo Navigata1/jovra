@@ -3,9 +3,10 @@
 
 Usage: scripts/ios/xcresult-summary.py <bundle.xcresult>
 
-A row is printed for every test class or Swift Testing suite that directly holds test cases. A
-parameterized Swift Testing test counts once (its argument runs are noted in the total line).
-Exit status: 0 when every counted test passed or was skipped, 1 otherwise.
+A row is printed for every test class or Swift Testing suite that directly holds test cases, with
+passed, failed, skipped and expected-failure (XCTExpectFailure) counts, so every test case is counted.
+A parameterized Swift Testing test counts once (its argument runs are noted in the total line).
+Exit status: 0 when no counted test failed, 1 otherwise.
 """
 import json
 import subprocess
@@ -43,6 +44,22 @@ def suite_rows(nodes, rows, prefix=""):
         suite_rows([child for child in children if child.get("nodeType") == "Test Suite"], rows, prefix)
 
 
+COLUMNS = (("Passed", "passed"), ("Failed", "failed"), ("Skipped", "skipped"), ("Expected Failure", "expected"))
+
+
+def totals(rows):
+    return {key: sum(counts.get(key, 0) for _, counts in rows) for key, _ in COLUMNS}
+
+
+def format_table(rows):
+    """The header and one line per class: passed, failed, skipped, expected failures."""
+    width = max([len(label) for label, _ in rows] + [len("Test class")])
+    lines = ["  ".join(["Test class".ljust(width)] + [title for _, title in COLUMNS])]
+    for label, counts in rows:
+        lines.append("  ".join([label.ljust(width)] + [str(counts.get(key, 0)).rjust(len(title)) for key, title in COLUMNS]))
+    return lines
+
+
 def main():
     if len(sys.argv) != 2:
         print(__doc__.strip(), file=sys.stderr)
@@ -52,14 +69,11 @@ def main():
     summary = load(bundle, "summary")
     rows = []
     suite_rows(tests.get("testNodes", []), rows)
-    width = max([len(label) for label, _ in rows] + [len("Test class")])
-    print(f"{'Test class'.ljust(width)}  passed  failed  skipped")
-    for label, counts in rows:
-        print(f"{label.ljust(width)}  {counts['Passed']:>6}  {counts['Failed']:>6}  {counts['Skipped']:>7}")
-    failed = sum(counts["Failed"] for _, counts in rows)
-    passed = sum(counts["Passed"] for _, counts in rows)
-    skipped = sum(counts["Skipped"] for _, counts in rows)
-    print(f"Total: {passed} passed, {failed} failed, {skipped} skipped in {len(rows)} classes "
+    for line in format_table(rows):
+        print(line)
+    total = totals(rows)
+    passed, failed, skipped, expected = (total[key] for key, _ in COLUMNS)
+    print(f"Total: {passed} passed, {failed} failed, {skipped} skipped, {expected} expected failure(s) in {len(rows)} classes "
           f"(xcresult summary: {summary.get('passedTests', 0)} passed, {summary.get('failedTests', 0)} failed, "
           f"{summary.get('skippedTests', 0)} skipped; result {summary.get('result')})")
     for failure in summary.get("testFailures", []):
