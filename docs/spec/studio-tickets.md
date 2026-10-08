@@ -1,0 +1,3662 @@
+# JOVRA Studio v1 — ticket DAG
+
+Generated from `docs/spec/studio-tickets.json` (the source of truth). Studio tickets are S01–S107 in dependency order; `T`-ids are core iOS tickets from `docs/spec/tickets.md`. Blockers are direct edges after transitive reduction over Studio and core edges; an edge implied through another blocker is named in the ticket text. Depth counts Studio edges only. Labels: `ready-for-agent` or `ready-for-human`, `platform:ios|shared`, `area:studio`, `stage:S0..S5`, `backend`.
+
+107 tickets: 49 L, 47 M, 11 S. 249 of 254 Studio user stories covered (deferred: 45, 132, 143, 207, 253).
+
+## Notes
+
+FINAL SET: 107 Studio and backend tickets, S01-S107, in dependency order (every S blocker precedes its dependant; acyclic; T-ids checked against docs/spec/tickets.json). Sizes: 49 L, 47 M, 11 S. Stages: S0 34, S1 20, S2 13, S3 7, S4 30 (27 carry backend), S5 3. User stories covered: 249 of 254. Files: docs/spec/studio-tickets.json (source of truth) and docs/spec/studio-tickets.md; the draft was deleted.
+
+CHECKS RUN BY THE BUILDER (scratchpad build script): acyclic; every blocker exists; the graph is transitively reduced over Studio AND core edges (a removed edge is named in the ticket text as 'Implied through other blockers'); no two tickets that can run concurrently own overlapping paths (0 clashes after adding S03 as a blocker of S10); stories counted.
+
+LABELS: ready-for-agent | ready-for-human, platform:ios | platform:shared, area:studio, stage:S0..S5, backend. The four pure human gates (S54 Jon's scored excerpt, S67 two-phone footage, S74 six phones, S104 test-environment activation) are labelled ready-for-human; their agent halves are separate ready-for-agent tickets (S53, S66, S73, S103). Tickets with a partial human or hardware step keep ready-for-agent and state the gate in hardware_or_activation_gate.
+
+PACKAGE AND FOLDER DECISIONS (lead to confirm): two new SwiftPM packages, JovraStudioCore (Foundation-only, Linux CI) and JovraStudioMedia (AVFoundation), because T10 alone edits JovraMedia's manifest; S04 also adds them to the JovraTests and JovraUITests targets and is the only Studio ticket that edits project.yml. App code in ios/Jovra/Features/Studio/<Area>; adapters in ios/Jovra/Platform/Studio{Cloud,Room,Providers,Background}; cross-family components in ios/Jovra/DesignSystem/Studio and cross-family sheets in DesignSystem/Studio/Sheets (S16 owns A4, A6, A11, A13, A14, A23, A24). UI tests in ios/JovraUITests/Studio with -only-testing. Named slots (Delivery, Player, Settings incl. AccountSlot, Lessons, Home) let a ticket fill another's screen without editing it. Backend in backend/{supabase, contracts, gateway (two Worker scripts), planner, render, editor-adapter, spikes}, each with its own workflow; core ci.yml is never edited. Swift consumption of each fixture kind is tracked by the `swift:` line in that kind's spec/studio/modules page (S03), so parity tickets flip only their own page and never a shared allow-list.
+
+CORE TOUCHES (core-owner review recorded in each PR): S04 one optional xcconfig include line (T06 chain); S15 one FullScreenRoute case, one registration line and one namespaced -studioState hook in LaunchConfiguration; S30-S33 one insertion line each in core Home, Match overview, Insights root and Profile hub.
+
+FRONTIER AND CRITICAL PATH: blocker-free now: S01 and S03. S02 and then the backend chain (S75, S81) follow S01; S04 follows core T06; S05, S08 (with T11), S56 and S68 follow S03; S10 needs S03, S04 and T03. Weighted critical path (S=1, M=2, L=3, core ancestors included, T01 merged) = 40: T02-T03-T04-T05-S13-S15-S16-S20-S38-S43-S44-S49-S52-S53-S54. The backend chain S01-S02-S75...S103-S104 weighs 39 on Studio tickets alone, and S104 also reaches 39 through core via S99 (cloud flow) and S51. Earlier claim that the backend critical path needs no core ticket is withdrawn.
+
+CORE BLOCKERS USED (direct edges after reduction): T03, T04, T05, T06, T07, T09, T11, T12, T13, T14, T15, T17, T18, T19, T24, T26, T27, T29, T30, T34, T36, T38, T47, T52, T53, T58, T61. Far-downstream core tickets appear only where required, in isolated tickets: T34 (S62), T36 (S51), T38 (S50), T47 (S32), T61 (S31), T58 (S33), T52/T53 (S106), T53 also S97 (Keychain reuse), T27 (S44), T29/T30/T24 (S52 journey). The S0 gate S34 no longer waits on any core screen ticket.
+
+FINDINGS MAP (round-2 indices): 0-2, 7, 8 -> S11; 3, 4, 10, 11 -> S55, S57 (S55 closes SOF-R4-01); 5, 9 -> S12; 6 -> S10 refuses in Swift, the core gate fix (SOF-R4-02) stays open with the core owner; 12 -> S03 baseline; 13 -> S80, S82; 14 -> S83; 15 -> S75, S82, S104; 16 -> S94, S98; 17 -> S77, S79; 18 -> S78, S79; 19 -> S79; 20 -> S77; 21 -> S76; 22 -> S77, S94; 23 -> S77; 24 -> S76; 25 -> S90; 26 -> S76; 27 -> S82, S96, S102; 28 -> S93; 29 -> S86, S89; 30 -> S01 (dated amendment notes on ADR-0014/0018/0019/0022); 31 -> S77, S78; 32 -> S78; 33 -> S34; 34 -> this DAG; 35 -> S01 records ADR-0023, S87 drafts the pricing ADR, Jon decides; 36-48 -> S02 re-verifies them (SOF-R4-05) before S4 starts, behaviour built in S17 (40), S19 and S72 (36), S73/S74 (38), S27 (41), S26 (44), S40 (45), S29 (48), S61 (39), S91 (47), S99; 42 and 46 are deferred (below); 43 -> S01 verifies the ADR-0002 note.
+
+CRITIQUES APPLIED: convention-based Swift pending status (no shared allow-list) and registry-driven record round-trips without literal counts (S10); S56/S68 land new kinds as swift: pending; S55 owns the Swift method id, refreshes the bundled sample and proves vector stability, ordered after S37; shared sheets have one owner (S16); barcode-court plans over real fixture media (S09) feed S40, S41 and S92; overlays verified through a sidecar log and id band, fold equality moved to S42 (no OCR); ADR-0027 throughout the room tickets (epochs, seq, freshness bands, 'may still be recording' and not counted, grants vs slot roles, commandId receipts, per-device stop-all results, channel-bound typed code, local-only QR endpoints, opaque Bonjour hint); ADR-0025 window-class layouts with resize/state-preservation tests (S20, S24, S25, S48, S49, S63, S26, S99); S01 reconciles ADR-0023..0028; S02 split out and gating S75; S01 gates the shell (copy); entry rows split four ways with T61/T58 serialization and removed from the S0 gate; S15 declares its core edits; S04 test-target wiring; S43 tracer + S44 local jobs (T27 scheduler reuse, T17/CaptureActivity, junior no-audio, Home on real data); missing core edges added (T15 S59, T17 S39, T05 S13, T18/T53 S97, T24/T29/T30 S52; S13 for S36; S58 for S91; S05 for S25); context-size splits (S06/S07, S15/S16/S17, S18/S19, S22/S23/S24, S26/S27/S28, S79/S80, S81/S82, S88/S89); local end-to-end ticket S101 before S104; human gates split from agent harnesses; S53 states the excerpt is an FFmpeg transcode (Lavf63.1.101, OBSERVED) and keeps open question 2 open, with the original-file run in S54; S52 enumerates the S1 (b) mutation suite and records the YouTube deviation; gap cards in S1 (S07, S37, S42; story 127); pricing ADR + quote/2 (S87, gate G8, closes SOF-R4-03/04 only on Jon's answer); G3b and G5 rows (S102, S103, S104; S99 claims no push); B-12 spike (S85); Q7 and Q12 to Jon (S102); StudioEntitlements.localStudio (S13, read by S15); S99 originals-hash and Cloud-processing-off checks; account export/deletion iOS (S98); A15 counted as unsupportedBeforeS5 and A16/A19 as demo-only in S34; S59 editor-equivalent checks (multicam 8.3 case 12) and the Kotlin part of case 15 deferred; S38 reuses T26 duplicate/partial results; S51 uses a fixture consent record (T58 noted); S96 feeds S104.
+
+CRITIQUES REJECTED OR VARIED: (1) Renaming ticket ids away from S01..: rejected, because the task fixes the S prefix; ids are always two or three digits, stage labels are 'stage:S0'..'stage:S5', and core screens are written 'core screen 03 Home'. (2) Moving Prepare for YouTube into S1: rejected, the task places it in S5 (S107); S52 records the deviation against the S1 contract and stories 211-213. (3) Removing S55's edits to existing contract files: kept as the single recorded exception to 'new files only', with ownership and ordering widened instead. (4) jovra.watch-snapshot/1: deferred to the watch workflow (ADR-0026), not built. (5) Wiring ADR-0023 tiers into the gateway: deferred until G8; only the quote/2 contract is drafted. (6) Splitting every L ticket: 49 remain L; the biggest were split, the rest are single-concern.
+
+DEFERRED SCOPE (listed in the S34 and S52 status reports): stories 45 and 253 (Android), 132 (music), 143 (narration), 207 (captions; A15 caption correction); finding 42 (new Remotion tennis compositions); finding 46 and the Android acceptance items (Kotlin fixture byte parity incl. multicam 8.3 case 15, mixed Pixel/iPhone normalization, cross-platform lobby and project opening; ADR-0024); measured multi-angle capabilities (benchmark-promoted); advanced storyboard editing; portrait reframing (SD15); wired YouTube upload (A19); real Box and Dropbox connectors; live pricing and store hardening beyond the S87 draft.
+
+GATES (reported separately, never as passed from local success): Jon's scoring and the original file (S54); two-phone footage (S67); six phones (S74); LAN and endurance on devices (S70, S72); iOS 18 render paths on a device (S41, S42); background continuation on a device (S44); G1-G3, G3b, G5, G6 (S104); G2 hosted spike (S85); G4 Apple revoke (S94, S97, S98); G6 live models (S89); G7 privacy review (S102); G8 pricing (S87); Drive OAuth (S106). No ticket provisions infrastructure or spends money. No footage is ever committed.
+
+OPEN FOR THE LEAD: the package split; the 25 MB budget for bundled demo media (S08); the core-owner extension points used by S04, S15 and S30-S33; Jon's answers on open questions 2 and 9.
+
+## Tickets
+
+| ID | Title | Stage | Blocked by | Size | Depth | Label | Screens |
+|---|---|---|---|---|---|---|---|
+| S01 | Studio docs reconciliation: glossary terms, ADR-0023 to ADR-0028 reconciled into the spec, and dated ADR amendment notes for finding 30 | S0 | — | S | 1 | agent | — |
+| S02 | Re-verify findings 13-48 against the current backend, security, spec and screen documents (SOF-R4-05) before S4 starts | S0 | S01 | S | 2 | agent | — |
+| S03 | Studio contract plumbing by convention: reference modules, cases and vector kinds discovered by file | S0 | — | M | 1 | agent | — |
+| S04 | Studio packages, project wiring, Studio Info.plist keys and the Studio CI workflow | S0 | T06 | M | 1 | agent | — |
+| S05 | Python reference: keeper selection and ranking, cross-angle dedupe, staleness propagation and Progress Story comparability | S0 | S03 | M | 2 | agent | — |
+| S06 | Python reference: StoryDirector grammar lint and the RulesPlanner for five profiles and three lengths, with documented fallbacks | S0 | S05 | M | 3 | agent | — |
+| S07 | Python reference: the EDL compiler (StoryPlan to jovra.edit-plan/2) with PTS snapping, the audio bed, the S1 allowlist, gap cards and no upscale | S0 | S06 | M | 4 | agent | — |
+| S08 | Studio media fixtures: barcode and click sources at 24/30/60 fps, the coherent synthetic match with barcode and click tracks, and labelled synthetic angle renders | S0 | S03, T11 | L | 2 | agent | — |
+| S09 | Barcode-court trusted context and compile vectors over the S08 media, covering every S1 operation | S0 | S07, S08 | M | 5 | agent | — |
+| S10 | JovraStudioCore contracts: Codable models for every jovra.* Studio schema, canonical JSON and a manifest test that fails on an unconsumed fixture | S0 | S03, S04, T03 | L | 2 | agent | — |
+| S11 | EDL validator in Swift with parity to edl.py: rules 1-12, the round-2 tightenings, clean alternate and the stage operation allowlist | S0 | S10 | L | 3 | agent | — |
+| S12 | Job state machine, quote/consent state machine and the reservation ledger in Swift with parity to jobstate.py and ledger.py | S0 | S10 | M | 3 | agent | — |
+| S13 | StudioProjectStore and StudioSampleContent: project folders, atomic studio.json, revisions, delete scopes, and the removable Studio sample | S0 | S10, T05, T09 | L | 3 | agent | — |
+| S14 | CloudClient protocol with the DemoCloudClient, a configuration-gated Test adapter shell and a disabled Live adapter | S0 | S12 | M | 4 | agent | — |
+| S15 | Studio shell: StudioRouter, the -studioState harness, window-class layout helper, shared Studio components and the UI-test network trap | S0 | S01, S13, S14, T07, T12 | L | 5 | agent | — |
+| S16 | Shared Studio sheets in their demo states: A4 missing-file repair, A6 delete scope, A11 expired or revoked invite, A13 preview feedback, A14 film versions, A23 lesson picker, A24 session picker | S0 | S15 | M | 6 | agent | — |
+| S17 | Studio Home (ST21) in every state, bound to store queries rather than fixed demo values | S0 | S16 | M | 7 | agent | 21-studio-home |
+| S18 | Demo screen: Build your match (ST22) with the court placement diagram and sheets A21 and A22 | S0 | S15, T13 | M | 6 | agent | 22-build-your-match |
+| S19 | Demo screens: Camera lobby (ST23) and Director capture (ST24) driven by the fixture room, with sheets A1, A2 and A3 | S0 | S16 | L | 7 | agent | 23-camera-lobby, 24-director-capture |
+| S20 | Demo screens: Source import (ST25) and the Sync workspace (ST26: sheets in compact windows, the desk in expanded windows) | S0 | S16 | L | 7 | agent | 25-source-import, 26-sync-workspace |
+| S21 | Demo screens: Match Broadcast / project player (ST27) and Angle insights (ST28) | S0 | S08, S16, T14 | L | 7 | agent | 27-match-broadcast, 28-angle-insights |
+| S22 | Demo screen: Story modes (ST29) with five profile cards, length pills and the film options sheet (A25) | S0 | S15 | M | 6 | agent | 29-story-modes |
+| S23 | Demo screens: Coach's Cut (ST30), Rally Pulse (ST31) and Court Memories (ST33) in every coverage state | S0 | S16, S22 | L | 7 | agent | 30-coachs-cut, 31-rally-pulse, 33-court-memories |
+| S24 | Demo screen: Film storyboard (ST36) as a beat list in compact windows and a timeline workspace in expanded windows | S0 | S16 | L | 7 | agent | 36-film-storyboard |
+| S25 | Demo screens: Progress Story (ST32), Lesson journal (ST34) and Lesson workspace (ST35) in compact and expanded windows | S0 | S05, S16 | M | 7 | agent | 32-progress-story, 34-lesson-journal, 35-lesson-workspace |
+| S26 | Demo screen: Cloud preflight quote (ST37) with consent rows and sheets A5, A7 and A8 | S0 | S15 | M | 6 | agent | 37-cloud-job-review |
+| S27 | Demo screen: Render queue (ST38) with stage progress and sheet A9 | S0 | S15 | M | 6 | agent | 38-render-queue |
+| S28 | Demo screen: Film delivery (ST39) with sheets A18, A19, A20, the A15 placeholder and named slots | S0 | S16 | M | 7 | agent | 39-film-delivery |
+| S29 | Studio settings (ST40) in every state, local Studio preferences and the storage-usage view | S0 | S16 | M | 7 | agent | 40-studio-settings |
+| S30 | Studio entry point on core Home: the StudioEntryCard below the editorial card | S0 | S15, T19 | S | 6 | agent | 21-studio-home |
+| S31 | Studio entry point on core Match overview: 'Make a film' in the action row | S0 | S22, T61 | S | 7 | agent | 29-story-modes |
+| S32 | Studio entry points on core Insights: Lesson journal, Progress Story and Angle insights rows | S0 | S21, S25, T47 | S | 8 | agent | 34-lesson-journal |
+| S33 | Studio entry point on core Profile hub: the Studio settings row | S0 | S29, T18, T58 | S | 8 | agent | 40-studio-settings |
+| S34 | S0 gate: every Studio state reachable and audited, copy and claim lint, and the S0 status report | S0 | S17, S18, S19, S20, S21, S23, S24, S25, S26, S27, S28, S29 | M | 8 | agent | — |
+| S35 | KeeperSelector and staleness propagation in Swift with parity to the S05 reference | S1 | S05, S13 | M | 4 | agent | — |
+| S36 | LessonJournal and ProgressStoryBuilder in Swift: lesson records, clips, cues, drills and percentage-point comparisons | S1 | S05, S13 | M | 4 | agent | — |
+| S37 | StoryDirector, RulesPlanner and EDLCompiler in Swift with parity to the S06 reference | S1 | S07, S11, S35 | L | 5 | agent | — |
+| S38 | SourceIngest: SourceManifest from bytes, decoded PTS tables, original hashing, the S1 normalization gate and ST25 for one source | S1 | S20, T26 | L | 8 | agent | 25-source-import |
+| S39 | Build your match (ST22) for real: a one-camera project from a session, slot assignment, placement hints and the capture-method routes | S1 | S18, T17 | M | 7 | agent | 22-build-your-match |
+| S40 | FilmVerifier: full decode, exact frame count and timestamp grid, output facts, audio sample count, barcode and overlay checks | S1 | S09, S10 | L | 6 | agent | — |
+| S41 | LocalFilmRenderer core on AVFoundation: live, B-roll, clean-frame replay, cut/dissolve/dip and the court-audio bed | S1 | S11, S40 | L | 7 | agent | — |
+| S42 | LocalFilmRenderer second half: exact freezes, title cards, Core Animation overlays, the final H.264 writer, 9:16 letterbox and the clean alternate | S1 | S41, T04 | L | 8 | agent | — |
+| S43 | S1 tracer bullet: one Match Broadcast film from the synthetic match, produced, verified, recorded and shown on ST39 | S1 | S28, S37, S38, S41 | M | 9 | agent | 39-film-delivery |
+| S44 | Local film jobs: all five profiles, resumable checkpoints, background continuation, notifications, the local queue (ST38) and Home on real data | S1 | S27, S42, S43, T17, T27 | L | 10 | agent | 38-render-queue, 21-studio-home |
+| S45 | Project player for one angle (ST27 real): score at the playhead, point bookmarks, study controls and keeper/B-roll marking | S1 | S21, S35 | L | 8 | agent | 27-match-broadcast |
+| S46 | Angle insights for real (ST28): manual observations, confirm or reject estimated cues, keep a cue for a lesson, honest capability states | S1 | S21, S35, S36 | M | 8 | agent | 28-angle-insights |
+| S47 | Story modes and profiles for real (ST29-ST31, ST33): readiness, lengths, options, on-phone preview and honest fallbacks | S1 | S23, S44 | L | 11 | agent | 29-story-modes, 30-coachs-cut, 31-rally-pulse, 33-court-memories |
+| S48 | Film storyboard for real (ST36): beat list or timeline by window class, re-validated edits, Rebuild draft and Approve film plan | S1 | S24, S44 | L | 11 | agent | 36-film-storyboard |
+| S49 | Lesson journal and lesson workspace for real (ST34, ST35), lesson linking from films, and Progress Story (ST32) from lessons | S1 | S17, S25, S36, S44 | L | 11 | agent | 32-progress-story, 34-lesson-journal, 35-lesson-workspace |
+| S50 | Private lesson export for a coach: a Share Pack scoped to one lesson's notes and clips | S1 | S49, T38 | S | 12 | agent | 35-lesson-workspace |
+| S51 | Saving films: the Include audio switch, the separately verified no-audio file, version choice and Save clip from the project player | S1 | S44, S45, T36 | M | 11 | agent | 39-film-delivery |
+| S52 | S1 journey gate: one imported match to five verified local films, lessons and saved files, driven end to end on the simulator | S1 | S39, S47, S48, S49, S51, T24, T29, T30 | L | 12 | agent | 21-studio-home, 27-match-broadcast, 29-story-modes, 39-film-delivery |
+| S53 | Real-footage gate harness: the gate script and checklist, proven on the synthetic match and on the custody items of Jon's transcoded Feb-2024 excerpt | S1 | S52 | M | 13 | agent | 39-film-delivery |
+| S54 | Real-footage gate: all five films from Jon's scored Feb-2024 excerpt, and the same gate on the original file when it arrives | S1 | S53 | M | 14 | human | 39-film-delivery |
+| S55 | Sync fitter method robust-trimmed-ols/2 in the reference (SOF-R4-01) with small-n outlier vectors | S2 | S02, S37 | M | 6 | agent | — |
+| S56 | Normalization contract: original-PTS to proxy-frame tables for VFR sources, with embedded-ID conformance fixtures | S2 | S03 | M | 2 | agent | — |
+| S57 | SyncEngine fitting in Swift with parity to syncfit.py: piecewise affine maps, sound-travel correction, review gate and queries that never extrapolate | S2 | S55 | L | 7 | agent | — |
+| S58 | Synthetic multi-angle fixture generator: scene and rig to per-camera videos with ground truth, drift, restarts, late starts, shake and muted cameras | S2 | S08 | L | 3 | agent | — |
+| S59 | ProxyNormalizer: VFR to CFR with original-PTS tables, rotation once, HDR to SDR, mixed fps, resumable and heat-aware | S2 | S38, S56, S58, T15 | L | 9 | agent | — |
+| S60 | Two-view import (ST25 for real multi-source): mixed formats, slots, proxies in the background and storage accounting | S2 | S59 | M | 10 | agent | 25-source-import |
+| S61 | Anchor extraction: GCC-PHAT on hinted windows, manual markers, marked visual events and capture hints, with sound-travel correction | S2 | S57, S59, T13 | L | 10 | agent | — |
+| S62 | Core HitDetector onsets as sync anchor candidates | S2 | S61, T34 | S | 11 | agent | — |
+| S63 | Sync desk and sync sheets for real (ST26): review, manual markers, nudge, Confirm sync and reopening | S2 | S61 | L | 11 | agent | 26-sync-workspace |
+| S64 | Multi-angle project player (ST27): angle switching on the match clock, no-coverage honesty and keepers counted once | S2 | S45, S57, S60 | L | 11 | agent | 27-match-broadcast |
+| S65 | Multi-angle films: alt-bed, multi-angle live and replay, warm-court-1 and Match Broadcast post-point alternate replays | S2 | S42, S61 | L | 11 | agent | — |
+| S66 | Two-view gate harness: the per-angle residual report generator, proven on the synthetic two-camera match | S2 | S63, S64, S65 | M | 12 | agent | — |
+| S67 | Two-view field gate: Jon's first real two-phone footage of one match, residuals documented | S2 | S66 | M | 13 | human | 26-sync-workspace, 27-match-broadcast |
+| S68 | JOVRA Room v1 contract: jovra.room/1 schema, join-code payload, approval code and message set with a Python reference | S3 | S03 | M | 2 | agent | 23-camera-lobby, 24-director-capture |
+| S69 | Room protocol in Swift: codec, host and guest state machines, a loopback fake transport and schema-valid fixture-room transcripts | S3 | S19, S68 | L | 8 | agent | — |
+| S70 | LAN carrier for JOVRA Room: Network.framework with Bonjour, TLS key pinning, in-app QR invites and the Local Network explainer | S3 | S69 | L | 9 | agent | 23-camera-lobby |
+| S71 | Camera lobby (ST23) for real: invites per slot, approval by device code, revoke, readiness and telemetry, reconnect | S3 | S70 | L | 10 | agent | 23-camera-lobby |
+| S72 | Director capture (ST24) for real: each phone records locally with the unchanged CaptureEngine, acknowledgements, aged stills, health and stop one / stop all | S3 | S71, T24 | L | 11 | agent | 24-director-capture |
+| S73 | Six-device field protocol, report template and log collector, rehearsed on the loopback fake | S3 | S61, S72 | M | 12 | agent | — |
+| S74 | Six-device field gate: a 60-minute six-phone session, endurance and six-angle sync residuals on physical devices | S3 | S73 | M | 13 | human | 23-camera-lobby, 24-director-capture |
+| S75 | Backend scaffold: local Supabase project, server-enforced tester sign-up, fictional seed testers and the backend-db GitHub Actions workflow | S4 | S02 | M | 3 | agent, backend | — |
+| S76 | Migration 1: schemas, roles, enums, identity and membership tables, helpers, triggers and RLS with pgTAP role tests | S4 | S75 | L | 4 | agent, backend | — |
+| S77 | Migration 2: sources, manifests, sync, calibration, event revisions, observations, lessons, clips and story plans with RLS and quotas | S4 | S76 | L | 5 | agent, backend | — |
+| S78 | Migration 3: quotes, reservations, jobs, attempts, artifacts, grants, providers, deletion and app_ops tables with RLS | S4 | S77 | L | 6 | agent, backend | — |
+| S79 | Gateway command functions: app_gateway commands with actor re-checks, audit_denial, accept_quote idempotency and fail-closed spend limits | S4 | S78 | L | 7 | agent, backend | — |
+| S80 | Orchestrator command functions: lease-fenced *_for_attempt commands, SQL-computed estimates, one consumption per stage and the role-separation lint | S4 | S79 | M | 8 | agent, backend | — |
+| S81 | Backend request, response and queue contracts: JSON Schemas and fixtures for every gateway route, shared with the iOS client | S4 | S02 | M | 3 | agent, backend | — |
+| S82 | Gateway and jovra-internal Worker scaffold: JWKS ES256 with pinned issuer, envelope, redacted idempotency, allowlisted logging and route validation against the contracts | S4 | S80, S81 | L | 9 | agent, backend | — |
+| S83 | Camera invites, guest capabilities and email-bound coach and viewer grants through the gateway | S4 | S82 | M | 10 | agent, backend | — |
+| S84 | Upload sessions through the gateway: 32 MiB parts streamed through a hashing tee, completion checks, one session per source and server re-hash verification | S4 | S82 | L | 10 | agent, backend | — |
+| S85 | Spike B-12: presigned UploadPart, temporary credentials and gateway throughput, measured locally and then on the test bucket | S4 | S84 | S | 11 | agent, backend | — |
+| S86 | Quotes, consent, reservations and job creation with the outbox and idempotent Workflow start, Sample amounts only | S4 | S82 | L | 10 | agent, backend | — |
+| S87 | SD4 pricing ADR draft and jovra.quote/2 with ADR-0023 length tiers and capture-quality line items (Sample only) | S4 | S55, S86 | M | 11 | agent, backend | — |
+| S88 | Planner adapter, part 1: the heuristic planner and compiler ported to TypeScript with byte parity to the S06 and S07 reference | S4 | S07 | M | 5 | agent, backend | — |
+| S89 | Planner adapter, part 2: Anthropic and OpenAI adapters on recorded fixtures, the ADR-0023 draft-and-critique pipeline, and the consent and spend gates | S4 | S88 | L | 6 | agent, backend | — |
+| S90 | RenderJob Workflow, queue, DLQ and reconciler in jovra-internal with leases, heartbeats, fencing, cancellation, cleanup and a fake render host | S4 | S86, S89 | L | 11 | agent, backend | — |
+| S91 | Render host container, part 1: pinned FFmpeg, probe allowlist, full-file SHA-256, normalization with PTS tables, metadata stripping and SIGTERM-safe stages | S4 | S56, S58 | L | 4 | agent, backend | — |
+| S92 | Render host, part 2: assembly from a validated EDL through fixed FFmpeg templates, verify_output, the no-audio remux and the shared barcode suite | S4 | S09, S91 | L | 6 | agent, backend | — |
+| S93 | Delivery: Range streaming, 24-hour share links, grants, thumbnails, audio variants and stale labelling | S4 | S90 | L | 12 | agent, backend | — |
+| S94 | Deletion Workflow and retention sweeps: project, source, artifact, lesson, clip and account scopes, per-job retention and the Apple revoke stub | S4 | S83, S84, S93 | L | 13 | agent, backend | — |
+| S95 | JOVRA editor adapter: jovra.edit-plan/2 to the founder editor's own contracts, run only on a copy of the editor | S4 | S92 | M | 7 | agent, backend | — |
+| S96 | Lesson search: Postgres full-text through a POST RPC body, pgvector deferred | S4 | S82 | S | 10 | agent, backend | — |
+| S97 | iOS Test and Live CloudClient adapters over HTTP, contract-tested against a URLProtocol-stubbed gateway, with background resumable uploads | S4 | S29, S81, T18, T53 | L | 8 | agent | 40-studio-settings |
+| S98 | Account export and deletion from Studio settings (A16) against the stubbed gateway, with fresh sign-in before deletion | S4 | S97 | M | 9 | agent | 40-studio-settings |
+| S99 | Cloud preflight, render queue and cloud delivery for real (ST37-ST39) against the stubbed or local test backend | S4 | S26, S51, S97 | L | 12 | agent | 37-cloud-job-review, 38-render-queue, 39-film-delivery |
+| S100 | Linking a local project to the test backend and metadata sync with conflicts kept, never overwritten | S4 | S49, S97 | L | 12 | agent, backend | 35-lesson-workspace |
+| S101 | Local end-to-end cloud path: iOS TestCloudClient to the wrangler dev gateway, local Supabase and the fake render host | S4 | S94, S99 | M | 14 | agent, backend | — |
+| S102 | Activation runbook (G1-G9) and privacy drafts: consent copy, App Privacy answers and the minors question | S4 | S94 | M | 14 | agent, backend | — |
+| S103 | Test-environment activation scripts: hosted-suite runners and the activation log template, refusing to run without Jon's configuration | S4 | S102 | M | 15 | agent, backend | — |
+| S104 | Test-environment activation gate: Jon provisions the isolated test backend, hosted suites run, and planners are compared on shared fixtures | S4 | S85, S95, S96, S100, S101, S103 | M | 16 | human | — |
+| S105 | Storage providers: one interface, the device provider, Files/iCloud Drive folder export, and truthful Planned rows for Box and Dropbox | S5 | S29, S43 | L | 10 | agent | 40-studio-settings |
+| S106 | Google Drive as a Studio storage provider wrapping the core archive connection | S5 | S105, T52, T53 | S | 11 | agent | 40-studio-settings |
+| S107 | Prepare for YouTube: a local package with the verified film, cover, draft copy, chapters and the synthetic-content note, and no upload | S5 | S51 | M | 12 | agent | 39-film-delivery |
+
+## S01: Studio docs reconciliation: glossary terms, ADR-0023 to ADR-0028 reconciled into the spec, and dated ADR amendment notes for finding 30
+
+`studio-docs-reconciliation` · S0 · size S · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S0`
+
+**Blocked by:** None (can start immediately)
+
+**What to build:** Close the documentation side of the open Studio register before any Studio copy freezes (S15, the shell, waits on this). (1) STU-00: the Studio domain terms in studio-v1-spec.md Further Notes ('Domain language') are added to GLOSSARY.md through its owner, in one Studio section, without redefining Sync point, Highlight reel, Clip, Original, Archive or Stat. (2) ADR-0002 still carries 'Status: amended by ADR-0014 (backend boundary only)'; verify it and never edit it. (3) ADR-0023 (founder decision, Jon, 2026-10-07: dual-provider planner, length and capture-quality credit tiers, Remotion free licence for a one-person company) post-dates the spec's D-4/D-5 working defaults and open questions 5 and 9. Record it as the dated founder source where it answers them (on-device rules planner stays the free default; Remotion licence answered) and keep open question 9 open for what ADR-0023 does not settle (whether on-device template films stay free; whether local lengths gain the 10-30 minute tiers). Update register entry SOF-R4-03 to name exactly what remains. (4) The other ADRs accepted on 2026-10-07 are reconciled into the Studio spec text they change: ADR-0025 (layout from window class and posture, never the device; the preserved-state contract; a layout change never repeats a side effect) replaces device wording such as 'iPad workspace' in the spec's Studio layout lines; ADR-0027 (host epochs, per-sender seq, receiver-owned freshness bands, slot roles separate from grants, commandId receipts, channel-bound typed-code fallback, opaque Bonjour hint, local-only QR endpoints) is cited from SD10; ADR-0026's jovra.watch-snapshot/1 is recorded as deferred to the watch workflow and outside Studio v1; ADR-0028 (Mark for review is a note, never a call) is cited where Studio mentions review; ADR-0024 is cited where Studio mentions the Android port. (5) Finding 30 (ADR consistency): dated, append-only amendment notes are added to ADR-0014, ADR-0018, ADR-0019 and ADR-0022 that correct the inconsistencies the finding names (for example ADR-0018's camera capability now requires host approval after the thumbprint-code match); decision text is never rewritten. Findings 13-48 are re-verified separately in S02. No behaviour, code, schema or core document changes. Why blocked: none.
+
+**Acceptance criteria**
+
+- [ ] GLOSSARY.md gains a Studio section with every term listed under 'Domain language' in studio-v1-spec.md; `grep -c` for each term returns at least 1 and the diff shows no change to any existing core definition.
+- [ ] `grep -n "amended by ADR-0014" docs/adr/0002-local-first-document-store.md` prints the note and ADR-0002 is not in the diff.
+- [ ] The only ADR changes are appended dated amendment notes on ADR-0014, ADR-0018, ADR-0019 and ADR-0022 (the diff for each is additions only, after the existing text); each note names the finding-30 item it answers.
+- [ ] studio-v1-spec.md open questions 5 and 9 and D-4/D-5 cite ADR-0023 with its date wherever ADR-0023 answers them; `grep -n "ADR-0023" docs/spec/studio-v1-spec.md docs/spec/studio-open-findings.md` returns at least one line in each file.
+- [ ] `grep -n "ADR-0025\|ADR-0026\|ADR-0027\|ADR-0028" docs/spec/studio-v1-spec.md` returns at least one line for each ADR, and `grep -n "watch-snapshot" docs/spec/studio-v1-spec.md` shows it recorded as deferred.
+- [ ] SOF-R4-03 in docs/spec/studio-open-findings.md states the remaining open part of question 9 in one sentence and its falsifiable check still names a grep that would fail if the answer were silently assumed.
+- [ ] No file under spec/, ios/, backend/ or docs/spec/tickets.* changes (diff stat).
+
+**Evidence required**
+
+- grep outputs for every glossary term, the ADR-0002 note and the ADR-0023 to ADR-0028 citations
+- Diff of the four ADR amendment notes (additions only)
+- Diff stat limited to GLOSSARY.md, docs/spec/studio-v1-spec.md, docs/spec/studio-open-findings.md and the four ADR files
+
+**Owned areas**
+
+- `GLOSSARY.md (Studio section only)`
+- `docs/spec/studio-v1-spec.md (Further Notes: decisions, open questions; SD10 citation; layout wording)`
+- `docs/spec/studio-open-findings.md (SOF-R4-03 only)`
+- `docs/adr/0014-backend-ready-v1-three-environments.md (appended amendment note only)`
+- `docs/adr/0018-cloud-media-security-rls-and-signing-gateway.md (appended amendment note only)`
+- `docs/adr/0019-paid-cloud-production-is-opt-in.md (appended amendment note only)`
+- `docs/adr/0022-identity-siwa-demo-profile-tester-config.md (appended amendment note only)`
+
+**User stories:** 246, 249, 251
+
+**Gate:** Jon's answer to the remainder of open question 9 is a founder decision; this ticket records it only if he gives it, and otherwise leaves the question open with its register entry.
+
+## S02: Re-verify findings 13-48 against the current backend, security, spec and screen documents (SOF-R4-05) before S4 starts
+
+`studio-findings-reverification` · S0 · size S · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S0`
+
+**Blocked by:** S01
+
+**What to build:** SOF-R4-05: round 3 re-checked only findings 0-11, so findings 13-48 (backend and security docs, coverage and spec text) were fixed in documents but never re-verified. A verifier pass reads each of findings 13-48 from the round-2 list against the current docs/backend/architecture.md, docs/backend/security-model.md, docs/spec/studio-v1-spec.md and docs/spec/studio-screens.md and marks each closed with a cited file:line or re-raised with a new register id. The S4 backend chain (S75 onward) starts only after this lands, as the register requires ('before S4 starts (B-00)'). No design change is made here; a re-raised finding becomes a register entry that the owning S4 ticket must answer. Why blocked: S01 (both edit the open-findings register; this one after the SOF-R4-03 update).
+
+**Acceptance criteria**
+
+- [ ] A table in docs/spec/studio-open-findings.md lists findings 13-48 (indices from the round-2 verifier list), each marked closed with file:line, or re-raised with a new register id; zero rows are marked closed without a cited line.
+- [ ] SOF-R4-05 moves to the closed table with the table and the scratch evidence path cited, or stays open naming every re-raised id.
+- [ ] Every re-raised finding names the S4 ticket that must close it (cross-checked against this DAG's findings map).
+- [ ] No file outside docs/spec/studio-open-findings.md changes (diff stat).
+
+**Evidence required**
+
+- The findings 13-48 re-verification table with cited lines (diff of studio-open-findings.md)
+- Diff stat
+
+**Owned areas**
+
+- `docs/spec/studio-open-findings.md (findings 13-48 table and SOF-R4-05 only)`
+
+**User stories:** 249
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S03: Studio contract plumbing by convention: reference modules, cases and vector kinds discovered by file
+
+`studio-contract-plumbing` · S0 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S0`
+
+**Blocked by:** None (can start immediately)
+
+**What to build:** The Studio contract generator and validator are made convention-based, the Studio twin of core T02's fixture plumbing, so that every later Studio contract ticket (keepers, planner and compile, sync v2, normalization, room) adds files and never edits a shared list. generate_studio_fixtures.py imports every `spec/reference/studio/cases/*_cases.py` module and writes what each declares; validate_studio.py maps a vector file's `kind` to a checker registered by the module that owns it, and fails on a vector kind with no checker. The current generate_studio_cases.py content moves into cases modules without changing a byte of output. Module pages: one file per module under spec/studio/modules/ with front matter `kinds:` (the vector kinds and schemas it owns), `coverage: covered | not-covered` and a per-platform consumption status `swift: pending | consumed` (and `kotlin:` for the Android port). validate_studio.py fails when a registered kind appears in no module page. spec/studio/README.md links the modules/ folder through a generated index and holds no per-module lines; its current 'not covered yet' list (normalization) moves into module pages marked not-covered, so S56 rewrites its own page and never the README. This ticket creates the pages for every existing reference module. The Studio validator gets a `--list` mode printing every registered kind, its count and its module's swift status, used as evidence by later tickets. Why blocked: none.
+
+**Acceptance criteria**
+
+- [ ] `python3 spec/reference/studio/generate_studio_fixtures.py` rewrites spec/studio/fixtures with zero byte changes (sha256 of every generated file identical before and after; the list is attached).
+- [ ] `python3 scripts/spec/validate_studio.py` prints RESULT: PASS with counts equal to or above the pre-change run (the pre-change counts are printed in the PR, not hard-coded in any test).
+- [ ] Adding a temporary cases module with one new vector kind and no checker makes the validator fail with 'no checker for kind <name>'; adding its checker but no module page fails with 'kind <name> has no module page'; adding the page makes it pass; the temporary files are removed before merge (test transcript in the PR).
+- [ ] Removing one existing vector case file makes the validator fail ('generated file missing'), proving the manifest is complete.
+- [ ] spec/studio/README.md contains no per-module line (grep for each module name in the README returns only the generated index include); the generated index lists every page under spec/studio/modules/ and a new page appears in it without a README edit.
+- [ ] `python3 scripts/spec/validate_studio.py --list` prints every kind with its module and swift status; normalization is listed as not-covered.
+- [ ] The core gate is untouched: `python3 scripts/spec/validate.py` output is identical before and after; scripts/spec/validate.py and scripts/spec/jsonschema_subset.py are not in the diff.
+
+**Evidence required**
+
+- python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- Before/after sha256 list of every generated Studio fixture file
+- Transcript of the temporary-kind negative test
+- `python3 scripts/spec/validate_studio.py --list` output
+
+**Owned areas**
+
+- `spec/reference/studio/generate_studio_fixtures.py`
+- `spec/reference/studio/generate_studio_cases.py (moved into cases/)`
+- `spec/reference/studio/cases/`
+- `scripts/spec/validate_studio.py`
+- `spec/studio/README.md`
+- `spec/studio/modules/`
+
+**User stories:** 251, 252
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S04: Studio packages, project wiring, Studio Info.plist keys and the Studio CI workflow
+
+`studio-packages-ci` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** T06
+
+**What to build:** Decision (lead to confirm): Studio domain code lives in a new Foundation-only package `ios/Packages/JovraStudioCore` (depends on JovraCore; builds and tests on Linux) and media code in a new package `ios/Packages/JovraStudioMedia` (AVFoundation; depends on JovraStudioCore and JovraMedia). The spec names 'a Studio area of JovraMedia'; a sibling package is chosen because core T10 is the only ticket allowed to edit JovraMedia's manifest and because it lets Studio media tickets run without touching core-owned folders. This ticket creates both packages with one smoke test each and a test-support helper that locates spec/studio/fixtures from #filePath (no fixture copies), adds both packages to project.yml as dependencies of the app target and of the existing JovraTests and JovraUITests targets (so hosted tests under ios/JovraTests/Studio can import them without another project.yml edit), adds every Studio Info.plist key once (NSLocalNetworkUsageDescription and NSBonjourServices for JOVRA Room, the BGTaskSchedulerPermittedIdentifiers entry for Studio rendering), creates ios/Config/Studio.xcconfig (STUDIO_ENVIRONMENT = demo; no URL or key) with one optional include line in the T06-owned xcconfig chain (recorded as a core-owned edit and reviewed by the core owner), and adds .github/workflows/studio.yml with two required-able jobs: `studio-contracts` (Linux, python3 scripts/spec/validate_studio.py) and `jovra-studio-core` (Linux, swift:6.1, swift test for JovraStudioCore). Studio UI tests live in ios/JovraUITests/Studio/ inside the existing JovraUITests target (no new target or scheme; the spec's JovraStudioUITests scheme is replaced by -only-testing class filters). docs/studio/DEVELOPING.md documents commands, folders and the evidence layout evidence/ios/studio/<ticket>/. Why blocked: T06 (owns project.yml, Info.plist and the xcconfig chain; this ticket must land after it so the edit is a small addition, not a parallel rewrite).
+
+**Acceptance criteria**
+
+- [ ] `swift test --package-path ios/Packages/JovraStudioCore` passes on macOS and in the Linux job; `swift test --package-path ios/Packages/JovraStudioMedia` passes on macOS.
+- [ ] The JovraStudioCore package graph contains no Apple-only framework: the Linux job builds it (CI log), and a grep for `import AVFoundation|import UIKit|import SwiftUI` under JovraStudioCore returns nothing.
+- [ ] The fixture-locator helper finds spec/studio/fixtures/records/project-lock.json from a test in each package; renaming the folder in a scratch copy makes that test fail.
+- [ ] `scripts/ios/generate.sh` then an app build succeeds; the generated Info.plist contains NSLocalNetworkUsageDescription, NSBonjourServices and the Studio BG task identifier (plutil -p output).
+- [ ] The project.yml diff adds only the two package entries, their dependency lines on the app, JovraTests and JovraUITests targets and the Studio Info.plist keys, plus one optional include line in the T06 xcconfig chain; the core owner's review is recorded in the PR; core smoke UI tests stay green.
+- [ ] studio.yml runs both jobs on a pull request; deliberately breaking a Studio fixture in a scratch branch turns `studio-contracts` red (screenshot or log link).
+- [ ] ios/Config/Studio.xcconfig contains no URL, key or secret (grep for https?:// and key= returns nothing).
+- [ ] A hosted unit test under ios/JovraTests/Studio imports JovraStudioCore and passes (proves the test-target wiring).
+
+**Evidence required**
+
+- swift test output for both packages (macOS) and the Linux CI log for jovra-studio-core
+- plutil -p of the generated Info.plist showing the Studio keys
+- CI run links for studio.yml (green, and the deliberate red run)
+- docs/studio/DEVELOPING.md
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore (Package.swift, smoke source, Tests/JovraStudioCoreTests/Support)`
+- `ios/Packages/JovraStudioMedia (Package.swift, smoke source, Tests/JovraStudioMediaTests/Support)`
+- `ios/project.yml (Studio package lines and Studio Info.plist keys only)`
+- `ios/Config/Studio.xcconfig and its single include line`
+- `.github/workflows/studio.yml`
+- `docs/studio/DEVELOPING.md`
+- `ios/JovraUITests/Studio/README.md`
+- `ios/Config (one optional include line in the T06-owned chain, core-owner review)`
+
+**User stories:** 245, 251
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S05: Python reference: keeper selection and ranking, cross-angle dedupe, staleness propagation and Progress Story comparability
+
+`studio-reference-keepers-progress` · S0 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S0`
+
+**Blocked by:** S03
+
+**What to build:** The spec's S0 deliverable 'Python reference (rules planner, EDL compile, validator, sync fit, comparability)' is only partly shipped: there is no reference for KeeperSelector, staleness or ProgressStoryBuilder, so Swift and Kotlin would have no oracle. Add `keepers.py` (one keeper per effective point from the core fold, per Mark and per lesson clip; default pre-roll 1.5 s and post-roll 2.5 s; rally and contact windows from reviewed shots, with estimated hits labelled and never protecting less than a reviewed contact; dedupe by session event across angles; deterministic per-profile ranking: Rally Pulse longest real rallies plus break/set/match points, Coach's Cut keepers linked to a reviewed cue or lesson, Match Broadcast all points in order, Progress Story dated comparable examples with selectionRule all | seeded-random | user-chosen, Court Memories B-roll and match moments by chapter), `staleness.py` (event, sync and keeper revision bumps mark dependent plans stale and films 'Made before a correction'; old films kept as versions) and `progress.py` (compare(statDefinitionId, earlier, later) -> earlier/later fractions, deltaPercentagePoints from displayed integers via core pct, comparable + reasons; comparable only when stat definition, capability/method version, session kind and selection rule match and both sides are at least Reviewed; '% improvement' never produced). Cases modules generate vectors from the sample-court-day records and the core Jon vs Alex fold, each with a hand-derived assertion that does not come from the reference. Its module pages declare the new kinds with `swift: pending`, so Swift tickets S35 and S36 flip their own page when they consume them. Why blocked: S03 (adds cases modules and vector kinds by convention).
+
+**Acceptance criteria**
+
+- [ ] New vector kinds keepers, staleness and progress-comparison are listed by `validate_studio.py --list` with at least 12, 6 and 8 cases respectively and swift status pending, and RESULT: PASS.
+- [ ] The progress vector for the sample serve practice gives 12/30 -> 18/30, pct 40 -> 60, +20 percentage points; a mutation that changes the later method version makes `comparable` false with reason methodChange; a user-chosen selection on one side gives differingSelection.
+- [ ] A keeper vector shows the same point seen from Camera 1 and Camera 2 yields one keeper with two views; a vector with an estimated hit inside a reviewed contact window keeps the reviewed window.
+- [ ] A staleness vector bumps the event revision and lists exactly the dependent plan and film ids as stale, and a sync-revision bump on Camera 2 does not stale a plan that uses only Camera 1.
+- [ ] Every vector case carries a hand assertion; deleting the reference function body makes the validator fail (shown once in the PR).
+- [ ] No existing generated file changes (sha256 list) and no core spec/ file is in the diff.
+
+**Evidence required**
+
+- python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- `validate_studio.py --list` output with the new kinds
+- spec/studio/modules/keepers.md and progress.md
+
+**Owned areas**
+
+- `spec/reference/studio/keepers.py`
+- `spec/reference/studio/staleness.py`
+- `spec/reference/studio/progress.py`
+- `spec/reference/studio/cases/keepers_cases.py`
+- `spec/reference/studio/cases/progress_cases.py`
+- `spec/studio/fixtures/vectors/keepers.json`
+- `spec/studio/fixtures/vectors/staleness.json`
+- `spec/studio/fixtures/vectors/progress-comparison.json`
+- `spec/studio/modules/keepers.md`
+- `spec/studio/modules/progress.md`
+
+**User stories:** 102, 104, 107, 134, 135, 136, 137, 230, 231, 251
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S06: Python reference: StoryDirector grammar lint and the RulesPlanner for five profiles and three lengths, with documented fallbacks
+
+`studio-reference-planner-compile` · S0 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S0`
+
+**Blocked by:** S05
+
+**What to build:** The planning half of the oracle every planner port must match (Swift on device S37, TypeScript on the server S88). `director.py` loads story-profiles.v1.json and produces a StoryBrief per profile and options (length 3 min, 5 min, Full = profile maximum bounded by coverage; aspect 16:9, 9:16 letterboxed; in-app audio policy per SD5; Rally Pulse effects Subtle by default, shake off, keep full rallies on; caption, dedication, venue opt-in) and lints a brief against the machine grammar (film-engine section 6 bold rules). `planner.py` is the deterministic RulesPlanner (contract planner kind heuristic): it emits a StoryPlan of beats made only from keeper, B-roll and card-template ids, with the documented fallback per profile when evidence is missing ('Your examples', one-angle match with chapters, lesson chronology, court-sound highlights with static titles, one-camera excerpts with real stills), the omitted ideas and missing evidence listed, and card text only from templates with typed slots. Compilation to an EDL is S07. The module page planner.md declares the director and planner kinds with `swift: pending`. Why blocked: S05 (keeper ranking is the planner's input).
+
+**Acceptance criteria**
+
+- [ ] For each of the five profiles x {3 min, 5 min, Full} on the sample-court-day context, the director's brief passes the grammar lint and the planner emits a StoryPlan that references only catalog ids (vector kind planner, at least 15 passing cases).
+- [ ] Fallback vectors: no keepers -> 'Mark a few moments first' refusal; Coach's Cut with no reviewed cue -> 'Your examples' with no instruction card; Progress Story with non-comparable sessions -> lesson chronology with a method-change note; Court Memories with no B-roll -> the Arrival chapter shrinks; each lists its omitted ideas.
+- [ ] Negative vectors that must fail: a planner output naming a keeper id not in the catalog (untrustedReference), a card with free text (unknownField), a brief that breaks a bold grammar rule (grammarViolation).
+- [ ] Planning the same brief twice gives byte-identical canonical JSON (determinism check in the validator).
+- [ ] python3 scripts/spec/validate_studio.py output ends in RESULT: PASS and `--list` shows the director and planner kinds with swift pending.
+
+**Evidence required**
+
+- python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- `validate_studio.py --list` with the director and planner kinds
+- spec/studio/modules/planner.md
+
+**Owned areas**
+
+- `spec/reference/studio/director.py`
+- `spec/reference/studio/planner.py`
+- `spec/reference/studio/cases/planner_cases.py`
+- `spec/studio/fixtures/vectors/planner.json`
+- `spec/studio/modules/planner.md`
+
+**User stories:** 117, 118, 119, 120, 125, 137, 145, 146, 147, 157
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S07: Python reference: the EDL compiler (StoryPlan to jovra.edit-plan/2) with PTS snapping, the audio bed, the S1 allowlist, gap cards and no upscale
+
+`studio-reference-compile` · S0 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S0`
+
+**Blocked by:** S06
+
+**What to build:** `compile.py` turns a StoryPlan plus the trusted context into a `jovra.edit-plan/2`: boundaries snapped to real frame PTS with the one half-up rounding rule, the audio bed computed (primary-bed only under live, hold-bed over real dead time, alt-bed only with a reviewed map, switches on boundaries with fades), the S1 operation allowlist (SD6b) enforced, the renderer's supported-operation set taken from the trusted context (operations outside it are omitted with reason notInThisBuild and listed, so a renderer that is still being built can render an honest subset), output fps = the primary's capture fps with a refusal above source rate, no upscale (a 1280x720 source compiles to a 1280x720 output), a gap card wherever a one-camera source restarted (the film shows the gap and no final card unless coverage is complete), canonical JSON and its sha256. Every compiled plan must pass the existing `edl.validate`. Module page compile.md declares the compile kind with `swift: pending`. Why blocked: S06 (StoryPlans are its input).
+
+**Acceptance criteria**
+
+- [ ] For each of the five profiles x {3 min, 5 min, Full} on the sample-court-day context, the compiled EDL passes `edl.validate` (vector kind compile, at least 15 passing cases).
+- [ ] A compile vector requesting a 1/2x replay from a 30 fps source at 30 fps output omits the replay with reason cleanFrame and plays the original speed instead (originalSpeedFallback); the same request from the 60 fps source compiles.
+- [ ] A compile vector with a 1280x720 primary and a requested 1920x1080 fill output is refused with upscaleRefused, and the default output spec for that source is 1280x720.
+- [ ] A one-camera Match Broadcast vector whose source restarted compiles a gap card at the restart and no final card (coverage incomplete); the same source without the restart gets the final card.
+- [ ] A context whose renderer supported-operation set lacks title cards compiles with every title beat omitted (notInThisBuild) and listed; the plan still validates.
+- [ ] Compiling the same StoryPlan twice gives byte-identical canonical JSON and the same sha256 (determinism check).
+- [ ] The Court Memories final film plan compiled from story-brief.court-memories.json reproduces chapters 42 + 141 + 75 s = 258 s (hand assertion).
+
+**Evidence required**
+
+- python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- `validate_studio.py --list` with the compile kind
+- spec/studio/modules/compile.md
+
+**Owned areas**
+
+- `spec/reference/studio/compile.py`
+- `spec/reference/studio/cases/compile_cases.py`
+- `spec/studio/fixtures/vectors/compile.json`
+- `spec/studio/modules/compile.md`
+
+**User stories:** 125, 127, 128, 148, 157
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S08: Studio media fixtures: barcode and click sources at 24/30/60 fps, the coherent synthetic match with barcode and click tracks, and labelled synthetic angle renders
+
+`studio-media-fixtures` · S0 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S0`
+
+**Blocked by:** S03, T11
+
+**What to build:** Frame-truth media for every Studio renderer and verifier (film-engine section 7, ADR-0012 extended). A deterministic script under scripts/media/studio/ (reusing core T10's renderer core, never forking it) generates: barcode sources at 24, 30 and 60 fps whose every frame carries a machine-readable frame id and whose audio has 1 kHz clicks at known frames; a two-segment variant with a restart; a no-audio variant; a coherent synthetic match built on the core synthetic sample video (T11) with barcode and click tracks whose point events fold to a known score; short B-roll clips marked 'Sample video (synthetic)'; and six angle-labelled synthetic renders of the match sample for the ST27 demo (each a visibly different synthetic view of the same timeline with the angle name and Sample badge burned in; they are not a multi-camera simulation, which is S58). Media is generated at test time into a cache folder; only ground-truth manifests (frame maps, click frames, hashes, generator version) are committed under spec/studio/fixtures/media/. A bundled demo subset for the app has a size budget (lead to confirm: at most 25 MB) and a script that installs it. A reader utility decodes a frame id from a barcode frame so tests can compare output frames to a plan. Why blocked: S03 (module pages and media manifests by convention); T10 (frame-counter renderer core and ground-truth schema); T11 (the synthetic sample video and its bundling step). Implied through other blockers and not repeated as edges: T10 (through T11).
+
+**Acceptance criteria**
+
+- [ ] Running the generator twice produces byte-identical media files (sha256 list) and the committed ground-truth manifests are unchanged.
+- [ ] The barcode reader recovers the frame id of every frame of the 24, 30 and 60 fps sources (100% on a full decode); flipping one barcode bit in a scratch copy makes the reader report a mismatch.
+- [ ] Click detection on each source finds every click within +/-1 output frame of its ground-truth frame and no extra clicks.
+- [ ] The synthetic match's point events fold through the core reference (spec/reference) to the score stated in its manifest (hand-checked literal in the test).
+- [ ] Every generated frame of the demo angle renders and B-roll clips carries the Sample label (checked on sampled frames by the reader).
+- [ ] The bundled demo subset is within the stated budget (du output) and no media file is committed outside the bundled subset (CI check lists added binary paths).
+
+**Evidence required**
+
+- Generator run log with sha256 list (two runs)
+- Reader and click-detection test output
+- du of the bundled subset and the CI added-binary check output
+- spec/studio/modules/media-fixtures.md
+
+**Owned areas**
+
+- `scripts/media/studio/ (barcode, click, match and angle generators; reader)`
+- `spec/studio/fixtures/media/ (ground-truth manifests and hashes only)`
+- `ios/Jovra/Resources/StudioSampleMedia (bundled demo subset)`
+- `spec/studio/modules/media-fixtures.md`
+
+**User stories:** 13, 14, 215, 252
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S09: Barcode-court trusted context and compile vectors over the S08 media, covering every S1 operation
+
+`studio-barcode-court-context` · S0 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S0`
+
+**Blocked by:** S07, S08
+
+**What to build:** The renderers (S41, S42 on device, S92 in the cloud) and FilmVerifier (S40) need edit plans bound to real media files with real hashes and PTS tables; the sample-court-day context has none. This ticket builds a barcode-court trusted context from the S08 barcode/click sources and the coherent synthetic match: SourceManifests with the real sha256 and decoded PTS-table hashes, an identity SyncMap, keeper and B-roll catalogs and a point-event fold, and compile vectors over it (through S07) that exercise every S1 operation: live, B-roll, replay 1/2x from the 60 fps source at 30 fps output, freeze, cut, dissolve, dip to forest, title card and gap card, each overlay kind (score bug, metric chip, cue chip, provenance chip, replay and paused labels, Sample badge, one 2D annotation), primary-bed, hold-bed and silence, the 9:16 letterbox output and the clean alternate. Each vector carries the expected output frame map (output frame -> source frame id) and click frames, so a renderer test compares barcodes directly. Media stays generated at test time; only the context records (with hashes) and vectors are committed. Why blocked: S07 (the compiler); S08 (the media and its ground truth).
+
+**Acceptance criteria**
+
+- [ ] Every operation of the S1 allowlist appears in at least one barcode-court compile vector (a coverage check in the validator lists each operation with its vector ids and fails on a missing one).
+- [ ] The context's manifest hashes equal the sha256 of the media the S08 generator produces (the validator regenerates into the cache and compares).
+- [ ] Each vector's expected frame map is consistent with its plan (validator check) and every compiled plan passes `edl.validate`.
+- [ ] Changing one generator parameter in a scratch run changes a media hash and the validator reports the context as stale.
+- [ ] python3 scripts/spec/validate_studio.py output ends in RESULT: PASS.
+
+**Evidence required**
+
+- python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- Operation-coverage table from the validator
+- spec/studio/modules/barcode-court.md
+
+**Owned areas**
+
+- `spec/studio/fixtures/records/barcode-court/`
+- `spec/reference/studio/cases/barcode_court_cases.py`
+- `spec/studio/fixtures/vectors/barcode-court.json`
+- `spec/studio/modules/barcode-court.md`
+
+**User stories:** 158, 252
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S10: JovraStudioCore contracts: Codable models for every jovra.* Studio schema, canonical JSON and a manifest test that fails on an unconsumed fixture
+
+`studio-swift-contracts` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S03, S04, T03
+
+**What to build:** STU-01. JovraStudioCore reads and writes every Studio contract: project-lock, source-manifest, sync-map, observation, keeper and B-roll catalogs, story-profile catalog, story-brief, edit-plan/2, reference-catalog, render-job, quote, usage-reservation, delivered-artifact, lesson, camera-invite, storage-providers, plus the contract data files (story-profiles.v1.json, render-job-transitions.v1.json, credit-classes.v1.json). Decoders are strict (unknown fields and integral floats refused, as the reference does), ids and hashes are checked with ECMA-262 pattern semantics (a value ending in a newline is refused even though the core Python gate still accepts it, SOF-R4-02, which stays open for the core gate owner), canonical re-encoding reuses core T03's canonical JSON writer and is byte-identical to the fixtures, and time values use exact rationals and integer microseconds (SD7) with the one half-up rounding function. Record round-trips are registry-driven: each schema id maps to a decoder registered by the Swift module that owns it, so later tickets register their own decoders in their own folders. A manifest test enumerates spec/studio/fixtures (records, invalid and vectors; fixtures/media belongs to the media package tests) and reads each module page's front matter: a kind whose page says `swift: consumed` must be consumed by a registered Swift test, a kind whose page says `swift: pending` may be unconsumed, and a kind or schema in no page fails. There is no shared allow-list file: each later Swift ticket flips only its own module page's status line, so parallel tickets never edit the same file, and a spec ticket that adds a kind (S56, S68) lands it as pending. This ticket flips the records page to consumed. Why blocked: S03 (module pages carry the swift consumption status the manifest test reads); S04 (the package exists); T03 (canonical JSON, pct and provenance models in JovraCore are reused, not copied).
+
+**Acceptance criteria**
+
+- [ ] Every record under spec/studio/fixtures/records whose schema has a registered decoder decodes and re-encodes byte-identically (count printed by the test, never asserted as a literal).
+- [ ] Every schema-layer invalid case for a registered schema is refused by the Swift decoder; the id/hash trailing-newline cases are refused even though Python `re.search` would accept them (finding 6).
+- [ ] An integral float (744.0) in a frame field and an unknown property are refused (negative tests).
+- [ ] The manifest test fails when a new fixture kind is added with no module page, and when a page says `swift: consumed` with no Swift consumer (both shown in the PR with temporary files); it passes when a new kind's page says `swift: pending`.
+- [ ] SOF-R4-02 remains listed as open in the register (this ticket does not close it) and the PR links the core-owner issue for the core gate fix.
+- [ ] `swift test --package-path ios/Packages/JovraStudioCore --filter Contracts` passes on macOS and in the Linux CI job.
+- [ ] No file under spec/ changes except the records module page's swift status line (diff stat).
+
+**Evidence required**
+
+- swift test --filter Contracts output (macOS) and the Linux CI log
+- Manifest-test negative transcripts
+- `validate_studio.py --list` showing each kind's swift status after this change
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Contracts`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Contracts`
+- `spec/studio/modules/records.md (swift status line only)`
+
+**User stories:** 162, 232, 251
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S11: EDL validator in Swift with parity to edl.py: rules 1-12, the round-2 tightenings, clean alternate and the stage operation allowlist
+
+`studio-edl-validator-swift` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S10
+
+**What to build:** STU-02. `EDLValidator.validate(edl, trustedContext) -> [Finding]` implements every rule of spec/reference/studio/edl.py with the same finding codes: trusted lookups, revision binding, strict chronology where the profile says so, half-open coverage intervals (a live segment on the first frame of a restarted interval maps through that interval, finding 0), one 1x showing per moment (replayWithoutLabel in every profile, finding 1), contact protection from every stored contact rather than the plan's keeperId (finding 2), clean-frame replays, one audio bed per frame with bed switches only on segment boundaries and fades at cuts and dips across dissolves (bedSwitchNotAtBoundary, fadeTooShort, courtBedOffLive, finding 7), projectMismatch (finding 8), overlay references resolved against the ReferenceCatalog with stored kind and provenance (overlayOutsideMoment), accessibility (3 flashes per second, text hold, clean alternate whenever motion is used), output limits and the refusal of any path, URL, command, approval or price field. `cleanAlternate(edl)` derives the SD17 alternate. A stage allowlist (SD6b) is separate from the contract: S1 enables live, broll, replay (clean-frame), freeze, title-card, cut/dissolve/dip, the overlay kinds, grade none, primary-bed, hold-bed and silence; S2 and S5 operations are refused with stageNotEnabled until their tickets flip one entry each. The validator refuses to run without the trusted context (contextMissing). Why blocked: S10 (contract models).
+
+**Acceptance criteria**
+
+- [ ] Every edit-plan invalid case under spec/studio/fixtures/invalid fails in Swift with the same finding code as the reference (count printed; zero mismatches).
+- [ ] Every valid edit-plan record and every edl-context vector passes as stored; the two clean-alternate pairs are reproduced byte for byte by cleanAlternate.
+- [ ] Regression tests reproduce the verifier repros for findings 0, 1, 2, 7 and 8 (restart-frame mapping, re-shown live moment, keeperId nulled over a contact, alt-bed return mid-segment and alt-bed at a dissolve, foreign projectId), each rejected with its code; reverting the corresponding rule in a scratch build makes that test fail.
+- [ ] The Rally Pulse 9:16 fixture (moving reframe, music) is accepted by the contract validator and refused by the S1 stage allowlist with stageNotEnabled for reframe and music.
+- [ ] validate() without a trusted context returns contextMissing.
+- [ ] `swift test --filter EDL` passes on macOS and Linux; the edl module page now reads `swift: consumed` and the manifest test passes.
+
+**Evidence required**
+
+- swift test --filter EDL output with the per-code parity table
+- Linux CI log
+- Scratch-revert transcript for one regression test
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/EDL (validator, clean alternate, stage allowlist)`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/EDL`
+- `spec/studio/modules/edl.md (swift status line only)`
+
+**User stories:** 148, 152, 153, 233, 240
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S12: Job state machine, quote/consent state machine and the reservation ledger in Swift with parity to jobstate.py and ledger.py
+
+`studio-ledger-jobstate-swift` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S10
+
+**What to build:** STU-04. One `RenderJobMachine` for local and cloud jobs replays render-job-transitions.v1.json (states draft ... ready, paused, canceled, failed_retryable, failed_terminal, quote_expired, budget_exceeded, deleted; resumeStage checked, never trusted; retries counted; local jobs skip the cloud-only states; `analyzing` is evidence consolidation and is never shown as analysis). `QuoteReservation` is the pure client state machine none -> requested -> presented(expiresAt) -> consented -> accepted(reservationId), with expired, aboveCap, unavailable(reason) and demoDisabled; parsed times, never string comparison; the client never computes a price the server trusts. `Ledger` mirrors ledger.py: key (projectId, planRevision, outputSpecSha256), one reservation per accepted quote, top-up on budget_exceeded keyed by the top-up quote and never by initialQuoteId, consumption once per (job, stage) when an attempt succeeds, entries tied to the record (badEntryKey; finding 5), a remembered history of applied (quoteId, credits) so a redelivered reserve or top-up replays instead of returning idempotencyConflict (finding 9), demo holds zero, test is Sample, live refused (liveChargingNotActivated). Why blocked: S10.
+
+**Acceptance criteria**
+
+- [ ] All 32 job-transition, 21 ledger and 8 quote-credit vectors pass with the reference's outputs; the render-job, quote and usage-reservation invalid cases fail with the same codes.
+- [ ] Regression tests for finding 5 (a second reserve key 'reserve:<k>:retry' summed into the hold) and finding 9 (redelivered reserve and top-up after a top-up) are rejected and replayed respectively; reverting either rule in a scratch build makes the test fail.
+- [ ] A property test of 1,000 seeded random retry/redelivery sequences never makes reserved exceed cap and never charges a stage twice.
+- [ ] QuoteReservation refuses consent after expiresAt parsed at fractional seconds (vector at ...:00.500Z) and in demo mode ends in demoDisabled with no reservation.
+- [ ] `swift test --filter Ledger` passes on macOS and Linux.
+- [ ] The jobstate and ledger module pages read `swift: consumed` and the manifest test passes.
+
+**Evidence required**
+
+- swift test --filter Ledger output (macOS + Linux CI)
+- Property-test seed and summary
+- Scratch-revert transcript for findings 5 and 9
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Ledger (job machine, quote state, reservation ledger)`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Ledger`
+- `spec/studio/modules/jobstate.md and ledger.md (swift status lines only)`
+
+**User stories:** 185, 186, 193, 194, 197, 198, 199, 201
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S13: StudioProjectStore and StudioSampleContent: project folders, atomic studio.json, revisions, delete scopes, and the removable Studio sample
+
+`studio-project-store-sample` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S10, T05, T09
+
+**What to build:** A Studio project is a folder in app storage with a versioned studio.json written write-temp-then-rename (ADR-0002 pattern) plus its manifests, sync maps, catalogs, plans, EDLs and film records; originals are referenced by session and segment, never copied (imported angles are ordinary core sessions). Interface as in the spec: create(kind: match | lessonSeries, primarySession?), addSource(sessionId, slot), assignSlot (slotTaken on an occupied slot), setPrimary, revisions() (monotonic sourceManifestRevision, syncRevision, keeperRevision and the event-log version), lock(profile, output) -> ProjectLock, films(projectId), delete(scope: derived | cloudCopies | project) where no scope deletes an original; the index is rebuilt from folders when missing. StudioSampleContent installs the distinct sample identities (match sample on the core Jon vs Alex 124-point log, import, sync, lesson, progress, Court Memories film, storyboard, queue, quote and provider samples) from the spec/studio sample-court-day records with isSample, removes them in one action, and keeps them out of stats, trends, lessons and goals (core sample-scope rule). It also defines `StudioEntitlements.localStudio` (SD2, D-4), true in every build, which every local Studio entry and film path reads, so Jon's answer to open question 9 becomes a configuration change rather than a code change. Bundled copies of the sample records are byte-equal to spec/studio/fixtures (checked by a test, refreshed by a script). Why blocked: S10 (models); T08 (atomic document store and MediaLibrary custody patterns); T09 (core sample library, Jon vs Alex log and the sample-scope rule); T04 (the fold that computes 6-4 6-3); T05 (the stats and trends queries the sample-scope test reads). Implied through other blockers and not repeated as edges: T08 (through T09), T04 (through T05).
+
+**Acceptance criteria**
+
+- [ ] Killing the process between temp write and rename (injected fault) leaves the previous studio.json intact and loadable; a corrupted index is rebuilt from folders with the same project list.
+- [ ] assignSlot on an occupied slot throws slotTaken; delete(scope:) for each scope leaves every original's bytes and sha256 unchanged (hash before/after in the test).
+- [ ] Installing the sample yields a match project whose score computed by the core fold reads Jon 6 6 / Alex 4 3, Final; removing it deletes every isSample project and leaves non-sample projects untouched.
+- [ ] After installing the sample, the core stats and trends queries return the same values as before installation (sample-scope rule test); the goals query (T48) is not an ancestor and is listed as not run in the S34 status report.
+- [ ] The bundled sample records are byte-identical to spec/studio/fixtures/records (sha256 equality test); changing one byte in a scratch copy fails it.
+- [ ] `swift test --filter Project` and `--filter SampleContent` pass on macOS and Linux.
+- [ ] StudioEntitlements.localStudio is true in every build configuration; a scratch build that sets it false makes the store refuse to create a film project with the stated reason, while originals, exports and core features stay available (test).
+
+**Evidence required**
+
+- swift test output for Project and SampleContent (macOS + Linux)
+- Fault-injection transcript
+- scripts/studio/sync-sample-resources.sh run output
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Project`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/SampleContent`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Project`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/SampleContent`
+- `ios/Jovra/Resources/StudioSample`
+- `scripts/studio/sync-sample-resources.sh`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Entitlements`
+
+**User stories:** 13, 14, 15, 16, 22, 27, 69, 162, 163, 165, 225
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S14: CloudClient protocol with the DemoCloudClient, a configuration-gated Test adapter shell and a disabled Live adapter
+
+`studio-cloud-client-demo` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S12
+
+**What to build:** SD11. One protocol: mode() -> CloudMode {demo, test, live, unavailable(reason)}, identity(), quote, accept(quote, consent, cap, idempotencyKey) -> JobRef, openUpload, uploadPart, completeUpload, job(jobId) -> AsyncStream<JobSnapshot>, pause, resume, cancel, artifacts, download (resumable), shareLink(create | refresh | revoke), deleteCloudCopies, exportMyData, deleteAccount. DemoCloudClient is in-process and deterministic: fixture transcripts (the queue sample: Upload complete for 3 sources, Align angles complete and reviewed, Build film at 42% of its stage, Verify export queued), every failure state injectable by launch argument (paused, retryable, terminal, canceled, budgetExhausted, quoteExpired, notSignedIn, aboveCap, partial upload, expired link, revoked access, deletion running/failed), Sample quotes with charging disabled ('Sample quote $4-$8, limit $12'), no network and no token of any kind. The Test and Live adapters exist only as shells here: Test refuses to start with 'Test backend not configured' when STUDIO_ENVIRONMENT is not test or its URL/key are missing; Live is compiled but always unavailable until an activation flag, configuration and recorded S4 gates exist (the HTTP implementation is S97). Why blocked: S12 (job and quote state machines drive the transcripts).
+
+**Acceptance criteria**
+
+- [ ] Each injectable failure state is reached by its launch argument and its JobSnapshot sequence matches a committed transcript (one test per state).
+- [ ] A demo job's stages replay through RenderJobMachine without a refused transition; the 42% is stage progress of Build film, never an overall percentage.
+- [ ] Every demo quote is flagged Sample and accept() in demo returns demoDisabled with no reservation; there is no code path in DemoCloudClient that constructs a URLRequest (grep in CI plus a URLProtocol trap test).
+- [ ] With STUDIO_ENVIRONMENT=test and no URL configured, mode() returns unavailable('Test backend not configured'); with demo it returns demo; Live returns unavailable in every build configuration of this ticket.
+- [ ] `swift test --filter Cloud` passes on macOS and Linux.
+
+**Evidence required**
+
+- swift test --filter Cloud output
+- The committed demo transcripts
+- CI grep showing no URLRequest/URLSession use in DemoCloudClient
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Cloud (protocol, CloudMode, DemoCloudClient, transcripts, adapter shells)`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Cloud`
+
+**User stories:** 17, 20, 189, 190, 193, 194
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S15: Studio shell: StudioRouter, the -studioState harness, window-class layout helper, shared Studio components and the UI-test network trap
+
+`studio-shell` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S01, S13, S14, T07, T12
+
+**What to build:** StudioRouter adds the push routes of studio-screens.md section 0.1 to the owning tab's stack and one full-screen route family (directorCapture, projectPlayer, syncDesk, storyboard) through a single `.studio(...)` case in the app's FullScreenRoute and the core service-registration seam, so no later Studio ticket edits App files. Deep link jovra://studio/film/<id> opens ST39; jovra-room payloads are never accepted as URLs. A launch-argument harness `-studioState <screen>.<state>` installs the demo adapter and the Studio sample and opens any route in any state; it is parsed through one namespaced hook in core LaunchConfiguration, and every Studio screen family registers its states in its own file. A UI test base class installs a URLProtocol network trap and offers the accessibility checks. A `StudioPaneLayout` helper chooses panes from the window's width and height class and text size per ADR-0025 (never the device idiom) and persists selection, the rational playhead and draft ids in scene storage, so every workspace ticket reuses it. Cross-family components are built once in DesignSystem/Studio (FilmCard, StudioFactTile, NextStepRow, LessonRow, TodayFocusCard, CameraSlotRow/AddSlotRow, ComparisonPair, DemoBanner use, the Studio token additions anchor, gapHatch and sourceTint1-6 paired with number tags); single-family components stay in their feature folders. Every Studio entry path reads StudioEntitlements.localStudio. Studio copy is not frozen before the S01 reconciliation (glossary terms, D-4/D-5). Studio Home itself is S17 and the cross-family sheets are S16. Why blocked: S01 (glossary terms and the working-default copy rules Studio copy must use); S13 (store, sample and entitlement); S14 (demo cloud mode); T07 (router, typed routes, service registration, permissions center); T12 (design-system components and badges).
+
+**Acceptance criteria**
+
+- [ ] Every registered -studioState value opens its route in a UI test, and an unknown value fails with a listed error (harness self-test).
+- [ ] The five-tab bar is unchanged: the core smoke tests pass and a Studio test asserts exactly the tabs Home, Sessions, Record, Insights, Profile with no Studio tab.
+- [ ] Opening jovra://studio/film/<sample id> shows ST39's placeholder route; passing a jovra-room:1:... string as a URL opens nothing and logs a refusal.
+- [ ] StudioPaneLayout unit tests: for the ADR-0025 breakpoint table (compact, medium, expanded, large widths x compact/medium/expanded heights, and accessibility text sizes) it returns the documented pane count; no test or source line reads userInterfaceIdiom (grep).
+- [ ] A scratch build with StudioEntitlements.localStudio false hides every Studio entry with the stated reason; the core tabs are unchanged.
+- [ ] The network trap fails a deliberately networked scratch test and records zero requests across the harness self-test.
+- [ ] The App and LaunchConfiguration diff is limited to one FullScreenRoute case, one registration call and one namespaced launch-argument hook (diff stat), with the core owner's review recorded.
+- [ ] Shared components render in light, dark and AX5 snapshot tests without clipping; every control is at least 44 x 44 pt.
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S15 with -only-testing for the harness and component test classes: class names, pass count and the .xcresult path
+- StudioPaneLayout unit test output
+- Component snapshots under evidence/ios/studio/S15-studio-shell/ in light, dark and AX5
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Shell`
+- `ios/Jovra/DesignSystem/Studio (components, StudioPaneLayout; not Sheets/)`
+- `ios/JovraUITests/Studio/Support`
+- `ios/Jovra/App (one FullScreenRoute case and one registration line only, core-owner review)`
+- `ios/Jovra/Platform/LaunchConfiguration (one namespaced -studioState hook only, core-owner review)`
+
+**User stories:** 234, 236, 237, 238, 239
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S16: Shared Studio sheets in their demo states: A4 missing-file repair, A6 delete scope, A11 expired or revoked invite, A13 preview feedback, A14 film versions, A23 lesson picker, A24 session picker
+
+`studio-shared-sheets` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S15
+
+**What to build:** Sheets used by more than one screen family are built once, here, under DesignSystem/Studio/Sheets, with typed payloads and their demo states, so the parallel screen tickets present them and never rebuild them: A4 (missing-file repair entry: 'Find the video', matched by hash), A6 (delete scope: this film, editing copies (proxies), cloud copies; never an original), A11 (expired code, full slot, revoked invite), A13 (preview feedback that produces a new plan version request), A14 (film versions with revisions and 'Made before a correction'), A23 (lesson picker) and A24 (session picker). Each sheet registers its states with the -studioState harness. Single-family sheets stay with their screen tickets. Why blocked: S15 (shell, harness, components).
+
+**Acceptance criteria**
+
+- [ ] XCUITest opens each of A4, A6, A11, A13, A14, A23 and A24 in every state through -studioState and asserts screens.json copy.
+- [ ] A6 never lists an original (string assertion over every state).
+- [ ] A14 lists versions newest first with their event revision and marks stale ones 'Made before a correction' (from the Sample film records).
+- [ ] Each sheet's typed payload is the only way to present it (no untyped route; compile-time check documented).
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S16 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S16-studio-shared-sheets/ in light, dark and AX5 for every state this ticket adds
+
+**Owned areas**
+
+- `ios/Jovra/DesignSystem/Studio/Sheets`
+- `ios/JovraUITests/Studio/Sheets`
+
+**User stories:** 64, 165, 172, 224, 225
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S17: Studio Home (ST21) in every state, bound to store queries rather than fixed demo values
+
+`studio-home` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S16
+
+**What to build:** Studio Home (ST21) shows the latest film, this month's lessons (a named LessonsSlot filled by S49), Build your match and next step, with states noFilms, firstSession, localDemo, cloudUnavailable, lastJobFailed, filmVerifying, filmStale, noLessons, loading, and the angle tile gated by the build's stage (anglesOneInThisBuild, anglesFromFilesOnly; finding 40). Every value comes from StudioProjectStore and job-state queries (latest FilmRecord, last job outcome, lesson count), so the same screen shows real data once local films exist (checked in S44); in demo those queries return the Studio sample. The Delete scope sheet (A6) is the shared one from S16. Why blocked: S15 (shell, harness, components); S16 (shared sheets). Implied through other blockers and not repeated as edges: S15 (through S16).
+
+**Acceptance criteria**
+
+- [ ] XCUITest opens ST21 in each of its 12 states (normal + 11) by -studioState and asserts the brief copy from design-reference/studio/brief/screens.json (documented differences listed in the test file).
+- [ ] In the S0 build the angle tile reads one angle and VoiceOver says 'One camera angle in this build'; a test fails if it reads 'Up to 6' before the S3 flag is on.
+- [ ] Changing the Sample's latest FilmRecord in a scratch store changes the latest-film card (proves the screen reads the store, not constants).
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S17 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S17-studio-home/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S17-studio-home/side-by-side.html against design-reference/studio/screens/21-studio-home.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Home (except LessonsSlot contents)`
+- `ios/JovraUITests/Studio/Home`
+
+**Screens:** 21-studio-home
+
+**User stories:** 7, 8, 9, 10, 11, 12, 13, 14, 17, 20
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S18: Demo screen: Build your match (ST22) with the court placement diagram and sheets A21 and A22
+
+`studio-build-match-demo` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S15, T13
+
+**What to build:** Every state of ST22 reachable in demo with Sample data and no network, plus sheets A21 (slot sheet) and A22 (capture method). ST22 draws the CourtPlacementDiagram with six numbered slots and view cones from core CourtGeometry, primary defaulted to the near baseline, the 'outside the playing area' reminder, occupiedRole, unsafePlacement, capabilityUnavailable and pairingNotInBuild. In this build 'Invite other phones' shows a 'Pairing arrives in a later version' StateCard (unsupportedBeforeS3) outside -studioState, with 'Use videos I already have' as the working alternative. Why blocked: S15 (router, harness, shared components); T13 (CourtGeometry and the court diagram components).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST22 (normal + 5 states) and sheets A21 and A22, asserting screens.json copy.
+- [ ] Slot numbers are carried by number tags as well as colour (trait or label assertion on each slot).
+- [ ] Outside -studioState, choosing 'Invite other phones' shows the unsupportedBeforeS3 StateCard with 'Use videos I already have' as the working alternative.
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S18 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S18-studio-build-match-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S18-studio-build-match-demo/side-by-side.html against design-reference/studio/screens/22-build-your-match.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Match`
+- `ios/JovraUITests/Studio/Match/Demo`
+
+**Screens:** 22-build-your-match
+
+**User stories:** 22, 23, 24, 25, 26, 27, 28, 31
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S19: Demo screens: Camera lobby (ST23) and Director capture (ST24) driven by the fixture room, with sheets A1, A2 and A3
+
+`studio-lobby-director-demo` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S16
+
+**What to build:** Every state of ST23 and ST24 reachable in demo with Sample data and no network, plus sheets A1 (permission explainers), A2 (acknowledgement detail) and A3 (stop one vs stop all); A11 is the shared sheet from S16. ST23 and ST24 are driven by a fixture room: an in-process transcript player (JVR-482 expiring in 10 min; Camera 1 Jon's iPhone Ready, Camera 2 Alex's phone Ready, Camera 3 Corner left Waiting; REC 12:34; stills aged 8 s and 12 s; battery 78%, 2 h 10 min left; 3 of 3 recording) whose message shapes are provisional until S69 replaces them with schema-valid jovra.room/1 messages. Capture controls are at least 64 pt (Stop 76 pt), acknowledgement changes are announced, a camera silent beyond the ADR-0027 freshness bands reads 'No contact for 0:42 · may still be recording' and never 'Stopped', it is not counted in 'Recording on n of m', secondary stills are never labelled live, and the 'Primary - Live' chip means the live picture, never live analysis. Outside -studioState the lobby and director routes show the unsupportedBeforeS3 StateCard. Why blocked: S15 (router, harness, components); S16 (A11). Implied through other blockers and not repeated as edges: S15 (through S16).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST23 (normal + 12 states) and ST24 (normal + 9 states) and sheets A1, A2, A3, asserting screens.json copy.
+- [ ] ST24 capture controls measure at least 64 pt and Stop at least 76 pt (frame assertions); the stop sheet offers 'Stop this phone', 'Stop all cameras (3)' and 'Keep recording'.
+- [ ] A test asserts no element in ST24 contains the words 'analysing', 'analyzing' or 'live analysis', and the silent camera row reads 'No contact for 0:42 · may still be recording' while the aggregate counts only fresh acknowledgements.
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S19 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S19-studio-lobby-director-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S19-studio-lobby-director-demo/side-by-side.html against design-reference/studio/screens/23-camera-lobby.png, design-reference/studio/screens/24-director-capture.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Lobby`
+- `ios/Jovra/Features/Studio/Director`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Room/FixtureRoom`
+- `ios/JovraUITests/Studio/Capture`
+
+**Screens:** 23-camera-lobby, 24-director-capture
+
+**User stories:** 33, 38, 39, 40, 47, 48, 49, 50, 51, 53, 58
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S20: Demo screens: Source import (ST25) and the Sync workspace (ST26: sheets in compact windows, the desk in expanded windows)
+
+`studio-sources-sync-demo` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S16
+
+**What to build:** ST25 in every state with the import sample (Camera 1 Baseline, Camera 2 Far baseline, Camera 3 Corner, 60 min and 3.6 GB each, 10.8 GB total computed from the Sample manifest records, 'Originals stay on your phone.') and states oneOldMatch, noAudio, unsupportedMedia, duplicate, partialSource, mixedFormats, insufficientSpace, working; it presents the shared A4 and A24 sheets from S16. ST26 as sync sheets in a compact window and the syncDesk full-screen workspace in a width-expanded-or-wider window (ADR-0025, chosen by StudioPaneLayout, never by device) with SourceCard, SyncTimeline, WaveformLane, AnchorMarker and SyncInspector; the default state shows Camera 2 before confirmation (offset +120 ms, drift 18 ms/min, Estimated, anchor at 00:12.320, from the Sample sync records, never typed constants) and the states manualMarkers, failedAlignment, noOverlap (shown as the contract's failed state with 'No shared coverage'), drift, gapRestart, mutedSource ('visible events you mark'), normalizingProxy, needsReview and the confirmed Reviewed record; sheet A10 (manual markers) in its demo form. Sync numbers are presented as alignment, never as ball or swing speed. Timelines are adjustable for VoiceOver (step by point, Frame rotor) and waveform pixels are hidden with the data given as text. Hardware-keyboard shortcuts (space, arrows, shift-arrows, J/K/L, cmd-return) work in the desk. Why blocked: S15; S16 (A4, A24). Implied through other blockers and not repeated as edges: S15 (through S16).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST25 (normal + 8 states) and ST26 in compact and expanded windows (normal + 8 states + Reviewed) and sheet A10, and presents A4 and A24, asserting screens.json copy.
+- [ ] The ST25 totals and ST26 offset/drift values are read from the Sample records by the engine (a test changes the Sample sync record in a scratch fixture and the label changes accordingly).
+- [ ] VoiceOver adjustable action on a sync lane moves by one point and reads time, point and state ('12 minutes 46 seconds, point 42, Camera 2 needs review').
+- [ ] The desk responds to space (play/pause) and cmd-return (Confirm sync) in a hardware-keyboard UI test in an expanded window.
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] Layout follows ADR-0025, never the device: the workspace layout appears when the window is width-expanded or wider with height at least medium, and the same iPad in compact-width Split View gets the phone (sheet) layout; a UI test resizes mid-edit (full width -> compact Split View -> full width) and the selected ids, the rational playhead and any unsaved draft survive, and the resize re-issues no command, job, quote or store write (request and store logs).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S20 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S20-studio-sources-sync-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S20-studio-sources-sync-demo/side-by-side.html against design-reference/studio/screens/25-source-import.png, design-reference/studio/screens/26-sync-workspace.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Sources`
+- `ios/Jovra/Features/Studio/Sync`
+- `ios/JovraUITests/Studio/SourcesSync`
+
+**Screens:** 25-source-import, 26-sync-workspace
+
+**User stories:** 59, 61, 62, 63, 64, 65, 66, 68, 76, 77, 78, 81, 82, 83, 85, 86, 87, 235
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S21: Demo screens: Match Broadcast / project player (ST27) and Angle insights (ST28)
+
+`studio-player-insights-demo` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S08, S16, T14
+
+**What to build:** ST27 full-screen player in demo with the six labelled synthetic angle renders from S08 on core playback (T14): AngleGrid and AngleThumb with coverage and sync state, ScoreBug derived from the core fold at the playhead with 'Final - Reviewed', PointChips, 0.5x and 1x, frame stepping, 'Edit this film', the explanation that a downloaded MP4 is one chosen edit, and states oneAngle, missingAngle (hatched 'No video here', never a frozen frame), buffering, uncertainSync, scoreUnknown, offline, staleFilm ('Made before a correction'), filmMode; it presents the shared A13 and A14 sheets from S16. The player creates named slots for keeper marking and Save clip that S45 and S51 fill. ST28 Angle insights with ObservationCard, ComparisonPair and the states manualNote, reviewedCue, unsupportedCapability, occluded, noCalibration, rejected, oneAngle; the sample observation 'Recovery step - Estimated - Camera 3 - Point 18 - 24:12' carries the fixture capability studio.recoveryStep@sample, and no spin, 3D, injury or speed claim appears. The match-clock scrubber is adjustable and chapter changes are announced. iPhone landscape works for ST27. Why blocked: S15; S16 (A13, A14); S08 (synthetic angle renders); T14 (frame-accurate playback, VideoSurface, jog strip). Implied through other blockers and not repeated as edges: S15 (through S16).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST27 (normal + 8 states) and ST28 (normal + 7 states) and presents A13 and A14, asserting copy.
+- [ ] Switching angle in the demo keeps the playhead time within one frame (readout before and after).
+- [ ] The ScoreBug value at three playhead times equals the core fold at those times (oracle from the core reference for the Jon vs Alex sample).
+- [ ] A copy-lint test over ST28 strings fails on 'spin', 'rpm', 'injury', 'mph' or 'km/h'.
+- [ ] iPhone landscape: the player renders without clipping at 320 pt height-equivalent and Close is reachable (44 pt, labelled 'Close Match Broadcast').
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S21 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S21-studio-player-insights-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S21-studio-player-insights-demo/side-by-side.html against design-reference/studio/screens/27-match-broadcast.png, design-reference/studio/screens/28-angle-insights.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Player`
+- `ios/Jovra/Features/Studio/Insights`
+- `ios/JovraUITests/Studio/PlayerInsights`
+
+**Screens:** 27-match-broadcast, 28-angle-insights
+
+**User stories:** 89, 90, 91, 92, 93, 94, 95, 97, 99, 100, 101, 109, 110, 114, 115, 116
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S22: Demo screen: Story modes (ST29) with five profile cards, length pills and the film options sheet (A25)
+
+`studio-story-modes-demo` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S15
+
+**What to build:** ST29 with five ProfileCards (radio group with selection by fill + check + weight), one-line descriptions, length pills 3 min / 5 min / Full with disabled reasons, and states noKeepers, needsNotes, quoteUnavailable, localDraft, noMusicRights; and sheet A25 (film options: length, aspect 16:9 or 9:16 letterboxed, replays, venue, caption, and the sound line from SD5), which the profile screens of S23 reuse. Rally Pulse options default to Subtle effects, shake off and full rallies on (the brief's 'Medium' appears only as a chosen state). Why blocked: S15.
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST29 (normal + 5 states) and A25 in every state, asserting copy.
+- [ ] Rally Pulse's options sheet opens with Subtle selected and shake off; a test fails if Medium is the default.
+- [ ] Profile selection is announced and carried by check and weight as well as fill (trait assertion).
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S22 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S22-studio-story-modes-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S22-studio-story-modes-demo/side-by-side.html against design-reference/studio/screens/29-story-modes.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Story/Modes`
+- `ios/Jovra/Features/Studio/Story/Options`
+- `ios/JovraUITests/Studio/Story/Modes`
+
+**Screens:** 29-story-modes
+
+**User stories:** 117, 118, 119, 120, 138, 139, 140
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S23: Demo screens: Coach's Cut (ST30), Rally Pulse (ST31) and Court Memories (ST33) in every coverage state
+
+`studio-profile-screens-demo` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S16, S22
+
+**What to build:** ST30, ST31 and ST33 in every state of the coverage map (including noReviewedCue, draftFailed, stale, juniorMode, labelledReplay, originalSpeedFallback, noNaturalAudio, reduceMotion, cleanAlternate, contactProtected, clipTooShort, oneSource, noBroll, venueHidden, captionOmitted) with ChapterCard, MetricFractionCard (18 / 30 read from the Sample records) and TreatmentChips; each opens A25 from S22 and A13 from S16. Why blocked: S22 (ST29 and A25); S16 (A13).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST30 (normal + 11), ST31 (normal + 7) and ST33 (normal + 6), asserting copy.
+- [ ] The MetricFractionCard value is read from the Sample record (a scratch-fixture change propagates to the label).
+- [ ] The reduceMotion and cleanAlternate states show only cuts in their beat previews (state assertion).
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S23 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S23-studio-profile-screens-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S23-studio-profile-screens-demo/side-by-side.html against design-reference/studio/screens/30-coachs-cut.png, design-reference/studio/screens/31-rally-pulse.png, design-reference/studio/screens/33-court-memories.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Story/Profiles`
+- `ios/JovraUITests/Studio/Story/Profiles`
+
+**Screens:** 30-coachs-cut, 31-rally-pulse, 33-court-memories
+
+**User stories:** 122, 123, 124, 125, 129, 130, 133
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S24: Demo screen: Film storyboard (ST36) as a beat list in compact windows and a timeline workspace in expanded windows
+
+`studio-storyboard-demo` · S0 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S16
+
+**What to build:** ST36 as the beat list (storyboardList) in a compact window and the timeline workspace (storyboard) in a width-expanded-or-wider window, chosen by StudioPaneLayout per ADR-0025, with SourceBinCard, StoryBeatList, BeatCard, ClipInspector and StoryboardTimeline lanes (video, court audio, score, titles) and states invalidWindow, gap, unsupportedEffect, missingAudioRights, olderPointRevision, pendingApproval, rebuild; the sample window Camera 2 00:12.400-00:18.600 placed 00:12.000-00:18.200 at 1x comes from the storyboard EDL record. 'Approve film plan' is visually and semantically separate from any spending or sharing control. It presents A13 from S16. Why blocked: S15; S16 (A13). Implied through other blockers and not repeated as edges: S15 (through S16).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST36 in compact and expanded windows (normal + 7 states), asserting copy.
+- [ ] The storyboard window values are read from the storyboard EDL record (scratch-fixture change propagates to the label).
+- [ ] No element on ST36 combines 'Approve' with a price, credit or share wording (string assertion).
+- [ ] The timeline is adjustable by point and by frame with VoiceOver.
+- [ ] Layout follows ADR-0025, never the device: the workspace layout appears when the window is width-expanded or wider with height at least medium, and the same iPad in compact-width Split View gets the phone (sheet) layout; a UI test resizes mid-edit (full width -> compact Split View -> full width) and the selected ids, the rational playhead and any unsaved draft survive, and the resize re-issues no command, job, quote or store write (request and store logs).
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S24 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S24-studio-storyboard-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S24-studio-storyboard-demo/side-by-side.html against design-reference/studio/screens/36-film-storyboard.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Storyboard`
+- `ios/JovraUITests/Studio/Storyboard/Demo`
+
+**Screens:** 36-film-storyboard
+
+**User stories:** 149, 150, 151, 153, 155
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S25: Demo screens: Progress Story (ST32), Lesson journal (ST34) and Lesson workspace (ST35) in compact and expanded windows
+
+`studio-lessons-demo` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S05, S16
+
+**What to build:** ST34 with dated LessonRows (Sep 9 First serve foundation, 4 clips, 36 min; Sep 23 Recovery step, 2 clips, 42 min; Oct 7 Serve rhythm, 3 clips, 28 min; durations from the linked sample sessions) and states empty, offline, missingClip, coachShare, export, manualLesson. ST35 as the lesson workspace in a width-expanded-or-wider window and the single-pane layout in a compact window (ADR-0025) with NoteItem (author and provenance), ChecklistRow (10/10, 20/20, review 0/5 -> '2 of 3 drills complete' read from the Sample lesson record), today's focus 'Same toss. Calm finish.' and states unreviewedNote, unsavedEdits, sourceUnavailable, permissionRevoked, conflictedSync, manualLesson. ST32 Progress Story with ComparisonStatCard '12 / 30 - 40% -> 18 / 30 - 60%, +20 percentage points' read from the S05 progress-comparison vector and the Sample lesson fields (the Swift computation arrives with S36 and is wired in S49), JourneyTimeline with focus lines (Find the rhythm, Repeat the routine, Trust the motion) and states noEarlierEvidence, methodChange, differingSelection, noChange, reflectionOnly, noNaturalAudio, juniorMode; it presents the shared A23 and A4 sheets from S16. Named slots: a lesson-export action (filled by S50) and a Home lessons section consumer. Why blocked: S15; S16 (A23, A4); S05 (the progress-comparison values it displays). Implied through other blockers and not repeated as edges: S15 (through S16).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST32 (normal + 7), ST34 (normal + 6) and ST35 in compact and expanded windows (normal + 6) and presents A23, asserting copy.
+- [ ] '2 of 3 drills complete' and '+20 percentage points' are read from the Sample lesson record and the S05 vector (a scratch fixture change flips them); no string contains '% improvement'.
+- [ ] ST35's unsavedEdits state blocks leaving with a confirmation and keeps the text when cancelled.
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] Layout follows ADR-0025, never the device: the workspace layout appears when the window is width-expanded or wider with height at least medium, and the same iPad in compact-width Split View gets the phone (sheet) layout; a UI test resizes mid-edit (full width -> compact Split View -> full width) and the selected ids, the rational playhead and any unsaved draft survive, and the resize re-issues no command, job, quote or store write (request and store logs).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S25 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S25-studio-lessons-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S25-studio-lessons-demo/side-by-side.html against design-reference/studio/screens/32-progress-story.png, design-reference/studio/screens/34-lesson-journal.png, design-reference/studio/screens/35-lesson-workspace.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Lessons`
+- `ios/Jovra/Features/Studio/Progress`
+- `ios/JovraUITests/Studio/Lessons`
+
+**Screens:** 32-progress-story, 34-lesson-journal, 35-lesson-workspace
+
+**User stories:** 134, 135, 136, 137, 166, 168, 169, 170, 171, 172, 173, 178
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S26: Demo screen: Cloud preflight quote (ST37) with consent rows and sheets A5, A7 and A8
+
+`studio-cloud-preflight-demo` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S15
+
+**What to build:** ST37 with QuoteCard 'Sample quote $4-$8, spending limit $12, temporary media 7 days' (illustrative Sample metadata only), ConsentRow unchecked so Create stays disabled, the two consent checkboxes (upload; and the planning service when 'Plan the story in the cloud' is on), 'Use local replay' always offered, upload size beside the estimated upload time ('Upload time depends on your connection' when nothing is measured; finding 44), and states demoChargeDisabled, quoteExpired, notSignedIn, aboveCap, noConsent, retentionChoice (1, 7 or 30 days), localReplay, wifiOnlyCellular, cloudUnavailable, cloudPlanningOn; sheets A5 (consent detail), A7 (fresh quote) and A8 (spending limit). A confirmation that is open during a window resize is restored still unconfirmed (ADR-0025). Why blocked: S15.
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST37 (normal + 10 states) and sheets A5, A7 and A8, asserting copy.
+- [ ] Create on ST37 is disabled until the consent row is ticked by the user (UI test toggles it), and in demo even then shows 'Demo mode does not upload or charge'.
+- [ ] Resizing the window while A5 is open restores it unconfirmed with the consent rows unchanged (ADR-0025 test).
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S26 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S26-studio-cloud-preflight-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S26-studio-cloud-preflight-demo/side-by-side.html against design-reference/studio/screens/37-cloud-job-review.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Cloud`
+- `ios/JovraUITests/Studio/Cloud/Demo`
+
+**Screens:** 37-cloud-job-review
+
+**User stories:** 17, 182, 183, 184, 185, 187, 189, 190
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S27: Demo screen: Render queue (ST38) with stage progress and sheet A9
+
+`studio-render-queue-demo` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S15
+
+**What to build:** ST38 with JobStageList stages Upload, Align angles, Build film (planning and analyzing folded in, never named as analysis; finding 41), Verify export, StageProgressCard 'of this step', and states paused, resumed, retryableFailure, terminalFailure, canceled, budgetExhausted, notificationUnavailable, appSuspended, verifying, localJob; sheet A9 (partial upload retry). Driven by the S14 demo transcripts. Why blocked: S15.
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST38 (normal + 10 states) and sheet A9, asserting copy.
+- [ ] No ST38 element shows a percentage without the caption 'of this step'; no element names 'analysis' or 'analyzing'.
+- [ ] The demo job's displayed stages replay the S14 transcript in order (assertion against the transcript file).
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S27 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S27-studio-render-queue-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S27-studio-render-queue-demo/side-by-side.html against design-reference/studio/screens/38-render-queue.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Jobs`
+- `ios/JovraUITests/Studio/Jobs/Demo`
+
+**Screens:** 38-render-queue
+
+**User stories:** 193, 194, 195, 197, 198
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S28: Demo screen: Film delivery (ST39) with sheets A18, A19, A20, the A15 placeholder and named slots
+
+`studio-delivery-demo` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S16
+
+**What to build:** ST39 with DeliveryPanel, ShareLinkRow (no URL text), 'Export verified' only after verification and 'Still verifying' before, and states stillVerifying, failedDecode, expiredLink, accessRevoked, partialDownload, oldVersion, archiveDisconnected, juniorMode, localFilm, includeAudioOff, includeAudioOn, noAudioVariantPreparing; sheets A18 (download verification), A19 (YouTube upload, demo-only: 'Planned') and A20 (Include audio); A15 (caption correction, S5) is registered as an unsupportedBeforeS5 state so the S0 coverage gate can count it honestly; A6 and A14 are the shared sheets from S16. Named slots for Export, YouTube, Cloud actions and lesson linking so S51, S107, S99 and S49 fill them without editing the screen. 'Demo mode does not upload or charge' appears wherever a cloud action appears. Why blocked: S15; S16 (A6, A14). Implied through other blockers and not repeated as edges: S15 (through S16).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST39 (normal + 12 states) and sheets A18, A19, A20 and the A15 unsupportedBeforeS5 state, and presents A6 and A14, asserting copy.
+- [ ] The A20 sheet defaults Include audio off for Coach's Cut and on for Court Memories, and juniorMode shows no switch (values read from story-profiles.v1.json exportAudio).
+- [ ] ST39 never shows a URL string for a share link (assertion over all static texts).
+- [ ] Each named slot renders an empty, labelled placeholder until filled (snapshot) and the slot API is the only extension point (no later ticket needs to edit the base screen; documented in the folder README).
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S28 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S28-studio-delivery-demo/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S28-studio-delivery-demo/side-by-side.html against design-reference/studio/screens/39-film-delivery.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Delivery (base screen and named slot declarations)`
+- `ios/JovraUITests/Studio/Delivery/Demo`
+
+**Screens:** 39-film-delivery
+
+**User stories:** 202, 205, 206, 208, 210, 214, 215
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S29: Studio settings (ST40) in every state, local Studio preferences and the storage-usage view
+
+`studio-settings` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S16
+
+**What to build:** ST40 reached from Studio Home (the Profile row comes with S33) with IdentityCard (Local demo, Test, Connected; mode shown truthfully from CloudMode), ProviderRows from the provider sample (On this iPhone Active; iCloud Drive Choose folder; Google Drive Not connected; Box Planned; Dropbox Planned) whose Planned rows are explanation-only, a Cloud processing switch that is off until the player turns it on, invitation expiry 10 min, the retention policy text (uploads 7 days by default, films until you delete them, links 24 hours), storage used by films and by proxies with separate delete actions that never list originals (the shared A6 sheet from S16), Help with hello@islanddevcrew.com as selectable text (never mailto), and Advanced shown only in Test mode (finding 48). States: realAuthTest, realAuthLive, disconnect, reconnect, tokenExpired ('Needs reconnect'), providerPlanned, providerUnavailable, deletionRunning, deletionFailed, dataExport, noConfiguration, juniorMode, cloudFilmsList; sheets A12 (demo: 'Use demo profile'), A16, A17. Local preferences persist in a Studio settings store. Slots: IdentitySlot (filled by S97), ProvidersSlot (filled by S105) and AccountSlot (account export and deletion, filled by S98). Why blocked: S15; S16 (A6). Implied through other blockers and not repeated as edges: S15 (through S16).
+
+**Acceptance criteria**
+
+- [ ] XCUITest visits ST40 (normal + 13 states) and sheets A12, A16 (demo-only until S98), A17, and presents A6, asserting copy.
+- [ ] Cloud processing reads off on first launch and persists the player's choice across relaunch; turning it on in demo still shows 'Demo mode does not upload or charge'.
+- [ ] The A6 sheet lists 'Delete this film', 'Delete editing copies (proxies)' and 'Delete cloud copies' and never an original (string assertion); deleting proxies leaves originals' sha256 unchanged.
+- [ ] Advanced is absent in demo and live configurations and present only with STUDIO_ENVIRONMENT=test (two launches).
+- [ ] A copy-lint test fails on 'mailto:' anywhere in Studio sources and on any address other than hello@islanddevcrew.com.
+- [ ] A URLProtocol trap installed for the whole UI test run records zero network requests while these demo states are visited.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S29 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S29-studio-settings/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S29-studio-settings/side-by-side.html against design-reference/studio/screens/40-studio-settings.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Settings (screen and IdentitySlot/ProvidersSlot/AccountSlot declarations)`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Settings`
+- `ios/JovraUITests/Studio/Settings`
+
+**Screens:** 40-studio-settings
+
+**User stories:** 4, 20, 21, 165, 216, 219, 220, 221, 222, 223, 225, 228
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S30: Studio entry point on core Home: the StudioEntryCard below the editorial card
+
+`studio-entry-home` · S0 · size S · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S15, T19
+
+**What to build:** SD1 entry point on core screen 03 Home (core ticket T19): StudioEntryCard below the editorial card opens ST21 with the Home tab still selected. One new file in the Home feature folder plus one insertion line, reviewed by the core owner. A player who never opens Studio sees no other change. Not part of the S0 gate (S34): entry rows are core-screen insertions reported separately. Why blocked: S15 (routes); T19 (Home).
+
+**Acceptance criteria**
+
+- [ ] XCUITest taps the card and lands on ST21 with the Home tab still selected.
+- [ ] The core T19 UI tests and the smoke suite stay green (run output).
+- [ ] The diff touches the Home screen in one insertion line plus one new file (diff stat reviewed by the core owner).
+- [ ] With no Studio project the Home layout matches its pre-change screenshot apart from the card (perceptual diff threshold recorded).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S30 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S30-studio-entry-home/ in light, dark and AX5 for every state this ticket adds
+
+**Owned areas**
+
+- `ios/Jovra/Features/Home/StudioEntry (one new file) and one insertion line in the Home screen`
+- `ios/JovraUITests/Studio/Entry/Home`
+
+**Screens:** 21-studio-home
+
+**User stories:** 1
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S31: Studio entry point on core Match overview: 'Make a film' in the action row
+
+`studio-entry-match-overview` · S0 · size S · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S22, T61
+
+**What to build:** SD1 entry point on core screen 09 Match overview (core ticket T22): 'Make a film' in the action row opens ST29 for that session, keeping the Sessions tab selected. One new file plus one insertion line. Core T61 also edits Match overview (regular-width adapters), so this lands after it to avoid a parallel edit of the same file. Why blocked: S22 (ST29 route); T22 (Match overview); T61 (regular-width Match overview edits). Implied through other blockers and not repeated as edges: T22 (through T61).
+
+**Acceptance criteria**
+
+- [ ] XCUITest taps 'Make a film' on the sample match and lands on ST29 for that session with the Sessions tab selected.
+- [ ] The core T22 and T61 UI tests and the smoke suite stay green.
+- [ ] The diff touches Match overview in one insertion line plus one new file (diff stat reviewed by the core owner).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S31 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S31-studio-entry-match-overview/ in light, dark and AX5 for every state this ticket adds
+
+**Owned areas**
+
+- `ios/Jovra/Features/Sessions/MatchOverview/StudioEntry (one new file) and one insertion line`
+- `ios/JovraUITests/Studio/Entry/MatchOverview`
+
+**Screens:** 29-story-modes
+
+**User stories:** 2
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S32: Studio entry points on core Insights: Lesson journal, Progress Story and Angle insights rows
+
+`studio-entry-insights` · S0 · size S · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S21, S25, T47
+
+**What to build:** SD1 entry points on core screen 15 (Insights root, core ticket T47): 'Lesson journal', 'Progress Story' and 'Angle insights' rows in the Explore list open ST34, ST32 and ST28 with the Insights tab selected. One new file plus one insertion line. Why blocked: S21 (ST28); S25 (ST32, ST34); T47 (Insights root).
+
+**Acceptance criteria**
+
+- [ ] XCUITest taps each of the three rows and lands on the right Studio screen with the Insights tab selected.
+- [ ] The core T47 UI tests and the smoke suite stay green.
+- [ ] The diff touches the Insights root in one insertion line plus one new file (diff stat reviewed by the core owner).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S32 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S32-studio-entry-insights/ in light, dark and AX5 for every state this ticket adds
+
+**Owned areas**
+
+- One StudioEntry file in the Insights root folder and one insertion line
+- `ios/JovraUITests/Studio/Entry/Insights`
+
+**Screens:** 34-lesson-journal
+
+**User stories:** 3, 5
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S33: Studio entry point on core Profile hub: the Studio settings row
+
+`studio-entry-profile` · S0 · size S · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S29, T18, T58
+
+**What to build:** SD1 entry point on the core Profile hub (core ticket T18): a 'Studio settings' row in the settings group opens ST40 with the Profile tab selected. Core T58 also edits the Profile hub (Recording rules row), so this lands after it. One new file plus one insertion line. Why blocked: S29 (ST40); T18 (Profile hub); T58 (Profile hub edit).
+
+**Acceptance criteria**
+
+- [ ] XCUITest taps the row and lands on ST40 with the Profile tab selected.
+- [ ] The core T18 and T58 UI tests and the smoke suite stay green.
+- [ ] The diff touches the Profile hub in one insertion line plus one new file (diff stat reviewed by the core owner).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S33 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S33-studio-entry-profile/ in light, dark and AX5 for every state this ticket adds
+
+**Owned areas**
+
+- `ios/Jovra/Features/Profile/StudioEntry (one new file) and one insertion line`
+- `ios/JovraUITests/Studio/Entry/Profile`
+
+**Screens:** 40-studio-settings
+
+**User stories:** 4, 6
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S34: S0 gate: every Studio state reachable and audited, copy and claim lint, and the S0 status report
+
+`studio-s0-coverage-gate` · S0 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S0`
+
+**Blocked by:** S17, S18, S19, S20, S21, S23, S24, S25, S26, S27, S28, S29
+
+**What to build:** Aggregates S0 acceptance (c)-(f). A machine-readable state map (one entry per row of studio-screens.md section 3 and per sheet A1-A25) drives a coverage test that fails when any state lacks a -studioState registration, a UI test or a screenshot. A15 (caption correction) counts only as its registered unsupportedBeforeS5 state; A16 and A19 are counted as demo-only and the status report says so. A Studio copy and claim lint runs over Studio sources and string tables: banned words and claims ('highlight reel' for a film, 'frame-perfect', 'Validated' for sync, '% improvement', spin RPM, injury, model or provider names in normal player flows, any price outside a Sample quote, mailto:, and any copy that states the free/paid line as decided while SOF-R4-03 is open), with the documented exceptions (A5 consent names the planning service). Accessibility matrix: every Studio screen at AX5, dark mode, Increase Contrast (chips over video gain solid backgrounds), Reduce Motion. The S0 status report states local code, demo completeness, simulator, physical device, real media render, ML benchmark, backend test, live, store and publication in separate columns (story 246), with everything beyond simulator marked not run, and lists the deferred scope (notes of this DAG). Records the verifier coverage summary (finding 33). The core-screen entry rows (S30-S33) are not part of this gate; they depend on core screens and are reported in their own tickets. Why blocked: S17, S18, S19, S20, S21, S22, S23, S24, S25, S28, S26, S27, S29 (the screens and sheets it aggregates). Implied through other blockers and not repeated as edges: S22 (through S23).
+
+**Acceptance criteria**
+
+- [ ] The coverage test enumerates every screen state of the section 3 map (188 as of 2026-10-07, printed not hard-coded) and the 25 sheets (A15 as unsupportedBeforeS5) and passes; removing one registration in a scratch build makes it fail naming the state.
+- [ ] The lint fails on a scratch string 'highlight reel' in a Studio view, on 'Claude' in a non-consent view and on 'Studio films are free' while SOF-R4-03 is open, and passes on the real tree.
+- [ ] Increase Contrast run: every chip over video has a solid background (snapshot assertion on ST27, ST24 and ST36).
+- [ ] The S0 status report exists with the ten columns and no column beyond simulator claims success.
+- [ ] The core smoke suite is green in the same run (five tabs unchanged).
+- [ ] The status report marks A16 and A19 as demo-only and lists the deferred scope with each story or finding number.
+
+**Evidence required**
+
+- Coverage test output with counts and the .xcresult path
+- Lint output (pass, and the scratch fail)
+- evidence/ios/studio/S34-studio-s0-coverage-gate/status-report.md
+- Accessibility matrix screenshots (AX5, dark, Increase Contrast, Reduce Motion)
+
+**Owned areas**
+
+- `ios/JovraUITests/Studio/Coverage (state map and coverage test)`
+- `scripts/studio/copy-lint`
+- `evidence/ios/studio/S34-studio-s0-coverage-gate`
+
+**User stories:** 234, 236, 238, 239, 240, 246
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S35: KeeperSelector and staleness propagation in Swift with parity to the S05 reference
+
+`studio-keepers-staleness` · S1 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S05, S13
+
+**What to build:** STU-10 (rest). `KeeperSelector.candidates(project, eventVersion) -> KeeperCatalog` (one keeper per effective point from the core fold, per Mark and per lesson clip; core pre/post-roll; reviewed contacts protected; cross-angle dedupe) with select, exclude, annotate(note) and markBroll(window, depictsThisMatch, peopleVisible, locationVisible), and the deterministic per-profile ranking. The store subscribes to event-log versions (core ScoringEngine.diff), sync revisions and keeper revisions; any change marks dependent plans stale and films 'Made before a correction' while old films stay as labelled versions. Excluding a keeper, a person or a location removes it from every later plan. Why blocked: S13 (store and revisions); S05 (keepers and staleness vectors); T04 (fold and recalculation diff). Implied through other blockers and not repeated as edges: T04 (through S13).
+
+**Acceptance criteria**
+
+- [ ] Every keepers and staleness vector from S05 passes in Swift (count printed; zero mismatches).
+- [ ] Correcting an early point in a fixture session (core event edit) marks the dependent plan stale and the film 'Made before a correction' within the same store transaction; an unrelated session's films stay current.
+- [ ] markBroll with depictsThisMatch=false is never offered as match footage by a later plan (planner input test).
+- [ ] An excluded keeper never appears in candidates for any profile.
+- [ ] `swift test --filter Keepers` passes on macOS and Linux.
+- [ ] The keepers module page (keepers and staleness kinds) reads `swift: consumed` and the manifest test passes.
+
+**Evidence required**
+
+- swift test --filter Keepers output (macOS + Linux)
+- Parity table against the S05 vectors
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Keepers`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Project/Staleness`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Keepers`
+- `spec/studio/modules/keepers.md (swift status line only)`
+
+**User stories:** 102, 103, 104, 105, 106, 107, 108, 230, 231, 233
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S36: LessonJournal and ProgressStoryBuilder in Swift: lesson records, clips, cues, drills and percentage-point comparisons
+
+`studio-lessons-core` · S1 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S05, S13
+
+**What to build:** `jovra.lesson/1` records in the local store: create (also by hand with no recording), update with an unsaved-edit guard, linkClip(sessionId, range), linkCue(observationId), attachFilm, setDrill(target), tick(drill). Notes carry author player or coach (as entered) and provenance Manual or Reviewed; JOVRA never authors a note. A missing clip source surfaces missing with the core 'Find the video' repair. Corrections to a session update the lesson insights that use it. `ProgressStoryBuilder.compare` uses the core StatsEngine Fraction and pct and reproduces the S05 comparability vectors; journey(lessons) orders lessons with focus lines; '% improvement' is never produced. Works offline. Why blocked: S10 (lesson contract); S13 (the project store the lesson records live in); S05 (comparability vectors); T05 (StatsEngine Fraction and pct). Implied through other blockers and not repeated as edges: S10 (through S13), T05 (through S13).
+
+**Acceptance criteria**
+
+- [ ] The three Sample lesson records round-trip and the lesson invalid cases are refused with their codes.
+- [ ] Every progress-comparison vector passes in Swift, including methodChange and differingSelection.
+- [ ] A coach note entered without a coach is refused; a note authored as 'JOVRA' is impossible by construction (no enum case; compile-time check documented).
+- [ ] Deleting a linked clip's source session marks the clip missing; restoring the same file by hash re-links it and a different file with the same name does not.
+- [ ] `swift test --filter Lessons` passes on macOS and Linux.
+- [ ] The progress module page reads `swift: consumed` and the manifest test passes.
+
+**Evidence required**
+
+- swift test --filter Lessons output (macOS + Linux)
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Lessons`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Progress`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Lessons`
+- `spec/studio/modules/progress.md (swift status line only)`
+
+**User stories:** 134, 135, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 178, 180
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S37: StoryDirector, RulesPlanner and EDLCompiler in Swift with parity to the S06 reference
+
+`studio-rules-planner-swift` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S07, S11, S35
+
+**What to build:** STU-11. The Swift StoryDirector (briefs and grammar lint), RulesPlanner (planner kind heuristic, the default and always the fallback) and EDLCompiler (pure, deterministic, PTS snapping, audio bed, gap cards for a restarted one-camera source with no final card unless coverage is complete, the renderer supported-operation set honoured with notInThisBuild omissions, canonical JSON and hash) reproduce every S06 and S07 vector byte for byte, and every compiled plan passes the S11 validator before it can be rendered. Planner, profile revision and price-table version are pinned into the brief. Profiles are laid out one file per profile so later tickets (S65 Match Broadcast alternate replays) change one file. This ticket flips the planner and compile module pages to `swift: consumed`. Why blocked: S07 (planner and compile vectors, after S06); S11 (validator and stage allowlist); S35 (keeper catalogs and ranking).
+
+**Acceptance criteria**
+
+- [ ] Every planner, compile and director vector from S06 and S07 passes in Swift with byte-identical canonical JSON and the same sha256 (count printed).
+- [ ] Each profile x length on the sample context produces a plan the S11 validator accepts; the fallback vectors produce the same omitted-ideas lists.
+- [ ] A 30 fps source requesting 1/2x replay compiles to the original-speed fallback; a 1280x720 source compiles to a 1280x720 output.
+- [ ] Compiling twice yields the same hash; a one-frame change in a keeper window changes it (hash-binding test).
+- [ ] `swift test --filter Planner` passes on macOS and Linux.
+- [ ] A one-camera Match Broadcast on a restarted source compiles a gap card at the restart and no final card, byte-identical to the S07 vector.
+
+**Evidence required**
+
+- swift test --filter Planner output with the parity table (macOS + Linux)
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Story (StoryDirector, RulesPlanner, Profiles/ one file per profile)`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/EDL/Compiler`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Planner`
+- `spec/studio/modules/planner.md and compile.md (swift status lines only)`
+
+**User stories:** 117, 119, 120, 122, 125, 126, 127, 128, 129, 137, 138, 145, 146, 147, 148, 157
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S38: SourceIngest: SourceManifest from bytes, decoded PTS tables, original hashing, the S1 normalization gate and ST25 for one source
+
+`studio-source-ingest` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S20, T26
+
+**What to build:** `SourceIngest.ingest(sessionId) -> SourceManifest` through the core MediaLibrary: decoded PTS table (compact, hashed), streamed SHA-256 of every segment, frame count, nominal fps, VFR flag, codec, dimensions, rotation, colour/HDR, audio facts, lens and capture hints (fileZeroHostNs from the core capture journal when present); never a fact from a filename. In S1, a source that is not CFR, unrotated and SDR is refused with the finding 'needs normalization (coming with multi-angle)' instead of rendering. A one-angle project gets an identity SyncMap whose primary piece is `reference`. ST25 is wired for real for one session, an old match from the library, and same-session B-roll windows: per-source facts, 'Originals stay on your phone.', duplicates and partial/interrupted files taken from core T26's ImportPipeline results ('Open existing' / 'Import anyway', missing stretch) rather than re-implemented, unsupported files rejected with a reason, a working-space check before import, slot assignment. Original hashes are checked again after every processing step. Why blocked: S20 (the ST25 screen; through it the store and contract models); T26 (ImportPipeline and probe); T08 (MediaLibrary custody). Implied through other blockers and not repeated as edges: T08 (through S20).
+
+**Acceptance criteria**
+
+- [ ] The manifest built for each S08 barcode source (24, 30, 60 fps) validates against the schema and its PTS table hash equals the ground truth; frame count equals the barcode count.
+- [ ] An HDR (PQ), a rotated and a VFR synthetic variant are each refused with 'needs normalization' and nothing is rendered.
+- [ ] Importing the same file twice surfaces T26's duplicate result and adds no source; a truncated copy surfaces T26's partial result with its covered range (no second duplicate or partial detector exists in Studio code: grep).
+- [ ] Every original's sha256 is identical before and after ingest (test asserts on each fixture).
+- [ ] XCUITest imports the synthetic sample session into a new project and shows its real facts on ST25 (duration, size, fps, resolution).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- swift test --package-path ios/Packages/JovraStudioMedia --filter Ingest output
+- scripts/ios/ui-test.sh studio-S38 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S38-studio-source-ingest/ in light, dark and AX5 for every state this ticket adds
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Ingest`
+- `ios/Packages/JovraStudioMedia/Tests/JovraStudioMediaTests/Ingest`
+- `ios/Jovra/Features/Studio/Sources (real one-source wiring)`
+- `ios/JovraUITests/Studio/Sources`
+
+**Screens:** 25-source-import
+
+**User stories:** 59, 60, 61, 62, 63, 64, 65, 66, 68, 69, 71
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S39: Build your match (ST22) for real: a one-camera project from a session, slot assignment, placement hints and the capture-method routes
+
+`studio-build-match-real` · S1 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S18, T17
+
+**What to build:** ST22 wired to the store: start a Studio project with one camera (a complete path), primary defaulted to the near baseline, optional cameras assigned to far baseline and the four corners, a warning when a role is taken (slotTaken), a placement hint when a slot is unlikely to see the court (from core CourtGeometry view cones), the 'outside the playing area' reminder, the 60 fps recommendation with its reason, and the capture-method sheet A22 routing to 'Record now with this iPhone' (core capture; the new session becomes the primary), 'Use videos I already have' (ST25) and 'Invite other phones' (unsupportedBeforeS3 until S3). Why blocked: S18 (the ST22 screen; the store slot API comes with it through S15); T17 (the core capture route that 'Record now' opens).
+
+**Acceptance criteria**
+
+- [ ] XCUITest creates a one-camera project from the sample session and the project lists it as primary at the near baseline.
+- [ ] Assigning Camera 2 to an occupied slot shows the occupiedRole warning and does not change the store (store read-back).
+- [ ] A slot placed behind the net post (fixture placement) shows the unsafePlacement hint; a baseline slot does not.
+- [ ] 'Record now' opens the core capture route and, after a fixture-camera recording, the new session is attached as primary.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S39 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S39-studio-build-match-real/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S39-studio-build-match-real/side-by-side.html against design-reference/studio/screens/22-build-your-match.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Match (real wiring)`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Placement`
+- `ios/JovraUITests/Studio/Match`
+
+**Screens:** 22-build-your-match
+
+**User stories:** 22, 23, 24, 25, 26, 27, 28, 30, 31, 32
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S40: FilmVerifier: full decode, exact frame count and timestamp grid, output facts, audio sample count, barcode and overlay checks
+
+`studio-film-verifier` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S09, S10
+
+**What to build:** STU-13. `FilmVerifier.verify(attempt, edl) -> VerificationReport`: probe; full decode; exact frame count and timestamp grid against the output clock; output dimensions, aspect and display aspect equal the plan, including the 9:16 letterbox variant (finding 45); codec, profile, level, pixel format and audio codec/sample rate/channels equal the output spec (H.264 High or HEVC Main, yuv420p, AAC-LC 48 kHz stereo); duration equals frames / fps exactly; audio sample count and route; for fixture sources every frame's barcode equals the compiled frame map and click times are within +/-1 output frame; a no-audio variant has no audio track at all. Overlays are verified through machine-readable channels, never OCR: the renderer writes a sidecar overlay log (overlay id, kind, text, frame range, stored-record reference) and, for fixture renders, an overlay-id barcode band; the verifier checks that every planned overlay appears in the log over its planned range, that the band ids match the log on sampled frames, and that the Sample badge and provenance entries exist where required. Equality of overlay text with the event fold is checked in S42, which has the fold. Pass -> atomic move into the films folder (no overwrite) and a ready FilmRecord with the report; fail -> failedVerification with evidence retained, never ready. The report states what was proven: barcode content equality only for fixture sources; for real footage clock, counts, audio and the overlay log, never 'frame-perfect'. Tested here against films synthesized by the S08 generator from the S09 barcode-court frame maps plus deliberate mutations, so it does not wait for the renderer. Why blocked: S10 (delivered-artifact and edit-plan models); S09 (barcode-court plans and frame maps, after the S08 media).
+
+**Acceptance criteria**
+
+- [ ] A generator-made film that matches its plan passes with a report that validates against jovra.delivered-artifact/1 verification fields.
+- [ ] Mutations each fail with a named reason: one-frame shift, dropped frame, wrong aspect (16:9 where 9:16 letterbox planned), wrong codec profile, 44.1 kHz audio, a replay label missing from the overlay log or the id band, an audio track present in a no-audio variant, missing Sample badge.
+- [ ] A failed verification never produces a ready record and leaves the attempt folder with its evidence.
+- [ ] A report for a non-fixture source sets the real-footage scope and contains no 'frame-perfect' or content-equality claim (string assertion).
+- [ ] `swift test --filter Verifier` passes on macOS.
+
+**Evidence required**
+
+- swift test --filter Verifier output with the mutation table
+- Example VerificationReport JSON (fixture) under evidence/ios/studio/S40-studio-film-verifier/
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Verify`
+- `ios/Packages/JovraStudioMedia/Tests/JovraStudioMediaTests/Verify`
+
+**User stories:** 160, 161, 205, 206, 252
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S41: LocalFilmRenderer core on AVFoundation: live, B-roll, clean-frame replay, cut/dissolve/dip and the court-audio bed
+
+`studio-renderer-core` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S11, S40
+
+**What to build:** STU-12 (first half). `render(edl, sources, output) -> RenderAttempt` publishes its `supportedOperations` (here live, broll, replay, cut, dissolve, dip and the audio bed), which the compiler receives in the trusted context, and writes to a new temporary attempt folder and renders only an EDL the S11 validator accepted (refuses otherwise). Composition: one track per source with A/B tracks for dissolves and dips to forest; replay by per-range time scaling of a distinct inserted range under the clean-frame rule (no duplicated or interpolated frames); live and B-roll at 1x; audio bed primary-bed, hold-bed and silence with volume ramps and fades exactly as planned. Builder branches: iOS 26 AVVideoComposition.Configuration and the iOS 18 mutable classes behind #available (the iOS 18 path is reported UNVERIFIED until a device run, because the build Mac has only the iOS 26.5 simulator). cancel() leaves no partial file outside the attempt folder. Each test records renderer version and composition path. Why blocked: S11 (only validated EDLs render); S40 (FilmVerifier is the acceptance oracle; the barcode-court plans and media come with it).
+
+**Acceptance criteria**
+
+- [ ] For the S09 barcode-court plans using live, broll, replay (1/2x from 60 fps at 30 fps output), cut, dissolve and dip, the rendered MP4 passes FilmVerifier on macOS swift test and on the iOS 26.5 simulator: every output frame's barcode equals the plan, no source frame is duplicated in a replay, dissolve frames appear only where planned.
+- [ ] Clicks land within +/-1 output frame and the audio sample count equals frames x 48000 / fps exactly; a hold-bed span carries no repeated click.
+- [ ] Mutation: shifting one segment by one frame in the EDL after compile (bypassing the hash) makes rendering refuse on hash mismatch; rendering a plan with a stale event revision is refused.
+- [ ] Cancelling mid-render and forcing a render failure each leave originals' sha256 unchanged and no file outside the attempt folder (directory listing assertion).
+- [ ] The test log names the composition path used per test; the iOS 18 path is listed as not run on the simulator.
+
+**Evidence required**
+
+- swift test --package-path ios/Packages/JovraStudioMedia --filter Render output (macOS)
+- Simulator test run output with FilmVerifier reports
+- Verification reports under evidence/ios/studio/S41-studio-renderer-core/verification/
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Render (composition, audio bed, path branches)`
+- `ios/Packages/JovraStudioMedia/Tests/JovraStudioMediaTests/Render`
+
+**User stories:** 126, 129, 158, 161, 252
+
+**Gate:** The iOS 18 composition path needs a physical iOS 18 device run before it may be reported verified; until then it is UNVERIFIED (spec Architecture and seams).
+
+## S42: LocalFilmRenderer second half: exact freezes, title cards, Core Animation overlays, the final H.264 writer, 9:16 letterbox and the clean alternate
+
+`studio-renderer-freeze-overlays` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S41, T04
+
+**What to build:** STU-12 (rest). Freeze per SD21/D-2: AVAssetImageGenerator with zero tolerance before and after extracts the source frame at the freeze PTS (from the PTS table, after the preferred transform, in the output colour space) and draws it as a Core Animation layer for exactly the freeze's output range over the source track held paused, under the annotation and 'Paused' label layers, with hold-bed or silence. Title cards from card templates with typed slots only, including the gap card for a restarted one-camera source (the film shows the gap and invents no continuity; story 127). Overlays with the Core Animation tool: score bug derived from the core fold at each session time, metric chip with numerator/denominator/provenance, cue chip, provenance chip, replay and paused labels, Sample badge on every frame of a sample film, a single 2D annotation, each written to the sidecar overlay log and, for fixture renders, the overlay-id barcode band; text held max(2.0 s, 0.6 s + 0.3 s x words) and at most 3 flashes per second. Final film via reader -> writer at the YouTube-recommended H.264 settings (film-engine 3.8), preview via export session; 9:16 letterboxed output; cleanAlternate rendered and verified when Reduce Motion is on (default) or motion is used. This ticket extends `supportedOperations` with freeze, title and gap cards and the overlay kinds. Why blocked: S41 (composition core); T04 (the fold that drives the score bug and the overlay-text oracle).
+
+**Acceptance criteria**
+
+- [ ] A freeze fixture passes: every held output frame's barcode equals the source frame's barcode on the iOS 26 path (simulator and macOS); mutation 'freeze frames differ from the source frame' fails.
+- [ ] Overlay text in the sidecar log at sampled frames equals the fold at those session times (no OCR); a scratch mutation of one point's winner changes the expected text and the old film fails verification.
+- [ ] A Sample film carries the Sample badge on every frame (reader check); dropping the replay label in a mutated EDL is refused before rendering and, if forced, fails verification.
+- [ ] The 9:16 letterbox film passes FilmVerifier's dimension and active-picture checks; the Rally Pulse clean alternate renders with only cuts and passes.
+- [ ] Final films report H.264 High, yuv420p, AAC-LC 48 kHz stereo in the verification report.
+- [ ] The iOS 18 freeze path is reported UNVERIFIED in the test log.
+- [ ] A one-camera restart fixture renders the gap card over the gap and no final card; the verification report lists the gap.
+
+**Evidence required**
+
+- swift test --filter Render output (freeze, overlays, writer) on macOS and the simulator
+- Verification reports under evidence/ios/studio/S42-studio-renderer-freeze-overlays/verification/
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Render/Freeze`
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Render/Overlays`
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Render/Writer`
+- `ios/Packages/JovraStudioMedia/Tests/JovraStudioMediaTests/RenderOverlays`
+
+**User stories:** 122, 123, 124, 127, 128, 131, 133, 144, 158, 215, 240
+
+**Gate:** The freeze method and the iOS 18 composition path stay UNVERIFIED on iOS 18 until a physical-device barcode run (D-2).
+
+## S43: S1 tracer bullet: one Match Broadcast film from the synthetic match, produced, verified, recorded and shown on ST39
+
+`studio-s1-tracer-film` · S1 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S28, S37, S38, S41
+
+**What to build:** The first demoable slice through every S1 layer, before the renderer is complete. `StudioEngine.produceFilm(projectId, profileId, options) -> FilmJob` composes keeper selection, brief, RulesPlanner, compile (with the renderer's current supportedOperations, so ops the renderer cannot yet draw are omitted as notInThisBuild and listed), validate, render, verify and record, running in the foreground with no background continuation yet. On the synthetic match it produces a one-angle Match Broadcast at 3 min with live, cut and the court-audio bed; the FilmRecord (DeliveredArtifact) binds source hashes, event/sync/keeper revisions, profile and revision, planner kind, EDL hash, brief revision, renderer version and verification; ST39 shows that local film (title, style, length, resolution, chapters, thumbnail, source manifest) and plays it. Older versions stay labelled until deleted; a failed render keeps originals and evidence and offers Retry. Background continuation, checkpoints, all five profiles, notifications and ST38 are S44. Why blocked: S37 (planner and compiler); S41 (renderer core); S38 (manifests and identity sync map); S28 (ST39 screen).
+
+**Acceptance criteria**
+
+- [ ] produceFilm on the synthetic match produces a ready, verified Match Broadcast on the simulator; the FilmRecord validates against jovra.delivered-artifact/1 and names planner kind heuristic.
+- [ ] The film's omitted-ideas list names every operation omitted as notInThisBuild (score bug, title cards) and no omitted op appears in the EDL.
+- [ ] XCUITest opens ST39 on the produced film, plays it and shows its real length and resolution.
+- [ ] Rebuilding after a correction keeps the old film as a labelled older version (the A14 sheet lists both with revisions).
+- [ ] A forced render failure ends failedVerification or failed with a stated reason and Retry; originals' sha256 identical after a success and a failure.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- swift test --filter Engine output
+- The tracer film's VerificationReport under evidence/ios/studio/S43-studio-s1-tracer-film/
+- scripts/ios/ui-test.sh studio-S43 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S43-studio-s1-tracer-film/ in light, dark and AX5 for every state this ticket adds
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Engine`
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Engine`
+- `ios/Jovra/Features/Studio/Delivery/Film (local film)`
+- `ios/JovraUITests/Studio/Engine`
+
+**Screens:** 39-film-delivery
+
+**User stories:** 121, 159, 160, 161, 162, 163, 164
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S44: Local film jobs: all five profiles, resumable checkpoints, background continuation, notifications, the local queue (ST38) and Home on real data
+
+`studio-local-film-jobs` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S27, S42, S43, T17, T27
+
+**What to build:** Local jobs run the RenderJobMachine's local states with resumable checkpoints for every profile now that the full renderer exists. Background continuation reuses core T27's scheduler adapter and registration (no second BGTaskScheduler registration): on iOS 26 a BGContinuedProcessingTask (user-initiated, system progress) and on iOS 18 foreground rendering with 'Rendering pauses if you leave JOVRA'. Studio rendering yields to core CaptureActivity: recording never waits on a render, and a render pauses while capture is active. ST38 shows local jobs (localJob, verifying); films follow the originals' backup choice; a local notification announces a ready film when the player enabled job notifications, an in-app badge otherwise. SD5 junior mode forces no audio everywhere, including the in-app film. Studio Home (S17) now shows real data: the latest real film and lastJobFailed after a forced failure. Why blocked: S43 (the engine and FilmRecord); S42 (complete renderer); S27 (ST38); T27 (background scheduler adapter); T17 (capture route and CaptureActivity).
+
+**Acceptance criteria**
+
+- [ ] produceFilm on the synthetic match produces a ready, verified film for each of the five profiles on the simulator.
+- [ ] Killing the app mid-render then relaunching resumes from the last checkpoint or ends failed with a stated reason, never stuck (UI test with app termination).
+- [ ] Starting a capture while a render runs starts recording immediately (fixture camera timing assertion) and the render pauses until capture ends.
+- [ ] With notifications denied, a ready film shows the in-app badge and no notification request is made (permission fake).
+- [ ] A junior-mode project's in-app film has no audio track and its verification report shows media.audioCodec null; the A20 switch is absent.
+- [ ] After a real local render, ST21 shows that film as the latest film; after a forced failure it shows lastJobFailed with 'your videos are safe', from store data (no demo fixture installed).
+- [ ] No second BGTaskScheduler registration exists outside T27's adapter (grep), and originals' sha256 are identical after a successful, a cancelled and a failed render.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- swift test --filter Engine output (all profiles)
+- scripts/ios/ui-test.sh studio-S44 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S44-studio-local-film-jobs/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S44-studio-local-film-jobs/side-by-side.html against design-reference/studio/screens/38-render-queue.png, design-reference/studio/screens/21-studio-home.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Platform/StudioBackground (adapter over T27's scheduler)`
+- `ios/Jovra/Features/Studio/Jobs/Local`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Engine/Jobs`
+- `ios/JovraUITests/Studio/LocalJobs`
+
+**Screens:** 38-render-queue, 21-studio-home
+
+**User stories:** 7, 9, 10, 193, 195, 197, 200, 202, 206, 231
+
+**Gate:** BGContinuedProcessingTask behaviour (iOS 26) and foreground resume on iOS 18 are proven on the simulator only; a physical-device background run is reported separately.
+
+## S45: Project player for one angle (ST27 real): score at the playhead, point bookmarks, study controls and keeper/B-roll marking
+
+`studio-one-angle-player` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S21, S35
+
+**What to build:** ST27 wired to a real one-angle project on core playback: the on-screen score derived from the point events at the playhead, provisional or unknown when points are unreviewed or missing; point bookmarks (PointChips) to jump between points; 0.5x and 1x playback and frame stepping; marking a keeper with a note (pre/post-roll like clips), marking B-roll in a B-roll marking mode with 'from this match', people visible and location visible; excluding a keeper; 'Edit this film' opening the storyboard of the film being watched; offline from local sources; film mode labelled 'Made before a correction' when stale; the same player without the angle grid when one angle exists. Fills the keeper-marking slot S21 declared. Why blocked: S21 (ST27 screen and slots); S35 (keeper API); T14 (playback). Implied through other blockers and not repeated as edges: T14 (through S21).
+
+**Acceptance criteria**
+
+- [ ] On the synthetic match, the score shown at five playhead times equals the core fold at those times; an unreviewed point makes it read provisional.
+- [ ] Marking a keeper and a B-roll window writes catalog entries that validate against jovra.keeper-catalog/1 and jovra.broll-catalog/1 and bump keeperRevision.
+- [ ] With the network disabled (URLProtocol trap) the player plays, steps frames and marks keepers.
+- [ ] A one-angle project shows no AngleGrid; after a correction the film mode shows 'Made before a correction'.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S45 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S45-studio-one-angle-player/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S45-studio-one-angle-player/side-by-side.html against design-reference/studio/screens/27-match-broadcast.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Player (one-angle real wiring and keeper/B-roll marking slot)`
+- `ios/JovraUITests/Studio/Player`
+
+**Screens:** 27-match-broadcast
+
+**User stories:** 92, 93, 94, 95, 97, 98, 99, 100, 102, 103, 104, 105, 106, 108
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S46: Angle insights for real (ST28): manual observations, confirm or reject estimated cues, keep a cue for a lesson, honest capability states
+
+`studio-angle-insights` · S1 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S21, S35, S36
+
+**What to build:** Observations as `jovra.observation/1` records: each shown with source camera, point and time; labelled Manual, Estimated or Reviewed; a player can write their own observation on a clip (Manual), confirm or reject an estimated cue (only reviewed cues become instructions), and keep a cue for a lesson. Capability states come from the core capability registry: unsupported, occluded from this view, and measurements needing calibration disabled with the reason when none exists. No estimated observation ships from a real capability in v1 (only the Sample one), so real projects show manual notes and reviewed cues. It presents the shared A23 lesson picker. Why blocked: S21 (ST28 screen); S35 (keepers and points); S36 (lesson linking); T03 (capability registry model). Implied through other blockers and not repeated as edges: T03 (through S21).
+
+**Acceptance criteria**
+
+- [ ] Writing a note on a keeper creates a manual observation that validates; confirming the Sample estimated cue records the reviewer and provenance reviewed; rejecting it removes it from cue candidates.
+- [ ] Keeping a reviewed cue adds it to the chosen lesson (A23) and the lesson record validates.
+- [ ] A calibration-dependent capability with no calibration shows the disabled reason; the observation invalid case 'calibration missing' is refused in Swift.
+- [ ] No real project ever shows an Estimated observation unless one exists in its records (test with an empty project).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S46 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S46-studio-angle-insights/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S46-studio-angle-insights/side-by-side.html against design-reference/studio/screens/28-angle-insights.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Insights (real wiring)`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Observations`
+- `ios/JovraUITests/Studio/Insights`
+
+**Screens:** 28-angle-insights
+
+**User stories:** 109, 110, 111, 112, 113, 114, 115, 116
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S47: Story modes and profiles for real (ST29-ST31, ST33): readiness, lengths, options, on-phone preview and honest fallbacks
+
+`studio-story-flow-real` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S23, S44
+
+**What to build:** ST29-ST31 and ST33 wired to the engine: each ProfileCard's thumbnail is a real frame chosen by KeeperSelector and its readiness comes from a StoryDirector dry run ('Mark a few moments first' with no keepers opens the player with a Mark point coach mark); lengths 3 min / 5 min / Full with disabled reasons; the options sheet (A25) for aspect, replays, venue (hidden unless opted in), caption and dedication, effects intensity (Subtle default), shake (off) and full rallies (on); a preview rendered on the phone before anything else; a profile without enough evidence states what is missing and offers the simpler honest version; Reduce Motion makes the clean alternate the default; the private film keeps court audio and the sound line says files ask at save; no music, narration or generated commentary. Preview feedback (A13) produces a new plan version. Why blocked: S23 (the profile screens, after ST29 and A25); S44 (all five profiles rendered locally, which brings the engine, director and planner).
+
+**Acceptance criteria**
+
+- [ ] For each of Coach's Cut, Rally Pulse and Court Memories on the synthetic match, Preview produces a verified local film and the UI shows its real length.
+- [ ] With no keepers, each profile shows 'Mark a few moments first' and Preview is disabled; Coach's Cut with no reviewed cue renders 'Your examples' with no instruction titles.
+- [ ] With Reduce Motion on, the produced Rally Pulse film is the clean alternate (EDL cleanAlternate true, verified); turning effects on is an explicit choice.
+- [ ] Venue text never appears in a film unless the opt-in is on (overlay text check).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] A junior-mode project offers no Include audio choice in A25 and its preview has no audio track.
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S47 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S47-studio-story-flow-real/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S47-studio-story-flow-real/side-by-side.html against design-reference/studio/screens/29-story-modes.png, design-reference/studio/screens/30-coachs-cut.png, design-reference/studio/screens/31-rally-pulse.png, design-reference/studio/screens/33-court-memories.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Story (real wiring)`
+- `ios/JovraUITests/Studio/StoryReal`
+
+**Screens:** 29-story-modes, 30-coachs-cut, 31-rally-pulse, 33-court-memories
+
+**User stories:** 117, 118, 119, 120, 121, 122, 123, 125, 126, 129, 130, 133, 138, 139, 140, 141, 142
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S48: Film storyboard for real (ST36): beat list or timeline by window class, re-validated edits, Rebuild draft and Approve film plan
+
+`studio-storyboard-real` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S24, S44
+
+**What to build:** ST36 wired to plans: a compact window reviews a plan as ordered beats with sheets; a width-expanded-or-wider window shows the video, court audio, score and titles lanes (ADR-0025) with each segment's source camera and in/out times; a player can swap a segment's angle (within synchronized coverage; one angle in S1), trim within its keeper (JogStrip; speed fixed at 1x for live), or remove a beat, and every edit is re-validated with plain-language reasons for unsupported effects, invalid windows, gaps and older point revisions; 'Rebuild draft' re-plans from the current events and keepers; 'Approve film plan' approves the story only and never spends or shares. Edits create a new plan version (PlanEditing in the Story module). Unsaved plan edits autosave as draft documents in the project folder and survive resize and process death. Why blocked: S24 (storyboard screens); S44 (preview after an edit with the full renderer, which brings the planner, compiler and validator).
+
+**Acceptance criteria**
+
+- [ ] Trimming a beat outside its keeper window is refused with a plain reason; a valid trim produces a new plan version that the validator accepts and a re-rendered preview that passes FilmVerifier.
+- [ ] Removing a beat re-flows output times with no gap (validator outputGap never raised).
+- [ ] After a correction, the plan shows olderPointRevision and Rebuild produces a plan bound to the new event revision.
+- [ ] Approve film plan writes no quote, reservation, share link or job (store and demo cloud client read-back).
+- [ ] Timeline lanes are adjustable by point and by frame with VoiceOver.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] Layout follows ADR-0025, never the device: the workspace layout appears when the window is width-expanded or wider with height at least medium, and the same iPad in compact-width Split View gets the phone (sheet) layout; a UI test resizes mid-edit (full width -> compact Split View -> full width) and the selected ids, the rational playhead and any unsaved draft survive, and the resize re-issues no command, job, quote or store write (request and store logs).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S48 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S48-studio-storyboard-real/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S48-studio-storyboard-real/side-by-side.html against design-reference/studio/screens/36-film-storyboard.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Storyboard (real wiring)`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Story/PlanEditing`
+- `ios/JovraUITests/Studio/Storyboard`
+
+**Screens:** 36-film-storyboard
+
+**User stories:** 149, 150, 151, 152, 153, 154, 155, 235
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S49: Lesson journal and lesson workspace for real (ST34, ST35), lesson linking from films, and Progress Story (ST32) from lessons
+
+`studio-lessons-ui-real` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S17, S25, S36, S44
+
+**What to build:** ST34 and ST35 bound to LessonJournal: create a lesson by hand, link exact clips from any session (A24 session picker), cues from observations, practice checklist with counts and ticks ('2 of 3 drills complete'), next goal, unreviewed notes marked, coach notes attributed only as entered, offline use, missing clip with repair, unsaved-edit protection. A film links to a lesson from ST39 (LessonLinkSlot) and from the workspace. 'Turn lessons into a Progress Story' builds ST32 from two dated lessons: comparison card when comparable, otherwise the lesson chronology with reflections and a method-change note; examples the player chose are labelled 'Examples you chose'. Fills Home's LessonsSlot (S17). The workspace layout follows ADR-0025 (window class, never device) and unsaved lesson edits autosave as drafts. Why blocked: S25 (screens); S36 (lessons core); S44 (films to attach and the Progress Story render); S17 (the Home LessonsSlot it fills).
+
+**Acceptance criteria**
+
+- [ ] XCUITest creates a manual lesson, links two clips from two sessions, ticks two of three drills and reads '2 of 3 drills complete'; the record validates.
+- [ ] Progress Story from the two Sample serve-practice lessons renders a verified film whose comparison card text equals '12 / 30 - 40% -> 18 / 30 - 60%, +20 percentage points'; with a method change it renders the chronology instead.
+- [ ] Leaving ST35 with unsaved edits asks first and keeps the text when cancelled.
+- [ ] Attaching a film from ST39 to a lesson shows it in the lesson's films list.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] Layout follows ADR-0025, never the device: the workspace layout appears when the window is width-expanded or wider with height at least medium, and the same iPad in compact-width Split View gets the phone (sheet) layout; a UI test resizes mid-edit (full width -> compact Split View -> full width) and the selected ids, the rational playhead and any unsaved draft survive, and the resize re-issues no command, job, quote or store write (request and store logs).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S49 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S49-studio-lessons-ui-real/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S49-studio-lessons-ui-real/side-by-side.html against design-reference/studio/screens/32-progress-story.png, design-reference/studio/screens/34-lesson-journal.png, design-reference/studio/screens/35-lesson-workspace.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Lessons (real wiring, except the lesson-export slot)`
+- `ios/Jovra/Features/Studio/Progress (real wiring)`
+- `ios/Jovra/Features/Studio/Delivery/LessonLinkSlot`
+- `ios/Jovra/Features/Studio/Home/LessonsSlot`
+- `ios/JovraUITests/Studio/LessonsReal`
+
+**Screens:** 32-progress-story, 34-lesson-journal, 35-lesson-workspace
+
+**User stories:** 3, 134, 135, 136, 137, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 178, 180, 181
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S50: Private lesson export for a coach: a Share Pack scoped to one lesson's notes and clips
+
+`studio-lesson-private-export` · S1 · size S · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S49, T38
+
+**What to build:** `LessonJournal.exportPrivate(lessonId) -> SharePack` reuses the core Share Pack builder scoped to that lesson's clips and notes (never the whole match), opens without a JOVRA account in any browser from the folder, defaults clips to no audio with 'Include audio', and is disabled for audio in junior mode. Fills the lesson-export slot declared by S25. Why blocked: S49 (the real lesson screens and their export slot; lesson records come with them); T38 (Share Pack builder and its static viewer).
+
+**Acceptance criteria**
+
+- [ ] Exporting the Oct 7 Sample lesson produces a pack with exactly its 3 clips and its notes, and no other session's media (file list assertion).
+- [ ] The pack's index.html opens in a headless browser offline and lists the notes (snapshot).
+- [ ] Default clips have no audio track; with Include audio on they have one; a junior lesson offers no switch.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- swift test --filter LessonExport output
+- Headless-browser snapshot of the exported viewer
+- scripts/ios/ui-test.sh studio-S50 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Lessons/Export`
+- `ios/Jovra/Features/Studio/Lessons/LessonExportSlot`
+
+**Screens:** 35-lesson-workspace
+
+**User stories:** 176, 177
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S51: Saving films: the Include audio switch, the separately verified no-audio file, version choice and Save clip from the project player
+
+`studio-export-audio` · S1 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S44, S45, T36
+
+**What to build:** STU-16 / D-1. Save to Photos (add-only) or Files from ST39 shows A20: Include audio, off by default for Coach's Cut, Match Broadcast and Progress Story, on by default and always shown for Rally Pulse and Court Memories ('Voices recorded on court will be in the file.'), defaults read from story-profiles.v1.json exportAudio; junior mode and silent sources show no switch and save no audio. Off produces a separate verified artifact (a verified remux of the same video stream with the audio track removed) recorded as its own DeliveredArtifact with media.audioCodec null and its own verification; never a muted player or a flag. The player chooses which film version to save (A14). 'Save clip' in the project player saves the current angle and moment through the core ClipExporter and its ExportOptions. Consent-restricted sharing reads the core consent fields through a fixture consent record in tests (core T58 owns those fields and is not an ancestor; the real record is exercised once T58 lands). Why blocked: S44 (verified films of every profile and FilmRecords); S45 (the real project player whose Save clip slot it fills); T36 (ClipExporter, ExportOptions, ExportDefaults with the junior flag, add-only Photos saving).
+
+**Acceptance criteria**
+
+- [ ] For each profile, the no-audio file and the with-audio file both pass FilmVerifier with identical video frame counts and identical barcodes on the synthetic match; the no-audio file has no audio track (probe).
+- [ ] Mutation: a file saved with Include audio off that still carries an audio track fails verification.
+- [ ] Defaults per profile match the contract; a junior session shows no switch and the saved file has no audio track.
+- [ ] Photos receives one add-only request and no read authorization (fake Photos); choosing an older version saves that version's hash.
+- [ ] Save clip from the player produces a clip whose first and last frames are within one frame of the chosen range (barcode check).
+- [ ] A session whose fixture consent record restricts sharing (core ExportDefaults policy over a fixture record) disables Save and share for its films with the stated reason.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- swift test --filter Export output
+- scripts/ios/ui-test.sh studio-S51 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S51-studio-export-audio/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S51-studio-export-audio/side-by-side.html against design-reference/studio/screens/39-film-delivery.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Export`
+- `ios/Jovra/Features/Studio/Delivery/Export (slot fill)`
+- `ios/Jovra/Features/Studio/Player/SaveClipSlot`
+- `ios/JovraUITests/Studio/Export`
+
+**Screens:** 39-film-delivery
+
+**User stories:** 96, 141, 203, 214, 228, 229
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S52: S1 journey gate: one imported match to five verified local films, lessons and saved files, driven end to end on the simulator
+
+`studio-s1-journey` · S1 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S39, S47, S48, S49, S51, T24, T29, T30
+
+**What to build:** Aggregates S1 acceptance (a)-(f) on the synthetic match (ADR-0012 extended): import or choose the session -> Studio project with identity SyncMap -> points from live scoring, Fast Point Review or manual entry, and Marks -> keeper candidates plus manual keeper and B-roll marking -> each of the five profiles at a chosen length -> RulesPlanner -> compile -> validate -> render -> FilmVerifier -> FilmRecord with court audio -> attach to a lesson -> Progress Story from two lessons -> save with and without Include audio. Also: correcting an early point marks existing films stale and a rebuilt film shows the new later scores (fold oracle); denied microphone, no network and a forced render failure leave capture, replay and originals intact; VoiceOver labels and Reduce Motion (clean alternate becomes the default). Points come from live scoring (core T24), Fast Point Review (T30) and manual entry; the correction runs through the core point editor (T29); capture with the microphone denied runs through the core capture route (T17). The S1 (b) mutation suite is enumerated here, each mapped to the test that fails: one-frame shift (S41), dropped replay label (S40/S42), dissolve over a contact (S11), stale event revision (S41), 1/2x from 30 fps (S37), an audio track in a no-audio file (S51) and freeze frames that differ from the source frame (S42). Prepare for YouTube is not in this gate: the task places it in S5 (S107), and the status report records the deviation against the S1 contract and stories 211-213. Produces the S1 status report in separate columns, stating 'rendered and verified on the simulator from synthetic fixtures' and nothing about real tennis, real footage or devices. Why blocked: S39 (one-camera project); S47 (profiles); S48 (storyboard); S49 (lessons and Progress Story); S51 (saving with and without audio, after the real player and keeper marking of S45); T24, T29, T30 (live scoring, the point editor and Fast Point Review used in the journey).
+
+**Acceptance criteria**
+
+- [ ] One XCUITest drives the whole journey; it produces five ready films, each with a passing VerificationReport (count asserted = 5) and a with-audio and no-audio saved file each passing verification.
+- [ ] Original hashes are identical before and after the whole journey, including after a cancelled and a failed render (hash table in the evidence).
+- [ ] Correction test: after changing the winner of point 3, every existing film shows 'Made before a correction' and the rebuilt Match Broadcast's score bug at three later points equals the new fold.
+- [ ] With microphone denied and the network trapped, recording and replay still work and the trap records zero requests.
+- [ ] The journey passes with VoiceOver labels asserted on every step and with Reduce Motion on (Rally Pulse output is the clean alternate).
+- [ ] The S1 status report lists real footage, physical device and ML benchmark as not run.
+- [ ] The mutation table lists each S1 (b) mutation with the test id that fails on it; re-running each mutation in a scratch build fails its test (transcript).
+- [ ] The status report states that Prepare for YouTube (stories 211-213) is outside the S1 gate and lists the rest of the deferred scope.
+
+**Evidence required**
+
+- XCUITest journey output with the .xcresult path
+- Five VerificationReports and the original-hash table under evidence/ios/studio/S52-studio-s1-journey/
+- evidence/ios/studio/S52-studio-s1-journey/status-report.md
+
+**Owned areas**
+
+- `ios/JovraUITests/Studio/Journey`
+- `evidence/ios/studio/S52-studio-s1-journey`
+
+**Screens:** 21-studio-home, 27-match-broadcast, 29-story-modes, 39-film-delivery
+
+**User stories:** 6, 121, 160, 162, 230, 231, 232, 233, 234, 237, 246
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S53: Real-footage gate harness: the gate script and checklist, proven on the synthetic match and on the custody items of Jon's transcoded Feb-2024 excerpt
+
+`studio-real-footage-harness` · S1 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S52
+
+**What to build:** The agent half of the spec's old-match gate. `scripts/studio/real-footage-gate.sh` drives a project end to end from a file path outside the repository (manifest, points from an authored event log or the app's own entry, keepers, five profiles, verification), writes the checklist and the VerificationReports into evidence/ and never copies media into the repository. It is proven twice: on the synthetic match (every item passes) and on Jon's excerpt for the items that need no tennis input. The excerpt is a transcode, not Jon's original: /Users/IDC2.5/JOVRA-media/excerpts/match-feb2024-14m00s-2min-720p30.mp4 and -6min-720p30.mp4 were written by FFmpeg (encoder Lavf63.1.101, durations 120.03 s and 360.03 s, starting 14 min into the match; OBSERVED by ffprobe on 2026-10-07: H.264 1280x720, 30/1 fps CFR, bt709 SDR, AAC 48 kHz stereo, no rotation side data), and /Users/IDC2.5/JOVRA-media/old-match is empty. Its CFR/SDR/unrotated facts may have been forced by the transcode, so open question 2 (the original's format and how much S2 normalization S1 must pull forward) stays open. Items run here: (1) SourceManifest from the file's bytes (hash, decoded PTS table, fps, rotation, colour) and the hash identical after the run; (2) a non-CFR, rotated or HDR input is refused with 'needs normalization' (synthetic variant); (7) report wording. Output for this source is 1280x720 at 30 fps (a 1080p fill is an upscale and is refused) and every 1/2x replay is refused by the clean-frame rule, so Coach's Cut will use its original-speed fallback. Why blocked: S52 (the S1 journey passes on synthetic fixtures first).
+
+**Acceptance criteria**
+
+- [ ] The script run on the synthetic match produces a checklist with items 1-7 passing and five passing VerificationReports.
+- [ ] The script run on the excerpt records its provenance (encoder, start offset, duration, sha256), item 1 (manifest, hash identical before and after) and item 7, and marks items 3-6 'waiting for Jon's scoring' rather than passing.
+- [ ] A synthetic rotated or HDR variant run through the script is refused with 'needs normalization' (item 2).
+- [ ] The PR adds no video container file and no file larger than 1 MB (CI added-paths check output).
+- [ ] The report wording contains no tennis-accuracy or frame-perfect claim and calls the source 'one transcoded excerpt of Jon's match' (lint).
+
+**Evidence required**
+
+- scripts/studio/real-footage-gate.sh run logs (synthetic and excerpt; paths outside the repo)
+- evidence/ios/studio/S53-studio-real-footage-harness/checklist.md for both runs
+- CI added-paths check output
+
+**Owned areas**
+
+- `scripts/studio/real-footage-gate.sh`
+- `evidence/ios/studio/S53-studio-real-footage-harness (reports only, never media)`
+
+**Screens:** 39-film-delivery
+
+**User stories:** 162, 250
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S54: Real-footage gate: all five films from Jon's scored Feb-2024 excerpt, and the same gate on the original file when it arrives
+
+`studio-real-footage-gate-feb2024` · S1 · size M · labels `ready-for-human`, `platform:ios`, `area:studio`, `stage:S1`
+
+**Blocked by:** S53
+
+**What to build:** The human-gated half. After Jon scores the excerpt in the app (or authors its point list) and marks any B-roll, the S53 script runs items 3-6: points come only from Jon's own scoring or review, never inferred, and every keeper window maps to decoded frames at its first and last frame; each of the five profiles yields an MP4 passing FilmVerifier (frame count, timestamp grid, audio sample count, overlay log equal to the fold at sampled frames); every segment's source window lies inside the recorded file and every overlay resolves to a stored record; a profile without enough evidence (Progress Story with one match; Coach's Cut without a reviewed cue) produces its documented fallback and lists what is missing. Results are reported as 'one transcoded excerpt of one real one-angle match on <device/simulator>' with no tennis-accuracy claim. When Jon supplies the original recording, it is probed and run through the same gate; if it is not CFR, unrotated and SDR it is refused with 'needs normalization' and open question 2 is answered from that probe. Why blocked: S53 (the harness).
+
+**Acceptance criteria**
+
+- [ ] Five VerificationReports exist, one per profile, each passing; each names the excerpt's sha256 and the 1280x720 30 fps output spec.
+- [ ] Coach's Cut's report shows no replay segment (original-speed fallback) and its omitted-ideas list names the refused 1/2x replays.
+- [ ] Every overlay value in the reports resolves to a stored record bound to Jon's own scoring session (the event log's author/source is Jon's entry, never an automatic suggestion).
+- [ ] When the original arrives, its ffprobe facts are recorded and either the gate passes on it or it is refused with 'needs normalization'; open question 2 is updated with that result and its date.
+- [ ] No media is committed (CI added-paths check).
+
+**Evidence required**
+
+- evidence/ios/studio/S54-studio-real-footage-gate-feb2024/checklist.md with items 1-7 marked pass/fail and reasons
+- Five VerificationReport JSON files and the SourceManifest (no media)
+
+**Owned areas**
+
+- `evidence/ios/studio/S54-studio-real-footage-gate-feb2024 (reports only)`
+
+**Screens:** 39-film-delivery
+
+**User stories:** 160, 250
+
+**Gate:** Needs Jon: points and keepers for the excerpt must come from his own scoring or review in the app (or a point list he authored); B-roll windows are his to mark; the original recording is his to supply. The footage never leaves /Users/IDC2.5/JOVRA-media and is never committed.
+
+## S55: Sync fitter method robust-trimmed-ols/2 in the reference (SOF-R4-01) with small-n outlier vectors
+
+`studio-sync-reference-v2` · S2 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S2`
+
+**Blocked by:** S02, S37
+
+**What to build:** SOF-R4-01: the pooled Theil-Sen start of robust-trimmed-ols/1 is not robust at small n (four anchors with one +2 s outlier fail the piece; three anchors give a 583 ppm map). Introduce `robust-trimmed-ols/2` (Siegel repeated-median slope, plus for at most 8 anchors a consensus start over every within-piece pairwise line ranked by inliers within three output frames, ties broken by the smaller |rate - 1|), retire /1 the way /1 retired trimmed-ols/1, and carry the method id through the sync-map schema const, the fixtures, ADR-0017 and SD9 in the same change. Re-check findings 3, 4, 10 and 11 still hold (failed piece without coverage, reference pieces constrained, drift plausibility reasons, from-hints reachable) under /2. Close SOF-R4-01 in the register with the evidence. This is the one recorded exception to the 'after S03, contract changes add new files only' rule: it edits existing contract files, so it also owns the Swift sync-map method id (JovraStudioCore Contracts) and re-runs scripts/studio/sync-sample-resources.sh to refresh the bundled sample copy, and it proves by sha256 that no planner, compile or edl-context vector changes (if one would, the regeneration and the S11/S37 Swift parity runs land in this same change, and the backend heuristic parity of S88 is re-run if it has merged). Why blocked: S37 (the Swift planner/compile/EDL parity whose vectors must stay byte-stable, after S07 and S11); S02 (it edits the open-findings register after the reconciliation and re-verification).
+
+**Acceptance criteria**
+
+- [ ] New vectors four-anchors-one-outlier (nOutliers 1, offset within +/-2,000 us, drift within +/-3 ppm, reviewable true) and three-anchors-end-outlier (the end anchor trimmed or the piece failed; drift within +/-3 ppm when fitted; reviewable false) pass.
+- [ ] Every existing sync-fit vector's hand assertions still hold under /2, and the Sample Camera 2 still rounds to +120 ms and 18 ms/min.
+- [ ] The r3 repro prints no 583 ppm map (repro script output attached).
+- [ ] A sync map declaring method /1 is refused by the schema const after the change (invalid case).
+- [ ] SOF-R4-01 moves to the closed table with the validator output cited; ADR-0017 and SD9 name /2.
+- [ ] python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- [ ] A sha256 list before and after shows that only the sync-fit vectors, the sync-map record and its invalid cases change; every planner, compile, barcode-court and edl-context vector hash is unchanged (or, if not, `swift test --filter EDL` and `--filter Planner` pass on the regenerated vectors in the same PR).
+- [ ] The Swift decoder accepts robust-trimmed-ols/2 and refuses /1 (Contracts test), and the bundled sample sync map is byte-identical to the regenerated fixture (S13's equality test passes).
+
+**Evidence required**
+
+- python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- Repro script output for the small-n cases
+- Diff of ADR-0017, SD9 and the register entry
+
+**Owned areas**
+
+- `spec/reference/studio/syncfit.py`
+- `spec/reference/studio/records.py (sync-map checks only)`
+- `spec/schemas/studio/sync-map.schema.json`
+- `spec/reference/studio/cases/sync_cases.py`
+- `spec/studio/fixtures/vectors/sync-fit.json`
+- `spec/studio/fixtures/records/sync-map.json (regenerated)`
+- `docs/adr/0017-multi-device-capture-and-post-hoc-sync.md (method id only)`
+- `docs/spec/studio-v1-spec.md (SD9 method id only)`
+- `docs/spec/studio-open-findings.md (SOF-R4-01 only)`
+- `spec/studio/modules/sync.md`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Contracts/SyncMapMethod.swift (method id only)`
+- `ios/Jovra/Resources/StudioSample (refreshed by scripts/studio/sync-sample-resources.sh only)`
+
+**User stories:** 76, 77, 78, 81, 86
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S56: Normalization contract: original-PTS to proxy-frame tables for VFR sources, with embedded-ID conformance fixtures
+
+`studio-normalization-contract` · S2 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S2`
+
+**Blocked by:** S03
+
+**What to build:** spec/studio/README.md lists normalization as 'not covered yet': only the PTS-table hashes are bound. Add the table format (compact original PTS -> render-proxy frame map, rational timescales, `lcm(fps_num, 1000)` track timescale, zero start, rotation baked once, HDR tone-map method declared) as a schema, a Python reference that derives the expected proxy frame for every original PTS with the one half-up rule, and vectors from synthetic VFR, rotated, HDR and mixed-fps descriptions (multicam-sync 8.2 embedded-ID method), including the half-even tie mutation that must fail frame selection (case 4 of multicam-sync 8.3). The normalization module page (created by S03 as not-covered) is rewritten as covered with `swift: pending`. Why blocked: S03 (module and vector-kind plumbing).
+
+**Acceptance criteria**
+
+- [ ] Schema and vectors validate; at least 20 normalization vector cases including a 29.97/30 mixed case and a VFR case with a dropped-frame burst.
+- [ ] The half-even tie mutation selects a different frame and is listed as a failing case with its code.
+- [ ] Rotation 90 swaps proxy dimensions and HDR declares a tone-map method (invalid cases for both omissions).
+- [ ] python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+
+**Evidence required**
+
+- python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- spec/studio/modules/normalization.md
+
+**Owned areas**
+
+- `spec/schemas/studio/pts-table.schema.json`
+- `spec/reference/studio/normalization.py`
+- `spec/reference/studio/cases/normalization_cases.py`
+- `spec/studio/fixtures/vectors/normalization.json`
+- `spec/studio/modules/normalization.md`
+
+**User stories:** 67, 75
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S57: SyncEngine fitting in Swift with parity to syncfit.py: piecewise affine maps, sound-travel correction, review gate and queries that never extrapolate
+
+`studio-sync-fit-swift` · S2 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S55
+
+**What to build:** STU-03. `SyncEngine.fit(anchors, geometry, hints) -> SyncMap` reproduces robust-trimmed-ols/2 exactly (integer square root RMS, rate rounded half-up to 1 ppb, offsets and residuals to 1 us), sound delays sqrt(d^2) x 10^6 / c with c = 343 m/s or 331.3 sqrt(1 + T/273.15) rounded to mm/s, states reference, estimated, needs-review (with reasons, including the >303 ppm and >1000 ppm timebase reasons), reviewed (only by a person, >= 3 inliers and the start/middle/end checkpoints; reviewOfWeakFit otherwise), manual, from-hints (from the manifest's journal hints, checked) and failed (no shared coverage included). `review(map, action)` with confirm, addManualAnchor, nudge(+/-frames), rejectAnchor; `query(map, sourceId, matchUs) -> sourceTime | noCoverage` never extrapolates into a gap. Only reference and reviewed pieces are offered for cutting. Regression tests for findings 3, 4, 10 and 11. Why blocked: S55 (method /2 vectors); S10 (sync-map model). Implied through other blockers and not repeated as edges: S10 (through S55).
+
+**Acceptance criteria**
+
+- [ ] Every sync-fit (including the two new small-n cases) and sound-delay vector equals the reference byte for byte (48 sound-delay cases, all sync-fit cases).
+- [ ] The sync-map invalid cases and the four hint self-tests are reproduced in Swift with the same codes.
+- [ ] Findings 3, 4, 10, 11: a failed piece carrying coverage, a reference-device piece with invented offset and rate 1.09, two anchors with a +2 s error marked reviewed, and a stored from-hints piece are each handled as the reference does (refused or reachable); reverting one rule fails its test.
+- [ ] query() in a gap returns noCoverage at the gap's first and last microsecond (the multicam-sync 8.3 case 8 fixture).
+- [ ] `swift test --filter Sync` passes on macOS and Linux; Swift and Python sync maps are byte-identical on the fixture set (the Swift and Python part of multicam-sync 8.3 case 15; the Kotlin part is deferred with the Android port).
+- [ ] The sync module page reads `swift: consumed` and the manifest test passes.
+
+**Evidence required**
+
+- swift test --filter Sync output with the parity table (macOS + Linux)
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Sync`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Sync`
+- `spec/studio/modules/sync.md (swift status line only)`
+
+**User stories:** 76, 77, 78, 80, 81, 82, 83, 85, 86, 88, 251
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S58: Synthetic multi-angle fixture generator: scene and rig to per-camera videos with ground truth, drift, restarts, late starts, shake and muted cameras
+
+`studio-multiangle-generator` · S2 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S2`
+
+**Blocked by:** S08
+
+**What to build:** multicam-sync 8.1: a deterministic generator (beside S08) renders a synthetic court scene from a rig of up to six placements into per-camera videos with coded variants (embedded frame ids, clicks) and clean variants, and a ground-truth manifest (true offset, drift, restarts, gaps, event positions on court, sound delays per placement). Profiles: drift 1-50 ppm default and 300 ppm stress; a 41 s restart gap with and without journal; a late-starting camera; a knocked-tripod shake stretch; a muted camera; mixed 60/30/240 fps; VFR, rotated and HDR variants; two angles with no shared coverage; opposite-baseline audio-only. Media is generated at test time; only ground truth is committed. Why blocked: S08 (barcode, click and reader tools reused).
+
+**Acceptance criteria**
+
+- [ ] Two runs produce byte-identical media and unchanged ground-truth files.
+- [ ] Reading the embedded ids from each generated camera and applying the ground-truth map recovers the true match time of every frame within half an output frame.
+- [ ] Sound delays in the ground truth reproduce the multicam research 4.4 tables within 0.1 ms (the sound-delay vectors).
+- [ ] The shake profile's ground truth marks the shaken stretch so anchor tests can assert down-weighting.
+- [ ] No generated media is committed (CI added-binary check).
+
+**Evidence required**
+
+- Generator run logs with sha256 lists
+- Ground-truth recovery test output
+- spec/studio/modules/multiangle-generator.md
+
+**Owned areas**
+
+- `scripts/media/studio/multiangle/`
+- `spec/studio/fixtures/media/multiangle/ (ground truth only)`
+- `spec/studio/modules/multiangle-generator.md`
+
+**User stories:** 82, 83, 252
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S59: ProxyNormalizer: VFR to CFR with original-PTS tables, rotation once, HDR to SDR, mixed fps, resumable and heat-aware
+
+`studio-proxy-normalizer` · S2 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S38, S56, S58, T15
+
+**What to build:** STU-20. `normalize(manifest, target) -> Proxy`: analysis proxies keep original timestamps; render proxies are constant frame rate, rotation applied once, SDR BT.709 with HDR tone-mapped by a declared method, zero-start, track timescale lcm(fps_num, 1000), with the explicit hashed original-PTS -> proxy-frame table of S56. AVAssetReader -> AVAssetWriter on device, resumable checkpoints, runs only at thermal state <= fair (core DeviceBudget) and never while core CaptureActivity is active, and prefers power; render proxies also pass editor-equivalent invariants (multicam-sync 8.3 case 12): a 1/600 timescale is refused, and CFR, even dimensions and baked rotation are enforced; proxies are deletable, rebuildable derived caches. Original hashes are identical before and after every run. Local real-media evidence (never committed): Jon's corner-sep2026 and sideview-oct2026 excerpts are HDR PQ (smpte2084, OBSERVED by ffprobe) and normalize to SDR proxies whose tables are monotonic and complete. Flips the normalization module page to `swift: consumed`. Why blocked: S56 (table contract); S58 (VFR/rotated/HDR/mixed-fps fixtures); S38 (manifests and the S1 refusal it lifts); T15 (DeviceBudget thermal source and CaptureActivity).
+
+**Acceptance criteria**
+
+- [ ] On the S58 VFR, rotated, HDR and mixed-fps fixtures, the embedded ids decoded from the render proxy match the S56 expected table 100%.
+- [ ] The half-even tie mutation fails the frame-selection test; the correct rule passes.
+- [ ] Killing normalization mid-run resumes from the checkpoint and produces a byte-identical proxy to an uninterrupted run.
+- [ ] With the injected thermal state serious, normalization pauses and resumes at fair (thermal fake).
+- [ ] Originals' sha256 identical before and after; deleting proxies and rebuilding gives the same table hash.
+- [ ] Local run on the two HDR excerpts reports SDR output, frame counts equal to decoded counts and monotonic tables (report committed, media not).
+- [ ] Normalization pauses while a fixture capture is active and resumes after it ends (CaptureActivity fake).
+- [ ] A synthetic proxy with a 1/600 timescale, odd dimensions or unbaked rotation is refused by the editor-equivalent check, and every real render proxy passes it.
+
+**Evidence required**
+
+- swift test --filter Normalize output
+- evidence/ios/studio/S59-studio-proxy-normalizer/real-hdr-excerpts.md (no media)
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Normalize`
+- `ios/Packages/JovraStudioMedia/Tests/JovraStudioMediaTests/Normalize`
+- `spec/studio/modules/normalization.md (swift status line only)`
+
+**User stories:** 67, 72, 73, 74, 75
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S60: Two-view import (ST25 for real multi-source): mixed formats, slots, proxies in the background and storage accounting
+
+`studio-two-view-import` · S2 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S59
+
+**What to build:** ST25 for up to six sources of the same match: each source assigned to a slot, mixed resolutions and frame rates accepted and normalized without touching originals, proxies built in the background with heat pauses and progress, sources with no audio accepted and marked, duplicates by hash, partial sources flagged, the working-space check covering proxies, deletable proxies with storage shown separately from originals. Lifts the S1 'needs normalization' refusal for sources the normalizer handles. Why blocked: S59 (normalizer).
+
+**Acceptance criteria**
+
+- [ ] Importing the S58 two-camera fixture (60 fps primary, 30 fps rotated secondary) creates two sources in their slots and render proxies whose tables pass S56 vectors.
+- [ ] A muted camera is accepted and marked 'No audio'; adding the same file again is a duplicate.
+- [ ] Proxy creation pauses at injected thermal serious and the UI says so; the app stays usable (UI responsiveness assertion).
+- [ ] Storage shows proxies separately; deleting them leaves originals' sha256 unchanged and Rebuild restores them.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S60 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S60-studio-two-view-import/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S60-studio-two-view-import/side-by-side.html against design-reference/studio/screens/25-source-import.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Sources (multi-source wiring)`
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Ingest/MultiSource`
+- `ios/JovraUITests/Studio/SourcesMulti`
+
+**Screens:** 25-source-import
+
+**User stories:** 30, 61, 63, 65, 66, 67, 68, 69, 72, 73, 74
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S61: Anchor extraction: GCC-PHAT on hinted windows, manual markers, marked visual events and capture hints, with sound-travel correction
+
+`studio-sync-anchors` · S2 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S57, S59, T13
+
+**What to build:** SyncEngine anchor extraction in JovraStudioMedia: GCC-PHAT on windows around candidate events constrained by hints so rally rhythm cannot alias (refuse with 'needs capture hint or manual marker'), visual anchors only from events a person marks (Mark point on a serve contact; no automatic visual detection in v1), manual markers (clap or ball drop) placed on both sources, capture hints from the journal; sound-travel correction from core CourtGeometry with point-event role priors. Output feeds `fit`. Robustness: every discontinuity gets its own piece checked at its start and end; a late-starting camera's coverage begins where its recording begins; anchors inside a shaken stretch are down-weighted or trimmed and the piece goes to needs-review with a reason. Onset candidates come from a pluggable source; the core HitDetector plug-in is S62. Why blocked: S57 (fit); S59 (analysis proxies, which bring the multi-angle fixtures); T13 (court geometry for sound travel). Case 12 of multicam-sync 8.3 is covered by S59's editor-equivalent checks and the Kotlin part of case 15 is deferred with the Android port, so S2 is never reported as passing all sixteen.
+
+**Acceptance criteria**
+
+- [ ] multicam-sync 8.3 on synthetic fixtures: case 1 (offset only, <= 1/2 frame, estimated), case 2 (20 ppm, drift within +/-3 ppm), case 5 (opposite baselines without correction -> needs-review), case 6 (with correction, <= 1/2 frame at 60 fps), case 7 (alias refused), cases 8 and 9, case 10 (muted camera, < 8 anchors -> needs-review), case 11 (mixed fps by time), case 13, case 14 (no shared coverage -> failed, not offered) and case 16 (revision bump stales plans) all pass.
+- [ ] Mutations case 3 (+1 frame shift fails anchor agreement) and case 4 (half-even tie fails frame selection) fail as required.
+- [ ] The late-start fixture shows 'No video here' before its first frame; the shake fixture ends needs-review with the shake reason.
+- [ ] The case table states that case 12 is evidenced by S59 and the Kotlin part of case 15 is deferred.
+- [ ] `swift test --filter SyncS` passes on macOS.
+
+**Evidence required**
+
+- swift test --filter SyncS output with the multicam-sync 8.3 case table
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/SyncAnchors`
+- `ios/Packages/JovraStudioMedia/Tests/JovraStudioMediaTests/SyncAnchors`
+
+**User stories:** 76, 78, 79, 82, 83, 84, 87
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S62: Core HitDetector onsets as sync anchor candidates
+
+`studio-hitdetector-onsets` · S2 · size S · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S61, T34
+
+**What to build:** Plug the core HitDetector (reused, never forked) into S61's onset-candidate interface so GCC-PHAT windows centre on detected hits; estimated hits stay labelled and the fit still needs the S61 gates. Why blocked: S61 (the candidate interface); T34 (HitDetector).
+
+**Acceptance criteria**
+
+- [ ] On the S58 two-camera fixture with clicks, HitDetector-seeded windows give the same fit as the ground-truth-seeded windows within 1/2 output frame.
+- [ ] Turning the plug-in off falls back to the S61 candidates with no other behaviour change (same test, both modes).
+- [ ] No file under the core HitDetector folder changes (diff stat).
+
+**Evidence required**
+
+- swift test --filter SyncS output for the HitDetector mode
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/SyncAnchors/HitDetectorOnsets`
+
+**User stories:** 76
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S63: Sync desk and sync sheets for real (ST26): review, manual markers, nudge, Confirm sync and reopening
+
+`studio-sync-desk-real` · S2 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S61
+
+**What to build:** ST26 bound to SyncEngine, with the desk or the sheets chosen by window class (ADR-0025): per-source state pills, offset and drift shown separately, start/middle/end checkpoints, gaps and restarts drawn on each track, waveforms drawn from each source's real decoded audio (peak envelope of the analysis proxy), A10 manual markers with the resulting offset and residual previewed before saving, frame nudges against the primary, 'Needs review' never auto-approved, 'Confirm sync' only for a fit with >= 3 inliers after the three checkpoints (records the reviewer), Estimated until confirmed and never Validated, reopening after confirming marks dependent plans and films stale. Why blocked: S61 (anchors and fit; the ST26 screens come before it through S38).
+
+**Acceptance criteria**
+
+- [ ] On the S58 two-camera fixture, confirming after checking the three checkpoints stores a reviewed piece with the reviewer; with two inliers Confirm is disabled with the reason.
+- [ ] Placing a manual marker pair previews offset and residual equal to SyncEngine's output and saving bumps syncRevision.
+- [ ] Nudging +1 frame changes the offset by exactly one frame duration in microseconds.
+- [ ] Reopening and changing a confirmed map marks the dependent plan stale (store read-back).
+- [ ] VoiceOver adjustable lanes step by point and by frame and read state.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] Layout follows ADR-0025, never the device: the workspace layout appears when the window is width-expanded or wider with height at least medium, and the same iPad in compact-width Split View gets the phone (sheet) layout; a UI test resizes mid-edit (full width -> compact Split View -> full width) and the selected ids, the rational playhead and any unsaved draft survive, and the resize re-issues no command, job, quote or store write (request and store logs).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S63 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S63-studio-sync-desk-real/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S63-studio-sync-desk-real/side-by-side.html against design-reference/studio/screens/26-sync-workspace.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Sync (real wiring)`
+- `ios/JovraUITests/Studio/SyncReal`
+
+**Screens:** 26-sync-workspace
+
+**User stories:** 76, 77, 78, 79, 80, 81, 82, 85, 86, 88, 235
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S64: Multi-angle project player (ST27): angle switching on the match clock, no-coverage honesty and keepers counted once
+
+`studio-multiangle-player` · S2 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S45, S57, S60
+
+**What to build:** ST27 with several angles: AngleGrid and AngleThumbs with coverage and sync state; switching angle keeps the same match moment through the SyncMap (query, never extrapolation); an angle with no coverage at this moment shows hatched 'No video here' with the gap reason, never a frozen frame; estimated maps are playable with an 'Estimated' label; the same point seen from several angles is one keeper with views (story 107). Why blocked: S45 (one-angle player); S57 (sync queries); S60 (multi-source projects).
+
+**Acceptance criteria**
+
+- [ ] On the S58 two-camera fixture, switching angle at 10 sampled times shows the frame whose embedded match time equals the playhead within one output frame.
+- [ ] Inside a restart gap the secondary tile shows 'No video here' (snapshot) and is not selectable.
+- [ ] Marking a keeper on Camera 2 for a point already kept from Camera 1 adds a view, not a second keeper (catalog read-back).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S64 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S64-studio-multiangle-player/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S64-studio-multiangle-player/side-by-side.html against design-reference/studio/screens/27-match-broadcast.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Player/MultiAngle`
+- `ios/JovraUITests/Studio/PlayerMulti`
+
+**Screens:** 27-match-broadcast
+
+**User stories:** 89, 90, 91, 107
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S65: Multi-angle films: alt-bed, multi-angle live and replay, warm-court-1 and Match Broadcast post-point alternate replays
+
+`studio-multiangle-render` · S2 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S42, S61
+
+**What to build:** Enables the S2 operations one entry each in the stage allowlist (alt-bed, multi-angle live/replay, grade warm-court-1) with their renderer support and barcode tests, and teaches the Match Broadcast profile file to add alternate-angle replays after a point on reviewed maps only (live stays on the wide angle in point order). Films with angle changes keep one continuous court-audio bed: onset count equals the plan (no doubled impacts), A/V offset <= 1 output frame, bed switches only at segment boundaries with the planned fades. Why blocked: S42 (renderer); S37 (planner profile files); S61 (reviewed maps from real anchors, and the multi-angle fixtures). Implied through other blockers and not repeated as edges: S37 (through S61).
+
+**Acceptance criteria**
+
+- [ ] A compiled Match Broadcast on the S58 two-camera fixture with post-point replays passes FilmVerifier with barcodes from both angles equal to the plan.
+- [ ] Click-onset count in the rendered audio equals the plan's count (no doubled hit) and every click is within one output frame of its picture frame.
+- [ ] Mutations: an alt-bed starting mid-segment and a replay cut from an estimated (not reviewed) map are refused before render.
+- [ ] The warm-court-1 grade renders only when the allowlist entry is on; with it off the plan is refused stageNotEnabled.
+- [ ] swift test passes on macOS and the simulator.
+
+**Evidence required**
+
+- swift test --filter MultiAngle output
+- Verification reports under evidence/ios/studio/S65-studio-multiangle-render/verification/
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Render/MultiAngle`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Story/Profiles/MatchBroadcast (alternate replays only)`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/EDL/StageAllowlist (S2 entries)`
+- `ios/Packages/JovraStudioMedia/Tests/JovraStudioMediaTests/MultiAngle`
+
+**User stories:** 126, 127, 156
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S66: Two-view gate harness: the per-angle residual report generator, proven on the synthetic two-camera match
+
+`studio-two-view-gate-harness` · S2 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S63, S64, S65
+
+**What to build:** The agent half of STU-23. A report generator reads a project's sync maps, anchors and marked visual events and writes the per-angle table the field gate needs: offset, drift (ppm), inlier count, residual RMS and maximum, the state reached, each restart piece checked at its start and end, and the residual in output frames of every marked visual anchor at start, middle, end and each restart; pairs over one output frame are flagged and excluded from cross-cutting. It also runs FilmVerifier on a rendered Match Broadcast and records the real-footage scope. Proven on the S58 synthetic two-camera match, where the ground truth is known. Why blocked: S63 (review UI and confirmed maps); S65 (multi-angle films); S64 (multi-angle player).
+
+**Acceptance criteria**
+
+- [ ] On the S58 two-camera fixture the generated table's offsets and drifts match the ground truth within the S61 tolerances, and every restart piece has start and end rows.
+- [ ] A fixture with one anchor pair shifted by two frames is flagged and excluded from cross-cutting in the report.
+- [ ] The Match Broadcast rendered from the fixture passes FilmVerifier and the report embeds its VerificationReport.
+- [ ] The generator writes text reports only and never a video file; the CI added-paths check shows no media.
+
+**Evidence required**
+
+- Generated report for the synthetic fixture under evidence/ios/studio/S66-studio-two-view-gate-harness/
+- Generator test output
+
+**Owned areas**
+
+- `scripts/studio/two-view-gate-report`
+- `evidence/ios/studio/S66-studio-two-view-gate-harness (reports only)`
+
+**User stories:** 76, 77, 78, 81, 85
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S67: Two-view field gate: Jon's first real two-phone footage of one match, residuals documented
+
+`studio-two-view-field-gate` · S2 · size M · labels `ready-for-human`, `platform:ios`, `area:studio`, `stage:S2`
+
+**Blocked by:** S66
+
+**What to build:** STU-23 on real footage. On Jon's first real two-phone recording of the same match (not yet supplied: the corner-sep2026 and sideview-oct2026 excerpts are from different days and cannot be aligned), import both, normalize, fit and review sync, render a Match Broadcast with post-point alternate replays and run the S66 report generator. Pass: matching visible anchors (marked by a person) agree within one output frame at start, middle, end and each restart, or the pair is flagged and excluded from cross-cutting; offset, drift, inliers, residual RMS and maximum and the state reached are documented and never tuned away; the film passes FilmVerifier (real-footage scope). Footage stays outside the repository. Why blocked: S66 (the harness).
+
+**Acceptance criteria**
+
+- [ ] A per-angle report lists offset, drift, inliers, residual RMS and max, and the state for each piece; every restart piece is checked at its start and end.
+- [ ] Every angle that reached reviewed has marked visual anchors within one output frame at start, middle and end (table of residuals in frames); every angle that did not is listed with its reason.
+- [ ] The rendered film's VerificationReport passes and carries the real-footage scope.
+- [ ] No media file is committed (CI added-paths check).
+
+**Evidence required**
+
+- evidence/ios/studio/S67-studio-two-view-field-gate/report.md with per-angle residual tables
+- VerificationReport JSON (no media)
+
+**Owned areas**
+
+- `evidence/ios/studio/S67-studio-two-view-field-gate (reports only)`
+
+**Screens:** 26-sync-workspace, 27-match-broadcast
+
+**User stories:** 76, 77, 78, 81, 85, 250
+
+**Gate:** Needs Jon's two-phone recording of one match (same session, two angles). The excerpts available on 2026-10-07 are from different days and do not satisfy it. Footage is never committed.
+
+## S68: JOVRA Room v1 contract: jovra.room/1 schema, join-code payload, approval code and message set with a Python reference
+
+`studio-room-contract` · S3 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `stage:S3`
+
+**Blocked by:** S03
+
+**What to build:** SD10, multicam-sync 2.4-2.7 and ADR-0027 (accepted 2026-10-07). The RoomMessage schema: every message carries roomId, hostEpoch (increases on every host start, restart or change), deviceId and a per-sender increasing seq, plus sentMonoNs; messages hello, join, approvalRequest, approve, revoke, roleAssigned, grantChanged, readiness with battery/free space/minutes left/thermal, recordingIntent, recordingStarted acknowledgement with intent id, segment id, fileZeroHostNs, wall clock, preset, fps, timescale, heartbeat every 2 s, still metadata every 5 s or 2 s while framing, segmentEvent, recordingStopped, stopOne, stopAll, bookmark, and command receipts. Commands carry commandId, issuer, claimed grant, roomId, hostEpoch, expiry, target scope and baseEventRevision where it applies; the host persists command ids with a payload hash; receipts go Pending -> Accepted, Rejected, Expired or Conflicted, with per-device results for a fan-out such as stop-all. Slot roles (primary, camera) are separate from grants (viewer by default, marker, scorer, capture-controller; a camera guest gets record-local and view-own-preview only); the roster's host-controls permission maps to capture-controller. Framing is 4-byte length-prefixed JSON. The join payload is `jovra-room:1:<base64url>` (one slot, single use, expiry <= 10 min, bound to roomId, slot, hostEpoch and the host key pin, a 32-byte secret and a nonce, endpoints that must be local addresses), and approval uses the 6-digit code derived from the guest key's thumbprint (never the guest's self-chosen name); on the typed-code path the comparison code derives from the TLS channel binding or the path is refused. The Bonjour instance name is an opaque random room hint. A Python reference checks transcripts: expiry, single use, approval before role binding, revoke closing the connection and voiding the code, host transfer voiding invites, slot full, older epochs and non-increasing seq rejected, receiver-owned freshness bands (fresh <= 5 s, delayed <= 15 s, Unknown beyond, or after a receiver restart), 'Recording on n of m' counting only freshly acknowledged recording devices, and silence never inferred as stop. Fixtures include the ST23/ST24 demo transcripts. ADR-0026's jovra.watch-snapshot/1 is deferred to the watch workflow and not built here. The room module page declares its kinds with `swift: pending`. Why blocked: S03 (plumbing).
+
+**Acceptance criteria**
+
+- [ ] Schema and reference validate the demo transcripts and at least 25 invalid transcript cases, including: expired code, reused code, role bound before approval, approval by display name, ack counted without recordingStarted, stop inferred from silence, frame over max length.
+- [ ] ADR-0027 vectors pass: an older hostEpoch and a replayed or non-increasing seq are rejected; the same commandId with the same payload returns the original receipt and with a different payload is rejected as a security event; a viewer attempting stop-all is rejected; a QR with a public endpoint is refused; a mismatched comparison code is refused; a typed-code join without a channel-bound code is refused; a partial stop-all fan-out reports Accepted, Failed and Unknown per device.
+- [ ] Freshness vectors: a camera silent for 42 s is Unknown, shown as contact age, not counted in n of m and never marked stopped.
+- [ ] The approval code vector reproduces a hand-computed 6-digit code from a fixed public key.
+- [ ] python3 scripts/spec/validate_studio.py output ends in RESULT: PASS and `--list` shows the room kinds with swift pending.
+
+**Evidence required**
+
+- python3 scripts/spec/validate_studio.py output ending in RESULT: PASS with the per-check counts
+- spec/studio/modules/room.md
+
+**Owned areas**
+
+- `spec/schemas/studio/room.schema.json`
+- `spec/reference/studio/room.py`
+- `spec/reference/studio/cases/room_cases.py`
+- `spec/studio/fixtures/vectors/room.json`
+- `spec/studio/fixtures/records/room-transcript.*.json`
+- `spec/studio/modules/room.md`
+
+**Screens:** 23-camera-lobby, 24-director-capture
+
+**User stories:** 33, 34, 35, 40, 47, 51, 223
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S69: Room protocol in Swift: codec, host and guest state machines, a loopback fake transport and schema-valid fixture-room transcripts
+
+`studio-room-protocol-swift` · S3 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S3`
+
+**Blocked by:** S19, S68
+
+**What to build:** JovraStudioCore/Room: the 4-byte length-prefixed JSON codec, the host state machine (invites, approvals, slot roles and grants checked on every command, host epochs with re-authentication and reconciliation before acting on a new epoch, persisted commandId receipts with payload hashes, aggregate 'Recording on n of m' counting only freshly acknowledged recording devices, receiver-owned freshness bands, silence shown as contact age and never as stopped) and the guest state machine (join, wait for approval, report readiness, acks, heartbeats, stills, segment events; keeps recording when the host leaves), a `RoomTransport` protocol with an in-process loopback fake, and the S19 fixture room re-based on schema-valid jovra.room/1 transcripts. Persisted roles, grants, receipts and acknowledgements are project records on each device; presence carries readiness only. Flips the room module page to `swift: consumed`. Why blocked: S68 (contract); S19 (the fixture room it replaces).
+
+**Acceptance criteria**
+
+- [ ] Every room vector and invalid transcript from S68 is reproduced in Swift with the same codes.
+- [ ] Loopback test: host plus three guests join, one is revoked, one goes silent for 42 s: it reads 'No contact for 0:42 · may still be recording', is not counted in 'Recording on n of m' (which drops to 2 of 3 fresh) and is never marked stopped; stop one and stop all report per-device Accepted, Failed or Unknown results.
+- [ ] A host restart raises hostEpoch; guests re-authenticate, the host re-reads each capture state and no pending command is replayed (test).
+- [ ] A guest whose host disappears keeps its recording state and writes its own records (test).
+- [ ] The ST23/ST24 demo UI tests from S19 still pass on the new transcripts.
+- [ ] `swift test --filter Room` passes on macOS and Linux and the room module page reads `swift: consumed`.
+
+**Evidence required**
+
+- swift test --filter Room output (macOS + Linux)
+- S19 UI test rerun output
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Room`
+- `ios/Packages/JovraStudioCore/Tests/JovraStudioCoreTests/Room`
+- `spec/studio/modules/room.md (swift status line only)`
+
+**User stories:** 34, 35, 37, 41, 47, 48, 51, 54
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S70: LAN carrier for JOVRA Room: Network.framework with Bonjour, TLS key pinning, in-app QR invites and the Local Network explainer
+
+`studio-room-lan-transport` · S3 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S3`
+
+**Blocked by:** S69
+
+**What to build:** RoomTransport over LAN: Network.framework listener and browser with Bonjour (NSBonjourServices from S04) advertising only an opaque random room hint, TLS 1.3 with the host key pinned from the join payload and the guest key bound at approval, reconnect after a blip within the same hostEpoch, and a clear 'cannot connect' fallback to independent recording. QR invites are generated on the host and scanned only by the in-app scanner (never registered as a URL scheme); endpoints in a QR must be local addresses or the invite is refused. A typed 6-digit code is the short-range fallback: because it carries no pinned key, its comparison code is derived from the TLS channel binding (both keys, a TLS exporter value) and the host still taps Approve; without channel binding the typed path is refused (ADR-0027). The Local Network permission joins the core PermissionsCenter (explanation first, consequence text, Open iOS Settings). MultipeerConnectivity stays an Apple-only experiment behind a flag (off), and Wi-Fi Aware is not built. Why blocked: S69 (protocol; the S04 Info.plist keys precede it); T07 (PermissionsCenter). Implied through other blockers and not repeated as edges: T07 (through S69).
+
+**Acceptance criteria**
+
+- [ ] Two in-process endpoints on the simulator's loopback interface complete join, approval, ack and stop-all over TLS; a guest presenting the wrong pinned key is refused.
+- [ ] A typed-code join derives its comparison code from the channel binding; a man-in-the-middle fixture that terminates TLS with a third key produces mismatched codes on the two sides and is refused.
+- [ ] A QR whose endpoint is a public address is refused before any connection attempt; the advertised Bonjour instance name contains no player, project or device name (assertion).
+- [ ] Dropping the connection for 5 s and restoring it reconnects without a new join (test with an injected path change).
+- [ ] Scanning a generated QR in a UI test (image injection) joins; opening the same payload as a URL does nothing.
+- [ ] Local Network denied shows the explainer's consequence and 'Record on this phone instead' (UI test with the permission fake).
+
+**Evidence required**
+
+- XCUITest and hosted unit test output for the LAN carrier
+- Screenshots of the permission explainer states
+- scripts/ios/ui-test.sh studio-S70 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+
+**Owned areas**
+
+- `ios/Jovra/Platform/StudioRoom (LAN carrier, TLS pinning, QR generate/scan)`
+- `ios/JovraTests/Studio/Room`
+
+**Screens:** 23-camera-lobby
+
+**User stories:** 33, 36, 41, 42, 44
+
+**Gate:** Real LAN behaviour across physical phones on court Wi-Fi or an Android hotspot is UNVERIFIED until a device run; the simulator proves the protocol over loopback only.
+
+## S71: Camera lobby (ST23) for real: invites per slot, approval by device code, revoke, readiness and telemetry, reconnect
+
+`studio-camera-lobby-real` · S3 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S3`
+
+**Blocked by:** S70
+
+**What to build:** ST23 bound to the room: an expiring join code and QR per camera slot (10 min default; host transfer voids every outstanding invite), host approval after both phones show the same 6-digit device code, revoke at any time, the operator sees only their own slot and status and needs no account, and a camera guest holds only record-local and view-own-preview until the host grants more (grants are visible and revocable), rows show Ready, Waiting or why not ready, battery, free space, estimated minutes left and heat, expired code and full slot explained, automatic reconnect, camera/microphone/local-network explainers with 'record anyway' without a microphone. Lifts unsupportedBeforeS3 behind the S3 build flag. Why blocked: S70 (LAN carrier; the ST23 screens precede it through S69).
+
+**Acceptance criteria**
+
+- [ ] Simulator test with two app processes (or the loopback carrier): approve by matching code, revoke closes the guest's connection and its code is refused afterwards.
+- [ ] An expired code shows the A11 message; a full slot is refused with its message.
+- [ ] A guest with microphone denied joins and is shown ready with 'No microphone'.
+- [ ] A guest whose device reports it cannot record the slot's preset (fixture capability) shows capabilityUnavailable with the reason on the host's slot row.
+- [ ] The guest UI shows only its own slot (no other camera's still or name).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] A camera guest's attempt to stop another camera is rejected with a receipt naming the missing grant; after the host grants capture-controller the same command is accepted.
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S71 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S71-studio-camera-lobby-real/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S71-studio-camera-lobby-real/side-by-side.html against design-reference/studio/screens/23-camera-lobby.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Lobby (real wiring)`
+- `ios/JovraUITests/Studio/LobbyReal`
+
+**Screens:** 23-camera-lobby
+
+**User stories:** 29, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 223
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S72: Director capture (ST24) for real: each phone records locally with the unchanged CaptureEngine, acknowledgements, aged stills, health and stop one / stop all
+
+`studio-director-capture-real` · S3 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S3`
+
+**Blocked by:** S71, T24
+
+**What to build:** A RoomParticipant on the unchanged core CaptureEngine reports recordingStarted acknowledgements, heartbeats every 2 s, stills every 5 s (2 s while framing) only at thermal <= fair, segment events and recordingStopped; the host shows 'Recording on n of m', highlights a missing acknowledgement with the camera's name, shows other cameras as aged stills, battery, storage and heat warnings, 'No contact for 0:42' for a silent camera, bookmarks a rally on the shared timeline, and distinguishes stopping one camera from stopping all: stop-all is a confirmed fan-out naming its targets that reports each device's Accepted, Failed or Unknown result with no blanket success banner, and losing the host or network never stops any local recording (ADR-0027). The primary runs exactly core capture-time behaviour including live scoring (no score until points are scored; no automatic analysis during capture). Guests keep recording if the host leaves or dies; an interruption closes a clean segment and logs a gap; operators see 'Saved through mm:ss'. Capture hints (fileZeroHostNs, room offset and round trip) go into each source's manifest. Recording never waits on the room. Why blocked: S71 (lobby); T17 (capture route and slots); T24 (live scoring and Mark point on the primary). Implied through other blockers and not repeated as edges: T17 (through T24).
+
+**Acceptance criteria**
+
+- [ ] Loopback test with three fixture-camera devices: 'Recording on 3 of 3' only after three acknowledgements; killing one guest's room connection leaves its recording running and its segments intact.
+- [ ] Starting the primary's recording with the room disconnected starts within the core capture latency budget (fixture-camera timing) and records.
+- [ ] Stills stop being sent at injected thermal serious and resume at fair (message log assertion).
+- [ ] Stop one stops only that camera (acks); stop all reports per-device Accepted, Failed or Unknown (one fixture device forced to Unknown) and shows no blanket success banner.
+- [ ] The manifest of a guest's source carries fileZeroHostNs and roomOffsetUs that satisfy the reference capture-hints check.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S72 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S72-studio-director-capture-real/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S72-studio-director-capture-real/side-by-side.html against design-reference/studio/screens/24-director-capture.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Director (real wiring)`
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/Capture (RoomParticipant adapter over CaptureEngine)`
+- `ios/JovraUITests/Studio/DirectorReal`
+
+**Screens:** 24-director-capture
+
+**User stories:** 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58
+
+**Gate:** Endurance, thermal behaviour, wireless delivery and stills bandwidth are UNVERIFIED on the simulator and proven only by the S74 field test on physical phones.
+
+## S73: Six-device field protocol, report template and log collector, rehearsed on the loopback fake
+
+`studio-six-device-field-protocol` · S3 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S3`
+
+**Blocked by:** S61, S72
+
+**What to build:** The agent half of STU-32. docs/studio/field-tests/six-device-protocol.md (who places which phone, the 60-minute session plan, forced kills, disconnect and rejoin, expired/revoked/full-slot codes, how to measure stills bandwidth and how to capture each log), a report template with every table the gate needs (per-device duration, segments, gaps, recoveries, warnings fired; stills bandwidth with method; the per-angle sync residual table from the S66 generator), and a log collector that pulls the room, capture-journal and thermal logs from each device's project folder into the report without media. Rehearsed end to end on the six-participant loopback fake so the collector and template are proven before any phone is used. States plainly that the field run is iPhone-only until the Android port exists. Why blocked: S72 (director capture); S61 (sync anchors and fit).
+
+**Acceptance criteria**
+
+- [ ] The protocol document lists every scenario of the gate with the evidence it produces and the pass condition.
+- [ ] The rehearsal on the loopback fake fills every table of the template from collected logs (no hand-entered numbers).
+- [ ] The collector refuses to copy any video file (test with a fixture project).
+- [ ] The template's stills-bandwidth section states the 0.32 Mbit/s INFERRED estimate and the measurement method that will confirm or correct it.
+
+**Evidence required**
+
+- docs/studio/field-tests/six-device-protocol.md
+- Rehearsal report under evidence/ios/studio/S73-studio-six-device-field-protocol/
+
+**Owned areas**
+
+- `docs/studio/field-tests/`
+- `scripts/studio/field-log-collector`
+- `evidence/ios/studio/S73-studio-six-device-field-protocol (reports only)`
+
+**User stories:** 46, 47, 50, 51, 54, 55
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S74: Six-device field gate: a 60-minute six-phone session, endurance and six-angle sync residuals on physical devices
+
+`studio-six-device-field-gate` · S3 · size M · labels `ready-for-human`, `platform:ios`, `area:studio`, `stage:S3`
+
+**Blocked by:** S73
+
+**What to build:** STU-32 on physical devices, run by the S73 protocol. Six phones record a 60-minute session; per-device journals and segments recover after forced kills; the host shows actual acknowledgement counts; a silenced device shows its contact age and still produces a complete local recording; the stills cadence is measured against the 0.32 Mbit/s estimate for five secondaries; thermal, battery and storage warnings fire; disconnect and rejoin; expired, revoked and full-slot codes refused. Six-device sync acceptance: every secondary fitted against the primary with offset, drift, inliers, residual RMS and max, every restart piece checked at start and end, the state reached; every reviewed angle has marked visual anchors within one output frame at start, middle, end and each restart; every angle that does not is reported with its reason. Why blocked: S73 (protocol, template and collector).
+
+**Acceptance criteria**
+
+- [ ] The field report lists, per device, recording duration, segments, gaps, forced-kill recoveries and warnings fired.
+- [ ] Measured stills bandwidth over the hour is reported with the method; the 0.32 Mbit/s estimate is confirmed or corrected.
+- [ ] The per-angle sync table covers all five secondaries with residuals in output frames; no failing angle is omitted.
+- [ ] No footage is committed (CI added-paths check).
+
+**Evidence required**
+
+- evidence/ios/studio/S74-studio-six-device-field-gate/report.md with logs and residual tables
+
+**Owned areas**
+
+- `evidence/ios/studio/S74-studio-six-device-field-gate (reports only)`
+
+**Screens:** 23-camera-lobby, 24-director-capture
+
+**User stories:** 46, 47, 50, 51, 54, 55
+
+**Gate:** Hardware gate: six physical phones, a court and a 60-minute session organised by Jon. Nothing here can be evidenced on the simulator.
+
+## S75: Backend scaffold: local Supabase project, server-enforced tester sign-up, fictional seed testers and the backend-db GitHub Actions workflow
+
+`backend-scaffold-ci` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S02
+
+**What to build:** B-02 plus the CI the task asks for. backend/supabase with config.toml (ES256 signing key path generated locally, anonymous sign-in off, `enable_signup = false`, a mandatory before_user_created allow-list hook, Mailpit OTP), fictional seed testers at example.test (untracked allow-list format documented; no real email), a pgTAP harness folder with basejump-style helpers to create users and authenticate as them, and .github/workflows/backend-db.yml that installs the Supabase CLI (setup-cli action), runs `supabase start`, `supabase db reset`, `supabase test db` and `supabase db advisors --local --type security --fail-on warn` on every PR touching backend/supabase. .gitignore gains `.dev.vars` and local env files. Nothing is provisioned: no hosted project, key or account. Why blocked: S02 (SOF-R4-05: findings 13-48 must be re-verified before S4 starts, B-00); ADR-0014 is accepted.
+
+**Acceptance criteria**
+
+- [ ] `supabase start` and `supabase db reset` succeed locally from a clean checkout (log).
+- [ ] A seed tester can request an OTP and sign in via Mailpit; an OTP request with create_user true for an unknown email is refused by the hook (finding 15; T-GW-30's database half).
+- [ ] A deliberately failing pgTAP test turns the backend-db workflow red; the real suite is green (two CI runs).
+- [ ] `git check-ignore backend/gateway/.dev.vars` reports ignored.
+- [ ] No hosted URL, project ref, key or real email appears in the tree (grep for supabase.co, sb_secret, @ outside example.test).
+
+**Evidence required**
+
+- Local supabase start/reset/test logs
+- backend-db.yml CI runs (green and the deliberate red)
+- grep output for hosted identifiers
+
+**Owned areas**
+
+- `backend/supabase (config.toml, seed/, hooks, tests/database/000_harness)`
+- `.github/workflows/backend-db.yml`
+- .gitignore (backend entries)
+- `backend/README.md`
+
+**User stories:** 18, 245
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S76: Migration 1: schemas, roles, enums, identity and membership tables, helpers, triggers and RLS with pgTAP role tests
+
+`backend-db-identity-rls` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S75
+
+**What to build:** B-03 with the B-23/B-25 hardening that lands in these tables: schemas public, app_private, app_gateway, app_ops; one owner role jovra_owner owning every table, helper and function (finding 26); jovra_gateway and jovra_orchestrator roles; profiles, projects, project_members, camera_invites; security definer helpers with empty search_path in app_private; RLS per security-model 5.1-5.2; role-first a00_rls_guard BEFORE triggers so an unrelated user cannot learn a project's existence or revision (finding 24); shares_project_with applies the approval predicate so pending coaches share nothing (finding 21); length checks with P0422 before constraints. Why blocked: S75.
+
+**Acceptance criteria**
+
+- [ ] pgTAP T-DB-01..11, 28..33, 35, 63, 65, 66 and 67 pass under real authenticated owner, unrelated user, coach, viewer, camera, anonymous-authenticated and unauthenticated roles.
+- [ ] T-DB-65: an unrelated user inserting into a BEFORE-triggered table naming a victim project gets the identical 42501 for every parent_revision value.
+- [ ] T-DB-66: proowner = relowner = jovra_owner for every table, helper and function; relforcerowsecurity false.
+- [ ] T-DB-03 lint and `supabase db advisors --local --type security --fail-on warn` are clean.
+- [ ] Reverting the approval predicate in shares_project_with in a scratch branch fails T-DB-63.
+
+**Evidence required**
+
+- supabase test db output listing each T-DB id
+- Advisors output
+- backend-db.yml CI run link
+
+**Owned areas**
+
+- `backend/supabase/migrations (identity migration)`
+- `backend/supabase/tests/database/identity_*.test.sql`
+
+**User stories:** 241, 244
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S77: Migration 2: sources, manifests, sync, calibration, event revisions, observations, lessons, clips and story plans with RLS and quotas
+
+`backend-db-media-lessons-rls` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S76
+
+**What to build:** B-04 with hardening: camera_sources, source_manifests, sync_maps, calibration_versions, point_event_revisions (append-only, P0409 on stale parent, stale-marking trigger), observations, lessons, lesson_clips, story_plans, story_plan_versions; composite FKs binding sources (finding 31) and plans/versions to their project (finding 17); clip share approval pinned by fingerprint with revoke_clip_share and a lesson_clip deletion scope (finding 20); per-project and per-user aggregate quotas on direct PostgREST writes with P0429 and a NULL subject refused (finding 23); ON DELETE SET NULL (source_id) where deletion would otherwise stall (finding 22a). Why blocked: S76.
+
+**Acceptance criteria**
+
+- [ ] pgTAP T-DB-12..24, 41..43, 45, 46, 49, 52, 62, 64, 69 and 70 pass.
+- [ ] T-DB-59 (FK half): pairing project A with project B's story plan in render_jobs or quotes as jovra_owner is an FK violation.
+- [ ] T-DB-62/69: moving an approved coach clip's window clears approval and the viewer sees 0 rows until re-approved.
+- [ ] T-DB-64: writes past a per-project quota and past the per-user aggregate across N projects are refused P0429 and counters roll back.
+- [ ] Advisors clean.
+
+**Evidence required**
+
+- supabase test db output listing each T-DB id
+- Advisors output
+
+**Owned areas**
+
+- `backend/supabase/migrations (media and lessons migration)`
+- `backend/supabase/tests/database/media_*.test.sql`
+
+**User stories:** 173, 179, 241, 242, 243
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S78: Migration 3: quotes, reservations, jobs, attempts, artifacts, grants, providers, deletion and app_ops tables with RLS
+
+`backend-db-money-jobs-rls` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S77
+
+**What to build:** B-05 with hardening: quotes (consent with modelProvider, textClasses, retentionDays, consentTextVersion; plannerChoice), usage_reservations (key (project, plan version, output hash) with NULLS NOT DISTINCT so plan-by-job work cannot open a second hold, finding 18; initialQuoteId), render_jobs, render_attempts (measurements hidden from coaches, finding 32; planner_budget; input/output ref lists), artifacts with composite FKs for source, parent and excerpt (finding 31) and artifact_sources, access_grants (share links as a grant kind), provider_connections as status rows only with no token column, deletion_requests, and server-only app_ops tables (upload sessions and parts, outbox, redacted idempotency records, spend_limits with a default owner row, spend_commitments, audit_events, quota counters). Owners cannot insert or update money, jobs, artifacts or grants directly. Why blocked: S77.
+
+**Acceptance criteria**
+
+- [ ] pgTAP T-DB-25..27, 29, 47, 48, 50, 53 and 59 (command half) pass; T-DB-26 shows an owner cannot create a reservation, job, grant or ready artifact.
+- [ ] A coach selecting render_attempts sees no measurements column values (finding 32) and 0 rows of quotes and reservations (T-DB-25).
+- [ ] `hasnt_column` for any token or secret column on provider_connections (T-DB-29).
+- [ ] A unique-index test inserts two held reservations with story_plan_version_id null for the same project and output and the second fails.
+- [ ] Advisors clean.
+
+**Evidence required**
+
+- supabase test db output listing each T-DB id
+- Advisors output
+
+**Owned areas**
+
+- `backend/supabase/migrations (money and jobs migration)`
+- `backend/supabase/tests/database/money_*.test.sql`
+
+**User stories:** 199, 201, 241
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S79: Gateway command functions: app_gateway commands with actor re-checks, audit_denial, accept_quote idempotency and fail-closed spend limits
+
+`backend-db-commands` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S78
+
+**What to build:** B-06, gateway half, with hardening: the named commands the gateway calls as jovra_gateway (create_project, open/complete upload checks, redeem and approve invites and grants, create_quote, accept_quote, review_job, share links, deletion requests); every command re-checks the actor (P0404 for an unrelated actor, with an audit row through audit_denial); accept_quote is idempotent by key, refuses expired quotes (P0410) and changed inputs (P0409), requires the tester flag in test, fails closed with no spend_limits row or a NULL limit (P0402, finding 19), serializes the environment daily ceiling, and keeps one held reservation for plan-by-job work (finding 18). The orchestrator commands are S80. Why blocked: S78.
+
+**Acceptance criteria**
+
+- [ ] pgTAP T-DB-04, 05, 33, 34, 38, 39, 51, 54, 56, 58, 59 (command half), 60, 61 and 71 pass.
+- [ ] T-DB-61: accept_quote with no spend_limits rows or a NULL limit returns P0402.
+- [ ] T-DB-71: two concurrent accept_quote calls crossing the daily ceiling - exactly one succeeds.
+- [ ] T-DB-33: every owner-only command called with an unrelated p_actor returns P0404 and writes an audit row.
+- [ ] Advisors clean.
+
+**Evidence required**
+
+- supabase test db output listing each T-DB id
+- Advisors output
+
+**Owned areas**
+
+- `backend/supabase/migrations (gateway commands migration)`
+- `backend/supabase/tests/database/commands_gateway_*.test.sql`
+
+**User stories:** 185, 186, 199, 244
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S80: Orchestrator command functions: lease-fenced *_for_attempt commands, SQL-computed estimates, one consumption per stage and the role-separation lint
+
+`backend-db-orchestrator-commands` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S79
+
+**What to build:** B-06, orchestrator half: the lease-fenced `*_for_attempt` commands only jovra_orchestrator can execute (set_job_state, reserve_stage, finish_attempt, mark_artifact_verified, audit_denial_for_attempt; finding 13's database half); reserve_stage computes estimates in SQL (never zero), limits input_refs to the job project's verified sources and artifacts and writes planner_budget; consumption once per (job, stage); in-job revise moves the reservation key (T-DB-68); lesson-scope deletion on the server path keeps Progress plans consistent (T-DB-73). The lint that no function is executable by both roles closes the pair with S79. Why blocked: S79 (the gateway commands the lint and the ledger replay span).
+
+**Acceptance criteria**
+
+- [ ] pgTAP T-DB-36, 37, 53, 55, 57, 68, 72 (SQL half) and 73 pass.
+- [ ] T-DB-57: no function is executable by both jovra_gateway and jovra_orchestrator (lint query returns zero rows).
+- [ ] The ledger sequences of spec/studio/fixtures/vectors/ledger.json replayed through the SQL commands give the same balances (adapter test).
+- [ ] Advisors clean.
+
+**Evidence required**
+
+- supabase test db output listing each T-DB id
+- Ledger-vector replay output
+
+**Owned areas**
+
+- `backend/supabase/migrations (orchestrator commands migration)`
+- `backend/supabase/tests/database/commands_orchestrator_*.test.sql`
+
+**User stories:** 193, 199
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S81: Backend request, response and queue contracts: JSON Schemas and fixtures for every gateway route, shared with the iOS client
+
+`backend-contracts` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S02
+
+**What to build:** backend/contracts holds JSON Schemas and fixtures for every gateway request and response of architecture 5.1 and the queue message shapes ({attemptId} only), with a validator script and .github/workflows/backend-contracts.yml. Fixtures carry no real identifier, URL or token (example.test and Sample values only). Both the gateway (S82) and the iOS client (S97) test against these files, so neither waits on the other. Why blocked: S02 (the re-verified backend documents these contracts transcribe).
+
+**Acceptance criteria**
+
+- [ ] Every route of architecture 5.1 has a request and response schema and at least one fixture each (a coverage script lists routes from the document and fails on a missing one).
+- [ ] Every fixture validates against its schema; a deliberately invalid fixture turns backend-contracts.yml red.
+- [ ] No fixture contains a hosted URL, project ref, JWT-shaped string or email outside example.test (grep).
+- [ ] Queue message schemas allow only attemptId (an extra field is an invalid case).
+
+**Evidence required**
+
+- backend-contracts.yml CI runs (green and the deliberate red)
+- Route coverage script output
+
+**Owned areas**
+
+- `backend/contracts`
+- `.github/workflows/backend-contracts.yml`
+
+**User stories:** 245
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S82: Gateway and jovra-internal Worker scaffold: JWKS ES256 with pinned issuer, envelope, redacted idempotency, allowlisted logging and route validation against the contracts
+
+`backend-gateway-scaffold` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S80, S81
+
+**What to build:** B-07 plus B-01's gateway half and B-25's two-script split. backend/gateway holds two Worker scripts: the user gateway (no orchestrator Hyperdrive binding, no host secret, no /internal route, a service binding exposing only startJob and notifyReview) and jovra-internal (no user route). JWT verification: ES256 only, JWKS from the local stack's signing key, issuer pinned per environment, demo markers refused with 401 demo_not_accepted. A response envelope, a redacted idempotency store (no secret ever stored; replays of secret-minting requests return 409 secret_not_replayable), an allowlisted logger with a scrubber, per-route rate limits, and refusal of any body or query field named key, bucket, url, path, endpoint, callback, webhook or baseUrl. Every route's real response is validated against the S81 contracts. Tests run with @cloudflare/vitest-plugin (Miniflare) and Hyperdrive localConnectionString against the local stack; .github/workflows/backend-gateway.yml runs them with the Supabase CLI. Why blocked: S80 (the commands the routes call, after S79); S81 (contracts).
+
+**Acceptance criteria**
+
+- [ ] vitest T-GW-01..05, 19, 22, 29 and 35 pass; T-R2-10 and T-R2-11 pass.
+- [ ] T-GW-29: the user gateway's wrangler config has no orchestrator binding, no host secret and no /internal/ route (config assertion test).
+- [ ] T-GW-19: logs captured over the whole suite contain no JWT, capability, share token, invite code, email or display name.
+- [ ] Every route's real response in the test suite validates against its S81 response schema.
+- [ ] backend-gateway.yml is green on a PR and turns red on a deliberately failing test.
+
+**Evidence required**
+
+- vitest output listing T-GW and T-R2 ids
+- backend-gateway.yml CI runs
+
+**Owned areas**
+
+- `backend/gateway (wrangler configs for both scripts, src/core, src/auth, src/log, test/core)`
+- `.github/workflows/backend-gateway.yml`
+
+**User stories:** 19, 244
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S83: Camera invites, guest capabilities and email-bound coach and viewer grants through the gateway
+
+`backend-invites-grants` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S82
+
+**What to build:** B-08 with hardening: camera invites redeemed by code then approved by the host after the device-code match, with a guest capability bound to the device key and replay-proof signed requests (nonce cache); coach, lesson and viewer grants bound to the invitee's confirmed email and approved by the owner seeing a masked verified email (finding 14), never a display name; a stranger redeeming a forwarded code gets 404 indistinguishable from an unknown code; failed redemptions rate-limited. Why blocked: S82.
+
+**Acceptance criteria**
+
+- [ ] vitest T-GW-07, 23, 33 and 37 pass; pgTAP T-DB-39 and T-DB-58 pass.
+- [ ] T-R2-01: a camera guest PUTs a part to another slot's session -> 404, its own -> 200; T-R2-02: a guest GETs any artifact including its own completed source -> 404.
+- [ ] Approving a coach shows a masked email only; a request carrying a display name as approval evidence is refused.
+- [ ] Revoking an invite makes the next part upload 403 and the session unusable.
+
+**Evidence required**
+
+- vitest output listing ids
+- pgTAP output for T-DB-39 and T-DB-58
+
+**Owned areas**
+
+- `backend/gateway/src/routes/invites`
+- `backend/gateway/src/routes/grants`
+- `backend/gateway/test/invites`
+
+**User stories:** 33, 34, 35, 36, 37, 242, 243, 244
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S84: Upload sessions through the gateway: 32 MiB parts streamed through a hashing tee, completion checks, one session per source and server re-hash verification
+
+`backend-uploads` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S82
+
+**What to build:** B-09 with hardening: multipart upload sessions per source (one live session per source; a second aborts the first), fixed 32 MiB parts streamed to R2 through a hashing tee and never buffered, per-part length and digest checks, completion validated against server-held expectations, etag pinning, abort and expiry, and verification: a source is verified only after the server re-hashes the stored bytes and the SHA-256 matches the manifest. Keys are server-generated from UUIDs only. Why blocked: S82.
+
+**Acceptance criteria**
+
+- [ ] vitest T-GW-06..09 and 25 pass; T-R2-10 and T-R2-15 pass; pgTAP T-DB-38 passes.
+- [ ] A 200 MiB synthetic upload in Miniflare completes with peak Worker memory below one part size (memory measurement in the test).
+- [ ] Completing an upload whose stored bytes hash differently from the manifest leaves the source unverified and blocks any job using it.
+- [ ] Resuming after a dropped connection re-sends only unconfirmed parts (part request log).
+
+**Evidence required**
+
+- vitest output listing ids
+- Memory measurement output
+
+**Owned areas**
+
+- `backend/gateway/src/routes/uploads`
+- `backend/gateway/test/uploads`
+
+**User stories:** 70, 71, 191, 192, 242
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S85: Spike B-12: presigned UploadPart, temporary credentials and gateway throughput, measured locally and then on the test bucket
+
+`backend-presigned-upload-spike` · S4 · size S · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S84
+
+**What to build:** B-12. A spike harness under backend/spikes/presigned-upload compares gateway-streamed parts (S84) with presigned UploadPart URLs and temporary credentials: request shape, expiry, part-size limits, throughput and failure modes, run first against Miniflare's local R2 and recorded as local-only numbers. The hosted measurement on cellular and Wi-Fi needs the test bucket (gate G2). The result is a decision record; S93's presigned GETs stay disabled until it says otherwise. Why blocked: S84 (the gateway upload path it is compared against).
+
+**Acceptance criteria**
+
+- [ ] The harness runs locally and reports throughput and error rates for both paths with the method stated, labelled local-only.
+- [ ] The decision record states which path is the default, with the hosted measurement listed as not run until G2.
+- [ ] No credential, bucket name or hosted URL is committed (grep).
+
+**Evidence required**
+
+- docs/backend/spikes/b-12-presigned-upload.md
+- Local harness output
+
+**Owned areas**
+
+- `backend/spikes/presigned-upload`
+- `docs/backend/spikes/b-12-presigned-upload.md`
+
+**User stories:** 191
+
+**Gate:** The hosted throughput measurement needs gate G2 (Jon creates the test R2 bucket); until then only local numbers exist.
+
+## S86: Quotes, consent, reservations and job creation with the outbox and idempotent Workflow start, Sample amounts only
+
+`backend-quotes-jobs` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S82
+
+**What to build:** B-10: quote creation from server-computed inputs (the client never sends a price), consent capture (upload consent, modelProvider, textClasses with coach text excluded unless named, retentionDays 1/7/30, consentTextVersion; finding 29), accept with an idempotency key creating one job, one reservation and one outbox row, Workflow start idempotent on job id, re-quote top-up after budget_exceeded, quote expiry, Sample credits only with a real internal cost cap in micro-USD and the environment ceiling, coach responses without usage. ADR-0023's length tiers and capture-quality classes are not modelled here: they arrive with jovra.quote/2 in S87 and are not wired into the gateway until the pricing ADR is decided. Why blocked: S82.
+
+**Acceptance criteria**
+
+- [ ] vitest T-GW-10, 11, 12, 17, 24 and 26 pass; pgTAP T-DB-34 and 56 pass.
+- [ ] T-GW-12 property test: retry storms never push reserved over the cap.
+- [ ] A quote with plannerChoice model but consent.modelProvider false cannot be accepted; a heuristic quote estimates no model tokens.
+- [ ] Every amount in a test-environment response is flagged Sample and no route can produce a live charge (liveChargingNotActivated).
+
+**Evidence required**
+
+- vitest output listing ids
+- Property-test seed and summary
+
+**Owned areas**
+
+- `backend/gateway/src/routes/quotes`
+- `backend/gateway/src/routes/jobs`
+- `backend/gateway/test/quotes`
+
+**User stories:** 183, 184, 185, 186, 188, 189, 199, 201
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S87: SD4 pricing ADR draft and jovra.quote/2 with ADR-0023 length tiers and capture-quality line items (Sample only)
+
+`studio-pricing-adr-quote-v2` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S55, S86
+
+**What to build:** Gate G8 has no owner otherwise. Draft the SD4 pricing ADR for Jon: it cites ADR-0023 (3, 5, 10, 15, 20, 25 and 30 minute tiers plus Full match, scaled by input duration and capture quality SD to 4K60; prices set only after the pricing-and-premium benchmarks) and offers the options that close SOF-R4-03 (the free/paid line of open question 9) and SOF-R4-04 (cloud films kept indefinitely vs the 30-day storage bound: (a) free indefinitely with a measured cost per film-month and a gateway-enforced per-account bound, or (b) a default lifetime with a paid extension). Add `jovra.quote/2` as new contract files (schema, reference, vectors) with length-tier and capture-quality line items, every amount Sample. Wiring /2 into the gateway and client is deferred until Jon decides. The register entries close only with Jon's dated answer. Why blocked: S86 (quotes /1 in the gateway); S55 (both edit the open-findings register; serialized).
+
+**Acceptance criteria**
+
+- [ ] The draft ADR lists both SOF-R4-04 options with their falsifiable checks and the open part of question 9, and cites ADR-0023 with its date.
+- [ ] jovra.quote/2 vectors cover every ADR-0023 tier and capture-quality class; a non-Sample amount is an invalid case; python3 scripts/spec/validate_studio.py ends in RESULT: PASS.
+- [ ] SOF-R4-03 and SOF-R4-04 stay open unless Jon's dated answer is recorded; `grep -n "working default" docs/spec/studio-v1-spec.md` still finds D-4/D-5 until then.
+- [ ] No price appears outside a Sample-flagged field (grep).
+
+**Evidence required**
+
+- docs/adr/<next free number>-studio-pricing.md (status: proposed)
+- validate_studio.py output
+- Register diff
+
+**Owned areas**
+
+- `docs/adr/<next free number>-studio-pricing.md (new file, status proposed)`
+- `spec/schemas/studio/quote-v2.schema.json`
+- `spec/reference/studio/cases/quote_v2_cases.py`
+- `spec/studio/fixtures/vectors/quote-v2.json`
+- `spec/studio/modules/quote-v2.md`
+- `docs/spec/studio-open-findings.md (SOF-R4-03/04 only)`
+
+**User stories:** 199, 201
+
+**Gate:** Gate G8: Jon decides prices, the free/paid line and film retention; the ADR stays proposed until then.
+
+## S88: Planner adapter, part 1: the heuristic planner and compiler ported to TypeScript with byte parity to the S06 and S07 reference
+
+`backend-planner-adapter` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S07
+
+**What to build:** backend/planner, a TypeScript package the jovra-internal Workflow's plan step imports. `heuristic` reproduces the S06 RulesPlanner and S07 compile vectors byte for byte (a server copy that matches the device), and every plan it produces passes a TypeScript port of the reference validator's checks used at the plan step. .github/workflows/backend-planner.yml runs the parity suite. Model adapters are S89. If S55 has merged, its regenerated vectors are the ones checked. Why blocked: S07 (the reference vectors, after S06).
+
+**Acceptance criteria**
+
+- [ ] The heuristic port passes every S06 planner and S07 compile vector (byte-identical canonical JSON, count printed).
+- [ ] Mutating one keeper window in a vector changes the output hash (binding test).
+- [ ] backend-planner.yml is green and turns red when one vector is altered in a scratch branch.
+
+**Evidence required**
+
+- backend-planner.yml CI run output
+- Parity table against S06 and S07 vectors
+
+**Owned areas**
+
+- `backend/planner/src/heuristic`
+- `backend/planner/test/heuristic`
+- `backend/planner/package.json`
+- `.github/workflows/backend-planner.yml`
+
+**User stories:** 145, 146, 147, 148
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S89: Planner adapter, part 2: Anthropic and OpenAI adapters on recorded fixtures, the ADR-0023 draft-and-critique pipeline, and the consent and spend gates
+
+`backend-planner-model-adapters` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S88
+
+**What to build:** `anthropic` builds a Messages request for claude-opus-5-5 at effort medium with structured JSON output through output_config.format (no forced tool_choice), inline images only (no Files API), and the one shared schema that fits both vendors (all fields required, 'none' sentinels). `openai` ships disabled and returns 'unavailable: model not configured' until a configured model id passes the capability probe; ADR-0023's two-provider draft -> critique -> refine pipeline is implemented behind configuration with the deterministic validator between every step. Every model run needs consent.modelProvider true and only the consented textClasses; the worst case (images, input, max_tokens, repair) must fit planner_budget or no provider call is made and heuristic runs; at most one bounded repair; refusals and truncations are never parsed as plans; output is data, never code. Tests use recorded fixture responses only; no API key exists in the repo or CI. Why blocked: S88 (the heuristic fallback and the shared package).
+
+**Acceptance criteria**
+
+- [ ] Recorded-fixture tests: an Anthropic response with a shell string, an unknown op, a URL, an out-of-window cut or an invented metric number is rejected; after one failed repair the heuristic plan is used and the reason recorded.
+- [ ] A fixture whose worst case exceeds planner_budget makes zero provider requests (fake transport records 0) and the request built for a fitting case carries exactly the budget numbers (T-DB-72 fixture half).
+- [ ] Without consent.modelProvider the adapter never builds a model request; coach-authored text is absent from the request unless coachNotes is consented.
+- [ ] The openai adapter returns unavailable with no model id; the draft-critique pipeline on recorded fixtures validates after each step and falls back to heuristic on an invalid critique.
+- [ ] A grep in CI finds no API key pattern (sk-ant-, sk-) in backend/planner; backend-planner.yml is green.
+
+**Evidence required**
+
+- backend-planner.yml CI run output
+- Recorded-fixture suite output
+
+**Owned areas**
+
+- `backend/planner/src/models`
+- `backend/planner/src/pipeline`
+- `backend/planner/test/models`
+- `backend/planner/fixtures`
+
+**User stories:** 145, 188, 247
+
+**Gate:** Live model behaviour, cost and latency, and any OpenAI model id, are UNVERIFIED until activation gate G6 (Jon's keys and test cap); the planner comparison of story 248 runs in S104.
+
+## S90: RenderJob Workflow, queue, DLQ and reconciler in jovra-internal with leases, heartbeats, fencing, cancellation, cleanup and a fake render host
+
+`backend-workflow-queue` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S86, S89
+
+**What to build:** B-11 with hardening: one Workflow instance per job (instance id = job id) walking verify -> normalize -> sync -> analyze (evidence consolidation only) -> plan (S89 adapter, with the S88 heuristic fallback) -> validate -> preview -> review -> final -> verify -> deliver; queue messages carry {attemptId} only and the host claims the attempt (lease minted at claim, inputs and outputs from the attempt row); heartbeats and fencing tokens; cancel answered on heartbeat with cleanup enqueued and reservation settled; DLQ marks the attempt dead_lettered and the job failed_retryable; budget checked before every stage and retry; failure before ready releases the unconsumed reservation; the reconciler re-dispatches the outbox, expires leases and never deletes fresh media (diffs against open upload sessions and artifacts in writing, 48 h minimum age; finding 25); host-route denials audited. A fake render host drives the tests. Why blocked: S86 (jobs and outbox); S89 (the plan step with its consent and spend gates, after the heuristic port).
+
+**Acceptance criteria**
+
+- [ ] vitest T-GW-13, 14, 17, 18, 28 and 36 pass; T-R2-08, 08b, 09 and 17 pass.
+- [ ] A job replayed through the Workflow reaches ready only with a verified artifact; its state history replays through render-job-transitions.v1.json without a refused transition.
+- [ ] Redelivered queue messages and duplicate job requests create one job, one reservation and one artifact (count assertions).
+- [ ] T-DB-72 end to end: a plan stage whose fixture exceeds the reservation makes no provider call and records the heuristic fallback.
+
+**Evidence required**
+
+- vitest output listing ids
+
+**Owned areas**
+
+- `backend/gateway/src/internal (workflow, queue consumer, reconciler, host routes)`
+- `backend/gateway/test/internal`
+
+**User stories:** 193, 194, 195, 196, 197, 198, 199
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S91: Render host container, part 1: pinned FFmpeg, probe allowlist, full-file SHA-256, normalization with PTS tables, metadata stripping and SIGTERM-safe stages
+
+`backend-render-normalize` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S56, S58
+
+**What to build:** B-13. backend/render: a Dockerfile pinning and probing its FFmpeg build at startup (the local 9.0.1 lacks drawtext and zscale; the image's build is recorded in a manifest), a probe allowlist with size, type, duration, rotation and HDR limits, full-file SHA-256 verification before work, per-source normalization to render proxies with the S56 original-PTS table, metadata stripping, no outbound network except jovra-internal, per-stage timeouts and disk caps, SIGTERM-safe stages that restart cleanly, outputs keyed by input hash, and a storage adapter pointed at a local directory or Miniflare R2. It adapts, by pattern only, the founder editor's custody and verification habits (plan-hash binding, pinned source hashes, decoded-clock checks, full decode, atomic hardlink custody, size limits) read from Navigata1/video-editor and garnet-remotion without modifying or importing them. Tests use synthetic and malformed media only, in .github/workflows/backend-render.yml. Why blocked: S08 (barcode fixtures); S56 (normalization table contract); S58 (the VFR, rotated, HDR and mixed-fps fixtures its acceptance runs on). Implied through other blockers and not repeated as edges: S08 (through S58).
+
+**Acceptance criteria**
+
+- [ ] On the S08/S58 VFR, rotated, HDR and mixed-fps fixtures, proxies' decoded embedded ids match the S56 expected tables 100%.
+- [ ] Malformed inputs (oversize, unknown codec, rotated-odd, HDR without a tone map, truncated) are refused by the probe allowlist with named reasons.
+- [ ] A hash mismatch between the stored source and its manifest refuses the job before any decode.
+- [ ] SIGTERM mid-normalization then restart produces the same output hash.
+- [ ] No file in the founder's editor repositories changes (their git status is clean before and after; recorded by the implementer).
+- [ ] backend-render.yml is green and turns red on a deliberately failing fixture.
+
+**Evidence required**
+
+- backend-render.yml CI runs
+- Normalization conformance output
+- FFmpeg build manifest
+
+**Owned areas**
+
+- `backend/render (Dockerfile, ffmpeg-build manifest, src/probe, src/normalize, src/storage, tests)`
+- `.github/workflows/backend-render.yml`
+
+**User stories:** 67, 71, 75
+
+**Gate:** Runtime on Cloudflare Containers or Cloud Run (per-stage time at 4 vCPU / 12 GiB) is UNVERIFIED until activation gate G3.
+
+## S92: Render host, part 2: assembly from a validated EDL through fixed FFmpeg templates, verify_output, the no-audio remux and the shared barcode suite
+
+`backend-render-assembly-verify` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S09, S91
+
+**What to build:** B-14. Assembly from a jovra.edit-plan/2 that the reference validator accepts, with filtergraphs generated from fixed per-operation templates filled only with validated numbers and passed as a file (never a shell string), the continuous court-audio bed, and `verify_output` (full decode, frame count, timestamp grid, audio sample count, codec facts, barcode equality for fixture sources, overlay provenance) matching FilmVerifier's semantics; the cloud no-audio variant is a verified remux recorded as its own artifact (remux_no_audio). Remotion overlays and new tennis compositions (finding 42) stay off in this ticket and are deferred beyond this DAG (ADR-0023 answers the licence). Why blocked: S91 (host part 1); S09 (barcode-court plans with expected frame maps).
+
+**Acceptance criteria**
+
+- [ ] The cloud renderer passes the same barcode/click suite as the device: every S09 barcode-court plan renders and verifies frame for frame.
+- [ ] Adversarial EDL fixtures (shell metacharacters in an id, an unknown op, a path field) are refused before FFmpeg runs; the generated filtergraph file contains only template text and numbers (snapshot).
+- [ ] The no-audio remux has no audio track and identical video frame count and video stream hash to its parent.
+- [ ] A one-frame-shifted output fails verify_output.
+
+**Evidence required**
+
+- backend-render.yml output for the assembly suite
+- Filtergraph snapshot files
+
+**Owned areas**
+
+- `backend/render/src/assemble`
+- `backend/render/src/verify`
+- `backend/render/src/remux`
+- `backend/render/tests/assemble`
+
+**User stories:** 141, 158, 160, 252
+
+**Gate:** A synthetic fixture film fully verified in the hosted test environment is activation gate G3 (S104).
+
+## S93: Delivery: Range streaming, 24-hour share links, grants, thumbnails, audio variants and stale labelling
+
+`backend-delivery` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S90
+
+**What to build:** B-16 with hardening: owner, coach and granted-viewer streaming with Range through the grant-checking gateway; share links as gateway tokens lasting at most 24 hours with refresh and revoke (new viewing stops; a started download may finish and the copy says so), a per-token rate limit and byte budget, Cache-Control private no-store, nosniff and a sandboxing CSP on every media response, server-generated Content-Disposition; /s/<token>/thumbnail for the linked film only; presigned GETs (when enabled after the spike) at most 5 minutes with signed response overrides; audio variants: a link or download chosen without audio serves the verified no-audio child, junior mode refuses includeAudio true; stale artifacts labelled after a new event revision. Why blocked: S90 (artifacts produced by jobs).
+
+**Acceptance criteria**
+
+- [ ] vitest T-GW-15, 16, 21, 27, 34 and 38 pass; T-R2-04..07, 13 and 14 pass.
+- [ ] T-GW-21: after revoking a share link or coach grant, a request within 60 s returns 404 with the Hyperdrive local binding.
+- [ ] A share link for a source, proxy, project bundle or another owner's film cannot be created (404/422).
+- [ ] Junior-mode project: includeAudio true is refused 422.
+
+**Evidence required**
+
+- vitest output listing ids
+
+**Owned areas**
+
+- `backend/gateway/src/routes/delivery`
+- `backend/gateway/src/routes/share`
+- `backend/gateway/test/delivery`
+
+**User stories:** 204, 208, 209, 210, 228, 241
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S94: Deletion Workflow and retention sweeps: project, source, artifact, lesson, clip and account scopes, per-job retention and the Apple revoke stub
+
+`backend-deletion-retention` · S4 · size L · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S83, S84, S93
+
+**What to build:** B-17 with hardening: deletion requests by scope (project, source with dependent films and share links after the owner's explicit choice, artifact, lesson, lesson_clip, account) that remove every object under the right prefixes in both buckets and every row, including clip excerpts of a coach's lessons under another owner's project; open multipart sessions aborted; thumbnails, captions and chapters removed with their film; coach-authored rows in another owner's project kept with actor columns null; account deletion requires a fresh authentication (Auth session created by a recent sign-in, never a refreshed token's iat; finding 16) and revokes Sign in with Apple through a server-held key behind gate G4 (stubbed locally); per-object retention_until from the accepted quote with a daily sweep (1/7/30 days) and the 31-day lifecycle backstop; cloud films kept until the owner deletes them; deleting cloud copies never touches local originals. Why blocked: S93 (delivery artifacts and share links); S84 (upload sessions); S83 (grants and coach rows).
+
+**Acceptance criteria**
+
+- [ ] vitest T-GW-20, 20b, 31 and 32 pass; T-R2-12, 16 and 18 pass; pgTAP T-DB-48 and 73 pass.
+- [ ] T-GW-31: account deletion with a freshly refreshed token whose Auth session is old -> 401 reauth_required; after a new sign-in it proceeds.
+- [ ] T-R2-18: work objects of a 1-day job are gone after the first daily sweep past one day; a 30-day job's are kept until day 30 (simulated clock).
+- [ ] Deletion progress is reported per stage and a failure leaves the request failed with a reason (no silent success).
+
+**Evidence required**
+
+- vitest output listing ids
+- pgTAP output for T-DB-48 and 73
+
+**Owned areas**
+
+- `backend/gateway/src/internal/deletion`
+- `backend/gateway/src/internal/retention`
+- `backend/gateway/src/routes/deletion`
+- `backend/gateway/test/deletion`
+
+**User stories:** 187, 224, 225, 226, 227
+
+**Gate:** Apple token revocation needs Jon's Sign in with Apple key (gate G4) and a device run; it is stubbed and reported UNVERIFIED until then.
+
+## S95: JOVRA editor adapter: jovra.edit-plan/2 to the founder editor's own contracts, run only on a copy of the editor
+
+`backend-editor-adapter` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S92
+
+**What to build:** B-24 / SD22. An adapter that writes production-lab.video-editor.v1, idc.production-handoff/1, production-lab.editor-plan.v1 and production-lab.editor-media-map.v1 from a validated EDL and the normalized render proxies, with every segment audioMode silent and a separately verified JOVRA audio bed. The field mapping is read from the editor's repository first (currently UNVERIFIED). It runs only against a copy of the editor (never the founder's checkout, never imported into JOVRA), and the editor's own SHIP/approval flow never authorizes a JOVRA film. The suite's frozen-hook recipe is not reused. Why blocked: S92 (render host assembly and verification).
+
+**Acceptance criteria**
+
+- [ ] On a copy of the editor, the adapter's output for the synthetic barcode match passes the editor's preview checks (log).
+- [ ] A 1/600-timescale clip is refused by the editor and its normalized proxy accepted.
+- [ ] The resulting film passes FilmVerifier semantics (verify_output) and the JOVRA bed passes its own audio check.
+- [ ] The founder's editor checkouts show no modification (status before and after recorded).
+
+**Evidence required**
+
+- Adapter test output on the editor copy
+- Mapping document backend/editor-adapter/MAPPING.md
+
+**Owned areas**
+
+- `backend/editor-adapter`
+
+**User stories:** 254
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S96: Lesson search: Postgres full-text through a POST RPC body, pgvector deferred
+
+`backend-lesson-search` · S4 · size S · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S82
+
+**What to build:** ADR-0021 / B-20 first step: full-text search over the caller's own lessons and notes through a POST request body (never a query string, so user text stays out of gateway and PostgREST logs; finding 27), RLS-respecting (a viewer grant never widens results). pgvector stays deferred until a measured retrieval need. Why blocked: S82 (gateway contracts and logger; the lessons tables precede it).
+
+**Acceptance criteria**
+
+- [ ] A pgTAP test: user B searching while holding A's lesson_clip_view grant gets 0 of A's lesson rows (T-DB-40's full-text equivalent).
+- [ ] T-GW-35: the search route refuses a query-string search and the request builder fixture puts text only in the body.
+- [ ] Results for the Sample lessons match a hand-checked list for three queries.
+
+**Evidence required**
+
+- pgTAP and vitest output
+
+**Owned areas**
+
+- `backend/supabase/migrations (search migration)`
+- `backend/supabase/tests/database/search_*.test.sql`
+- `backend/gateway/src/routes/search`
+
+**User stories:** 172
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S97: iOS Test and Live CloudClient adapters over HTTP, contract-tested against a URLProtocol-stubbed gateway, with background resumable uploads
+
+`studio-cloud-client-test` · S4 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S4`
+
+**Blocked by:** S29, S81, T18, T53
+
+**What to build:** The HTTP side of SD11 (B-18): TestCloudClient reads environment name, Supabase URL, publishable key and gateway base URL from ios/Config/Studio.xcconfig (never source; no URL committed until DNS resolves, IDC doctrine) and refuses to start without them; LiveCloudClient stays disabled until an activation flag and configuration exist. Sign-in sheet A12: email OTP for testers and Sign in with Apple through core T18's AppleSignIn adapter (the native ID token with a raw nonce whose SHA-256 goes to Apple is added through that adapter's owner, not a second implementation); tokens through core T53's Keychain wrapper and registered with the core DataEraser; the mode indicator shows Local demo, Test or Connected. Upload protocol target-agnostic ({url, method, headers, expiresAt} per part), background URLSession uploads from file, resume never re-sends confirmed parts, Wi-Fi-only honoured. Contract tests run every backend/contracts fixture through a URLProtocol stub (the core fake Drive pattern). Signing out keeps local projects, films and originals playable offline. Fills the Settings IdentitySlot. Why blocked: S29 (the Settings identity slot it fills, after the CloudClient protocol and demo of S14); S81 (request/response contracts); T18 (AppleSignIn adapter); T53 (Keychain wrapper).
+
+**Acceptance criteria**
+
+- [ ] Every backend/contracts request fixture is produced byte-equivalently by the client and every response fixture decodes (contract test output with counts).
+- [ ] Kill the app during a 6-part stubbed upload, relaunch: only unconfirmed parts are sent (stub request log).
+- [ ] With Wi-Fi-only on and the path reported cellular, no part is sent and the UI says it waits for Wi-Fi.
+- [ ] A build with STUDIO_ENVIRONMENT=live and no activation flag reports unavailable; demo still opens no socket (URLProtocol trap).
+- [ ] Sign-out leaves every local film playable offline (UI test).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] No new file exists under ios/Jovra/Platform/AppleSignIn or ios/Jovra/Platform/Keychain from this ticket other than through their owners' extension points (diff stat), and Studio tokens are erased by 'Delete account and data' (DataEraser test).
+
+**Evidence required**
+
+- Hosted unit and contract test output
+- XCUITest output for A12 and the mode indicator
+
+**Owned areas**
+
+- `ios/Jovra/Platform/StudioCloud`
+- `ios/Config/Studio.xcconfig (keys only)`
+- `ios/Jovra/Features/Studio/Settings/IdentitySlot`
+- `ios/JovraTests/Studio/Cloud`
+
+**Screens:** 40-studio-settings
+
+**User stories:** 18, 20, 21, 70, 190, 191, 192, 245
+
+**Gate:** Sign in with Apple end to end and real uploads against the hosted test gateway need gates G1, G2 and G4 (S104); until then only the stubbed contract is proven.
+
+## S98: Account export and deletion from Studio settings (A16) against the stubbed gateway, with fresh sign-in before deletion
+
+`studio-account-export-deletion` · S4 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S4`
+
+**Blocked by:** S97
+
+**What to build:** A16 for real, filling the Settings AccountSlot: exportMyData first (download verified by size and hash), then deleteAccount, which needs a fresh sign-in (a reauth_required response forces the sign-in sheet; finding 16's client half), offers the Sign in with Apple revoke step, reports deletion progress and failure truthfully, and keeps local projects, films and originals unless the player chooses to remove them too. Tested against the URLProtocol-stubbed gateway with S81 fixtures. Why blocked: S97 (HTTP client and sign-in).
+
+**Acceptance criteria**
+
+- [ ] XCUITest: Delete account with a stale session receives reauth_required from the stub and shows the sign-in sheet; after it, deletion proceeds and shows per-stage progress.
+- [ ] Export downloads a verified archive before deletion is offered (order asserted).
+- [ ] A stubbed deletion failure shows deletionFailed with the reason and never reports success.
+- [ ] Local originals' sha256 are unchanged after account deletion unless the player chose local removal.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S98 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S98-studio-account-export-deletion/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S98-studio-account-export-deletion/side-by-side.html against design-reference/studio/screens/40-studio-settings.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Settings/AccountSlot`
+- `ios/JovraUITests/Studio/Account`
+
+**Screens:** 40-studio-settings
+
+**User stories:** 224, 226, 227
+
+**Gate:** Apple token revocation end to end needs gate G4 and a device run; until then the revoke step is stubbed and reported UNVERIFIED.
+
+## S99: Cloud preflight, render queue and cloud delivery for real (ST37-ST39) against the stubbed or local test backend
+
+`studio-cloud-flow-real` · S4 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S4`
+
+**Blocked by:** S26, S51, S97
+
+**What to build:** ST37 with the real selection: which sources would upload, total bytes and the estimated upload time from bytes and the last measured rate ('about 1 h 12 min on this Wi-Fi', or 'depends on your connection'; labelled an estimate), output, retention choice 1/7/30 days (changing it re-quotes), estimate, cap and expiry, per-source consent (A5) and a separate consent for the planning service when 'Plan the story in the cloud' is on, A7 fresh quote on expiry, A8 explicit limit entry, local replay always offered. ST38 bound to the job stream with stages named Upload, Align angles, Build film, Verify export, pause/resume, cancel cleaning temporary copies, retries, budget stop; A9 partial upload retry. ST39 cloud films: resumable verified download (A18), share links create/refresh/revoke with the chosen audio variant, deleting cloud copies with progress. Every money value says Sample. Why blocked: S97 (HTTP client); S51 (the Delivery export slot it sits beside, after the local job and film screens of S44); S26 and S27 (the ST37 and ST38 screens it wires). Implied through other blockers and not repeated as edges: S27 (through S51).
+
+**Acceptance criteria**
+
+- [ ] XCUITest against the stubbed gateway: Create stays disabled until consent is ticked; an expired quote shows A7 with consent cleared.
+- [ ] Changing retention from 7 to 30 days requests a new quote (request log) and the new quote's retentionDays is 30.
+- [ ] A double tap on Create sends one accept with one idempotency key (request log).
+- [ ] A partial upload shows A9 listing the remaining parts and Retry sends only those.
+- [ ] A downloaded film is verified by size and hash before it is listed; a corrupted stub response is discarded with the A18 message.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+- [ ] Local originals' sha256 are unchanged after a cloud cancel and after a partial upload failure (hash table in the evidence).
+- [ ] With the Cloud processing switch off, no upload, quote or job request is made from any screen (request log) and ST37 explains why.
+- [ ] Cloud job completion is shown in the app only; no remote push is registered or claimed until gate G3b (assertion that no APNs registration occurs).
+- [ ] Resizing the window or rotating after tapping Create re-issues nothing: the idempotency key is persisted before the request and the re-created screen shows the stored job (ADR-0025; request log shows one accept).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S99 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S99-studio-cloud-flow-real/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S99-studio-cloud-flow-real/side-by-side.html against design-reference/studio/screens/37-cloud-job-review.png, design-reference/studio/screens/38-render-queue.png, design-reference/studio/screens/39-film-delivery.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Jovra/Features/Studio/Cloud (real wiring)`
+- `ios/Jovra/Features/Studio/Jobs/Cloud`
+- `ios/Jovra/Features/Studio/Delivery/Cloud`
+- `ios/JovraUITests/Studio/CloudReal`
+
+**Screens:** 37-cloud-job-review, 38-render-queue, 39-film-delivery
+
+**User stories:** 182, 183, 184, 185, 186, 187, 188, 193, 194, 195, 196, 197, 198, 199, 201, 204, 208, 210, 224
+
+**Gate:** Real uploads, jobs and downloads against the hosted test environment need gates G1-G3 (S104).
+
+## S100: Linking a local project to the test backend and metadata sync with conflicts kept, never overwritten
+
+`studio-project-linking-sync` · S4 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S49, S97
+
+**What to build:** B-19: opt-in per project and per source; local UUIDs linked to cloud ids through a reviewed mapping; conditional updates and append-only revisions; a local edit never silently overwrites a newer cloud revision (both kept until the player resolves the conflict, including lesson edits made on two devices, story 179); sign-out and environment changes keep offline access. Tested against the local Supabase stack. Why blocked: S97 (client; the tables precede it); S49 (the lesson UI that shows conflicts).
+
+**Acceptance criteria**
+
+- [ ] Against the local stack: two clients editing the same lesson produce a conflict shown in ST35 with both versions kept; resolving keeps the chosen one and appends a revision.
+- [ ] Linking a project uploads metadata only (no media) unless the player chose sources (request log).
+- [ ] Signing out leaves the project fully usable offline and re-signing in does not duplicate it.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- Integration test output against the local stack
+- XCUITest output for the conflict state
+
+**Owned areas**
+
+- `ios/Jovra/Platform/StudioCloud/Sync`
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Project/Linking`
+- `ios/Jovra/Features/Studio/Lessons/ConflictSlot`
+- `ios/JovraTests/Studio/Sync`
+
+**Screens:** 35-lesson-workspace
+
+**User stories:** 21, 179
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S101: Local end-to-end cloud path: iOS TestCloudClient to the wrangler dev gateway, local Supabase and the fake render host
+
+`backend-local-end-to-end` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S94, S99
+
+**What to build:** Before anything is hosted, run the whole cloud path locally: the iOS app on the simulator with STUDIO_ENVIRONMENT=test pointed at a localhost gateway (wrangler dev, both Worker scripts), local Supabase (seed testers, Mailpit OTP) and the fake render host (optionally the S92 container): sign in, quote with consent, accept, upload the synthetic match, job runs to ready with a verified artifact, download and verify, create and revoke a share link, delete cloud copies. A script brings the stack up and down; the run log is the evidence. Nothing is provisioned. Why blocked: S99 (client flow); S94 (deletion and retention, after delivery and the job pipeline).
+
+**Acceptance criteria**
+
+- [ ] One scripted run on the simulator completes sign-in, quote, accept, upload, job, download, share link create and revoke, and cloud-copy deletion against the local stack; every step's request and response validates against the S81 contracts.
+- [ ] The downloaded film's sha256 equals the artifact the fake host registered, and FilmVerifier passes on it.
+- [ ] After deletion the local stack holds no object or row for the project (query output), and local originals are unchanged.
+- [ ] The script refuses to run with any non-localhost URL configured.
+
+**Evidence required**
+
+- scripts/studio/local-e2e.sh run log
+- evidence/backend/local-e2e/ (request log, verification report)
+
+**Owned areas**
+
+- `scripts/studio/local-e2e.sh`
+- `evidence/backend/local-e2e/`
+
+**User stories:** 182, 191, 193, 204, 224
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S102: Activation runbook (G1-G9) and privacy drafts: consent copy, App Privacy answers and the minors question
+
+`backend-activation-runbook-privacy` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S94
+
+**What to build:** B-21 and B-22 as documents for Jon: what to create for each gate, which secret goes where (Worker secrets, never the repo), which hosted checks to run and what evidence to capture (including zone Logpush and WAF logs excluding /s/, Hyperdrive caching off, invocation logs off, two Worker scripts, spend ceilings and the default owner row); the App Privacy answers and consent copy for cloud processing, the model providers and retention; the participant acknowledgement; the minors question (Q11), the gateway hostname under the IDC domain doctrine (Q7: the API rides api.islanddevcrew.ai or a JOVRA deed only once it resolves) and invitations bound to an email when a coach hides their address with Sign in with Apple (Q12), all as decisions for Jon and legal review; gates G3b (remote push) and G5 (custom SMTP sender under IDC Rule 07, MX custody untouched) get their own rows. No agent provisions anything. Why blocked: S94 (deletion and retention it must describe, after the job pipeline of S90).
+
+**Acceptance criteria**
+
+- [ ] The runbook lists every gate G0-G9 of architecture section 13, including G3b and G5, with its evidence row, and Q7, Q11 and Q12 appear as open decisions; a check script greps that each gate id appears with an 'Evidence' line.
+- [ ] The consent copy names the planning service and its retention only in the A5 consent context (matches the S34 lint exception).
+- [ ] No secret value, project ref or hosted URL appears in either document (grep).
+
+**Evidence required**
+
+- docs/backend/activation-runbook.md
+- docs/backend/privacy-drafts.md
+- Check-script output
+
+**Owned areas**
+
+- `docs/backend/activation-runbook.md`
+- `docs/backend/privacy-drafts.md`
+
+**User stories:** 188, 249
+
+**Gate:** Jon reviews and approves both documents (gate G7 for the privacy draft).
+
+## S103: Test-environment activation scripts: hosted-suite runners and the activation log template, refusing to run without Jon's configuration
+
+`test-env-activation-scripts` · S4 · size M · labels `ready-for-agent`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S102
+
+**What to build:** The agent half of the activation gate. Scripts that, once Jon has provisioned the test environment, run the pgTAP suite and advisors against the hosted test project, the gateway suite against hosted bindings, a synthetic fixture film through the cloud with its verification, the iOS client against the test environment, and the planner comparison of story 248 on the shared fixtures (schema-valid rate, grounding precision, repair rate, cost, latency); each writes its evidence file. Every script refuses to run when its configuration is missing and never creates a resource. docs/backend/activation-log.md is the template with one row per gate (G1, G2, G3, G3b, G5, G6), each 'not yet activated' until its evidence file exists. Why blocked: S102 (the runbook it implements).
+
+**Acceptance criteria**
+
+- [ ] Each script, run with no configuration, exits non-zero with 'not configured' and makes no network request (test with a network trap).
+- [ ] Each script, run against the local stack in a dry-run mode, produces its evidence file shape (proves the writers).
+- [ ] The activation log template lists G1, G2, G3, G3b, G5 and G6, all 'not yet activated'.
+- [ ] No secret, project ref or hosted URL appears in the scripts (grep).
+
+**Evidence required**
+
+- scripts/backend/activation/ dry-run outputs
+- docs/backend/activation-log.md
+
+**Owned areas**
+
+- `scripts/backend/activation/`
+- `docs/backend/activation-log.md (template)`
+
+**User stories:** 18, 19, 249
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S104: Test-environment activation gate: Jon provisions the isolated test backend, hosted suites run, and planners are compared on shared fixtures
+
+`test-env-activation-gate` · S4 · size M · labels `ready-for-human`, `platform:shared`, `area:studio`, `backend`, `stage:S4`
+
+**Blocked by:** S85, S95, S96, S100, S101, S103
+
+**What to build:** Live activation is a founder step. After Jon creates the test Supabase project, Cloudflare resources and the render host (G1-G3), the push key (G3b), the SMTP sender (G5) and sets the test cap and keys (G6), the S103 scripts run: the hosted pgTAP suite and advisors, the gateway suite against hosted bindings, a synthetic fixture film fully verified in the cloud, the iOS client on a device (sign-in, upload, job, download, share link, deletion, lesson search), the B-12 hosted measurement and the planner comparison of story 248 for heuristic vs Opus 5.5 and, if configured, the OpenAI model. Each gate's evidence is captured separately and nothing is reported live from local success. Why blocked: S103 (scripts); S99, S100 and S101 (the client flow, linking and the local end-to-end run); S95 (editor adapter); S96 (lesson search); S85 (the spike whose hosted half runs here). Implied through other blockers and not repeated as edges: S99 (through S101).
+
+**Acceptance criteria**
+
+- [ ] Each gate G1, G2, G3, G3b, G5 and G6 has a captured evidence file (command output) or is listed as not yet activated; none is marked passed without its file.
+- [ ] The hosted pgTAP and advisors runs are clean, or each failure is listed with its id.
+- [ ] The planner comparison table reports the five metrics per planner on the same fixtures; no default changes without it.
+- [ ] The status report keeps local, hosted test and live in separate columns; live stays not activated.
+
+**Evidence required**
+
+- docs/backend/activation-log.md (filled)
+- evidence/backend/test-env/ (hosted suite outputs, cloud film VerificationReport, planner comparison)
+
+**Owned areas**
+
+- `evidence/backend/test-env/`
+- `docs/backend/activation-log.md (rows only)`
+
+**User stories:** 18, 19, 247, 248, 249
+
+**Gate:** Activation gate: Jon creates every account and project, sets every secret and cap, and approves each step (ADR-0014 gates). No agent provisions, signs up or spends.
+
+## S105: Storage providers: one interface, the device provider, Files/iCloud Drive folder export, and truthful Planned rows for Box and Dropbox
+
+`studio-storage-providers-files` · S5 · size L · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S5`
+
+**Blocked by:** S29, S43
+
+**What to build:** SD13 / ADR-0020: `StorageProvider {id, capability: active | choose-folder | not-connected | token-expired | disconnected | planned | unavailable(reason), connect(), exportProject(bundle) -> ExportReport, importSources(), quota()}` with the contract's status spellings (token-expired shown as 'Needs reconnect'). Device is active; FilesFolder exports a Studio project to any Files location including iCloud Drive through a security-scoped bookmark (not CloudKit): bundle = studio.json + manifests + plans + films + optional originals (the player's choice), verified by size and SHA-256 after write. Box and Dropbox are planned with no network code: their rows explain what they would do and are never shown as connected. Archive permission is never processing consent (A17). Fills the Settings ProvidersSlot. Why blocked: S29 (Studio settings and slot); S43 (verified films to export).
+
+**Acceptance criteria**
+
+- [ ] Exporting the sample project to a Files folder (simulator) writes every bundle file and the ExportReport lists each with size and sha256 matching the source; corrupting one file in a scratch run makes the report fail.
+- [ ] Revoking the bookmark (fake) shows choose-folder again with a reason.
+- [ ] Box and Dropbox rows are planned, not tappable except for an explanation, and a grep finds no network code for them.
+- [ ] The storage-providers fixture round-trips and processing is false for every provider.
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- scripts/ios/ui-test.sh studio-S105 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S105-studio-storage-providers-files/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S105-studio-storage-providers-files/side-by-side.html against design-reference/studio/screens/40-studio-settings.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Providers`
+- `ios/Jovra/Platform/StudioProviders (device, Files folder)`
+- `ios/Jovra/Features/Studio/Settings/ProvidersSlot`
+- `ios/JovraUITests/Studio/Providers`
+
+**Screens:** 40-studio-settings
+
+**User stories:** 216, 217, 219, 220, 221, 226
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+
+## S106: Google Drive as a Studio storage provider wrapping the core archive connection
+
+`studio-drive-provider-wrap` · S5 · size S · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S5`
+
+**Blocked by:** S105, T52, T53
+
+**What to build:** GoogleDrive in Studio wraps the core ArchiveService and its drive.file connection (D3): same states ('Awaiting Google Drive setup' as unavailable with the setup reason, Connected as active, Needs reconnect as token-expired), connect once for the whole app, and archive permission never treated as processing consent. Why blocked: S105 (the interface); T52 (Drive provider and upload queue); T53 (Drive sign-in and Keychain tokens).
+
+**Acceptance criteria**
+
+- [ ] With the core fake Drive, Studio's Drive row reads the same state as the core Storage screen in each of the four core states (table test).
+- [ ] Disconnecting from Studio and from core Storage are the same action (one token deletion observed).
+- [ ] No new OAuth client id or Drive network code is added (diff stat).
+
+**Evidence required**
+
+- Hosted unit test output
+- Screenshots of the Drive row states
+
+**Owned areas**
+
+- `ios/Jovra/Platform/StudioProviders/GoogleDrive`
+
+**Screens:** 40-studio-settings
+
+**User stories:** 218, 220
+
+**Gate:** Real Drive behaviour stays UNVERIFIED until Jon registers the OAuth client (core Drive gate).
+
+## S107: Prepare for YouTube: a local package with the verified film, cover, draft copy, chapters and the synthetic-content note, and no upload
+
+`studio-prepare-youtube` · S5 · size M · labels `ready-for-agent`, `platform:ios`, `area:studio`, `stage:S5`
+
+**Blocked by:** S51
+
+**What to build:** `PrepareForYouTube.prepare(filmId, version, options) -> YouTubePackage`: the verified film with the chosen audio route (A20), a cover from a chosen real frame plus the film title, an editable draft title and description (template plus the player's edits), chapters from the film, a synthetic-content note whenever any generated or stock element exists, captions only for real speech (none until S5 captions exist), saved to Files or Photos. No network, no channel, no upload; disabled in junior mode; a film made from sample content carries the visible Sample mark. Public contact in any draft is only hello@islanddevcrew.com as text. Fills the Delivery YouTube slot. Why blocked: S51 (verified with/without-audio files and the export slot pattern).
+
+**Acceptance criteria**
+
+- [ ] Preparing the sample Court Memories film writes the video, cover, title/description text and chapters; the video file's sha256 equals the verified artifact's.
+- [ ] A URLProtocol trap records zero requests during preparation, and a grep finds no YouTube API host in the code.
+- [ ] A film with a synthetic element produces the synthetic-content note; one without does not.
+- [ ] Junior mode hides the action; the sample film's frames carry the Sample mark (reader check).
+- [ ] performAccessibilityAudit (including textClipped) passes for every state this ticket adds in light, dark and AX5; every control is at least 44 x 44 pt; selection and state are never carried by colour alone (asserted by trait or label).
+
+**Evidence required**
+
+- swift test --filter YouTube output
+- scripts/ios/ui-test.sh studio-S107 with -only-testing for this ticket's new Studio UI test classes: class names, pass count and the .xcresult path
+- Named screenshots under evidence/ios/studio/S107-studio-prepare-youtube/ in light, dark and AX5 for every state this ticket adds
+- evidence/ios/studio/S107-studio-prepare-youtube/side-by-side.html against design-reference/studio/screens/39-film-delivery.png, with one reviewer line per pair (matches, or a documented deviation from studio-screens.md)
+
+**Owned areas**
+
+- `ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/YouTube`
+- `ios/Jovra/Features/Studio/Delivery/YouTube (slot fill)`
+- `ios/JovraUITests/Studio/YouTube`
+
+**Screens:** 39-film-delivery
+
+**User stories:** 211, 212, 213, 214, 215
+
+**Gate:** None: verifiable locally, on the simulator or in CI.
+

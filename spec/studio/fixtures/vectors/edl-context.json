@@ -1,0 +1,407 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "edl-context",
+  "status": "Sample: the trusted context is patched to give Camera 2 two adjacent coverage intervals (a restart); expectations come from the reference, assertions are hand-derived",
+  "cases": [
+    {
+      "id": "restart-first-frame",
+      "why": "A live segment starting on the first frame of the restarted interval maps through that interval: sessionInUs is the interval's session start",
+      "plan": "records/edit-plan.coach-cut-serve.json",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/sources/camera-2/coverage",
+          "value": [
+            {
+              "inFrame": 0,
+              "outFrame": 108000,
+              "sessionStartUs": 119837,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            },
+            {
+              "inFrame": 108000,
+              "outFrame": 216000,
+              "sessionStartUs": 2000000000,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            }
+          ]
+        }
+      ],
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/coverage",
+          "value": [
+            {
+              "inFrame": 0,
+              "outFrame": 108000,
+              "sessionStartUs": 119837,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            },
+            {
+              "inFrame": 108000,
+              "outFrame": 216000,
+              "sessionStartUs": 2000000000,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            }
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceInFrame",
+          "value": 108000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceOutFrame",
+          "value": 114540
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sessionInUs",
+          "value": 2000000000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/keeperId",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/protectedFrames",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/overlayRefs",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/3/sourceInFrame",
+          "value": 108000
+        }
+      ],
+      "expect": {
+        "status": "valid-plan"
+      },
+      "assert": {
+        "sessionInUs": 2000000000
+      }
+    },
+    {
+      "id": "restart-extrapolated-session",
+      "why": "The previous interval's extrapolated end is not the session time of the restarted interval's first frame",
+      "plan": "records/edit-plan.coach-cut-serve.json",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/sources/camera-2/coverage",
+          "value": [
+            {
+              "inFrame": 0,
+              "outFrame": 108000,
+              "sessionStartUs": 119837,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            },
+            {
+              "inFrame": 108000,
+              "outFrame": 216000,
+              "sessionStartUs": 2000000000,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            }
+          ]
+        }
+      ],
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/coverage",
+          "value": [
+            {
+              "inFrame": 0,
+              "outFrame": 108000,
+              "sessionStartUs": 119837,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            },
+            {
+              "inFrame": 108000,
+              "outFrame": 216000,
+              "sessionStartUs": 2000000000,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            }
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceInFrame",
+          "value": 108000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceOutFrame",
+          "value": 114540
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sessionInUs",
+          "value": 1800660021
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/keeperId",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/protectedFrames",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/overlayRefs",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/3/sourceInFrame",
+          "value": 108000
+        }
+      ],
+      "expect": {
+        "rejectCode": "sessionTimeMismatch"
+      },
+      "assert": {
+        "sessionInUs": 1800660021
+      }
+    },
+    {
+      "id": "window-ends-at-restart",
+      "why": "A window may end exactly on the restart frame (the exclusive end of the first interval)",
+      "plan": "records/edit-plan.coach-cut-serve.json",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/sources/camera-2/coverage",
+          "value": [
+            {
+              "inFrame": 0,
+              "outFrame": 108000,
+              "sessionStartUs": 119837,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            },
+            {
+              "inFrame": 108000,
+              "outFrame": 216000,
+              "sessionStartUs": 2000000000,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            }
+          ]
+        }
+      ],
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/coverage",
+          "value": [
+            {
+              "inFrame": 0,
+              "outFrame": 108000,
+              "sessionStartUs": 119837,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            },
+            {
+              "inFrame": 108000,
+              "outFrame": 216000,
+              "sessionStartUs": 2000000000,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            }
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceInFrame",
+          "value": 101460
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceOutFrame",
+          "value": 108000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sessionInUs",
+          "value": 1691627309
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/keeperId",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/protectedFrames",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/overlayRefs",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/3/sourceInFrame",
+          "value": 101460
+        }
+      ],
+      "expect": {
+        "status": "valid-plan"
+      },
+      "assert": {
+        "sessionInUs": 1691627309
+      }
+    },
+    {
+      "id": "dissolve-across-restart",
+      "why": "A dissolve into the restarted interval's first frame would need handles from the other interval",
+      "plan": "records/edit-plan.coach-cut-serve.json",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/sources/camera-2/coverage",
+          "value": [
+            {
+              "inFrame": 0,
+              "outFrame": 108000,
+              "sessionStartUs": 119837,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            },
+            {
+              "inFrame": 108000,
+              "outFrame": 216000,
+              "sessionStartUs": 2000000000,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            }
+          ]
+        }
+      ],
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/coverage",
+          "value": [
+            {
+              "inFrame": 0,
+              "outFrame": 108000,
+              "sessionStartUs": 119837,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            },
+            {
+              "inFrame": 108000,
+              "outFrame": 216000,
+              "sessionStartUs": 2000000000,
+              "rate": {
+                "num": 1000300102,
+                "den": 1000000000
+              }
+            }
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceInFrame",
+          "value": 108000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceOutFrame",
+          "value": 114540
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sessionInUs",
+          "value": 2000000000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/keeperId",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/protectedFrames",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/overlayRefs",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/3/sourceInFrame",
+          "value": 108000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/transitionIn",
+          "value": {
+            "type": "dissolve",
+            "frames": 4
+          }
+        }
+      ],
+      "expect": {
+        "rejectCode": "transitionHandle"
+      },
+      "assert": {
+        "handlesCrossRestart": true
+      }
+    }
+  ]
+}

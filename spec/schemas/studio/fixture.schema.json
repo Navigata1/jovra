@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio fixture files",
+  "description": "Shapes of the two fixture kinds that are not records: invalid-case sets (patches applied to a valid record that must be rejected by the schema or by the reference with a stable code) and reference vectors (inputs, the reference's expected output, and hand-derived assertions that do not come from the reference).",
+  "oneOf": [{"$ref": "#/$defs/invalidCases"}, {"$ref": "#/$defs/vectors"}],
+  "$defs": {
+    "patchOp": {
+      "type": "object",
+      "required": ["op", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"enum": ["replace", "add", "remove"]},
+        "path": {"type": "string", "pattern": "^(/[^/]*)+$"},
+        "value": true
+      }
+    },
+    "invalidCases": {
+      "type": "object",
+      "required": ["schemaVersion", "base", "cases"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.studio-fixture.invalid-cases/1"},
+        "base": {"description": "Path of the valid record, relative to spec/studio/fixtures.", "type": "string", "pattern": "^records/[a-z0-9.-]+\\.json$"},
+        "cases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "why", "patch", "expect"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+              "why": {"type": "string", "minLength": 1, "maxLength": 300},
+              "patch": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/patchOp"}},
+              "expect": {
+                "oneOf": [
+                  {"type": "object", "required": ["layer"], "additionalProperties": false, "properties": {"layer": {"const": "schema"}}},
+                  {"type": "object", "required": ["layer", "code"], "additionalProperties": false, "properties": {"layer": {"const": "reference"}, "code": {"type": "string", "pattern": "^[a-z][A-Za-z]+$"}}}
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "vectors": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "status", "cases"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.studio-fixture.vectors/1"},
+        "kind": {"enum": ["sync-fit", "sound-delay", "job-transitions", "ledger", "quote-credits", "sample-truth", "edl-context"]},
+        "status": {"type": "string", "maxLength": 400},
+        "cases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id"],
+            "properties": {"id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9-]{0,63}$"}}
+          }
+        }
+      }
+    }
+  }
+}

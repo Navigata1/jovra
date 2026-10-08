@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio ReferenceCatalog (jovra.reference-catalog/1)",
+  "description": "The trusted index of every record an EDL or StoryBrief names by id but must never carry by value: score states and point events and stats derived from the event log at one event revision, user notes, lesson notes and cues, annotations, narration consents and music rights. It is a projection that trusted code builds from the stored records (core point events and stats, Lesson, ProjectLock participants, a rights record store), never something a planner or client writes. edl.validate resolves every overlay refId, title-card textRef and narration scriptNoteId here and requires the kind and the stored provenance to match; a consentRecordId or rightsRecordId must name a stored, granted record whose scope covers the use. bundle.py cross-checks cues and lesson notes against the lessons and consents against the ProjectLock participants.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "revision", "sample", "eventRevision", "references", "consents", "rights"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.reference-catalog/1"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "eventRevision": {"description": "The event-log revision the score, point and stat entries were resolved at.", "$ref": "studio-common.schema.json#/$defs/revision"},
+    "references": {
+      "type": "array",
+      "maxItems": 2000,
+      "items": {
+        "type": "object",
+        "required": ["refId", "kind", "provenance", "eventRevision", "origin"],
+        "additionalProperties": false,
+        "properties": {
+          "refId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "kind": {"$ref": "studio-common.schema.json#/$defs/overlayKind"},
+          "provenance": {"$ref": "studio-common.schema.json#/$defs/provenanceStatus"},
+          "eventRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+          "origin": {
+            "type": "object",
+            "required": ["recordKind", "recordId"],
+            "additionalProperties": false,
+            "properties": {
+              "recordKind": {"enum": ["point-event", "score-state", "stat", "user-note", "lesson-note", "lesson-cue", "annotation"]},
+              "recordId": {"$ref": "studio-common.schema.json#/$defs/id"}
+            }
+          }
+        }
+      }
+    },
+    "consents": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "required": ["consentRecordId", "participantId", "scope", "granted", "at"],
+        "additionalProperties": false,
+        "properties": {
+          "consentRecordId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "participantId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "scope": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["narration-voice", "generated-voice"]}},
+          "granted": {"type": "boolean"},
+          "at": {"$ref": "studio-common.schema.json#/$defs/dateTime"}
+        }
+      }
+    },
+    "rights": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "required": ["rightsRecordId", "assetId", "holder", "scope"],
+        "additionalProperties": false,
+        "properties": {
+          "rightsRecordId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "assetId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "holder": {"enum": ["user", "licensor"]},
+          "scope": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["private-film", "lesson-share", "youtube"]}}
+        }
+      }
+    }
+  }
+}

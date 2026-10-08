@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio shipped contract data",
+  "description": "Shapes of the data files in spec/studio/contracts/ that apps and services read: the RenderJob transition table and the Studio Credit classes (a proposal, not a price).",
+  "oneOf": [{"$ref": "#/$defs/transitions"}, {"$ref": "#/$defs/creditClasses"}],
+  "$defs": {
+    "state": {"$ref": "render-job.schema.json#/$defs/state"},
+    "states": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/state"}},
+    "transitions": {
+      "type": "object",
+      "required": ["schemaVersion", "status", "states", "initial", "terminal", "resumable", "reservationRequiredFrom", "budgetCheckedBefore", "forward", "pausableFrom", "retryableFrom", "terminalFailureFrom", "budgetExceededFrom", "resumeTo", "cancelFrom", "deleteFrom", "readyRequires"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.render-job-transitions/1"},
+        "status": {"type": "string"},
+        "states": {"$ref": "#/$defs/states"},
+        "initial": {"const": "draft"},
+        "terminal": {"$ref": "#/$defs/states"},
+        "resumable": {"$ref": "#/$defs/states"},
+        "reservationRequiredFrom": {"$ref": "#/$defs/states"},
+        "budgetCheckedBefore": {"$ref": "#/$defs/states"},
+        "forward": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/state"},
+          "additionalProperties": {"$ref": "#/$defs/states"}
+        },
+        "pausableFrom": {"$ref": "#/$defs/states"},
+        "retryableFrom": {"$ref": "#/$defs/states"},
+        "terminalFailureFrom": {"$ref": "#/$defs/states"},
+        "budgetExceededFrom": {"$ref": "#/$defs/states"},
+        "resumeTo": {"type": "string"},
+        "cancelFrom": {"type": "string"},
+        "deleteFrom": {"type": "string"},
+        "readyRequires": {"type": "string"}
+      }
+    },
+    "creditClasses": {
+      "type": "object",
+      "required": ["schemaVersion", "status", "creditCostBudgetMicroUsd", "quoteRule", "quoteMaxLifetimeSeconds", "classes"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.credit-classes/1"},
+        "status": {"type": "string"},
+        "creditCostBudgetMicroUsd": {"type": "integer", "minimum": 1},
+        "quoteRule": {"type": "string"},
+        "quoteMaxLifetimeSeconds": {"type": "integer", "minimum": 60, "maximum": 3600},
+        "classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "minimumCredits"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "quote.schema.json#/properties/filmClass"},
+              "label": {"type": "string", "maxLength": 80},
+              "minimumCredits": {"$ref": "studio-common.schema.json#/$defs/credits"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

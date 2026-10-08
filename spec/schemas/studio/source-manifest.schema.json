@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio SourceManifest (jovra.source-manifest/1)",
+  "description": "What each camera or B-roll file actually is, measured from the file (never inferred from a name): immutable hash, size, duration, codec, dimensions, rotation, colour/HDR, rational timebase, variable-frame-rate flag, audio, lens, capture hints (host time and wall clock are hints, not synchronization), recorded segments and restarts, normalized proxies with their original-PTS tables, and server-side verification. Originals are never replaced by proxies.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "revision", "sample", "createdAt", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.source-manifest/1"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "createdAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"},
+    "sources": {"type": "array", "minItems": 1, "maxItems": 18, "items": {"$ref": "#/$defs/source"}}
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["sourceId", "role", "slot", "isPrimary", "deviceLabel", "original", "lens", "captureHints", "segments", "proxies", "verification"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "role": {"enum": ["match", "broll"]},
+        "slot": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/placementSlot"}]},
+        "isPrimary": {"type": "boolean"},
+        "deviceLabel": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/userText"}]},
+        "original": {
+          "type": "object",
+          "required": ["sha256", "sizeBytes", "container", "durationUs", "timescale", "startPts", "frameCount", "nominalFps", "vfr", "video", "colour", "audio"],
+          "additionalProperties": false,
+          "properties": {
+            "sha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+            "sizeBytes": {"type": "integer", "minimum": 1, "maximum": 1000000000000},
+            "container": {"enum": ["mov", "mp4", "m4v"]},
+            "durationUs": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+            "timescale": {"description": "The video track's media timescale (e.g. 600 or 90000); PTS are integers on it.", "$ref": "studio-common.schema.json#/$defs/posInt"},
+            "startPts": {"$ref": "studio-common.schema.json#/$defs/rationalTime"},
+            "frameCount": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+            "nominalFps": {"$ref": "studio-common.schema.json#/$defs/fps"},
+            "vfr": {"description": "True when decoded frame durations vary; average fps then proves nothing about a constant clock.", "type": "boolean"},
+            "video": {
+              "type": "object",
+              "required": ["codec", "width", "height", "rotationDegrees", "pixelAspect"],
+              "additionalProperties": false,
+              "properties": {
+                "codec": {"enum": ["h264", "hevc", "prores", "other"]},
+                "width": {"type": "integer", "minimum": 2, "maximum": 7680},
+                "height": {"type": "integer", "minimum": 2, "maximum": 7680},
+                "rotationDegrees": {"enum": [0, 90, 180, 270]},
+                "pixelAspect": {"$ref": "studio-common.schema.json#/$defs/rational"}
+              }
+            },
+            "colour": {
+              "type": "object",
+              "required": ["primaries", "transfer", "matrix", "range", "bitDepth", "hdr"],
+              "additionalProperties": false,
+              "properties": {
+                "primaries": {"enum": ["bt709", "bt2020", "p3", "unknown"]},
+                "transfer": {"enum": ["bt709", "srgb", "hlg", "pq", "unknown"]},
+                "matrix": {"enum": ["bt709", "bt2020nc", "bt601", "unknown"]},
+                "range": {"enum": ["limited", "full"]},
+                "bitDepth": {"enum": [8, 10, 12]},
+                "hdr": {"type": "boolean"}
+              }
+            },
+            "audio": {
+              "oneOf": [
+                {"type": "null"},
+                {
+                  "type": "object",
+                  "required": ["codec", "sampleRate", "channels"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "codec": {"enum": ["aac", "pcm", "alac", "other"]},
+                    "sampleRate": {"enum": [44100, 48000]},
+                    "channels": {"type": "integer", "minimum": 1, "maximum": 8}
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "lens": {
+          "type": "object",
+          "required": ["kind", "zoomFactor"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"enum": ["ultra-wide", "wide", "telephoto", "unknown"]},
+            "zoomFactor": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/decimalString"}]}
+          }
+        },
+        "captureHints": {
+          "description": "Hints only. Pairing, the host's start button, room clock pings and file times never establish frame synchronization.",
+          "type": "object",
+          "required": ["wallClockStart", "wallClockSource", "roomOffsetUs", "roomRoundTripUs"],
+          "additionalProperties": false,
+          "properties": {
+            "wallClockStart": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/dateTime"}]},
+            "wallClockSource": {"enum": ["device", "room-ntp", "file-metadata", "none"]},
+            "roomOffsetUs": {"description": "Room clock minus this device's host clock, in microseconds, measured at pairing (null when not paired). A segment's room time is fileZeroHostNs / 1000 + roomOffsetUs; bundle.capture_hints turns that into a from-hints prior.", "type": ["integer", "null"]},
+            "roomRoundTripUs": {"type": ["integer", "null"], "minimum": 0}
+          }
+        },
+        "segments": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": ["segmentId", "index", "reason", "fileZeroHostNs", "startPts", "durationUs", "frameCount"],
+            "additionalProperties": false,
+            "properties": {
+              "segmentId": {"$ref": "studio-common.schema.json#/$defs/id"},
+              "index": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+              "reason": {"enum": ["start", "restart", "thermal", "interruption", "import"]},
+              "fileZeroHostNs": {"description": "Host-clock time of the segment's file zero (journalled on capture); null for imports.", "type": ["integer", "null"], "minimum": 0},
+              "startPts": {"$ref": "studio-common.schema.json#/$defs/rationalTime"},
+              "durationUs": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+              "frameCount": {"$ref": "studio-common.schema.json#/$defs/posInt"}
+            }
+          }
+        },
+        "proxies": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["class", "sha256", "fps", "width", "height", "frameCount", "ptsTableSha256", "normalizerVersion", "rotationApplied", "toneMapped"],
+            "additionalProperties": false,
+            "properties": {
+              "class": {"description": "analysis keeps original timestamps; render is constant-frame-rate, rotation-baked, SDR, zero-start.", "enum": ["analysis", "render"]},
+              "sha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+              "fps": {"$ref": "studio-common.schema.json#/$defs/fps"},
+              "width": {"type": "integer", "minimum": 2, "maximum": 7680},
+              "height": {"type": "integer", "minimum": 2, "maximum": 7680},
+              "frameCount": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+              "ptsTableSha256": {"description": "Hash of the original-PTS -> proxy-frame table.", "$ref": "studio-common.schema.json#/$defs/sha256"},
+              "normalizerVersion": {"type": "string", "pattern": "^[a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"},
+              "rotationApplied": {"type": "boolean"},
+              "toneMapped": {"type": "boolean"}
+            }
+          }
+        },
+        "verification": {
+          "type": "object",
+          "required": ["status", "method", "verifiedAt"],
+          "additionalProperties": false,
+          "properties": {
+            "status": {"enum": ["unverified", "verified", "failed"]},
+            "method": {"oneOf": [{"type": "null"}, {"enum": ["sha256-full-read-device", "sha256-full-read-server"]}]},
+            "verifiedAt": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/dateTime"}]}
+          }
+        }
+      }
+    }
+  }
+}

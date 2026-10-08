@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA paired-watch bridge snapshot (jovra.room.watch-bridge/1)",
+  "description": "Small status metadata a paired phone forwards to its own watch (WatchConnectivity on watchOS, Wearable Data Layer on Wear OS). The watch never opens camera streams or becomes the host. ageAtBridgeMs is the bridge phone's conservative per-camera age at serialization; the watch adds known transit and its own monotonic time since acceptance. receiverObservation is written by the receiving watch when it accepts the payload and is persisted with the cached copy; a sender never fills it.",
+  "type": "object",
+  "required": ["schemaVersion", "sample", "sessionId", "hostEpoch", "snapshotSeq", "eventRevision", "bridge", "participant", "freshnessPolicy", "capabilities", "roster", "devices", "alerts", "receipts"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.room.watch-bridge/1"},
+    "sample": {"$ref": "room-common.schema.json#/$defs/sample"},
+    "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "hostEpoch": {"$ref": "room-common.schema.json#/$defs/hostEpoch"},
+    "snapshotSeq": {"$ref": "room-common.schema.json#/$defs/seq"},
+    "eventRevision": {"$ref": "room-common.schema.json#/$defs/revision"},
+    "bridge": {
+      "type": "object",
+      "required": ["bridgeDeviceId", "bridgeInstanceId", "channel", "bridgeSeq", "snapshotAgeAtBridgeMs"],
+      "additionalProperties": false,
+      "properties": {
+        "bridgeDeviceId": {"description": "The watch's own paired phone; the watch accepts payloads from no other bridge (reference rule notPairedBridge).", "$ref": "room-common.schema.json#/$defs/id"},
+        "bridgeInstanceId": {"description": "New for every bridge process start. A watch never returns to an instance it has left (bridgeInstanceRetired).", "$ref": "room-common.schema.json#/$defs/id"},
+        "channel": {"enum": ["watchconnectivity", "wearable-data-layer"]},
+        "bridgeSeq": {"description": "Strictly increasing within one bridgeInstanceId; the watch rejects non-increasing values (replayOrOutOfOrder) and, within one session and epoch, any decrease of snapshotSeq or eventRevision.", "$ref": "room-common.schema.json#/$defs/seq"},
+        "snapshotAgeAtBridgeMs": {"$ref": "room-common.schema.json#/$defs/durationMs"}
+      }
+    },
+    "participant": {
+      "description": "Who the watch acts for. commandRoles are the member's granted roles (a set); pairing a watch grants nothing. watchCommandTypes is what the phone owner left switched on in the watch abilities sheet: a subset of what the roles permit, never a capture request (reference rules watchExceedsGrant, watchCaptureCommand).",
+      "type": "object",
+      "required": ["memberId", "commandRoles", "watchCommandTypes"],
+      "additionalProperties": false,
+      "properties": {
+        "memberId": {"$ref": "room-common.schema.json#/$defs/id"},
+        "commandRoles": {"type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "room-common.schema.json#/$defs/commandRole"}},
+        "watchCommandTypes": {"type": "array", "maxItems": 6, "uniqueItems": true, "items": {"$ref": "room-common.schema.json#/$defs/commandType"}}
+      }
+    },
+    "freshnessPolicy": {"$ref": "room-common.schema.json#/$defs/freshnessPolicy"},
+    "capabilities": {"$ref": "room-common.schema.json#/$defs/capabilities"},
+    "score": {"$ref": "room-common.schema.json#/$defs/scoreSummary"},
+    "roster": {"$ref": "room-common.schema.json#/$defs/roster"},
+    "latestServe": {"description": "The last phone-produced, post-capture serve-speed result, forwarded only while capabilities.serveSpeedResults is true. Shown with its own point and timestamp and its provenance label, never as live. Null when there is none.", "oneOf": [{"type": "null"}, {"$ref": "analysis-result.schema.json"}]},
+    "alerts": {
+      "description": "Alert inputs computed on the bridge phone. Critical (vibrates at once) only for the watch owner's own phone: ownRecordingFailed, ownStorageCritical. Every other kind is deferred to the next accepted point event or 45 s, whichever comes first (reference rule alertSeverity).",
+      "type": "array", "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["alertId", "kind", "deviceId", "severity", "ageAtBridgeMs"],
+        "additionalProperties": false,
+        "properties": {
+          "alertId": {"$ref": "room-common.schema.json#/$defs/id"},
+          "kind": {"enum": ["ownRecordingFailed", "ownStorageCritical", "cameraUnknown", "storageLow", "batteryLow", "thermalWarning", "reviewNeeded"]},
+          "deviceId": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/id"}]},
+          "severity": {"enum": ["critical", "deferred"]},
+          "ageAtBridgeMs": {"$ref": "room-common.schema.json#/$defs/durationMs"}
+        }
+      }
+    },
+    "devices": {
+      "type": "array", "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["deviceId", "captureInstanceId", "segmentId", "deviceSeq", "captureState", "ageAtBridgeMs", "lastReportedElapsedMs"],
+        "additionalProperties": false,
+        "properties": {
+          "deviceId": {"$ref": "room-common.schema.json#/$defs/id"},
+          "captureInstanceId": {"$ref": "room-common.schema.json#/$defs/id"},
+          "segmentId": {"$ref": "room-common.schema.json#/$defs/id"},
+          "deviceSeq": {"$ref": "room-common.schema.json#/$defs/seq"},
+          "captureState": {"$ref": "room-common.schema.json#/$defs/captureState"},
+          "ageAtBridgeMs": {"$ref": "room-common.schema.json#/$defs/durationMs"},
+          "lastReportedElapsedMs": {"$ref": "room-common.schema.json#/$defs/durationMs"},
+          "flags": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {"storageLow": {"type": "boolean"}, "batteryLow": {"type": "boolean"}, "thermalWarning": {"type": "boolean"}}
+          }
+        }
+      }
+    },
+    "receipts": {"type": "array", "maxItems": 16, "items": {"$ref": "receipt.schema.json#/$defs/receipt"}},
+    "receiverObservation": {
+      "description": "Transit bounds and baseline validity as observed by the receiving watch.",
+      "type": "object",
+      "required": ["delivery", "transitBounded", "transitMs", "processBaselineId", "acceptedAtMonoMs"],
+      "additionalProperties": false,
+      "properties": {
+        "delivery": {"description": "interactive = a reachable request/acknowledgement exchange that bounds transit (transitBounded must be true); queued = background latest-state or queued transfer whose delay is not bounded (transitBounded must be false); fixture = test data.", "enum": ["interactive", "queued", "fixture"]},
+        "transitBounded": {"type": "boolean"},
+        "transitMs": {"oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/durationMs"}]},
+        "processBaselineId": {"description": "Identifies the receiving process's monotonic clock; a restart creates a new one and invalidates every cached age.", "$ref": "room-common.schema.json#/$defs/id"},
+        "acceptedAtMonoMs": {"$ref": "room-common.schema.json#/$defs/seq"}
+      },
+      "allOf": [
+        {"if": {"properties": {"transitBounded": {"const": true}}},
+         "then": {"properties": {"transitMs": {"type": "integer"}}},
+         "else": {"properties": {"transitMs": {"type": "null"}}}},
+        {"if": {"properties": {"delivery": {"const": "queued"}}},
+         "then": {"properties": {"transitBounded": {"const": false}}}},
+        {"if": {"properties": {"delivery": {"const": "interactive"}}},
+         "then": {"properties": {"transitBounded": {"const": true}}}}
+      ]
+    }
+  }
+}

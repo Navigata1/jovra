@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "jovra.delivered-artifact/1",
+  "artifactId": "film-court-memories",
+  "projectId": "sample-court-day",
+  "jobId": "job-film-01",
+  "environment": "test",
+  "sample": true,
+  "kind": "film",
+  "variant": "primary",
+  "titleText": "A good day on court",
+  "renderer": {
+    "kind": "ffmpeg",
+    "version": "jovra-render-ffmpeg@0.1.0"
+  },
+  "media": {
+    "container": "mp4",
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "width": 1920,
+    "height": 1080,
+    "fps": {
+      "num": 30,
+      "den": 1
+    },
+    "durationFrames": 7740,
+    "audioSampleCount": 12384000,
+    "sizeBytes": 412000000,
+    "sha256": "9891915899c5ddbc48f6a4d659ea5245ef57ee857164eda6db8ebc36bb98e6bf"
+  },
+  "chapters": [
+    {
+      "id": "ch-arrival",
+      "templateId": "chapter.arrival",
+      "startFrame": 0,
+      "endFrame": 1260
+    },
+    {
+      "id": "ch-match",
+      "templateId": "chapter.match",
+      "startFrame": 1260,
+      "endFrame": 5490
+    },
+    {
+      "id": "ch-after",
+      "templateId": "chapter.after",
+      "startFrame": 5490,
+      "endFrame": 7740
+    }
+  ],
+  "captions": null,
+  "bindings": {
+    "sourceSha256s": [
+      "3dd8384c35d332710ba3248a9588d8e274ddff6d26ceb2b2dfe409ca2b2051ff",
+      "637ced057c91240f310c4e851bafb3213cf886594d669f861e415d70dd1b8318",
+      "edbc43ac3cabeaaad090552b0b684ad0c4d0e84ba7646855bf68467d387793ab",
+      "02c2897f6e82f64e6f5f5d5b6588e844ebacc1c16990f7ada82f86e8a51a1321"
+    ],
+    "sourceManifestRevision": 1,
+    "syncRevision": 2,
+    "eventRevision": 3,
+    "profile": {
+      "id": "court-memories",
+      "revision": 1
+    },
+    "planner": {
+      "kind": "heuristic",
+      "modelId": null
+    },
+    "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+    "storyBriefRevision": 1
+  },
+  "verification": {
+    "status": "passed",
+    "probe": "passed",
+    "fullDecode": "passed",
+    "frameCount": "passed",
+    "audio": "passed",
+    "overlayProvenance": "passed",
+    "checkedAt": "2026-10-07T23:48:30Z"
+  },
+  "delivery": {
+    "visibility": "private",
+    "shareLink": {
+      "grantId": "grant-01",
+      "issuedAt": "2026-10-07T23:50:00Z",
+      "expiresAt": "2026-10-08T23:50:00Z"
+    },
+    "retention": {
+      "policy": "keep-until-deleted",
+      "days": null
+    }
+  },
+  "youtubePrep": {
+    "prepared": true,
+    "published": false
+  },
+  "stale": null
+}

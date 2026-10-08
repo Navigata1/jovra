@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/usage-reservation.held.json",
+  "cases": [
+    {
+      "id": "demo-credits",
+      "why": "Demo identities never reserve",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/environment",
+          "value": "demo"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "demoNeverReserves"
+      }
+    }
+  ]
+}

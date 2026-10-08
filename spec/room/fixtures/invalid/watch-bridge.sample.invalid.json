@@ -1,0 +1,326 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/watch-bridge.sample.json",
+  "cases": [
+    {
+      "id": "bounded-without-bound",
+      "why": "A bounded transit states its bound",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/receiverObservation/transitMs",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        8
+      ]
+    },
+    {
+      "id": "unbounded-with-bound",
+      "why": "An unbounded transit has no bound",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/receiverObservation/transitBounded",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        8
+      ]
+    },
+    {
+      "id": "video-stream",
+      "why": "A watch never receives camera streams",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/devices/0/streamUrl",
+          "value": "rtsp://192.168.1.21/live"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "duplicate-device",
+      "why": "A device appears once",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/devices/1/deviceId",
+          "value": "c1"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "duplicateDevice"
+      }
+    },
+    {
+      "id": "watch-as-host",
+      "why": "The watch bridge channel is a native companion API",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/bridge/channel",
+          "value": "lan-room"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "queued-but-bounded",
+      "why": "A queued delivery can never claim a bounded transit (D6)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/receiverObservation/delivery",
+          "value": "queued"
+        },
+        {
+          "op": "replace",
+          "path": "/receiverObservation/transitMs",
+          "value": 0
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        8
+      ]
+    },
+    {
+      "id": "interactive-unbounded",
+      "why": "An interactive exchange is the bounded one",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/receiverObservation/delivery",
+          "value": "interactive"
+        },
+        {
+          "op": "replace",
+          "path": "/receiverObservation/transitBounded",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/receiverObservation/transitMs",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        8
+      ]
+    },
+    {
+      "id": "no-bridge-instance",
+      "why": "Replay marks need the bridge instance (D6)",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/bridge/bridgeInstanceId"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "no-participant",
+      "why": "The watch UI is driven by the member's roles, so the bridge states them",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/participant"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        14
+      ]
+    },
+    {
+      "id": "watch-stop-all",
+      "why": "A watch never issues capture requests (ADR-0026 as amended)",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/participant/watchCommandTypes/-",
+          "value": "StopAllRequest"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "watchCaptureCommand"
+      },
+      "acceptanceRows": [
+        14
+      ]
+    },
+    {
+      "id": "watch-exceeds-grant",
+      "why": "Pairing grants nothing: a viewer's watch cannot score",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/participant/commandRoles",
+          "value": [
+            "viewer"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "watchExceedsGrant"
+      },
+      "acceptanceRows": [
+        14
+      ]
+    },
+    {
+      "id": "camera-unknown-critical",
+      "why": "A camera going Unknown is deferred, never critical (ADR-0026 as amended)",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/alerts/-",
+          "value": {
+            "alertId": "a1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "critical",
+            "ageAtBridgeMs": 0
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "alertSeverity"
+      },
+      "acceptanceRows": [
+        19
+      ]
+    },
+    {
+      "id": "own-failure-deferred",
+      "why": "The owner's own recording failure is critical",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/alerts/-",
+          "value": {
+            "alertId": "a2",
+            "kind": "ownRecordingFailed",
+            "deviceId": "c1",
+            "severity": "deferred",
+            "ageAtBridgeMs": 0
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "alertSeverity"
+      },
+      "acceptanceRows": [
+        19
+      ]
+    },
+    {
+      "id": "serve-without-capability",
+      "why": "A serve result is forwarded only with serveSpeedResults on",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/latestServe",
+          "value": {
+            "schemaVersion": "jovra.room.analysis-result/1",
+            "sample": true,
+            "sessionId": "sample-jon-alex",
+            "sourceRefs": [
+              {
+                "deviceId": "c1",
+                "captureInstanceId": "sample-c1-take1",
+                "segmentId": "s1",
+                "frameRange": {
+                  "startFrame": 45210,
+                  "endFrame": 45330
+                }
+              }
+            ],
+            "producedAt": "2026-10-07T21:28:40Z",
+            "producedAtEventRevision": 42,
+            "reviewState": "notRequired",
+            "scoreEffect": "none",
+            "resultId": "sample-serve-42",
+            "capabilityId": "serveSpeed.manualAssisted",
+            "kind": "serveSpeed",
+            "pointEventId": "sample-point-42",
+            "label": "estimated",
+            "modelVersion": "serve-assist/0.1",
+            "calibrationId": "sample-cal-1",
+            "value": "74",
+            "units": "mph",
+            "uncertainty": {
+              "lower": "70",
+              "upper": "78",
+              "level": "range"
+            },
+            "unavailableReason": null
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "capabilityAbsent"
+      },
+      "acceptanceRows": [
+        20
+      ]
+    },
+    {
+      "id": "bridge-device-not-in-roster",
+      "why": "Every device row is on the roster (D8)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/roster/cameraDeviceIds",
+          "value": [
+            "c1",
+            "c2",
+            "c3",
+            "c4",
+            "c5"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "deviceNotInRoster"
+      },
+      "acceptanceRows": [
+        7
+      ]
+    }
+  ]
+}

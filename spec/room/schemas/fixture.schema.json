@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room fixture files",
+  "description": "Shapes of spec/room/fixtures/invalid/*.json, vectors/*.json and acceptance-map.json. Case bodies are kind-specific and checked by scripts/spec/validate_room.py.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["schemaVersion", "base", "cases"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.room-fixture.invalid-cases/1"},
+        "base": {"type": "string", "pattern": "^records/[a-z0-9.-]+\\.json$"},
+        "cases": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "why", "patch", "expect"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+              "why": {"type": "string", "minLength": 1},
+              "acceptanceRows": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+              "patch": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["op", "path"], "properties": {"op": {"enum": ["add", "replace", "remove"]}, "path": {"type": "string"}}}},
+              "expect": {
+                "oneOf": [
+                  {"type": "object", "required": ["layer"], "additionalProperties": false, "properties": {"layer": {"const": "schema"}}},
+                  {"type": "object", "required": ["layer", "code"], "additionalProperties": false, "properties": {"layer": {"const": "reference"}, "code": {"type": "string", "minLength": 1}}}
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "status", "cases"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.room-fixture.vectors/1"},
+        "kind": {"enum": ["freshness", "watch-sample", "phone-status", "display", "snapshot", "bridge", "alerts", "invitation", "ledger", "outbox", "disconnect", "analysis"]},
+        "status": {"type": "string", "minLength": 1},
+        "secrets": {
+          "description": "Sample-only stand-in for a host's secure store (invitation vectors). Values are derived from public strings and are not credentials.",
+          "type": "object",
+          "required": ["note", "tokens", "nonces"],
+          "additionalProperties": false,
+          "properties": {
+            "note": {"type": "string", "minLength": 1},
+            "tokens": {"type": "object", "additionalProperties": {"$ref": "room-common.schema.json#/$defs/secretToken"}},
+            "nonces": {"type": "object", "additionalProperties": {"$ref": "room-common.schema.json#/$defs/nonce"}}
+          }
+        },
+        "cases": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "why"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+              "why": {"type": "string", "minLength": 1},
+              "acceptanceRows": {"type": "array", "items": {"type": "integer", "minimum": 1}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schemaVersion", "source", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.room-fixture.acceptance-map/1"},
+        "source": {"const": "design-reference/adaptive/brief/acceptance-matrix.md"},
+        "rows": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["row", "scenario", "protocolTestable", "covers", "note"],
+            "additionalProperties": false,
+            "properties": {
+              "row": {"type": "integer", "minimum": 1},
+              "scenario": {"type": "string", "minLength": 1},
+              "protocolTestable": {"enum": ["yes", "partial", "no"]},
+              "covers": {"type": "array", "items": {"type": "string", "pattern": "^(vectors|invalid)/[a-z0-9.-]+\\.json#[a-z0-9][a-z0-9-]*$"}},
+              "note": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio BrollCatalog (jovra.broll-catalog/1)",
+  "description": "Real atmosphere footage, catalogued separately from match action with its origin, rights and whether it depicts this match. Stock or generated material is never presented as the day: it carries a disclosure label and a rights record.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "revision", "sample", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.broll-catalog/1"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "items": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "required": ["brollId", "sourceId", "window", "depictsThisMatch", "origin", "rights", "disclosureTemplateId", "revealsLocation", "participantIds", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "brollId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "sourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "window": {"$ref": "studio-common.schema.json#/$defs/frameWindow"},
+          "depictsThisMatch": {"type": "boolean"},
+          "origin": {"enum": ["captured-today", "captured-other-day", "imported", "stock", "generated"]},
+          "rights": {
+            "type": "object",
+            "required": ["holder", "scope", "rightsRecordId"],
+            "additionalProperties": false,
+            "properties": {
+              "holder": {"enum": ["user", "participant", "licensor"]},
+              "scope": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["private-film", "lesson-share", "youtube"]}},
+              "rightsRecordId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]}
+            }
+          },
+          "disclosureTemplateId": {"oneOf": [{"type": "null"}, {"const": "label.not-match-footage"}]},
+          "revealsLocation": {"type": "boolean"},
+          "participantIds": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/id"}},
+          "description": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/userText"}]}
+        }
+      }
+    }
+  }
+}

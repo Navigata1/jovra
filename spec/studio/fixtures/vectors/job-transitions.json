@@ -1,0 +1,355 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "job-transitions",
+  "status": "hand-written expectations from the backend brief's state machine; defaults: resumeStage null, attempt 1, maxAttempts 3, hasReservation true, verifiedArtifact false",
+  "cases": [
+    {
+      "id": "draft-to-quoted",
+      "from": {
+        "state": "draft"
+      },
+      "to": "quoted",
+      "expect": {
+        "state": "quoted",
+        "resumeStage": null
+      }
+    },
+    {
+      "id": "draft-to-ready",
+      "from": {
+        "state": "draft"
+      },
+      "to": "ready",
+      "expect": {
+        "rejectCode": "illegalTransition"
+      }
+    },
+    {
+      "id": "quote-expires",
+      "from": {
+        "state": "quoted"
+      },
+      "to": "quote_expired",
+      "expect": {
+        "state": "quote_expired"
+      }
+    },
+    {
+      "id": "expired-never-auto-accepted",
+      "from": {
+        "state": "quote_expired"
+      },
+      "to": "consented",
+      "expect": {
+        "rejectCode": "illegalTransition"
+      }
+    },
+    {
+      "id": "expired-requoted",
+      "from": {
+        "state": "quote_expired"
+      },
+      "to": "quoted",
+      "expect": {
+        "state": "quoted",
+        "resumeStage": null
+      }
+    },
+    {
+      "id": "no-spend-without-reservation",
+      "from": {
+        "state": "consented"
+      },
+      "to": "upload_pending",
+      "expect": {
+        "rejectCode": "reservationRequired"
+      },
+      "hasReservation": false
+    },
+    {
+      "id": "upload-paused",
+      "from": {
+        "state": "uploading"
+      },
+      "to": "paused",
+      "expect": {
+        "state": "paused",
+        "resumeStage": "uploading"
+      }
+    },
+    {
+      "id": "pause-resumes-same-stage",
+      "from": {
+        "state": "paused",
+        "resumeStage": "uploading"
+      },
+      "to": "uploading",
+      "expect": {
+        "state": "uploading",
+        "resumeStage": null,
+        "attempt": 1
+      }
+    },
+    {
+      "id": "pause-cannot-skip-ahead",
+      "from": {
+        "state": "paused",
+        "resumeStage": "uploading"
+      },
+      "to": "queued",
+      "expect": {
+        "rejectCode": "illegalTransition"
+      }
+    },
+    {
+      "id": "render-fails-retryably",
+      "from": {
+        "state": "final_rendering"
+      },
+      "to": "failed_retryable",
+      "expect": {
+        "state": "failed_retryable",
+        "resumeStage": "final_rendering"
+      }
+    },
+    {
+      "id": "retry-counts-attempt",
+      "from": {
+        "state": "failed_retryable",
+        "resumeStage": "final_rendering",
+        "attempt": 1
+      },
+      "to": "final_rendering",
+      "expect": {
+        "state": "final_rendering",
+        "attempt": 2,
+        "resumeStage": null
+      }
+    },
+    {
+      "id": "retries-exhausted",
+      "from": {
+        "state": "failed_retryable",
+        "resumeStage": "final_rendering",
+        "attempt": 3
+      },
+      "to": "final_rendering",
+      "expect": {
+        "rejectCode": "retriesExhausted"
+      }
+    },
+    {
+      "id": "retryable-to-terminal",
+      "from": {
+        "state": "failed_retryable",
+        "resumeStage": "verifying"
+      },
+      "to": "failed_terminal",
+      "expect": {
+        "state": "failed_terminal",
+        "resumeStage": null
+      }
+    },
+    {
+      "id": "ready-needs-verification",
+      "from": {
+        "state": "verifying"
+      },
+      "to": "ready",
+      "expect": {
+        "rejectCode": "unverifiedReady"
+      }
+    },
+    {
+      "id": "ready-after-verification",
+      "from": {
+        "state": "verifying"
+      },
+      "to": "ready",
+      "expect": {
+        "state": "ready"
+      },
+      "verifiedArtifact": true
+    },
+    {
+      "id": "ready-is-terminal",
+      "from": {
+        "state": "ready"
+      },
+      "to": "canceled",
+      "expect": {
+        "rejectCode": "terminalState"
+      }
+    },
+    {
+      "id": "ready-can-be-deleted",
+      "from": {
+        "state": "ready"
+      },
+      "to": "deleted",
+      "expect": {
+        "state": "deleted"
+      }
+    },
+    {
+      "id": "deleted-is-final",
+      "from": {
+        "state": "deleted"
+      },
+      "to": "deleted",
+      "expect": {
+        "rejectCode": "terminalState"
+      }
+    },
+    {
+      "id": "budget-stops-stage",
+      "from": {
+        "state": "normalizing"
+      },
+      "to": "budget_exceeded",
+      "expect": {
+        "state": "budget_exceeded",
+        "resumeStage": "normalizing"
+      }
+    },
+    {
+      "id": "budget-never-auto-raised",
+      "from": {
+        "state": "budget_exceeded",
+        "resumeStage": "normalizing"
+      },
+      "to": "normalizing",
+      "expect": {
+        "rejectCode": "illegalTransition"
+      }
+    },
+    {
+      "id": "budget-requote",
+      "from": {
+        "state": "budget_exceeded",
+        "resumeStage": "normalizing"
+      },
+      "to": "quoted",
+      "expect": {
+        "state": "quoted",
+        "resumeStage": null
+      }
+    },
+    {
+      "id": "draft-cannot-pause",
+      "from": {
+        "state": "draft"
+      },
+      "to": "paused",
+      "expect": {
+        "rejectCode": "illegalTransition"
+      }
+    },
+    {
+      "id": "queued-cancel",
+      "from": {
+        "state": "queued"
+      },
+      "to": "canceled",
+      "expect": {
+        "state": "canceled"
+      }
+    },
+    {
+      "id": "review-is-not-retryable",
+      "from": {
+        "state": "awaiting_review"
+      },
+      "to": "failed_retryable",
+      "expect": {
+        "rejectCode": "illegalTransition"
+      }
+    },
+    {
+      "id": "analysis-unavailable-fallback",
+      "from": {
+        "state": "syncing"
+      },
+      "to": "planning",
+      "expect": {
+        "state": "planning"
+      }
+    },
+    {
+      "id": "sources-already-verified",
+      "from": {
+        "state": "upload_pending"
+      },
+      "to": "queued",
+      "expect": {
+        "state": "queued"
+      }
+    },
+    {
+      "id": "no-budget-check-at-upload",
+      "from": {
+        "state": "uploading"
+      },
+      "to": "budget_exceeded",
+      "expect": {
+        "rejectCode": "illegalTransition"
+      }
+    },
+    {
+      "id": "unknown-state",
+      "from": {
+        "state": "draft"
+      },
+      "to": "published",
+      "expect": {
+        "rejectCode": "unknownState"
+      }
+    },
+    {
+      "id": "paused-resume-to-ready-refused",
+      "from": {
+        "state": "paused",
+        "resumeStage": "ready"
+      },
+      "to": "ready",
+      "expect": {
+        "rejectCode": "badResumeStage"
+      },
+      "verifiedArtifact": true
+    },
+    {
+      "id": "retry-resume-to-ready-refused",
+      "from": {
+        "state": "failed_retryable",
+        "resumeStage": "ready"
+      },
+      "to": "ready",
+      "expect": {
+        "rejectCode": "badResumeStage"
+      },
+      "verifiedArtifact": true
+    },
+    {
+      "id": "retry-resume-to-deleted-refused",
+      "from": {
+        "state": "failed_retryable",
+        "resumeStage": "deleted"
+      },
+      "to": "canceled",
+      "expect": {
+        "rejectCode": "badResumeStage"
+      }
+    },
+    {
+      "id": "stray-resume-stage-refused",
+      "from": {
+        "state": "queued",
+        "resumeStage": "normalizing"
+      },
+      "to": "normalizing",
+      "expect": {
+        "rejectCode": "badResumeStage"
+      }
+    }
+  ]
+}

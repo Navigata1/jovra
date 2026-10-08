@@ -1,0 +1,513 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/edit-plan.court-memories-storyboard.json",
+  "cases": [
+    {
+      "id": "executable-command",
+      "why": "An EDL never carries a command",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/command",
+          "value": "ffmpeg -i x"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "approval-in-plan",
+      "why": "Approval lives in the job/reservation, never the plan",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/approved",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "signed-url-source",
+      "why": "No URL or path in a source snapshot",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/sources/0/url",
+          "value": "https://example.invalid/x"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "unlabelled-speed",
+      "why": "1.25x is not an allowed speed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/speed",
+          "value": {
+            "num": 5,
+            "den": 4
+          }
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "wipe-transition",
+      "why": "Transitions come from cut/dissolve/dip only",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/transitionIn/type",
+          "value": "wipe"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "copied-score-digits",
+      "why": "Overlays reference records; the plan never carries the value",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/segments/2/overlayRefs/0/value",
+          "value": 7
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "aspect-21-9",
+      "why": "Unsupported output aspect",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/output/aspect",
+          "value": "21:9"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "model-guessed-reframe",
+      "why": "Reframe only from a reviewed action-safe box",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/framing",
+          "value": {
+            "mode": "reframe",
+            "basis": "model-guess",
+            "windows": [
+              {
+                "atFrame": 0,
+                "x": 0,
+                "y": 0,
+                "w": 10000,
+                "h": 10000
+              }
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "stale-overlay",
+      "why": "A score overlay bound to an older event revision",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/2/overlayRefs/0/eventRevision",
+          "value": 2
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "staleRevision"
+      }
+    },
+    {
+      "id": "stale-event-revision",
+      "why": "The plan predates a point correction",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/bindings/eventRevision",
+          "value": 2
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "staleRevision"
+      }
+    },
+    {
+      "id": "stale-sync-revision",
+      "why": "The plan predates the reviewed sync map",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/bindings/syncRevision",
+          "value": 1
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "staleRevision"
+      }
+    },
+    {
+      "id": "output-gap",
+      "why": "Output frames 360-361 are uncovered",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/outputInFrame",
+          "value": 361
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "outputGap"
+      }
+    },
+    {
+      "id": "incomplete-timeline",
+      "why": "The last frame is uncovered",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/output/totalFrames",
+          "value": 7741
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "incompleteCoverage"
+      }
+    },
+    {
+      "id": "source-overrun",
+      "why": "Window past the end of Camera 2's coverage",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceInFrame",
+          "value": 213000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceOutFrame",
+          "value": 217608
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "outsideCoverage"
+      }
+    },
+    {
+      "id": "duration-mismatch",
+      "why": "Source and output durations disagree at 1x",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/sourceOutFrame",
+          "value": 1118
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "durationMismatch"
+      }
+    },
+    {
+      "id": "forged-session-time",
+      "why": "sessionInUs does not follow the sync map",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/2/sessionInUs",
+          "value": 1200001000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "sessionTimeMismatch"
+      }
+    },
+    {
+      "id": "integral-float-frame",
+      "why": "Frames are integers; 744.0 is refused by the reference",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/sourceInFrame",
+          "value": 744.0
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badInteger"
+      }
+    },
+    {
+      "id": "transition-too-long",
+      "why": "16 frames = 533 ms > Court Memories' 500 ms",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/transitionIn/frames",
+          "value": 16
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "transitionTooLong"
+      }
+    },
+    {
+      "id": "dissolve-without-handles",
+      "why": "B-roll 1 has no frames after its end for the dissolve",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/0/sourceInFrame",
+          "value": 1440
+        },
+        {
+          "op": "replace",
+          "path": "/segments/0/sourceOutFrame",
+          "value": 1800
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "transitionHandle"
+      }
+    },
+    {
+      "id": "dissolve-over-contact",
+      "why": "The dissolve would blend a protected contact window",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/segments/1/protectedFrames/-",
+          "value": {
+            "inFrame": 746,
+            "outFrame": 760
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "contactProtected"
+      }
+    },
+    {
+      "id": "court-audio-out-of-sync",
+      "why": "The primary bed starts 20 frames (333 ms) late",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/1/sourceInFrame",
+          "value": 771
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "bedOutOfSync"
+      }
+    },
+    {
+      "id": "silent-live-play",
+      "why": "Live play under silence while the film has court audio",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/2",
+          "value": {
+            "route": "silence",
+            "sourceId": null,
+            "sourceInFrame": null,
+            "outputInFrame": 546,
+            "outputOutFrame": 2346,
+            "fadeInMs": 10,
+            "fadeOutMs": 10
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "liveWithoutCourtAudio"
+      }
+    },
+    {
+      "id": "bed-gap",
+      "why": "An output span with no audio route",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/audio/bed/3"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "bedCoverage"
+      }
+    },
+    {
+      "id": "clean-alternate-with-motion",
+      "why": "A clean alternate cannot keep dissolves",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/cleanAlternate",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "motionInCleanAlternate"
+      }
+    },
+    {
+      "id": "unknown-source",
+      "why": "Camera 9 is not in the plan",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceId",
+          "value": "camera-9"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "unknownSource"
+      }
+    },
+    {
+      "id": "duplicate-segment-id",
+      "why": "Segment ids are unique",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/3/id",
+          "value": "s03"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "duplicateId"
+      }
+    },
+    {
+      "id": "untrusted-hash",
+      "why": "The source hash differs from the trusted manifest",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/0/sha256",
+          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "untrustedSource"
+      }
+    },
+    {
+      "id": "upscale-to-4k",
+      "why": "A 4K film from 1080p proxies invents no detail",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/output/width",
+          "value": 3840
+        },
+        {
+          "op": "replace",
+          "path": "/output/height",
+          "value": 2160
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "upscaleRefused"
+      }
+    },
+    {
+      "id": "chapters-out-of-order",
+      "why": "Chapters strictly increase",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/chapters/1/outputInFrame",
+          "value": 7100
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badChapters"
+      }
+    },
+    {
+      "id": "contact-unprotected-without-keeper",
+      "why": "Naming no keeper does not switch contact protection off: s03 still contains the stored k-02 contacts",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/2/keeperId",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/segments/2/protectedFrames",
+          "value": []
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "contactUnprotected"
+      }
+    },
+    {
+      "id": "forged-coverage-start",
+      "why": "Camera 2's session start shifted 500 ms together with sessionInUs: coverage comes from the reviewed sync map, never from the plan",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/coverage/0/sessionStartUs",
+          "value": 619837
+        },
+        {
+          "op": "replace",
+          "path": "/segments/1/sessionInUs",
+          "value": 13023558
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "coverageMismatch"
+      }
+    }
+  ]
+}

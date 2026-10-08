@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio DeliveredArtifact (jovra.delivered-artifact/1)",
+  "description": "A private film (or preview, thumbnail, captions, chapters, edit manifest, project bundle) with everything that produced it: source hashes, event/sync/profile revisions, planner, edit-plan hash, renderer version and result hash. 'passed' verification means probe, full decode, exact frame count, audio and overlay provenance checks all passed; a process exit is not readiness. Delivery is private; a share link is a gateway grant of at most 24 hours, never a raw storage URL. Preparing for YouTube never publishes.",
+  "type": "object",
+  "required": ["schemaVersion", "artifactId", "projectId", "jobId", "environment", "sample", "kind", "variant", "titleText", "renderer", "media", "chapters", "captions", "bindings", "verification", "delivery", "youtubePrep", "stale"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.delivered-artifact/1"},
+    "artifactId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "jobId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+    "environment": {"$ref": "studio-common.schema.json#/$defs/environment"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "kind": {"enum": ["film", "preview", "thumbnail", "captions", "chapters", "edit-manifest", "project-bundle"]},
+    "variant": {"enum": ["primary", "clean-alternate"]},
+    "titleText": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/userText"}]},
+    "renderer": {
+      "type": "object",
+      "required": ["kind", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["avfoundation", "ffmpeg", "ffmpeg-remotion-overlay"]},
+        "version": {"type": "string", "pattern": "^[a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": ["container", "videoCodec", "audioCodec", "width", "height", "fps", "durationFrames", "audioSampleCount", "sizeBytes", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "container": {"const": "mp4"},
+        "videoCodec": {"enum": ["h264", "hevc"]},
+        "audioCodec": {"oneOf": [{"type": "null"}, {"const": "aac"}]},
+        "width": {"type": "integer", "minimum": 2, "maximum": 3840},
+        "height": {"type": "integer", "minimum": 2, "maximum": 3840},
+        "fps": {"$ref": "studio-common.schema.json#/$defs/fps"},
+        "durationFrames": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "audioSampleCount": {"type": ["integer", "null"], "minimum": 0},
+        "sizeBytes": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "sha256": {"$ref": "studio-common.schema.json#/$defs/sha256"}
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "required": ["id", "templateId", "startFrame", "endFrame"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "templateId": {"$ref": "studio-common.schema.json#/$defs/templateId"},
+          "startFrame": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+          "endFrame": {"$ref": "studio-common.schema.json#/$defs/posInt"}
+        }
+      }
+    },
+    "captions": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["format", "source"],
+          "additionalProperties": false,
+          "properties": {"format": {"enum": ["srt", "vtt"]}, "source": {"enum": ["user-authored", "transcribed-reviewed"]}}
+        }
+      ]
+    },
+    "bindings": {
+      "type": "object",
+      "required": ["sourceSha256s", "sourceManifestRevision", "syncRevision", "eventRevision", "profile", "planner", "editPlanSha256", "storyBriefRevision"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceSha256s": {"type": "array", "minItems": 1, "maxItems": 18, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/sha256"}},
+        "sourceManifestRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+        "syncRevision": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/revision"}]},
+        "eventRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+        "profile": {
+          "type": "object",
+          "required": ["id", "revision"],
+          "additionalProperties": false,
+          "properties": {"id": {"$ref": "studio-common.schema.json#/$defs/profileId"}, "revision": {"$ref": "studio-common.schema.json#/$defs/revision"}}
+        },
+        "planner": {
+          "type": "object",
+          "required": ["kind", "modelId"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"enum": ["heuristic", "model", "user"]},
+            "modelId": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,63}$"}]}
+          }
+        },
+        "editPlanSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+        "storyBriefRevision": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/revision"}]}
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["status", "probe", "fullDecode", "frameCount", "audio", "overlayProvenance", "checkedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {"enum": ["pending", "passed", "failed"]},
+        "probe": {"$ref": "#/$defs/check"},
+        "fullDecode": {"$ref": "#/$defs/check"},
+        "frameCount": {"$ref": "#/$defs/check"},
+        "audio": {"$ref": "#/$defs/check"},
+        "overlayProvenance": {"$ref": "#/$defs/check"},
+        "checkedAt": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/dateTime"}]}
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "required": ["visibility", "shareLink", "retention"],
+      "additionalProperties": false,
+      "properties": {
+        "visibility": {"const": "private"},
+        "shareLink": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["grantId", "issuedAt", "expiresAt"],
+              "additionalProperties": false,
+              "properties": {
+                "grantId": {"$ref": "studio-common.schema.json#/$defs/id"},
+                "issuedAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"},
+                "expiresAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"}
+              }
+            }
+          ]
+        },
+        "retention": {
+          "type": "object",
+          "required": ["policy", "days"],
+          "additionalProperties": false,
+          "properties": {
+            "policy": {"enum": ["device-only", "keep-until-deleted", "days"]},
+            "days": {"type": ["integer", "null"], "minimum": 1, "maximum": 3650}
+          }
+        }
+      }
+    },
+    "youtubePrep": {
+      "type": "object",
+      "required": ["prepared", "published"],
+      "additionalProperties": false,
+      "properties": {"prepared": {"type": "boolean"}, "published": {"const": false}}
+    },
+    "stale": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["reason", "currentEventRevision"],
+          "additionalProperties": false,
+          "properties": {
+            "reason": {"enum": ["event-revision", "sync-revision", "source-manifest-revision", "profile-revision"]},
+            "currentEventRevision": {"$ref": "studio-common.schema.json#/$defs/revision"}
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "check": {"enum": ["pending", "passed", "failed", "not-applicable"]}
+  }
+}

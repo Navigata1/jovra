@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/observation.calibrated-bounce.json",
+  "cases": [
+    {
+      "id": "uncalibrated-bounce",
+      "why": "A bounce location needs a court calibration",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/calibrationId",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "calibrationMissing"
+      }
+    }
+  ]
+}

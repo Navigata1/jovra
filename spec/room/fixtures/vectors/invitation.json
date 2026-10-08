@@ -1,0 +1,1787 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "invitation",
+  "status": "Sample host (device c1) with records/invitation.json (camera, viewer) and records/invitation.scorer.json; join requests patch records/join-request.json; host nonces are per attempt",
+  "secrets": {
+    "note": "Sample secrets derived from public strings; not credentials. A real host keeps tokens in its secure store.",
+    "tokens": {
+      "inv-c2": "oPNN0f-PlTyYoMPexe5KKg",
+      "inv-scorer": "LV-iz8Jl8TmNIO1B2W1qgA"
+    },
+    "nonces": {
+      "inv-c2": "2V2bl9x1tlTmFxQnwkpQqg",
+      "inv-scorer": "ZHn5XxWCTeYcwBEIm-og5w"
+    }
+  },
+  "cases": [
+    {
+      "id": "happy-path",
+      "why": "Proof checks, the host challenges, the guest reveals, both screens show the same code, host approves, single use consumed",
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "301112",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": true,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "accepted",
+            "code": null,
+            "grants": [
+              "record-local",
+              "upload-own-source",
+              "view-own-preview",
+              "view-room-status"
+            ],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": "c2"
+          }
+        },
+        {
+          "op": "assertRecord",
+          "inviteId": "inv-c2",
+          "expect": {
+            "status": "used",
+            "usedByDeviceId": "c2",
+            "usedAt": "2026-10-07T21:12:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "replayed-invite",
+      "why": "The same token presented again after use is refused and exposes nothing",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "301112",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": true,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "accepted",
+            "code": null,
+            "grants": [
+              "record-local",
+              "upload-own-source",
+              "view-own-preview",
+              "view-room-status"
+            ],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": "c2"
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:13:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "alreadyUsed",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/guestDeviceId",
+              "value": "c5"
+            }
+          ],
+          "now": "2026-10-07T21:13:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "alreadyUsed",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "join-in-progress",
+      "why": "A second presentation while one is pending is refused",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "joinInProgress",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "expired-invite",
+      "why": "One second after expiry on the host's own clock",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:20:01Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "expired",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "assertRecord",
+          "inviteId": "inv-c2",
+          "expect": {
+            "status": "expired"
+          }
+        }
+      ]
+    },
+    {
+      "id": "expiry-boundary",
+      "why": "Exactly at expiresAt is still valid",
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:20:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "expired-while-waiting",
+      "why": "Approval after expiry is refused",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:19:30Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "301112",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": true,
+          "now": "2026-10-07T21:20:01Z",
+          "expect": {
+            "result": "rejected",
+            "code": "expired",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "wrong-session",
+      "why": "A request for another session",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/sessionId",
+              "value": "other-room"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "wrongSession",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "wrong-epoch",
+      "why": "A request bound to another host epoch",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/hostEpoch",
+              "value": 2
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "revoked",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "impostor-host",
+      "why": "The guest observed a different TLS key than the QR pinned",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/observedHostKeySha256",
+              "value": "657c067cc572b54dfb0edd88541302816efd3d5e4327679a56a91401d9ec6eea"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "hostFingerprintMismatch",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "guessed-token",
+      "why": "Knowing the display code is not knowing the token",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/proof",
+              "value": "ef8d75fe0a5c71bc22a9ab8648883aa3611ede6977f063b98ffb1c03f9e349bc"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "badProof",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "proof-bound-to-guest-key",
+      "why": "A proof made for one guest key fails for another",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/guestKeySha256",
+              "value": "9c9ca70294db451125a4a99ddfb52e4c21df21b49b9d525ee405b3df05fa39b4"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "badProof",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "proof-bound-to-commitment",
+      "why": "A proof made for one commitment fails for another",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/guestCommitment",
+              "value": "82d702d1d3983d0dc58b5af7be3431eb55d235520cb8c9d5fd423d011c8d00ca"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "badProof",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "role-escalation",
+      "why": "The invitation's role is the role; a guest cannot ask for more",
+      "acceptanceRows": [
+        14
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/requestedCommandRole",
+              "value": "scorer"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "roleMismatch",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "unknown-invite",
+      "why": "No such invitation",
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/inviteId",
+              "value": "inv-zz"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "unknownInvite",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "codes-not-confirmed",
+      "why": "The host did not confirm matching verification codes",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "301112",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": false,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "rejected",
+            "code": "verificationNotConfirmed",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "assertRecord",
+          "inviteId": "inv-c2",
+          "expect": {
+            "status": "issued"
+          }
+        }
+      ]
+    },
+    {
+      "id": "commitment-mismatch",
+      "why": "D3: a reveal that does not open the commitment fails the attempt; nothing is pending afterwards",
+      "acceptanceRows": [
+        4,
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "lbTYlObK4KynRgu1k7Gs_A",
+          "expect": {
+            "result": "rejected",
+            "code": "commitmentMismatch",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "rejected",
+            "code": "noPendingJoin",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "assertRecord",
+          "inviteId": "inv-c2",
+          "expect": {
+            "status": "issued"
+          }
+        }
+      ]
+    },
+    {
+      "id": "reveal-before-challenge",
+      "why": "A reveal without a challenged join is refused",
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "rejected",
+            "code": "noPendingJoin",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": true,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "rejected",
+            "code": "noPendingJoin",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "host-nonce-binds-code",
+      "why": "D3: the code depends on a host nonce chosen after the guest committed, so it cannot be precomputed from the QR",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "301112",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": false,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "rejected",
+            "code": "verificationNotConfirmed",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "UELPHOtdY49BsqtMd4u7LA",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "UELPHOtdY49BsqtMd4u7LA",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "644903",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "attempts-exhausted",
+      "why": "D11: three declined attempts by token holders revoke the invitation; no endless approval prompts",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "301112",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": false,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "rejected",
+            "code": "verificationNotConfirmed",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "UELPHOtdY49BsqtMd4u7LA",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "UELPHOtdY49BsqtMd4u7LA",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "644903",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": false,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "rejected",
+            "code": "verificationNotConfirmed",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "6UBbfUq2YDJ_wLNRocuGKg",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "6UBbfUq2YDJ_wLNRocuGKg",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "085056",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": false,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "rejected",
+            "code": "verificationNotConfirmed",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "assertRecord",
+          "inviteId": "inv-c2",
+          "expect": {
+            "status": "revoked",
+            "revokedReason": "attemptsExhausted"
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "revoked",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "already-member",
+      "why": "D17: a member cannot join again under a second invitation (no implicit role upgrade)",
+      "acceptanceRows": [
+        14
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "challenge",
+            "code": null,
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+            "deviceId": null
+          }
+        },
+        {
+          "op": "reveal",
+          "inviteId": "inv-c2",
+          "guestNonce": "iXc-nS5L1Lb274OD_Lk05g",
+          "expect": {
+            "result": "awaitingHostApproval",
+            "code": null,
+            "grants": [],
+            "verificationCode": "301112",
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "approve",
+          "inviteId": "inv-c2",
+          "confirmed": true,
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "accepted",
+            "code": null,
+            "grants": [
+              "record-local",
+              "upload-own-source",
+              "view-own-preview",
+              "view-room-status"
+            ],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": "c2"
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/inviteId",
+              "value": "inv-scorer"
+            },
+            {
+              "op": "replace",
+              "path": "/requestedCaptureRole",
+              "value": "none"
+            },
+            {
+              "op": "replace",
+              "path": "/requestedCommandRole",
+              "value": "scorer"
+            },
+            {
+              "op": "replace",
+              "path": "/proof",
+              "value": "7d9b3318d6c549a44bdf8aef5afc63ffa8f5726c92f5e11c897e22b4abfe0d6b"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "alreadyMember",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/inviteId",
+              "value": "inv-scorer"
+            },
+            {
+              "op": "replace",
+              "path": "/requestedCaptureRole",
+              "value": "none"
+            },
+            {
+              "op": "replace",
+              "path": "/requestedCommandRole",
+              "value": "scorer"
+            },
+            {
+              "op": "replace",
+              "path": "/proof",
+              "value": "7d9b3318d6c549a44bdf8aef5afc63ffa8f5726c92f5e11c897e22b4abfe0d6b"
+            },
+            {
+              "op": "replace",
+              "path": "/guestDeviceId",
+              "value": "c2-again"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "alreadyMember",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "assertRecord",
+          "inviteId": "inv-scorer",
+          "expect": {
+            "status": "issued"
+          }
+        }
+      ]
+    },
+    {
+      "id": "host-is-member",
+      "why": "The host's own key cannot be enrolled as a guest",
+      "acceptanceRows": [
+        14
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/guestDeviceId",
+              "value": "c1"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "alreadyMember",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "host-transfer-revokes",
+      "why": "A new host epoch revokes every open invitation",
+      "acceptanceRows": [
+        5,
+        17
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "transferHost",
+          "newEpoch": 4,
+          "newHostKey": "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297",
+          "expect": {
+            "revoked": [
+              "inv-c2",
+              "inv-scorer"
+            ]
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "revoked",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "join",
+          "requestPatch": [
+            {
+              "op": "replace",
+              "path": "/hostEpoch",
+              "value": 4
+            },
+            {
+              "op": "replace",
+              "path": "/observedHostKeySha256",
+              "value": "50ca364b34c5dba8a1cbcbbe4983389abee5ee3e53fc1c0bfb290e2efcfbf297"
+            }
+          ],
+          "now": "2026-10-07T21:12:00Z",
+          "hostNonce": "krKI1FNsydI5IwpWr4U14Q",
+          "expect": {
+            "result": "rejected",
+            "code": "revoked",
+            "grants": [],
+            "verificationCode": null,
+            "hostNonce": null,
+            "deviceId": null
+          }
+        },
+        {
+          "op": "assertRecord",
+          "inviteId": "inv-scorer",
+          "expect": {
+            "status": "revoked",
+            "revokedReason": "hostTransfer"
+          }
+        }
+      ]
+    },
+    {
+      "id": "display-code-lookup",
+      "why": "A display code finds an invitation for host approval; it never authenticates",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "lookup",
+          "code": "JVR-482",
+          "source": "guest-a",
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "found",
+            "inviteId": "inv-c2",
+            "authenticates": false
+          }
+        },
+        {
+          "op": "lookup",
+          "code": "JVR-517",
+          "source": "guest-a",
+          "now": "2026-10-07T21:12:00Z",
+          "expect": {
+            "result": "found",
+            "inviteId": "inv-scorer",
+            "authenticates": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "display-code-guessing",
+      "why": "D11: five misses throttle that source for a 10-minute window; other sources and the code itself keep working",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "lookup",
+          "code": "JVR-000",
+          "source": "guest-a",
+          "now": "2026-10-07T21:10:00Z",
+          "expect": {
+            "result": "notFound",
+            "inviteId": null,
+            "authenticates": false
+          }
+        },
+        {
+          "op": "lookup",
+          "code": "JVR-001",
+          "source": "guest-a",
+          "now": "2026-10-07T21:10:01Z",
+          "expect": {
+            "result": "notFound",
+            "inviteId": null,
+            "authenticates": false
+          }
+        },
+        {
+          "op": "lookup",
+          "code": "JVR-002",
+          "source": "guest-a",
+          "now": "2026-10-07T21:10:02Z",
+          "expect": {
+            "result": "notFound",
+            "inviteId": null,
+            "authenticates": false
+          }
+        },
+        {
+          "op": "lookup",
+          "code": "JVR-003",
+          "source": "guest-a",
+          "now": "2026-10-07T21:10:03Z",
+          "expect": {
+            "result": "notFound",
+            "inviteId": null,
+            "authenticates": false
+          }
+        },
+        {
+          "op": "lookup",
+          "code": "JVR-004",
+          "source": "guest-a",
+          "now": "2026-10-07T21:10:04Z",
+          "expect": {
+            "result": "notFound",
+            "inviteId": null,
+            "authenticates": false
+          }
+        },
+        {
+          "op": "lookup",
+          "code": "JVR-482",
+          "source": "guest-a",
+          "now": "2026-10-07T21:10:05Z",
+          "expect": {
+            "result": "lookupThrottled",
+            "inviteId": null,
+            "authenticates": false
+          }
+        },
+        {
+          "op": "lookup",
+          "code": "JVR-482",
+          "source": "guest-b",
+          "now": "2026-10-07T21:10:06Z",
+          "expect": {
+            "result": "found",
+            "inviteId": "inv-c2",
+            "authenticates": false
+          }
+        },
+        {
+          "op": "lookup",
+          "code": "JVR-482",
+          "source": "guest-a",
+          "now": "2026-10-07T21:20:00Z",
+          "expect": {
+            "result": "found",
+            "inviteId": "inv-c2",
+            "authenticates": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lookup-ignores-expired",
+      "why": "D18: an expired invitation is never found, even before anything else marks it",
+      "acceptanceRows": [
+        4
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "lookup",
+          "code": "JVR-482",
+          "source": "guest-a",
+          "now": "2026-10-07T21:20:01Z",
+          "expect": {
+            "result": "notFound",
+            "inviteId": null,
+            "authenticates": false
+          }
+        },
+        {
+          "op": "assertRecord",
+          "inviteId": "inv-c2",
+          "expect": {
+            "status": "expired"
+          }
+        }
+      ]
+    },
+    {
+      "id": "joiner-side-checks",
+      "why": "Before sending anything the guest checks roles, lifetime, endpoints and the pinned key; a QR is never a URL. The joiner never compares its own clock with the host's (D14): expiry is the host's decision",
+      "acceptanceRows": [
+        4,
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "joinerVerify",
+          "payloadPatch": [],
+          "observedHostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+          "expect": "ok"
+        },
+        {
+          "op": "joinerVerify",
+          "payloadPatch": [],
+          "observedHostKey": "657c067cc572b54dfb0edd88541302816efd3d5e4327679a56a91401d9ec6eea",
+          "expect": "hostFingerprintMismatch"
+        },
+        {
+          "op": "joinerVerify",
+          "payloadPatch": [
+            {
+              "op": "replace",
+              "path": "/endpoints/1/address",
+              "value": "203.0.113.7"
+            }
+          ],
+          "observedHostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+          "expect": "endpointNotAllowed"
+        },
+        {
+          "op": "joinerVerify",
+          "payloadPatch": [
+            {
+              "op": "replace",
+              "path": "/commandRole",
+              "value": "capture-controller"
+            }
+          ],
+          "observedHostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+          "expect": "cameraCannotControl"
+        },
+        {
+          "op": "decodeQr",
+          "text": "https://jovra.example/join?code=JVR-482",
+          "expect": {
+            "error": "notJovraRoomCode"
+          }
+        },
+        {
+          "op": "decodeQr",
+          "text": "jovra-room:1:%%%",
+          "expect": {
+            "error": "malformedPayload"
+          }
+        },
+        {
+          "op": "decodeQr",
+          "fromPayload": true,
+          "expect": {
+            "roundTrip": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "strict-qr",
+      "why": "D15: every port decodes the same bytes the same way: base64url alphabet, no padding, no duplicate keys, canonical JSON only",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "decodeQr",
+          "text": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDgyIiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJKT1ZSQSBDb3VydCAzIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjE6MjA6MDBaIiwiaG9zdEVwb2NoIjozLCJob3N0S2V5U2hhMjU2IjoiYmJmYmUwYzY2ZmFhNWY2MTA1Y2RjZWQ0Njc2MmVlZWYzMDk5N2VmOTI3OWYxMWZmZTczNDFjMjczOGYxMzA2NSIsImludml0ZUlkIjoiaW52LWMyIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIxOjEwOjAwWiIsImpvaW5Ub2tlbiI6Im9QTk4wZi1QbFR5WW9NUGV4ZTVLS2ciLCJub25jZSI6IjJWMmJsOXgxdGxUbUZ4UW53a3BRcWciLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoic2FtcGxlLWpvbi1hbGV4In0",
+          "expect": {
+            "decoded": true
+          }
+        },
+        {
+          "op": "decodeQr",
+          "text": "jovra-room:1:eyJjYXB!!**0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDgyIiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJKT1ZSQSBDb3VydCAzIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjE6MjA6MDBaIiwiaG9zdEVwb2NoIjozLCJob3N0S2V5U2hhMjU2IjoiYmJmYmUwYzY2ZmFhNWY2MTA1Y2RjZWQ0Njc2MmVlZWYzMDk5N2VmOTI3OWYxMWZmZTczNDFjMjczOGYxMzA2NSIsImludml0ZUlkIjoiaW52LWMyIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIxOjEwOjAwWiIsImpvaW5Ub2tlbiI6Im9QTk4wZi1QbFR5WW9NUGV4ZTVLS2ciLCJub25jZSI6IjJWMmJsOXgxdGxUbUZ4UW53a3BRcWciLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoic2FtcGxlLWpvbi1hbGV4In0",
+          "expect": {
+            "error": "malformedPayload"
+          }
+        },
+        {
+          "op": "decodeQr",
+          "text": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDgyIiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJKT1ZSQSBDb3VydCAzIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjE6MjA6MDBaIiwiaG9zdEVwb2NoIjozLCJob3N0S2V5U2hhMjU2IjoiYmJmYmUwYzY2ZmFhNWY2MTA1Y2RjZWQ0Njc2MmVlZWYzMDk5N2VmOTI3OWYxMWZmZTczNDFjMjczOGYxMzA2NSIsImludml0ZUlkIjoiaW52LWMyIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIxOjEwOjAwWiIsImpvaW5Ub2tlbiI6Im9QTk4wZi1QbFR5WW9NUGV4ZTVLS2ciLCJub25jZSI6IjJWMmJsOXgxdGxUbUZ4UW53a3BRcWciLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoic2FtcGxlLWpvbi1hbGV4In0=",
+          "expect": {
+            "error": "malformedPayload"
+          }
+        },
+        {
+          "op": "decodeQr",
+          "text": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDgyIiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJKT1ZSQSBDb3VydCAzIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjE6MjA6MDBaIiwiaG9zdEVwb2NoIjozLCJob3N0S2V5U2hhMjU2IjoiYmJmYmUwYzY2ZmFhNWY2MTA1Y2RjZWQ0Njc2MmVlZWYzMDk5N2VmOTI3OWYxMWZmZTczNDFjMjczOGYxMzA2NSIsImludml0ZUlkIjoiaW52LWMyIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIxOjEwOjAwWiIsImpvaW5Ub2tlbiI6Im9QTk4wZi1QbFR5WW9NUGV4ZTVLS2ciLCJub25jZSI6IjJWMmJsOXgxdGxUbUZ4UW53a3BRcWciLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoic2FtcGxlLWpvbi1hbGV4IiwiaG9zdEtleVNoYTI1NiI6IjY1N2MwNjdjYzU3MmI1NGRmYjBlZGQ4ODU0MTMwMjgxNmVmZDNkNWU0MzI3Njc5YTU2YTkxNDAxZDllYzZlZWEifQ",
+          "expect": {
+            "error": "duplicateKey"
+          }
+        },
+        {
+          "op": "decodeQr",
+          "text": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ICJjYW1lcmEiLCAiY29tbWFuZFJvbGUiOiAidmlld2VyIiwgImRpc3BsYXlDb2RlIjogIkpWUi00ODIiLCAiZW5kcG9pbnRzIjogW3siaW5zdGFuY2VOYW1lIjogIkpPVlJBIENvdXJ0IDMiLCAia2luZCI6ICJkbnNzZCIsICJzZXJ2aWNlVHlwZSI6ICJfam92cmEtcm9vbS5fdGNwIn0sIHsiYWRkcmVzcyI6ICIxOTIuMTY4LjEuMjAiLCAia2luZCI6ICJsYW4iLCAicG9ydCI6IDQ3MTAwfV0sICJleHBpcmVzQXQiOiAiMjAyNi0xMC0wN1QyMToyMDowMFoiLCAiaG9zdEVwb2NoIjogMywgImhvc3RLZXlTaGEyNTYiOiAiYmJmYmUwYzY2ZmFhNWY2MTA1Y2RjZWQ0Njc2MmVlZWYzMDk5N2VmOTI3OWYxMWZmZTczNDFjMjczOGYxMzA2NSIsICJpbnZpdGVJZCI6ICJpbnYtYzIiLCAiaXNzdWVkQXQiOiAiMjAyNi0xMC0wN1QyMToxMDowMFoiLCAiam9pblRva2VuIjogIm9QTk4wZi1QbFR5WW9NUGV4ZTVLS2ciLCAibm9uY2UiOiAiMlYyYmw5eDF0bFRtRnhRbndrcFFxZyIsICJzYW1wbGUiOiB0cnVlLCAic2NoZW1hVmVyc2lvbiI6ICJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwgInNlc3Npb25JZCI6ICJzYW1wbGUtam9uLWFsZXgifQ",
+          "expect": {
+            "error": "nonCanonicalPayload"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dnssd-resolved-endpoint",
+      "why": "D16: a resolved DNS-SD address passes the same LAN allow-list and port rule before connecting",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "hostKey": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065",
+        "members": {
+          "c1": "bbfbe0c66faa5f6105cdced46762eeef30997ef9279f11ffe7341c2738f13065"
+        },
+        "records": [
+          "records/invitation.json",
+          "records/invitation.scorer.json"
+        ]
+      },
+      "steps": [
+        {
+          "op": "checkResolved",
+          "address": "192.168.1.20",
+          "port": 47100,
+          "expect": "ok"
+        },
+        {
+          "op": "checkResolved",
+          "address": "fe80::1c2a:3bff:fe4d:5e6f",
+          "port": 47100,
+          "expect": "ok"
+        },
+        {
+          "op": "checkResolved",
+          "address": "93.184.216.34",
+          "port": 47100,
+          "expect": "endpointNotAllowed"
+        },
+        {
+          "op": "checkResolved",
+          "address": "127.0.0.1",
+          "port": 47100,
+          "expect": "endpointNotAllowed"
+        },
+        {
+          "op": "checkResolved",
+          "address": "192.168.1.20",
+          "port": 443,
+          "expect": "endpointNotAllowed"
+        }
+      ]
+    }
+  ]
+}

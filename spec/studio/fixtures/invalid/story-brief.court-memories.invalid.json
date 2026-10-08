@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/story-brief.court-memories.json",
+  "cases": [
+    {
+      "id": "replay-in-memories",
+      "why": "Court Memories has no replays",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/beats/1/treatment",
+          "value": "replay"
+        },
+        {
+          "op": "replace",
+          "path": "/beats/1/replaySpeedDen",
+          "value": 2
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "opNotAllowed"
+      }
+    }
+  ]
+}

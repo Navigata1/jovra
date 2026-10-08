@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/watch-local.stop-own-phone.json",
+  "cases": [
+    {
+      "id": "stop-other-phone",
+      "why": "A watch can only stop its own phone; there is no target field",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/deviceId",
+          "value": "c4"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    },
+    {
+      "id": "stop-all-from-watch",
+      "why": "No stop-all kind exists on the watch channel",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/kind",
+          "value": "stopAll"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    },
+    {
+      "id": "unconfirmed-stop",
+      "why": "The own-phone stop needs the watch's confirmation",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/confirmed"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    }
+  ]
+}

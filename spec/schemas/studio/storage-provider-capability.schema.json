@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio storage-provider capabilities (jovra.storage-providers/1)",
+  "description": "Truthful capability states for optional archive/import providers behind one adapter interface. A provider is an archive, never the database or the compute engine (processing is always false). iCloud Drive is reached through the Files picker on iOS only; Google Drive, Box and Dropbox need their own verified integrations before they are active. Credentials are Keychain/EncryptedSharedPreferences references, never tokens.",
+  "type": "object",
+  "required": ["schemaVersion", "sample", "environment", "providers"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.storage-providers/1"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "environment": {"$ref": "studio-common.schema.json#/$defs/environment"},
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["provider", "status", "integration", "platforms", "operations", "credentialRef", "folderRef", "processing", "lastVerifiedAt"],
+        "additionalProperties": false,
+        "properties": {
+          "provider": {"enum": ["device", "icloud-drive-files", "google-drive", "box", "dropbox"]},
+          "status": {"enum": ["active", "choose-folder", "not-connected", "planned", "unavailable", "token-expired", "disconnected"]},
+          "integration": {"enum": ["local", "files-picker", "oauth-verified", "oauth-planned"]},
+          "platforms": {
+            "type": "object",
+            "required": ["ios", "android"],
+            "additionalProperties": false,
+            "properties": {"ios": {"type": "boolean"}, "android": {"type": "boolean"}}
+          },
+          "operations": {
+            "type": "object",
+            "required": ["exportFiles", "importFiles", "archiveSidecar", "resume", "quota"],
+            "additionalProperties": false,
+            "properties": {
+              "exportFiles": {"type": "boolean"},
+              "importFiles": {"type": "boolean"},
+              "archiveSidecar": {"type": "boolean"},
+              "resume": {"type": "boolean"},
+              "quota": {"type": "boolean"}
+            }
+          },
+          "credentialRef": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+          "folderRef": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+          "processing": {"const": false},
+          "lastVerifiedAt": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/dateTime"}]}
+        }
+      }
+    }
+  }
+}

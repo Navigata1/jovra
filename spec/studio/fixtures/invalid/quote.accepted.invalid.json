@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/quote.accepted.json",
+  "cases": [
+    {
+      "id": "money-on-a-real-quote",
+      "why": "Dollar amounts appear only as illustrative Sample UX",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/displayAmounts",
+          "value": {
+            "currency": "USD",
+            "minMinor": 400,
+            "maxMinor": 800,
+            "capMinor": 1200,
+            "illustrative": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "illustrativeQuote"
+      }
+    },
+    {
+      "id": "accepted-after-expiry",
+      "why": "Never auto-accepted after expiry",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/acceptedAt",
+          "value": "2026-10-07T23:20:00Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "quoteExpired"
+      }
+    },
+    {
+      "id": "accepted-without-consent",
+      "why": "Acceptance records upload consent",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/consent",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "consentMissing"
+      }
+    },
+    {
+      "id": "accepted-half-second-late",
+      "why": "23:15:00.500Z is after 23:15:00Z (timestamps are parsed, not compared as text)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/acceptedAt",
+          "value": "2026-10-07T23:15:00.500Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "quoteExpired"
+      }
+    },
+    {
+      "id": "unbound-quote",
+      "why": "A quote is bound to one output spec",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/outputSpecSha256"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "heuristic-quote-with-planner-tokens",
+      "why": "A rules-planned quote estimates no model tokens",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/lineItems/plannerTokensEstimate",
+          "value": 120000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "plannerMismatch"
+      }
+    },
+    {
+      "id": "model-planning-without-provider-consent",
+      "why": "Model planning needs the explicit model-provider consent",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/plannerChoice",
+          "value": "model"
+        },
+        {
+          "op": "replace",
+          "path": "/lineItems/plannerTokensEstimate",
+          "value": 120000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "consentMissing"
+      }
+    },
+    {
+      "id": "note-text-without-model-consent",
+      "why": "Note text classes go to a model only with model planning",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/consent/textClasses",
+          "value": [
+            "ownerNotes"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badQuote"
+      }
+    },
+    {
+      "id": "consent-retention-differs",
+      "why": "The consent confirms the quote's retention",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/consent/retentionDays",
+          "value": 30
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badQuote"
+      }
+    },
+    {
+      "id": "retention-not-offered",
+      "why": "Retention is 1, 7 or 30 days (D-3)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/retentionDays",
+          "value": 14
+        },
+        {
+          "op": "replace",
+          "path": "/lineItems/storageDays",
+          "value": 14
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "consent-without-model-field",
+      "why": "The consent records the model-provider choice",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/consent/modelProvider"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "hash-trailing-newline",
+      "why": "A sha256 with a trailing newline is not a sha256 (ECMA-262 anchors)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/outputSpecSha256",
+          "value": "8888888888888888888888888888888888888888888888888888888888888888\n"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

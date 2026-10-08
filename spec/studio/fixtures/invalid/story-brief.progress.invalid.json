@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/story-brief.progress.json",
+  "cases": [
+    {
+      "id": "percent-improvement",
+      "why": "Proportions change in percentage points, never '% improvement'",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/comparisons/0/display/delta",
+          "value": "+50% improvement"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "displayMismatch"
+      }
+    },
+    {
+      "id": "estimated-change-claim",
+      "why": "A change claim needs reviewed evidence on both sides",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/comparisons/0/before/provenance",
+          "value": "estimated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "weakEvidence"
+      }
+    },
+    {
+      "id": "cherry-picked",
+      "why": "User-chosen examples cannot claim a change",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/comparisons/0/selectionRule",
+          "value": "user-chosen"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "selectionBias"
+      }
+    },
+    {
+      "id": "live-without-keeper",
+      "why": "No narrative beat without source evidence",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/beats/1/keeperId",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "beatWithoutEvidence"
+      }
+    },
+    {
+      "id": "score-text-in-brief",
+      "why": "The planner never writes score digits",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/beats/1/scoreText",
+          "value": "6-4"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

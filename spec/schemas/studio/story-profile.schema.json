@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio story-profile catalog (jovra.story-profile-catalog/1)",
+  "description": "The five versioned story profiles. Text fields are carried over unchanged from design-reference/studio/brief/story-profiles.json (jovra.story-profiles/1; validate_studio.py checks they still match). Each profile adds a machine-checkable grammar (film-engine research section 6, proposed defaults to tune on real footage) that the EDL validator enforces. Changing a grammar bumps that profile's revision, which makes plans bound to the old revision stale.",
+  "type": "object",
+  "required": ["schemaVersion", "derivedFrom", "status", "defaults", "profiles"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.story-profile-catalog/1"},
+    "derivedFrom": {"const": "design-reference/studio/brief/story-profiles.json#jovra.story-profiles/1"},
+    "status": {"type": "string", "maxLength": 300},
+    "defaults": {
+      "type": "object",
+      "required": ["preserveOriginals", "inventFootage", "inventMetrics", "publishAutomatically", "music", "generatedCommentary", "rallyActionSpeed", "effectIntensity", "sourceAudio", "metricProvenanceVisible"],
+      "additionalProperties": false,
+      "properties": {
+        "preserveOriginals": {"const": true},
+        "inventFootage": {"const": false},
+        "inventMetrics": {"const": false},
+        "publishAutomatically": {"const": false},
+        "music": {"const": "none"},
+        "generatedCommentary": {"const": "off"},
+        "rallyActionSpeed": {"const": 1},
+        "effectIntensity": {"const": "low"},
+        "sourceAudio": {"const": "continuous primary track"},
+        "metricProvenanceVisible": {"const": true}
+      }
+    },
+    "profiles": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"$ref": "#/$defs/profile"}}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "maxLength": 400},
+    "provenanceList": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/provenanceStatus"}},
+    "msRange": {
+      "type": "object",
+      "required": ["min", "max"],
+      "additionalProperties": false,
+      "properties": {"min": {"type": "integer", "minimum": 0}, "max": {"type": "integer", "minimum": 0}}
+    },
+    "profile": {
+      "type": "object",
+      "required": ["id", "revision", "name", "intent", "recommendedDurationSeconds", "beats", "editing", "mustNot", "fallback", "exportAudio", "grammar"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "studio-common.schema.json#/$defs/profileId"},
+        "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+        "name": {"$ref": "#/$defs/text"},
+        "intent": {"$ref": "#/$defs/text"},
+        "recommendedDurationSeconds": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}], "minItems": 2, "maxItems": 2},
+        "beats": {"type": "array", "minItems": 1, "maxItems": 12, "items": {"$ref": "#/$defs/text"}},
+        "editing": {
+          "type": "object",
+          "additionalProperties": {"oneOf": [{"$ref": "#/$defs/text"}, {"type": "array", "items": {"$ref": "#/$defs/text"}}]}
+        },
+        "mustNot": {"type": "array", "minItems": 1, "maxItems": 12, "items": {"$ref": "#/$defs/text"}},
+        "fallback": {"$ref": "#/$defs/text"},
+        "exportAudio": {
+          "description": "Spec D-1 / SD5: the private in-app film keeps the court audio whatever this says. For every file that leaves the app (Save to Photos or Files, Download, share link, Prepare for YouTube) the Include audio switch starts at includeByDefault and is always shown; a no-audio export is its own verified artifact (audioCodec null). Junior mode overrides this: no audio and no switch. On only for Rally Pulse and Court Memories.",
+          "type": "object",
+          "required": ["includeByDefault", "switchShown", "juniorMode"],
+          "additionalProperties": false,
+          "properties": {
+            "includeByDefault": {"type": "boolean"},
+            "switchShown": {"const": true},
+            "juniorMode": {"const": "no-audio-no-switch"}
+          }
+        },
+        "grammar": {
+          "type": "object",
+          "required": ["durationSeconds", "chronology", "ops", "replaySpeedDens", "transitions", "maxTransitionMs", "freezeMs", "cardMs", "replayMaxMs", "reframe", "gradePresets", "narration", "music", "overlays"],
+          "additionalProperties": false,
+          "properties": {
+            "durationSeconds": {"$ref": "#/$defs/msRange"},
+            "chronology": {"enum": ["strict", "free"]},
+            "ops": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/segmentOp"}},
+            "replaySpeedDens": {"type": "array", "uniqueItems": true, "items": {"enum": [1, 2, 4, 8]}},
+            "transitions": {"type": "array", "uniqueItems": true, "items": {"enum": ["dissolve", "dip"]}},
+            "maxTransitionMs": {"type": "integer", "minimum": 0, "maximum": 1000},
+            "freezeMs": {"$ref": "#/$defs/msRange"},
+            "cardMs": {"$ref": "#/$defs/msRange"},
+            "replayMaxMs": {"type": "integer", "minimum": 0, "maximum": 8000},
+            "reframe": {"enum": ["if-box-fits", "letterbox-only"]},
+            "gradePresets": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/gradePreset"}},
+            "narration": {"type": "boolean"},
+            "music": {"type": "boolean"},
+            "overlays": {
+              "description": "Overlay kinds this profile uses, each with the provenance it may display.",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "score": {"$ref": "#/$defs/provenanceList"},
+                "metric": {"$ref": "#/$defs/provenanceList"},
+                "note": {"$ref": "#/$defs/provenanceList"},
+                "cue": {"$ref": "#/$defs/provenanceList"},
+                "annotation": {"$ref": "#/$defs/provenanceList"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

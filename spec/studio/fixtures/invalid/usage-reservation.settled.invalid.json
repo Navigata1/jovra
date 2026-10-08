@@ -1,0 +1,268 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/usage-reservation.settled.json",
+  "cases": [
+    {
+      "id": "double-consume",
+      "why": "One consumption per stage attempt",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/3/key",
+          "value": "consume:job-film-01:normalizing:1"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "idempotencyConflict"
+      }
+    },
+    {
+      "id": "totals-disagree",
+      "why": "Totals equal the entries",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/releasedCredits",
+          "value": 2
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "ledgerMismatch"
+      }
+    },
+    {
+      "id": "live-charge",
+      "why": "No live charging before its ADR",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/environment",
+          "value": "live"
+        },
+        {
+          "op": "replace",
+          "path": "/sample",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "liveChargingNotActivated"
+      }
+    },
+    {
+      "id": "reserved-above-cap",
+      "why": "A reservation never exceeds the cap",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/capCredits",
+          "value": 3
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "overCap"
+      }
+    },
+    {
+      "id": "stage-charged-twice",
+      "why": "A retried stage is charged once, whatever the attempt",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/3/key",
+          "value": "consume:job-film-01:normalizing:2"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "idempotencyConflict"
+      }
+    },
+    {
+      "id": "retried-reserve-second-key",
+      "why": "A retried reserve written under a second key is a double hold within the cap; a retry replays instead",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/0/credits",
+          "value": 2
+        },
+        {
+          "op": "add",
+          "path": "/entries/1",
+          "value": {
+            "entryId": "e-1b",
+            "kind": "reserve",
+            "credits": 2,
+            "key": "reserve:sample-court-day:2:retry",
+            "at": "2026-10-07T22:50:06Z"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "reserve-key-of-another-output",
+      "why": "The reserve entry is keyed by this record's own output spec",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/0/key",
+          "value": "reserve:sample-court-day:2:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "consume-for-another-job",
+      "why": "Consumption is charged to this reservation's job only",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/3/key",
+          "value": "consume:other-job:final_rendering:2"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "consume-unknown-stage",
+      "why": "Only the job contract's charged stages consume credits",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/3/key",
+          "value": "consume:job-film-01:not_a_stage:2"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "consume-stage-case",
+      "why": "Stages are spelled exactly; Final_Rendering is not final_rendering",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/3/key",
+          "value": "consume:job-film-01:Final_Rendering:2"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "reserve-keyed-as-consume",
+      "why": "An entry's key prefix is its kind",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/1/kind",
+          "value": "reserve"
+        },
+        {
+          "op": "replace",
+          "path": "/reservedCredits",
+          "value": 5
+        },
+        {
+          "op": "replace",
+          "path": "/capCredits",
+          "value": 5
+        },
+        {
+          "op": "replace",
+          "path": "/consumedCredits",
+          "value": 2
+        },
+        {
+          "op": "replace",
+          "path": "/releasedCredits",
+          "value": 3
+        },
+        {
+          "op": "replace",
+          "path": "/entries/4/credits",
+          "value": 3
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "release-outcome-mismatch",
+      "why": "A settled reservation was released as ready, not failed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/4/key",
+          "value": "release:job-film-01:failed"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "topup-from-initial-quote",
+      "why": "One accepted quote funds one hold: a top-up keyed by the quote that funded the initial hold is a second hold from the same quote",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/entries/0/credits",
+          "value": 2
+        },
+        {
+          "op": "add",
+          "path": "/entries/1",
+          "value": {
+            "entryId": "e-1b",
+            "kind": "reserve",
+            "credits": 2,
+            "key": "reserve:sample-court-day:2:8e10e6614d128e6380090e9b206cac5e6ee800e17cce73cc23e823114efffb99:topup:quote-test-01",
+            "at": "2026-10-07T22:50:06Z"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    },
+    {
+      "id": "quote-is-not-initial",
+      "why": "Without a top-up the funding quote is the initial quote",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/initialQuoteId",
+          "value": "quote-test-00"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badEntryKey"
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/keeper-catalog.json",
+  "cases": [
+    {
+      "id": "same-point-twice",
+      "why": "A second angle is a view, not another event",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/keepers/1/eventRefs",
+          "value": [
+            "p-003"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "duplicateEvent"
+      }
+    },
+    {
+      "id": "two-primary-views",
+      "why": "One primary view per keeper",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/keepers/0/views/1/primary",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "primaryCount"
+      }
+    },
+    {
+      "id": "contact-outside-view",
+      "why": "A contact lies inside a view",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/keepers/1/contacts/0/frame",
+          "value": 80000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badContact"
+      }
+    }
+  ]
+}

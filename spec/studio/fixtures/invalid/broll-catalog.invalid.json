@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/broll-catalog.json",
+  "cases": [
+    {
+      "id": "generated-as-match",
+      "why": "Generated material never depicts this match",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/items/0/origin",
+          "value": "generated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "brollMisrepresented"
+      }
+    }
+  ]
+}

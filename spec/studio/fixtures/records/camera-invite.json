@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "jovra.camera-invite/1",
+  "projectId": "sample-court-day",
+  "sample": true,
+  "environment": "test",
+  "hostDeviceId": "device-jon",
+  "maxCameras": 6,
+  "roles": [
+    {
+      "slot": "near-baseline",
+      "role": "primary",
+      "deviceId": "device-jon",
+      "deviceLabel": "Jon's iPhone",
+      "status": "ready",
+      "recordingAcknowledged": true,
+      "permissions": [
+        "record-local",
+        "upload-own-source",
+        "view-own-preview",
+        "host-controls"
+      ]
+    },
+    {
+      "slot": "far-baseline",
+      "role": "camera",
+      "deviceId": "device-alex",
+      "deviceLabel": "Alex's phone",
+      "status": "ready",
+      "recordingAcknowledged": true,
+      "permissions": [
+        "record-local",
+        "upload-own-source",
+        "view-own-preview"
+      ]
+    },
+    {
+      "slot": "near-left-corner",
+      "role": "camera",
+      "deviceId": null,
+      "deviceLabel": "Corner left",
+      "status": "waiting",
+      "recordingAcknowledged": false,
+      "permissions": [
+        "record-local",
+        "upload-own-source"
+      ]
+    }
+  ],
+  "invites": [
+    {
+      "inviteId": "inv-2",
+      "displayCode": "JVR-417",
+      "slot": "far-baseline",
+      "role": "camera",
+      "issuedAt": "2026-10-07T20:50:00Z",
+      "expiresAt": "2026-10-07T21:00:00Z",
+      "singleUse": true,
+      "hostApprovalRequired": true,
+      "tlsFingerprintSha256": "ad7e039675fcb054ac40be91b04e4e5184cb07e2efbadbc2281ca1c53a80ed45",
+      "status": "accepted",
+      "acceptedAt": "2026-10-07T20:52:10Z",
+      "deviceId": "device-alex"
+    },
+    {
+      "inviteId": "inv-3",
+      "displayCode": "JVR-482",
+      "slot": "near-left-corner",
+      "role": "camera",
+      "issuedAt": "2026-10-07T20:55:00Z",
+      "expiresAt": "2026-10-07T21:05:00Z",
+      "singleUse": true,
+      "hostApprovalRequired": true,
+      "tlsFingerprintSha256": "ad7e039675fcb054ac40be91b04e4e5184cb07e2efbadbc2281ca1c53a80ed45",
+      "status": "issued",
+      "acceptedAt": null,
+      "deviceId": null
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/receipt.stop-all-partial.json",
+  "cases": [
+    {
+      "id": "blanket-success",
+      "why": "A capture fan-out keeps per-device results",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/deviceResults",
+          "value": []
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "missingDeviceResults"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    },
+    {
+      "id": "stopped-result",
+      "why": "Per-device results do not claim a capture state",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/deviceResults/0/status",
+          "value": "Stopped"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    },
+    {
+      "id": "duplicate-result",
+      "why": "One result per device",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/deviceResults/1/deviceId",
+          "value": "c1"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "duplicateDeviceResult"
+      },
+      "acceptanceRows": [
+        16
+      ]
+    }
+  ]
+}

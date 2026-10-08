@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "sample-truth",
+  "status": "numbers copied by hand from design-reference/studio/brief/implementation-states.md and backend-media-design.md; all Sample, none measured",
+  "cases": [
+    {
+      "id": "sync-offset-drift",
+      "kind": "sync",
+      "record": "records/sync-map.json",
+      "sourceId": "camera-2",
+      "offsetMs": 120,
+      "driftMsPerMin": 18,
+      "driftPpm": 300
+    },
+    {
+      "id": "progress-delta",
+      "kind": "progress",
+      "record": "records/story-brief.progress.json",
+      "before": [
+        12,
+        30
+      ],
+      "after": [
+        18,
+        30
+      ],
+      "beforePct": 40,
+      "afterPct": 60,
+      "delta": "+20 percentage points"
+    },
+    {
+      "id": "court-memories-length",
+      "kind": "chapters",
+      "record": "records/delivered-artifact.film.json",
+      "chapterSeconds": [
+        42,
+        141,
+        75
+      ],
+      "totalSeconds": 258,
+      "display": "04:18",
+      "height": 1080,
+      "sizeBytes": 412000000
+    },
+    {
+      "id": "storyboard-window",
+      "kind": "window",
+      "record": "records/edit-plan.court-memories-storyboard.json",
+      "segmentId": "s02",
+      "sourceStartMs": 12400,
+      "sourceEndMs": 18600,
+      "outputStartMs": 12000,
+      "outputEndMs": 18200,
+      "durationMs": 6200
+    },
+    {
+      "id": "import-size",
+      "kind": "import",
+      "record": "records/source-manifest.json",
+      "sources": 3,
+      "minutes": 60,
+      "megabitsPerSecond": 8,
+      "perSourceBytes": 3600000000,
+      "totalBytes": 10800000000
+    },
+    {
+      "id": "six-angle-upload-time",
+      "kind": "upload",
+      "bytes": 21600000000,
+      "megabitsPerSecond": 20,
+      "seconds": 8640,
+      "minutes": 144
+    },
+    {
+      "id": "seven-day-raw-storage",
+      "kind": "storage",
+      "gigabytes": "21.6",
+      "days": 7,
+      "usdPerGbMonth": "0.015",
+      "microUsd": 75600
+    },
+    {
+      "id": "queue-stage-progress",
+      "kind": "queue",
+      "record": "records/render-job.queue-sample.json",
+      "stage": "preview_rendering",
+      "percent": 42
+    },
+    {
+      "id": "lesson-clip-counts",
+      "kind": "lessons",
+      "records": [
+        "records/lesson.2026-09-09.json",
+        "records/lesson.2026-09-23.json",
+        "records/lesson.2026-10-07.json"
+      ],
+      "clipCounts": [
+        4,
+        2,
+        3
+      ],
+      "practice": {
+        "done": [
+          10,
+          20
+        ],
+        "pendingClipGoal": 5
+      }
+    },
+    {
+      "id": "illustrative-quote",
+      "kind": "quote",
+      "record": "records/quote.sample-illustrative.json",
+      "minUsd": 4,
+      "maxUsd": 8,
+      "capUsd": 12
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/device-status.json",
+  "cases": [
+    {
+      "id": "sender-asserted-fresh",
+      "why": "Freshness is receiver-derived; a sender cannot assert it",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/freshness",
+          "value": "Fresh"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "sender-asserted-unknown",
+      "why": "Unknown is not a capture state",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/captureState",
+          "value": "Unknown"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "sender-asserted-connected",
+      "why": "No 'connected' claim",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/connected",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "failed-without-reason",
+      "why": "A failure says why",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/captureState",
+          "value": "Failed"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        15
+      ]
+    },
+    {
+      "id": "reason-without-failure",
+      "why": "Only a failure has a reason",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/failureReason",
+          "value": "storageFull"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "sender-asserted-age",
+      "why": "Only the host measures a device's age",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/ageAtHostMs",
+          "value": 0
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "senderAssertedAge"
+      },
+      "acceptanceRows": [
+        6
+      ]
+    },
+    {
+      "id": "negative-elapsed",
+      "why": "Durations are non-negative",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/lastReportedElapsedMs",
+          "value": -1
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/observation.estimated-cue.json",
+  "cases": [
+    {
+      "id": "estimate-without-confidence",
+      "why": "Estimated values name their confidence",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/confidence",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "provenanceMismatch"
+      }
+    },
+    {
+      "id": "accepted-estimate",
+      "why": "Accepting an estimate makes it reviewed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/status",
+          "value": "accepted"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "provenanceMismatch"
+      }
+    },
+    {
+      "id": "validated-without-benchmark",
+      "why": "Validated needs the capability benchmark",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/status",
+          "value": "validated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "provenanceMismatch"
+      }
+    },
+    {
+      "id": "certainty-over-one",
+      "why": "Confidence lies in [0, 1]",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/confidence",
+          "value": 1.5
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

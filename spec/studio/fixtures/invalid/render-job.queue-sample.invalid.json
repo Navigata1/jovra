@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/render-job.queue-sample.json",
+  "cases": [
+    {
+      "id": "progress-for-other-stage",
+      "why": "Progress is reported for the active stage only",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/stageProgress/stage",
+          "value": "final_rendering"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "stateMismatch"
+      }
+    },
+    {
+      "id": "skip-to-final",
+      "why": "syncing -> final_rendering skips planning and preview",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/history/8/to",
+          "value": "final_rendering"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "illegalTransition"
+      }
+    }
+  ]
+}

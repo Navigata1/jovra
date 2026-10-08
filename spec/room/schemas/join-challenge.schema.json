@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room join challenge (jovra.room.join-challenge/1)",
+  "description": "The host's answer to a valid join request, sent only after the guest has committed to its key and guest nonce (guestCommitment). hostNonce is fresh CSPRNG output for this attempt; the guest then reveals guestNonce (jovra.room.join-reveal/1) and both screens show the six-digit verification code.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "inviteId",
+    "sessionId",
+    "hostEpoch",
+    "hostNonce"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "jovra.room.join-challenge/1"
+    },
+    "inviteId": {
+      "$ref": "room-common.schema.json#/$defs/id"
+    },
+    "sessionId": {
+      "$ref": "room-common.schema.json#/$defs/id"
+    },
+    "hostEpoch": {
+      "$ref": "room-common.schema.json#/$defs/hostEpoch"
+    },
+    "hostNonce": {
+      "$ref": "room-common.schema.json#/$defs/nonce"
+    }
+  }
+}

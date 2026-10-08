@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio KeeperCatalog (jovra.keeper-catalog/1)",
+  "description": "Moments worth keeping, each bound to point events at one event revision and to exact source windows. A second angle of the same point is another view of the same keeper, never another statistical event: an event appears in at most one keeper. Contact frames feed the EDL's protected windows.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "revision", "sample", "eventRevision", "syncRevision", "keepers"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.keeper-catalog/1"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "eventRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "syncRevision": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/revision"}]},
+    "keepers": {
+      "type": "array",
+      "maxItems": 2000,
+      "items": {
+        "type": "object",
+        "required": ["keeperId", "eventRefs", "session", "views", "contacts", "selection", "provenance"],
+        "additionalProperties": false,
+        "properties": {
+          "keeperId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "eventRefs": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/id"}},
+          "session": {"$ref": "studio-common.schema.json#/$defs/intervalUs"},
+          "views": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
+            "items": {
+              "type": "object",
+              "required": ["sourceId", "window", "primary"],
+              "additionalProperties": false,
+              "properties": {
+                "sourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+                "window": {"description": "Render-proxy frames.", "$ref": "studio-common.schema.json#/$defs/frameWindow"},
+                "primary": {"type": "boolean"}
+              }
+            }
+          },
+          "contacts": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "required": ["sourceId", "frame"],
+              "additionalProperties": false,
+              "properties": {"sourceId": {"$ref": "studio-common.schema.json#/$defs/id"}, "frame": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"}}
+            }
+          },
+          "selection": {"enum": ["manual", "heuristic", "planner-proposed-reviewed"]},
+          "provenance": {"$ref": "studio-common.schema.json#/$defs/provenanceStatus"}
+        }
+      }
+    }
+  }
+}

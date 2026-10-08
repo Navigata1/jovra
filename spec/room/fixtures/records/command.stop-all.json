@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "jovra.room.command/1",
+  "commandId": "cmd-stop-all",
+  "sessionId": "sample-jon-alex",
+  "hostEpoch": 3,
+  "issuer": {
+    "memberId": "m-controller",
+    "deviceId": "p-controller",
+    "surface": "phone",
+    "bridgeDeviceId": null
+  },
+  "role": "capture-controller",
+  "issuedAt": "2026-10-07T21:30:00Z",
+  "issuedFreshness": {
+    "basedOnSnapshotSeq": 8,
+    "basedOnFreshness": "Fresh"
+  },
+  "expiry": {
+    "ttlMs": 15000,
+    "ageAtSendMs": 200
+  },
+  "target": {
+    "scope": "allCameras",
+    "deviceIds": []
+  },
+  "baseEventRevision": null,
+  "payload": {
+    "type": "StopAllRequest",
+    "targetLabel": "All 6 cameras",
+    "confirmed": true
+  }
+}

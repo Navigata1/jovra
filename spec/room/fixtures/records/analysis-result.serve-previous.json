@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "jovra.room.analysis-result/1",
+  "sample": true,
+  "sessionId": "sample-jon-alex",
+  "sourceRefs": [
+    {
+      "deviceId": "c1",
+      "captureInstanceId": "sample-c1-take1",
+      "segmentId": "s1",
+      "frameRange": {
+        "startFrame": 45210,
+        "endFrame": 45330
+      }
+    }
+  ],
+  "producedAt": "2026-10-07T21:28:40Z",
+  "producedAtEventRevision": 42,
+  "reviewState": "notRequired",
+  "scoreEffect": "none",
+  "resultId": "sample-serve-42",
+  "capabilityId": "serveSpeed.manualAssisted",
+  "kind": "serveSpeed",
+  "pointEventId": "sample-point-42",
+  "label": "estimated",
+  "modelVersion": "serve-assist/0.1",
+  "calibrationId": "sample-cal-1",
+  "value": "74",
+  "units": "mph",
+  "uncertainty": {
+    "lower": "70",
+    "upper": "78",
+    "level": "range"
+  },
+  "unavailableReason": null
+}

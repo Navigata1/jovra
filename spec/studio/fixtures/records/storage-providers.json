@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "jovra.storage-providers/1",
+  "sample": true,
+  "environment": "demo",
+  "providers": [
+    {
+      "provider": "device",
+      "status": "active",
+      "integration": "local",
+      "platforms": {
+        "ios": true,
+        "android": true
+      },
+      "operations": {
+        "exportFiles": true,
+        "importFiles": true,
+        "archiveSidecar": true,
+        "resume": true,
+        "quota": true
+      },
+      "credentialRef": null,
+      "folderRef": null,
+      "processing": false,
+      "lastVerifiedAt": null
+    },
+    {
+      "provider": "icloud-drive-files",
+      "status": "choose-folder",
+      "integration": "files-picker",
+      "platforms": {
+        "ios": true,
+        "android": false
+      },
+      "operations": {
+        "exportFiles": true,
+        "importFiles": true,
+        "archiveSidecar": true,
+        "resume": false,
+        "quota": false
+      },
+      "credentialRef": null,
+      "folderRef": null,
+      "processing": false,
+      "lastVerifiedAt": null
+    },
+    {
+      "provider": "google-drive",
+      "status": "not-connected",
+      "integration": "oauth-planned",
+      "platforms": {
+        "ios": true,
+        "android": true
+      },
+      "operations": {
+        "exportFiles": false,
+        "importFiles": false,
+        "archiveSidecar": false,
+        "resume": false,
+        "quota": false
+      },
+      "credentialRef": null,
+      "folderRef": null,
+      "processing": false,
+      "lastVerifiedAt": null
+    },
+    {
+      "provider": "box",
+      "status": "planned",
+      "integration": "oauth-planned",
+      "platforms": {
+        "ios": true,
+        "android": true
+      },
+      "operations": {
+        "exportFiles": false,
+        "importFiles": false,
+        "archiveSidecar": false,
+        "resume": false,
+        "quota": false
+      },
+      "credentialRef": null,
+      "folderRef": null,
+      "processing": false,
+      "lastVerifiedAt": null
+    },
+    {
+      "provider": "dropbox",
+      "status": "planned",
+      "integration": "oauth-planned",
+      "platforms": {
+        "ios": true,
+        "android": true
+      },
+      "operations": {
+        "exportFiles": false,
+        "importFiles": false,
+        "archiveSidecar": false,
+        "resume": false,
+        "quota": false
+      },
+      "credentialRef": null,
+      "folderRef": null,
+      "processing": false,
+      "lastVerifiedAt": null
+    }
+  ]
+}

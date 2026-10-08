@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room join request (jovra.room.join-request/1)",
+  "description": "The guest's first frame over the pinned TLS channel. It proves possession of the join token with an HMAC instead of sending it, reports the host key it actually observed, and records consent. The device name is the guest's own claim; the host approves only after both screens show the same six-digit verification code, derived by commit-then-reveal from both keys, the QR nonce, the host nonce and the guest nonce (ADR-0027 section 3 as amended 2026-10-07).",
+  "type": "object",
+  "required": ["schemaVersion", "inviteId", "sessionId", "hostEpoch", "guestDeviceId", "guestKeySha256", "guestCommitment", "observedHostKeySha256", "proof", "requestedCaptureRole", "requestedCommandRole", "displayName", "consent"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.room.join-request/1"},
+    "inviteId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "hostEpoch": {"$ref": "room-common.schema.json#/$defs/hostEpoch"},
+    "guestDeviceId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "guestKeySha256": {"$ref": "room-common.schema.json#/$defs/sha256"},
+    "guestCommitment": {"description": "SHA-256 of 'jovra-room-commit|' + guestKeySha256 + '|' + guestNonce, lower-case hex. The guest commits before the host sends its hostNonce (jovra.room.join-challenge/1) and reveals guestNonce afterwards (jovra.room.join-reveal/1), so the verification code cannot be ground offline.", "$ref": "room-common.schema.json#/$defs/sha256"},
+    "observedHostKeySha256": {"$ref": "room-common.schema.json#/$defs/sha256"},
+    "proof": {"description": "HMAC-SHA256(key = joinToken, message = sessionId|inviteId|nonce|guestKeySha256|guestCommitment), lower-case hex.", "$ref": "room-common.schema.json#/$defs/hmacSha256"},
+    "requestedCaptureRole": {"enum": ["camera", "none"]},
+    "requestedCommandRole": {"$ref": "room-common.schema.json#/$defs/commandRole"},
+    "displayName": {"$ref": "room-common.schema.json#/$defs/userText"},
+    "consent": {
+      "type": "object",
+      "required": ["shareCaptureMetadata"],
+      "additionalProperties": false,
+      "properties": {"shareCaptureMetadata": {"const": true}}
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/storage-providers.json",
+  "cases": [
+    {
+      "id": "planned-claims-export",
+      "why": "A planned provider does nothing yet",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/providers/3/operations/exportFiles",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "capabilityOverclaim"
+      }
+    },
+    {
+      "id": "icloud-on-android",
+      "why": "iCloud Drive is not an Android provider",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/providers/1/platforms/android",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badProvider"
+      }
+    },
+    {
+      "id": "drive-active-unverified",
+      "why": "Active needs a verified OAuth integration and credential",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/providers/2/status",
+          "value": "active"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "capabilityOverclaim"
+      }
+    },
+    {
+      "id": "provider-as-compute",
+      "why": "Archives never process video",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/providers/0/processing",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "token-for-unconnected",
+      "why": "No credential for a provider that is not connected",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/providers/2/credentialRef",
+          "value": "kc-drive"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "capabilityOverclaim"
+      }
+    }
+  ]
+}

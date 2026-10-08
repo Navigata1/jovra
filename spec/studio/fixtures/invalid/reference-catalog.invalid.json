@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/reference-catalog.json",
+  "cases": [
+    {
+      "id": "duplicate-reference",
+      "why": "One stored record per id",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/references/1/refId",
+          "value": "p-041"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "duplicateId"
+      }
+    },
+    {
+      "id": "stat-shown-as-score",
+      "why": "A stat is a metric, never a score",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/references/4/kind",
+          "value": "score"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "kindMismatch"
+      }
+    },
+    {
+      "id": "stale-reference",
+      "why": "Resolved at an older event revision",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/references/0/eventRevision",
+          "value": 2
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "staleRevision"
+      }
+    },
+    {
+      "id": "value-in-catalog",
+      "why": "The catalog indexes records; it never carries their values",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/references/0/value",
+          "value": "6-4"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

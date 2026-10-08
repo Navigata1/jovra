@@ -1,0 +1,291 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "bridge",
+  "status": "D6: watch-side acceptance of records/watch-bridge.sample.json; the watch is paired to sample-bridge-phone",
+  "cases": [
+    {
+      "id": "replayed-payload",
+      "why": "The same bridgeSeq re-delivered as 'interactive' is a replay, not a refresh",
+      "acceptanceRows": [
+        5,
+        8
+      ],
+      "pairedPhoneId": "sample-bridge-phone",
+      "steps": [
+        {
+          "op": "accept",
+          "bridgePatch": [],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/receiverObservation/delivery",
+              "value": "interactive"
+            },
+            {
+              "op": "replace",
+              "path": "/receiverObservation/transitMs",
+              "value": 40
+            }
+          ],
+          "expect": "replayOrOutOfOrder"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 7
+            }
+          ],
+          "expect": "replayOrOutOfOrder"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 9
+            }
+          ],
+          "expect": "accepted"
+        }
+      ]
+    },
+    {
+      "id": "not-paired-bridge",
+      "why": "Only the watch's own paired phone is a bridge",
+      "acceptanceRows": [
+        5
+      ],
+      "pairedPhoneId": "sample-bridge-phone",
+      "steps": [
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeDeviceId",
+              "value": "p-other"
+            }
+          ],
+          "expect": "notPairedBridge"
+        }
+      ]
+    },
+    {
+      "id": "bridge-restart",
+      "why": "A restarted bridge starts a new instance; the old instance can never come back",
+      "acceptanceRows": [
+        5
+      ],
+      "pairedPhoneId": "sample-bridge-phone",
+      "steps": [
+        {
+          "op": "accept",
+          "bridgePatch": [],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeInstanceId",
+              "value": "sample-bridge-run-2"
+            },
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 1
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 9
+            }
+          ],
+          "expect": "bridgeInstanceRetired"
+        }
+      ]
+    },
+    {
+      "id": "session-regression",
+      "why": "Within one session and epoch, snapshotSeq and eventRevision never go back; an older epoch is refused",
+      "acceptanceRows": [
+        5,
+        12
+      ],
+      "pairedPhoneId": "sample-bridge-phone",
+      "steps": [
+        {
+          "op": "accept",
+          "bridgePatch": [],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 9
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 7
+            }
+          ],
+          "expect": "snapshotSeqRegressed"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 10
+            },
+            {
+              "op": "replace",
+              "path": "/eventRevision",
+              "value": 41
+            },
+            {
+              "op": "replace",
+              "path": "/score/eventRevision",
+              "value": 41
+            }
+          ],
+          "expect": "eventRevisionRegressed"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 11
+            },
+            {
+              "op": "replace",
+              "path": "/hostEpoch",
+              "value": 2
+            }
+          ],
+          "expect": "staleEpoch"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 12
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 8
+            }
+          ],
+          "expect": "accepted"
+        }
+      ]
+    },
+    {
+      "id": "new-session",
+      "why": "The phone joined the next match; the previous session's payloads stay behind the bridge sequence",
+      "pairedPhoneId": "sample-bridge-phone",
+      "steps": [
+        {
+          "op": "accept",
+          "bridgePatch": [],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 9
+            },
+            {
+              "op": "replace",
+              "path": "/sessionId",
+              "value": "sample-next-match"
+            },
+            {
+              "op": "replace",
+              "path": "/snapshotSeq",
+              "value": 1
+            },
+            {
+              "op": "replace",
+              "path": "/eventRevision",
+              "value": 0
+            },
+            {
+              "op": "replace",
+              "path": "/score/eventRevision",
+              "value": 0
+            }
+          ],
+          "expect": "accepted"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [],
+          "expect": "replayOrOutOfOrder"
+        }
+      ]
+    },
+    {
+      "id": "watch-restart-keeps-marks",
+      "why": "Replay marks persist across a watch restart (freshness does not)",
+      "acceptanceRows": [
+        3
+      ],
+      "pairedPhoneId": "sample-bridge-phone",
+      "steps": [
+        {
+          "op": "accept",
+          "bridgePatch": [],
+          "expect": "accepted"
+        },
+        {
+          "op": "restart"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [],
+          "expect": "replayOrOutOfOrder"
+        },
+        {
+          "op": "accept",
+          "bridgePatch": [
+            {
+              "op": "replace",
+              "path": "/bridge/bridgeSeq",
+              "value": 9
+            }
+          ],
+          "expect": "accepted"
+        }
+      ]
+    }
+  ]
+}

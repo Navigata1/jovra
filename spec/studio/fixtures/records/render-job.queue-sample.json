@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "jovra.render-job/1",
+  "jobId": "job-queue-38",
+  "projectId": "sample-court-day",
+  "environment": "test",
+  "sample": true,
+  "planId": "court-memories-storyboard",
+  "planRevision": 1,
+  "quoteId": "quote-test-00",
+  "reservationId": "res-0001",
+  "idempotencyKey": "4dca1b2af2d5acb331ffd8654c9c26c818dab903ec08d38277f5683ed7570019",
+  "state": "preview_rendering",
+  "resumeStage": null,
+  "attempt": 1,
+  "maxAttempts": 3,
+  "stageProgress": {
+    "stage": "preview_rendering",
+    "percent": 42,
+    "sample": true
+  },
+  "deliveredArtifactIds": [],
+  "history": [
+    {
+      "seq": 0,
+      "from": null,
+      "to": "draft",
+      "at": "2026-10-07T22:44:00Z",
+      "reason": "created"
+    },
+    {
+      "seq": 1,
+      "from": "draft",
+      "to": "quoted",
+      "at": "2026-10-07T22:45:00Z",
+      "reason": "preflight"
+    },
+    {
+      "seq": 2,
+      "from": "quoted",
+      "to": "consented",
+      "at": "2026-10-07T22:50:00Z",
+      "reason": "owner-accepted"
+    },
+    {
+      "seq": 3,
+      "from": "consented",
+      "to": "upload_pending",
+      "at": "2026-10-07T22:50:05Z",
+      "reason": "reserved"
+    },
+    {
+      "seq": 4,
+      "from": "upload_pending",
+      "to": "uploading",
+      "at": "2026-10-07T22:51:00Z",
+      "reason": "upload-started"
+    },
+    {
+      "seq": 5,
+      "from": "uploading",
+      "to": "queued",
+      "at": "2026-10-07T23:03:00Z",
+      "reason": "sources-verified"
+    },
+    {
+      "seq": 6,
+      "from": "queued",
+      "to": "normalizing",
+      "at": "2026-10-07T23:04:00Z",
+      "reason": "stage-start"
+    },
+    {
+      "seq": 7,
+      "from": "normalizing",
+      "to": "syncing",
+      "at": "2026-10-07T23:08:00Z",
+      "reason": "stage-start"
+    },
+    {
+      "seq": 8,
+      "from": "syncing",
+      "to": "planning",
+      "at": "2026-10-07T23:12:00Z",
+      "reason": "analysis-unavailable-manual-fallback"
+    },
+    {
+      "seq": 9,
+      "from": "planning",
+      "to": "preview_rendering",
+      "at": "2026-10-07T23:13:00Z",
+      "reason": "plan-valid"
+    }
+  ]
+}

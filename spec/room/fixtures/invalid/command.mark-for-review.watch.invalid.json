@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/command.mark-for-review.watch.json",
+  "cases": [
+    {
+      "id": "mark-without-reference",
+      "why": "A review mark is source-linked",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/payload/pointEventId",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/payload/sourceRefs",
+          "value": []
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "markWithoutReference"
+      },
+      "acceptanceRows": [
+        22
+      ]
+    },
+    {
+      "id": "watch-own-bridge",
+      "why": "The bridge is the paired phone",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/issuer/bridgeDeviceId",
+          "value": "w-marker"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "watchIsItsOwnBridge"
+      }
+    }
+  ]
+}

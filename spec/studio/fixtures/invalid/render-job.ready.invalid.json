@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/render-job.ready.json",
+  "cases": [
+    {
+      "id": "state-not-from-history",
+      "why": "The stored state must be where the history leads",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/state",
+          "value": "verifying"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "stateMismatch"
+      }
+    },
+    {
+      "id": "ready-without-artifact",
+      "why": "Ready needs a verified delivered artifact",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/deliveredArtifactIds",
+          "value": []
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "unverifiedReady"
+      }
+    },
+    {
+      "id": "spend-without-reservation",
+      "why": "Paid stages need a reservation",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/reservationId",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "reservationRequired"
+      }
+    },
+    {
+      "id": "retry-not-counted",
+      "why": "A retry consumes an attempt",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/attempt",
+          "value": 1
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "stateMismatch"
+      }
+    },
+    {
+      "id": "ghost-artifact",
+      "why": "An artifact id that resolves to no verified film is not a verified film",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/deliveredArtifactIds",
+          "value": [
+            "ghost-film"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "unverifiedReady"
+      }
+    },
+    {
+      "id": "resume-to-ready",
+      "why": "A stored resume stage can never be ready",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/resumeStage",
+          "value": "ready"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}
