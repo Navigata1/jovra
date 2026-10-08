@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA benchmark bindings",
+  "description": "Binds a capability's research gate (spec/contracts/capability-registry.v1.json) to the benchmark task that measures it: the task id, version and tolerance a record naming the capability must use, and which task metric each gate metric is. scripts/spec/validate.py requires every gate metric to be mapped exactly once from a metric the task's reference scorer emits, with the same unit.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "description", "bindings"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.benchmarkBindings"},
+    "description": {"type": "string", "minLength": 1, "maxLength": 600},
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["capabilityId", "task", "metrics", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "capabilityId": {"$ref": "common.schema.json#/$defs/capabilityId"},
+          "task": {
+            "type": "object",
+            "required": ["id", "version"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$"},
+              "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+              "tolerance": {"$ref": "ground-truth.schema.json#/$defs/rationalTime"}
+            },
+            "allOf": [
+              {"if": {"properties": {"id": {"const": "eventTimes"}}}, "then": {"required": ["tolerance"]}}
+            ]
+          },
+          "metrics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["task", "gate"],
+              "additionalProperties": false,
+              "properties": {
+                "task": {"type": "string", "minLength": 1, "maxLength": 80},
+                "gate": {"type": "string", "minLength": 1, "maxLength": 80}
+              }
+            }
+          },
+          "rationale": {"type": "string", "minLength": 1, "maxLength": 600}
+        }
+      }
+    }
+  }
+}

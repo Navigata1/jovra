@@ -1,6 +1,28 @@
 import Foundation
 
-public struct RationalOverflow: Error, Equatable {}
+/// Exact arithmetic that does not fit in 64 bits. `context` names what was being computed (the tolerance, the
+/// metric), so a run fails with a message the caller can act on instead of a bare type name.
+public struct RationalOverflow: Error, Equatable, CustomStringConvertible {
+    public let context: String?
+
+    public init(context: String? = nil) {
+        self.context = context
+    }
+
+    public var description: String {
+        "exact arithmetic overflowed 64 bits" + (context.map { " while computing \($0)" } ?? "")
+    }
+
+    /// Runs `body`, adding `context` to an overflow it throws (the first context set is kept: it is the most
+    /// specific).
+    static func naming<T>(_ context: @autoclosure () -> String, _ body: () throws -> T) throws -> T {
+        do {
+            return try body()
+        } catch let overflow as RationalOverflow where overflow.context == nil {
+            throw RationalOverflow(context: context())
+        }
+    }
+}
 
 /// An exact fraction in lowest terms with a positive denominator. Metrics and verdicts are computed with it
 /// so Swift and the Python reference (`fractions.Fraction`) agree exactly; arithmetic throws rather than

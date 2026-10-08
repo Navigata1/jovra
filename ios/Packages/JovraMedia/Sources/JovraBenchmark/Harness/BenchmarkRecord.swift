@@ -21,8 +21,24 @@ public struct BenchmarkRecord: Codable, Hashable, Sendable {
         public let truthId: String
         public let seed: Int
         public let split: GroundTruth.Split
+        /// The ground truth's `renderer.sourceHash`: the renderer version that made the clip.
+        public let rendererSourceHash: String
+        /// The ground truth's `signature.decodedFramesSha256`. For a candidate, the harness decoded the rendered
+        /// clip and checked this hash before estimating; oracle and null estimators read no media.
+        public let decodedFramesSha256: String
         public let truthEventsSha256: String
         public let outputs: JSONValue
+
+        public init(truthId: String, seed: Int, split: GroundTruth.Split, rendererSourceHash: String,
+                    decodedFramesSha256: String, truthEventsSha256: String, outputs: JSONValue) {
+            self.truthId = truthId
+            self.seed = seed
+            self.split = split
+            self.rendererSourceHash = rendererSourceHash
+            self.decodedFramesSha256 = decodedFramesSha256
+            self.truthEventsSha256 = truthEventsSha256
+            self.outputs = outputs
+        }
     }
 
     public let schemaVersion: String

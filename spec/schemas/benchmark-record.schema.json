@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA benchmark record",
-  "description": "One run of the benchmark harness (JovraBenchmark): which estimator and method version ran on which ground-truth clips, every output it produced, the metrics, and, for a gating run, the floor and the verdict. Capability status changes only through a committed record (ADR-0004). A gating run uses held-out seeds only; a tuning run carries no verdict; each clip appears once; only a candidate estimator names a capability, with that capability's registry gate as its floor. scripts/spec/validate.py re-scores every record from its outputs and the committed ground truth.",
+  "description": "One run of the benchmark harness (JovraBenchmark): which estimator and method version ran on which ground-truth clips, every output it produced, the metrics, and, for a gating run, the floor and the verdict. Capability status changes only through a committed record (ADR-0004). A gating run uses held-out seeds only; a tuning run carries no verdict; each clip appears once; only a candidate estimator names a capability, with that capability's registry gate as its floor and the task, tolerance and metric names of its binding in spec/fixtures/media/benchmark-bindings.json; each clip carries its ground truth's renderer and decoded-frame hashes. scripts/spec/validate.py re-scores every record from its outputs and the committed ground truth.",
   "type": "object",
   "required": ["schemaVersion", "kind", "runId", "at", "harness", "task", "estimator", "capabilityId", "mode", "band", "clips", "metrics", "floor", "verdict"],
   "additionalProperties": false,
@@ -47,12 +47,14 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["truthId", "seed", "split", "truthEventsSha256", "outputs"],
+        "required": ["truthId", "seed", "split", "rendererSourceHash", "decodedFramesSha256", "truthEventsSha256", "outputs"],
         "additionalProperties": false,
         "properties": {
           "truthId": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*/[a-z0-9][a-z0-9-]{0,63}$"},
           "seed": {"type": "integer", "minimum": 0},
           "split": {"enum": ["tuning", "heldOut"]},
+          "rendererSourceHash": {"$ref": "common.schema.json#/$defs/sha256", "description": "The ground truth's renderer.sourceHash: the renderer version that made the clip."},
+          "decodedFramesSha256": {"$ref": "common.schema.json#/$defs/sha256", "description": "The ground truth's signature.decodedFramesSha256. For a candidate the harness decoded the rendered clip and checked this hash before estimating (it refuses a clip that is not rendered or does not match); oracle and null estimators read no media."},
           "truthEventsSha256": {"$ref": "common.schema.json#/$defs/sha256", "description": "SHA-256 of the clip's truth event times, one 'value/timescale' line each."},
           "outputs": {"type": "array"}
         }

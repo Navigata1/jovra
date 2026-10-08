@@ -1,0 +1,20 @@
+# Round 2: records placed in a scratch spec/benchmarks/ (not committed, removed after the run):
+#   control-perfect-candidate:          the oracle gate's outputs as a candidate naming audio.hitDetection, on the
+#                                       registry gate, bound task (eventTimes 1.0.0, 50/1000) and gate metric names
+#   attack-candidate-task-names:        the same record with the task's own metric names (precision, recall), the
+#                                       shape the round-1 harness wrote: its verdict could only fail
+#   attack-candidate-tolerance:         the same record re-scored at a caller-chosen 200/1000 tolerance
+#   attack-clip-media-hash:             the oracle gate record with the clip's decodedFramesSha256 altered
+#   attack-record-without-media-hashes: a round-1 record without rendererSourceHash / decodedFramesSha256
+# Expected: one failure per attack and none for the control (benchmark records counts the 3 committed + the control).
+$ python3 scripts/spec/validate.py
+FAIL spec/benchmarks/attack-record-without-media-hashes.json: schema benchmark-record.schema.json: $.clips[0]: missing required property 'rendererSourceHash'; $.clips[0]: missing required property 'decodedFramesSha256'
+FAIL spec/benchmarks/attack-candidate-task-names.json: metrics differ from the reference re-score: $[0].name: 'own-court hit precision' != 'precision'
+FAIL spec/benchmarks/attack-candidate-task-names.json: verdict differs from the floor applied to the re-scored metrics
+FAIL spec/benchmarks/attack-candidate-tolerance.json: the task is not audio.hitDetection's binding: {"id": "eventTimes", "tolerance": {"timescale": 1000, "value": 200}, "version": "1.0.0"} instead of {"id": "eventTimes", "tolerance": {"timescale": 1000, "value": 50}, "version": "1.0.0"}
+FAIL spec/benchmarks/attack-clip-media-hash.json: harness/events-s23: decodedFramesSha256 is not the ground truth's decoded-frame hash
+benchmark bindings           1
+benchmark records            4
+media self-tests             37
+RESULT: FAIL (5 failure(s))
+exit 1

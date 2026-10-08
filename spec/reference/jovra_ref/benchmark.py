@@ -101,6 +101,22 @@ def score_event_times(record: dict, truths: dict[str, dict]) -> list[dict]:
 
 SCORERS = {TASK_EVENT_TIMES: score_event_times}
 
+# Each task's version and the (name, unit) of every metric its scorer emits, in order.
+TASK_VERSIONS = {TASK_EVENT_TIMES: "1.0.0"}
+TASK_METRICS = {TASK_EVENT_TIMES: [("precision", None), ("recall", None), ("onset MAE", "ms")]}
+
+
+def gate_metrics(metrics: list[dict], binding: dict) -> list[dict]:
+    """The task's metrics under a capability's gate names (spec/fixtures/media/benchmark-bindings.json), in the
+    task's order. A metric the binding does not map is a ValueError."""
+    names = {m["task"]: m["gate"] for m in binding["metrics"]}
+    renamed = []
+    for metric in metrics:
+        if metric["name"] not in names:
+            raise ValueError(f"the binding of {binding['capabilityId']} does not map task metric {metric['name']!r}")
+        renamed.append({**metric, "name": names[metric["name"]]})
+    return renamed
+
 
 def verdict(metrics: list[dict], floor: dict) -> dict:
     by_name = {m["name"]: m for m in metrics}

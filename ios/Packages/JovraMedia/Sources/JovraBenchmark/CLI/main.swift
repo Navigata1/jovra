@@ -5,7 +5,8 @@
 //     --out spec/fixtures/media/benchmark/oracle.gate.json
 //
 // Options: --tolerance VALUE/TIMESCALE (event tasks, default 50/1000), --capability ID (candidate estimators
-// only; the floor defaults to, and must equal, that capability's registry gate), --run-id ID, --repo PATH
+// only; the floor defaults to, and must equal, that capability's registry gate, and the task and tolerance
+// default to, and must equal, its binding in spec/fixtures/media/benchmark-bindings.json), --run-id ID, --repo PATH
 // (default: the repository containing the current directory). Each --clip counts once.
 // `jovra-benchmark list` prints the registered estimators and floors.
 // Exit status: 0 record written (tuning run, or gate passed); 3 record written and the gate FAILED;
@@ -65,7 +66,7 @@ case "run":
     let now = Date()
     let stamp = ISO8601DateFormatter().string(from: now).replacingOccurrences(of: "-", with: "").replacingOccurrences(of: ":", with: "")
     let request = RunRequest(clipIDs: clips, mode: mode, floor: floor, capabilityId: one("capability"),
-                             tolerance: one("tolerance").map(tolerance) ?? RunRequest.defaultTolerance,
+                             tolerance: one("tolerance").map(tolerance),
                              runId: one("run-id") ?? "\(estimatorID)-\(mode.rawValue)-\(stamp)", at: now)
     do {
         let record = try await runner(BenchmarkHarness(catalog: catalog), request)

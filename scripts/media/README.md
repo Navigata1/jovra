@@ -82,8 +82,24 @@ duration's rate, snapped to a standard camera rate when within a tick, plus `isV
   `spec/contracts/capability-registry.v1.json` (the CLI uses it when `--floor` is omitted; any other floor is
   refused). Oracle and null runs never name a capability: the harness refuses, the schema forbids it and
   `validate.py` re-checks the floor against the registry.
+- **The gate fixes the task, tolerance and metric names.** `spec/fixtures/media/benchmark-bindings.json`
+  (`benchmark-bindings.schema.json`) binds each gated capability to the task that measures it.
+  `audio.hitDetection` is `eventTimes` 1.0.0 at a 50 ms matching window (the MIREX onset-evaluation window), and
+  the task's `precision`, `recall` and `onset MAE` are recorded as the gate's `own-court hit precision`,
+  `own-court hit recall` and `onset MAE`. A run that names a capability with any other task or tolerance is
+  refused (the CLI takes the bound tolerance when `--tolerance` is omitted), and a capability with a gate but no
+  binding cannot be named yet. `validate.py` requires every gate metric to be mapped once from a metric the
+  reference scorer emits, with the same unit, and re-scores capability records under the gate's names. The
+  self-test floor keeps the task's names and promotes nothing.
+- **Media provenance.** A candidate estimator analyses media, so before any estimation the harness requires
+  each clip to be rendered (`notRendered` otherwise, exit 2) and to decode to the committed decoded-frame hash
+  (`mediaDoesNotMatchTruth`). Every record clip carries `rendererSourceHash` and `decodedFramesSha256` from its
+  ground truth, and `validate.py` checks both. Oracle and null estimators read no media, so their runs do not
+  need the render cache.
 - **Malformed JSON fails, never traps.** A zero timescale, frame rate or fraction denominator, or a threshold
-  that is not a plain decimal, is a decoding error in Swift and a reported failure in `validate.py`.
+  that is not a plain decimal, is a decoding error in Swift and a reported failure in `validate.py`. Arithmetic
+  that overflows 64 bits (for example `--tolerance 9223372036854775807/1`) fails with a message that names the
+  tolerance or metric being computed.
 - **Self-test.** The oracle estimator (returns the truth) passes the floor and the null estimator (returns
   nothing) fails it. Their records are committed in `spec/fixtures/media/benchmark/`, and
   `CommittedRecordTests` re-runs them.

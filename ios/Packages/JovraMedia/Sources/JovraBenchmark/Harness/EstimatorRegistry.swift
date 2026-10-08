@@ -6,15 +6,16 @@ public struct RunRequest: Sendable {
     public var mode: RunMode
     public var floor: Floor?
     public var capabilityId: String?
-    /// Matching tolerance for event-time tasks.
-    public var tolerance: RationalTime
+    /// Matching tolerance for event-time tasks. Nil: the capability's bound tolerance when the run names one
+    /// (`BenchmarkBindings`), else `defaultTolerance`.
+    public var tolerance: RationalTime?
     public var runId: String
     public var at: Date
 
     public static let defaultTolerance = RationalTime(value: 50, timescale: 1000)
 
     public init(clipIDs: [String], mode: RunMode, floor: Floor?, capabilityId: String? = nil,
-                tolerance: RationalTime = RunRequest.defaultTolerance, runId: String, at: Date) {
+                tolerance: RationalTime? = nil, runId: String, at: Date) {
         self.clipIDs = clipIDs
         self.mode = mode
         self.floor = floor
@@ -22,6 +23,12 @@ public struct RunRequest: Sendable {
         self.tolerance = tolerance
         self.runId = runId
         self.at = at
+    }
+
+    public func resolvedTolerance(catalog: MediaFixtureCatalog) throws -> RationalTime {
+        if let tolerance { return tolerance }
+        guard let capabilityId else { return Self.defaultTolerance }
+        return try BenchmarkBindings.binding(for: capabilityId, catalog: catalog).task.tolerance ?? Self.defaultTolerance
     }
 }
 
@@ -37,7 +44,8 @@ public enum EstimatorRegistry {
 
     public static func eventTimes<E: BenchmarkEstimator>(_ estimator: E) -> Runner where E.Output == [RationalTime] {
         { harness, request in
-            try await harness.run(estimator, task: EventTimesTask(tolerance: request.tolerance), clipIDs: request.clipIDs,
+            try await harness.run(estimator, task: EventTimesTask(tolerance: try request.resolvedTolerance(catalog: harness.catalog)),
+                                  clipIDs: request.clipIDs,
                                   mode: request.mode, floor: request.floor, capabilityId: request.capabilityId,
                                   runId: request.runId, at: request.at)
         }
@@ -48,7 +56,7 @@ public enum EstimatorRegistry {
         guard let runner = all[record.estimator.id] else { throw RegistryError.unknownEstimator(record.estimator.id) }
         let request = RunRequest(clipIDs: record.clips.map(\.truthId), mode: record.mode, floor: record.floor,
                                  capabilityId: record.capabilityId,
-                                 tolerance: record.task.tolerance ?? RunRequest.defaultTolerance,
+                                 tolerance: record.task.tolerance,
                                  runId: record.runId, at: at)
         return try await runner(harness, request)
     }

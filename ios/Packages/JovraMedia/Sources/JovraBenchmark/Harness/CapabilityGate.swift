@@ -32,3 +32,47 @@ extension Floor {
         return Floor(source: "\(CapabilityRegistryGates.path) gate of \(capabilityId)", metrics: metrics)
     }
 }
+
+/// How a task is judged against one capability's research gate (`spec/fixtures/media/benchmark-bindings.json`,
+/// `spec/schemas/benchmark-bindings.schema.json`): the task id, version and tolerance a record naming the
+/// capability must use, and the gate name of each task metric. The caller chooses none of these.
+public struct BenchmarkBinding: Decodable, Hashable, Sendable {
+    public struct MetricName: Decodable, Hashable, Sendable {
+        public let task: String
+        public let gate: String
+    }
+
+    public let capabilityId: String
+    public let task: TaskDescriptor
+    public let metrics: [MetricName]
+
+    /// The task's metrics under the gate's names, in the task's order. A task metric the binding does not map
+    /// is an error: a record must never carry a metric its gate cannot judge.
+    public func gateMetrics(_ results: [MetricResult]) throws -> [MetricResult] {
+        try results.map { result in
+            guard let mapped = metrics.first(where: { $0.task == result.name }) else {
+                throw HarnessError.bindingMissesMetric(capabilityId: capabilityId, metric: result.name)
+            }
+            return result.named(mapped.gate)
+        }
+    }
+}
+
+public enum BenchmarkBindings {
+    public static let path = "spec/fixtures/media/benchmark-bindings.json"
+
+    struct Document: Decodable { let bindings: [BenchmarkBinding] }
+
+    public static func load(from catalog: MediaFixtureCatalog) throws -> [BenchmarkBinding] {
+        let data = try Data(contentsOf: catalog.root.appendingPathComponent(path))
+        return try JSONDecoder().decode(Document.self, from: data).bindings
+    }
+
+    /// The binding of `capabilityId`; a capability without one cannot be named by a run.
+    public static func binding(for capabilityId: String, catalog: MediaFixtureCatalog) throws -> BenchmarkBinding {
+        guard let binding = try load(from: catalog).first(where: { $0.capabilityId == capabilityId }) else {
+            throw HarnessError.capabilityHasNoBinding(capabilityId)
+        }
+        return binding
+    }
+}

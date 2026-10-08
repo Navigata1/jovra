@@ -9,8 +9,11 @@
    byte-for-byte, and file sizes/hashes quoted in export/archive examples must match the files.
 5. Media ground truth is internally consistent, and every benchmark record is re-scored from its outputs and
    the committed ground truth (spec/reference/jovra_ref/benchmark.py); gating runs use held-out seeds only,
-   each clip counts once, and a record naming a capability is a candidate run on that capability's registry
-   gate (ADR-0004). Malformed numbers are reported as failures, never crashes.
+   each clip counts once, each clip carries its ground truth's renderer and decoded-frame hashes, and a record
+   naming a capability is a candidate run on that capability's registry gate (ADR-0004) with the task,
+   tolerance and metric names of its binding (spec/fixtures/media/benchmark-bindings.json, itself checked
+   against the registry gates and the reference scorers). Malformed numbers are reported as failures, never
+   crashes.
 
 Exit status is non-zero on any failure.  Usage:  python3 scripts/spec/validate.py [-v]
 """
@@ -47,6 +50,7 @@ KIND_TO_SCHEMA = {
     "jovra.fixture.sample": "fixture-sample.schema.json",
     "jovra.groundTruth": "ground-truth.schema.json",
     "jovra.benchmarkRecord": "benchmark-record.schema.json",
+    "jovra.benchmarkBindings": "benchmark-bindings.schema.json",
 }
 
 
@@ -438,6 +442,11 @@ def benchmark_record_problems(doc: dict, docs: dict) -> list[str]:
             problems.append(f"{capability} has no research gate in the capability registry")
         elif doc["floor"] is not None and canon(doc["floor"]["metrics"]) != canon(gates[capability]["metrics"]):
             problems.append(f"the floor is not {capability}'s registry gate")
+        binding = benchmark_bindings(docs).get(capability)
+        if binding is None:
+            problems.append(f"{capability} has no benchmark binding in {BINDINGS_PATH}")
+        elif canon(doc["task"]) != canon(binding["task"]):
+            problems.append(f"the task is not {capability}'s binding: {canon(doc['task'])} instead of {canon(binding['task'])}")
     for clip in doc["clips"]:
         truth = truths.get(clip["truthId"])
         if truth is None:
@@ -445,6 +454,10 @@ def benchmark_record_problems(doc: dict, docs: dict) -> list[str]:
             continue
         if (clip["seed"], clip["split"]) != (truth["seed"], truth["split"]):
             problems.append(f"{clip['truthId']}: seed/split differ from the ground truth")
+        if clip["rendererSourceHash"] != truth["renderer"]["sourceHash"]:
+            problems.append(f"{clip['truthId']}: rendererSourceHash is not the ground truth's renderer.sourceHash")
+        if clip["decodedFramesSha256"] != truth["signature"]["decodedFramesSha256"]:
+            problems.append(f"{clip['truthId']}: decodedFramesSha256 is not the ground truth's decoded-frame hash")
         if clip["truthEventsSha256"] != benchmark.truth_events_sha256(truth):
             problems.append(f"{clip['truthId']}: truthEventsSha256 does not match the committed events")
         if doc["mode"] == "gate" and truth["split"] != "heldOut":
@@ -458,11 +471,68 @@ def benchmark_record_problems(doc: dict, docs: dict) -> list[str]:
         problems.append(f"no reference scorer for task {doc['task']['id']!r}")
     elif not problems:
         metrics = scorer(doc, truths)
+        if capability is not None:
+            metrics = benchmark.gate_metrics(metrics, benchmark_bindings(docs)[capability])
         if canon(metrics) != canon(doc["metrics"]):
             problems.append("metrics differ from the reference re-score: " + first_difference(metrics, doc["metrics"]))
         expected = benchmark.verdict(metrics, doc["floor"]) if doc["mode"] == "gate" else None
         if canon(expected) != canon(doc["verdict"]):
             problems.append("verdict differs from the floor applied to the re-scored metrics")
+    return problems
+
+
+BINDINGS_PATH = "spec/fixtures/media/benchmark-bindings.json"
+
+
+def benchmark_bindings(docs: dict) -> dict[str, dict]:
+    """capability id -> its benchmark binding, from the committed bindings document."""
+    return {b["capabilityId"]: b for d in docs.values() if d.get("kind") == "jovra.benchmarkBindings"
+            for b in d["bindings"]}
+
+
+def check_bindings(path: Path, doc: dict, docs: dict, rep: Report) -> None:
+    where = str(path.relative_to(ROOT)) if path.is_absolute() else str(path)
+    try:
+        problems = binding_problems(doc, docs)
+    except (ArithmeticError, ValueError, KeyError, TypeError) as e:
+        problems = [f"malformed bindings: {type(e).__name__}: {e}"]
+    for p in problems:
+        rep.fail(where, p)
+    if not problems:
+        rep.ok("benchmark bindings")
+
+
+def binding_problems(doc: dict, docs: dict) -> list[str]:
+    """Each binding names a gated capability, a task with a reference scorer of that version, and maps every gate
+    metric exactly once from a metric that scorer emits, with the gate's unit."""
+    problems = []
+    gates = registry_gates(docs)
+    ids = [b["capabilityId"] for b in doc["bindings"]]
+    for cid in sorted({i for i in ids if ids.count(i) > 1}):
+        problems.append(f"{cid} is bound more than once")
+    for b in doc["bindings"]:
+        cid, task = b["capabilityId"], b["task"]
+        if gates.get(cid) is None:
+            problems.append(f"{cid}: no research gate in the capability registry to bind")
+            continue
+        if task["id"] not in benchmark.SCORERS:
+            problems.append(f"{cid}: no reference scorer for task {task['id']!r}")
+            continue
+        if task["version"] != benchmark.TASK_VERSIONS[task["id"]]:
+            problems.append(f"{cid}: task {task['id']} is version {benchmark.TASK_VERSIONS[task['id']]}, not {task['version']}")
+        if "tolerance" in task:
+            benchmark.rt(task["tolerance"])
+        emitted = dict(benchmark.TASK_METRICS[task["id"]])
+        gate_units = {m["name"]: m.get("unit") for m in gates[cid]["metrics"]}
+        task_names = [m["task"] for m in b["metrics"]]
+        gate_names = [m["gate"] for m in b["metrics"]]
+        if sorted(task_names) != sorted(emitted):
+            problems.append(f"{cid}: maps task metrics {sorted(task_names)}, but {task['id']} emits {sorted(emitted)}")
+        if sorted(gate_names) != sorted(gate_units):
+            problems.append(f"{cid}: maps gate metrics {sorted(gate_names)}, but the gate has {sorted(gate_units)}")
+        for m in b["metrics"]:
+            if m["task"] in emitted and m["gate"] in gate_units and emitted[m["task"]] != gate_units[m["gate"]]:
+                problems.append(f"{cid}: {m['task']!r} is in {emitted[m['task']]!r} but gate metric {m['gate']!r} is in {gate_units[m['gate']]!r}")
     return problems
 
 
@@ -473,22 +543,36 @@ def registry_gates(docs: dict) -> dict[str, dict | None]:
 
 
 def candidate_on_gate(record: dict, docs: dict) -> dict:
-    """A copy of ``record`` as a candidate run backing audio.hitDetection on that capability's registry gate,
-    with the verdict recomputed: the shape a real capability record has."""
+    """A copy of ``record`` as a candidate run backing audio.hitDetection: that capability's registry gate, its
+    binding's task, the metrics re-scored under the gate's names and the verdict recomputed: the shape a real
+    capability record has."""
     doc = json.loads(canon(record))
     doc["estimator"] = {"id": "selfTest.candidate", "methodVersion": "0", "role": "candidate"}
     doc["capabilityId"] = "audio.hitDetection"
     gate = registry_gates(docs)["audio.hitDetection"]
+    binding = benchmark_bindings(docs)["audio.hitDetection"]
+    doc["task"] = json.loads(canon(binding["task"]))
     doc["floor"] = {"source": "spec/contracts/capability-registry.v1.json gate of audio.hitDetection",
                     "metrics": json.loads(canon(gate["metrics"]))}
+    truths = {d["id"]: d for d in docs.values() if d.get("kind") == "jovra.groundTruth"}
+    doc["metrics"] = benchmark.gate_metrics(benchmark.SCORERS[doc["task"]["id"]](doc, truths), binding)
     doc["verdict"] = benchmark.verdict(doc["metrics"], doc["floor"])
     return doc
+
+
+SELF_TEST_RECORDS = SPEC / "fixtures" / "media" / "benchmark"
+
+
+def truths_by_id(docs: dict) -> dict[str, dict]:
+    return {d["id"]: d for d in docs.values() if d.get("kind") == "jovra.groundTruth"}
 
 
 def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
     """Known-bad media documents must fail and known-good ones pass (the new checks are not vacuous)."""
     truth = next((d for d in docs.values() if d.get("kind") == "jovra.groundTruth" and d["split"] == "heldOut"), None)
-    record = next((d for d in docs.values() if d.get("kind") == "jovra.benchmarkRecord" and d["mode"] == "gate"), None)
+    # The committed harness self-test records only: a record elsewhere (spec/benchmarks) is under test, not a base.
+    committed = [d for p, d in docs.items() if d.get("kind") == "jovra.benchmarkRecord" and SELF_TEST_RECORDS in p.parents]
+    record = next((d for d in committed if d["mode"] == "gate"), None)
     if truth is None or record is None:
         rep.fail("media self-test", "needs a held-out ground truth and a gating benchmark record")
         return
@@ -509,8 +593,11 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
     for role in ("oracle", "null"):
         bad = json.loads(canon(record)); bad["estimator"]["role"] = role; bad["capabilityId"] = "audio.hitDetection"
         schema_cases.append(("benchmark-record.schema.json", bad, False, f"a {role} record naming a capability"))
-    candidate = candidate_on_gate(record, docs)
+    oracle = next((d for d in committed if d["mode"] == "gate" and d["estimator"]["role"] == "oracle"), record)
+    candidate = candidate_on_gate(oracle, docs)   # perfect outputs: the truth's own event times
     schema_cases.append(("benchmark-record.schema.json", candidate, True, "a candidate record naming a capability"))
+    bad = json.loads(canon(record)); del bad["clips"][0]["decodedFramesSha256"]
+    schema_cases.append(("benchmark-record.schema.json", bad, False, "a clip without its decoded-frame hash"))
     for schema, instance, must_pass, label in schema_cases:
         errors = schemas.validate(instance, schema)
         if (not errors) != must_pass:
@@ -529,8 +616,6 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
     bad["metrics"] = benchmark.SCORERS[bad["task"]["id"]](bad, {d["id"]: d for d in docs.values() if d.get("kind") == "jovra.groundTruth"})
     bad["verdict"] = benchmark.verdict(bad["metrics"], bad["floor"])
     check_cases.append((bad, "the same clip pooled three times (an inflated denominator)"))
-    oracle = next((d for d in docs.values() if d.get("kind") == "jovra.benchmarkRecord" and d["mode"] == "gate"
-                   and d["estimator"]["role"] == "oracle"), record)
     bad = json.loads(canon(oracle)); bad["capabilityId"] = "audio.hitDetection"
     check_cases.append((bad, "an oracle record naming a capability"))
     bad = json.loads(canon(candidate)); bad["floor"] = json.loads(canon(record["floor"]))
@@ -538,6 +623,22 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
     check_cases.append((bad, "a capability record gated by a self-declared floor instead of the registry gate"))
     bad = json.loads(canon(candidate)); bad["capabilityId"] = "scoring.manual"
     check_cases.append((bad, "a capability record for a capability without a gate"))
+    bad = json.loads(canon(candidate)); bad["task"]["tolerance"] = {"value": 200, "timescale": 1000}
+    bad["metrics"] = benchmark.gate_metrics(benchmark.SCORERS[bad["task"]["id"]](bad, truths_by_id(docs)),
+                                            benchmark_bindings(docs)["audio.hitDetection"])
+    bad["verdict"] = benchmark.verdict(bad["metrics"], bad["floor"])
+    check_cases.append((bad, "a capability record with a tolerance other than its binding's"))
+    bad = json.loads(canon(candidate)); bad["metrics"] = benchmark.SCORERS[bad["task"]["id"]](bad, truths_by_id(docs))
+    bad["verdict"] = benchmark.verdict(bad["metrics"], bad["floor"])
+    check_cases.append((bad, "a capability record whose metrics keep the task's names instead of the gate's"))
+    bad = json.loads(canon(candidate)); bad["capabilityId"] = "camera.movedDetection"
+    bad["floor"]["metrics"] = json.loads(canon(registry_gates(docs)["camera.movedDetection"]["metrics"]))
+    bad["verdict"] = benchmark.verdict(bad["metrics"], bad["floor"])
+    check_cases.append((bad, "a capability record for a gated capability without a binding"))
+    bad = json.loads(canon(record)); bad["clips"][0]["decodedFramesSha256"] = "0" * 64
+    check_cases.append((bad, "a clip whose decoded-frame hash is not its ground truth's"))
+    bad = json.loads(canon(record)); bad["clips"][0]["rendererSourceHash"] = "0" * 64
+    check_cases.append((bad, "a clip whose renderer source hash is not its ground truth's"))
     bad = json.loads(canon(record)); bad["task"]["tolerance"]["timescale"] = 0
     check_cases.append((bad, "a zero timescale (reported, not a crash)"))
     bad = json.loads(canon(record)); bad["floor"]["metrics"][0]["threshold"] = "1e-3"
@@ -560,6 +661,39 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
                  + "; ".join(probe.failures))
     else:
         rep.ok("media self-tests")
+    if not candidate["verdict"]["passed"]:
+        rep.fail("media self-test", "a perfect candidate (the truth's own event times) fails the real audio.hitDetection gate: "
+                 + canon(candidate["verdict"]))
+    else:
+        rep.ok("media self-tests")
+    bindings_doc = next((d for d in docs.values() if d.get("kind") == "jovra.benchmarkBindings"), None)
+    if bindings_doc is None:
+        rep.fail("media self-test", f"needs {BINDINGS_PATH}")
+        return
+    binding_cases = []
+    bad = json.loads(canon(bindings_doc)); bad["bindings"][0]["metrics"].pop()
+    binding_cases.append((bad, "a binding that leaves a gate metric unmapped"))
+    bad = json.loads(canon(bindings_doc)); bad["bindings"][0]["metrics"][0]["task"] = "f1"
+    binding_cases.append((bad, "a binding that maps a metric its task does not emit"))
+    bad = json.loads(canon(bindings_doc)); bad["bindings"][0]["metrics"][0]["gate"] = "precision"
+    binding_cases.append((bad, "a binding whose gate names are not the registry gate's"))
+    bad = json.loads(canon(bindings_doc)); bad["bindings"][0]["capabilityId"] = "scoring.manual"
+    binding_cases.append((bad, "a binding for a capability without a gate"))
+    bad = json.loads(canon(bindings_doc)); bad["bindings"].append(json.loads(canon(bad["bindings"][0])))
+    binding_cases.append((bad, "a capability bound twice"))
+    bad = json.loads(canon(bindings_doc)); bad["bindings"][0]["task"]["tolerance"]["timescale"] = 0
+    binding_cases.append((bad, "a zero tolerance timescale in a binding (reported, not a crash)"))
+    for instance, label in binding_cases:
+        probe = Report(False)
+        try:
+            check_bindings(Path("media self-test"), instance, docs, probe)
+        except Exception as e:  # noqa: BLE001 - a crash is itself the failure under test
+            rep.fail("media self-test", f"{label}: the bindings check crashed ({type(e).__name__}: {e})")
+            continue
+        if not probe.failures:
+            rep.fail("media self-test", f"{label}: expected the bindings check to fail")
+        else:
+            rep.ok("media self-tests")
     truth_path = next(p for p, d in docs.items() if d is truth)
     truth_cases = []
     bad = json.loads(canon(truth)); bad["events"][0]["frame"] += 1
@@ -614,6 +748,8 @@ def main() -> int:
             check_ground_truth(path, doc, docs, rep)
         elif kind == "jovra.benchmarkRecord":
             check_benchmark_record(path, doc, docs, rep)
+        elif kind == "jovra.benchmarkBindings":
+            check_bindings(path, doc, docs, rep)
     check_references(docs, rep)
 
     for line in rep.failures:

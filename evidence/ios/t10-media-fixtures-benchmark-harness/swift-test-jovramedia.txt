@@ -1,66 +1,80 @@
-$ swift test --package-path ios/Packages/JovraMedia
+$ swift test --package-path ios/Packages/JovraMedia --scratch-path .derivedData/spm-JovraMedia   # via scripts/ios/test.sh on the build Mac, 2026-10-07
 ↳ Testing Library Version: 1902
-✔ Test "a time between frames maps to the frame on screen" passed after 0.001 seconds.
-✔ Test "every frame start round-trips to its frame index" with 6 test cases passed after 0.001 seconds.
-✔ Test "invalid and negative times map to frame 0" passed after 0.001 seconds.
-✔ Test "frame 120 at 240 fps is half a second" passed after 0.006 seconds.
-✔ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" passed after 0.010 seconds.
-✔ Test "fewer than two frames or a bad timescale states no rate" passed after 0.011 seconds.
-✔ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" passed after 0.011 seconds.
-✔ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" passed after 0.011 seconds.
-✔ Test "a constant rate that is no standard rate is reported exactly" passed after 0.011 seconds.
-✔ Test "decode order with B-frames: timestamps are sorted before differencing" passed after 0.011 seconds.
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test "a time between frames maps to the frame on screen" passed after 0.007 seconds.
+✔ Test "every frame start round-trips to its frame index" with 6 test cases passed after 0.007 seconds.
+✔ Test "frame 120 at 240 fps is half a second" passed after 0.007 seconds.
+✔ Test "a gating run needs a floor" passed after 0.007 seconds.
+✔ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" passed after 0.007 seconds.
+✔ Test "a clip with no benchmark split cannot be gated on" passed after 0.007 seconds.
+✔ Test "one prediction serves only one truth event" passed after 0.007 seconds.
+✔ Test "no predictions: precision and MAE are undefined (null), recall is 0" passed after 0.007 seconds.
+✔ Test "invalid and negative times map to frame 0" passed after 0.007 seconds.
+✔ Test "gating on a tuning seed is refused before the estimator runs" passed after 0.008 seconds.
+✔ Test "audio.hitDetection is bound to eventTimes 1.0.0 at 50 ms, with the gate's metric names" passed after 0.008 seconds.
+✔ Test "a ground-truth frame rate of zero is a decoding error" passed after 0.011 seconds.
+✔ Test "every binding maps each gate metric of its capability exactly once" passed after 0.012 seconds.
+✔ Test "a run that names a capability must use that capability's registry gate" passed after 0.012 seconds.
+✔ Test "a zero or negative timescale is a decoding error" with 2 test cases passed after 0.012 seconds.
+✔ Test "a run request takes the binding's tolerance unless one is given" passed after 0.012 seconds.
+✔ Test "a gated capability without a binding is refused before the estimator runs" passed after 0.012 seconds.
+✔ Test "an exact tolerance boundary matches; one tick past it does not" passed after 0.012 seconds.
+✔ Test "a tie in distance goes to the earlier prediction, which is then consumed" passed after 0.012 seconds.
+✔ Test "an oracle or null run cannot name a capability" with 2 test cases passed after 0.012 seconds.
+✔ Test "a capability run with any other tolerance is refused before the estimator runs" passed after 0.012 seconds.
+✔ Test "the committed record decodes (the cases below change one field each)" passed after 0.012 seconds.
+✔ Test "a clip listed twice is refused before the estimator runs" passed after 0.012 seconds.
+✔ Test "a floor threshold that is not a plain decimal is a decoding error" with 5 test cases passed after 0.012 seconds.
+✔ Test "an overflowing tolerance names itself in the error" passed after 0.012 seconds.
+✔ Test "clips pool: matches, predictions and truth events add up across clips" passed after 0.012 seconds.
+✔ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" passed after 0.013 seconds.
+✔ Test "tuning runs use tuning seeds only and carry no verdict" passed after 0.013 seconds.
+✔ Test "the oracle passes the floor on the held-out seed" passed after 0.013 seconds.
+✔ Test "the record carries the truth-events digest the reference validator recomputes" passed after 0.013 seconds.
+✔ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec" passed after 0.012 seconds.
+✔ Test "a metric fraction with a zero denominator is a decoding error" passed after 0.013 seconds.
+✔ Test "re-running the estimator reproduces the record" with 3 test cases passed after 0.012 seconds.
+✔ Test "an unknown capability or one without a gate is refused" passed after 0.012 seconds.
+✔ Test "the committed gate records pass and fail as the self-test requires" passed after 0.012 seconds.
+✔ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" passed after 0.012 seconds.
+✔ Test "fewer than two frames or a bad timescale states no rate" passed after 0.012 seconds.
+✔ Test "the duplicate pair is byte-identical under two names" passed after 0.012 seconds.
+✔ Test "decode order with B-frames: timestamps are sorted before differencing" passed after 0.012 seconds.
+✔ Test "a candidate run on a clip that is not rendered is refused before the estimator runs" passed after 0.012 seconds.
 ✔ Test "one-tick rounding (29.97 fps at timescale 600: 20 ticks and every 50th 21) is 30000/1001, constant" passed after 0.012 seconds.
 ✔ Test "oracle gate, null gate and a tuning run are committed" passed after 0.012 seconds.
-✔ Test "constant 30 fps at timescale 30000" passed after 0.014 seconds.
-✔ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" passed after 0.015 seconds.
-✔ Test "a tie in distance goes to the earlier prediction, which is then consumed" passed after 0.014 seconds.
-✔ Test "the duplicate pair is byte-identical under two names" passed after 0.015 seconds.
-✔ Test "the committed gate records pass and fail as the self-test requires" passed after 0.015 seconds.
-✔ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" passed after 0.015 seconds.
-✔ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec" passed after 0.015 seconds.
-✔ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" passed after 0.015 seconds.
-✔ Test "a gating run needs a floor" passed after 0.015 seconds.
-✔ Test "re-running the estimator reproduces the record" with 3 test cases passed after 0.015 seconds.
-✔ Test "tuning runs use tuning seeds only and carry no verdict" passed after 0.015 seconds.
-✔ Test "the record carries the truth-events digest the reference validator recomputes" passed after 0.015 seconds.
-✔ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" passed after 0.015 seconds.
-✔ Test "one prediction serves only one truth event" passed after 0.015 seconds.
-✔ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" passed after 0.015 seconds.
-✔ Test "the oracle passes the floor on the held-out seed" passed after 0.015 seconds.
-✔ Test "an exact tolerance boundary matches; one tick past it does not" passed after 0.015 seconds.
-✔ Test "no predictions: precision and MAE are undefined (null), recall is 0" passed after 0.015 seconds.
-✔ Test "gating on a tuning seed is refused before the estimator runs" passed after 0.016 seconds.
-✔ Test "a floor threshold that is not a plain decimal is a decoding error" with 5 test cases passed after 0.016 seconds.
-✔ Test "the committed record decodes (the cases below change one field each)" passed after 0.016 seconds.
-✔ Test "a ground-truth frame rate of zero is a decoding error" passed after 0.016 seconds.
-✔ Test "clips pool: matches, predictions and truth events add up across clips" passed after 0.016 seconds.
-✔ Test "a metric fraction with a zero denominator is a decoding error" passed after 0.016 seconds.
-✔ Test "a clip listed twice is refused before the estimator runs" passed after 0.016 seconds.
-✔ Test "a clip with no benchmark split cannot be gated on" passed after 0.016 seconds.
-✔ Test "a zero or negative timescale is a decoding error" with 2 test cases passed after 0.016 seconds.
-✔ Test "the fixture set covers capture, playback, import and the harness" passed after 0.016 seconds.
-✔ Test "a run that names a capability must use that capability's registry gate" passed after 0.016 seconds.
-✔ Suite "Frame-accurate CMTime" passed after 0.017 seconds.
-✔ Test "an unknown capability or one without a gate is refused" passed after 0.016 seconds.
-✔ Test "a candidate run on the registry gate is accepted and carries the capability" passed after 0.016 seconds.
-✔ Test "an oracle or null run cannot name a capability" with 2 test cases passed after 0.016 seconds.
-✔ Suite "Frame rate from presentation timestamps" passed after 0.018 seconds.
-✔ Suite "Committed benchmark records are reproducible" passed after 0.019 seconds.
-✔ Suite "eventTimes scoring" passed after 0.020 seconds.
-✔ Suite "Benchmark harness" passed after 0.020 seconds.
-✔ Suite "Malformed benchmark JSON throws instead of trapping" passed after 0.020 seconds.
-✔ Suite "Benchmark harness provenance" passed after 0.020 seconds.
-✔ Test "constant-frame-rate excerpt: 30 fps, constant" passed after 0.034 seconds.
-✔ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" with 11 test cases passed after 0.043 seconds.
-✔ Suite "MediaProbe reports every import fixture's ground truth" passed after 0.043 seconds.
-✔ Test "Oct 4 phone original: 30 fps, variable frame rate" passed after 0.049 seconds.
-✔ Test "Sep 29 phone original: 30 fps, variable frame rate" passed after 0.072 seconds.
-✔ Suite "MediaProbe on private real footage (skipped when absent)" passed after 0.072 seconds.
-✔ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" with 5 test cases passed after 0.787 seconds.
-✔ Test "every decoded frame N shows counter N at presentation time N / fps" with 5 test cases passed after 1.654 seconds.
-✔ Suite "Frame-counter fixtures decode to their own frame index" passed after 1.655 seconds.
-✔ Test "decoded-frame signature hash equals the ground truth" with 18 test cases passed after 1.701 seconds.
-✔ Test "every clip burns in its own frame index" with 18 test cases passed after 1.706 seconds.
-✔ Suite "AVFoundation decodes every supported fixture to its committed signature hash" passed after 1.707 seconds.
-✔ Test run with 52 tests in 11 suites passed after 1.707 seconds.
+✔ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" passed after 0.012 seconds.
+✔ Test "constant 30 fps at timescale 30000" passed after 0.012 seconds.
+✔ Test "a constant rate that is no standard rate is reported exactly" passed after 0.012 seconds.
+✔ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" passed after 0.012 seconds.
+✔ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" passed after 0.012 seconds.
+✔ Test "the fixture set covers capture, playback, import and the harness" passed after 0.012 seconds.
+✔ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" passed after 0.012 seconds.
+✔ Suite "Frame-accurate CMTime" passed after 0.014 seconds.
+✔ Suite "Benchmark harness" passed after 0.014 seconds.
+✔ Suite "eventTimes scoring" passed after 0.015 seconds.
+✔ Suite "Malformed benchmark JSON throws instead of trapping" passed after 0.015 seconds.
+✔ Suite "Committed benchmark records are reproducible" passed after 0.015 seconds.
+✔ Suite "Frame rate from presentation timestamps" passed after 0.015 seconds.
+✔ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" passed after 0.014 seconds.
+✔ Test "constant-frame-rate excerpt: 30 fps, constant" passed after 0.033 seconds.
+✔ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" with 11 test cases passed after 0.040 seconds.
+✔ Suite "MediaProbe reports every import fixture's ground truth" passed after 0.041 seconds.
+✔ Test "Oct 4 phone original: 30 fps, variable frame rate" passed after 0.100 seconds.
+✔ Test "Sep 29 phone original: 30 fps, variable frame rate" passed after 0.106 seconds.
+✔ Suite "MediaProbe on private real footage (skipped when absent)" passed after 0.107 seconds.
+✔ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" with 5 test cases passed after 0.608 seconds.
+✔ Test "a perfect candidate passes the real audio.hitDetection registry gate" passed after 1.378 seconds.
+✔ Suite "Capability bindings" passed after 1.378 seconds.
+✔ Test "every record clip carries its truth's renderer source hash and decoded-frame hash" with 2 test cases passed after 1.384 seconds.
+✔ Test "a candidate run on the registry gate is accepted and carries the capability" passed after 1.402 seconds.
+✔ Suite "Benchmark harness provenance" passed after 1.402 seconds.
+✔ Test "a candidate reads the verified media file" passed after 1.410 seconds.
+✔ Test "every decoded frame N shows counter N at presentation time N / fps" with 5 test cases passed after 1.514 seconds.
+✔ Suite "Frame-counter fixtures decode to their own frame index" passed after 1.516 seconds.
+✔ Test "decoded-frame signature hash equals the ground truth" with 18 test cases passed after 1.527 seconds.
+✔ Test "every clip burns in its own frame index" with 18 test cases passed after 1.528 seconds.
+✔ Suite "AVFoundation decodes every supported fixture to its committed signature hash" passed after 1.530 seconds.
+✔ Test "a candidate run on a rendered clip that is not the committed media is refused before the estimator runs" passed after 1.659 seconds.
+✔ Suite "Benchmark media provenance" passed after 1.660 seconds.
+✔ Test run with 63 tests in 13 suites passed after 1.660 seconds.

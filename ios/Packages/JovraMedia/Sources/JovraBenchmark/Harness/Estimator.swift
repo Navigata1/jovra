@@ -73,7 +73,19 @@ public struct MetricResult: Codable, Hashable, Sendable {
         self.name = name
         self.unit = unit
         self.exact = exact
-        self.value = try exact?.decimalString(places: places)
+        self.value = try RationalOverflow.naming("metric \(name)") { try exact?.decimalString(places: places) }
+    }
+
+    private init(name: String, unit: String?, exact: Rational?, value: String?) {
+        self.name = name
+        self.unit = unit
+        self.exact = exact
+        self.value = value
+    }
+
+    /// The same result under another name (a capability's gate name for a task metric).
+    public func named(_ name: String) -> MetricResult {
+        MetricResult(name: name, unit: unit, exact: exact, value: value)
     }
 
     enum CodingKeys: String, CodingKey { case name, unit, exact, value }

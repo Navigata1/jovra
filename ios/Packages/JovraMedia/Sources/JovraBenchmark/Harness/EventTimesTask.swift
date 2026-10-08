@@ -53,15 +53,19 @@ public struct EventTimesTask: BenchmarkTask {
         var matched: Int64 = 0, predicted: Int64 = 0, expected: Int64 = 0
         var total = Rational.zero
         for clip in clips {
-            let deltas = try Self.match(truth: clip.truth, predictions: clip.predictions, tolerance: Rational(tolerance))
+            let deltas = try RationalOverflow.naming("event matches within tolerance \(tolerance) s") {
+                try Self.match(truth: clip.truth, predictions: clip.predictions, tolerance: Rational(tolerance))
+            }
             matched += Int64(deltas.count)
             predicted += Int64(clip.predictions.count)
             expected += Int64(clip.truth.count)
-            for delta in deltas { total = try total.adding(delta) }
+            for delta in deltas { total = try RationalOverflow.naming("onset MAE (sum of matched offsets)") { try total.adding(delta) } }
         }
         let precision = predicted > 0 ? Rational(matched, predicted) : nil
         let recall = expected > 0 ? Rational(matched, expected) : nil
-        let mae = matched > 0 ? try total.multiplied(by: Rational(1000)).divided(by: Rational(matched)) : nil
+        let mae = matched > 0
+            ? try RationalOverflow.naming("onset MAE") { try total.multiplied(by: Rational(1000)).divided(by: Rational(matched)) }
+            : nil
         return [
             try MetricResult(name: "precision", exact: precision, places: 4),
             try MetricResult(name: "recall", exact: recall, places: 4),

@@ -1,6 +1,7 @@
 $ jovra-benchmark list
 estimators: null.eventTimes, oracle.eventTimes
 floors: harnessSelfTest
+exit 0
 
 $ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s23 --mode gate --floor harnessSelfTest --out spec/fixtures/media/benchmark/oracle.gate.json
 wrote spec/fixtures/media/benchmark/oracle.gate.json: oracle.eventTimes 1.0.0, gate on harness/events-s23
@@ -26,25 +27,32 @@ metrics: precision 1.0000, recall 1.0000, onset MAE 0.000 ms
 verdict: none (tuning run; gates nothing)
 exit 0
 
-$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s11 --mode gate --floor harnessSelfTest --out <scratch>/refused.json   # negative: gate on the tuning seed
+$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s11 --mode gate --floor harnessSelfTest --out <scratch>/refused-tuning.json
 jovra-benchmark: Refusing to gate on tuning seeds: harness/events-s11. Gate on held-out seeds only.
 exit 2
-no record written
 
-# Verifier round 1: provenance and denominators (refused before the estimator runs)
-
-$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s23 --mode gate --floor harnessSelfTest --capability audio.hitDetection --out <scratch>/refused.json
+$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s23 --mode gate --capability audio.hitDetection --out <scratch>/refused-oracle-capability.json
 jovra-benchmark: The oracle estimator is a harness self-test and cannot back capability audio.hitDetection; only a candidate can
 exit 2
-no record written
 
-$ jovra-benchmark run --estimator null.eventTimes --clip harness/events-s23 --mode gate --capability audio.hitDetection --out <scratch>/refused.json
+$ jovra-benchmark run --estimator null.eventTimes --clip harness/events-s23 --mode gate --capability audio.hitDetection --out <scratch>/refused-null-capability.json
 jovra-benchmark: The null estimator is a harness self-test and cannot back capability audio.hitDetection; only a candidate can
 exit 2
-no record written
 
-$ jovra-benchmark run --estimator null.eventTimes --clip harness/events-s23 --clip harness/events-s23 --clip harness/events-s23 --mode gate --floor harnessSelfTest --out <scratch>/refused.json
+$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s23 --clip harness/events-s23 --clip harness/events-s23 --mode gate --floor harnessSelfTest --out <scratch>/refused-dup.json
 jovra-benchmark: Each clip counts once; listed more than once: harness/events-s23
 exit 2
-no record written
 
+$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s23 --mode gate --floor harnessSelfTest --tolerance 9223372036854775807/1 --out <scratch>/refused-overflow.json
+jovra-benchmark: exact arithmetic overflowed 64 bits while computing event matches within tolerance 9223372036854775807/1 s
+exit 2
+
+$ ls <scratch>/refused-*.json   # the five refused runs
+no matches found: no record written
+
+# Round 2. A candidate's media checks (clip not rendered -> notRendered; rendered clip that does not decode to the
+# committed hash -> mediaDoesNotMatchTruth; both before any estimation) and the capability binding (perfect
+# candidate passes the real audio.hitDetection gate; any other tolerance, or a gated capability without a
+# binding, is refused) are shown by MediaProvenanceTests and CapabilityBindingTests in swift-test-jovramedia.txt:
+# EstimatorRegistry has no candidate estimator yet (the first arrives with T34), so the CLI cannot run one.
+# Oracle and null estimators read no media, so their runs do not need the render cache.

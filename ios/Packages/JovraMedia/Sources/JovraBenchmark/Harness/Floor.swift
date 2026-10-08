@@ -47,7 +47,9 @@ public struct Floor: Codable, Hashable, Sendable {
     }
 
     /// The harness self-test floor. It uses the values of the audio.hitDetection research gate so the oracle
-    /// and null runs exercise a realistic floor; it is not that capability's gate and promotes nothing.
+    /// and null runs exercise a realistic floor; it is not that capability's gate and promotes nothing. Its
+    /// metric names are the eventTimes task's own; a run that names audio.hitDetection is judged by the registry
+    /// gate instead, with the task metrics renamed to the gate's names by `BenchmarkBindings`.
     public static let harnessSelfTest = Floor(
         source: "harness self-test (values of the audio.hitDetection gate; promotes nothing)",
         metrics: [
