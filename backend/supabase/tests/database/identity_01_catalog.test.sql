@@ -172,12 +172,12 @@ $$, 'T-DB-67: no BEFORE INSERT trigger sorts before a00_rls_guard');
 select is_empty($$
   select c.relname::text from pg_class c join pg_namespace n on n.oid = c.relnamespace
    where n.nspname = 'public' and c.relkind = 'r' and has_any_column_privilege('authenticated', c.oid, 'insert')
-     and not exists (select 1 from pg_policy p
-                      where p.polrelid = c.oid and p.polcmd = 'a' and p.polpermissive
-                        and pg_get_expr(p.polwithcheck, p.polrelid) like '%app_private.can_insert_' || c.relname || '(%')
-     or not exists (select 1 from pg_trigger g join pg_proc f on f.oid = g.tgfoid
-                     where g.tgrelid = c.oid and g.tgname = 'a00_rls_guard'
-                       and f.prosrc like '%app_private.can_insert_' || c.relname || '(%')
+     and (not exists (select 1 from pg_policy p
+                       where p.polrelid = c.oid and p.polcmd = 'a' and p.polpermissive
+                         and pg_get_expr(p.polwithcheck, p.polrelid) like '%app_private.can_insert_' || c.relname || '(%')
+          or not exists (select 1 from pg_trigger g join pg_proc f on f.oid = g.tgfoid
+                          where g.tgrelid = c.oid and g.tgname = 'a00_rls_guard'
+                            and f.prosrc like '%app_private.can_insert_' || c.relname || '(%'))
 $$, 'T-DB-67: the INSERT policy and a00_rls_guard call the same app_private.can_insert_<table> predicate');
 
 select * from finish();
