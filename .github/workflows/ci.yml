@@ -45,6 +45,11 @@ jobs:
         run: python3 scripts/spec/validate.py
       - name: Contract tooling tests
         run: python3 -m unittest discover -s scripts/spec -p 'test_*.py' -v
+      # Studio and Room reuse scripts/spec/jsonschema_subset.py, so a checker change must keep them green too.
+      - name: Validate Studio contracts
+        run: python3 scripts/spec/validate_studio.py
+      - name: Validate Room contracts
+        run: python3 scripts/spec/validate_room.py
 
   # Manual only: macOS minutes on a private repo are scarce (ADR-0006). Simulator UI suites run on
   # the build Mac and their evidence is attached to the PR instead.

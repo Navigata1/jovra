@@ -1,0 +1,35 @@
+# T02 round 3: merge origin/main (dd2d0c3) into the branch and re-run everything, 2026-10-08
+# Simulator: JOVRA-T02 (18D4F325-4E94-456C-9A10-5C24F7019BF3), iPhone 17 Pro, iOS 26.5. No other simulator was used.
+# Why: main gained the Room v1 contracts (scripts/spec/validate_room.py, spec/room) and Studio fixes. Room
+# reuses scripts/spec/jsonschema_subset.py, which T02 made stricter (ECMA-262 '$', no \d \w \s \b), so the
+# stricter checker had to be proved against Room too. The merge had no conflicts (.gitignore and
+# validate_studio.py auto-merged).
+
+## Spec (Python 3 from PATH, and again under /usr/bin/python3 3.9.6 for Room and Studio)
+$ python3 spec/reference/generate_fixtures.py
+scoring_cases 74, stats_cases 4, units_cases 1, sample_cases 1, records 5, sample_media 1, contract_examples 4
+$ git status --porcelain spec            -> empty (byte-stable after the merge)
+$ python3 scripts/spec/validate.py       -> RESULT: PASS (15 schemas, 93 instances, 26 schema self-tests,
+                                            154 closed-object rejections, 93 reference-integrity documents,
+                                            74 scoring + 3 stats fixtures, 527 hand assertions)
+$ python3 -m unittest discover -s scripts/spec -p 'test_*.py'
+Ran 52 tests ... OK
+$ python3 scripts/spec/validate_studio.py -> RESULT: PASS (20 schemas, 5 schema self-tests, 64 generated files current)
+$ python3 scripts/spec/validate_room.py   -> cases passed: 232, failed: 0 / PASS: JOVRA Room v1 contracts
+$ /usr/bin/python3 scripts/spec/validate_room.py   -> cases passed: 232, failed: 0
+$ /usr/bin/python3 scripts/spec/validate_studio.py -> RESULT: PASS
+
+CI: the spec job now also runs validate_studio.py and validate_room.py, since both share the checker.
+
+## iOS (fresh .derivedData under the worktree)
+$ SIMULATOR_ID=18D4F325-... DERIVED_DATA=<worktree>/.derivedData scripts/ios/test.sh   -> exit 0
+  JovraCore: 15 tests in 4 suites passed; JovraMedia: 5 tests in 1 suite passed
+  JovraTests xcresult (Test-Jovra-2026.10.08_09-31-17--0500): Passed, 10 total, 10 passed, 0 failed
+$ SIMULATOR_ID=18D4F325-... DERIVED_DATA=<worktree>/.derivedData scripts/ios/ui-test.sh -> exit 0
+  ui-tests-20261008-093156.xcresult:        Passed, 6 total, 6 passed, 0 failed
+  ui-system-light-20261008-093156.xcresult: Passed, 1 total, 1 passed, 0 failed
+  ui-system-dark-20261008-093156.xcresult:  Passed, 1 total, 1 passed, 0 failed
+This run was 8/8 green. It does not retire the intermittent "Contrast failed for SwiftUI.AccessibilityNode"
+seen in round 1 (07-ui-suite-runs.txt); one green run is not evidence that the flake is gone. T02 changes
+no file under ios/ or scripts/ios/. The exported screenshots show the unchanged app shell, so they are not
+committed (the ticket has no screens).
