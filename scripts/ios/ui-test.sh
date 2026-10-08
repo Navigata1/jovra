@@ -7,7 +7,8 @@
 #   so a ticket shows exactly its own tests. Without it the whole suite runs, followed by the
 #   system-appearance pass: testSystemAppearanceIsFollowed with the simulator itself in light, then
 #   in dark (the simulator's original appearance is restored afterwards).
-#   The ticket slug defaults to the branch name minus "ticket/".
+#   The ticket slug defaults to the branch name minus "ticket/" and a "t" before the ticket number
+#   (ticket/t06-ui-harness -> 06-ui-harness), the evidence/ios/NN-<name> convention.
 #
 # Environment: SIMULATOR_ID (your own simulator), DERIVED_DATA (inside your worktree).
 set -euo pipefail
@@ -32,7 +33,7 @@ for filter in ${FILTERS[@]+"${FILTERS[@]}"}; do
     *) echo "-only-testing $filter: UI test filters start with JovraUITests/" >&2; exit 2 ;;
   esac
 done
-TICKET="${TICKET:-$(git -C "$ROOT" rev-parse --abbrev-ref HEAD | sed 's#^ticket/##')}"
+TICKET="${TICKET:-$(git -C "$ROOT" rev-parse --abbrev-ref HEAD | sed -E 's#^ticket/##; s#^t([0-9]+-)#\1#')}"
 EVIDENCE="$ROOT/evidence/ios/$TICKET"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$EVIDENCE"

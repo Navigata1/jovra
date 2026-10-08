@@ -54,7 +54,7 @@ All scripts live in `scripts/ios/` and keep derived data in `.derivedData/` at t
 |---|---|
 | `scripts/ios/generate.sh` | Generates `ios/Jovra.xcodeproj` from `ios/project.yml`. |
 | `scripts/ios/test.sh` | `swift test` for JovraCore and JovraMedia, then `xcodebuild test` for `JovraTests` on the simulator; prints per-class counts and the `.xcresult` path. |
-| `scripts/ios/ui-test.sh [-only-testing JovraUITests/<Class>[/<test>]]... [ticket]` | With `-only-testing` (repeatable), runs only those classes or tests, so a ticket shows exactly its own. Without it, runs all of `JovraUITests`, then a system-appearance pass with the simulator in light and in dark (restored afterwards). Prints per-class counts and the `.xcresult` path, and exports every named screenshot to `evidence/ios/<ticket>/` (default: branch name minus `ticket/`). |
+| `scripts/ios/ui-test.sh [-only-testing JovraUITests/<Class>[/<test>]]... [ticket]` | With `-only-testing` (repeatable), runs only those classes or tests, so a ticket shows exactly its own. Without it, runs all of `JovraUITests`, then a system-appearance pass with the simulator in light and in dark (restored afterwards). Prints per-class counts and the `.xcresult` path, and exports every named screenshot to `evidence/ios/<ticket>/` (default: branch name minus `ticket/` and the `t` before the number, so `ticket/t06-x` gives `06-x`). |
 | `scripts/ios/check-build-config.sh` | Builds the app unsigned (no team) without and with a test Drive xcconfig; checks the entitlements in the binary, every v1 Info.plist key, the empty and the configured Drive client, and that the unsigned build installs and runs. |
 | `scripts/ios/side_by_side.py evidence/ios/<ticket>` | Pairs `sNN-*` screenshots with reference PNG NN and writes `side-by-side.html`; exits non-zero until every pair has a reviewer line in `reviews.txt`. |
 | `scripts/ios/xcresult-summary.py <bundle.xcresult>` | Per-class passed/failed/skipped counts, the device and the bundle path. |
@@ -107,7 +107,8 @@ is not its reversed form reads as `.misconfigured`, never as configured.
 `ios/Jovra/Platform/LaunchConfiguration/LaunchConfiguration.swift` is compiled into the app and into
 `JovraUITests`: the tests build arguments from a `LaunchConfiguration` value and the app parses the same
 type, so the two cannot drift. A value the app cannot parse is logged as a problem, never silently
-ignored. With no arguments, everything is live.
+ignored (`LaunchConfiguration.reportedProblems`, including a `-startRoute` that names no tab or
+full-screen route; the app then opens on Home). With no arguments, everything is live.
 
 | Argument | Values | Meaning |
 |---|---|---|
@@ -154,7 +155,12 @@ English ships; Spanish is the first translation and ships after native review (s
   may carry `copy-lint: allow <rule> — <reason>` in its catalog comment.
 - **Pseudo-locale**: `-pseudoLocale accented` wraps every catalog string in `[# … #]` with accents;
   anything that bypassed the catalogs shows up unchanged. `PseudoLocaleUITests` runs all five tabs this
-  way and asserts the textClipped audit.
+  way and asserts the textClipped audit (tab bar titles included) and that every visible text with
+  words in it is bracketed (FormatStyle output such as "6h 42m" is localized by Foundation and exempt).
+  It also checks the tab titles with `-pseudoLocale doubleLength` and at AX5: the textClipped audit on
+  the tab bar, and (double length) each title read back from the screen with on-device text
+  recognition, which fails on "…" or a missing word. A long tab title wraps onto up to three lines and
+  only then shrinks (to 75 % at most); it is never truncated.
 
 ## UI-test support (`ios/JovraUITests/Support`)
 
@@ -190,11 +196,10 @@ fully visible at a later step.
 
 There are two documented audit exceptions, and the test logs every issue it ignores:
 
-- **Dynamic Type and text clipping on tab bar titles.** Like the system tab bar, `JovraTabBar` caps its
-  titles at `xxxLarge`, shrinks a long title to fit its column (minimum scale 0.75), and offers the Large
-  Content Viewer (touch and hold). The audit reports a capped or shrunk title as "may be clipped at
-  larger Dynamic Type sizes" (seen with pseudo-localized titles). Only text inside the tab bar's frame is
-  exempt; the pseudo-locale test asserts each tab's full title separately.
+- **Dynamic Type on tab bar titles.** Like the system tab bar, `JovraTabBar` caps its titles at
+  `xxxLarge` and offers the Large Content Viewer (touch and hold). The audit reports the cap as a Dynamic
+  Type issue. Only the dynamicType audit, and only inside the tab bar's frame, is exempt: text clipping
+  on a tab title always fails.
 - **Contrast on clipped content.** This covers a non-tab-bar element under the status-bar backdrop, or
   one reaching into the tab bar or within 16 pt of it. The audit's sampling there takes in the bar
   and the chartreuse Record circle, not the element. SwiftUI keeps off-screen scroll content in the
