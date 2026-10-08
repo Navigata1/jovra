@@ -16,7 +16,8 @@ cd "$repo"
 host_pattern='[a-z0-9-]+\.supa''base\.co([^m]|$)'
 key_pattern='sb_(sec''ret|publish''able)_[A-Za-z0-9_-]+'
 jwt_pattern='eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}'
-email_pattern='[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+'
+# The last domain label must start with a letter, so versioned ids such as name@1.0.0 are not addresses.
+email_pattern='[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z][A-Za-z0-9-]*'
 allowed_email='@example\.test\b'
 
 scan() {  # prints offending lines of the given files; exit status 0 when something was found
@@ -33,7 +34,7 @@ printf 'url = "https://abcdefghijklmnopqrst.%s.co"\n' "supabase" > "$tmp/host"
 printf 'key = "sb_%s_0123456789abcdef"\n' "secret" > "$tmp/key"
 printf 'anon = "eyJ%s.eyJ%s.x"\n' hbGciOiJIUzI1NiJ9 yb2xlIjoiYW5vbiJ9 > "$tmp/jwt"
 printf 'owner = "someone@%s.com"\n' "gmail" > "$tmp/email"
-printf 'tester = "owner.tester@example.test"\ndocs = "https://supabase.com/docs"\n' > "$tmp/clean"
+printf 'tester = "owner.tester@example.test"\ndocs = "https://supabase.com/docs"\nconsent = "studio-cloud-consent@1.0.0"\n' > "$tmp/clean"
 for sample in host key jwt email; do
   scan "$tmp/$sample" > /dev/null || { echo "self-test: the $sample pattern missed its sample" >&2; exit 2; }
 done

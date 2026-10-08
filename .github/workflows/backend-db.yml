@@ -56,14 +56,32 @@ jobs:
       - name: supabase test db
         run: supabase test db
 
+      # pg_prove prints one line per file; this replays each file through psql so the log lists every assertion
+      # (each T-DB id) as evidence. Every file rolls back except the harness, which is idempotent.
+      - name: pgTAP assertions by id
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase-db.env"
+          db_url="$(grep '^DB_URL=' "$RUNNER_TEMP/supabase-db.env" | cut -d= -f2- | tr -d '"')"
+          for f in supabase/tests/database/*.test.sql; do
+            echo "# $f"
+            psql "$db_url" -X -q -t -A -v ON_ERROR_STOP=1 -f "$f" 2>&1 | grep -E '^(not )?ok |^1\.\.|ERROR'
+          done
+
       - name: OTP sign-in through Auth and Mailpit; unknown emails refused
         run: |
           supabase status -o env > "$RUNNER_TEMP/supabase-status.env"
           python3 supabase/scripts/otp_smoke.py "$RUNNER_TEMP/supabase-status.env"
 
+      - name: PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)
+        run: python3 supabase/scripts/postgrest_identity_smoke.py "$RUNNER_TEMP/supabase-status.env"
+
       - name: Auth log on failure
         if: failure()
         run: docker logs "$(docker ps --filter name=supabase_auth --format '{{.Names}}' | head -1)" 2>&1 | tail -80
+
+      - name: Database log on failure
+        if: failure()
+        run: docker logs "$(docker ps -a --filter name=supabase_db --format '{{.Names}}' | head -1)" 2>&1 | tail -80
 
       - name: supabase stop
         if: always()
