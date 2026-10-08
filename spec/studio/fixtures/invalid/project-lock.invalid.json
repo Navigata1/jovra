@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/project-lock.json",
+  "cases": [
+    {
+      "id": "demo-with-quote",
+      "why": "The local demo never authorizes spend",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/quoteAuthorization",
+          "value": {
+            "quoteId": "quote-test-01",
+            "reservationId": "res-0002"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "demoNeverReserves"
+      }
+    },
+    {
+      "id": "recoloured-brand",
+      "why": "Brand tokens are fixed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/brand/chartreuse",
+          "value": "#00FF00"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "demo-upload",
+      "why": "The local demo never uploads",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sourceRights/0/cloudConsent",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "demoNoUpload"
+      }
+    },
+    {
+      "id": "hidden-but-visible",
+      "why": "A hidden location cannot show the venue",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/privacy/venueVisible",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "privacyConflict"
+      }
+    }
+  ]
+}

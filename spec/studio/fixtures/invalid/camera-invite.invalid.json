@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/camera-invite.json",
+  "cases": [
+    {
+      "id": "long-invite",
+      "why": "Invitations expire within 10 minutes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/invites/1/expiresAt",
+          "value": "2026-10-07T21:25:00Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteLifetime"
+      }
+    },
+    {
+      "id": "second-primary",
+      "why": "One primary camera",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/roles/1/role",
+          "value": "primary"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "primaryCount"
+      }
+    },
+    {
+      "id": "camera-escalation",
+      "why": "A camera never gets host controls",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/roles/1/permissions/-",
+          "value": "host-controls"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "permissionEscalation"
+      }
+    },
+    {
+      "id": "coach-invite",
+      "why": "Camera invitations are for cameras",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/invites/1/role",
+          "value": "coach"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "invite-to-filled-slot",
+      "why": "An open invite cannot target a filled slot",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/invites/1/slot",
+          "value": "far-baseline"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "slotTaken"
+      }
+    },
+    {
+      "id": "invite-accepted-half-second-late",
+      "why": "21:00:00.500Z is after the 21:00:00Z expiry",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/invites/0/acceptedAt",
+          "value": "2026-10-07T21:00:00.500Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteExpired"
+      }
+    }
+  ]
+}

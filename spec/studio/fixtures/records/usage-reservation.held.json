@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "jovra.usage-reservation/1",
+  "reservationId": "res-0001",
+  "projectId": "sample-court-day",
+  "jobId": "job-queue-38",
+  "quoteId": "quote-test-00",
+  "environment": "test",
+  "sample": true,
+  "idempotencyKey": {
+    "projectId": "sample-court-day",
+    "planRevision": 1,
+    "outputSpecSha256": "4dca1b2af2d5acb331ffd8654c9c26c818dab903ec08d38277f5683ed7570019"
+  },
+  "capCredits": 4,
+  "reservedCredits": 4,
+  "consumedCredits": 2,
+  "releasedCredits": 0,
+  "status": "held",
+  "entries": [
+    {
+      "entryId": "e-1",
+      "kind": "reserve",
+      "credits": 4,
+      "key": "reserve:sample-court-day:1:4dca1b2af2d5acb331ffd8654c9c26c818dab903ec08d38277f5683ed7570019",
+      "at": "2026-10-07T22:50:05Z"
+    },
+    {
+      "entryId": "e-2",
+      "kind": "consume",
+      "credits": 1,
+      "key": "consume:job-queue-38:normalizing:1",
+      "at": "2026-10-07T23:05:00Z"
+    },
+    {
+      "entryId": "e-3",
+      "kind": "consume",
+      "credits": 1,
+      "key": "consume:job-queue-38:syncing:1",
+      "at": "2026-10-07T23:09:00Z"
+    }
+  ],
+  "createdAt": "2026-10-07T22:50:05Z"
+}

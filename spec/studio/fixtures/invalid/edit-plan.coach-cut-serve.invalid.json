@@ -1,0 +1,586 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/edit-plan.coach-cut-serve.json",
+  "cases": [
+    {
+      "id": "free-text-card",
+      "why": "Card text comes from records and templates, never free text",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/0/templateId",
+          "value": "Your goal: win"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "interpolated-quarter-speed",
+      "why": "60 fps x 1/4 = 15 fps < 30 fps output: would need invented frames",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/3/speed",
+          "value": {
+            "num": 1,
+            "den": 4
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/segments/3/sourceOutFrame",
+          "value": 73100
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "cleanFrameRule"
+      }
+    },
+    {
+      "id": "replay-before-original",
+      "why": "A replay follows the live segment it re-shows",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/3/replayOf",
+          "value": "c05"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "replayBeforeOriginal"
+      }
+    },
+    {
+      "id": "replay-of-unshown-time",
+      "why": "The replay shows session time c02 never showed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/3/sourceInFrame",
+          "value": 75700
+        },
+        {
+          "op": "replace",
+          "path": "/segments/3/sourceOutFrame",
+          "value": 75940
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "replayOutsideOriginal"
+      }
+    },
+    {
+      "id": "freeze-too-long",
+      "why": "A 5 s freeze exceeds Coach's Cut's 3 s",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/2/outputOutFrame",
+          "value": 2070
+        },
+        {
+          "op": "replace",
+          "path": "/segments/3/outputInFrame",
+          "value": 2070
+        },
+        {
+          "op": "replace",
+          "path": "/segments/3/sourceOutFrame",
+          "value": 73160
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "freezeDuration"
+      }
+    },
+    {
+      "id": "grade-not-in-profile",
+      "why": "Coach's Cut uses no look preset",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/grade/presetId",
+          "value": "warm-court-1"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "opNotAllowed"
+      }
+    },
+    {
+      "id": "dip-not-in-profile",
+      "why": "Coach's Cut allows dissolves only",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/4/transitionIn",
+          "value": {
+            "type": "dip",
+            "frames": 6
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "transitionNotAllowed"
+      }
+    },
+    {
+      "id": "estimated-cue-as-instruction",
+      "why": "An estimated cue is never shown as instruction",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/2/overlayRefs/1/provenance",
+          "value": "estimated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "provenanceNotAllowed"
+      }
+    },
+    {
+      "id": "two-annotations",
+      "why": "At most one annotation at a time",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/segments/2/overlayRefs/-",
+          "value": {
+            "kind": "annotation",
+            "refId": "ann-02",
+            "eventRevision": 3,
+            "provenance": "reviewed"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badOverlays"
+      }
+    },
+    {
+      "id": "hold-bed-over-live",
+      "why": "Hold-bed continues under live play",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/2/outputOutFrame",
+          "value": 2300
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/3",
+          "value": {
+            "route": "primary-bed",
+            "sourceId": "camera-1",
+            "sourceInFrame": 150000,
+            "outputInFrame": 2300,
+            "outputOutFrame": 5520,
+            "fadeInMs": 20,
+            "fadeOutMs": 20
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "holdBedOverLive"
+      }
+    },
+    {
+      "id": "hold-bed-not-dead-time",
+      "why": "The held court audio is session time a later live segment shows",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceInFrame",
+          "value": 75690
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sourceOutFrame",
+          "value": 82230
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/sessionInUs",
+          "value": 1261998416
+        },
+        {
+          "op": "replace",
+          "path": "/segments/4/protectedFrames",
+          "value": []
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "holdBedNotDeadTime"
+      }
+    },
+    {
+      "id": "hold-bed-jump",
+      "why": "Hold-bed must continue the primary bed without a jump",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/2/sourceInFrame",
+          "value": 75000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "holdBedNotContinuous"
+      }
+    },
+    {
+      "id": "alt-bed-mid-segment",
+      "why": "Switching angle audio only at a segment boundary",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/2/outputOutFrame",
+          "value": 2260
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/3/outputInFrame",
+          "value": 2260
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "bedSwitchNotAtBoundary"
+      }
+    },
+    {
+      "id": "bed-returns-mid-segment",
+      "why": "The return from an alternate bed to the primary is a switch too: never inside live segment c05, and never with a 0 ms fade",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/3/outputOutFrame",
+          "value": 4800
+        },
+        {
+          "op": "add",
+          "path": "/audio/bed/4",
+          "value": {
+            "route": "primary-bed",
+            "sourceId": "camera-1",
+            "sourceInFrame": 155154,
+            "outputInFrame": 4800,
+            "outputOutFrame": 5520,
+            "fadeInMs": 0,
+            "fadeOutMs": 20
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "bedSwitchNotAtBoundary"
+      }
+    },
+    {
+      "id": "replay-as-unlabelled-live",
+      "why": "Re-showing c02's moment as a second 1x live segment is a replay without the Replay label",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/3",
+          "value": {
+            "id": "c04",
+            "op": "live",
+            "outputInFrame": 2010,
+            "outputOutFrame": 2250,
+            "transitionIn": {
+              "type": "cut",
+              "frames": 0
+            },
+            "sourceId": "camera-1",
+            "sourceInFrame": 72980,
+            "sourceOutFrame": 73460,
+            "speed": {
+              "num": 1,
+              "den": 1
+            },
+            "sessionInUs": 1216333333,
+            "keeperId": null,
+            "protectedFrames": [
+              {
+                "inFrame": 73085,
+                "outFrame": 73116
+              }
+            ],
+            "overlayRefs": [],
+            "framing": {
+              "mode": "fill"
+            }
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/2/outputOutFrame",
+          "value": 2010
+        },
+        {
+          "op": "add",
+          "path": "/audio/bed/3",
+          "value": {
+            "route": "primary-bed",
+            "sourceId": "camera-1",
+            "sourceInFrame": 72980,
+            "outputInFrame": 2010,
+            "outputOutFrame": 2250,
+            "fadeInMs": 20,
+            "fadeOutMs": 20
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "replayWithoutLabel"
+      }
+    },
+    {
+      "id": "plan-for-another-project",
+      "why": "A plan is checked only against its own project's records",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/projectId",
+          "value": "someone-elses-project"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "projectMismatch"
+      }
+    },
+    {
+      "id": "narration-without-consent",
+      "why": "Narration needs recorded consent",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/narration/consent/granted",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "consentMissing"
+      }
+    },
+    {
+      "id": "generated-narration-undisclosed",
+      "why": "Generated narration is labelled",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/narration/voice",
+          "value": "generated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "disclosureMissing"
+      }
+    },
+    {
+      "id": "music-in-coach-cut",
+      "why": "Coach's Cut has no music",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/music",
+          "value": {
+            "assetId": "track-01",
+            "rightsRecordId": "rights-track-01",
+            "rightsScope": [
+              "private-film"
+            ],
+            "windows": [
+              {
+                "outputInFrame": 0,
+                "outputOutFrame": 120
+              }
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "opNotAllowed"
+      }
+    },
+    {
+      "id": "wrong-profile-length",
+      "why": "192 s is too long for Rally Pulse (30-180 s)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/bindings/profileId",
+          "value": "rally-pulse"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "durationOutsideProfile"
+      }
+    },
+    {
+      "id": "score-digits-as-ref",
+      "why": "Score digits used as an id resolve to no stored record",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/overlayRefs/0/refId",
+          "value": "6-4_3-2"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "untrustedReference"
+      }
+    },
+    {
+      "id": "unknown-overlay-ref",
+      "why": "An overlay must point at a stored record",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/overlayRefs/0/refId",
+          "value": "no-such-point"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "untrustedReference"
+      }
+    },
+    {
+      "id": "overlay-kind-relabelled",
+      "why": "A stored stat cannot be shown as a note",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/overlayRefs/1/kind",
+          "value": "note"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "kindMismatch"
+      }
+    },
+    {
+      "id": "cue-overlay-laundered",
+      "why": "Re-pointing the cue overlay at the estimated cue while keeping 'reviewed'",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/2/overlayRefs/1/refId",
+          "value": "cue-04"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "provenanceMismatch"
+      }
+    },
+    {
+      "id": "card-text-unresolved",
+      "why": "Card text comes only from stored notes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/0/textRefs",
+          "value": [
+            "40-15"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "untrustedReference"
+      }
+    },
+    {
+      "id": "card-text-not-a-note",
+      "why": "A score record is not card text",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/0/textRefs",
+          "value": [
+            "p-041"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "kindMismatch"
+      }
+    },
+    {
+      "id": "narration-script-unresolved",
+      "why": "A narration script is grounded in stored notes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/narration/scriptNoteIds",
+          "value": [
+            "invented-note"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "untrustedReference"
+      }
+    },
+    {
+      "id": "self-attested-consent",
+      "why": "A plan cannot attest its own consent",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/narration/consent/consentRecordId",
+          "value": "i-say-yes"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "consentMissing"
+      }
+    },
+    {
+      "id": "generated-voice-without-consent",
+      "why": "Consent to record narration is not consent to a generated voice",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/narration/voice",
+          "value": "generated"
+        },
+        {
+          "op": "replace",
+          "path": "/audio/narration/disclosureTemplateId",
+          "value": "label.narration-generated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "consentMissing"
+      }
+    }
+  ]
+}

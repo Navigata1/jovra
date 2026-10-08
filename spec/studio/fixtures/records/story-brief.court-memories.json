@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "jovra.story-brief/1",
+  "briefId": "brief-court-memories",
+  "projectId": "sample-court-day",
+  "revision": 1,
+  "sample": true,
+  "profile": {
+    "id": "court-memories",
+    "revision": 1
+  },
+  "bindings": {
+    "eventRevision": 3,
+    "syncRevision": 2,
+    "keeperCatalogRevision": 1,
+    "brollCatalogRevision": 1
+  },
+  "planner": {
+    "kind": "heuristic",
+    "modelId": null,
+    "adapterVersion": "jovra-planner@0.1.0"
+  },
+  "durationTargetSeconds": 258,
+  "aspect": "16:9",
+  "primaryAudioPolicy": "continuous-primary-court-audio",
+  "effectIntensity": "low",
+  "privacy": {
+    "venueVisible": false,
+    "faces": "show"
+  },
+  "music": null,
+  "narration": null,
+  "comparisons": [],
+  "omitted": [
+    {
+      "idea": "A reaction shot of Alex after the final point",
+      "missingEvidence": "No angle covers it."
+    }
+  ],
+  "unresolved": [],
+  "feelingKey": "feeling.day-mattered",
+  "audience": "family",
+  "cleanAlternate": true,
+  "beats": [
+    {
+      "beatId": "b01",
+      "role": "arrival",
+      "treatment": "broll",
+      "keeperId": null,
+      "brollId": "b-01",
+      "angle": null,
+      "replaySpeedDen": null,
+      "overlays": [
+        {
+          "kind": "note",
+          "refId": "note-caption"
+        }
+      ],
+      "noteId": null,
+      "templateId": null,
+      "reasonForReview": "Real arrival footage opens the day."
+    },
+    {
+      "beatId": "b02",
+      "role": "match-moment",
+      "treatment": "live",
+      "keeperId": "k-01",
+      "brollId": null,
+      "angle": "far-baseline",
+      "replaySpeedDen": null,
+      "overlays": [],
+      "noteId": null,
+      "templateId": null,
+      "reasonForReview": "The far-baseline view of the first long rally."
+    },
+    {
+      "beatId": "b03",
+      "role": "highlight",
+      "treatment": "live",
+      "keeperId": "k-02",
+      "brollId": null,
+      "angle": "near-baseline",
+      "replaySpeedDen": null,
+      "overlays": [
+        {
+          "kind": "score",
+          "refId": "p-041"
+        }
+      ],
+      "noteId": null,
+      "templateId": null,
+      "reasonForReview": "Jon's favourite point, reviewed."
+    },
+    {
+      "beatId": "b04",
+      "role": "after",
+      "treatment": "broll",
+      "keeperId": null,
+      "brollId": "b-02",
+      "angle": null,
+      "replaySpeedDen": null,
+      "overlays": [],
+      "noteId": null,
+      "templateId": null,
+      "reasonForReview": "Packing up after the match closes the film."
+    }
+  ]
+}

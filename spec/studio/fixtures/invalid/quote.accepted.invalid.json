@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/quote.accepted.json",
+  "cases": [
+    {
+      "id": "money-on-a-real-quote",
+      "why": "Dollar amounts appear only as illustrative Sample UX",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/displayAmounts",
+          "value": {
+            "currency": "USD",
+            "minMinor": 400,
+            "maxMinor": 800,
+            "capMinor": 1200,
+            "illustrative": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "illustrativeQuote"
+      }
+    },
+    {
+      "id": "accepted-after-expiry",
+      "why": "Never auto-accepted after expiry",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/acceptedAt",
+          "value": "2026-10-07T23:20:00Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "quoteExpired"
+      }
+    },
+    {
+      "id": "accepted-without-consent",
+      "why": "Acceptance records upload consent",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/consent",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "consentMissing"
+      }
+    },
+    {
+      "id": "accepted-half-second-late",
+      "why": "23:15:00.500Z is after 23:15:00Z (timestamps are parsed, not compared as text)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/acceptedAt",
+          "value": "2026-10-07T23:15:00.500Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "quoteExpired"
+      }
+    },
+    {
+      "id": "unbound-quote",
+      "why": "A quote is bound to one output spec",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/outputSpecSha256"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "hash-trailing-newline",
+      "why": "A sha256 with a trailing newline is not a sha256 (ECMA-262 anchors)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/outputSpecSha256",
+          "value": "8888888888888888888888888888888888888888888888888888888888888888\n"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

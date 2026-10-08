@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio ProjectLock (jovra.project-lock/1)",
+  "description": "The frozen inputs of one Studio project: source manifest revision and hash, point-event revision, chosen profile and revision, output preference, participant and source rights, identity/access mode, optional quote authorization and JOVRA brand tokens (jovra-studio-director skill). A lock is never copied to another project; approval does not carry over.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "revision", "sample", "environment", "identity", "createdAt", "sourceManifest", "eventRevision", "syncRevision", "profile", "output", "participants", "sourceRights", "privacy", "quoteAuthorization", "brand"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.project-lock/1"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "environment": {"$ref": "studio-common.schema.json#/$defs/environment"},
+    "identity": {
+      "type": "object",
+      "required": ["mode", "accountRef"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {"enum": ["demo-profile", "tester-account", "account"]},
+        "accountRef": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]}
+      }
+    },
+    "createdAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"},
+    "sourceManifest": {
+      "type": "object",
+      "required": ["revision", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+        "sha256": {"description": "Canonical-JSON SHA-256 of the SourceManifest document at that revision.", "$ref": "studio-common.schema.json#/$defs/sha256"}
+      }
+    },
+    "eventRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "syncRevision": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/revision"}]},
+    "profile": {
+      "type": "object",
+      "required": ["id", "revision"],
+      "additionalProperties": false,
+      "properties": {"id": {"$ref": "studio-common.schema.json#/$defs/profileId"}, "revision": {"$ref": "studio-common.schema.json#/$defs/revision"}}
+    },
+    "output": {
+      "type": "object",
+      "required": ["aspect", "height", "durationTargetSeconds"],
+      "additionalProperties": false,
+      "properties": {
+        "aspect": {"$ref": "studio-common.schema.json#/$defs/aspect"},
+        "height": {"description": "1080p is the default; 2160 only after device and compute benchmarks.", "enum": [720, 1080, 1920, 2160]},
+        "durationTargetSeconds": {"type": ["integer", "null"], "minimum": 10, "maximum": 14400}
+      }
+    },
+    "participants": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "required": ["participantId", "displayName", "role", "recordingAcknowledged", "appearance"],
+        "additionalProperties": false,
+        "properties": {
+          "participantId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "displayName": {"$ref": "studio-common.schema.json#/$defs/userText"},
+          "role": {"enum": ["player", "coach", "camera-operator", "guest"]},
+          "recordingAcknowledged": {"type": "boolean"},
+          "appearance": {"enum": ["show", "blur", "exclude"]}
+        }
+      }
+    },
+    "sourceRights": {
+      "type": "array",
+      "maxItems": 18,
+      "items": {
+        "type": "object",
+        "required": ["sourceId", "ownerParticipantId", "cloudConsent", "consentRecordId"],
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "ownerParticipantId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "cloudConsent": {"description": "Consent to upload this selected source for cloud processing. Archive permission is not processing consent.", "type": "boolean"},
+          "consentRecordId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]}
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "required": ["venueVisible", "locationHidden"],
+      "additionalProperties": false,
+      "properties": {"venueVisible": {"type": "boolean"}, "locationHidden": {"type": "boolean"}}
+    },
+    "quoteAuthorization": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["quoteId", "reservationId"],
+          "additionalProperties": false,
+          "properties": {"quoteId": {"$ref": "studio-common.schema.json#/$defs/id"}, "reservationId": {"$ref": "studio-common.schema.json#/$defs/id"}}
+        }
+      ]
+    },
+    "brand": {
+      "type": "object",
+      "required": ["wordmark", "mark", "ivory", "forest", "panel", "chartreuse", "clay"],
+      "additionalProperties": false,
+      "properties": {
+        "wordmark": {"const": "JOVRA"},
+        "mark": {"const": "court-arc"},
+        "ivory": {"const": "#F4F1E8"},
+        "forest": {"const": "#092A25"},
+        "panel": {"const": "#123C33"},
+        "chartreuse": {"const": "#D7F56A"},
+        "clay": {"const": "#C47752"}
+      }
+    }
+  }
+}

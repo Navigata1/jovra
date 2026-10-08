@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/delivered-artifact.film.json",
+  "cases": [
+    {
+      "id": "chapters-short",
+      "why": "Chapters cover the whole film",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/chapters/2/endFrame",
+          "value": 7700
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badChapters"
+      }
+    },
+    {
+      "id": "ready-without-full-decode",
+      "why": "A finished export is not a verified film",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/verification/fullDecode",
+          "value": "pending"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "unverifiedReady"
+      }
+    },
+    {
+      "id": "two-day-link",
+      "why": "Share links last at most 24 hours",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/delivery/shareLink/expiresAt",
+          "value": "2026-10-09T23:50:00Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "shareLinkLifetime"
+      }
+    },
+    {
+      "id": "auto-published",
+      "why": "Prepare for YouTube never publishes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/youtubePrep/published",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "public-film",
+      "why": "Delivery is private",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/delivery/visibility",
+          "value": "public"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "plan-hash-trailing-newline",
+      "why": "ECMA-262 anchors: the bound plan hash has no trailing newline",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/bindings/editPlanSha256",
+          "value": "8888888888888888888888888888888888888888888888888888888888888888\n"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

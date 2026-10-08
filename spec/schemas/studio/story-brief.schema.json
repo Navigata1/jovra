@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio StoryBrief (jovra.story-brief/1)",
+  "description": "The planner-facing story proposal (the film-engine research calls its planner output a StoryPlan; this is that contract). A heuristic or model planner fills it with ids and enums only: keepers, B-roll items, notes, cues, stats, catalog templates and treatments. It never carries frame numbers, score digits, metric values, quotes, paths or filter strings. reasonForReview and omitted ideas appear only in the review UI. Deterministic code compiles a valid brief into a jovra.edit-plan/2.",
+  "type": "object",
+  "required": ["schemaVersion", "briefId", "projectId", "revision", "sample", "profile", "bindings", "planner", "feelingKey", "audience", "durationTargetSeconds", "aspect", "primaryAudioPolicy", "effectIntensity", "cleanAlternate", "privacy", "music", "narration", "beats", "comparisons", "omitted", "unresolved"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.story-brief/1"},
+    "briefId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "profile": {
+      "type": "object",
+      "required": ["id", "revision"],
+      "additionalProperties": false,
+      "properties": {"id": {"$ref": "studio-common.schema.json#/$defs/profileId"}, "revision": {"$ref": "studio-common.schema.json#/$defs/revision"}}
+    },
+    "bindings": {
+      "type": "object",
+      "required": ["eventRevision", "syncRevision", "keeperCatalogRevision", "brollCatalogRevision"],
+      "additionalProperties": false,
+      "properties": {
+        "eventRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+        "syncRevision": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/revision"}]},
+        "keeperCatalogRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+        "brollCatalogRevision": {"$ref": "studio-common.schema.json#/$defs/revision"}
+      }
+    },
+    "planner": {
+      "description": "Which planner proposed this brief. A model id is pinned and server-side only; 'heuristic' is the default and the fallback.",
+      "type": "object",
+      "required": ["kind", "modelId", "adapterVersion"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["heuristic", "model", "user"]},
+        "modelId": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,63}$"}]},
+        "adapterVersion": {"type": "string", "pattern": "^[a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "feelingKey": {"$ref": "studio-common.schema.json#/$defs/templateId"},
+    "audience": {"enum": ["self", "coach", "family", "private-share"]},
+    "durationTargetSeconds": {"type": "integer", "minimum": 10, "maximum": 14400},
+    "aspect": {"$ref": "studio-common.schema.json#/$defs/aspect"},
+    "primaryAudioPolicy": {"enum": ["continuous-primary-court-audio", "no-audio"]},
+    "effectIntensity": {"enum": ["low", "medium"]},
+    "cleanAlternate": {"type": "boolean"},
+    "privacy": {
+      "type": "object",
+      "required": ["venueVisible", "faces"],
+      "additionalProperties": false,
+      "properties": {"venueVisible": {"type": "boolean"}, "faces": {"enum": ["show", "blur-bystanders"]}}
+    },
+    "music": {"oneOf": [{"type": "null"}, {"type": "object", "required": ["assetId", "rightsRecordId"], "additionalProperties": false, "properties": {"assetId": {"$ref": "studio-common.schema.json#/$defs/id"}, "rightsRecordId": {"$ref": "studio-common.schema.json#/$defs/id"}}}]},
+    "narration": {"oneOf": [{"type": "null"}, {"type": "object", "required": ["voice", "consentRecordId"], "additionalProperties": false, "properties": {"voice": {"enum": ["user-recorded", "generated"]}, "consentRecordId": {"$ref": "studio-common.schema.json#/$defs/id"}}}]},
+    "beats": {"type": "array", "minItems": 1, "maxItems": 64, "items": {"$ref": "#/$defs/beat"}},
+    "comparisons": {"type": "array", "maxItems": 8, "items": {"$ref": "#/$defs/comparison"}},
+    "omitted": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "required": ["idea", "missingEvidence"],
+        "additionalProperties": false,
+        "properties": {"idea": {"$ref": "studio-common.schema.json#/$defs/userText"}, "missingEvidence": {"$ref": "studio-common.schema.json#/$defs/userText"}}
+      }
+    },
+    "unresolved": {"type": "array", "maxItems": 16, "items": {"$ref": "studio-common.schema.json#/$defs/userText"}}
+  },
+  "$defs": {
+    "beat": {
+      "type": "object",
+      "required": ["beatId", "role", "treatment", "keeperId", "brollId", "angle", "replaySpeedDen", "overlays", "noteId", "templateId", "reasonForReview"],
+      "additionalProperties": false,
+      "properties": {
+        "beatId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "role": {"enum": ["goal", "context", "example", "cue", "drill", "checkpoint", "intro", "point", "game-transition", "replay", "final-score", "opening", "build", "key-exchange", "payoff", "close", "early-evidence", "lesson", "recent-evidence", "what-changed", "next-goal", "arrival", "preparation", "match-moment", "highlight", "after", "dedication"]},
+        "treatment": {"enum": ["live", "replay", "freeze", "title-card", "broll"]},
+        "keeperId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+        "brollId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+        "angle": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/placementSlot"}]},
+        "replaySpeedDen": {"oneOf": [{"type": "null"}, {"enum": [1, 2, 4, 8]}]},
+        "overlays": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["kind", "refId"],
+            "additionalProperties": false,
+            "properties": {"kind": {"$ref": "studio-common.schema.json#/$defs/overlayKind"}, "refId": {"$ref": "studio-common.schema.json#/$defs/id"}}
+          }
+        },
+        "noteId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+        "templateId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/templateId"}]},
+        "reasonForReview": {"$ref": "studio-common.schema.json#/$defs/userText"}
+      }
+    },
+    "side": {
+      "type": "object",
+      "required": ["date", "sessionIds", "numerator", "denominator", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "date": {"$ref": "studio-common.schema.json#/$defs/date"},
+        "sessionIds": {"type": "array", "minItems": 1, "maxItems": 16, "items": {"$ref": "studio-common.schema.json#/$defs/id"}},
+        "numerator": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "denominator": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "provenance": {"$ref": "studio-common.schema.json#/$defs/provenanceStatus"}
+      }
+    },
+    "comparison": {
+      "description": "A dated before/after of one stored stat. The display strings are derived (integer pct, percentage points) and re-checked; '% improvement' wording on proportions is never produced.",
+      "type": "object",
+      "required": ["comparisonId", "statId", "metricDefinitionId", "methodId", "selectionRule", "claim", "before", "after", "display"],
+      "additionalProperties": false,
+      "properties": {
+        "comparisonId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "statId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "metricDefinitionId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "methodId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "selectionRule": {"enum": ["all", "seeded-random", "user-chosen"]},
+        "claim": {"enum": ["change", "chronology"]},
+        "before": {"$ref": "#/$defs/side"},
+        "after": {"$ref": "#/$defs/side"},
+        "display": {
+          "type": "object",
+          "required": ["before", "after", "delta"],
+          "additionalProperties": false,
+          "properties": {"before": {"type": "string", "maxLength": 40}, "after": {"type": "string", "maxLength": 40}, "delta": {"type": "string", "maxLength": 40}}
+        }
+      }
+    }
+  }
+}

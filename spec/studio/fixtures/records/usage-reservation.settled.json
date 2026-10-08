@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "jovra.usage-reservation/1",
+  "reservationId": "res-0002",
+  "projectId": "sample-court-day",
+  "jobId": "job-film-01",
+  "quoteId": "quote-test-01",
+  "environment": "test",
+  "sample": true,
+  "idempotencyKey": {
+    "projectId": "sample-court-day",
+    "planRevision": 2,
+    "outputSpecSha256": "8e10e6614d128e6380090e9b206cac5e6ee800e17cce73cc23e823114efffb99"
+  },
+  "capCredits": 4,
+  "reservedCredits": 4,
+  "consumedCredits": 3,
+  "releasedCredits": 1,
+  "status": "settled",
+  "entries": [
+    {
+      "entryId": "e-1",
+      "kind": "reserve",
+      "credits": 4,
+      "key": "reserve:sample-court-day:2:8e10e6614d128e6380090e9b206cac5e6ee800e17cce73cc23e823114efffb99",
+      "at": "2026-10-07T22:50:05Z"
+    },
+    {
+      "entryId": "e-2",
+      "kind": "consume",
+      "credits": 1,
+      "key": "consume:job-film-01:normalizing:1",
+      "at": "2026-10-07T23:05:00Z"
+    },
+    {
+      "entryId": "e-3",
+      "kind": "consume",
+      "credits": 1,
+      "key": "consume:job-film-01:preview_rendering:1",
+      "at": "2026-10-07T23:20:00Z"
+    },
+    {
+      "entryId": "e-4",
+      "kind": "consume",
+      "credits": 1,
+      "key": "consume:job-film-01:final_rendering:2",
+      "at": "2026-10-07T23:40:00Z"
+    },
+    {
+      "entryId": "e-5",
+      "kind": "release",
+      "credits": 1,
+      "key": "release:job-film-01:ready",
+      "at": "2026-10-07T23:50:00Z"
+    }
+  ],
+  "createdAt": "2026-10-07T22:50:05Z"
+}

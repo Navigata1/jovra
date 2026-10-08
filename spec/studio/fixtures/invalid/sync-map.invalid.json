@@ -1,0 +1,260 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/sync-map.json",
+  "cases": [
+    {
+      "id": "forged-offset",
+      "why": "The stored offset is not what the anchors give",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/pieces/0/transform/offsetUs",
+          "value": 120837
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "syncFitMismatch"
+      }
+    },
+    {
+      "id": "forged-residual",
+      "why": "A residual was edited",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/pieces/0/anchors/0/residualUs",
+          "value": 27
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "syncFitMismatch"
+      }
+    },
+    {
+      "id": "auto-approved",
+      "why": "Camera 3 has five anchors; it cannot be estimated",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/2/pieces/0/state",
+          "value": "estimated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "syncStateMismatch"
+      }
+    },
+    {
+      "id": "review-missing-middle",
+      "why": "Reviewed needs start, middle and end",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/pieces/0/checkpoints",
+          "value": [
+            "start",
+            "end"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "reviewIncomplete"
+      }
+    },
+    {
+      "id": "extrapolated-coverage",
+      "why": "Coverage beyond the recorded file",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/pieces/0/matchCoverage/endUs",
+          "value": 3661200204
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badCoverage"
+      }
+    },
+    {
+      "id": "validated-map",
+      "why": "A single map is never Validated",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/status",
+          "value": "validated"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "wrong-speed-of-sound",
+      "why": "Default is 343 m/s",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/speedOfSound/mmPerSecond",
+          "value": 340000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badSpeedOfSound"
+      }
+    },
+    {
+      "id": "provenance-overclaim",
+      "why": "Camera 3 still needs review",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/provenance/status",
+          "value": "reviewed"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badProvenance"
+      }
+    },
+    {
+      "id": "certainty-field",
+      "why": "No fake certainty percentages on anchors",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/sources/1/pieces/0/anchors/0/confidencePct",
+          "value": 99
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "anchor-outside-piece",
+      "why": "An anchor 1 s past the end of its piece (another segment's) is never fitted",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/sources/1/pieces/0/anchors/-",
+          "value": {
+            "id": "c2-stray",
+            "kind": "serve-contact",
+            "modality": "visual",
+            "sourceTimeUs": 3601000000,
+            "referenceTimeUs": 3601200000,
+            "eventPositionMm": null,
+            "sourceDelayUs": 0,
+            "referenceDelayUs": 0,
+            "corrected": true,
+            "residualUs": 0,
+            "inlier": true,
+            "reviewed": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badAnchor"
+      }
+    },
+    {
+      "id": "fit-without-inliers",
+      "why": "A fit needs at least two inlier anchors",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/pieces/0/fit/nInliers",
+          "value": 0
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "failed-piece-claims-coverage",
+      "why": "A failed piece (no transform) cannot carry match coverage",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/sources/2/pieces/-",
+          "value": {
+            "segmentId": "seg-1",
+            "sourceDurationUs": 600000000,
+            "matchCoverage": {
+              "startUs": 3700000000,
+              "endUs": 4300000000
+            },
+            "transform": null,
+            "fit": null,
+            "anchors": [],
+            "state": "failed",
+            "reasons": [
+              "too few anchors to fit"
+            ],
+            "checkpoints": [],
+            "reviewedAt": null
+          }
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "reference-restart-invented",
+      "why": "A restarted reference segment with an invented offset and a 1.09 rate: its placement comes from the capture journal (from-hints, rate 1) or it has none",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/sources/0/pieces/-",
+          "value": {
+            "segmentId": "seg-1",
+            "sourceDurationUs": 600000000,
+            "matchCoverage": {
+              "startUs": 3650000000,
+              "endUs": 4304000000
+            },
+            "transform": {
+              "offsetUs": 3650000000,
+              "rate": {
+                "num": 1090000000,
+                "den": 1000000000
+              }
+            },
+            "fit": null,
+            "anchors": [],
+            "state": "reference",
+            "reasons": [],
+            "checkpoints": [],
+            "reviewedAt": null
+          }
+        },
+        {
+          "op": "add",
+          "path": "/sources/0/gaps/-",
+          "value": {
+            "match": {
+              "startUs": 3600000000,
+              "endUs": 3650000000
+            },
+            "reason": "restart"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badReference"
+      }
+    }
+  ]
+}

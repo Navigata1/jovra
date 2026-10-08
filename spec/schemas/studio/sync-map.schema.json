@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio SyncMap (jovra.sync-map/1)",
+  "description": "Source clock -> match clock maps for one project. The match clock is light time on the reference (primary) source's video clock, integer microseconds, origin at the earliest covered instant. Each non-reference device has one rate (one oscillator) and a piecewise offset per recorded segment; maps never extend into gaps. Anchors keep their sound-travel corrections and residuals. Fits are reproduced exactly by spec/reference/studio/syncfit.py (method robust-trimmed-ols/1: a Theil-Sen start, one trim of residuals over three output frames, then exact OLS on the inliers). A piece keeps a transform only with at least two inlier anchors; otherwise it is failed, with no transform and no fit statistics, and cannot be reviewed. Provenance is never 'validated' here: that is reserved for the benchmarked sync capability.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "revision", "sample", "sourceManifestRevision", "matchClock", "outputFps", "speedOfSound", "placements", "sources", "provenance"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.sync-map/1"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "revision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "sourceManifestRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "matchClock": {
+      "type": "object",
+      "required": ["unit", "referenceSourceId", "referenceSegmentId", "origin"],
+      "additionalProperties": false,
+      "properties": {
+        "unit": {"const": "us"},
+        "referenceSourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "referenceSegmentId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "origin": {"const": "earliest-coverage"}
+      }
+    },
+    "outputFps": {"description": "The film frame rate the review thresholds use (half an output frame).", "$ref": "studio-common.schema.json#/$defs/fps"},
+    "speedOfSound": {
+      "type": "object",
+      "required": ["mmPerSecond", "temperatureC", "method"],
+      "additionalProperties": false,
+      "properties": {
+        "mmPerSecond": {"type": "integer", "minimum": 300000, "maximum": 380000},
+        "temperatureC": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/decimalString"}]},
+        "method": {"enum": ["default-343", "temperature"]}
+      }
+    },
+    "placements": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["sourceId", "slot", "positionMm", "from"],
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+          "positionMm": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/positionMm"}]},
+          "from": {"enum": ["slot-default", "calibration", "user", "unknown"]}
+        }
+      }
+    },
+    "sources": {"type": "array", "minItems": 1, "maxItems": 6, "items": {"$ref": "#/$defs/sourceMap"}},
+    "provenance": {
+      "type": "object",
+      "required": ["capabilityId", "method", "methodVersion", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "capabilityId": {"const": "studio.multiCameraSync"},
+        "method": {"const": "jovra-sync"},
+        "methodVersion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+        "status": {"enum": ["manual", "estimated", "reviewed"]}
+      }
+    }
+  },
+  "$defs": {
+    "anchor": {
+      "type": "object",
+      "required": ["id", "kind", "modality", "sourceTimeUs", "referenceTimeUs", "eventPositionMm", "sourceDelayUs", "referenceDelayUs", "corrected", "residualUs", "inlier", "reviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "kind": {"enum": ["serve-contact", "bounce", "impact", "slate-clap", "ball-drop", "manual-marker"]},
+        "modality": {"enum": ["visual", "audio", "manual"]},
+        "sourceTimeUs": {"description": "Observed time on this segment's source clock (from segment zero). Must lie inside the piece, 0 <= sourceTimeUs < sourceDurationUs; the reference rejects an anchor outside its piece (badAnchor) rather than fitting it.", "$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "referenceTimeUs": {"description": "The same event observed on the reference, on the match clock.", "$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "eventPositionMm": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/positionMm"}]},
+        "sourceDelayUs": {"description": "Sound travel event -> this phone, subtracted before fitting (0 for visual).", "$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "referenceDelayUs": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "corrected": {"description": "False for an audio anchor without geometry: such a map is never auto-approved.", "type": "boolean"},
+        "residualUs": {"type": ["integer", "null"]},
+        "inlier": {"type": "boolean"},
+        "reviewed": {"type": "boolean"}
+      }
+    },
+    "piece": {
+      "type": "object",
+      "required": ["segmentId", "sourceDurationUs", "matchCoverage", "transform", "fit", "anchors", "state", "reasons", "checkpoints", "reviewedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "segmentId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "sourceDurationUs": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "matchCoverage": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/intervalUs"}]},
+        "transform": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "description": "t_match = offsetUs + rate * t_source (t_source in microseconds from segment zero).",
+              "type": "object",
+              "required": ["offsetUs", "rate"],
+              "additionalProperties": false,
+              "properties": {"offsetUs": {"type": "integer"}, "rate": {"$ref": "studio-common.schema.json#/$defs/rate"}}
+            }
+          ]
+        },
+        "fit": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["method", "nInliers", "nOutliers", "residualRmsUs", "residualMaxUs", "driftPpb", "thirdsCovered", "uncorrectedAudio"],
+              "additionalProperties": false,
+              "properties": {
+                "method": {"const": "robust-trimmed-ols/1"},
+                "nInliers": {"description": "At least 2: a piece with fewer inliers has no fit at all.", "type": "integer", "minimum": 2},
+                "nOutliers": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+                "residualRmsUs": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+                "residualMaxUs": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+                "driftPpb": {"type": "integer", "minimum": -100000000, "maximum": 100000000},
+                "thirdsCovered": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "boolean"}},
+                "uncorrectedAudio": {"type": "boolean"}
+              }
+            }
+          ]
+        },
+        "anchors": {"type": "array", "maxItems": 2000, "items": {"$ref": "#/$defs/anchor"}},
+        "state": {"description": "reference: the primary's reference segment only (rate 1). from-hints: no anchors, placed from a capture hint derived from the SourceManifest (on the reference device, its own journal); never cut, never reviewed. failed: no transform (fewer than two inlier anchors, an implausible rate, or nothing to fit; this includes no shared coverage, so there is no separate no-overlap state). reviewed: a person confirmed the start, middle and end checkpoints of a fit with at least three inlier anchors and a drift of at most 1000 ppm.", "enum": ["reference", "from-hints", "estimated", "needs-review", "reviewed", "manual", "failed"]},
+        "reasons": {"type": "array", "maxItems": 16, "items": {"type": "string", "maxLength": 120}},
+        "checkpoints": {"type": "array", "uniqueItems": true, "maxItems": 8, "items": {"enum": ["start", "middle", "end", "restart"]}},
+        "reviewedAt": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/dateTime"}]}
+      },
+      "if": {"properties": {"transform": {"type": "null"}}},
+      "then": {"properties": {"matchCoverage": {"type": "null"}, "fit": {"type": "null"}}},
+      "else": {"properties": {"matchCoverage": {"type": "object"}}}
+    },
+    "sourceMap": {
+      "type": "object",
+      "required": ["sourceId", "audioLatencyUs", "pieces", "gaps"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "audioLatencyUs": {"description": "Device audio-vs-video latency; null until measured by a slate.", "type": ["integer", "null"]},
+        "pieces": {"type": "array", "minItems": 1, "maxItems": 64, "items": {"$ref": "#/$defs/piece"}},
+        "gaps": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": ["match", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "match": {"$ref": "studio-common.schema.json#/$defs/intervalUs"},
+              "reason": {"enum": ["restart", "stopped", "missing-file", "interruption", "thermal"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}

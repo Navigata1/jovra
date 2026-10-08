@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/source-manifest.json",
+  "cases": [
+    {
+      "id": "two-primaries",
+      "why": "Exactly one primary angle",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/1/isPrimary",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "primaryCount"
+      }
+    },
+    {
+      "id": "hdr-without-hdr-transfer",
+      "why": "HDR declares HLG or PQ",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/2/original/colour/transfer",
+          "value": "bt709"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "colourMismatch"
+      }
+    },
+    {
+      "id": "proxy-not-rotated",
+      "why": "A render proxy bakes rotation in",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/2/proxies/0/rotationApplied",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "proxyRotation"
+      }
+    },
+    {
+      "id": "shared-slot",
+      "why": "Two cameras in one placement",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/2/slot",
+          "value": "far-baseline"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "slotTaken"
+      }
+    },
+    {
+      "id": "file-path",
+      "why": "No local paths in a manifest",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/sources/0/original/path",
+          "value": "/var/mobile/x.mov"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "segment-frames",
+      "why": "Segment frames must add up",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/sources/0/segments/0/frameCount",
+          "value": 215999
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badSegments"
+      }
+    }
+  ]
+}

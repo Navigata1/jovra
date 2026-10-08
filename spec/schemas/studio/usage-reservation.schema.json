@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio UsageReservation (jovra.usage-reservation/1)",
+  "description": "An idempotent hold of Studio Credits against an accepted quote, keyed by (projectId, planRevision, outputSpecSha256), all computed server-side from the stored plan version; the quote carries the same outputSpecSha256 and funds only this reservation. One key has exactly one reservation: after budget_exceeded an accepted re-quote tops it up (another reserve entry; quoteId and capCredits then name the newest quote) instead of opening a second hold. Entries are keyed too: reserve by the request key, consume by stage (key consume:jobId:stage:attempt, at most one consume entry per jobId and stage, written when an attempt succeeds, so a failed attempt is not charged and a retry never charges a stage twice), release by outcome, so a retried request or a redelivered queue message can never charge twice. Estimates, consumption and releases are kept apart. Demo identities never reserve; test reservations are Sample; live charging waits for its own ADR.",
+  "type": "object",
+  "required": ["schemaVersion", "reservationId", "projectId", "jobId", "quoteId", "environment", "sample", "idempotencyKey", "capCredits", "reservedCredits", "consumedCredits", "releasedCredits", "status", "entries", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.usage-reservation/1"},
+    "reservationId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "jobId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+    "quoteId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "environment": {"$ref": "studio-common.schema.json#/$defs/environment"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "idempotencyKey": {
+      "type": "object",
+      "required": ["projectId", "planRevision", "outputSpecSha256"],
+      "additionalProperties": false,
+      "properties": {
+        "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "planRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+        "outputSpecSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"}
+      }
+    },
+    "capCredits": {"$ref": "studio-common.schema.json#/$defs/credits"},
+    "reservedCredits": {"$ref": "studio-common.schema.json#/$defs/credits"},
+    "consumedCredits": {"$ref": "studio-common.schema.json#/$defs/credits"},
+    "releasedCredits": {"$ref": "studio-common.schema.json#/$defs/credits"},
+    "status": {"enum": ["held", "settled", "released", "canceled"]},
+    "entries": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "required": ["entryId", "kind", "credits", "key", "at"],
+        "additionalProperties": false,
+        "properties": {
+          "entryId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "kind": {"enum": ["reserve", "consume", "release"]},
+          "credits": {"$ref": "studio-common.schema.json#/$defs/credits"},
+          "key": {"description": "reserve:<projectId>:<planRevision>:<outputSpecSha256> (the record's own idempotency key; one initial entry, first) or that key plus :topup:<quoteId>; consume:<jobId>:<stage>:<attempt> (this record's job, a charged stage spelled as in the job contract); release:<jobId>:<outcome> (ready, failed or canceled, matching status). The prefix is the entry kind.", "type": "string", "pattern": "^(reserve|consume|release)(:[A-Za-z0-9_-]{1,64}){2,5}$"},
+          "at": {"$ref": "studio-common.schema.json#/$defs/dateTime"}
+        }
+      }
+    },
+    "createdAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"}
+  }
+}

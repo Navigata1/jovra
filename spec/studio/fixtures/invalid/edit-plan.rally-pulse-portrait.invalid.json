@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/edit-plan.rally-pulse-portrait.json",
+  "cases": [
+    {
+      "id": "blind-portrait-crop",
+      "why": "Fill would blindly crop a landscape source into 9:16",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/3/framing",
+          "value": {
+            "mode": "fill"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "framingAspect"
+      }
+    },
+    {
+      "id": "pan-too-fast",
+      "why": "1082 units in 10 frames",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/0/framing/windows/1",
+          "value": {
+            "atFrame": 10,
+            "x": 4500,
+            "y": 0,
+            "w": 3164,
+            "h": 10000
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "panTooFast"
+      }
+    },
+    {
+      "id": "window-leaves-frame",
+      "why": "The crop window leaves the source frame",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/0/framing/windows/0/x",
+          "value": 7000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badReframe"
+      }
+    },
+    {
+      "id": "aspect-dimension-mismatch",
+      "why": "1080x1080 is not 9:16",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/output/height",
+          "value": 1080
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badOutput"
+      }
+    },
+    {
+      "id": "music-without-private-rights",
+      "why": "Music needs rights for the private film",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/music/rightsScope",
+          "value": [
+            "youtube"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "rightsMissing"
+      }
+    },
+    {
+      "id": "self-attested-rights",
+      "why": "A plan cannot attest its own rights",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/music/rightsRecordId",
+          "value": "trust-me"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "rightsMissing"
+      }
+    },
+    {
+      "id": "rights-scope-overclaim",
+      "why": "The stored rights cover the private film only",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/music/rightsScope",
+          "value": [
+            "private-film",
+            "youtube"
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "rightsMissing"
+      }
+    },
+    {
+      "id": "rights-for-another-asset",
+      "why": "A rights record covers one asset",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/music/assetId",
+          "value": "track-02"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "rightsMissing"
+      }
+    },
+    {
+      "id": "alt-bed-at-dissolve",
+      "why": "An alternate bed starting at r02's 6-frame dissolve with 20 ms fades would switch hard in the middle of the blend; it needs 100 ms fades on both sides (an audio dip)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/1",
+          "value": {
+            "route": "alt-bed",
+            "sourceId": "camera-2",
+            "sourceInFrame": 119957,
+            "outputInFrame": 420,
+            "outputOutFrame": 900,
+            "fadeInMs": 20,
+            "fadeOutMs": 20
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/2",
+          "value": {
+            "route": "silence",
+            "sourceId": null,
+            "sourceInFrame": null,
+            "outputInFrame": 900,
+            "outputOutFrame": 945,
+            "fadeInMs": 10,
+            "fadeOutMs": 10
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "fadeTooShort"
+      }
+    }
+  ]
+}

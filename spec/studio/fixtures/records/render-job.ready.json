@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "jovra.render-job/1",
+  "jobId": "job-film-01",
+  "projectId": "sample-court-day",
+  "environment": "test",
+  "sample": true,
+  "planId": "court-memories-final",
+  "planRevision": 2,
+  "quoteId": "quote-test-01",
+  "reservationId": "res-0002",
+  "idempotencyKey": "8e10e6614d128e6380090e9b206cac5e6ee800e17cce73cc23e823114efffb99",
+  "state": "ready",
+  "resumeStage": null,
+  "attempt": 2,
+  "maxAttempts": 3,
+  "stageProgress": null,
+  "deliveredArtifactIds": [
+    "film-court-memories"
+  ],
+  "history": [
+    {
+      "seq": 0,
+      "from": null,
+      "to": "draft",
+      "at": "2026-10-07T22:44:00Z",
+      "reason": "created"
+    },
+    {
+      "seq": 1,
+      "from": "draft",
+      "to": "quoted",
+      "at": "2026-10-07T22:45:00Z",
+      "reason": "preflight"
+    },
+    {
+      "seq": 2,
+      "from": "quoted",
+      "to": "consented",
+      "at": "2026-10-07T22:50:00Z",
+      "reason": "owner-accepted"
+    },
+    {
+      "seq": 3,
+      "from": "consented",
+      "to": "upload_pending",
+      "at": "2026-10-07T22:50:05Z",
+      "reason": "reserved"
+    },
+    {
+      "seq": 4,
+      "from": "upload_pending",
+      "to": "uploading",
+      "at": "2026-10-07T22:51:00Z",
+      "reason": "upload-started"
+    },
+    {
+      "seq": 5,
+      "from": "uploading",
+      "to": "paused",
+      "at": "2026-10-07T22:55:00Z",
+      "reason": "owner-paused"
+    },
+    {
+      "seq": 6,
+      "from": "paused",
+      "to": "uploading",
+      "at": "2026-10-07T22:58:00Z",
+      "reason": "owner-resumed"
+    },
+    {
+      "seq": 7,
+      "from": "uploading",
+      "to": "queued",
+      "at": "2026-10-07T23:03:00Z",
+      "reason": "sources-verified"
+    },
+    {
+      "seq": 8,
+      "from": "queued",
+      "to": "normalizing",
+      "at": "2026-10-07T23:04:00Z",
+      "reason": "stage-start"
+    },
+    {
+      "seq": 9,
+      "from": "normalizing",
+      "to": "syncing",
+      "at": "2026-10-07T23:08:00Z",
+      "reason": "stage-start"
+    },
+    {
+      "seq": 10,
+      "from": "syncing",
+      "to": "analyzing",
+      "at": "2026-10-07T23:10:00Z",
+      "reason": "stage-start"
+    },
+    {
+      "seq": 11,
+      "from": "analyzing",
+      "to": "planning",
+      "at": "2026-10-07T23:14:00Z",
+      "reason": "stage-start"
+    },
+    {
+      "seq": 12,
+      "from": "planning",
+      "to": "preview_rendering",
+      "at": "2026-10-07T23:15:00Z",
+      "reason": "plan-valid"
+    },
+    {
+      "seq": 13,
+      "from": "preview_rendering",
+      "to": "awaiting_review",
+      "at": "2026-10-07T23:22:00Z",
+      "reason": "preview-ready"
+    },
+    {
+      "seq": 14,
+      "from": "awaiting_review",
+      "to": "final_rendering",
+      "at": "2026-10-07T23:30:00Z",
+      "reason": "owner-approved"
+    },
+    {
+      "seq": 15,
+      "from": "final_rendering",
+      "to": "failed_retryable",
+      "at": "2026-10-07T23:33:00Z",
+      "reason": "lease-lost"
+    },
+    {
+      "seq": 16,
+      "from": "failed_retryable",
+      "to": "final_rendering",
+      "at": "2026-10-07T23:34:00Z",
+      "reason": "retry"
+    },
+    {
+      "seq": 17,
+      "from": "final_rendering",
+      "to": "verifying",
+      "at": "2026-10-07T23:44:00Z",
+      "reason": "render-done"
+    },
+    {
+      "seq": 18,
+      "from": "verifying",
+      "to": "ready",
+      "at": "2026-10-07T23:49:00Z",
+      "reason": "verification-passed"
+    }
+  ]
+}

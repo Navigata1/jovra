@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio camera roles and invitations (jovra.camera-invite/1)",
+  "description": "The Build-your-match roster (one primary plus up to five more phones, each recording locally) and its invitations. An invitation is project-scoped, single-use, expires within 10 minutes, carries the host's TLS key fingerprint and needs the host's approval tap; it is not a web link. A camera role can record locally, upload its own assigned source and see its own preview, never browse other participants' footage.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "sample", "environment", "hostDeviceId", "maxCameras", "roles", "invites"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.camera-invite/1"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "environment": {"$ref": "studio-common.schema.json#/$defs/environment"},
+    "hostDeviceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "maxCameras": {"const": 6},
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["slot", "role", "deviceId", "deviceLabel", "status", "recordingAcknowledged", "permissions"],
+        "additionalProperties": false,
+        "properties": {
+          "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+          "role": {"enum": ["primary", "camera"]},
+          "deviceId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+          "deviceLabel": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/userText"}]},
+          "status": {"enum": ["ready", "waiting", "reconnecting", "disconnected", "left", "permission-denied", "storage-low", "thermal-warning"]},
+          "recordingAcknowledged": {"type": "boolean"},
+          "permissions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["record-local", "upload-own-source", "view-own-preview", "host-controls"]}}
+        }
+      }
+    },
+    "invites": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["inviteId", "displayCode", "slot", "role", "issuedAt", "expiresAt", "singleUse", "hostApprovalRequired", "tlsFingerprintSha256", "status", "acceptedAt", "deviceId"],
+        "additionalProperties": false,
+        "properties": {
+          "inviteId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "displayCode": {"description": "Human-readable code shown beside the QR (e.g. JVR-482); the QR payload carries the single-use token and is never stored here.", "type": "string", "pattern": "^JVR-[0-9]{3}$"},
+          "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+          "role": {"const": "camera"},
+          "issuedAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"},
+          "expiresAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"},
+          "singleUse": {"const": true},
+          "hostApprovalRequired": {"const": true},
+          "tlsFingerprintSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+          "status": {"enum": ["issued", "accepted", "expired", "revoked"]},
+          "acceptedAt": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/dateTime"}]},
+          "deviceId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]}
+        }
+      }
+    }
+  }
+}

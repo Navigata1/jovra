@@ -1,0 +1,474 @@
+{
+  "schemaVersion": "jovra.source-manifest/1",
+  "projectId": "sample-court-day",
+  "revision": 1,
+  "sample": true,
+  "createdAt": "2026-10-07T22:00:00Z",
+  "sources": [
+    {
+      "sourceId": "camera-1",
+      "role": "match",
+      "slot": "near-baseline",
+      "isPrimary": true,
+      "deviceLabel": "Jon's iPhone",
+      "original": {
+        "sha256": "3dd8384c35d332710ba3248a9588d8e274ddff6d26ceb2b2dfe409ca2b2051ff",
+        "sizeBytes": 3600000000,
+        "container": "mov",
+        "durationUs": 3600000000,
+        "timescale": 600,
+        "startPts": {
+          "value": 0,
+          "timescale": 600
+        },
+        "frameCount": 216000,
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "vfr": false,
+        "video": {
+          "codec": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "rotationDegrees": 0,
+          "pixelAspect": {
+            "num": 1,
+            "den": 1
+          }
+        },
+        "colour": {
+          "primaries": "bt709",
+          "transfer": "bt709",
+          "matrix": "bt709",
+          "range": "limited",
+          "bitDepth": 8,
+          "hdr": false
+        },
+        "audio": {
+          "codec": "aac",
+          "sampleRate": 48000,
+          "channels": 1
+        }
+      },
+      "lens": {
+        "kind": "wide",
+        "zoomFactor": "1.0"
+      },
+      "captureHints": {
+        "wallClockStart": "2026-10-07T21:00:00Z",
+        "wallClockSource": "room-ntp",
+        "roomOffsetUs": 0,
+        "roomRoundTripUs": null
+      },
+      "segments": [
+        {
+          "segmentId": "seg-0",
+          "index": 0,
+          "reason": "start",
+          "fileZeroHostNs": 1000000000,
+          "startPts": {
+            "value": 0,
+            "timescale": 600
+          },
+          "durationUs": 3600000000,
+          "frameCount": 216000
+        }
+      ],
+      "proxies": [
+        {
+          "class": "render",
+          "sha256": "2efba57b9997b83f289a7e97e34c239ae6f70c7d79291eb97749553d3cdbdaa4",
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "width": 1920,
+          "height": 1080,
+          "frameCount": 216000,
+          "ptsTableSha256": "d3ef40eeb96e30c77316e347624752351434bd0b9ed8b9bfbe58444319d77afa",
+          "normalizerVersion": "jovra-normalize@0.1.0",
+          "rotationApplied": false,
+          "toneMapped": false
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "sha256-full-read-device",
+        "verifiedAt": "2026-10-07T22:10:00Z"
+      }
+    },
+    {
+      "sourceId": "camera-2",
+      "role": "match",
+      "slot": "far-baseline",
+      "isPrimary": false,
+      "deviceLabel": "Alex's phone",
+      "original": {
+        "sha256": "637ced057c91240f310c4e851bafb3213cf886594d669f861e415d70dd1b8318",
+        "sizeBytes": 3600000000,
+        "container": "mov",
+        "durationUs": 3600000000,
+        "timescale": 600,
+        "startPts": {
+          "value": 0,
+          "timescale": 600
+        },
+        "frameCount": 216000,
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "vfr": true,
+        "video": {
+          "codec": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "rotationDegrees": 0,
+          "pixelAspect": {
+            "num": 1,
+            "den": 1
+          }
+        },
+        "colour": {
+          "primaries": "bt709",
+          "transfer": "bt709",
+          "matrix": "bt709",
+          "range": "limited",
+          "bitDepth": 8,
+          "hdr": false
+        },
+        "audio": {
+          "codec": "aac",
+          "sampleRate": 48000,
+          "channels": 1
+        }
+      },
+      "lens": {
+        "kind": "wide",
+        "zoomFactor": "1.0"
+      },
+      "captureHints": {
+        "wallClockStart": "2026-10-07T21:00:00Z",
+        "wallClockSource": "room-ntp",
+        "roomOffsetUs": 4200,
+        "roomRoundTripUs": 9800
+      },
+      "segments": [
+        {
+          "segmentId": "seg-0",
+          "index": 0,
+          "reason": "start",
+          "fileZeroHostNs": 1000000000,
+          "startPts": {
+            "value": 0,
+            "timescale": 600
+          },
+          "durationUs": 3600000000,
+          "frameCount": 216000
+        }
+      ],
+      "proxies": [
+        {
+          "class": "render",
+          "sha256": "d7fd860bd3c36c3bb29bc8488b097527d4866c61babd4e2fa5308ef541217e80",
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "width": 1920,
+          "height": 1080,
+          "frameCount": 216000,
+          "ptsTableSha256": "6b89d4d90eb93ac76119dc55ef7420fce311cfc4505144897889bcf1bd7acfae",
+          "normalizerVersion": "jovra-normalize@0.1.0",
+          "rotationApplied": false,
+          "toneMapped": false
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "sha256-full-read-device",
+        "verifiedAt": "2026-10-07T22:10:00Z"
+      }
+    },
+    {
+      "sourceId": "camera-3",
+      "role": "match",
+      "slot": "near-left-corner",
+      "isPrimary": false,
+      "deviceLabel": "Corner left",
+      "original": {
+        "sha256": "190462f69901bcfe2115f6fc9d67bb6562b8623708b818878d8e5dd53baec9bd",
+        "sizeBytes": 3600000000,
+        "container": "mov",
+        "durationUs": 3600000000,
+        "timescale": 600,
+        "startPts": {
+          "value": 0,
+          "timescale": 600
+        },
+        "frameCount": 216000,
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "vfr": false,
+        "video": {
+          "codec": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "rotationDegrees": 90,
+          "pixelAspect": {
+            "num": 1,
+            "den": 1
+          }
+        },
+        "colour": {
+          "primaries": "bt2020",
+          "transfer": "hlg",
+          "matrix": "bt2020nc",
+          "range": "limited",
+          "bitDepth": 10,
+          "hdr": true
+        },
+        "audio": {
+          "codec": "aac",
+          "sampleRate": 48000,
+          "channels": 1
+        }
+      },
+      "lens": {
+        "kind": "wide",
+        "zoomFactor": "1.0"
+      },
+      "captureHints": {
+        "wallClockStart": "2026-10-07T21:00:00Z",
+        "wallClockSource": "room-ntp",
+        "roomOffsetUs": 4200,
+        "roomRoundTripUs": 9800
+      },
+      "segments": [
+        {
+          "segmentId": "seg-0",
+          "index": 0,
+          "reason": "start",
+          "fileZeroHostNs": 1000000000,
+          "startPts": {
+            "value": 0,
+            "timescale": 600
+          },
+          "durationUs": 3600000000,
+          "frameCount": 216000
+        }
+      ],
+      "proxies": [
+        {
+          "class": "render",
+          "sha256": "2477a12e3bfb7b6578a157e2e1b2925da2f69a3d36d15e302bc5695fbe85a9a8",
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "width": 1080,
+          "height": 1920,
+          "frameCount": 216000,
+          "ptsTableSha256": "d2e936c316e52b960a650e326584e549a1ede0c83c49fe296b56e36216a12f68",
+          "normalizerVersion": "jovra-normalize@0.1.0",
+          "rotationApplied": true,
+          "toneMapped": true
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "sha256-full-read-device",
+        "verifiedAt": "2026-10-07T22:10:00Z"
+      }
+    },
+    {
+      "sourceId": "broll-1",
+      "role": "broll",
+      "slot": null,
+      "isPrimary": false,
+      "deviceLabel": "Arrival",
+      "original": {
+        "sha256": "edbc43ac3cabeaaad090552b0b684ad0c4d0e84ba7646855bf68467d387793ab",
+        "sizeBytes": 60000000,
+        "container": "mov",
+        "durationUs": 60000000,
+        "timescale": 600,
+        "startPts": {
+          "value": 0,
+          "timescale": 600
+        },
+        "frameCount": 1800,
+        "nominalFps": {
+          "num": 30,
+          "den": 1
+        },
+        "vfr": false,
+        "video": {
+          "codec": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "rotationDegrees": 0,
+          "pixelAspect": {
+            "num": 1,
+            "den": 1
+          }
+        },
+        "colour": {
+          "primaries": "bt709",
+          "transfer": "bt709",
+          "matrix": "bt709",
+          "range": "limited",
+          "bitDepth": 8,
+          "hdr": false
+        },
+        "audio": {
+          "codec": "aac",
+          "sampleRate": 48000,
+          "channels": 1
+        }
+      },
+      "lens": {
+        "kind": "wide",
+        "zoomFactor": null
+      },
+      "captureHints": {
+        "wallClockStart": null,
+        "wallClockSource": "device",
+        "roomOffsetUs": null,
+        "roomRoundTripUs": null
+      },
+      "segments": [
+        {
+          "segmentId": "seg-0",
+          "index": 0,
+          "reason": "start",
+          "fileZeroHostNs": null,
+          "startPts": {
+            "value": 0,
+            "timescale": 600
+          },
+          "durationUs": 60000000,
+          "frameCount": 1800
+        }
+      ],
+      "proxies": [
+        {
+          "class": "render",
+          "sha256": "82dbe53880d5d2b3d1227de500c92ea7e65ef1b1c94b3f69dce2a177b9110abf",
+          "fps": {
+            "num": 30,
+            "den": 1
+          },
+          "width": 1920,
+          "height": 1080,
+          "frameCount": 1800,
+          "ptsTableSha256": "21abbb0dc18bbb7759884816735c6563c828c351de699ea2591028740ff65674",
+          "normalizerVersion": "jovra-normalize@0.1.0",
+          "rotationApplied": false,
+          "toneMapped": false
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "sha256-full-read-device",
+        "verifiedAt": "2026-10-07T22:10:00Z"
+      }
+    },
+    {
+      "sourceId": "broll-2",
+      "role": "broll",
+      "slot": null,
+      "isPrimary": false,
+      "deviceLabel": "After the match",
+      "original": {
+        "sha256": "02c2897f6e82f64e6f5f5d5b6588e844ebacc1c16990f7ada82f86e8a51a1321",
+        "sizeBytes": 90000000,
+        "container": "mov",
+        "durationUs": 90000000,
+        "timescale": 600,
+        "startPts": {
+          "value": 0,
+          "timescale": 600
+        },
+        "frameCount": 2700,
+        "nominalFps": {
+          "num": 30,
+          "den": 1
+        },
+        "vfr": false,
+        "video": {
+          "codec": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "rotationDegrees": 0,
+          "pixelAspect": {
+            "num": 1,
+            "den": 1
+          }
+        },
+        "colour": {
+          "primaries": "bt709",
+          "transfer": "bt709",
+          "matrix": "bt709",
+          "range": "limited",
+          "bitDepth": 8,
+          "hdr": false
+        },
+        "audio": {
+          "codec": "aac",
+          "sampleRate": 48000,
+          "channels": 1
+        }
+      },
+      "lens": {
+        "kind": "wide",
+        "zoomFactor": null
+      },
+      "captureHints": {
+        "wallClockStart": null,
+        "wallClockSource": "device",
+        "roomOffsetUs": null,
+        "roomRoundTripUs": null
+      },
+      "segments": [
+        {
+          "segmentId": "seg-0",
+          "index": 0,
+          "reason": "start",
+          "fileZeroHostNs": null,
+          "startPts": {
+            "value": 0,
+            "timescale": 600
+          },
+          "durationUs": 90000000,
+          "frameCount": 2700
+        }
+      ],
+      "proxies": [
+        {
+          "class": "render",
+          "sha256": "66bdee628f07053ecec11c7ff577bbb18ba3cb272dbc0ec978db8246638fef2a",
+          "fps": {
+            "num": 30,
+            "den": 1
+          },
+          "width": 1920,
+          "height": 1080,
+          "frameCount": 2700,
+          "ptsTableSha256": "928f69b54c8f77a08b6d56e794108e1a0853ca2bf655662ff9ebf2fd1b3cebf3",
+          "normalizerVersion": "jovra-normalize@0.1.0",
+          "rotationApplied": false,
+          "toneMapped": false
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "sha256-full-read-device",
+        "verifiedAt": "2026-10-07T22:10:00Z"
+      }
+    }
+  ]
+}

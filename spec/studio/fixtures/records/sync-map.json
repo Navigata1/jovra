@@ -1,0 +1,483 @@
+{
+  "schemaVersion": "jovra.sync-map/1",
+  "projectId": "sample-court-day",
+  "revision": 2,
+  "sample": true,
+  "sourceManifestRevision": 1,
+  "matchClock": {
+    "unit": "us",
+    "referenceSourceId": "camera-1",
+    "referenceSegmentId": "seg-0",
+    "origin": "earliest-coverage"
+  },
+  "outputFps": {
+    "num": 30,
+    "den": 1
+  },
+  "speedOfSound": {
+    "mmPerSecond": 343000,
+    "temperatureC": null,
+    "method": "default-343"
+  },
+  "placements": [
+    {
+      "sourceId": "camera-1",
+      "slot": "near-baseline",
+      "positionMm": {
+        "xMm": 0,
+        "yMm": -17365,
+        "zMm": 1500
+      },
+      "from": "slot-default"
+    },
+    {
+      "sourceId": "camera-2",
+      "slot": "far-baseline",
+      "positionMm": {
+        "xMm": 0,
+        "yMm": 17365,
+        "zMm": 1500
+      },
+      "from": "slot-default"
+    },
+    {
+      "sourceId": "camera-3",
+      "slot": "near-left-corner",
+      "positionMm": {
+        "xMm": -8535,
+        "yMm": -17365,
+        "zMm": 1500
+      },
+      "from": "slot-default"
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "camera-1",
+      "audioLatencyUs": null,
+      "pieces": [
+        {
+          "segmentId": "seg-0",
+          "sourceDurationUs": 3600000000,
+          "matchCoverage": {
+            "startUs": 0,
+            "endUs": 3600000000
+          },
+          "transform": {
+            "offsetUs": 0,
+            "rate": {
+              "num": 1000000000,
+              "den": 1000000000
+            }
+          },
+          "fit": null,
+          "anchors": [],
+          "state": "reference",
+          "reasons": [],
+          "checkpoints": [],
+          "reviewedAt": null
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "sourceId": "camera-2",
+      "audioLatencyUs": null,
+      "pieces": [
+        {
+          "segmentId": "seg-0",
+          "sourceDurationUs": 3600000000,
+          "matchCoverage": {
+            "startUs": 119837,
+            "endUs": 3601200204
+          },
+          "transform": {
+            "offsetUs": 119837,
+            "rate": {
+              "num": 1000300102,
+              "den": 1000000000
+            }
+          },
+          "fit": {
+            "method": "robust-trimmed-ols/1",
+            "nInliers": 14,
+            "nOutliers": 0,
+            "residualRmsUs": 1118,
+            "residualMaxUs": 2513,
+            "driftPpb": 300102,
+            "thirdsCovered": [
+              true,
+              true,
+              true
+            ],
+            "uncorrectedAudio": false
+          },
+          "anchors": [
+            {
+              "id": "c2-01",
+              "kind": "slate-clap",
+              "modality": "audio",
+              "sourceTimeUs": 59912824,
+              "referenceTimeUs": 60050648,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": 0,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 50648,
+              "referenceDelayUs": 50648,
+              "corrected": true,
+              "residualUs": 22,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-02",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 119846147,
+              "referenceTimeUs": 120000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": -1950,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-03",
+              "kind": "impact",
+              "modality": "audio",
+              "sourceTimeUs": 379851114,
+              "referenceTimeUs": 380016043,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": -11885,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 85289,
+              "referenceDelayUs": 16043,
+              "corrected": true,
+              "residualUs": 370,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-04",
+              "kind": "impact",
+              "modality": "audio",
+              "sourceTimeUs": 639704212,
+              "referenceTimeUs": 640085289,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": 11885,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 16043,
+              "referenceDelayUs": 85289,
+              "corrected": true,
+              "residualUs": 22,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-05",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 899608317,
+              "referenceTimeUs": 900000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 1872,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-06",
+              "kind": "impact",
+              "modality": "audio",
+              "sourceTimeUs": 1159548119,
+              "referenceTimeUs": 1160085289,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": 11885,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 16043,
+              "referenceDelayUs": 85289,
+              "corrected": true,
+              "residualUs": 109,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-07",
+              "kind": "impact",
+              "modality": "audio",
+              "sourceTimeUs": 1419539617,
+              "referenceTimeUs": 1420016043,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": -11885,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 85289,
+              "referenceDelayUs": 16043,
+              "corrected": true,
+              "residualUs": -146,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-08",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 1679377087,
+              "referenceTimeUs": 1680000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": -908,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-09",
+              "kind": "impact",
+              "modality": "audio",
+              "sourceTimeUs": 1939383334,
+              "referenceTimeUs": 1940016043,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": -11885,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 85289,
+              "referenceDelayUs": 16043,
+              "corrected": true,
+              "residualUs": 131,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-10",
+              "kind": "impact",
+              "modality": "audio",
+              "sourceTimeUs": 2199236302,
+              "referenceTimeUs": 2200085289,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": 11885,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 16043,
+              "referenceDelayUs": 85289,
+              "corrected": true,
+              "residualUs": -86,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-11",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 2459139657,
+              "referenceTimeUs": 2460000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 2513,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-12",
+              "kind": "impact",
+              "modality": "audio",
+              "sourceTimeUs": 2719080229,
+              "referenceTimeUs": 2720085289,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": 11885,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 16043,
+              "referenceDelayUs": 85289,
+              "corrected": true,
+              "residualUs": -20,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-13",
+              "kind": "impact",
+              "modality": "audio",
+              "sourceTimeUs": 2979071718,
+              "referenceTimeUs": 2980016043,
+              "eventPositionMm": {
+                "xMm": 0,
+                "yMm": -11885,
+                "zMm": 1000
+              },
+              "sourceDelayUs": 85289,
+              "referenceDelayUs": 16043,
+              "corrected": true,
+              "residualUs": -266,
+              "inlier": true,
+              "reviewed": true
+            },
+            {
+              "id": "c2-14",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 3238909828,
+              "referenceTimeUs": 3240000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": -1668,
+              "inlier": true,
+              "reviewed": true
+            }
+          ],
+          "state": "reviewed",
+          "reasons": [],
+          "checkpoints": [
+            "start",
+            "middle",
+            "end"
+          ],
+          "reviewedAt": "2026-10-07T22:40:00Z"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "sourceId": "camera-3",
+      "audioLatencyUs": null,
+      "pieces": [
+        {
+          "segmentId": "seg-0",
+          "sourceDurationUs": 3600000000,
+          "matchCoverage": {
+            "startUs": 2349482,
+            "endUs": 3602394482
+          },
+          "transform": {
+            "offsetUs": 2349482,
+            "rate": {
+              "num": 1000012500,
+              "den": 1000000000
+            }
+          },
+          "fit": {
+            "method": "robust-trimmed-ols/1",
+            "nInliers": 5,
+            "nOutliers": 0,
+            "residualRmsUs": 1848,
+            "residualMaxUs": 2420,
+            "driftPpb": 12500,
+            "thirdsCovered": [
+              true,
+              true,
+              false
+            ],
+            "uncorrectedAudio": false
+          },
+          "anchors": [
+            {
+              "id": "c3-01",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 197649728,
+              "referenceTimeUs": 200000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": -1681,
+              "inlier": true,
+              "reviewed": false
+            },
+            {
+              "id": "c3-02",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 597641028,
+              "referenceTimeUs": 600000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 2019,
+              "inlier": true,
+              "reviewed": false
+            },
+            {
+              "id": "c3-03",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 997638928,
+              "referenceTimeUs": 1000000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": -880,
+              "inlier": true,
+              "reviewed": false
+            },
+            {
+              "id": "c3-04",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 1397630628,
+              "referenceTimeUs": 1400000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": 2420,
+              "inlier": true,
+              "reviewed": false
+            },
+            {
+              "id": "c3-05",
+              "kind": "serve-contact",
+              "modality": "visual",
+              "sourceTimeUs": 1797629928,
+              "referenceTimeUs": 1800000000,
+              "eventPositionMm": null,
+              "sourceDelayUs": 0,
+              "referenceDelayUs": 0,
+              "corrected": true,
+              "residualUs": -1880,
+              "inlier": true,
+              "reviewed": false
+            }
+          ],
+          "state": "needs-review",
+          "reasons": [
+            "fewer than 8 inlier anchors",
+            "anchors do not cover the first, middle and last thirds"
+          ],
+          "checkpoints": [],
+          "reviewedAt": null
+        }
+      ],
+      "gaps": []
+    }
+  ],
+  "provenance": {
+    "capabilityId": "studio.multiCameraSync",
+    "method": "jovra-sync",
+    "methodVersion": "0.1",
+    "status": "estimated"
+  }
+}

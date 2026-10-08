@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/edit-plan.match-broadcast-set-1.json",
+  "cases": [
+    {
+      "id": "out-of-order-points",
+      "why": "Match Broadcast keeps strict session order",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/3/sourceInFrame",
+          "value": 3000
+        },
+        {
+          "op": "replace",
+          "path": "/segments/3/sourceOutFrame",
+          "value": 11220
+        },
+        {
+          "op": "replace",
+          "path": "/segments/3/sessionInUs",
+          "value": 50000000
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "chronology"
+      }
+    },
+    {
+      "id": "broadcast-reframe",
+      "why": "Match Broadcast letterboxes instead of reframing",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/1/framing",
+          "value": {
+            "mode": "reframe",
+            "basis": "reviewed-action-box",
+            "windows": [
+              {
+                "atFrame": 0,
+                "x": 0,
+                "y": 0,
+                "w": 10000,
+                "h": 10000
+              }
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "opNotAllowed"
+      }
+    },
+    {
+      "id": "metric-in-broadcast",
+      "why": "Match Broadcast shows score and notes only",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/segments/1/overlayRefs/-",
+          "value": {
+            "kind": "metric",
+            "refId": "stat-aces",
+            "eventRevision": 3,
+            "provenance": "reviewed"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "overlayNotAllowed"
+      }
+    },
+    {
+      "id": "quarter-speed-replay",
+      "why": "Match Broadcast replays at 1/2 only",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/segments/2/speed",
+          "value": {
+            "num": 1,
+            "den": 4
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badSpeed"
+      }
+    }
+  ]
+}

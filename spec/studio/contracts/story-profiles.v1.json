@@ -1,0 +1,442 @@
+{
+  "schemaVersion": "jovra.story-profile-catalog/1",
+  "derivedFrom": "design-reference/studio/brief/story-profiles.json#jovra.story-profiles/1",
+  "status": "design specification with proposed grammar defaults (film-engine research section 6, INFERRED); tune on real footage. Not an implemented renderer.",
+  "defaults": {
+    "preserveOriginals": true,
+    "inventFootage": false,
+    "inventMetrics": false,
+    "publishAutomatically": false,
+    "music": "none",
+    "generatedCommentary": "off",
+    "rallyActionSpeed": 1,
+    "effectIntensity": "low",
+    "sourceAudio": "continuous primary track",
+    "metricProvenanceVisible": true
+  },
+  "profiles": [
+    {
+      "id": "coach-cut",
+      "revision": 1,
+      "name": "Coach’s Cut",
+      "intent": "Turn a match or lesson into evidence-linked instruction.",
+      "recommendedDurationSeconds": [
+        180,
+        600
+      ],
+      "beats": [
+        "Goal and context",
+        "Observed pattern",
+        "Two or three source-linked examples",
+        "Reviewed cue or user note",
+        "Practice drill and next checkpoint"
+      ],
+      "editing": {
+        "cutPolicy": "at point boundaries; within-rally cuts only for a reviewed demonstration",
+        "pace": "deliberate",
+        "replay": "original speed first; optional labelled slow motion; no synthetic intermediate frames by default",
+        "overlays": [
+          "point-event score",
+          "source time",
+          "reviewed cue",
+          "2D annotation"
+        ],
+        "effects": "arrows and freeze frames outside the original-speed keeper"
+      },
+      "mustNot": [
+        "diagnose injury",
+        "claim unvalidated biomechanics",
+        "replace a coach observation with a fabricated measurement"
+      ],
+      "fallback": "Use user notes and manually chosen clips when automatic observations are unavailable.",
+      "grammar": {
+        "durationSeconds": {
+          "min": 180,
+          "max": 600
+        },
+        "chronology": "free",
+        "ops": [
+          "live",
+          "replay",
+          "freeze",
+          "title-card"
+        ],
+        "replaySpeedDens": [
+          2,
+          4
+        ],
+        "transitions": [
+          "dissolve"
+        ],
+        "maxTransitionMs": 400,
+        "freezeMs": {
+          "min": 500,
+          "max": 3000
+        },
+        "cardMs": {
+          "min": 1000,
+          "max": 6000
+        },
+        "replayMaxMs": 8000,
+        "reframe": "if-box-fits",
+        "gradePresets": [
+          "none"
+        ],
+        "narration": true,
+        "music": false,
+        "overlays": {
+          "score": [
+            "manual",
+            "reviewed",
+            "validated"
+          ],
+          "metric": [
+            "manual",
+            "estimated",
+            "reviewed",
+            "validated"
+          ],
+          "note": [
+            "manual",
+            "reviewed"
+          ],
+          "cue": [
+            "manual",
+            "reviewed",
+            "validated"
+          ],
+          "annotation": [
+            "manual",
+            "reviewed"
+          ]
+        }
+      }
+    },
+    {
+      "id": "match-broadcast",
+      "revision": 1,
+      "name": "Match Broadcast",
+      "intent": "Make a clean, understandable television-style record of the match.",
+      "recommendedDurationSeconds": [
+        300,
+        7200
+      ],
+      "beats": [
+        "Match introduction",
+        "Point sequence",
+        "Game and set transitions",
+        "Key replays after a point",
+        "Final event-derived score"
+      ],
+      "editing": {
+        "cutPolicy": "stay on selected wide angle during play; replays and alternate views after point end",
+        "pace": "faithful to play",
+        "overlays": [
+          "reviewed score",
+          "server indicator when recorded",
+          "set context"
+        ],
+        "effects": "quiet transitions and restrained lower thirds"
+      },
+      "mustNot": [
+        "jump to an unsynchronized view",
+        "hide missing recording intervals",
+        "invent commentary or score",
+        "present a flat movie as interactive multi-angle replay"
+      ],
+      "fallback": "A complete one-angle match with chapter markers.",
+      "grammar": {
+        "durationSeconds": {
+          "min": 300,
+          "max": 7200
+        },
+        "chronology": "strict",
+        "ops": [
+          "live",
+          "replay",
+          "title-card"
+        ],
+        "replaySpeedDens": [
+          2
+        ],
+        "transitions": [
+          "dissolve"
+        ],
+        "maxTransitionMs": 267,
+        "freezeMs": {
+          "min": 500,
+          "max": 4000
+        },
+        "cardMs": {
+          "min": 1000,
+          "max": 5000
+        },
+        "replayMaxMs": 8000,
+        "reframe": "letterbox-only",
+        "gradePresets": [
+          "none"
+        ],
+        "narration": false,
+        "music": false,
+        "overlays": {
+          "score": [
+            "manual",
+            "reviewed",
+            "validated"
+          ],
+          "note": [
+            "manual",
+            "reviewed"
+          ]
+        }
+      }
+    },
+    {
+      "id": "rally-pulse",
+      "revision": 1,
+      "name": "Rally Pulse",
+      "intent": "Create an energetic highlight film without losing the point’s meaning.",
+      "recommendedDurationSeconds": [
+        30,
+        180
+      ],
+      "beats": [
+        "Strong real rally opening",
+        "Short build",
+        "Key exchange",
+        "Point payoff",
+        "Quiet closing moment"
+      ],
+      "editing": {
+        "cutPolicy": "keep the selected rally sequence intact; energy cuts between points",
+        "pace": "quick between rallies, clear during live action",
+        "overlays": [
+          "point context",
+          "small reviewed fact"
+        ],
+        "effects": "optional beat-aligned cuts, title accents and brief transitions; shake off by default; clean alternate version",
+        "music": "user-selected licensed track or court sound"
+      },
+      "mustNot": [
+        "flash or shake over contact frames",
+        "misrepresent missed shots as winners",
+        "use an unlicensed popular song"
+      ],
+      "fallback": "Court-sound highlights with static titles.",
+      "grammar": {
+        "durationSeconds": {
+          "min": 30,
+          "max": 180
+        },
+        "chronology": "free",
+        "ops": [
+          "live",
+          "replay",
+          "title-card"
+        ],
+        "replaySpeedDens": [
+          2,
+          4
+        ],
+        "transitions": [
+          "dissolve",
+          "dip"
+        ],
+        "maxTransitionMs": 200,
+        "freezeMs": {
+          "min": 500,
+          "max": 4000
+        },
+        "cardMs": {
+          "min": 1000,
+          "max": 1500
+        },
+        "replayMaxMs": 8000,
+        "reframe": "if-box-fits",
+        "gradePresets": [
+          "none",
+          "warm-court-1"
+        ],
+        "narration": false,
+        "music": true,
+        "overlays": {
+          "score": [
+            "manual",
+            "reviewed",
+            "validated"
+          ],
+          "metric": [
+            "reviewed",
+            "validated"
+          ]
+        }
+      }
+    },
+    {
+      "id": "progress-story",
+      "revision": 1,
+      "name": "Progress Story",
+      "intent": "Show a player’s learning across dated sessions and lessons.",
+      "recommendedDurationSeconds": [
+        120,
+        360
+      ],
+      "beats": [
+        "Starting goal",
+        "Early evidence",
+        "Lesson and practice",
+        "Recent evidence",
+        "What changed and what remains",
+        "Next practice goal"
+      ],
+      "editing": {
+        "cutPolicy": "date-labelled comparable examples",
+        "pace": "reflective and explanatory",
+        "overlays": [
+          "session dates",
+          "metric definition",
+          "numerators and denominators",
+          "provenance",
+          "practice milestones"
+        ],
+        "effects": "before/after layouts and restrained charts"
+      },
+      "mustNot": [
+        "mix incompatible measurement methods without warning",
+        "claim a causal improvement from two clips",
+        "select only successes while implying a complete statistic"
+      ],
+      "fallback": "A lesson chronology with user-authored reflections and no improvement metric.",
+      "grammar": {
+        "durationSeconds": {
+          "min": 120,
+          "max": 360
+        },
+        "chronology": "free",
+        "ops": [
+          "live",
+          "replay",
+          "freeze",
+          "title-card"
+        ],
+        "replaySpeedDens": [
+          2,
+          4
+        ],
+        "transitions": [
+          "dissolve"
+        ],
+        "maxTransitionMs": 400,
+        "freezeMs": {
+          "min": 500,
+          "max": 4000
+        },
+        "cardMs": {
+          "min": 1000,
+          "max": 6000
+        },
+        "replayMaxMs": 8000,
+        "reframe": "if-box-fits",
+        "gradePresets": [
+          "none"
+        ],
+        "narration": true,
+        "music": true,
+        "overlays": {
+          "metric": [
+            "reviewed",
+            "validated"
+          ],
+          "note": [
+            "manual",
+            "reviewed"
+          ],
+          "cue": [
+            "manual",
+            "reviewed",
+            "validated"
+          ]
+        }
+      }
+    },
+    {
+      "id": "court-memories",
+      "revision": 1,
+      "name": "Court Memories",
+      "intent": "Memorialize the people, place and experience of a day on court.",
+      "recommendedDurationSeconds": [
+        120,
+        480
+      ],
+      "beats": [
+        "Arrival and setting",
+        "Preparation",
+        "Match moments",
+        "A personal highlight",
+        "After the match",
+        "Optional dedication"
+      ],
+      "editing": {
+        "cutPolicy": "real source moments and identifiable source-linked B-roll",
+        "pace": "cinematic with space for atmosphere",
+        "overlays": [
+          "date",
+          "venue if opted in",
+          "short user caption"
+        ],
+        "effects": "gentle transitions, warm consistent grade, natural sound"
+      },
+      "mustNot": [
+        "synthesize someone’s likeness or words",
+        "make a generated moment appear to be match footage",
+        "reveal location when hidden"
+      ],
+      "fallback": "One-camera match excerpts with real stills and original audio.",
+      "grammar": {
+        "durationSeconds": {
+          "min": 120,
+          "max": 480
+        },
+        "chronology": "free",
+        "ops": [
+          "live",
+          "broll",
+          "title-card"
+        ],
+        "replaySpeedDens": [],
+        "transitions": [
+          "dissolve",
+          "dip"
+        ],
+        "maxTransitionMs": 500,
+        "freezeMs": {
+          "min": 500,
+          "max": 4000
+        },
+        "cardMs": {
+          "min": 1000,
+          "max": 6000
+        },
+        "replayMaxMs": 0,
+        "reframe": "if-box-fits",
+        "gradePresets": [
+          "none",
+          "warm-court-1"
+        ],
+        "narration": true,
+        "music": true,
+        "overlays": {
+          "score": [
+            "manual",
+            "reviewed",
+            "validated"
+          ],
+          "note": [
+            "manual",
+            "reviewed"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio Observation (jovra.observation/1)",
+  "description": "One source-grounded observation (a cue, a contact, an occlusion, a ball or body position) with its provenance, producing capability, confidence, source time and calibration dependency. Estimated observations name the model or rule and its confidence; manual ones name a person; reviewed ones name the reviewer; validated needs the capability's benchmark. A rejected observation stays on record and is never shown as instruction.",
+  "type": "object",
+  "required": ["schemaVersion", "observationId", "projectId", "sample", "kind", "sourceId", "sourceTime", "sessionTimeUs", "syncRevision", "eventRevision", "eventRef", "capabilityId", "capabilityVersion", "provenance", "status", "reviewedBy", "textRef"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.observation/1"},
+    "observationId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "kind": {"enum": ["cue", "contact", "bounce", "occlusion", "body-position", "ball-position", "note"]},
+    "sourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "sourceTime": {"description": "Microseconds from the source segment's zero.", "$ref": "studio-common.schema.json#/$defs/intervalUs"},
+    "sessionTimeUs": {"type": ["integer", "null"], "minimum": 0},
+    "syncRevision": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/revision"}]},
+    "eventRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "eventRef": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+    "capabilityId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/capabilityId"}]},
+    "capabilityVersion": {"type": ["string", "null"], "maxLength": 64},
+    "provenance": {
+      "type": "object",
+      "required": ["status", "producer", "confidence", "calibrationRequired", "calibrationId", "benchmarkRef"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {"$ref": "studio-common.schema.json#/$defs/provenanceStatus"},
+        "producer": {"$ref": "studio-common.schema.json#/$defs/producer"},
+        "confidence": {"description": "Model/rule confidence in [0, 1]; null for manual entries. Never shown as a fake percentage of certainty.", "type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "calibrationRequired": {"type": "boolean"},
+        "calibrationId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+        "benchmarkRef": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]}
+      }
+    },
+    "status": {"enum": ["proposed", "accepted", "rejected"]},
+    "reviewedBy": {"oneOf": [{"type": "null"}, {"enum": ["user", "coach"]}]},
+    "textRef": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]}
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/lesson.2026-10-07.json",
+  "cases": [
+    {
+      "id": "over-done",
+      "why": "Done cannot exceed the target",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/practice/0/done",
+          "value": 12
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badPractice"
+      }
+    },
+    {
+      "id": "pending-marked-done",
+      "why": "Five-clip review is still pending",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/practice/2/status",
+          "value": "done"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badPractice"
+      }
+    },
+    {
+      "id": "cue-on-unknown-clip",
+      "why": "Cues anchor to this lesson's clips",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/cues/0/clipId",
+          "value": "l9-clip"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "unknownClip"
+      }
+    },
+    {
+      "id": "id-trailing-newline",
+      "why": "ECMA-262 '$' does not match before a trailing newline",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/lessonId",
+          "value": "lesson-1007\n"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "estimate-marked-reviewed",
+      "why": "An estimated cue is not reviewed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/cues/1/reviewedBy",
+          "value": "coach"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "provenanceMismatch"
+      }
+    }
+  ]
+}

@@ -1,0 +1,372 @@
+{
+  "schemaVersion": "jovra.edit-plan/2",
+  "projectId": "sample-court-day",
+  "planId": "coach-cut-serve",
+  "planRevision": 1,
+  "sample": true,
+  "cleanAlternate": false,
+  "bindings": {
+    "sourceManifestRevision": 1,
+    "syncRevision": 2,
+    "eventRevision": 3,
+    "profileId": "coach-cut",
+    "profileRevision": 1,
+    "keeperCatalogRevision": 1,
+    "brollCatalogRevision": 1
+  },
+  "output": {
+    "fps": {
+      "num": 30,
+      "den": 1
+    },
+    "width": 1920,
+    "height": 1080,
+    "aspect": "16:9",
+    "totalFrames": 5760,
+    "container": "mp4",
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000
+  },
+  "grade": {
+    "presetId": "none"
+  },
+  "sources": [
+    {
+      "id": "camera-1",
+      "role": "match",
+      "sha256": "3dd8384c35d332710ba3248a9588d8e274ddff6d26ceb2b2dfe409ca2b2051ff",
+      "proxy": {
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "width": 1920,
+        "height": 1080,
+        "frameCount": 216000,
+        "ptsTableSha256": "d3ef40eeb96e30c77316e347624752351434bd0b9ed8b9bfbe58444319d77afa"
+      },
+      "hasAudio": true,
+      "coverage": [
+        {
+          "inFrame": 0,
+          "outFrame": 216000,
+          "sessionStartUs": 0,
+          "rate": {
+            "num": 1000000000,
+            "den": 1000000000
+          }
+        }
+      ]
+    },
+    {
+      "id": "camera-2",
+      "role": "match",
+      "sha256": "637ced057c91240f310c4e851bafb3213cf886594d669f861e415d70dd1b8318",
+      "proxy": {
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "width": 1920,
+        "height": 1080,
+        "frameCount": 216000,
+        "ptsTableSha256": "6b89d4d90eb93ac76119dc55ef7420fce311cfc4505144897889bcf1bd7acfae"
+      },
+      "hasAudio": true,
+      "coverage": [
+        {
+          "inFrame": 0,
+          "outFrame": 216000,
+          "sessionStartUs": 119837,
+          "rate": {
+            "num": 1000300102,
+            "den": 1000000000
+          }
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "id": "c01",
+      "op": "title-card",
+      "outputInFrame": 0,
+      "outputOutFrame": 120,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "templateId": "card.goal",
+      "textRefs": [
+        "note-goal"
+      ],
+      "overlayRefs": []
+    },
+    {
+      "id": "c02",
+      "op": "live",
+      "outputInFrame": 120,
+      "outputOutFrame": 1920,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "sourceId": "camera-1",
+      "sourceInFrame": 72000,
+      "sourceOutFrame": 75600,
+      "speed": {
+        "num": 1,
+        "den": 1
+      },
+      "sessionInUs": 1200000000,
+      "keeperId": "k-02",
+      "protectedFrames": [
+        {
+          "inFrame": 72485,
+          "outFrame": 72516
+        },
+        {
+          "inFrame": 73085,
+          "outFrame": 73116
+        },
+        {
+          "inFrame": 73685,
+          "outFrame": 73716
+        }
+      ],
+      "overlayRefs": [
+        {
+          "kind": "score",
+          "refId": "p-041",
+          "eventRevision": 3,
+          "provenance": "reviewed"
+        },
+        {
+          "kind": "metric",
+          "refId": "stat-first-serve-in",
+          "eventRevision": 3,
+          "provenance": "reviewed"
+        }
+      ],
+      "framing": {
+        "mode": "fill"
+      }
+    },
+    {
+      "id": "c03",
+      "op": "freeze",
+      "outputInFrame": 1920,
+      "outputOutFrame": 2010,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "sourceId": "camera-1",
+      "sourceFrame": 73100,
+      "labelTemplateId": "label.paused",
+      "overlayRefs": [
+        {
+          "kind": "annotation",
+          "refId": "ann-01",
+          "eventRevision": 3,
+          "provenance": "reviewed"
+        },
+        {
+          "kind": "cue",
+          "refId": "cue-03",
+          "eventRevision": 3,
+          "provenance": "reviewed"
+        }
+      ],
+      "framing": {
+        "mode": "fill"
+      }
+    },
+    {
+      "id": "c04",
+      "op": "replay",
+      "outputInFrame": 2010,
+      "outputOutFrame": 2250,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "sourceId": "camera-1",
+      "sourceInFrame": 72980,
+      "sourceOutFrame": 73220,
+      "speed": {
+        "num": 1,
+        "den": 2
+      },
+      "replayOf": "c02",
+      "labelTemplateId": "label.replay",
+      "overlayRefs": [],
+      "framing": {
+        "mode": "fill"
+      }
+    },
+    {
+      "id": "c05",
+      "op": "live",
+      "outputInFrame": 2250,
+      "outputOutFrame": 5520,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "sourceId": "camera-2",
+      "sourceInFrame": 150000,
+      "sourceOutFrame": 156540,
+      "speed": {
+        "num": 1,
+        "den": 1
+      },
+      "sessionInUs": 2500870092,
+      "keeperId": "k-04",
+      "protectedFrames": [
+        {
+          "inFrame": 150985,
+          "outFrame": 151016
+        },
+        {
+          "inFrame": 152185,
+          "outFrame": 152216
+        }
+      ],
+      "overlayRefs": [
+        {
+          "kind": "score",
+          "refId": "p-090",
+          "eventRevision": 3,
+          "provenance": "manual"
+        }
+      ],
+      "framing": {
+        "mode": "fill"
+      }
+    },
+    {
+      "id": "c06",
+      "op": "title-card",
+      "outputInFrame": 5520,
+      "outputOutFrame": 5640,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "templateId": "card.drill",
+      "textRefs": [
+        "note-drill"
+      ],
+      "overlayRefs": []
+    },
+    {
+      "id": "c07",
+      "op": "title-card",
+      "outputInFrame": 5640,
+      "outputOutFrame": 5760,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "templateId": "card.next-checkpoint",
+      "textRefs": [
+        "note-next"
+      ],
+      "overlayRefs": []
+    }
+  ],
+  "chapters": [
+    {
+      "id": "ch-goal",
+      "outputInFrame": 0,
+      "templateId": "chapter.goal"
+    },
+    {
+      "id": "ch-example-1",
+      "outputInFrame": 120,
+      "templateId": "chapter.example"
+    },
+    {
+      "id": "ch-example-2",
+      "outputInFrame": 2250,
+      "templateId": "chapter.example"
+    },
+    {
+      "id": "ch-practice",
+      "outputInFrame": 5520,
+      "templateId": "chapter.practice"
+    }
+  ],
+  "audio": {
+    "primarySourceId": "camera-1",
+    "music": null,
+    "narration": {
+      "voice": "user-recorded",
+      "consent": {
+        "consentRecordId": "consent-voice-jon",
+        "granted": true
+      },
+      "disclosureTemplateId": null,
+      "duckDb": -12,
+      "scriptNoteIds": [
+        "note-drill",
+        "note-next"
+      ],
+      "windows": [
+        {
+          "outputInFrame": 5520,
+          "outputOutFrame": 5760
+        }
+      ]
+    },
+    "bed": [
+      {
+        "route": "silence",
+        "sourceId": null,
+        "sourceInFrame": null,
+        "outputInFrame": 0,
+        "outputOutFrame": 120,
+        "fadeInMs": 10,
+        "fadeOutMs": 10
+      },
+      {
+        "route": "primary-bed",
+        "sourceId": "camera-1",
+        "sourceInFrame": 72000,
+        "outputInFrame": 120,
+        "outputOutFrame": 1920,
+        "fadeInMs": 20,
+        "fadeOutMs": 20
+      },
+      {
+        "route": "hold-bed",
+        "sourceId": "camera-1",
+        "sourceInFrame": 75600,
+        "outputInFrame": 1920,
+        "outputOutFrame": 2250,
+        "fadeInMs": 20,
+        "fadeOutMs": 20
+      },
+      {
+        "route": "alt-bed",
+        "sourceId": "camera-2",
+        "sourceInFrame": 150000,
+        "outputInFrame": 2250,
+        "outputOutFrame": 5520,
+        "fadeInMs": 20,
+        "fadeOutMs": 20
+      },
+      {
+        "route": "silence",
+        "sourceId": null,
+        "sourceInFrame": null,
+        "outputInFrame": 5520,
+        "outputOutFrame": 5760,
+        "fadeInMs": 10,
+        "fadeOutMs": 10
+      }
+    ]
+  }
+}

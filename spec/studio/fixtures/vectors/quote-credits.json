@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "quote-credits",
+  "status": "capCredits = max(class minimum, ceil(cost / 800000 micro-USD)); proposal, not a price",
+  "cases": [
+    {
+      "id": "story-1-design-target",
+      "filmClass": "story-1",
+      "estimatedMaxCostMicroUsd": 1120000,
+      "expectCredits": 2
+    },
+    {
+      "id": "story-1-zero",
+      "filmClass": "story-1",
+      "estimatedMaxCostMicroUsd": 0,
+      "expectCredits": 2
+    },
+    {
+      "id": "story-1-worst-case",
+      "filmClass": "story-1",
+      "estimatedMaxCostMicroUsd": 9400000,
+      "expectCredits": 12
+    },
+    {
+      "id": "broadcast-4-6-design",
+      "filmClass": "broadcast-4-6",
+      "estimatedMaxCostMicroUsd": 2320000,
+      "expectCredits": 8
+    },
+    {
+      "id": "story-4-6-exact-boundary",
+      "filmClass": "story-4-6",
+      "estimatedMaxCostMicroUsd": 4800000,
+      "expectCredits": 6
+    },
+    {
+      "id": "story-4-6-one-over",
+      "filmClass": "story-4-6",
+      "estimatedMaxCostMicroUsd": 4800001,
+      "expectCredits": 7
+    },
+    {
+      "id": "revision",
+      "filmClass": "revision",
+      "estimatedMaxCostMicroUsd": 400000,
+      "expectCredits": 1
+    },
+    {
+      "id": "screen-37-class",
+      "filmClass": "story-2-3",
+      "estimatedMaxCostMicroUsd": 1290000,
+      "expectCredits": 4
+    }
+  ]
+}

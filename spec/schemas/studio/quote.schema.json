@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio Quote (jovra.quote/1)",
+  "description": "A server-computed preflight quote in Studio Credits: estimate, cap, retention and expiry, from actual source bytes, angles, profile and output. capCredits = max(class minimum, ceil(estimatedMaxCostMicroUsd / creditCostBudgetMicroUsd)) per spec/studio/contracts/credit-classes.v1.json (a proposal, not a price). An illustrative quote (the screen-37 $4-$8 estimate and $12 cap) is Sample UX only and can never be accepted. Timestamps are ordered by parsing, never as text. No live charging exists (ADR-0013).",
+  "type": "object",
+  "required": ["schemaVersion", "quoteId", "projectId", "environment", "sample", "illustrative", "planRevision", "outputSpecSha256", "inputsSha256", "filmClass", "estimate", "capCredits", "estimatedMaxCostMicroUsd", "creditCostBudgetMicroUsd", "lineItems", "retentionDays", "displayAmounts", "createdAt", "expiresAt", "status", "acceptedAt", "consent"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.quote/1"},
+    "quoteId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "projectId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "environment": {"$ref": "studio-common.schema.json#/$defs/environment"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "illustrative": {"type": "boolean"},
+    "planRevision": {"$ref": "studio-common.schema.json#/$defs/revision"},
+    "outputSpecSha256": {"description": "Binds the quote (and the consent recorded in it) to one output: canonical SHA-256 of (projectId, planRevision, output) of the stored plan version, computed by the server (core.output_spec_sha256), never taken from the client. A reservation funded by this quote must carry the same value, and an accepted quote funds at most one reservation.", "$ref": "studio-common.schema.json#/$defs/sha256"},
+    "inputsSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+    "filmClass": {"enum": ["story-1", "story-2-3", "story-4-6", "broadcast-1", "broadcast-2-3", "broadcast-4-6", "revision"]},
+    "estimate": {
+      "type": "object",
+      "required": ["minCredits", "maxCredits"],
+      "additionalProperties": false,
+      "properties": {"minCredits": {"$ref": "studio-common.schema.json#/$defs/credits"}, "maxCredits": {"$ref": "studio-common.schema.json#/$defs/credits"}}
+    },
+    "capCredits": {"$ref": "studio-common.schema.json#/$defs/credits"},
+    "estimatedMaxCostMicroUsd": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+    "creditCostBudgetMicroUsd": {"const": 800000},
+    "lineItems": {
+      "type": "object",
+      "required": ["sourceCount", "uploadBytes", "storageDays", "outputSeconds", "renderMinutesEstimate", "plannerTokensEstimate"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceCount": {"type": "integer", "minimum": 1, "maximum": 6},
+        "uploadBytes": {"type": "integer", "minimum": 0},
+        "storageDays": {"type": "integer", "minimum": 0, "maximum": 30},
+        "outputSeconds": {"type": "integer", "minimum": 1, "maximum": 14400},
+        "renderMinutesEstimate": {"type": "integer", "minimum": 0},
+        "plannerTokensEstimate": {"type": "integer", "minimum": 0}
+      }
+    },
+    "retentionDays": {"description": "Temporary staging media; 7 is the proposed default, confirmed at preflight.", "type": "integer", "minimum": 1, "maximum": 30},
+    "displayAmounts": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["currency", "minMinor", "maxMinor", "capMinor", "illustrative"],
+          "additionalProperties": false,
+          "properties": {
+            "currency": {"const": "USD"},
+            "minMinor": {"type": "integer", "minimum": 0},
+            "maxMinor": {"type": "integer", "minimum": 0},
+            "capMinor": {"type": "integer", "minimum": 0},
+            "illustrative": {"const": true}
+          }
+        }
+      ]
+    },
+    "createdAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"},
+    "expiresAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"},
+    "status": {"enum": ["open", "accepted", "expired", "superseded"]},
+    "acceptedAt": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/dateTime"}]},
+    "consent": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["consentRecordId", "uploadSelectedSources", "at"],
+          "additionalProperties": false,
+          "properties": {
+            "consentRecordId": {"$ref": "studio-common.schema.json#/$defs/id"},
+            "uploadSelectedSources": {"const": true},
+            "at": {"$ref": "studio-common.schema.json#/$defs/dateTime"}
+          }
+        }
+      ]
+    }
+  }
+}

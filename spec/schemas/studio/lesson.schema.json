@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio Lesson (jovra.lesson/1)",
+  "description": "A lesson record: date, focus, user and coach notes, exact clip links, source-linked cues with provenance, a practice checklist and the next goal. Works offline. A coach's words are stored only as the coach or user entered them; nothing is attributed to a coach that they did not say. Sharing one lesson clip never shares the whole match.",
+  "type": "object",
+  "required": ["schemaVersion", "lessonId", "sample", "date", "title", "focus", "coach", "sessionIds", "notes", "clips", "cues", "practice", "nextGoal", "filmIds", "share"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.lesson/1"},
+    "lessonId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "date": {"$ref": "studio-common.schema.json#/$defs/date"},
+    "title": {"$ref": "studio-common.schema.json#/$defs/userText"},
+    "focus": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/userText"}]},
+    "coach": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "required": ["displayName"], "additionalProperties": false, "properties": {"displayName": {"$ref": "studio-common.schema.json#/$defs/userText"}}}
+      ]
+    },
+    "sessionIds": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/id"}},
+    "notes": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": ["noteId", "author", "text", "provenance", "clipIds", "createdAt"],
+        "additionalProperties": false,
+        "properties": {
+          "noteId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "author": {"enum": ["user", "coach"]},
+          "text": {"$ref": "studio-common.schema.json#/$defs/userText"},
+          "provenance": {"enum": ["manual", "reviewed"]},
+          "clipIds": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/id"}},
+          "createdAt": {"$ref": "studio-common.schema.json#/$defs/dateTime"}
+        }
+      }
+    },
+    "clips": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": ["clipId", "sourceId", "sessionId", "keeperId", "window", "status", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "clipId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "sourceId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+          "sessionId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+          "keeperId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+          "window": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/intervalUs"}]},
+          "status": {"enum": ["available", "local-only", "missing", "deleted"]},
+          "label": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/userText"}]}
+        }
+      }
+    },
+    "cues": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["cueId", "text", "clipId", "observationId", "provenance", "reviewedBy"],
+        "additionalProperties": false,
+        "properties": {
+          "cueId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "text": {"$ref": "studio-common.schema.json#/$defs/userText"},
+          "clipId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "observationId": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/id"}]},
+          "provenance": {"$ref": "studio-common.schema.json#/$defs/provenanceStatus"},
+          "reviewedBy": {"oneOf": [{"type": "null"}, {"enum": ["user", "coach"]}]}
+        }
+      }
+    },
+    "practice": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "required": ["itemId", "label", "unit", "target", "done", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "itemId": {"$ref": "studio-common.schema.json#/$defs/id"},
+          "label": {"$ref": "studio-common.schema.json#/$defs/userText"},
+          "unit": {"enum": ["reps", "clips", "minutes"]},
+          "target": {"type": "integer", "minimum": 1, "maximum": 10000},
+          "done": {"type": "integer", "minimum": 0, "maximum": 10000},
+          "status": {"enum": ["pending", "in-progress", "done"]}
+        }
+      }
+    },
+    "nextGoal": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/userText"}]},
+    "filmIds": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/id"}},
+    "share": {
+      "type": "object",
+      "required": ["mode", "grantIds"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {"enum": ["private", "coach-share"]},
+        "grantIds": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"$ref": "studio-common.schema.json#/$defs/id"}}
+      }
+    }
+  }
+}

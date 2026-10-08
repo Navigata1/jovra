@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "jovra.credit-classes/1",
+  "status": "proposal, not a price. Source: docs/research/studio/pricing-and-premium.md section 5.1 (INFERRED margins). No charge exists: ADR-0013 holds until a new pricing ADR, measured benchmarks (research section 8) and a margin model.",
+  "creditCostBudgetMicroUsd": 800000,
+  "quoteRule": "capCredits = max(classMinimum, ceil(estimatedMaxCostMicroUsd / creditCostBudgetMicroUsd))",
+  "quoteMaxLifetimeSeconds": 1800,
+  "classes": [
+    {"id": "story-1", "label": "Story film, 1 angle", "minimumCredits": 2},
+    {"id": "story-2-3", "label": "Story film, 2-3 angles", "minimumCredits": 4},
+    {"id": "story-4-6", "label": "Story film, 4-6 angles", "minimumCredits": 6},
+    {"id": "broadcast-1", "label": "Match Broadcast, 1 angle", "minimumCredits": 3},
+    {"id": "broadcast-2-3", "label": "Match Broadcast, 2-3 angles", "minimumCredits": 5},
+    {"id": "broadcast-4-6", "label": "Match Broadcast, 4-6 angles", "minimumCredits": 8},
+    {"id": "revision", "label": "New revision of a delivered film", "minimumCredits": 1}
+  ]
+}

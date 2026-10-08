@@ -12,3 +12,5 @@ the export format, which keeps archive, export and the Android port on one shape
   and harder to recover by hand. Session counts are in the hundreds, so an in-memory index over JSON is ample.
 - SQLite (GRDB/Room): reasonable; rejected for v1 to avoid two schemas (SQL + JSON) for the same records.
 - A JOVRA cloud account/backend: out of scope for v1. No server, no JOVRA account, no analytics upload by default.
+
+Status: amended by ADR-0014 (backend boundary only)
