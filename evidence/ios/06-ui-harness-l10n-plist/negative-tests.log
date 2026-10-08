@@ -231,3 +231,13 @@ Ran 31 tests in 0.217s
 OK
 Ran 6 tests in 0.008s
 OK
+
+--- RED (round 3, before the fix): test_side_by_side.py with screen 71 added, against side_by_side.py at 9831823 (every screen > 20 looked up in design-reference/studio/screens)
+side-by-side: s71-light-ios-fold-studio.png names screen 71, which has no reference PNG
+side-by-side: s99-light-nowhere.png names screen 99, which has no reference PNG
+Ran 6 tests in 0.008s
+FAILED (failures=3, errors=1)
+  (the error: test_pairs_screenshots_with_references_by_screen_number; screen 71's reference was None)
+--- GREEN (round 3, 2fe3037: 41 and up -> design-reference/adaptive/screens)
+Ran 6 tests in 0.011s
+OK
