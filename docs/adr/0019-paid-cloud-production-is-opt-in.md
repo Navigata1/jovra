@@ -93,3 +93,20 @@ Sources: `docs/research/studio/pricing-and-premium.md` §§4–8;
 `design-reference/studio/brief/backend-media-design.md` (Job state and money);
 https://developer.apple.com/app-store/review/guidelines/ ; https://developers.cloudflare.com/r2/pricing/ ;
 https://platform.claude.com/docs/en/about-claude/pricing .
+
+## Amendment note (2026-10-07): finding 30, item (2)
+
+Append-only; no decision above changes. Finding 30 (ADR consistency, Studio review round 2) item (2): this ADR said
+"Only the project owner, on a live account, can accept a quote", while testers accept Sample quotes in the isolated
+test environment (`accept_quote`: "owner, real user", `docs/backend/security-model.md` §4.1). The text was
+corrected during that review, before this ADR was first committed. The reading that holds is "Who can spend" above:
+the project owner with a real, non-anonymous account accepts; that is a live account in live, and in test an
+allow-listed tester, whose quotes carry Sample credits and are accepted only when the operator-set tester flag is
+on (`security-model.md` §13.3). A demo profile never reserves.
+
+Cross-reference, no change to "The line": ADR-0023 (founder decision, Jon, 2026-10-07) post-dates this ADR. It keeps
+the on-device rules planner as the free default and prices Studio films in credits by story length (3 to 30 minute
+tiers and Full match) and capture quality, with every quote Sample until the benchmarks set prices. It does not say
+whether on-device template films stay free, so "On-device Studio — recommended free, pending Jon" above stays as
+written until Jon answers the rest of spec open question 9 (register entry SOF-R4-03 in
+`docs/spec/studio-open-findings.md`).

@@ -67,3 +67,16 @@ https://supabase.com/docs/guides/auth/auth-anonymous ; https://supabase.com/docs
 https://developer.apple.com/app-store/review/guidelines/ ;
 https://developer.apple.com/support/offering-account-deletion-in-your-app/ ;
 `docs/research/studio/backend-architecture.md` §3.
+
+## Amendment note (2026-10-07): finding 30, item (5)
+
+Append-only; no decision above changes. Finding 30 (ADR consistency, Studio review round 2) item (5): this ADR said
+account deletion removes "all their R2 objects", which the deletion design's coach-excerpt gap contradicted: a
+coach's lesson-clip excerpts live under another owner's project prefix, so deleting by the user's own project
+prefixes misses them. The text was corrected during that review, before this ADR was first committed. The reading
+that holds: deletion enumerates objects through the rows the user's data produced, not by prefix
+(`docs/backend/security-model.md` §13.9 (c)): every artifact in a project the user owns, plus every clip excerpt of a
+lesson the user owns, in any project. Each listed object, and its child artifacts (§13.9 (f)), is deleted before the
+request reports done. Rows the user wrote as a coach inside another owner's project stay with that project with
+their actor columns set to null, as the 2026-10-07 amendment above says, and objects belonging to that project are
+not deleted with the coach's account.

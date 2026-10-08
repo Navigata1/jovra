@@ -77,3 +77,16 @@ https://supabase.com/docs/guides/local-development/testing/overview ;
 https://supabase.com/docs/guides/database/database-advisors ; https://supabase.com/docs/guides/auth/jwts ;
 https://developers.cloudflare.com/workers/testing/vitest-integration/ ; `docs/research/studio/backend-architecture.md`;
 `design-reference/studio/brief/backend-media-design.md`.
+
+## Amendment note (2026-10-07): finding 30, item (3)
+
+Append-only; no decision above changes. Finding 30 (ADR consistency, Studio review round 2) item (3) said this ADR
+cited the backend tickets as "B-00…B-22", leaving out what `docs/backend/architecture.md` §15 lists after them: the
+review-round-1 hardening B-23 (D1–D24), the JOVRA editor adapter B-24 and the review-round-2 hardening B-25
+(`security-model.md` §13). The range was corrected to "B-00…B-25" during that review, before this ADR was first
+committed, so git holds no earlier wording; on 2026-10-07 it matches §15, whose last row is B-25.
+
+One related difference is recorded here, not fixed: §15's B-00 row still describes the scope change as superseding
+"the 'no backend' line of ADR-0002", while this ADR and ADR-0002 both say "amended (backend boundary only)". This
+ADR's word governs. The row belongs to the backend architecture owner and is left to the re-verification of findings
+13–48 (Studio ticket S02; register entry SOF-R4-05 in `docs/spec/studio-open-findings.md`).
