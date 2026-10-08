@@ -15,4 +15,5 @@ edit it by hand. A new page appears here when the generator runs. Each page's fr
 - [planner](planner.md)
 - [progress](progress.md)
 - [records](records.md)
+- [room](room.md)
 - [sync](sync.md)

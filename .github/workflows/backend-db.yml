@@ -1,0 +1,70 @@
+name: backend-db
+
+# The local Supabase stack in CI (S75 / B-02; docs/backend/architecture.md §12). Nothing hosted is touched: no
+# project, URL, key or account. Every key used here is generated inside the job and thrown away with it.
+
+on:
+  pull_request:
+    paths:
+      - backend/supabase/**
+      - .github/workflows/backend-db.yml
+  push:
+    branches: [main]
+    paths:
+      - backend/supabase/**
+      - .github/workflows/backend-db.yml
+  workflow_dispatch:
+
+concurrency:
+  group: backend-db-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend-db:
+    name: backend-db
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No hosted identifiers or real email addresses in the tree
+        run: supabase/scripts/check-hosted-identifiers.sh
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.100.1
+
+      - name: Generate a throwaway ES256 signing key
+        run: supabase/scripts/gen-signing-key.sh
+
+      - name: supabase start
+        run: supabase start
+
+      - name: supabase db reset (migrations and seed from scratch)
+        run: supabase db reset
+
+      # Advisors judge the shipped schema, so they run before the pgTAP harness installs its `tests` helpers.
+      - name: supabase db advisors (security, fail on warn)
+        run: supabase db advisors --local --type security --fail-on warn
+
+      - name: supabase test db
+        run: supabase test db
+
+      - name: OTP sign-in through Auth and Mailpit; unknown emails refused
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase-status.env"
+          python3 supabase/scripts/otp_smoke.py "$RUNNER_TEMP/supabase-status.env"
+
+      - name: Auth log on failure
+        if: failure()
+        run: docker logs "$(docker ps --filter name=supabase_auth --format '{{.Names}}' | head -1)" 2>&1 | tail -80
+
+      - name: supabase stop
+        if: always()
+        run: supabase stop --no-backup

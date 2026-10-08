@@ -1,0 +1,270 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/room-transcript.st24-contact-lost.json",
+  "cases": [
+    {
+      "id": "stop-inferred-from-silence",
+      "why": "Silence is never shown as Stopped",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/18/display/devices/3/state",
+          "value": "Stopped"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "stopInferredFromSilence"
+      }
+    },
+    {
+      "id": "silent-shown-fresh",
+      "why": "A camera silent for 42 s is Unknown",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/18/display/devices/3/freshness",
+          "value": "Fresh"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "freshnessMismatch"
+      }
+    },
+    {
+      "id": "silent-counted",
+      "why": "An Unknown camera is not counted in Recording on n of m",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/18/display/recordingOn",
+          "value": {
+            "n": 4,
+            "m": 4
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "recordingCountMismatch"
+      }
+    },
+    {
+      "id": "silent-label",
+      "why": "A silent recording camera reads No contact for 0:42 · may still be recording",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/18/display/devices/3/label",
+          "value": "Stopped"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "labelMismatch"
+      }
+    },
+    {
+      "id": "old-epoch-accepted",
+      "why": "An older host epoch is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/19/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "staleEpoch"
+      }
+    },
+    {
+      "id": "replayed-seq-accepted",
+      "why": "A replayed seq is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/20/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "seqNotIncreasing"
+      }
+    },
+    {
+      "id": "viewer-stop-all-accepted",
+      "why": "A viewer cannot stop all",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/22/message/body/status",
+          "value": "Accepted"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/22/length",
+          "value": 313
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "receiptMismatch"
+      }
+    },
+    {
+      "id": "claimed-grant-not-security-event",
+      "why": "Claiming a grant the member does not hold is a security event",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/24/message/body/securityEvent",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/steps/24/length",
+          "value": 309
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "receiptMismatch"
+      }
+    },
+    {
+      "id": "reuse-not-flagged",
+      "why": "The same commandId with another payload is refused as a security event",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/31/message/body/status",
+          "value": "Accepted"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/31/length",
+          "value": 310
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "receiptMismatch"
+      }
+    },
+    {
+      "id": "retry-new-receipt",
+      "why": "A retry with the same payload returns the original receipt",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/29/message/body/eventRevision",
+          "value": 2
+        },
+        {
+          "op": "replace",
+          "path": "/steps/29/length",
+          "value": 299
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "receiptMismatch"
+      }
+    },
+    {
+      "id": "stop-all-blanket-success",
+      "why": "A silent camera's stop result is Unknown, never Accepted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/44/message/body/perDevice/3/result",
+          "value": "Accepted"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "receiptMismatch"
+      }
+    },
+    {
+      "id": "stop-all-missing-target",
+      "why": "Stop all names every enrolled camera",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/38/message/body/target/deviceIds",
+          "value": [
+            "device-jon",
+            "device-alex",
+            "device-sam"
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/steps/38/message/body/targetLabel",
+          "value": "Stop all cameras (3)"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "receiptMismatch"
+      }
+    },
+    {
+      "id": "stop-all-unconfirmed",
+      "why": "Stop all is a confirmed action",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/38/message/body/confirmed",
+          "value": false
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "missing-receipt",
+      "why": "Every command is answered by a receipt",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/steps/33"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "missingReceipt"
+      }
+    },
+    {
+      "id": "unbounded-transit-accepted",
+      "why": "A capture command whose transit cannot be bounded expires",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/35/message/body/status",
+          "value": "Accepted"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/35/length",
+          "value": 313
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "receiptMismatch"
+      }
+    }
+  ]
+}
