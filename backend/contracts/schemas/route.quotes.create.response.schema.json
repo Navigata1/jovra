@@ -1,0 +1,526 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /v1/projects/{projectId}/quotes response",
+  "description": "quotes.create: a response descriptor (status, headers, body). Success body: JSON. Every response carries X-Request-Id; a JSON body's requestId equals it.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/success"
+    },
+    {
+      "$ref": "#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "success": {
+      "description": "Success: 200 with the §5 envelope {data, requestId}.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": 200
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "type": "object",
+          "required": [
+            "data",
+            "requestId"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/data"
+            },
+            "requestId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            },
+            "clientRequestId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "description": "An error: the §5 envelope with one of this route's codes at its HTTP status.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            401,
+            404,
+            409,
+            422,
+            429,
+            500
+          ]
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "$ref": "common.schema.json#/$defs/errorBody"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": 401
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "unauthorized",
+                        "demo_not_accepted"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 404
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "not_found"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 409
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "conflict"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 422
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "invalid",
+                        "idempotency_key_reused"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 429
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "rate_limited"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 500
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "internal"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "data": {
+      "$ref": "#/$defs/quote"
+    },
+    "quote": {
+      "description": "A jovra.quote/1 document (spec/schemas/studio/quote.schema.json) without the internal cost fields estimatedMaxCostMicroUsd, creditCostBudgetMicroUsd (architecture §5.1: all quotes columns except internal cost), plus the wire ids of the story plan it was computed for. Imported by generate.py; edit the spec, not this file.",
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "quoteId",
+        "projectId",
+        "environment",
+        "sample",
+        "illustrative",
+        "planRevision",
+        "outputSpecSha256",
+        "inputsSha256",
+        "plannerChoice",
+        "filmClass",
+        "estimate",
+        "capCredits",
+        "lineItems",
+        "retentionDays",
+        "displayAmounts",
+        "createdAt",
+        "expiresAt",
+        "status",
+        "acceptedAt",
+        "consent",
+        "storyPlanId",
+        "storyPlanVersionId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": "jovra.quote/1"
+        },
+        "quoteId": {
+          "$ref": "#/$defs/studio-common.id"
+        },
+        "projectId": {
+          "$ref": "#/$defs/studio-common.id"
+        },
+        "environment": {
+          "$ref": "#/$defs/studio-common.environment"
+        },
+        "sample": {
+          "$ref": "#/$defs/studio-common.sample"
+        },
+        "illustrative": {
+          "type": "boolean"
+        },
+        "planRevision": {
+          "$ref": "#/$defs/studio-common.revision"
+        },
+        "outputSpecSha256": {
+          "description": "Binds the quote (and the consent recorded in it) to one output: canonical SHA-256 of (projectId, planRevision, output) of the stored plan version, computed by the server (core.output_spec_sha256), never taken from the client. A reservation funded by this quote must carry the same value, and an accepted quote funds at most one reservation.",
+          "$ref": "#/$defs/studio-common.sha256"
+        },
+        "inputsSha256": {
+          "$ref": "#/$defs/studio-common.sha256"
+        },
+        "plannerChoice": {
+          "description": "Who plans the story for this quote (spec D-5, ADR-0016). 'heuristic': the rules planner, no model call, plannerTokensEstimate 0, consent.modelProvider false. 'model': the player switched on 'Plan the story in the cloud' (ST37); an accepted model quote needs consent.modelProvider true. A film funded by this quote binds the same planner kind.",
+          "enum": [
+            "heuristic",
+            "model"
+          ]
+        },
+        "filmClass": {
+          "enum": [
+            "story-1",
+            "story-2-3",
+            "story-4-6",
+            "broadcast-1",
+            "broadcast-2-3",
+            "broadcast-4-6",
+            "revision"
+          ]
+        },
+        "estimate": {
+          "type": "object",
+          "required": [
+            "minCredits",
+            "maxCredits"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "minCredits": {
+              "$ref": "#/$defs/studio-common.credits"
+            },
+            "maxCredits": {
+              "$ref": "#/$defs/studio-common.credits"
+            }
+          }
+        },
+        "capCredits": {
+          "$ref": "#/$defs/studio-common.credits"
+        },
+        "lineItems": {
+          "type": "object",
+          "required": [
+            "sourceCount",
+            "uploadBytes",
+            "storageDays",
+            "outputSeconds",
+            "renderMinutesEstimate",
+            "plannerTokensEstimate"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "sourceCount": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 6
+            },
+            "uploadBytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "storageDays": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 30
+            },
+            "outputSeconds": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 14400
+            },
+            "renderMinutesEstimate": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "plannerTokensEstimate": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "retentionDays": {
+          "description": "Days the work-bucket media (staged originals, proxies, frames, PTS tables, contact sheets, previews) is kept (spec D-3, SD23): 7 by default, 1 or 30 by the player's choice at preflight; equals lineItems.storageDays and consent.retentionDays.",
+          "enum": [
+            1,
+            7,
+            30
+          ]
+        },
+        "displayAmounts": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "currency",
+                "minMinor",
+                "maxMinor",
+                "capMinor",
+                "illustrative"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "currency": {
+                  "const": "USD"
+                },
+                "minMinor": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "maxMinor": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "capMinor": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "illustrative": {
+                  "const": true
+                }
+              }
+            }
+          ]
+        },
+        "createdAt": {
+          "$ref": "#/$defs/studio-common.dateTime"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/studio-common.dateTime"
+        },
+        "status": {
+          "enum": [
+            "open",
+            "accepted",
+            "expired",
+            "superseded"
+          ]
+        },
+        "acceptedAt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/studio-common.dateTime"
+            }
+          ]
+        },
+        "consent": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "consentRecordId",
+                "uploadSelectedSources",
+                "modelProvider",
+                "textClasses",
+                "retentionDays",
+                "consentTextVersion",
+                "at"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "consentRecordId": {
+                  "$ref": "#/$defs/studio-common.id"
+                },
+                "uploadSelectedSources": {
+                  "const": true
+                },
+                "modelProvider": {
+                  "description": "The explicit consent that sampled frames, structured events and the ticked note classes go to the planning model provider (D-5, SD19). Required true for plannerChoice 'model'; false for 'heuristic'.",
+                  "type": "boolean"
+                },
+                "textClasses": {
+                  "description": "Note text classes that may reach the model (security-model section 13.14). Empty unless modelProvider is true.",
+                  "type": "array",
+                  "maxItems": 3,
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "ownerNotes",
+                      "ownerLessonNotes",
+                      "coachNotes"
+                    ]
+                  }
+                },
+                "retentionDays": {
+                  "description": "The retention the player confirmed; equals the quote's retentionDays.",
+                  "enum": [
+                    1,
+                    7,
+                    30
+                  ]
+                },
+                "consentTextVersion": {
+                  "description": "Version of the consent copy shown (ST37), e.g. studio-cloud-consent@1.0.0.",
+                  "type": "string",
+                  "pattern": "^[a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+                },
+                "at": {
+                  "$ref": "#/$defs/studio-common.dateTime"
+                }
+              }
+            }
+          ]
+        },
+        "storyPlanId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        },
+        "storyPlanVersionId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "common.schema.json#/$defs/uuid"
+            }
+          ]
+        }
+      }
+    },
+    "studio-common.credits": {
+      "description": "Studio Credits, the unit of quote, cap, reservation and receipt. Integer only.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "studio-common.dateTime": {
+      "description": "RFC 3339 timestamp in UTC with a Z suffix.",
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,3})?Z$"
+    },
+    "studio-common.environment": {
+      "description": "Local demo (no network, tokens, uploads or charges), isolated test backend, or live backend.",
+      "enum": [
+        "demo",
+        "test",
+        "live"
+      ]
+    },
+    "studio-common.id": {
+      "description": "Opaque identifier. Letters, digits, '_' and '-' only, so an id can never be a path, URL or command.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$"
+    },
+    "studio-common.revision": {
+      "description": "Monotonic document revision. A newer revision makes plans and films bound to an older one stale.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "studio-common.sample": {
+      "description": "True for fictional demo data, which every surface badges 'Sample'.",
+      "type": "boolean"
+    },
+    "studio-common.sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

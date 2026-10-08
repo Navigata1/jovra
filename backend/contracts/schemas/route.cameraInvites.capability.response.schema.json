@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /v1/camera-invites/redemptions/{redemptionId}/capability response",
+  "description": "cameraInvites.capability: a response descriptor (status, headers, body). Success body: JSON. Every response carries X-Request-Id; a JSON body's requestId equals it.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/success"
+    },
+    {
+      "$ref": "#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "success": {
+      "description": "Success: 200 with the §5 envelope {data, requestId}.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": 200
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "type": "object",
+          "required": [
+            "data",
+            "requestId"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/data"
+            },
+            "requestId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            },
+            "clientRequestId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "description": "An error: the §5 envelope with one of this route's codes at its HTTP status.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            401,
+            404,
+            409,
+            410,
+            422,
+            429,
+            500
+          ]
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "$ref": "common.schema.json#/$defs/errorBody"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": 401
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "unauthorized"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 404
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "not_found"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 409
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "conflict",
+                        "secret_not_replayable"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 410
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "expired"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 422
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "invalid",
+                        "idempotency_key_reused"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 429
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "rate_limited"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 500
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "internal"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "capability",
+        "displayLabel",
+        "slot",
+        "scope",
+        "expiresAt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "capability": {
+          "$ref": "common.schema.json#/$defs/guestCapability"
+        },
+        "displayLabel": {
+          "$ref": "common.schema.json#/$defs/displayLabel"
+        },
+        "slot": {
+          "$ref": "common.schema.json#/$defs/cameraSlot"
+        },
+        "scope": {
+          "type": "object",
+          "required": [
+            "projectRef",
+            "slot",
+            "ops"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "projectRef": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            },
+            "slot": {
+              "$ref": "common.schema.json#/$defs/cameraSlot"
+            },
+            "ops": {
+              "const": [
+                "source.declare",
+                "upload"
+              ]
+            }
+          }
+        },
+        "expiresAt": {
+          "$ref": "common.schema.json#/$defs/dateTime"
+        }
+      }
+    }
+  }
+}

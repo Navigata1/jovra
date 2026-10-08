@@ -1,0 +1,40 @@
+{
+  "status": 200,
+  "headers": {
+    "X-Request-Id": "00000000-0000-4000-8000-000000000c3b",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "data": {
+      "leaseToken": "jvl_SampleSampleSampleSampleSampleSampleSampleS",
+      "leasedUntil": "2026-10-08T12:05:00.000Z",
+      "inputRefs": [
+        {
+          "inputRef": "src-1",
+          "kind": "source",
+          "bytes": 3600000000,
+          "sha256": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+        },
+        {
+          "inputRef": "src-2",
+          "kind": "source",
+          "bytes": 2100000000,
+          "sha256": "b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7"
+        }
+      ],
+      "outputPlan": [
+        {
+          "outputRef": "proxy-1",
+          "kind": "analysis_proxy",
+          "maxBytes": 900000000
+        },
+        {
+          "outputRef": "proxy-2",
+          "kind": "analysis_proxy",
+          "maxBytes": 900000000
+        }
+      ]
+    },
+    "requestId": "00000000-0000-4000-8000-000000000c3b"
+  }
+}

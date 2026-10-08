@@ -1,0 +1,159 @@
+backend-contracts	Fixtures validate; invalid cases are rejected	﻿2026-10-08T15:59:30.4316135Z ##[group]Run python backend/contracts/tools/validate.py --require-jsonschema -v
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4316959Z ^[[36;1mpython backend/contracts/tools/validate.py --require-jsonschema -v^[[0m
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4387232Z shell: /usr/bin/bash -e {0}
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4387551Z env:
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4387870Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4388409Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4388935Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4389424Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4389908Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4390391Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:30.4390820Z ##[endgroup]
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8915674Z ok    routes/account.appleLink/request.siwa.json  (route.account.appleLink.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8926016Z ok    routes/account.appleLink/response.linked.json  (route.account.appleLink.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8928023Z ok    routes/artifacts.content/request.download-no-audio.json  (route.artifacts.content.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8929788Z ok    routes/artifacts.content/request.playback.json  (route.artifacts.content.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8931510Z ok    routes/artifacts.content/response.not-visible.json  (route.artifacts.content.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8933233Z ok    routes/artifacts.content/response.partial.json  (route.artifacts.content.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8935094Z ok    routes/artifacts.content/response.whole.json  (route.artifacts.content.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8936650Z ok    routes/cameraInvites.approve/request.owner.json  (route.cameraInvites.approve.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8938380Z ok    routes/cameraInvites.approve/response.approved.json  (route.cameraInvites.approve.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8940300Z ok    routes/cameraInvites.capability/request.signed-challenge.json  (route.cameraInvites.capability.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8942179Z ok    routes/cameraInvites.capability/response.issued.json  (route.cameraInvites.capability.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8944374Z ok    routes/cameraInvites.capability/response.not-approved-yet.json  (route.cameraInvites.capability.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8946252Z ok    routes/cameraInvites.create/request.far-corner.json  (route.cameraInvites.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8947943Z ok    routes/cameraInvites.create/response.created.json  (route.cameraInvites.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8949616Z ok    routes/cameraInvites.create/response.replay-redacted.json  (route.cameraInvites.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8951315Z ok    routes/cameraInvites.redeem/request.anonymous-guest.json  (route.cameraInvites.redeem.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8953135Z ok    routes/cameraInvites.redeem/request.signed-in-guest.json  (route.cameraInvites.redeem.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8955301Z ok    routes/cameraInvites.redeem/response.awaiting-host.json  (route.cameraInvites.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8957089Z ok    routes/cameraInvites.redeem/response.expired.json  (route.cameraInvites.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8958767Z ok    routes/cameraInvites.revoke/request.owner.json  (route.cameraInvites.revoke.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8960471Z ok    routes/cameraInvites.revoke/response.revoked.json  (route.cameraInvites.revoke.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8962329Z ok    routes/deletionRequests.create/request.account.json  (route.deletionRequests.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8964341Z ok    routes/deletionRequests.create/request.source-confirmed.json  (route.deletionRequests.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8965968Z ok    routes/deletionRequests.create/request.source.json  (route.deletionRequests.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8968234Z ok    routes/deletionRequests.create/response.dependents.json  (route.deletionRequests.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8969790Z ok    routes/deletionRequests.create/response.reauth-required.json  (route.deletionRequests.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8971289Z ok    routes/deletionRequests.create/response.requested.json  (route.deletionRequests.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8972472Z ok    routes/deletionRequests.get/request.requester.json  (route.deletionRequests.get.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8973277Z ok    routes/deletionRequests.get/response.done.json  (route.deletionRequests.get.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8974347Z ok    routes/grants.create/request.film-view.json  (route.grants.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8975004Z ok    routes/grants.create/request.project-coach.json  (route.grants.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8975671Z ok    routes/grants.create/response.created.json  (route.grants.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8976301Z ok    routes/grants.redeem/request.coach.json  (route.grants.redeem.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8976951Z ok    routes/grants.redeem/response.awaiting-owner.json  (route.grants.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8977658Z ok    routes/grants.redeem/response.film-view-active.json  (route.grants.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8978341Z ok    routes/grants.redeem/response.not-for-you.json  (route.grants.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8978989Z ok    routes/grants.revoke/request.creator.json  (route.grants.revoke.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8979613Z ok    routes/grants.revoke/response.revoked.json  (route.grants.revoke.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8980280Z ok    routes/guestSources.declare/request.guest.json  (route.guestSources.declare.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8981024Z ok    routes/guestSources.declare/response.declared.json  (route.guestSources.declare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8981686Z ok    routes/health/request.anonymous.json  (route.health.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8982240Z ok    routes/health/response.internal.json  (route.health.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8982768Z ok    routes/health/response.ok.json  (route.health.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8983957Z ok    routes/internal.claim/request.external-host-signed.json  (route.internal.claim.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8985344Z ok    routes/internal.claim/request.host.json  (route.internal.claim.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8986571Z ok    routes/internal.claim/response.already-claimed.json  (route.internal.claim.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8987807Z ok    routes/internal.claim/response.claimed.json  (route.internal.claim.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8989045Z ok    routes/internal.heartbeat/request.running.json  (route.internal.heartbeat.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8990399Z ok    routes/internal.heartbeat/response.cancel.json  (route.internal.heartbeat.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8991776Z ok    routes/internal.heartbeat/response.extended.json  (route.internal.heartbeat.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8993104Z ok    routes/internal.input/request.range.json  (route.internal.input.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8994624Z ok    routes/internal.input/response.not-in-input-refs.json  (route.internal.input.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8995976Z ok    routes/internal.input/response.partial.json  (route.internal.input.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8997249Z ok    routes/internal.outputs/request.proxy.json  (route.internal.outputs.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8998526Z ok    routes/internal.outputs/response.opened.json  (route.internal.outputs.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.8999773Z ok    routes/internal.result/request.failed.json  (route.internal.result.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9001685Z ok    routes/internal.result/request.succeeded.json  (route.internal.result.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9003006Z ok    routes/internal.result/response.accepted.json  (route.internal.result.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9004535Z ok    routes/internal.result/response.fenced.json  (route.internal.result.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9005646Z ok    routes/jobs.cancel/request.owner.json  (route.jobs.cancel.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9006710Z ok    routes/jobs.cancel/response.already-terminal.json  (route.jobs.cancel.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9007879Z ok    routes/jobs.cancel/response.ok.json  (route.jobs.cancel.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9008861Z ok    routes/jobs.get/request.coach.json  (route.jobs.get.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9009831Z ok    routes/jobs.get/request.owner.json  (route.jobs.get.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9010855Z ok    routes/jobs.get/response.coach.json  (route.jobs.get.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9011854Z ok    routes/jobs.get/response.owner.json  (route.jobs.get.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9012840Z ok    routes/jobs.pause/request.owner.json  (route.jobs.pause.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9014101Z ok    routes/jobs.pause/response.ok.json  (route.jobs.pause.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9015110Z ok    routes/jobs.resume/request.owner.json  (route.jobs.resume.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9016177Z ok    routes/jobs.resume/response.ok.json  (route.jobs.resume.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9017230Z ok    routes/jobs.retry/request.owner.json  (route.jobs.retry.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9018285Z ok    routes/jobs.retry/response.ok.json  (route.jobs.retry.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9019370Z ok    routes/jobs.review/request.approve.json  (route.jobs.review.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9020478Z ok    routes/jobs.review/request.revise.json  (route.jobs.review.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9021688Z ok    routes/jobs.review/response.final-rendering.json  (route.jobs.review.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9022890Z ok    routes/jobs.review/response.requote.json  (route.jobs.review.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9024448Z ok    routes/lessonClips.approveShare/request.owner.json  (route.lessonClips.approveShare.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9026002Z ok    routes/lessonClips.approveShare/response.approved.json  (route.lessonClips.approveShare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9027556Z ok    routes/lessonClips.revokeShare/request.owner.json  (route.lessonClips.revokeShare.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9029113Z ok    routes/lessonClips.revokeShare/response.revoked.json  (route.lessonClips.revokeShare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9030301Z ok    routes/me/request.owner.json  (route.me.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9031190Z ok    routes/me/response.demo-not-accepted.json  (route.me.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9032105Z ok    routes/me/response.ok.json  (route.me.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9767211Z ok    routes/members.approve/request.owner.json  (route.members.approve.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9784274Z ok    routes/members.approve/response.approved.json  (route.members.approve.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9804306Z ok    routes/quotes.accept/request.owner.json  (route.quotes.accept.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9824113Z ok    routes/quotes.accept/response.consented.json  (route.quotes.accept.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9844121Z ok    routes/quotes.accept/response.over-ceiling.json  (route.quotes.accept.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9863511Z ok    routes/quotes.create/request.heuristic.json  (route.quotes.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9864727Z ok    routes/quotes.create/request.plan-by-job.json  (route.quotes.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9866439Z ok    routes/quotes.create/response.foreign-source.json  (route.quotes.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9867833Z ok    routes/quotes.create/response.open.json  (route.quotes.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9868719Z ok    routes/shareLinks.create/request.film.json  (route.shareLinks.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9869941Z ok    routes/shareLinks.create/response.created.json  (route.shareLinks.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9871236Z ok    routes/shareLinks.create/response.replay-redacted.json  (route.shareLinks.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9872507Z ok    routes/shareLinks.open/request.first-range.json  (route.shareLinks.open.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9873713Z ok    routes/shareLinks.open/response.partial.json  (route.shareLinks.open.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9875031Z ok    routes/shareLinks.open/response.revoked-or-unknown.json  (route.shareLinks.open.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9876317Z ok    routes/shareLinks.revoke/request.owner.json  (route.shareLinks.revoke.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9877517Z ok    routes/shareLinks.revoke/response.revoked.json  (route.shareLinks.revoke.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9879125Z ok    routes/shareLinks.thumbnail/request.anyone.json  (route.shareLinks.thumbnail.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9880552Z ok    routes/shareLinks.thumbnail/response.ok.json  (route.shareLinks.thumbnail.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9881841Z ok    routes/sources.declare/request.owner-primary.json  (route.sources.declare.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9883194Z ok    routes/sources.declare/response.declared.json  (route.sources.declare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9884841Z ok    routes/sources.declare/response.slot-taken.json  (route.sources.declare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9886110Z ok    routes/uploads.abort/request.owner.json  (route.uploads.abort.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9917283Z ok    routes/uploads.abort/request.session.json  (route.uploads.abort.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9918632Z ok    routes/uploads.abort/response.aborted.json  (route.uploads.abort.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9919939Z ok    routes/uploads.complete/request.session.json  (route.uploads.complete.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9921337Z ok    routes/uploads.complete/response.parts-mismatch.json  (route.uploads.complete.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9922838Z ok    routes/uploads.complete/response.uploaded-unverified.json  (route.uploads.complete.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9924527Z ok    routes/uploads.open/request.guest.json  (route.uploads.open.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9925684Z ok    routes/uploads.open/request.owner.json  (route.uploads.open.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9926997Z ok    routes/uploads.open/response.declaration-mismatch.json  (route.uploads.open.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9928328Z ok    routes/uploads.open/response.opened.json  (route.uploads.open.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9929556Z ok    routes/uploads.putPart/request.part-1.json  (route.uploads.putPart.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9930857Z ok    routes/uploads.putPart/response.digest-mismatch.json  (route.uploads.putPart.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9932251Z ok    routes/uploads.putPart/response.recorded.json  (route.uploads.putPart.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9933766Z ok    routes/uploads.status/request.session.json  (route.uploads.status.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9935037Z ok    routes/uploads.status/response.resume.json  (route.uploads.status.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9936324Z FAIL  queues/render-work/message.deliberately-invalid.json: $.leaseToken: no value is allowed here
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9937951Z FAIL  queues/render-work/message.deliberately-invalid.json: jsonschema $: Additional properties are not allowed ('leaseToken' was unexpected)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9939997Z ok    queues/render-work/message.wake-up.json  (queue.render-work.message.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9941229Z ok    queues/render-work-dlq/message.dead-letter.json  (queue.render-work.message.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9942900Z ok    invalid/render-work/message.lease-token-leaked.json  rejected: a queue message carries only attemptId; a lease token is minted at claim and never queued
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9945199Z ok    invalid/render-work/message.input-list.json  rejected: inputs come from render_attempts.input_refs, never from the message
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9946716Z ok    invalid/render-work/message.project-id.json  rejected: no project, user or media id rides the queue
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9947901Z ok    invalid/render-work/message.empty.json  rejected: attemptId is required
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9948924Z ok    invalid/render-work/message.not-a-uuid.json  rejected: attemptId is a server UUID
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9950283Z ok    invalid/quotes.accept/request.missing-inputs-hash.json  rejected: acceptance must present the quote's inputs hash
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9952324Z ok    invalid/quotes.create/response.leaks-internal-cost.json  rejected: a quote response never carries the internal cost (architecture §5.1)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9954436Z ok    invalid/cameraInvites.redeem/response.project-text-before-approval.json  rejected: no project text reaches a guest before the host approves
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9956192Z ok    invalid/cameraInvites.redeem/request.private-key-sent.json  rejected: the device's private key never leaves the Secure Enclave
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9957944Z ok    invalid/sources.declare/request.probe-with-location.json  rejected: probeSummary is allowlisted; QuickTime tags such as a location are refused
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9959691Z ok    invalid/shareLinks.open/response.sets-cookie.json  rejected: opening a share link sets no cookie (security-model §8.3)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9961070Z ok    invalid/shareLinks.create/request.longer-than-24h.json  rejected: share links live at most 24 hours
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9962567Z ok    invalid/me/response.wrong-code-for-status.json  rejected: an error code must be one of the route's codes at its own status
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9964521Z ok    invalid/deletionRequests.create/response.dependents-without-list.json  rejected: 409 dependents lists the films that use the source
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9966223Z ok    invalid/jobs.review/request.revise-without-version.json  rejected: a revision names the plan version to render
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9967793Z ok    invalid/internal.result/request.failed-without-code.json  rejected: a failed result carries errorCode and retryable
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9969548Z ok    invalid/internal.heartbeat/request.without-lease.json  rejected: every internal route after claim needs the current lease
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9971245Z ok    invalid/grants.create/request.film-view-with-lesson.json  rejected: exactly the target the grant kind needs
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9972687Z ok    invalid/uploads.putPart/request.without-part-digest.json  rejected: every part carries its SHA-256
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9974365Z ok    invalid/jobs.get/response.progress-over-1000.json  rejected: stage progress is per mille of the current stage
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9975896Z ok    invalid/me/request.guest-capability-on-user-route.json  rejected: no read route accepts a guest capability
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9977105Z ok    invalid/health/request.with-body.json  rejected: a GET has no body
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:31.9978336Z FAIL  2 problem(s); 84 schemas, 123 fixtures valid, 22 invalid cases rejected, 41 routes, 2 queues (bundled checker + jsonschema)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:59:32.0052682Z ##[error]Process completed with exit code 1.

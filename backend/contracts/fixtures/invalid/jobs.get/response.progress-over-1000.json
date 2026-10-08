@@ -1,0 +1,53 @@
+{
+  "status": 200,
+  "headers": {
+    "X-Request-Id": "00000000-0000-4000-8000-000000000c48",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "data": {
+      "state": "preview_rendering",
+      "stage": "preview_render",
+      "stageProgressMilli": 1001,
+      "errorCode": null,
+      "stages": [
+        {
+          "stage": "verify_sources",
+          "attempt": 1,
+          "state": "succeeded"
+        },
+        {
+          "stage": "normalize",
+          "attempt": 1,
+          "state": "succeeded"
+        },
+        {
+          "stage": "sync",
+          "attempt": 2,
+          "state": "succeeded"
+        },
+        {
+          "stage": "plan",
+          "attempt": 1,
+          "state": "succeeded"
+        },
+        {
+          "stage": "preview_render",
+          "attempt": 1,
+          "state": "running"
+        }
+      ],
+      "artifacts": [
+        {
+          "artifactId": "00000000-0000-4000-8000-000000000603",
+          "kind": "render_proxy",
+          "state": "ready",
+          "stale": false,
+          "displayTitle": null,
+          "bytes": 812000000
+        }
+      ]
+    },
+    "requestId": "00000000-0000-4000-8000-000000000c48"
+  }
+}

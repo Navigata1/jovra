@@ -1,0 +1,451 @@
+backend-contracts	Set up job	﻿2026-10-08T15:57:46.1916448Z Current runner version: '2.337.0'
+backend-contracts	Set up job	2026-10-08T15:57:46.1945050Z ##[group]Runner Image Provisioner
+backend-contracts	Set up job	2026-10-08T15:57:46.1946216Z Hosted Compute Agent
+backend-contracts	Set up job	2026-10-08T15:57:46.1946931Z Version: 20261002.596
+backend-contracts	Set up job	2026-10-08T15:57:46.1947667Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+backend-contracts	Set up job	2026-10-08T15:57:46.1948621Z Build Date: 2026-10-02T22:28:27Z
+backend-contracts	Set up job	2026-10-08T15:57:46.1949473Z Worker ID: {1862b178-6f5f-44c2-a91f-2177fecc2ac7}
+backend-contracts	Set up job	2026-10-08T15:57:46.1950285Z Region: westus
+backend-contracts	Set up job	2026-10-08T15:57:46.1951035Z Cloud: Azure
+backend-contracts	Set up job	2026-10-08T15:57:46.1951659Z ##[endgroup]
+backend-contracts	Set up job	2026-10-08T15:57:46.1953448Z ##[group]Operating System
+backend-contracts	Set up job	2026-10-08T15:57:46.1954226Z Ubuntu
+backend-contracts	Set up job	2026-10-08T15:57:46.1955081Z 24.04.5
+backend-contracts	Set up job	2026-10-08T15:57:46.1955811Z LTS
+backend-contracts	Set up job	2026-10-08T15:57:46.1956437Z ##[endgroup]
+backend-contracts	Set up job	2026-10-08T15:57:46.1957155Z ##[group]Runner Image
+backend-contracts	Set up job	2026-10-08T15:57:46.1957921Z Image: ubuntu-24.04
+backend-contracts	Set up job	2026-10-08T15:57:46.1958591Z Version: 20261004.327.1
+backend-contracts	Set up job	2026-10-08T15:57:46.1959975Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+backend-contracts	Set up job	2026-10-08T15:57:46.1962241Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+backend-contracts	Set up job	2026-10-08T15:57:46.1963522Z ##[endgroup]
+backend-contracts	Set up job	2026-10-08T15:57:46.1965175Z ##[group]GITHUB_TOKEN Permissions
+backend-contracts	Set up job	2026-10-08T15:57:46.1967234Z Contents: read
+backend-contracts	Set up job	2026-10-08T15:57:46.1967933Z Metadata: read
+backend-contracts	Set up job	2026-10-08T15:57:46.1968694Z ##[endgroup]
+backend-contracts	Set up job	2026-10-08T15:57:46.1971023Z Secret source: Actions
+backend-contracts	Set up job	2026-10-08T15:57:46.1972262Z Cache mode: write
+backend-contracts	Set up job	2026-10-08T15:57:46.1973355Z Prepare workflow directory
+backend-contracts	Set up job	2026-10-08T15:57:46.2345465Z Prepare all required actions
+backend-contracts	Set up job	2026-10-08T15:57:46.2400762Z Getting action download info
+backend-contracts	Set up job	2026-10-08T15:57:46.6427268Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+backend-contracts	Set up job	2026-10-08T15:57:46.9458980Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+backend-contracts	Set up job	2026-10-08T15:57:48.6378230Z Complete job name: backend-contracts
+backend-contracts	Run actions/checkout@v4	﻿2026-10-08T15:57:48.7894057Z ##[group]Run actions/checkout@v4
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7895077Z with:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7895508Z   repository: Navigata1/jovra
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7899221Z   token: ***
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7899644Z   ssh-strict: true
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7900081Z   ssh-user: git
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7900512Z   persist-credentials: true
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7900978Z   clean: true
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7901414Z   sparse-checkout-cone-mode: true
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7901914Z   fetch-depth: 1
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7902336Z   fetch-tags: false
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7902771Z   show-progress: true
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7903207Z   lfs: false
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7903609Z   submodules: false
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7904073Z   set-safe-directory: true
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7904778Z   allow-unsafe-pr-checkout: false
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.7905599Z ##[endgroup]
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.8806248Z Syncing repository: Navigata1/jovra
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.8813099Z ##[group]Getting Git version info
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.8814149Z Working directory is '/home/runner/work/jovra/jovra'
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.8842722Z [command]/usr/bin/git version
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.9045693Z git version 2.55.0
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.9068598Z ##[endgroup]
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.9080118Z Temporarily overriding HOME='/home/runner/work/_temp/286b413a-4fc3-4335-9357-83c30abad478' before making global git config changes
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.9082556Z Adding repository directory to the temporary git global config as a safe directory
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:48.9085022Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jovra/jovra
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.0214191Z Deleting the contents of '/home/runner/work/jovra/jovra'
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.0216023Z ##[group]Initializing the repository
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.0217184Z [command]/usr/bin/git init /home/runner/work/jovra/jovra
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3459292Z hint: Using 'master' as the name for the initial branch. This default branch name
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3538875Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3540656Z hint: to use in all of your new repositories, which will suppress this warning,
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3542211Z hint: call:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3543216Z hint:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3544214Z hint: 	git config --global init.defaultBranch <name>
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3545491Z hint:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3546579Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3548198Z hint: 'development'. The just-created branch can be renamed via this command:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3549564Z hint:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3550298Z hint: 	git branch -m <name>
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3551114Z hint:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3552289Z hint: Disable this message with "git config set advice.defaultBranchName false"
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3554022Z Initialized empty Git repository in /home/runner/work/jovra/jovra/.git/
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3557380Z [command]/usr/bin/git remote add origin https://github.com/Navigata1/jovra
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3865223Z ##[endgroup]
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3866898Z ##[group]Disabling automatic garbage collection
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3870175Z [command]/usr/bin/git config --local gc.auto 0
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3913910Z ##[endgroup]
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3916071Z ##[group]Setting up auth
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3917572Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.3952925Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.4296804Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.4336412Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.4544444Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.4581072Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.5397014Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.5400991Z ##[endgroup]
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.5402470Z ##[group]Fetching the repository
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:49.5405269Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +361034c8b08fa9d26ae936f773cb052bb5a300e2:refs/remotes/pull/320/merge
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9263411Z From https://github.com/Navigata1/jovra
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9274256Z  * [new ref]         361034c8b08fa9d26ae936f773cb052bb5a300e2 -> pull/320/merge
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9287427Z ##[endgroup]
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9288173Z ##[group]Determining the checkout info
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9305643Z ##[endgroup]
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9315615Z [command]/usr/bin/git sparse-checkout disable
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9340653Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9388866Z ##[group]Checking out the ref
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:55.9405347Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/320/merge
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8009280Z Note: switching to 'refs/remotes/pull/320/merge'.
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8009905Z 
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8025187Z You are in 'detached HEAD' state. You can look around, make experimental
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8030270Z changes and commit them, and you can discard any commits you make in this
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8031152Z state without impacting any branches by switching back to a branch.
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8031784Z 
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8032315Z If you want to create a new branch to retain commits you create, you may
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8045569Z do so (now or later) by using -c with the switch command. Example:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8048290Z 
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8048940Z   git switch -c <new-branch-name>
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8049357Z 
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8049664Z Or undo this operation with:
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8050352Z 
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8050638Z   git switch -
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8051202Z 
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8051704Z Turn off this advice by setting config variable advice.detachedHead to false
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8052290Z 
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8052886Z HEAD is now at 361034c Merge c6b0d4bd13693fb821cf86d1901e5fa43e577de0 into 951e81bcbdce68be33a9b93261eff273d0b283ec
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8055482Z ##[endgroup]
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8134197Z [command]/usr/bin/git log -1 --format=%H
+backend-contracts	Run actions/checkout@v4	2026-10-08T15:57:56.8159444Z 361034c8b08fa9d26ae936f773cb052bb5a300e2
+backend-contracts	Run actions/setup-python@v5	﻿2026-10-08T15:57:56.8470503Z ##[group]Run actions/setup-python@v5
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.8470913Z with:
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.8471199Z   python-version: 3.12
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.8471492Z   check-latest: false
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.8475706Z   token: ***
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.8476002Z   update-environment: true
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.8476314Z   allow-prereleases: false
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.8476647Z   freethreaded: false
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.8476927Z ##[endgroup]
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.9582928Z ##[group]Installed versions
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.9781374Z (node:1975) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.9782384Z Successfully set up CPython (3.12.15)
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.9783042Z (Use `node --trace-deprecation ...` to show where the warning was created)
+backend-contracts	Run actions/setup-python@v5	2026-10-08T15:57:56.9783992Z ##[endgroup]
+backend-contracts	Install the independent validator	﻿2026-10-08T15:57:57.0022846Z ##[group]Run python -m pip install --disable-pip-version-check jsonschema==4.26.0
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0023682Z ^[[36;1mpython -m pip install --disable-pip-version-check jsonschema==4.26.0^[[0m
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0351824Z shell: /usr/bin/bash -e {0}
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0352129Z env:
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0352380Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0352765Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0353108Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0353426Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0353721Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0354020Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+backend-contracts	Install the independent validator	2026-10-08T15:57:57.0354281Z ##[endgroup]
+backend-contracts	Install the independent validator	2026-10-08T15:57:58.6858000Z Collecting jsonschema==4.26.0
+backend-contracts	Install the independent validator	2026-10-08T15:57:58.7237018Z   Downloading jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:57:58.8173198Z Collecting attrs>=22.2.0 (from jsonschema==4.26.0)
+backend-contracts	Install the independent validator	2026-10-08T15:57:58.8200947Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:57:58.8645170Z Collecting jsonschema-specifications>=2023.03.6 (from jsonschema==4.26.0)
+backend-contracts	Install the independent validator	2026-10-08T15:57:58.8682576Z   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:57:59.1902294Z Collecting referencing>=0.28.4 (from jsonschema==4.26.0)
+backend-contracts	Install the independent validator	2026-10-08T15:57:59.1936303Z   Downloading referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:57:59.7482117Z Collecting rpds-py>=0.25.0 (from jsonschema==4.26.0)
+backend-contracts	Install the independent validator	2026-10-08T15:57:59.7510959Z   Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:57:59.8860080Z Collecting typing-extensions>=4.4.0 (from referencing>=0.28.4->jsonschema==4.26.0)
+backend-contracts	Install the independent validator	2026-10-08T15:57:59.8891416Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:58:00.0751256Z Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:58:00.2504771Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:58:00.3885857Z Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:58:00.4295794Z Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:58:00.4885544Z Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:58:00.8291829Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+backend-contracts	Install the independent validator	2026-10-08T15:58:01.7850115Z Installing collected packages: typing-extensions, rpds-py, attrs, referencing, jsonschema-specifications, jsonschema
+backend-contracts	Install the independent validator	2026-10-08T15:58:03.6961051Z 
+backend-contracts	Install the independent validator	2026-10-08T15:58:03.6976102Z Successfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.9.1 typing-extensions-4.16.0
+backend-contracts	Schemas and manifest match their definitions	﻿2026-10-08T15:58:03.7466953Z ##[group]Run python backend/contracts/tools/generate.py --check
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7467370Z ^[[36;1mpython backend/contracts/tools/generate.py --check^[[0m
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7524506Z shell: /usr/bin/bash -e {0}
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7524962Z env:
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7525189Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7525554Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7525895Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7526196Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7526486Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7526795Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.7527057Z ##[endgroup]
+backend-contracts	Schemas and manifest match their definitions	2026-10-08T15:58:03.8377632Z OK  85 generated files match
+backend-contracts	Route coverage (architecture §5.1)	﻿2026-10-08T15:58:03.8475193Z ##[group]Run python backend/contracts/tools/route_coverage.py
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8475586Z ^[[36;1mpython backend/contracts/tools/route_coverage.py^[[0m
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8532390Z shell: /usr/bin/bash -e {0}
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8532607Z env:
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8532832Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8533187Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8533533Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8533840Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8534167Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8534466Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8534968Z ##[endgroup]
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8912615Z 41 routes in architecture §5.1 (docs/backend/architecture.md)
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8913303Z ok       GET    /v1/health  -> health
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8914009Z ok       GET    /v1/me  -> me
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8914881Z ok       POST   /v1/projects/{projectId}/sources  -> sources.declare
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8915686Z ok       POST   /v1/projects/{projectId}/camera-invites  -> cameraInvites.create
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8916592Z ok       DELETE /v1/projects/{projectId}/camera-invites/{inviteId}  -> cameraInvites.revoke
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8917420Z ok       POST   /v1/camera-invites/redeem  -> cameraInvites.redeem
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8918278Z ok       POST   /v1/projects/{projectId}/camera-invites/{inviteId}/approve  -> cameraInvites.approve
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8919278Z ok       POST   /v1/camera-invites/redemptions/{redemptionId}/capability  -> cameraInvites.capability
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8920086Z ok       POST   /v1/guest/sources  -> guestSources.declare
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8920698Z ok       POST   /v1/sources/{sourceId}/uploads  -> uploads.open
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8921320Z ok       GET    /v1/uploads/{sessionId}  -> uploads.status
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8922001Z ok       PUT    /v1/uploads/{sessionId}/parts/{n}  -> uploads.putPart
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8922745Z ok       POST   /v1/uploads/{sessionId}/complete  -> uploads.complete
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8923416Z ok       DELETE /v1/uploads/{sessionId}  -> uploads.abort
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8924076Z ok       POST   /v1/projects/{projectId}/quotes  -> quotes.create
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8924855Z ok       POST   /v1/quotes/{quoteId}/accept  -> quotes.accept
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8925424Z ok       GET    /v1/jobs/{jobId}  -> jobs.get
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8925956Z ok       POST   /v1/jobs/{jobId}/cancel  -> jobs.cancel
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8926531Z ok       POST   /v1/jobs/{jobId}/pause  -> jobs.pause
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8927152Z ok       POST   /v1/jobs/{jobId}/resume  -> jobs.resume
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8928014Z ok       POST   /v1/jobs/{jobId}/review  -> jobs.review
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8928606Z ok       POST   /v1/jobs/{jobId}/retry  -> jobs.retry
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8929221Z ok       GET    /v1/artifacts/{artifactId}/content  -> artifacts.content
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8929929Z ok       POST   /v1/artifacts/{artifactId}/share-links  -> shareLinks.create
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8930664Z ok       DELETE /v1/share-links/{shareLinkId}  -> shareLinks.revoke
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8931299Z ok       GET    /s/{token}  -> shareLinks.open
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8931877Z ok       GET    /s/{token}/thumbnail  -> shareLinks.thumbnail
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8932454Z ok       POST   /v1/grants  -> grants.create
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8932994Z ok       POST   /v1/grants/redeem  -> grants.redeem
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8933684Z ok       POST   /v1/projects/{projectId}/members/{userId}/approve  -> members.approve
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8934680Z ok       POST   /v1/lesson-clips/{clipId}/share-approval  -> lessonClips.approveShare
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8935537Z ok       DELETE /v1/lesson-clips/{clipId}/share-approval  -> lessonClips.revokeShare
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8936500Z ok       DELETE /v1/grants/{grantId}  -> grants.revoke
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8937220Z ok       POST   /v1/account/apple-link  -> account.appleLink
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8938144Z ok       POST   /v1/deletion-requests  -> deletionRequests.create
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8938842Z ok       GET    /v1/deletion-requests/{id}  -> deletionRequests.get
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8939558Z ok       POST   /internal/v1/attempts/{attemptId}/claim  -> internal.claim
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8940325Z ok       POST   /internal/v1/attempts/{attemptId}/heartbeat  -> internal.heartbeat
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8941151Z ok       GET    /internal/v1/attempts/{attemptId}/inputs/{inputRef}  -> internal.input
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8941956Z ok       POST   /internal/v1/attempts/{attemptId}/outputs  -> internal.outputs
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8942708Z ok       POST   /internal/v1/attempts/{attemptId}/result  -> internal.result
+backend-contracts	Route coverage (architecture §5.1)	2026-10-08T15:58:03.8943532Z OK  every documented route has a request and response schema and at least one fixture of each
+backend-contracts	Fixtures validate; invalid cases are rejected	﻿2026-10-08T15:58:03.8984929Z ##[group]Run python backend/contracts/tools/validate.py --require-jsonschema -v
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.8985438Z ^[[36;1mpython backend/contracts/tools/validate.py --require-jsonschema -v^[[0m
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9041132Z shell: /usr/bin/bash -e {0}
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9041353Z env:
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9041581Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9041960Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9042325Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9042669Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9042984Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9043299Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:03.9043569Z ##[endgroup]
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6708998Z ok    routes/account.appleLink/request.siwa.json  (route.account.appleLink.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6710277Z ok    routes/account.appleLink/response.linked.json  (route.account.appleLink.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6711656Z ok    routes/artifacts.content/request.download-no-audio.json  (route.artifacts.content.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6712908Z ok    routes/artifacts.content/request.playback.json  (route.artifacts.content.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6714065Z ok    routes/artifacts.content/response.not-visible.json  (route.artifacts.content.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6715432Z ok    routes/artifacts.content/response.partial.json  (route.artifacts.content.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6716552Z ok    routes/artifacts.content/response.whole.json  (route.artifacts.content.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6717706Z ok    routes/cameraInvites.approve/request.owner.json  (route.cameraInvites.approve.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6719212Z ok    routes/cameraInvites.approve/response.approved.json  (route.cameraInvites.approve.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6720538Z ok    routes/cameraInvites.capability/request.signed-challenge.json  (route.cameraInvites.capability.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6721843Z ok    routes/cameraInvites.capability/response.issued.json  (route.cameraInvites.capability.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6723166Z ok    routes/cameraInvites.capability/response.not-approved-yet.json  (route.cameraInvites.capability.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6724446Z ok    routes/cameraInvites.create/request.far-corner.json  (route.cameraInvites.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6725799Z ok    routes/cameraInvites.create/response.created.json  (route.cameraInvites.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6727032Z ok    routes/cameraInvites.create/response.replay-redacted.json  (route.cameraInvites.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6728377Z ok    routes/cameraInvites.redeem/request.anonymous-guest.json  (route.cameraInvites.redeem.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6729618Z ok    routes/cameraInvites.redeem/request.signed-in-guest.json  (route.cameraInvites.redeem.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6730883Z ok    routes/cameraInvites.redeem/response.awaiting-host.json  (route.cameraInvites.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6732082Z ok    routes/cameraInvites.redeem/response.expired.json  (route.cameraInvites.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6733259Z ok    routes/cameraInvites.revoke/request.owner.json  (route.cameraInvites.revoke.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6734455Z ok    routes/cameraInvites.revoke/response.revoked.json  (route.cameraInvites.revoke.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6735807Z ok    routes/deletionRequests.create/request.account.json  (route.deletionRequests.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6737121Z ok    routes/deletionRequests.create/request.source-confirmed.json  (route.deletionRequests.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6738441Z ok    routes/deletionRequests.create/request.source.json  (route.deletionRequests.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6739963Z ok    routes/deletionRequests.create/response.dependents.json  (route.deletionRequests.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6741293Z ok    routes/deletionRequests.create/response.reauth-required.json  (route.deletionRequests.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6742619Z ok    routes/deletionRequests.create/response.requested.json  (route.deletionRequests.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6743886Z ok    routes/deletionRequests.get/request.requester.json  (route.deletionRequests.get.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6745221Z ok    routes/deletionRequests.get/response.done.json  (route.deletionRequests.get.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6746312Z ok    routes/grants.create/request.film-view.json  (route.grants.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6747371Z ok    routes/grants.create/request.project-coach.json  (route.grants.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6748429Z ok    routes/grants.create/response.created.json  (route.grants.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6749448Z ok    routes/grants.redeem/request.coach.json  (route.grants.redeem.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6750496Z ok    routes/grants.redeem/response.awaiting-owner.json  (route.grants.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6751603Z ok    routes/grants.redeem/response.film-view-active.json  (route.grants.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6752686Z ok    routes/grants.redeem/response.not-for-you.json  (route.grants.redeem.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6753730Z ok    routes/grants.revoke/request.creator.json  (route.grants.revoke.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6754863Z ok    routes/grants.revoke/response.revoked.json  (route.grants.revoke.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6756222Z ok    routes/guestSources.declare/request.guest.json  (route.guestSources.declare.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6757392Z ok    routes/guestSources.declare/response.declared.json  (route.guestSources.declare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6758433Z ok    routes/health/request.anonymous.json  (route.health.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6759338Z ok    routes/health/response.internal.json  (route.health.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6760198Z ok    routes/health/response.ok.json  (route.health.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6761196Z ok    routes/internal.claim/request.external-host-signed.json  (route.internal.claim.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6762281Z ok    routes/internal.claim/request.host.json  (route.internal.claim.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6763389Z ok    routes/internal.claim/response.already-claimed.json  (route.internal.claim.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6764474Z ok    routes/internal.claim/response.claimed.json  (route.internal.claim.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6765735Z ok    routes/internal.heartbeat/request.running.json  (route.internal.heartbeat.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6766859Z ok    routes/internal.heartbeat/response.cancel.json  (route.internal.heartbeat.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6768036Z ok    routes/internal.heartbeat/response.extended.json  (route.internal.heartbeat.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6769108Z ok    routes/internal.input/request.range.json  (route.internal.input.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6770199Z ok    routes/internal.input/response.not-in-input-refs.json  (route.internal.input.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6771308Z ok    routes/internal.input/response.partial.json  (route.internal.input.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6772361Z ok    routes/internal.outputs/request.proxy.json  (route.internal.outputs.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6773427Z ok    routes/internal.outputs/response.opened.json  (route.internal.outputs.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6774500Z ok    routes/internal.result/request.failed.json  (route.internal.result.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6775952Z ok    routes/internal.result/request.succeeded.json  (route.internal.result.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6777043Z ok    routes/internal.result/response.accepted.json  (route.internal.result.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6778102Z ok    routes/internal.result/response.fenced.json  (route.internal.result.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6779091Z ok    routes/jobs.cancel/request.owner.json  (route.jobs.cancel.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6780091Z ok    routes/jobs.cancel/response.already-terminal.json  (route.jobs.cancel.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6781098Z ok    routes/jobs.cancel/response.ok.json  (route.jobs.cancel.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6782005Z ok    routes/jobs.get/request.coach.json  (route.jobs.get.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6782885Z ok    routes/jobs.get/request.owner.json  (route.jobs.get.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6783760Z ok    routes/jobs.get/response.coach.json  (route.jobs.get.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6785016Z ok    routes/jobs.get/response.owner.json  (route.jobs.get.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6785959Z ok    routes/jobs.pause/request.owner.json  (route.jobs.pause.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6787031Z ok    routes/jobs.pause/response.ok.json  (route.jobs.pause.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6787992Z ok    routes/jobs.resume/request.owner.json  (route.jobs.resume.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6788933Z ok    routes/jobs.resume/response.ok.json  (route.jobs.resume.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6789856Z ok    routes/jobs.retry/request.owner.json  (route.jobs.retry.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6790760Z ok    routes/jobs.retry/response.ok.json  (route.jobs.retry.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6791866Z ok    routes/jobs.review/request.approve.json  (route.jobs.review.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6792811Z ok    routes/jobs.review/request.revise.json  (route.jobs.review.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6793829Z ok    routes/jobs.review/response.final-rendering.json  (route.jobs.review.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6794985Z ok    routes/jobs.review/response.requote.json  (route.jobs.review.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6796119Z ok    routes/lessonClips.approveShare/request.owner.json  (route.lessonClips.approveShare.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6797398Z ok    routes/lessonClips.approveShare/response.approved.json  (route.lessonClips.approveShare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6798655Z ok    routes/lessonClips.revokeShare/request.owner.json  (route.lessonClips.revokeShare.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6799895Z ok    routes/lessonClips.revokeShare/response.revoked.json  (route.lessonClips.revokeShare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6800930Z ok    routes/me/request.owner.json  (route.me.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6801763Z ok    routes/me/response.demo-not-accepted.json  (route.me.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.6802607Z ok    routes/me/response.ok.json  (route.me.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7163123Z ok    routes/members.approve/request.owner.json  (route.members.approve.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7164149Z ok    routes/members.approve/response.approved.json  (route.members.approve.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7165221Z ok    routes/quotes.accept/request.owner.json  (route.quotes.accept.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7166100Z ok    routes/quotes.accept/response.consented.json  (route.quotes.accept.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7167378Z ok    routes/quotes.accept/response.over-ceiling.json  (route.quotes.accept.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7185270Z ok    routes/quotes.create/request.heuristic.json  (route.quotes.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7205352Z ok    routes/quotes.create/request.plan-by-job.json  (route.quotes.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7206747Z ok    routes/quotes.create/response.foreign-source.json  (route.quotes.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7216482Z ok    routes/quotes.create/response.open.json  (route.quotes.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7235260Z ok    routes/shareLinks.create/request.film.json  (route.shareLinks.create.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7241853Z ok    routes/shareLinks.create/response.created.json  (route.shareLinks.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7264407Z ok    routes/shareLinks.create/response.replay-redacted.json  (route.shareLinks.create.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7285402Z ok    routes/shareLinks.open/request.first-range.json  (route.shareLinks.open.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7286462Z ok    routes/shareLinks.open/response.partial.json  (route.shareLinks.open.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7305263Z ok    routes/shareLinks.open/response.revoked-or-unknown.json  (route.shareLinks.open.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7315494Z ok    routes/shareLinks.revoke/request.owner.json  (route.shareLinks.revoke.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7316485Z ok    routes/shareLinks.revoke/response.revoked.json  (route.shareLinks.revoke.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7317519Z ok    routes/shareLinks.thumbnail/request.anyone.json  (route.shareLinks.thumbnail.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7318487Z ok    routes/shareLinks.thumbnail/response.ok.json  (route.shareLinks.thumbnail.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7320283Z ok    routes/sources.declare/request.owner-primary.json  (route.sources.declare.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7323288Z ok    routes/sources.declare/response.declared.json  (route.sources.declare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7331873Z ok    routes/sources.declare/response.slot-taken.json  (route.sources.declare.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7333097Z ok    routes/uploads.abort/request.owner.json  (route.uploads.abort.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7334047Z ok    routes/uploads.abort/request.session.json  (route.uploads.abort.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7335200Z ok    routes/uploads.abort/response.aborted.json  (route.uploads.abort.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7336213Z ok    routes/uploads.complete/request.session.json  (route.uploads.complete.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7337271Z ok    routes/uploads.complete/response.parts-mismatch.json  (route.uploads.complete.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7338378Z ok    routes/uploads.complete/response.uploaded-unverified.json  (route.uploads.complete.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7339346Z ok    routes/uploads.open/request.guest.json  (route.uploads.open.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7340205Z ok    routes/uploads.open/request.owner.json  (route.uploads.open.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7341134Z ok    routes/uploads.open/response.declaration-mismatch.json  (route.uploads.open.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7341995Z ok    routes/uploads.open/response.opened.json  (route.uploads.open.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7342783Z ok    routes/uploads.putPart/request.part-1.json  (route.uploads.putPart.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7343649Z ok    routes/uploads.putPart/response.digest-mismatch.json  (route.uploads.putPart.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7344185Z ok    routes/uploads.putPart/response.recorded.json  (route.uploads.putPart.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7344901Z ok    routes/uploads.status/request.session.json  (route.uploads.status.request.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7345386Z ok    routes/uploads.status/response.resume.json  (route.uploads.status.response.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7345873Z ok    queues/render-work/message.wake-up.json  (queue.render-work.message.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7346390Z ok    queues/render-work-dlq/message.dead-letter.json  (queue.render-work.message.schema.json)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7347037Z ok    invalid/render-work/message.lease-token-leaked.json  rejected: a queue message carries only attemptId; a lease token is minted at claim and never queued
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7347922Z ok    invalid/render-work/message.input-list.json  rejected: inputs come from render_attempts.input_refs, never from the message
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7348498Z ok    invalid/render-work/message.project-id.json  rejected: no project, user or media id rides the queue
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7348949Z ok    invalid/render-work/message.empty.json  rejected: attemptId is required
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7349361Z ok    invalid/render-work/message.not-a-uuid.json  rejected: attemptId is a server UUID
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7349882Z ok    invalid/quotes.accept/request.missing-inputs-hash.json  rejected: acceptance must present the quote's inputs hash
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7350813Z ok    invalid/quotes.create/response.leaks-internal-cost.json  rejected: a quote response never carries the internal cost (architecture §5.1)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7351551Z ok    invalid/cameraInvites.redeem/response.project-text-before-approval.json  rejected: no project text reaches a guest before the host approves
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7352262Z ok    invalid/cameraInvites.redeem/request.private-key-sent.json  rejected: the device's private key never leaves the Secure Enclave
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7352964Z ok    invalid/sources.declare/request.probe-with-location.json  rejected: probeSummary is allowlisted; QuickTime tags such as a location are refused
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7353754Z ok    invalid/shareLinks.open/response.sets-cookie.json  rejected: opening a share link sets no cookie (security-model §8.3)
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7354340Z ok    invalid/shareLinks.create/request.longer-than-24h.json  rejected: share links live at most 24 hours
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7355174Z ok    invalid/me/response.wrong-code-for-status.json  rejected: an error code must be one of the route's codes at its own status
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7355980Z ok    invalid/deletionRequests.create/response.dependents-without-list.json  rejected: 409 dependents lists the films that use the source
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7356640Z ok    invalid/jobs.review/request.revise-without-version.json  rejected: a revision names the plan version to render
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7357234Z ok    invalid/internal.result/request.failed-without-code.json  rejected: a failed result carries errorCode and retryable
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7357855Z ok    invalid/internal.heartbeat/request.without-lease.json  rejected: every internal route after claim needs the current lease
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7358455Z ok    invalid/grants.create/request.film-view-with-lesson.json  rejected: exactly the target the grant kind needs
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7359033Z ok    invalid/uploads.putPart/request.without-part-digest.json  rejected: every part carries its SHA-256
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7359623Z ok    invalid/jobs.get/response.progress-over-1000.json  rejected: stage progress is per mille of the current stage
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7360218Z ok    invalid/me/request.guest-capability-on-user-route.json  rejected: no read route accepts a guest capability
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7377599Z ok    invalid/health/request.with-body.json  rejected: a GET has no body
+backend-contracts	Fixtures validate; invalid cases are rejected	2026-10-08T15:58:04.7378350Z OK  84 schemas, 122 fixtures valid, 22 invalid cases rejected, 41 routes, 2 queues (bundled checker + jsonschema)
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	﻿2026-10-08T15:58:04.7406228Z ##[group]Run python backend/contracts/tools/check_fixture_hygiene.py
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7406630Z ^[[36;1mpython backend/contracts/tools/check_fixture_hygiene.py^[[0m
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7463342Z shell: /usr/bin/bash -e {0}
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7463552Z env:
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7463767Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7464120Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7464459Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7465005Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7465306Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7465608Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:04.7465866Z ##[endgroup]
+backend-contracts	No hosted URL, project ref, JWT, real email, real UUID or token in fixtures	2026-10-08T15:58:05.0135697Z OK  230 files: no hosted URL, project ref, JWT, real email, non-sample UUID or token
+backend-contracts	Tool tests	﻿2026-10-08T15:58:05.0227703Z ##[group]Run python -m unittest discover -s backend/contracts/tools -p 'test_*.py' -v
+backend-contracts	Tool tests	2026-10-08T15:58:05.0228456Z ^[[36;1mpython -m unittest discover -s backend/contracts/tools -p 'test_*.py' -v^[[0m
+backend-contracts	Tool tests	2026-10-08T15:58:05.0309185Z shell: /usr/bin/bash -e {0}
+backend-contracts	Tool tests	2026-10-08T15:58:05.0309512Z env:
+backend-contracts	Tool tests	2026-10-08T15:58:05.0309882Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Tool tests	2026-10-08T15:58:05.0310447Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+backend-contracts	Tool tests	2026-10-08T15:58:05.0311016Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Tool tests	2026-10-08T15:58:05.0311580Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Tool tests	2026-10-08T15:58:05.0312068Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+backend-contracts	Tool tests	2026-10-08T15:58:05.0312548Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+backend-contracts	Tool tests	2026-10-08T15:58:05.0312958Z ##[endgroup]
+backend-contracts	Tool tests	2026-10-08T15:58:05.3596764Z test_each_forbidden_kind_is_caught (test_contracts.HygieneTest.test_each_forbidden_kind_is_caught) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:05.3860654Z test_example_test_values_pass (test_contracts.HygieneTest.test_example_test_values_pass) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:05.6304164Z test_the_committed_fixtures_are_clean (test_contracts.HygieneTest.test_the_committed_fixtures_are_clean) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:05.6649415Z test_a_missing_route_fails_and_is_named (test_contracts.RouteCoverageTest.test_a_missing_route_fails_and_is_named) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:05.7249537Z test_a_route_without_a_fixture_fails (test_contracts.RouteCoverageTest.test_a_route_without_a_fixture_fails) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:05.7259268Z test_reads_every_route_of_section_5_1 (test_contracts.RouteCoverageTest.test_reads_every_route_of_section_5_1) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:05.7260429Z test_section_ends_at_the_next_heading (test_contracts.RouteCoverageTest.test_section_ends_at_the_next_heading) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:05.7595163Z test_the_committed_manifest_covers_the_document (test_contracts.RouteCoverageTest.test_the_committed_manifest_covers_the_document) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:06.5450362Z test_a_queue_message_with_an_extra_field_is_invalid (test_contracts.ValidatorTest.test_a_queue_message_with_an_extra_field_is_invalid) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:07.3502664Z test_an_invalid_case_that_validates_turns_the_check_red (test_contracts.ValidatorTest.test_an_invalid_case_that_validates_turns_the_check_red) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:08.1156444Z test_an_invalid_fixture_in_a_valid_slot_turns_the_check_red (test_contracts.ValidatorTest.test_an_invalid_fixture_in_a_valid_slot_turns_the_check_red) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:08.8844922Z test_request_id_header_and_body_must_agree (test_contracts.ValidatorTest.test_request_id_header_and_body_must_agree) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:08.9606178Z test_schemas_are_what_the_generator_writes (test_contracts.ValidatorTest.test_schemas_are_what_the_generator_writes) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:09.7087324Z test_the_committed_contracts_validate (test_contracts.ValidatorTest.test_the_committed_contracts_validate) ... ok
+backend-contracts	Tool tests	2026-10-08T15:58:09.7088179Z 
+backend-contracts	Tool tests	2026-10-08T15:58:09.7088537Z ----------------------------------------------------------------------
+backend-contracts	Tool tests	2026-10-08T15:58:09.7089139Z Ran 14 tests in 4.518s
+backend-contracts	Tool tests	2026-10-08T15:58:09.7089427Z 
+backend-contracts	Tool tests	2026-10-08T15:58:09.7089591Z OK
+backend-contracts	Post Run actions/setup-python@v5	﻿2026-10-08T15:58:09.8084997Z Post job cleanup.
+backend-contracts	Post Run actions/setup-python@v5	2026-10-08T15:58:09.9142677Z (node:2034) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+backend-contracts	Post Run actions/setup-python@v5	2026-10-08T15:58:09.9143900Z (Use `node --trace-deprecation ...` to show where the warning was created)
+backend-contracts	Post Run actions/checkout@v4	﻿2026-10-08T15:58:09.9846495Z Post job cleanup.
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.0596222Z [command]/usr/bin/git version
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.0653916Z git version 2.55.0
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.0715118Z Temporarily overriding HOME='/home/runner/work/_temp/13a9352d-4e4d-4ac3-8c81-85af7850bcaa' before making global git config changes
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.0716276Z Adding repository directory to the temporary git global config as a safe directory
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.0719142Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jovra/jovra
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.2402071Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.2445929Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.2656822Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.3931450Z http.https://github.com/.extraheader
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.3949375Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.5026530Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.5242226Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+backend-contracts	Post Run actions/checkout@v4	2026-10-08T15:58:10.5276439Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+backend-contracts	Complete job	﻿2026-10-08T15:58:10.5720339Z Cleaning up orphan processes
+backend-contracts	Complete job	2026-10-08T15:58:10.5996122Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
