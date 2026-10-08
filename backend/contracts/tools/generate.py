@@ -154,9 +154,7 @@ def error_schema(route: d.Route) -> tuple[dict, list[str]]:
         [c for auth in route.auth for c in d.AUTH_ERRORS.get(auth, [])]
         + (["invalid", "idempotency_key_reused"] if route.idempotency_required else [])
         + list(route.errors)
-        + (["internal"] if "internal" not in route.errors else [])))
-    if route.idempotency_required and "invalid" not in codes:
-        codes.append("invalid")
+        + ["internal"]))
     order = [c for c, _, _ in d.ERROR_CODES]
     codes.sort(key=order.index)
     by_status: dict[int, list[str]] = {}
