@@ -49,7 +49,7 @@
       "additionalProperties": false,
       "properties": {
         "schemaVersion": {"const": "jovra.studio-fixture.vectors/1"},
-        "kind": {"enum": ["sync-fit", "sound-delay", "job-transitions", "ledger", "quote-credits", "sample-truth", "edl-context"]},
+        "kind": {"description": "A vector kind. The set is not listed here: scripts/spec/validate_studio.py requires a checker registered by a cases module (spec/reference/studio/cases/*_cases.py) and a module page (spec/studio/modules/) for every kind.", "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"},
         "status": {"type": "string", "maxLength": 400},
         "cases": {
           "type": "array",
