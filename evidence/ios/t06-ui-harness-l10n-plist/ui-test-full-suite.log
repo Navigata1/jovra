@@ -1,0 +1,77 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/ios/Jovra.xcodeproj
+==> JovraUITests on 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (full suite)
+Writing result bundle at path:
+	/Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/.derivedData/ui-tests-20261007-192404.xcresult
+
+Failing tests:
+	JovraSmokeUITests.testEveryTabAtLargestAccessibilityTextSize()
+	JovraSmokeUITests.testEveryTabInDarkAppearance()
+	JovraSmokeUITests.testEveryTabInLightAppearance()
+	JovraSmokeUITests.testSystemAppearanceIsFollowed()
+
+** TEST FAILED **
+
+Testing started
+==> Screenshots exported to /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/harness-start-route-insights.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/ax5-2-sessions.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/ax5-1-home.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/dark-1-home.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/light-1-home.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/light-7-after-route.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/light-6-capture-route.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/system-home.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/pseudo-5-profile.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/pseudo-4-insights.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/pseudo-3-record.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/pseudo-2-sessions.png
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/pseudo-1-home.png
+==> Summary
+Test class                        passed  failed  skipped
+JovraUITests/HarnessUITests            8       0        0
+JovraUITests/JovraSmokeUITests         2       4        0
+JovraUITests/PseudoLocaleUITests       1       0        0
+Total: 11 passed, 4 failed, 0 skipped in 3 classes (xcresult summary: 11 passed, 4 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): Contrast failed
+FAILED JovraSmokeUITests/testEveryTabInDarkAppearance(): Contrast failed
+FAILED JovraSmokeUITests/testEveryTabInLightAppearance(): Contrast failed
+FAILED JovraSmokeUITests/testSystemAppearanceIsFollowed(): Contrast failed
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/.derivedData/ui-tests-20261007-192404.xcresult
+==> System appearance pass: simulator in light
+Writing result bundle at path:
+	/Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/.derivedData/ui-system-light-20261007-192404.xcresult
+
+Failing tests:
+	JovraSmokeUITests.testSystemAppearanceIsFollowed()
+
+** TEST FAILED **
+
+Testing started
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/simulator-light-system-home.png
+Test class                      passed  failed  skipped
+JovraUITests/JovraSmokeUITests       0       1        0
+Total: 0 passed, 1 failed, 0 skipped in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testSystemAppearanceIsFollowed(): Contrast failed
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/.derivedData/ui-system-light-20261007-192404.xcresult
+==> System appearance pass: simulator in dark
+Writing result bundle at path:
+	/Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/.derivedData/ui-system-dark-20261007-192404.xcresult
+
+Failing tests:
+	JovraSmokeUITests.testSystemAppearanceIsFollowed()
+
+** TEST FAILED **
+
+Testing started
+   /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/evidence/ios/t06-ui-harness-l10n-plist/simulator-dark-system-home.png
+Test class                      passed  failed  skipped
+JovraUITests/JovraSmokeUITests       0       1        0
+Total: 0 passed, 1 failed, 0 skipped in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testSystemAppearanceIsFollowed(): Contrast failed
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: /Users/IDC2.5/jv/.claude/worktrees/t06-ui-harness-l10n-plist/.derivedData/ui-system-dark-20261007-192404.xcresult

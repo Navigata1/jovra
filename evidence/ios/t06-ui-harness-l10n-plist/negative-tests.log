@@ -1,0 +1,80 @@
+$ python3 -m unittest (scripts/l10n/tests, scripts/ios/tests), then both lints over the shell
+test_catalogs_outside_the_localization_folder_and_non_ticket_branches_fail (tests.test_catalog_ownership.CatalogOwnershipTests.test_catalogs_outside_the_localization_folder_and_non_ticket_branches_fail) ... ok
+test_changes_without_catalogs_always_pass (tests.test_catalog_ownership.CatalogOwnershipTests.test_changes_without_catalogs_always_pass) ... ok
+test_pr_fixture_editing_another_areas_table_fails (tests.test_catalog_ownership.CatalogOwnershipTests.test_pr_fixture_editing_another_areas_table_fails) ... ok
+test_pr_fixture_editing_its_own_table_passes (tests.test_catalog_ownership.CatalogOwnershipTests.test_pr_fixture_editing_its_own_table_passes) ... ok
+test_the_localization_owner_may_edit_any_table (tests.test_catalog_ownership.CatalogOwnershipTests.test_the_localization_owner_may_edit_any_table) ... ok
+test_the_most_specific_owned_area_owns_a_table (tests.test_catalog_ownership.CatalogOwnershipTests.test_the_most_specific_owned_area_owns_a_table) ... ok
+test_a_seeded_line_call_fails (tests.test_copy_lint.CopyLintTests.test_a_seeded_line_call_fails) ... ok
+test_an_entry_comment_can_allow_one_rule_with_a_reason (tests.test_copy_lint.CopyLintTests.test_an_entry_comment_can_allow_one_rule_with_a_reason) ... ok
+test_every_banned_term (tests.test_copy_lint.CopyLintTests.test_every_banned_term) ... ok
+test_every_catalog_in_the_app_passes (tests.test_copy_lint.CopyLintTests.test_every_catalog_in_the_app_passes) ... ok
+test_honest_wording_passes (tests.test_copy_lint.CopyLintTests.test_honest_wording_passes) ... ok
+test_keys_are_checked_as_well_as_values (tests.test_copy_lint.CopyLintTests.test_keys_are_checked_as_well_as_values) ... ok
+test_a_file_can_opt_out_with_a_reason (tests.test_literal_lint.LiteralLintTests.test_a_file_can_opt_out_with_a_reason) ... ok
+test_a_literal_seeded_into_a_copy_of_the_shell_fails (tests.test_literal_lint.LiteralLintTests.test_a_literal_seeded_into_a_copy_of_the_shell_fails) ... ok
+test_accepts_a_literal_key_with_an_explicit_table (tests.test_literal_lint.LiteralLintTests.test_accepts_a_literal_key_with_an_explicit_table) ... ok
+test_accepts_verbatim_text_and_strings_without_letters (tests.test_literal_lint.LiteralLintTests.test_accepts_verbatim_text_and_strings_without_letters) ... ok
+test_flags_a_hard_coded_text_literal (tests.test_literal_lint.LiteralLintTests.test_flags_a_hard_coded_text_literal) ... ok
+test_flags_controls_modifiers_and_labelled_arguments (tests.test_literal_lint.LiteralLintTests.test_flags_controls_modifiers_and_labelled_arguments) ... ok
+test_flags_display_property_defaults (tests.test_literal_lint.LiteralLintTests.test_flags_display_property_defaults) ... ok
+test_flags_literals_returned_by_a_display_property (tests.test_literal_lint.LiteralLintTests.test_flags_literals_returned_by_a_display_property) ... ok
+test_ignores_previews_and_marked_lines (tests.test_literal_lint.LiteralLintTests.test_ignores_previews_and_marked_lines) ... ok
+test_the_shell_passes (tests.test_literal_lint.LiteralLintTests.test_the_shell_passes) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.036s
+
+OK
+test_a_pair_without_a_reviewer_line_fails_and_writes_no_page (tests.test_side_by_side.SideBySideTests.test_a_pair_without_a_reviewer_line_fails_and_writes_no_page) ... ok
+test_a_placeholder_reviewer_line_does_not_count (tests.test_side_by_side.SideBySideTests.test_a_placeholder_reviewer_line_does_not_count) ... ok
+test_a_screen_number_without_a_reference_is_an_error (tests.test_side_by_side.SideBySideTests.test_a_screen_number_without_a_reference_is_an_error) ... ok
+test_every_pair_reviewed_writes_the_page (tests.test_side_by_side.SideBySideTests.test_every_pair_reviewed_writes_the_page) ... ok
+test_pairs_screenshots_with_references_by_screen_number (tests.test_side_by_side.SideBySideTests.test_pairs_screenshots_with_references_by_screen_number) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.006s
+
+OK
+literal lint: 0 violation(s) in 27 Swift file(s)
+exit 0
+copy lint: 0 finding(s) in 9 catalog(s)
+exit 0
+
+=== Negative 1: literal lint on a copy of the shell with a seeded Text literal
+Jovra/Features/Home/HomeView.swift:105: hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:)): Text("Seeded literal")
+literal lint: 1 violation(s) in 27 Swift file(s)
+exit 1  (expected 1)
+
+=== Negative 2: copy lint on a copy of Home.xcstrings with a seeded "line call" string
+Home.xcstrings: “Line call: out”: line-call: “Line call: out” (no officiating-grade line calls (CLAUDE.md rule 1))
+copy lint: 1 finding(s) in 1 catalog(s)
+exit 1  (expected 1)
+
+=== Negative 3: String Catalog ownership on the PR fixture (T23 edits Home, owned by T19)
+{
+  "description": "T23 (framing) edits Home's table, which belongs to T19: the check must fail.",
+  "branch": "ticket/t23-framing-calibration",
+  "changed": [
+    "ios/Jovra/Features/Capture/Framing/FramingView.swift",
+    "ios/Jovra/Resources/Localization/Capture.Framing.xcstrings",
+    "ios/Jovra/Resources/Localization/Home.xcstrings"
+  ]
+}
+ios/Jovra/Resources/Localization/Home.xcstrings: table Home belongs to T19 (ios/Jovra/Features/Home), not T23
+catalog ownership: 2 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 1 problem(s)
+exit 1  (expected 1)
+--- the passing fixture (T23 edits only Capture.Framing)
+catalog ownership: 1 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 0 problem(s)
+exit 0  (expected 0)
+
+=== Negative 4: side-by-side generator with a pair lacking a reviewer line
+side-by-side: 1 of 2 pair(s) have no reviewer line in /privateevidence/ios/t19-home-dashboard/reviews.txt.
+Compare each pair, then add one line per screenshot, for example:
+  s03-dark-home: <reviewer> — <verdict and notes against 03-home.png>
+exit 2  (expected 2)
+files: reviews.txt s03-dark-home.png s03-light-home.png 
+--- after adding the missing line
+side-by-side: 2 reviewed pair(s) -> /privateevidence/ios/t19-home-dashboard/side-by-side.html
+exit 0  (expected 0)
+files: reviews.txt s03-dark-home.png s03-light-home.png side-by-side.html 

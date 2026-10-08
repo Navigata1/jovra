@@ -1,0 +1,38 @@
+==> xcodebuild build (no Drive.xcconfig), DEVELOPMENT_TEAM empty
+    team: ''
+    entitlements (__TEXT,__entitlements): {"application-identifier": "FAKETEAMID.com.islanddevcrew.jovra", "com.apple.developer.applesignin": ["Default"], "com.apple.developer.healthkit": true, "com.apple.developer.healthkit.access": []}
+    code signature: Signature=adhoc TeamIdentifier=not set 
+ok:   Sign in with Apple and HealthKit entitlements are in the unsigned simulator build
+ok:   NSCameraUsageDescription: JOVRA uses the camera to record your tennis sessions. Videos are saved on this device.
+ok:   NSMicrophoneUsageDescription: Optional. JOVRA can use the microphone to capture audio for hit detection and voice notes. Recording works without it.
+ok:   NSPhotoLibraryAddUsageDescription: JOVRA saves clips and exports you choose to your photo library.
+ok:   NSHealthUpdateUsageDescription: If you turn on Apple Health in Settings, JOVRA saves each tennis session as a workout with only its start time, end time and session reference, nothing else.
+ok:   BGTaskSchedulerPermittedIdentifiers: ["com.islanddevcrew.jovra.processing.overnight","com.islanddevcrew.jovra.continued.*"]
+ok:   UIBackgroundModes: processing
+ok:   JovraDriveClientID is empty
+ok:   JovraDriveRedirectScheme is empty
+    URL schemes: 'jovra '
+ok:   no Drive URL scheme registered
+==> install and launch the unsigned build on 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22
+com.islanddevcrew.jovra: 91218
+ok:   launched on the simulator
+ok:   still running after 3 s (pid 91218)
+==> xcodebuild build (with scripts/ios/fixtures/Drive.test.xcconfig as Drive.xcconfig), DEVELOPMENT_TEAM empty
+    team: ''
+    entitlements (__TEXT,__entitlements): {"application-identifier": "FAKETEAMID.com.islanddevcrew.jovra", "com.apple.developer.applesignin": ["Default"], "com.apple.developer.healthkit": true, "com.apple.developer.healthkit.access": []}
+    code signature: Signature=adhoc TeamIdentifier=not set 
+ok:   Sign in with Apple and HealthKit entitlements are in the unsigned simulator build
+ok:   NSCameraUsageDescription: JOVRA uses the camera to record your tennis sessions. Videos are saved on this device.
+ok:   NSMicrophoneUsageDescription: Optional. JOVRA can use the microphone to capture audio for hit detection and voice notes. Recording works without it.
+ok:   NSPhotoLibraryAddUsageDescription: JOVRA saves clips and exports you choose to your photo library.
+ok:   NSHealthUpdateUsageDescription: If you turn on Apple Health in Settings, JOVRA saves each tennis session as a workout with only its start time, end time and session reference, nothing else.
+ok:   BGTaskSchedulerPermittedIdentifiers: ["com.islanddevcrew.jovra.processing.overnight","com.islanddevcrew.jovra.continued.*"]
+ok:   UIBackgroundModes: processing
+    URL schemes: 'jovra com.googleusercontent.apps.000000000000-jovratest'
+ok:   reversed client id is a URL scheme
+ok:   JovraDriveClientID is the test client id
+==> rebuild without Drive.xcconfig so later runs use the default chain
+==> xcodebuild build (no Drive.xcconfig), DEVELOPMENT_TEAM empty
+    team: ''
+ok:   back to an empty client id
+==> 0 failure(s)
