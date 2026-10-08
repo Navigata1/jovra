@@ -1,0 +1,60 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 96000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "description": "HEVC Main, 1280x720 landscape, variable frame rate around a nominal 30 fps (frame durations of 749 to 1251 ticks of 1/30000 s in a 10-frame cycle, median 1000), AAC audio without events.",
+  "duplicateOf": null,
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "import/hevc-720p30-vfr",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/import-c057f208a9012761/hevc-720p30-vfr.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "c057f208a9012761bda6be0460390c3397f4a0f33120eda86798dbd4edcfca73"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 111,
+  "set": "import",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "82e7925839f0edc8e0812b7179b08de7e3637658988108cce76b73ee94cf2ac6",
+    "frameCount": 60,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 24,
+    "rows": 9
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "hevc",
+    "codedHeight": 720,
+    "codedWidth": 1280,
+    "displayHeight": 720,
+    "displayWidth": 1280,
+    "duration": {
+      "timescale": 1,
+      "value": 2
+    },
+    "fourCC": "hvc1",
+    "frameCount": 60,
+    "frameRate": {
+      "den": 1,
+      "num": 30
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true,
+    "variableFrameRate": true
+  }
+}

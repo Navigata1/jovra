@@ -1,0 +1,151 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 480000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "court": {
+    "order": "topLeft,topRight,bottomRight,bottomLeft",
+    "points": [
+      {
+        "x": 80,
+        "y": 80
+      },
+      {
+        "x": 560,
+        "y": 80
+      },
+      {
+        "x": 560,
+        "y": 320
+      },
+      {
+        "x": 80,
+        "y": 320
+      }
+    ],
+    "space": "displayPixels"
+  },
+  "description": "Harness clip, seed 11 (tuning): hit clicks with exact onsets and a flash cell.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 31,
+      "sample": 49721,
+      "time": {
+        "timescale": 48000,
+        "value": 49721
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 79,
+      "sample": 127173,
+      "time": {
+        "timescale": 16000,
+        "value": 42391
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 109,
+      "sample": 174764,
+      "time": {
+        "timescale": 12000,
+        "value": 43691
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 155,
+      "sample": 248869,
+      "time": {
+        "timescale": 48000,
+        "value": 248869
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 182,
+      "sample": 292420,
+      "time": {
+        "timescale": 2400,
+        "value": 14621
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 229,
+      "sample": 367846,
+      "time": {
+        "timescale": 24000,
+        "value": 183923
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 271,
+      "sample": 433767,
+      "time": {
+        "timescale": 16000,
+        "value": 144589
+      },
+      "type": "hit"
+    }
+  ],
+  "flashCell": {
+    "column": 15,
+    "row": 8
+  },
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "harness/events-s11",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/harness-4d9c18d5b3e4de4c/events-seed11.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "4d9c18d5b3e4de4cdb2b99351b4c25d8ea3c24610dc869be6d89487d5f059682"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 11,
+  "set": "harness",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "407390c2d4a07947dd9e55a61ce687eb1edb334d98013015c82635aabefa7d03",
+    "frameCount": 300,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 24,
+    "rows": 9
+  },
+  "split": "tuning",
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 360,
+    "codedWidth": 640,
+    "displayHeight": 360,
+    "displayWidth": 640,
+    "duration": {
+      "timescale": 1,
+      "value": 10
+    },
+    "fourCC": "avc1",
+    "frameCount": 300,
+    "frameRate": {
+      "den": 1,
+      "num": 30
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true,
+    "variableFrameRate": false
+  }
+}

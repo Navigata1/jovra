@@ -1,0 +1,24 @@
+# Probe tests on the private real footage (docs/fixtures/real-footage.md). Only test names and results are recorded; no media leaves the machine.
+$ swift test --filter "RealFootageProbeTests|FrameTimingTests"
+✔ Test "fewer than two frames or a bad timescale states no rate" passed after 0.001 seconds.
+✔ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" passed after 0.001 seconds.
+✔ Test "a constant rate that is no standard rate is reported exactly" passed after 0.001 seconds.
+✔ Test "decode order with B-frames: timestamps are sorted before differencing" passed after 0.001 seconds.
+✔ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" passed after 0.001 seconds.
+✔ Test "constant 30 fps at timescale 30000" passed after 0.001 seconds.
+✔ Test "one-tick rounding (29.97 fps at timescale 600: 20 ticks and every 50th 21) is 30000/1001, constant" passed after 0.001 seconds.
+✔ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" passed after 0.001 seconds.
+✔ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" passed after 0.003 seconds.
+✔ Suite "Frame rate from presentation timestamps" passed after 0.003 seconds.
+✔ Test "constant-frame-rate excerpt: 30 fps, constant" passed after 0.035 seconds.
+✔ Test "Oct 4 phone original: 30 fps, variable frame rate" passed after 0.055 seconds.
+✔ Test "Sep 29 phone original: 30 fps, variable frame rate" passed after 0.084 seconds.
+✔ Suite "MediaProbe on private real footage (skipped when absent)" passed after 0.084 seconds.
+✔ Test run with 12 tests in 2 suites passed after 0.085 seconds.
+
+# The same tests with the files absent (JOVRA_REAL_MEDIA_DIR and JOVRA_EXCERPTS_DIR pointed at an empty folder):
+➜ Test "Oct 4 phone original: 30 fps, variable frame rate" skipped: "real footage absent: 20261004_125549.mp4 (set JOVRA_REAL_MEDIA_DIR)"
+➜ Test "constant-frame-rate excerpt: 30 fps, constant" skipped: "real footage absent: match-feb2024-14m00s-2min-720p30.mp4 (set JOVRA_EXCERPTS_DIR)"
+➜ Test "Sep 29 phone original: 30 fps, variable frame rate" skipped: "real footage absent: 20260929_170141.mp4 (set JOVRA_REAL_MEDIA_DIR)"
+✔ Suite "MediaProbe on private real footage (skipped when absent)" passed after 0.001 seconds.
+✔ Test run with 3 tests in 1 suite passed after 0.001 seconds.
