@@ -61,6 +61,9 @@ jobs:
           supabase status -o env > "$RUNNER_TEMP/supabase-status.env"
           python3 supabase/scripts/otp_smoke.py "$RUNNER_TEMP/supabase-status.env"
 
+      - name: PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)
+        run: python3 supabase/scripts/postgrest_identity_smoke.py "$RUNNER_TEMP/supabase-status.env"
+
       - name: Auth log on failure
         if: failure()
         run: docker logs "$(docker ps --filter name=supabase_auth --format '{{.Names}}' | head -1)" 2>&1 | tail -80

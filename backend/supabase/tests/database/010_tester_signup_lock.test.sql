@@ -34,11 +34,12 @@ select ok(not exists (select 1 from pg_proc p, aclexplode(p.proacl) a
                        where p.oid = 'app_private.email_hmac(text)'::regprocedure and a.grantee = 0),
   'PUBLIC has no EXECUTE on email_hmac');
 
+-- Migration 1 (S76) grants authenticated USAGE on app_private so RLS policies can call the helpers
+-- (security-model §3); the hook functions stay unexecutable for it (asserted above).
 select ok(not has_schema_privilege('anon', 'app_private', 'usage')
-          and not has_schema_privilege('authenticated', 'app_private', 'usage')
           and not has_schema_privilege('anon', 'app_ops', 'usage')
           and not has_schema_privilege('authenticated', 'app_ops', 'usage'),
-  'client roles cannot use app_private or app_ops');
+  'anon cannot use app_private or app_ops; authenticated cannot use app_ops');
 select ok(not has_table_privilege('authenticated', 'app_ops.tester_allowlist', 'select')
           and not has_table_privilege('authenticated', 'app_ops.tester_allowlist', 'insert')
           and not has_table_privilege('anon', 'app_ops.tester_allowlist', 'select')
