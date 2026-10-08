@@ -63,6 +63,15 @@ helpers in the local database; `supabase db reset` removes them.
 `supabase start`, `supabase db reset`, the security advisors (fail on warn), `supabase test db` and the OTP smoke
 test. A failing pgTAP assertion turns it red.
 
+### Two facts found while building this (OBSERVED)
+
+- In the CLI, `[auth.email] enable_signup` switches the email provider on or off (`GOTRUE_EXTERNAL_EMAIL_ENABLED`);
+  setting it to false disables email codes for everyone. Sign-ups are closed by `[auth] enable_signup = false`.
+- Supabase Auth runs `before_user_created` on sign-up, OTP, anonymous, OAuth, SAML, Web3 and invite, but not on
+  `POST /auth/v1/admin/users` (no call in `internal/api/admin.go` of supabase/auth). The operator's admin creation
+  is therefore not checked by the hook; it needs the secret key, which never leaves the operator. The smoke test
+  proves the hook alone through the invite path, which also ignores the sign-up switch.
+
 ### Not covered yet
 
 - Everything hosted is UNVERIFIED until gate G1: the hook's availability, config keys and payload shape on the

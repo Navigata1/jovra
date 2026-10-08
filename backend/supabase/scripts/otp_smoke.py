@@ -6,7 +6,8 @@ Proves, through the real Auth service, Kong and Mailpit of `supabase start`:
   2. the session token is ES256 (ADR-0022) and belongs to that tester;
   3. an OTP request with create_user true for an unknown email is refused and creates no user;
   4. an anonymous sign-in is refused;
-  5. the hook alone refuses an unknown email even on the admin path, which bypasses enable_signup;
+  5. the hook alone refuses an unknown email on the invite path, which bypasses enable_signup, and lets an
+     allow-listed one through;
   6. the operator path works with sign-ups off: an allow-listed address can be created through the admin API.
 
 Usage (from backend/): supabase status -o env > "$TMP/status.env"; python3 supabase/scripts/otp_smoke.py "$TMP/status.env"
@@ -28,7 +29,7 @@ import urllib.request
 TESTER = "owner.tester@example.test"
 TESTER_ID = "00000000-0000-4000-8000-00000000a001"
 UNKNOWN = "stranger.otp@example.test"
-UNKNOWN_ADMIN = "stranger.admin@example.test"
+UNKNOWN_INVITE = "stranger.invite@example.test"
 PENDING = "pending.tester@example.test"
 MAILPIT_DEFAULT = "http://127.0.0.1:54324"
 CODE_PATTERN = re.compile(r"\b(\d{6})\b")
@@ -147,16 +148,26 @@ def main() -> int:
     status, body = request("POST", f"{api}/auth/v1/signup", public, {"data": {}})
     checks.check(400 <= status < 500, "anonymous sign-in is refused", f"HTTP {status} {summary(body)}")
 
-    # 5. The hook alone: the admin API ignores enable_signup, so only the hook can refuse this.
-    status, body = request("POST", f"{api}/auth/v1/admin/users", admin, {"email": UNKNOWN_ADMIN, "email_confirm": True})
+    # 5. The hook alone. POST /invite ignores enable_signup but runs before_user_created (OBSERVED in supabase/auth
+    #    internal/api/invite.go), so only the hook can refuse an unknown address here, and it must let an
+    #    allow-listed one through. This proves the hook is wired into the running Auth service.
+    status, body = request("POST", f"{api}/auth/v1/invite", admin, {"email": UNKNOWN_INVITE})
     checks.check(400 <= status < 500 and "signup_not_allowed" in json.dumps(body),
-                 "the hook refuses an unknown email on the admin path", f"HTTP {status} {summary(body)}")
-    checks.check(UNKNOWN_ADMIN not in user_emails(), "no user row was created on the admin path")
+                 "the hook alone refuses an unknown email (invite path, sign-up switch not involved)",
+                 f"HTTP {status} {summary(body)}")
+    checks.check(UNKNOWN_INVITE not in user_emails(), "no user row was created on the invite path")
+    status, body = request("POST", f"{api}/auth/v1/invite", admin, {"email": PENDING})
+    invited = status == 200 and isinstance(body, dict) and body.get("email") == PENDING
+    checks.check(invited, "the hook lets an allow-listed email through on the same path", f"HTTP {status}")
+    if invited:
+        request("DELETE", f"{api}/auth/v1/admin/users/{body['id']}", admin)
 
     # 6. The operator path: an allow-listed address is created with sign-ups off, then removed again.
+    #    POST /admin/users does not run the hook (OBSERVED in supabase/auth: no call in admin.go); it needs the
+    #    secret key, which only the operator holds.
     status, body = request("POST", f"{api}/auth/v1/admin/users", admin, {"email": PENDING, "email_confirm": True})
     created = status == 200 and isinstance(body, dict) and body.get("email") == PENDING
-    checks.check(created, "an allow-listed address can be created through the admin API", f"HTTP {status}")
+    checks.check(created, "the operator can create an allow-listed tester with sign-ups off", f"HTTP {status}")
     if created:
         request("DELETE", f"{api}/auth/v1/admin/users/{body['id']}", admin)
 

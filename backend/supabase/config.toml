@@ -78,7 +78,10 @@ token_verifications = 30
 web3 = 30
 
 [auth.email]
-enable_signup = false
+# Despite its name this key enables the email provider itself (the CLI maps it to GOTRUE_EXTERNAL_EMAIL_ENABLED,
+# OBSERVED in supabase/cli gotrue.service.ts); false would disable email codes entirely. Sign-ups are closed by
+# `[auth] enable_signup = false` (GOTRUE_DISABLE_SIGNUP) and the hook.
+enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
 secure_password_change = false
