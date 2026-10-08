@@ -285,6 +285,11 @@ A recorded run of a capability against footage with ground-truth labels, scored 
 benchmark on real footage promotes a capability; synthetic sample media can fail a capability but never validate it.
 _Avoid_: Test (generic), evaluation, accuracy claim
 
+**Benchmark binding**:
+For one capability, the benchmark task, version and tolerance that measure its gate, and which task metric each gate
+metric is (`spec/fixtures/media/benchmark-bindings.json`). A benchmark that names a capability must use its binding.
+_Avoid_: Mapping, task config
+
 **Confidence**:
 A capability's own certainty for one value, stored and shown as a band. It is never presented as accuracy; low
 confidence sends the value to needs review.

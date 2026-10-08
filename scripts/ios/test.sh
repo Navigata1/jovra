@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
-# Runs every non-UI test: JovraCore and JovraMedia with `swift test`, then the hosted JovraTests
-# bundle on the simulator.
+# Runs every non-UI test: renders the media fixtures if needed, JovraCore and JovraMedia with `swift test`,
+# then the hosted JovraTests bundle on the simulator.
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
+
+# JovraMedia's fixture tests decode rendered media (cached under .cache/media; only missing clips render).
+# --check never writes ground truth: it fails unless every clip, cached or fresh, reproduces the committed
+# decoded-frame hashes, so the Swift tests below compare against the committed values, not a fresh rewrite.
+# After changing a fixture set, run `python3 scripts/media/render.py` yourself and commit the new truth.
+echo "==> render media fixtures (check against committed ground truth)"
+python3 "$ROOT/scripts/media/render.py" --check
 
 for package in JovraCore JovraMedia; do
   echo "==> swift test ($package)"

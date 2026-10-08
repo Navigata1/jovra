@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.benchmarkBindings",
+  "description": "How a benchmark task is judged against a capability's research gate in spec/contracts/capability-registry.v1.json. A record that names a capability must use exactly this task, version and tolerance, and its metrics carry the gate's names. The harness (JovraBenchmark) and scripts/spec/validate.py both read this file. An analysis ticket adds the binding for its capability in the same PR as its task.",
+  "bindings": [
+    {
+      "capabilityId": "audio.hitDetection",
+      "task": {"id": "eventTimes", "version": "1.0.0", "tolerance": {"value": 50, "timescale": 1000}},
+      "metrics": [
+        {"task": "precision", "gate": "own-court hit precision"},
+        {"task": "recall", "gate": "own-court hit recall"},
+        {"task": "onset MAE", "gate": "onset MAE"}
+      ],
+      "rationale": "A predicted onset matches a truth hit within 50 ms, the matching window of the MIREX audio onset detection evaluation; the gate's onset MAE (<= 10 ms) then measures timing inside that window. The eventTimes task counts every truth event, so a capability record must gate on clips whose events are all own-court hits (the harness and synthetic corpus clips are)."
+    }
+  ]
+}

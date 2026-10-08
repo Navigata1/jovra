@@ -1,0 +1,140 @@
+{
+  "at" : "2026-10-08T02:12:53Z",
+  "band" : "synthetic",
+  "capabilityId" : null,
+  "clips" : [
+    {
+      "decodedFramesSha256" : "d7e18ccf01a41eb2c21391cf31b2529965901b41c2e854ed5d12e337d761ec0e",
+      "outputs" : [
+        {
+          "timescale" : 24000,
+          "value" : 24703
+        },
+        {
+          "timescale" : 1600,
+          "value" : 3137
+        },
+        {
+          "timescale" : 48000,
+          "value" : 156077
+        },
+        {
+          "timescale" : 24000,
+          "value" : 109963
+        },
+        {
+          "timescale" : 12000,
+          "value" : 74233
+        },
+        {
+          "timescale" : 400,
+          "value" : 3141
+        },
+        {
+          "timescale" : 24000,
+          "value" : 212369
+        }
+      ],
+      "rendererSourceHash" : "4d9c18d5b3e4de4cdb2b99351b4c25d8ea3c24610dc869be6d89487d5f059682",
+      "seed" : 23,
+      "split" : "heldOut",
+      "truthEventsSha256" : "3443e2e2ffbe6db1083447d0a669869bdd936ace010261b3caa4aaefb37807dc",
+      "truthId" : "harness/events-s23"
+    }
+  ],
+  "estimator" : {
+    "id" : "oracle.eventTimes",
+    "methodVersion" : "1.0.0",
+    "role" : "oracle"
+  },
+  "floor" : {
+    "metrics" : [
+      {
+        "comparator" : ">=",
+        "name" : "precision",
+        "threshold" : "0.95"
+      },
+      {
+        "comparator" : ">=",
+        "name" : "recall",
+        "threshold" : "0.90"
+      },
+      {
+        "comparator" : "<=",
+        "name" : "onset MAE",
+        "threshold" : "10",
+        "unit" : "ms"
+      }
+    ],
+    "source" : "harness self-test (values of the audio.hitDetection gate; promotes nothing)"
+  },
+  "harness" : {
+    "version" : "1.0.0"
+  },
+  "kind" : "jovra.benchmarkRecord",
+  "metrics" : [
+    {
+      "exact" : {
+        "d" : 1,
+        "n" : 1
+      },
+      "name" : "precision",
+      "value" : "1.0000"
+    },
+    {
+      "exact" : {
+        "d" : 1,
+        "n" : 1
+      },
+      "name" : "recall",
+      "value" : "1.0000"
+    },
+    {
+      "exact" : {
+        "d" : 1,
+        "n" : 0
+      },
+      "name" : "onset MAE",
+      "unit" : "ms",
+      "value" : "0.000"
+    }
+  ],
+  "mode" : "gate",
+  "runId" : "oracle.eventTimes-gate-20261008T021253Z",
+  "schemaVersion" : "1.0.0",
+  "task" : {
+    "id" : "eventTimes",
+    "tolerance" : {
+      "timescale" : 1000,
+      "value" : 50
+    },
+    "version" : "1.0.0"
+  },
+  "verdict" : {
+    "checks" : [
+      {
+        "comparator" : ">=",
+        "name" : "precision",
+        "passed" : true,
+        "threshold" : "0.95",
+        "value" : "1.0000"
+      },
+      {
+        "comparator" : ">=",
+        "name" : "recall",
+        "passed" : true,
+        "threshold" : "0.90",
+        "value" : "1.0000"
+      },
+      {
+        "comparator" : "<=",
+        "name" : "onset MAE",
+        "passed" : true,
+        "threshold" : "10",
+        "unit" : "ms",
+        "value" : "0.000"
+      }
+    ],
+    "passed" : true
+  }
+}

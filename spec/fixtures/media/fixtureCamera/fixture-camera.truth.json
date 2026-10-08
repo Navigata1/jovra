@@ -1,0 +1,160 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 576000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "court": {
+    "order": "topLeft,topRight,bottomRight,bottomLeft",
+    "points": [
+      {
+        "x": 160,
+        "y": 160
+      },
+      {
+        "x": 1120,
+        "y": 160
+      },
+      {
+        "x": 1120,
+        "y": 640
+      },
+      {
+        "x": 160,
+        "y": 640
+      }
+    ],
+    "space": "displayPixels"
+  },
+  "description": "Simulator fixture camera: court with exact corners, a ball turning at each hit, hit clicks in the audio with a flash cell, and the frame code in the top row.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 21,
+      "sample": 33853,
+      "time": {
+        "timescale": 48000,
+        "value": 33853
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 71,
+      "sample": 114409,
+      "time": {
+        "timescale": 48000,
+        "value": 114409
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 100,
+      "sample": 160304,
+      "time": {
+        "timescale": 3000,
+        "value": 10019
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 140,
+      "sample": 225383,
+      "time": {
+        "timescale": 48000,
+        "value": 225383
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 183,
+      "sample": 292988,
+      "time": {
+        "timescale": 12000,
+        "value": 73247
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 219,
+      "sample": 351639,
+      "time": {
+        "timescale": 16000,
+        "value": 117213
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 266,
+      "sample": 426586,
+      "time": {
+        "timescale": 24000,
+        "value": 213293
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 313,
+      "sample": 502036,
+      "time": {
+        "timescale": 12000,
+        "value": 125509
+      },
+      "type": "hit"
+    }
+  ],
+  "flashCell": {
+    "column": 15,
+    "row": 8
+  },
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "fixtureCamera/fixture-camera",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "8710c28d160f8765529ca5ed3aad96ac1f2b6ee23a3f3b7c3b9ac8d0b4ad9474"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 7,
+  "set": "fixtureCamera",
+  "signature": {
+    "columns": 16,
+    "decodedFramesSha256": "7e4d79d351839f527c3bf2f0547f98210fa0a07809969626aacd3cdf3604379f",
+    "frameCount": 360,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 24,
+    "rows": 9
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 720,
+    "codedWidth": 1280,
+    "displayHeight": 720,
+    "displayWidth": 1280,
+    "duration": {
+      "timescale": 1,
+      "value": 12
+    },
+    "fourCC": "avc1",
+    "frameCount": 360,
+    "frameRate": {
+      "den": 1,
+      "num": 30
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true,
+    "variableFrameRate": false
+  }
+}
