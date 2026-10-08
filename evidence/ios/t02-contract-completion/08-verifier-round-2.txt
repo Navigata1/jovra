@@ -106,3 +106,5 @@ $ scripts/ios/ui-test.sh t02-contract-completion   -> exit 0
   ui-system-light: Passed 1/1 on 18D4F325-4E94-456C-9A10-5C24F7019BF3
   ui-tests: Passed 6/6 on 18D4F325-4E94-456C-9A10-5C24F7019BF3
 No UI changed in this round (no ios/ diff), so no screenshot was refreshed; the run's exported PNGs were not committed.
+
+Correction: commit aaabcc2's message says "validator self-tests 18 -> 30". The measured counts are 17 (HEAD~1, git archive copy) -> 26 (above).
