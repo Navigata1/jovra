@@ -12,6 +12,7 @@ The repository itself is never modified.  Usage:  python3 scripts/spec/test_vali
 
 from __future__ import annotations
 
+import json
 import re
 import shutil
 import subprocess
@@ -123,6 +124,12 @@ class Sandbox:
 
     def validate(self, *flags: str) -> subprocess.CompletedProcess:
         return self.run("scripts/spec/validate_studio.py", *flags)
+
+    def vector_cases(self, kind: str) -> int:
+        """Cases of one vector kind, counted from this sandbox's files (never a hard-coded count)."""
+        files = self.path("spec/studio/fixtures/vectors").glob("*.json")
+        docs = (json.loads(f.read_text(encoding="utf-8")) for f in files)
+        return sum(len(doc.get("cases", [])) for doc in docs if doc.get("kind") == kind)
 
 
 class StudioPlumbingTest(unittest.TestCase):
@@ -250,17 +257,28 @@ class StudioPlumbingTest(unittest.TestCase):
         self.assertNotIn("Current result", text)
         self.assertNotRegex(text, r"\b\d+ (schemas|records|vector cases|module pages|registered kinds|generated files)\b")
 
-    def test_list_prints_kinds_modules_and_status(self):
+    def assertListRows(self):
         result = self.box.validate("--list")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         rows = {line.split()[0]: line.split() for line in result.stdout.splitlines() if line.strip()}
         # kind, type, count, invalid, module, coverage, swift, kotlin
-        self.assertEqual(rows["quote-credits"][1:3], ["vector", "8"])
+        self.assertEqual(rows["quote-credits"][1:3], ["vector", str(self.box.vector_cases("quote-credits"))])
         self.assertEqual(rows["quote-credits"][4:7], ["ledger", "covered", "pending"])
         self.assertEqual(rows["sync-fit"][4], "sync")
         self.assertEqual(rows["jovra.edit-plan/2"][1], "schema")
         self.assertEqual(rows["normalization"][1:], ["page", "-", "-", "normalization", "not-covered", "pending",
                                                      "pending"])
+
+    def test_list_prints_kinds_modules_and_status(self):
+        self.assertListRows()
+
+    def test_list_count_comes_from_the_vector_files(self):
+        # AC2: no test hard-codes a pre-change count; a later ticket that adds a quote-credits case edits no test
+        rel = "spec/studio/fixtures/vectors/quote-credits.json"
+        doc = json.loads(self.box.path(rel).read_text(encoding="utf-8"))
+        doc["cases"].append(dict(doc["cases"][0], id="added-by-a-later-ticket"))
+        self.box.write(rel, json.dumps(doc, indent=2) + "\n")
+        self.assertListRows()
 
 
 if __name__ == "__main__":
