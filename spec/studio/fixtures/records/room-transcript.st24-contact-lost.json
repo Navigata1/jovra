@@ -1,0 +1,1630 @@
+{
+  "schemaVersion": "jovra.room-transcript/1",
+  "transcriptId": "st24-contact-lost",
+  "sample": true,
+  "screen": "24-director-capture",
+  "title": "Director capture trust: a camera silent for 42 s, old epoch and replayed seq refused, viewer stop-all refused, retries, a reused command id, and a partial stop-all",
+  "room": {
+    "roomId": "room-court-day",
+    "projectId": "sample-court-day",
+    "hostDeviceId": "device-jon",
+    "hostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+    "hostEpoch": 2,
+    "roomHint": "jovra-k7m2q9x4d1",
+    "maxCameras": 6,
+    "plannedMinutes": 90,
+    "eventRevision": 0,
+    "members": [
+      {
+        "deviceId": "device-jon",
+        "keySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+        "label": "Jon's iPhone",
+        "slot": "near-baseline",
+        "slotRole": "primary",
+        "commandGrants": [
+          "capture-controller",
+          "scorer",
+          "viewer"
+        ],
+        "capabilities": [
+          "record-local",
+          "upload-own-source",
+          "view-own-preview"
+        ]
+      },
+      {
+        "deviceId": "device-alex",
+        "keySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+        "label": "Alex's phone",
+        "slot": "far-baseline",
+        "slotRole": "camera",
+        "commandGrants": [
+          "viewer"
+        ],
+        "capabilities": [
+          "record-local",
+          "view-own-preview"
+        ]
+      },
+      {
+        "deviceId": "device-sam",
+        "keySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+        "label": "Sam's phone",
+        "slot": "near-left-corner",
+        "slotRole": "camera",
+        "commandGrants": [
+          "viewer"
+        ],
+        "capabilities": [
+          "record-local",
+          "view-own-preview"
+        ]
+      },
+      {
+        "deviceId": "device-kai",
+        "keySha256": "d230269de07abf4dc72d2a5581eeab3cd44f2fb5e40368db7d449ddd5a3dd5e2",
+        "label": "Kai's phone",
+        "slot": "far-left-corner",
+        "slotRole": "camera",
+        "commandGrants": [
+          "viewer"
+        ],
+        "capabilities": [
+          "record-local",
+          "view-own-preview"
+        ]
+      }
+    ]
+  },
+  "steps": [
+    {
+      "step": "local",
+      "atMs": 3000000,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 1,
+        "sentMonoNs": 3000000000000,
+        "type": "readiness",
+        "body": {
+          "cameraPermission": "granted",
+          "microphonePermission": "granted",
+          "presetSupported": true,
+          "batteryPct": 78,
+          "charging": false,
+          "lowPowerMode": false,
+          "freeBytes": 149500000000,
+          "minutesLeft": 130,
+          "thermal": "nominal"
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 3000000,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 2,
+        "sentMonoNs": 3000000000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 78,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3000100,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 316,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 1,
+        "sentMonoNs": 10331100000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3000200,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 315,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 1,
+        "sentMonoNs": 55004200000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3000300,
+      "peerKeySha256": "d230269de07abf4dc72d2a5581eeab3cd44f2fb5e40368db7d449ddd5a3dd5e2",
+      "length": 314,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-kai",
+        "seq": 1,
+        "sentMonoNs": 3918300000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 3001000,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 3,
+        "sentMonoNs": 3001000000000,
+        "type": "recordingIntent",
+        "body": {
+          "commandId": "cmd-start-1",
+          "issuer": {
+            "deviceId": "device-jon"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 10000,
+            "ageAtSendMs": 0
+          },
+          "target": {
+            "scope": "all",
+            "deviceIds": [
+              "device-jon",
+              "device-alex",
+              "device-sam",
+              "device-kai"
+            ]
+          },
+          "baseEventRevision": 0,
+          "intentId": "intent-1"
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 3001001,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 4,
+        "sentMonoNs": 3001001000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-start-1",
+          "issuerDeviceId": "device-jon",
+          "status": "Accepted",
+          "reason": null,
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": [
+            {
+              "deviceId": "device-jon",
+              "result": "Pending",
+              "reason": null
+            },
+            {
+              "deviceId": "device-alex",
+              "result": "Pending",
+              "reason": null
+            },
+            {
+              "deviceId": "device-sam",
+              "result": "Pending",
+              "reason": null
+            },
+            {
+              "deviceId": "device-kai",
+              "result": "Pending",
+              "reason": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 3001002,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+        "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+        "d230269de07abf4dc72d2a5581eeab3cd44f2fb5e40368db7d449ddd5a3dd5e2"
+      ],
+      "length": 439,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 5,
+        "sentMonoNs": 3001002000000,
+        "type": "recordingIntent",
+        "body": {
+          "commandId": "cmd-start-1",
+          "issuer": {
+            "deviceId": "device-jon"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 10000,
+            "ageAtSendMs": 0
+          },
+          "target": {
+            "scope": "all",
+            "deviceIds": [
+              "device-jon",
+              "device-alex",
+              "device-sam",
+              "device-kai"
+            ]
+          },
+          "baseEventRevision": 0,
+          "intentId": "intent-1"
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 3001100,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 6,
+        "sentMonoNs": 3001100000000,
+        "type": "recordingStarted",
+        "body": {
+          "intentId": "intent-1",
+          "segmentId": "seg-c1-001",
+          "fileZeroHostNs": 3001135000000,
+          "wallClockAtStart": "2026-10-07T20:50:01Z",
+          "preset": {
+            "width": 1920,
+            "height": 1080
+          },
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "timescale": 600,
+          "orientationLock": "landscapeLeft"
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3001300,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 402,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 2,
+        "sentMonoNs": 10332300000000,
+        "type": "recordingStarted",
+        "body": {
+          "intentId": "intent-1",
+          "segmentId": "seg-c2-001",
+          "fileZeroHostNs": 10332335000000,
+          "wallClockAtStart": "2026-10-07T20:50:01Z",
+          "preset": {
+            "width": 1920,
+            "height": 1080
+          },
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "timescale": 600,
+          "orientationLock": "landscapeLeft"
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3001400,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 401,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 2,
+        "sentMonoNs": 55005400000000,
+        "type": "recordingStarted",
+        "body": {
+          "intentId": "intent-1",
+          "segmentId": "seg-c3-001",
+          "fileZeroHostNs": 55005435000000,
+          "wallClockAtStart": "2026-10-07T20:50:01Z",
+          "preset": {
+            "width": 1920,
+            "height": 1080
+          },
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "timescale": 600,
+          "orientationLock": "landscapeLeft"
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3001500,
+      "peerKeySha256": "d230269de07abf4dc72d2a5581eeab3cd44f2fb5e40368db7d449ddd5a3dd5e2",
+      "length": 399,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-kai",
+        "seq": 2,
+        "sentMonoNs": 3919500000000,
+        "type": "recordingStarted",
+        "body": {
+          "intentId": "intent-1",
+          "segmentId": "seg-c4-001",
+          "fileZeroHostNs": 3919535000000,
+          "wallClockAtStart": "2026-10-07T20:50:01Z",
+          "preset": {
+            "width": 1920,
+            "height": 1080
+          },
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "timescale": 600,
+          "orientationLock": "landscapeLeft"
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 3001600,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 7,
+        "sentMonoNs": 3001600000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-start-1",
+          "issuerDeviceId": "device-jon",
+          "status": "Accepted",
+          "reason": null,
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": [
+            {
+              "deviceId": "device-jon",
+              "result": "Accepted",
+              "reason": null
+            },
+            {
+              "deviceId": "device-alex",
+              "result": "Accepted",
+              "reason": null
+            },
+            {
+              "deviceId": "device-sam",
+              "result": "Accepted",
+              "reason": null
+            },
+            {
+              "deviceId": "device-kai",
+              "result": "Accepted",
+              "reason": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "note": "kai-last-heard",
+      "step": "in",
+      "atMs": 3060000,
+      "peerKeySha256": "d230269de07abf4dc72d2a5581eeab3cd44f2fb5e40368db7d449ddd5a3dd5e2",
+      "length": 330,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-kai",
+        "seq": 3,
+        "sentMonoNs": 3978000000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Recording",
+          "segmentId": "seg-c4-001",
+          "savedThroughMs": 58000,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "alex-beat",
+      "step": "in",
+      "atMs": 3100000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 332,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 3,
+        "sentMonoNs": 10431000000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Recording",
+          "segmentId": "seg-c2-001",
+          "savedThroughMs": 98000,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3100500,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 331,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 3,
+        "sentMonoNs": 55104500000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Recording",
+          "segmentId": "seg-c3-001",
+          "savedThroughMs": 98500,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3100700,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 264,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 4,
+        "sentMonoNs": 55104700000000,
+        "type": "segmentEvent",
+        "body": {
+          "segmentId": "seg-c3-001",
+          "event": "interruption",
+          "reason": "call",
+          "mediaMs": 98700,
+          "nextSegmentId": null
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 3101000,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 8,
+        "sentMonoNs": 3101000000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Recording",
+          "segmentId": "seg-c1-001",
+          "savedThroughMs": 99900,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 78,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "silent-42s",
+      "step": "observe",
+      "atMs": 3102000,
+      "display": {
+        "recordingOn": {
+          "n": 3,
+          "m": 4
+        },
+        "devices": [
+          {
+            "deviceId": "device-jon",
+            "slot": "near-baseline",
+            "freshness": "Local",
+            "contactAgeMs": null,
+            "state": "Recording",
+            "label": null,
+            "ready": true,
+            "stillAgeMs": null
+          },
+          {
+            "deviceId": "device-alex",
+            "slot": "far-baseline",
+            "freshness": "Fresh",
+            "contactAgeMs": null,
+            "state": "Recording",
+            "label": null,
+            "ready": null,
+            "stillAgeMs": null
+          },
+          {
+            "deviceId": "device-sam",
+            "slot": "near-left-corner",
+            "freshness": "Fresh",
+            "contactAgeMs": null,
+            "state": "Recording",
+            "label": null,
+            "ready": null,
+            "stillAgeMs": null
+          },
+          {
+            "deviceId": "device-kai",
+            "slot": "far-left-corner",
+            "freshness": "Unknown",
+            "contactAgeMs": 42000,
+            "state": "Recording",
+            "label": "No contact for 0:42 · may still be recording",
+            "ready": null,
+            "stillAgeMs": null
+          }
+        ]
+      }
+    },
+    {
+      "note": "old-epoch",
+      "step": "in",
+      "atMs": 3103000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 333,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "staleEpoch"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-alex",
+        "seq": 1,
+        "sentMonoNs": 10434000000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Recording",
+          "segmentId": "seg-c2-001",
+          "savedThroughMs": 101000,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "replayed-seq",
+      "step": "in",
+      "atMs": 3103500,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 333,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "seqNotIncreasing"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 3,
+        "sentMonoNs": 10434500000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Recording",
+          "segmentId": "seg-c2-001",
+          "savedThroughMs": 101500,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "viewer-stop-all",
+      "step": "in",
+      "atMs": 3104000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 450,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 4,
+        "sentMonoNs": 10435000000000,
+        "type": "stopAll",
+        "body": {
+          "commandId": "cmd-x1",
+          "issuer": {
+            "deviceId": "device-alex"
+          },
+          "claimedGrant": "viewer",
+          "expiry": {
+            "ttlMs": 10000,
+            "ageAtSendMs": 50
+          },
+          "target": {
+            "scope": "all",
+            "deviceIds": [
+              "device-jon",
+              "device-alex",
+              "device-sam",
+              "device-kai"
+            ]
+          },
+          "baseEventRevision": 1,
+          "confirmed": true,
+          "targetLabel": "Stop all cameras (4)"
+        }
+      }
+    },
+    {
+      "note": "viewer-stop-all-receipt",
+      "step": "out",
+      "atMs": 3104010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 313,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 9,
+        "sentMonoNs": 3104010000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-x1",
+          "issuerDeviceId": "device-alex",
+          "status": "Rejected",
+          "reason": "grantNotPermitted",
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "note": "claims-control",
+      "step": "in",
+      "atMs": 3104500,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 462,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 5,
+        "sentMonoNs": 10435500000000,
+        "type": "stopAll",
+        "body": {
+          "commandId": "cmd-x2",
+          "issuer": {
+            "deviceId": "device-alex"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 10000,
+            "ageAtSendMs": 50
+          },
+          "target": {
+            "scope": "all",
+            "deviceIds": [
+              "device-jon",
+              "device-alex",
+              "device-sam",
+              "device-kai"
+            ]
+          },
+          "baseEventRevision": 1,
+          "confirmed": true,
+          "targetLabel": "Stop all cameras (4)"
+        }
+      }
+    },
+    {
+      "note": "claims-control-receipt",
+      "step": "out",
+      "atMs": 3104510,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 308,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 10,
+        "sentMonoNs": 3104510000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-x2",
+          "issuerDeviceId": "device-alex",
+          "status": "Rejected",
+          "reason": "grantNotHeld",
+          "securityEvent": true,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "note": "alex-granted-control",
+      "step": "out",
+      "atMs": 3105000,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 236,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 11,
+        "sentMonoNs": 3105000000000,
+        "type": "grantChanged",
+        "body": {
+          "deviceId": "device-alex",
+          "commandGrants": [
+            "capture-controller",
+            "viewer"
+          ]
+        }
+      }
+    },
+    {
+      "note": "bookmark",
+      "step": "in",
+      "atMs": 3106000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 408,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 6,
+        "sentMonoNs": 10437000000000,
+        "type": "bookmark",
+        "body": {
+          "commandId": "cmd-a1",
+          "issuer": {
+            "deviceId": "device-alex"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 30000,
+            "ageAtSendMs": 10
+          },
+          "target": {
+            "scope": "room",
+            "deviceIds": []
+          },
+          "baseEventRevision": null,
+          "matchClockHintMs": 105000,
+          "note": "Great rally"
+        }
+      }
+    },
+    {
+      "note": "bookmark-receipt",
+      "step": "out",
+      "atMs": 3106010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 299,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 12,
+        "sentMonoNs": 3106010000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-a1",
+          "issuerDeviceId": "device-alex",
+          "status": "Accepted",
+          "reason": null,
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "note": "retry-same-payload",
+      "step": "in",
+      "atMs": 3107000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 409,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 7,
+        "sentMonoNs": 10438000000000,
+        "type": "bookmark",
+        "body": {
+          "commandId": "cmd-a1",
+          "issuer": {
+            "deviceId": "device-alex"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 30000,
+            "ageAtSendMs": 900
+          },
+          "target": {
+            "scope": "room",
+            "deviceIds": []
+          },
+          "baseEventRevision": null,
+          "matchClockHintMs": 105000,
+          "note": "Great rally"
+        }
+      }
+    },
+    {
+      "note": "retry-receipt",
+      "step": "out",
+      "atMs": 3107010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 299,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 13,
+        "sentMonoNs": 3107010000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-a1",
+          "issuerDeviceId": "device-alex",
+          "status": "Accepted",
+          "reason": null,
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "note": "reuse-other-payload",
+      "step": "in",
+      "atMs": 3108000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 409,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 8,
+        "sentMonoNs": 10439000000000,
+        "type": "bookmark",
+        "body": {
+          "commandId": "cmd-a1",
+          "issuer": {
+            "deviceId": "device-alex"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 30000,
+            "ageAtSendMs": 10
+          },
+          "target": {
+            "scope": "room",
+            "deviceIds": []
+          },
+          "baseEventRevision": null,
+          "matchClockHintMs": 105000,
+          "note": "Changed note"
+        }
+      }
+    },
+    {
+      "note": "reuse-receipt",
+      "step": "out",
+      "atMs": 3108010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 310,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 14,
+        "sentMonoNs": 3108010000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-a1",
+          "issuerDeviceId": "device-alex",
+          "status": "Rejected",
+          "reason": "commandIdReuse",
+          "securityEvent": true,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "note": "stale-revision",
+      "step": "in",
+      "atMs": 3109000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 368,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 9,
+        "sentMonoNs": 10440000000000,
+        "type": "stopOne",
+        "body": {
+          "commandId": "cmd-a2",
+          "issuer": {
+            "deviceId": "device-alex"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 10000,
+            "ageAtSendMs": 20
+          },
+          "target": {
+            "scope": "one",
+            "deviceIds": [
+              "device-kai"
+            ]
+          },
+          "baseEventRevision": 0
+        }
+      }
+    },
+    {
+      "note": "stale-revision-receipt",
+      "step": "out",
+      "atMs": 3109010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 316,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 15,
+        "sentMonoNs": 3109010000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-a2",
+          "issuerDeviceId": "device-alex",
+          "status": "Conflicted",
+          "reason": "baseRevisionStale",
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "note": "unbounded-transit",
+      "step": "in",
+      "atMs": 3110000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 369,
+      "transitMs": null,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 10,
+        "sentMonoNs": 10441000000000,
+        "type": "stopOne",
+        "body": {
+          "commandId": "cmd-a3",
+          "issuer": {
+            "deviceId": "device-alex"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 10000,
+            "ageAtSendMs": 20
+          },
+          "target": {
+            "scope": "one",
+            "deviceIds": [
+              "device-kai"
+            ]
+          },
+          "baseEventRevision": 1
+        }
+      }
+    },
+    {
+      "note": "unbounded-transit-receipt",
+      "step": "out",
+      "atMs": 3110010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 312,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 16,
+        "sentMonoNs": 3110010000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-a3",
+          "issuerDeviceId": "device-alex",
+          "status": "Expired",
+          "reason": "unboundedTransit",
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3110500,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 332,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 5,
+        "sentMonoNs": 55114500000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Recording",
+          "segmentId": "seg-c3-001",
+          "savedThroughMs": 108500,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3110600,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 334,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 11,
+        "sentMonoNs": 10441600000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Recording",
+          "segmentId": "seg-c2-001",
+          "savedThroughMs": 108600,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "stop-all",
+      "step": "local",
+      "atMs": 3111000,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 17,
+        "sentMonoNs": 3111000000000,
+        "type": "stopAll",
+        "body": {
+          "commandId": "cmd-stop-all",
+          "issuer": {
+            "deviceId": "device-jon"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 10000,
+            "ageAtSendMs": 0
+          },
+          "target": {
+            "scope": "all",
+            "deviceIds": [
+              "device-jon",
+              "device-alex",
+              "device-sam",
+              "device-kai"
+            ]
+          },
+          "baseEventRevision": 1,
+          "confirmed": true,
+          "targetLabel": "Stop all cameras (4)"
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 3111001,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 18,
+        "sentMonoNs": 3111001000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-stop-all",
+          "issuerDeviceId": "device-jon",
+          "status": "Accepted",
+          "reason": null,
+          "securityEvent": false,
+          "eventRevision": 2,
+          "perDevice": [
+            {
+              "deviceId": "device-jon",
+              "result": "Pending",
+              "reason": null
+            },
+            {
+              "deviceId": "device-alex",
+              "result": "Pending",
+              "reason": null
+            },
+            {
+              "deviceId": "device-sam",
+              "result": "Pending",
+              "reason": null
+            },
+            {
+              "deviceId": "device-kai",
+              "result": "Pending",
+              "reason": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 3111002,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+        "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+        "d230269de07abf4dc72d2a5581eeab3cd44f2fb5e40368db7d449ddd5a3dd5e2"
+      ],
+      "length": 465,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 19,
+        "sentMonoNs": 3111002000000,
+        "type": "stopAll",
+        "body": {
+          "commandId": "cmd-stop-all",
+          "issuer": {
+            "deviceId": "device-jon"
+          },
+          "claimedGrant": "capture-controller",
+          "expiry": {
+            "ttlMs": 10000,
+            "ageAtSendMs": 0
+          },
+          "target": {
+            "scope": "all",
+            "deviceIds": [
+              "device-jon",
+              "device-alex",
+              "device-sam",
+              "device-kai"
+            ]
+          },
+          "baseEventRevision": 1,
+          "confirmed": true,
+          "targetLabel": "Stop all cameras (4)"
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 3111200,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 20,
+        "sentMonoNs": 3111200000000,
+        "type": "recordingStopped",
+        "body": {
+          "commandId": "cmd-stop-all",
+          "segments": [
+            {
+              "segmentId": "seg-c1-001",
+              "durationMs": 109900,
+              "bytes": 2350000000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3111500,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 275,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-alex",
+        "seq": 12,
+        "sentMonoNs": 10442500000000,
+        "type": "recordingStopped",
+        "body": {
+          "commandId": "cmd-stop-all",
+          "segments": [
+            {
+              "segmentId": "seg-c2-001",
+              "durationMs": 109800,
+              "bytes": 2340000000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 3112000,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 235,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 6,
+        "sentMonoNs": 55116000000000,
+        "type": "commandResult",
+        "body": {
+          "commandId": "cmd-stop-all",
+          "result": "Failed",
+          "reason": "finalizeFailed"
+        }
+      }
+    },
+    {
+      "note": "stop-all-partial",
+      "step": "local",
+      "atMs": 3121001,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 21,
+        "sentMonoNs": 3121001000000,
+        "type": "receipt",
+        "body": {
+          "commandId": "cmd-stop-all",
+          "issuerDeviceId": "device-jon",
+          "status": "Accepted",
+          "reason": null,
+          "securityEvent": false,
+          "eventRevision": 2,
+          "perDevice": [
+            {
+              "deviceId": "device-jon",
+              "result": "Accepted",
+              "reason": null
+            },
+            {
+              "deviceId": "device-alex",
+              "result": "Accepted",
+              "reason": null
+            },
+            {
+              "deviceId": "device-sam",
+              "result": "Failed",
+              "reason": "finalizeFailed"
+            },
+            {
+              "deviceId": "device-kai",
+              "result": "Unknown",
+              "reason": "noAcknowledgement"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "note": "after-stop-all",
+      "step": "observe",
+      "atMs": 3121500,
+      "display": {
+        "recordingOn": {
+          "n": 0,
+          "m": 4
+        },
+        "devices": [
+          {
+            "deviceId": "device-jon",
+            "slot": "near-baseline",
+            "freshness": "Local",
+            "contactAgeMs": null,
+            "state": "Stopped",
+            "label": null,
+            "ready": true,
+            "stillAgeMs": null
+          },
+          {
+            "deviceId": "device-alex",
+            "slot": "far-baseline",
+            "freshness": "Delayed",
+            "contactAgeMs": 10000,
+            "state": "Stopped",
+            "label": "No contact for 0:10",
+            "ready": null,
+            "stillAgeMs": null
+          },
+          {
+            "deviceId": "device-sam",
+            "slot": "near-left-corner",
+            "freshness": "Delayed",
+            "contactAgeMs": 9500,
+            "state": "Recording",
+            "label": "No contact for 0:09 · may still be recording",
+            "ready": null,
+            "stillAgeMs": null
+          },
+          {
+            "deviceId": "device-kai",
+            "slot": "far-left-corner",
+            "freshness": "Unknown",
+            "contactAgeMs": 61500,
+            "state": "Recording",
+            "label": "No contact for 1:01 · may still be recording",
+            "ready": null,
+            "stillAgeMs": null
+          }
+        ]
+      }
+    }
+  ]
+}
