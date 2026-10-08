@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/watch-local.ack-alert.json",
+  "cases": [
+    {
+      "id": "ack-without-alert",
+      "why": "An acknowledgement names its alert",
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/alertId"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        19
+      ]
+    },
+    {
+      "id": "ack-with-stop",
+      "why": "An acknowledgement never carries a stop",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/confirmed",
+          "value": true
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        19
+      ]
+    }
+  ]
+}

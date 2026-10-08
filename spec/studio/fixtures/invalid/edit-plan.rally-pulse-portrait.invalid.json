@@ -3,6 +3,49 @@
   "base": "records/edit-plan.rally-pulse-portrait.json",
   "cases": [
     {
+      "id": "primary-returns-hard-at-cut",
+      "why": "The primary bed returning at another position of camera-1 (in sync with r04) after the held bed is a switch: it fades in for at least 20 ms even at a cut",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/3",
+          "value": {
+            "route": "primary-bed",
+            "sourceId": "camera-1",
+            "sourceInFrame": 150752,
+            "outputInFrame": 945,
+            "outputOutFrame": 1350,
+            "fadeInMs": 0,
+            "fadeOutMs": 20
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "fadeTooShort"
+      }
+    },
+    {
+      "id": "same-source-jump-at-dissolve",
+      "why": "r01 -> r02 jumps to another moment of camera-1 at a dissolve: a switch, so the fades must span the picture transition (100 ms each way at 6 frames)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/audio/bed/0/fadeOutMs",
+          "value": 20
+        },
+        {
+          "op": "replace",
+          "path": "/audio/bed/1/fadeInMs",
+          "value": 20
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "fadeTooShort"
+      }
+    },
+    {
       "id": "blind-portrait-crop",
       "why": "Fill would blindly crop a landscape source into 9:16",
       "patch": [

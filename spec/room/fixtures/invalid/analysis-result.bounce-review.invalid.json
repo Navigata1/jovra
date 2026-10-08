@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/analysis-result.bounce-review.json",
+  "cases": [
+    {
+      "id": "line-call-value",
+      "why": "No automated line call values",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/value",
+          "value": "3"
+        },
+        {
+          "op": "replace",
+          "path": "/units",
+          "value": "cm"
+        },
+        {
+          "op": "replace",
+          "path": "/unavailableReason",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/uncertainty",
+          "value": {
+            "lower": "0",
+            "upper": "9",
+            "level": "range"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "capabilityUnsupported"
+      },
+      "acceptanceRows": [
+        22
+      ]
+    }
+  ]
+}

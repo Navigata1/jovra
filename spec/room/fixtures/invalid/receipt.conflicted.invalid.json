@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/receipt.conflicted.json",
+  "cases": [
+    {
+      "id": "conflict-without-detail",
+      "why": "A conflict states both revisions",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/conflict",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "conflictFields"
+      },
+      "acceptanceRows": [
+        11
+      ]
+    },
+    {
+      "id": "succeeded-status",
+      "why": "Receipt states are Pending/Accepted/Rejected/Expired/Conflicted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/status",
+          "value": "Succeeded"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

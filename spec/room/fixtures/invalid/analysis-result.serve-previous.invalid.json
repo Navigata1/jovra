@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/analysis-result.serve-previous.json",
+  "cases": [
+    {
+      "id": "no-uncertainty",
+      "why": "An estimated value carries its uncertainty",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/uncertainty",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "uncertaintyMissing"
+      },
+      "acceptanceRows": [
+        20
+      ]
+    },
+    {
+      "id": "value-and-reason",
+      "why": "Exactly one of value and unavailable reason",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/unavailableReason",
+          "value": "occluded"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "valueOrReason"
+      },
+      "acceptanceRows": [
+        20
+      ]
+    },
+    {
+      "id": "unknown-capability",
+      "why": "Capabilities come from the registry",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/capabilityId",
+          "value": "serveSpeed.live"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "unknownCapability"
+      },
+      "acceptanceRows": [
+        20
+      ]
+    },
+    {
+      "id": "validated-label",
+      "why": "A label cannot exceed its capability",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/label",
+          "value": "validated"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "labelExceedsCapability"
+      }
+    },
+    {
+      "id": "spin-value",
+      "why": "Unsupported capabilities never carry a value",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/capabilityId",
+          "value": "spinRpm"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "capabilityUnsupported"
+      }
+    },
+    {
+      "id": "score-effect",
+      "why": "A result never changes the score",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/scoreEffect",
+          "value": "awardPoint"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        22
+      ]
+    },
+    {
+      "id": "wrist-speed",
+      "why": "Wrist movement is not ball speed",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/kind",
+          "value": "wristSpeed"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        20
+      ]
+    },
+    {
+      "id": "value-outside-range",
+      "why": "The value lies inside its stated uncertainty",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/value",
+          "value": "90"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "uncertaintyExcludesValue"
+      }
+    }
+  ]
+}

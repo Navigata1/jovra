@@ -276,7 +276,7 @@
       }
     },
     "audio": {
-      "description": "Exactly one bed route per output frame. primary-bed: the designated court source, in sync with live picture. hold-bed: the primary bed continuing over real dead time under a replay, freeze, card or B-roll. alt-bed: another source's audio. Every change of bed source (to or from alt-bed, back to the primary, or to or from silence) sits on a segment boundary: at a cut each sounding side fades at least 20 ms; at a dissolve or dip the switch is an audio dip spanning the picture transition. silence: explicit. Narration (consented, ducked, disclosed when generated) and music (rights record) are optional lanes over the bed.",
+      "description": "Exactly one bed route per output frame. primary-bed: the designated court source, in sync with live picture, and only under live segments. hold-bed: the primary bed continuing without a jump over real dead time under a replay, freeze, card or B-roll. alt-bed: another source's audio; from a match source, only under live segments (court audio never plays unchecked under a replay, freeze, card or B-roll). Every change of bed source (to or from alt-bed, back to the primary, or to or from silence), and every jump to another position of the same source, sits on a segment boundary: at a cut each sounding side fades at least 20 ms; at a dissolve or dip the switch is an audio dip spanning the picture transition. silence: explicit. Narration (consented, ducked, disclosed when generated) and music (rights record) are optional lanes over the bed.",
       "type": "object",
       "required": ["primarySourceId", "bed", "narration", "music"],
       "additionalProperties": false,

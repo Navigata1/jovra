@@ -19,8 +19,11 @@ output_spec_hash = output_spec_sha256
 
 def trusted_sources(b: dict) -> dict:
     """The sources offered for cutting, with the snapshot and coverage a plan must copy exactly. A match source is
-    offered only with one reference or reviewed sync piece (the reference cross-check covers single-segment sources);
-    anything else is absent, so a plan naming it is untrustedSource."""
+    offered only when its manifest records exactly one segment and the sync map has exactly one piece, for that
+    segment, in a reference or reviewed state (the reference cross-check covers single-segment sources; its coverage is
+    the whole render proxy, so it is offered only when the one piece maps the whole recording). A restarted source
+    (two or more manifest segments) is never offered here, even if the sync map omits the other pieces: anything else
+    is absent, so a plan naming it is untrustedSource."""
     maps = {s["sourceId"]: s["pieces"] for s in b["syncMap"]["sources"]}
     out = {}
     for src in b["manifest"]["sources"]:
@@ -32,7 +35,10 @@ def trusted_sources(b: dict) -> dict:
             coverage = [{"inFrame": 0, "outFrame": proxy["frameCount"], "sessionStartUs": None, "rate": None}]
         else:
             pieces = maps.get(src["sourceId"])
-            if pieces is None or len(pieces) != 1 or pieces[0]["state"] not in USABLE_SYNC_STATES:
+            if (pieces is None or len(pieces) != 1 or len(src["segments"]) != 1
+                    or pieces[0]["segmentId"] != src["segments"][0]["segmentId"]
+                    or pieces[0]["sourceDurationUs"] != src["segments"][0]["durationUs"]
+                    or pieces[0]["state"] not in USABLE_SYNC_STATES):
                 continue
             t = pieces[0]["transform"]
             coverage = [{"inFrame": 0, "outFrame": proxy["frameCount"], "sessionStartUs": t["offsetUs"], "rate": t["rate"]}]
@@ -84,6 +90,16 @@ def capture_hints(manifest: dict, smap: dict) -> dict:
     return out
 
 
+def point_windows(ref: dict, keepers: dict) -> list | None:
+    """Where a point-event overlay may be shown over play: the session windows [startUs, endUs] of every keeper whose
+    eventRefs carry that point, sorted. None for any other origin (a score state, a stat, a note), which is not bound
+    to one rally. An empty list means the point is in no keeper, so it can be shown over no live or replayed play."""
+    if ref["origin"]["recordKind"] != "point-event":
+        return None
+    point = ref["origin"]["recordId"]
+    return sorted([k["session"]["startUs"], k["session"]["endUs"]] for k in keepers["keepers"] if point in k["eventRefs"])
+
+
 def edl_context(b: dict) -> dict:
     """The trusted context an EDL is validated against (edl.validate requires every key): current revisions, the
     sources offered for cutting, keeper and B-roll ids, and the ReferenceCatalog's overlay targets, notes, consents
@@ -102,7 +118,8 @@ def edl_context(b: dict) -> dict:
         "keepers": [k["keeperId"] for k in keepers["keepers"]],
         "contacts": {sid: sorted(set(frames)) for sid, frames in sorted(contacts.items())},
         "brolls": [i["brollId"] for i in brolls["items"]],
-        "references": {r["refId"]: {"kind": r["kind"], "provenance": r["provenance"], "eventRevision": r["eventRevision"]}
+        "references": {r["refId"]: {"kind": r["kind"], "provenance": r["provenance"], "eventRevision": r["eventRevision"],
+                                    "pointWindows": point_windows(r, keepers)}
                        for r in refs["references"]},
         "consents": {c["consentRecordId"]: {"participantId": c["participantId"], "scope": list(c["scope"]),
                                             "granted": c["granted"]} for c in refs["consents"]},
@@ -137,11 +154,26 @@ def check_sync_against_manifest(b: dict) -> None:
         src = by_id.get(p["sourceId"])
         require(src is not None and src["role"] == "match" and src["slot"] == p["slot"], "placementMismatch",
                 f"placement of {p['sourceId']} disagrees with the manifest")
+    mapped = {s["sourceId"]: s for s in smap["sources"]}
     for s in smap["sources"]:
-        segs = {g["segmentId"]: g for g in by_id[s["sourceId"]]["segments"]}
+        src = by_id.get(s["sourceId"])
+        require(src is not None and src["role"] == "match", "placementMismatch",
+                f"{s['sourceId']}: the sync map names a source that is not a recorded match source")
+    for src in manifest["sources"]:
+        if src["role"] != "match":
+            continue
+        # exactly one piece per recorded segment: a sync map cannot drop a restarted segment and let the one piece it
+        # keeps stand for the whole recording (an unmapped segment is a failed piece, never an omitted one)
+        s = mapped.get(src["sourceId"])
+        require(s is not None, "unmappedSegment", f"{src['sourceId']}: a recorded match source has no sync map entry")
+        segs = {g["segmentId"]: g for g in src["segments"]}
+        piece_ids = [p["segmentId"] for p in s["pieces"]]
+        require(len(piece_ids) == len(set(piece_ids)) and set(piece_ids) == set(segs), "unmappedSegment",
+                f"{src['sourceId']}: sync pieces {sorted(piece_ids)} must be exactly one per recorded segment "
+                f"{sorted(segs)}")
         for piece in s["pieces"]:
-            seg = segs.get(piece["segmentId"])
-            require(seg is not None and seg["durationUs"] == piece["sourceDurationUs"], "placementMismatch",
+            seg = segs[piece["segmentId"]]
+            require(seg["durationUs"] == piece["sourceDurationUs"], "placementMismatch",
                     f"{s['sourceId']}/{piece['segmentId']} does not match a recorded segment")
 
 
@@ -175,8 +207,10 @@ def check_plan_against_trusted(plan: dict, b: dict) -> None:
             expect = [{"inFrame": 0, "outFrame": proxy["frameCount"], "sessionStartUs": None, "rate": None}]
         else:
             pieces = maps.get(s["id"])
-            require(pieces is not None and len(pieces) == 1, "unsupportedCoverage",
-                    f"{s['id']}: the reference cross-check covers single-segment sources only")
+            require(pieces is not None and len(pieces) == 1 and len(src["segments"]) == 1
+                    and pieces[0]["segmentId"] == src["segments"][0]["segmentId"]
+                    and pieces[0]["sourceDurationUs"] == src["segments"][0]["durationUs"], "unsupportedCoverage",
+                    f"{s['id']}: the reference cross-check covers single-segment sources only, mapped by their one piece")
             piece = pieces[0]
             require(piece["state"] in USABLE_SYNC_STATES, "unreviewedSync",
                     f"{s['id']}: sync state {piece['state']} is not offered for cutting")
@@ -184,6 +218,22 @@ def check_plan_against_trusted(plan: dict, b: dict) -> None:
                        "rate": piece["transform"]["rate"]}]
         require(s["coverage"] == expect, "coverageMismatch", f"{s['id']}: coverage is not the reviewed sync map's")
     require(plan["projectId"] == b["manifest"]["projectId"], "projectMismatch", f"{plan['planId']}: another project")
+    refs = {r["refId"]: r for r in b["references"]["references"]}
+    by_seg = {seg["id"]: seg for seg in plan["segments"]}
+    for seg in plan["segments"]:
+        # a point's score or metric over live or replayed play names that point's keeper: the live segment (or the
+        # live original a replay re-shows) must cut a keeper whose eventRefs carry the point (edl.validate checks the
+        # same binding through the keeper session windows, so a segment naming no keeper is still bound)
+        live = seg if seg["op"] == "live" else by_seg.get(seg.get("replayOf")) if seg["op"] == "replay" else None
+        for o in seg.get("overlayRefs", []):
+            stored = refs.get(o["refId"])
+            if live is None or o["kind"] not in ("score", "metric") or stored is None \
+                    or stored["origin"]["recordKind"] != "point-event":
+                continue
+            k = keepers.get(live["keeperId"]) if live["keeperId"] is not None else None
+            if k is not None:
+                require(stored["origin"]["recordId"] in k["eventRefs"], "overlayOutsideMoment",
+                        f"{seg['id']}: {o['refId']} is not a point of keeper {k['keeperId']}")
     for seg in plan["segments"]:
         if seg["op"] == "live" and seg["keeperId"] is not None:
             k = keepers[seg["keeperId"]]
@@ -279,6 +329,13 @@ def check_money(b: dict, plans: list) -> None:
                 and res["idempotencyKey"]["planRevision"] == quote["planRevision"] == plan["planRevision"]
                 and res["capCredits"] == quote["capCredits"], "moneyMismatch",
                 f"{job['jobId']}: job, reservation and quote do not share one key and cap")
+        for art in b["artifacts"]:
+            if art["jobId"] == job["jobId"]:
+                # the film's planner is the one the quote (and its consent) covered: no model-planned film from a
+                # rules-planned quote, and no rules film billed as model planning
+                require((art["bindings"]["planner"]["kind"] == "model") == (quote["plannerChoice"] == "model"),
+                        "plannerMismatch", f"{art['artifactId']}: planner {art['bindings']['planner']['kind']} but "
+                        f"quote {quote['quoteId']} is {quote['plannerChoice']}")
         expected_status = {"ready": "settled", "canceled": "canceled", "failed_terminal": "released"}.get(job["state"], "held")
         require(res["status"] == expected_status, "moneyMismatch",
                 f"{job['jobId']} is {job['state']} so its reservation is {expected_status}")
@@ -288,6 +345,13 @@ def check_money(b: dict, plans: list) -> None:
             ledger.check_reservation_record(res)
         except Reject as exc:
             raise Reject("moneyMismatch", f"{res['reservationId']}: {exc.message}") from None
+        topups = [e["key"].split(":")[5] for e in res["entries"]
+                  if e["kind"] == "reserve" and len(e["key"].split(":")) == 6]
+        for qid in [res["initialQuoteId"], *topups[:-1]] if topups else []:
+            # every quote a later top-up replaced is superseded: one accepted quote funds one hold, at one time
+            old = quotes.get(qid)
+            require(old is not None and old["status"] == "superseded", "moneyMismatch",
+                    f"{res['reservationId']}: quote {qid} was topped up past, so it is superseded")
         for e in res["entries"]:
             parts = e["key"].split(":")
             if e["kind"] == "reserve" and len(parts) == 6:

@@ -59,15 +59,20 @@ opens ST39; the lobby join payload (`jovra-room:1:…`) is accepted **only** by 
    Subtitles and taglines that appear in an image but not in the brief are replaced by brief-sourced lines (each
    screen lists them). The gallery "title" field of a brief entry is used as the screen's subtitle where the image
    shows a different on-screen title.
-2. Provenance words only Manual, Estimated, Reviewed, Validated; Sample is a separate label (`ProvenanceBadge(.sample)`);
-   undecided values say "Needs review". Sync states use the same words: Estimated, Needs review, Reviewed.
+2. Provenance words only Manual, Estimated, Reviewed, Validated; Sample is a separate label
+   (`ProvenanceBadge(.sample)`); undecided values say "Needs review". Sync states use the same words: Estimated, Needs
+   review, Reviewed.
 3. Glossary terms: "Mark point" (never "Bookmark"), "point" (never "rally" for a scoring unit; "Rally 18" → "Point 18"),
    "percentage points", "film" (never "highlight reel", a core export).
-4. Money: any amount in demo or test reads "Sample quote"; no amount is ever shown as a price until SD4. No payment
+4. Money: any amount in demo or test reads "Sample quote"; no amount is ever shown as a price until SD4's pricing ADR
+   (D-4, a working default pending Jon's answer to spec open question 9: on-device Studio is free; only cloud planning
+   and cloud production are ever quoted). No payment
    logos, no provider jargon in the normal flow.
-5. No model, provider or vendor names in normal player flows. Studio settings → Advanced exists only in Test mode and
-   shows the configured planner there; in Live the planner is server configuration set by the founder, and a film's
-   receipt names the planner that made it (spec "Design system and copy", story 247).
+5. No model, provider or vendor names in normal player flows. The one exception is the cloud consent detail (A5),
+   which names the planning service and its retention when "Plan the story in the cloud" is on, because consent needs
+   it (SD19). Studio settings → Advanced exists only in Test mode and shows the configured planners there; in Live the
+   planner is server configuration set by the founder, and a film's receipt names the planner that made it (spec
+   "Design system and copy", story 247).
 6. Times: match-clock and film times as `mm:ss` (`h:mm:ss` past an hour) with `Font.jovraTimecode`; precise editing
    times as `mm:ss.SSS` (ST26, ST36). Storage remaining as "2 h 10 min left" (VoiceOver "2 hours 10 minutes of storage
    left"), never a bare "02:10".
@@ -218,9 +223,9 @@ quoted in Layout.
 sheet A6).
 
 **Accessibility.** Order: back, settings ("Studio settings"), lockup ("JOVRA Studio"), title (header), banner, hero
-(header text + button), tiles (the stage's angle label, e.g. "One camera angle in this version"; "5 story styles"), Latest film header, FilmCard ("Jon versus
-Alex, Court Memories film, 4 minutes 18 seconds, sample project"), Lessons header, LessonRow ("October 7, Serve rhythm,
-3 clips, reviewed"). Tiles stack at accessibility sizes.
+(header text + button), tiles (the stage's angle label, e.g. "One camera angle in this version"; "5 story styles"),
+Latest film header, FilmCard ("Jon versus Alex, Court Memories film, 4 minutes 18 seconds, sample project"), Lessons
+header, LessonRow ("October 7, Serve rhythm, 3 clips, reviewed"). Tiles stack at accessibility sizes.
 
 **Phone and iPad.** Phone: single column. iPad: 720 pt column; hero and tiles side by side above AX2.
 
@@ -231,7 +236,8 @@ Alex, Court Memories film, 4 minutes 18 seconds, sample project"), Lessons heade
 - Tile captions "Multiple perspectives" / "From highlights to training" → the stage's angle caption ("Up to six
   phones" only once pairing ships in S3) / "From lessons to memories" ("up to" is the truth only when the build can do
   it; "highlights" collides with the core term).
-- The lesson card "Footwork Fundamentals / Move better, play longer" contradicts the lesson fixture → Oct 7 Serve rhythm.
+- The lesson card "Footwork Fundamentals / Move better, play longer" contradicts the lesson fixture → Oct 7 Serve
+  rhythm.
 - The Sample chip's cloud-upload symbol implies an upload → the Sample badge's dashed square.
 - Photographs become synthetic sample frames (demo) or the player's own frames.
 
@@ -342,7 +348,7 @@ records stays on that phone.").
 | State | Treatment |
 |---|---|
 | Host / guest | Layouts above |
-| Join request | Host sheet "Alex's phone wants to join as Camera 2 · Far baseline." `.jovraAccent` "Allow" / "Decline" (device model shown) |
+| Join request | Host sheet "A phone wants to join as Camera 2 · Far baseline." with the guest's own name for itself shown as unverified text ("Calls itself: Alex's phone") and a 6-digit **device code** derived from the guest's key thumbprint ("Check this code on that phone: 482 913"); the guest shows the same code. `.jovraAccent` "Codes match · Allow" / "Decline". A typed name is never the basis for approval (`security-model.md` §8.2) |
 | QR expired | Code area dims; "This code expired." + `.jovraAccent` "New code"; guest scanning it: "This code expired. Ask Jon for a new one." |
 | Invite revoked | Guest: `StateCard` "Jon removed this phone from the match." / "Anything you recorded stays on this phone." Action "Done" |
 | Role full | Guest: "Camera 3 already has a phone. Ask Jon for another slot." |
@@ -521,11 +527,12 @@ full-screen workspace. Phone: sequential sheets (below).
 3. Centre: title "One match. One clock." subtitle "Review at start, middle and end." Row of linked `VideoSurface`s
    (one per source, labelled "1 Baseline", "2 Far baseline", "3 Corner"), all driven by the match-clock playhead,
    each showing its own time and "No video here" where it has no coverage.
-4. Under them, **SyncTimeline**: one **WaveformLane** per source on the common match clock, drawn from that
-   source's **real decoded audio** (a peak envelope computed from the analysis proxy's audio track, so a clap or
-   impact is visibly aligned or not; a source with no audio shows "No audio" instead of a waveform; the Sample project
-   draws from its synthetic fixture audio) (labels with number and slot), anchor markers (**AnchorMarker**, clay vertical line with time chip "00:12.320"), gap hatching with reason,
-   checkpoint chips "Start" "Middle" "End", zoom, "View full timeline".
+4. Under them, **SyncTimeline**: one **WaveformLane** per source on the common match clock, drawn from that source's
+   **real decoded audio** (a peak envelope computed from the analysis proxy's audio track, so a clap or impact is
+   visibly aligned or not; a source with no audio shows "No audio" instead of a waveform; the Sample project draws
+   from its synthetic fixture audio) (labels with number and slot), anchor markers (**AnchorMarker**, clay vertical
+   line with time chip "00:12.320"), gap hatching with reason, checkpoint chips "Start" "Middle" "End", zoom, "View
+   full timeline".
 5. Right inspector **SyncInspector** for the selected source: "Sync details"; "Offset (vs. Camera 1 · Baseline)"
    "+120 ms"; "Drift" "18 ms/min"; "Alignment" state with symbol; checkpoint list (Start ✓, Middle ✓, End —);
    explanatory text "Review at start, middle and end of the match to confirm sync quality."; `.jovraAccent` "Confirm
@@ -557,7 +564,7 @@ check a serve by eye." / "Not enough shared moments in the last third." / "The c
 | No shared coverage | State "No overlap" (a UI label for a `failed` piece whose reason is that nothing could be fitted; the contract has no separate `no-overlap` state); lane shows no shared span; inspector "Camera 3 doesn't overlap Camera 1. It can't be used for cuts." |
 | Drift | Inspector shows drift and the end-checkpoint residual; End checkpoint marked "Check" until reviewed |
 | Gap / restart | Hatched lane span "Restart · 0:41 gap"; separate piece per side of the gap with its own state |
-| Muted source | Lane pattern "No audio"; alignment uses visible events or manual markers only |
+| Muted source | Lane pattern "No audio"; alignment uses visible events you mark (serve contact, bounce, clap) or manual markers only; no audio anchors |
 | Normalized proxy | SourceCard "Preparing an editing copy · 42%"; review waits for it; note "Originals stay as they are." |
 | Needs review | Pill "Needs review" + reason; Confirm enabled only after the player visits all three checkpoints |
 | Single source | Not reachable (one source has an identity map) |
@@ -569,9 +576,10 @@ proposes a manual correction (recomputed fit, residual shown) — nothing is sav
 ⌥←/⌥→ 10 ms, ⌘↩ Confirm.
 
 **Accessibility.** Lanes are adjustable elements (point/frame rotors); anchors are listed in the inspector as buttons
-("Anchor at 12.320 seconds, serve contact, residual 2 milliseconds"). The waveform pixels come from real source
-audio (item 4; the implementation-states production gate requires real stills and waveform data) but are hidden from
-VoiceOver, because the anchor list and the numbers carry the same information as text. State never by colour alone (symbols + words).
+("Anchor at 12.320 seconds, serve contact, residual 2 milliseconds"). The waveform pixels come from real source audio
+(item 4; the implementation-states production gate requires real stills and waveform data) but are hidden from
+VoiceOver, because the anchor list and the numbers carry the same information as text. State never by colour alone
+(symbols + words).
 
 **Phone and iPad.** As above; no split-screen editing on phone.
 
@@ -597,8 +605,8 @@ session overview (S09 "Watch angles" when a Studio project exists), or Studio Ho
 phone; portrait phone supported.
 
 **Layout (iPad landscape).**
-1. `FocusedHeader`: Close, compact lockup, title "Match Broadcast", `ProvenanceBadge(.sample)` "Sample project", trailing
-   segmented control "Film · Angles" (Film only when a film exists).
+1. `FocusedHeader`: Close, compact lockup, title "Match Broadcast", `ProvenanceBadge(.sample)` "Sample project",
+   trailing segmented control "Film · Angles" (Film only when a film exists).
 2. Main `VideoSurface` (16:9) with **ScoreBug** (top-left, `ScoreboardOverlay` dark variant): columns "Player",
    "Set 1", "Set 2"; rows "Jon 6 6", "Alex 4 3"; footer "Final · Reviewed" only when the playhead is after the last
    point; during play the bug shows sets so far, the current game and the point score at the playhead, with the
@@ -792,8 +800,8 @@ with checkable numbers.
 **Route and entry.** Push from ST29; from a lesson ("Make a Coach's Cut"). Tab bar visible.
 
 **Layout.**
-1. Navigation bar: back; trailing "Options" (`slider.horizontal.3`) → film options sheet (length, Sound, replays
-   ½× / ¼× / off, captions [S5]).
+1. Navigation bar: back; trailing "Options" (`slider.horizontal.3`) → film options sheet (length, replays
+   ½× / ¼× / off, captions [S5]; the sound line reads "Court audio in the app · saved files ask first", SD5).
 2. Title "Coach's Cut" subtitle "Understand the moment. Practice the change."
 3. Preview `VideoSurface` (16:9) of the local draft with `SampleBadge` "Sample film", native-style controls (play,
    "00:38 / 05:00", scrubber, mute, fullscreen). The cue text "Recover toward the center." and its arrow are rendered
@@ -806,8 +814,9 @@ with checkable numbers.
    keeper) and `.jovraAccent` "Save to lesson" (bookmark symbol).
 7. Below the row: text button "Create film without a lesson".
 
-**Copy.** Sound row inside Options (required before Save, SD5): "Sound · Choose" → "Natural court audio" / "No audio".
-Draft progress: "Building your preview on this iPhone · 40%".
+**Copy.** Sound line inside Options (information, not a choice, SD5 / D-1): "Court audio plays in the app. When you
+save or share, you choose whether the file includes it (off unless you turn it on)." Draft progress: "Building your
+preview on this iPhone · 40%".
 
 **Data bindings.**
 | Element | Source | Provenance |
@@ -829,6 +838,8 @@ Draft progress: "Building your preview on this iPhone · 40%".
 | No reviewed cue at all | Title card becomes "Your examples"; no instruction titles (grammar fallback) |
 | Draft rendering / failed | Progress overlay on the preview; failure `StateCard` "The preview didn't finish. Your videos are safe." + "Try again" |
 | Stale | Banner "Made before a correction" + "Rebuild" |
+| No natural audio | Sound line reads "This video has no sound"; the film and every saved file have no audio, and no Include audio switch appears |
+| Junior mode | Sound line reads "No audio in junior mode"; the private film and every saved or shared file have no audio, and no Include audio switch appears at export |
 
 **Interactions.** Save to lesson → lesson picker → final render + verification in the background → Toast "Saving your
 film to Oct 7 · Serve rhythm" → ST38 (local job) → ST39 when ready. "Create film without a lesson" → same without
@@ -842,7 +853,8 @@ current"). Preview controls are standard `AVPlayerViewController`-equivalent con
 **Deliberate differences from the reference image.**
 - "Original speed" dropdown → a button that plays the original-speed keeper (replay speed lives in Options), so the
   original-speed evidence is one tap away.
-- A Sound choice is required (SD5); the image has none.
+- No Sound choice before creating: the private film keeps court audio and the Include audio switch appears when a
+  file leaves the app (SD5, D-1); the image has neither.
 - Trailing JV avatar removed.
 
 ---
@@ -865,7 +877,9 @@ version.
    - `ToggleRow` "Camera shake" · "Adds movement between rallies, never during play." (default off).
    - `SettingsRow` "Music" · "Choose a licensed track" (chevron).
    - `ToggleRow` "Keep full rallies" · "Include complete points, not just highlights." (default on).
-   - `SettingsRow` "Sound" · "Choose" (SD5).
+   - `SettingsRow` "Sound" · "Court audio" with the caption "Saved and shared files include it too, unless you turn
+     it off when you save." (SD5, D-1: Rally Pulse's Include audio switch starts on; profile contract
+     `exportAudio.includeByDefault`). In junior mode or for a source without sound the row and caption change (States).
 6. Bottom action `.jovraAccent` "Generate preview" (re-renders the draft with the chosen options); after a preview
    exists, a second `.jovraAccent` "Create film" replaces it and "Generate preview" becomes a text button.
 7. Footnote with dashed symbol "Sample data" in demo.
@@ -884,6 +898,8 @@ profile settings.
 | No licensed music | Music row value "Court sound" and disabled with "Licensed music arrives in a later update" (S1–S4) |
 | Clip too short | `BannerView` "Only 2 rallies are long enough — the film will be 0:40." Under the 30 s minimum: `StateCard` "Not enough rallies for Rally Pulse." / "Try Match Broadcast, or mark more points." |
 | Contact frames protected | Always-visible caption under the slider: "Effects stay off during contact." |
+| No natural audio | Sound row "This video has no sound", no caption; the film and every saved file have no audio, and no Include audio switch appears |
+| Junior mode | Sound row "No audio in junior mode", no caption; the private film and every saved or shared file have no audio, and no Include audio switch appears at export |
 | Sample | Badges |
 
 **Interactions.** Slider detents give selection haptics; changing options marks the preview outdated ("Preview is out of
@@ -895,11 +911,12 @@ labelled. Flash and shake limits are enforced by the validator, not by the playe
 **Phone and iPad.** iPad: preview left, options right.
 
 **Deliberate differences from the reference image.**
-- Subtitle "Turn your sessions into highlight reels." → "Feel the energy." (brief line; "highlight reel" is a core term).
+- Subtitle "Turn your sessions into highlight reels." → "Feel the energy." (brief line; "highlight reel" is a core
+  term).
 - Default intensity Subtle, not the image's Medium (`story-profiles.json`: `effectIntensity: low`); Medium is a user
   choice in fixtures.
 - Camera shake description changed to state where shake is allowed.
-- Footnote cloud symbol → Sample's dashed square; Sound row added (SD5).
+- Footnote cloud symbol → Sample's dashed square; Sound row added, stating the export default (SD5).
 
 ---
 
@@ -944,10 +961,13 @@ change; they can't show why it happened."
 | Differing sample selection | Examples labelled "Examples you chose"; the stat appears only if both sides use the same selection rule |
 | No measurable change | Card shows "+0 percentage points" and "No change yet" — never hidden |
 | Manual reflection only | No stat card; journey + "Your reflections" list; film is a lesson chronology |
+| No natural audio | Sound line reads "This video has no sound"; the film and every saved file have no audio, and no Include audio switch appears |
+| Junior mode | Sound line reads "No audio in junior mode"; the private film and every saved or shared file have no audio, and no Include audio switch appears at export |
 | Sample | Badges |
 
 **Interactions.** Stat card → `FractionPopover` for each date. Journey node → ST35 for that lesson. Build my progress
-film → options sheet (length 2–6 min within 120–360 s, Sound) → local render → ST38 → ST39.
+film → options sheet (length 2–6 min within 120–360 s) → local render → ST38 → ST39 (audio for saved files is
+chosen there, off by default, SD5).
 
 **Accessibility.** Stat card reads "First serves in, reviewed. September 9: 12 of 30, 40 percent. October 7: 18 of 30,
 60 percent. Plus 20 percentage points. Source: 2 reviewed sessions." Journey is a list with position ("Step 3 of 3,
@@ -981,10 +1001,10 @@ sound if chosen, optional caption, private location.
 5. `SectionHeader` "Narrative" + Sample badge; **NoteRow** (document symbol): "A match to remember." and the
    player's caption, or "Add a few words (optional)" when empty; chevron → caption editor.
 6. `SectionHeader` "Sound"; **ChoiceRow** (waveform symbol) "Natural court audio" · "Court sounds, voices and
-   atmosphere" with trailing state ("Choose" until chosen; then "Selected" + check); second option "No audio" in the
-   same sheet.
+   atmosphere" with trailing "In your film" (the private film keeps court audio, SD5 / D-1) and the caption "When you
+   save or share, Include audio starts on. You can turn it off there."
 7. `ToggleRow` "Show the venue" · "Off keeps your location private." (default off).
-8. Bottom action `.jovraAccent` "Create this memory" (disabled with hint "Choose the sound first" until Sound is chosen).
+8. Bottom action `.jovraAccent` "Create this memory".
 
 **Copy.** Caption editor: "Write a caption or dedication. It appears as you type it." (max 120 characters).
 
@@ -1003,20 +1023,22 @@ sound if chosen, optional caption, private location.
 | No B-roll | `BannerView` "No arrival clips marked. Mark some in the player, or the film starts with the match." Action "Mark B-roll" (→ ST27 with a B-roll marking mode); "Arrival" chapter shrinks to the first real frames |
 | Venue hidden | Default; no venue text anywhere in the film or the YouTube draft |
 | Personal caption omitted | NoteRow empty state; no caption card in the film |
-| No natural audio | Sound row "This video has no sound" with only "No audio" available |
+| No natural audio | Sound row "This video has no sound"; the film and every saved file have no audio, and no Include audio switch appears |
+| Junior mode | Sound row "No audio in junior mode"; no switch at export |
 | Sample | Badges; the sample caption is a fixture written as user text |
 
 **Interactions.** Chapter card → seek. Create this memory → final render → ST38 → ST39.
 
-**Accessibility.** Chapters list ("Chapter 1, Arrival, 42 seconds"); the Sound choice is a radio group with its effect
-explained in the hint ("Voices recorded on court will be in the film").
+**Accessibility.** Chapters list ("Chapter 1, Arrival, 42 seconds"); the Sound row reads "Sound, natural court audio,
+in your film. When you save or share, include audio starts on."
 
 **Phone and iPad.** iPad: hero left, chapters and choices right.
 
 **Deliberate differences from the reference image.**
 - Subtitle "Your matches. More than scores." → the brief's profile line "Keep the moments that matter."
 - The narrative body "Great rallies, good company…" is invented copy → the player's own caption (empty by default).
-- "Natural court audio · Selected" pre-selected → unchosen until the player picks (SD5).
+- "Natural court audio · Selected" → "In your film": court audio is the private film's sound, and the export switch
+  (on by default for Court Memories, always shown) decides what a file carries (SD5, D-1).
 - The fist-bump photo is fictional; real films use real moments only.
 
 ---
@@ -1055,7 +1077,7 @@ explained in the hint ("Voices recorded on court will be in the film").
 | Empty | `StateCard` "Your first lesson goes here." / "Add notes, link clips and set a drill." Actions "Add a lesson", "Explore the sample" |
 | Offline | No change (local); with cloud sync on (S4) a caption "Changes will sync when you're online." |
 | Missing / deleted clip | Row line "1 clip missing" (attention) → ST35 repair |
-| Private coach share | Row pill "Shared with coach" (S4) or "Exported for coach" (S1 export) |
+| Private coach share | Row pill "Shared with coach" (S4) or "Exported for coach" (S1 export). S4 invitations are made out to the coach's email ("Invite by email"); only an account with that confirmed email can open the code, and a project-coach request waits for the player's approval, which shows the verified, masked email ("m•••@example.com"), never a display name (`security-model.md` §13.2); "Pending your approval" pill until then |
 | Export | Lesson context menu "Export for coach" → A-export sheet (Share Pack scoped to that lesson) |
 | Manual lesson | Row "No clips yet" |
 | Sample | Badges |
@@ -1238,10 +1260,20 @@ or live), or ST36 "Continue to quote". Push; tab bar visible.
      144 min at 20 Mbps), Wi-Fi only state, and what the planning step receives ("Sampled frames and your point events,
      not your full videos"; note text only as ticked in the consent: "Your notes" on, "Your coach's notes" off by
      default).
+   - `ToggleRow` "Plan the story in the cloud" · "Off: your iPhone's rules plan it, as in a local film." (off by
+     default, D-5). On: the planning step uses a model service, the A5 detail names that service and its retention,
+     and the quote includes planning (the paid, opt-in line, D-4). Hidden when no model planner is configured.
    - "Originals" · "Kept on device" (iPhone symbol).
-   - "Temporary media" · "Delete after 7 days" (clock symbol) → retention sheet (1 / 7 / 30 days).
-6. **ConsentRow**: checkbox (44 pt) "I agree to upload these selected videos" — unchecked by default.
-7. `.jovraAccent` "Create film" (disabled, grey, until consent is ticked, the quote is valid and the identity allows);
+   - "Temporary media" · "Delete after 7 days" (clock symbol) → retention sheet (1 / 7 / 30 days; "Uploads and
+     editing copies are removed within about a day after the days you choose"; changing it re-quotes; D-3).
+   - "Finished film" · "Kept until you delete it" (film symbol) → explanation: the film stays in your cloud library,
+     listed in Studio settings, until you delete it; share links last 24 hours (D-3).
+6. **ConsentRow**: checkbox (44 pt) "I agree to upload these selected videos" — unchecked by default. When "Plan the
+   story in the cloud" is on, a second checkbox appears under it, also unchecked by default and also required:
+   "I agree to send sampled frames, my point events and the notes I ticked to the planning service named above"
+   (D-5, ADR-0019 consent; it records `consent.modelProvider = true` and the ticked `consent.textClasses`). Turning
+   cloud planning off removes and clears it. Neither box is implied by the other or by the toggle.
+7. `.jovraAccent` "Create film" (disabled, grey, until every shown consent box is ticked, the quote is valid and the identity allows);
    `.jovraSecondary` "Use local replay" (→ back to the local film path for the same profile).
 
 **Copy.** Demo footnote: "Demo mode does not upload or charge." Cap explanation (tap limit): "The job stops here and
@@ -1253,8 +1285,9 @@ asks you before using more."
 | Quote, cap, expiry | `CloudClient.quote` (server-computed from actual bytes, profile, output, current rates); Sample in demo/test |
 | Sources and bytes | the job draft's source manifests |
 | Upload time | bytes ÷ the last measured upload rate on the current network (an estimate, labelled so); absent when unmeasured |
-| Retention | job draft policy (default 7 days) |
-| Consent | `QuoteReservation` state `consented` (local until accepted) |
+| Retention | job draft policy (default 7 days); films `keep-until-deleted` (D-3) |
+| Plan the story in the cloud | job draft `plannerChoice` (`heuristic` default, `model` when on); `consent.modelProvider` at acceptance (D-5) |
+| Consent | `QuoteReservation` state `consented` (local until accepted); `consent.uploadSelectedSources`, and with cloud planning `consent.modelProvider` and `consent.textClasses` (contract `jovra.quote/1`) |
 
 **States.**
 | State | Treatment |
@@ -1267,6 +1300,7 @@ asks you before using more."
 | Retention choice | Sheet; changing retention re-quotes |
 | Local replay | Secondary button always available |
 | Wi-Fi only on cellular | Row note "Upload will wait for Wi-Fi." |
+| Cloud planning on | A5 lists "Sampled frames, your point events and the notes you tick go to <planning service>, which keeps them for <retention statement>"; consent text version recorded |
 | Cloud unavailable | `StateCard` "Cloud production isn't available right now." + "Use local replay" |
 
 **Interactions.** Create film → `CloudClient.accept(quote, consent, cap, idempotencyKey)` → ST38. A second tap or a
@@ -1303,7 +1337,9 @@ film is still verifying. Tab bar visible.
    - "Align angles" · "Complete" · "Alignment reviewed" (film-strip symbol)
    - "Build film" · "In progress" · "Building your private preview" (scissors symbol)
    - "Verify export" · "Queued" · "Checks every frame before it's ready" (checkmark-shield symbol)
-   Local single-angle jobs show "Plan story · Build film · Verify export". The contract states `normalizing`,
+   Local jobs show "Build film · Verify export" (plus "Align angles" when they have more than one angle); planning is
+   part of "Build film" for every job, local or cloud, so no job shows a separate "Plan story" stage (story 193). The
+   contract states `normalizing`,
    `syncing` map to "Align angles"; `analyzing` (which in v1 runs no vision analysis: it gathers the bound points,
    keepers and existing notes for the plan) and `planning`, `preview_rendering`, `final_rendering` map to "Build film";
    no stage is ever labelled "Analyzing".
@@ -1373,10 +1409,14 @@ visible.
    with a refresh button (and Revoke in its detail) — no raw URL shown.
 7. Version row when older versions exist: "Version 2 of 2 · current" → A14.
 
-**Copy.** Save sheet: "Save to Photos" / "Save to Files" and the audio line ("Court audio" or "No audio" — the film's
-chosen route). YouTube package sheet: editable "Title", "Description" (draft from the template; mentions any
-generated or stock element), cover picker (real frames), chapters list, "Save package to Files". Footer: "JOVRA never
-uploads for you."
+**Copy.** Save sheet: "Save to Photos" / "Save to Files" with an **Include audio** `ToggleRow` (A20; SD5 / D-1):
+"Include audio" · "Voices recorded on court will be in the file." Off by default for Coach's Cut, Match Broadcast and
+Progress Story; on by default for Rally Pulse and Court Memories; always shown. The same switch appears when
+downloading a cloud film, when creating a shared link (the link serves the variant chosen then; changing it needs a
+new link) and in the YouTube package sheet. Turning it off saves a separate verified no-audio file ("Preparing a
+version without sound… checked"), never a muted copy. YouTube package sheet: editable "Title", "Description" (draft
+from the template; mentions any generated or stock element), cover picker (real frames), chapters list, "Save package
+to Files". Footer: "JOVRA never uploads for you."
 
 **Data bindings.**
 | Element | Source |
@@ -1384,7 +1424,9 @@ uploads for you."
 | Title, profile, duration, resolution | `FilmRecord` (duration from frames ÷ fps) |
 | 412 MB | measured file size (Sample: illustrative) |
 | Export verified | `FilmRecord.verification.passed` |
-| Shared link | `CloudClient.shareLink` (S4; demo fixture) |
+| Shared link | `CloudClient.shareLink` (S4; demo fixture); 24 h, refresh or revoke (D-3) |
+| Include audio default | profile (Rally Pulse, Court Memories on; others off); hidden in junior mode or for a silent film |
+| Cloud film retention | "Kept until you delete it" (D-3); delete via More → Delete film (A6) |
 | Version | film versions for this plan lineage |
 
 **States.**
@@ -1397,7 +1439,8 @@ uploads for you."
 | Partial download | Panel "Download paused · 212 of 412 MB" + "Resume"; completed downloads are re-verified by size and hash |
 | Old version | `BannerView` "Version 1 · made before a correction." Action "Watch current version" |
 | Archive disconnected | Optional row "Save to Google Drive" shows "Needs reconnect" (core archive state) |
-| Junior mode | Shared link and Prepare for YouTube hidden; Save offers No audio only |
+| Junior mode | Shared link and Prepare for YouTube hidden; the film has no audio and Save shows no Include audio switch |
+| No-audio variant preparing | Save sheet "Preparing a version without sound…" (determinate over frames), then "Checked"; Save enabled only after it passes FilmVerifier |
 | Local film (S1) | Shared link row hidden (cloud only); "Save film" primary |
 | Sample | Badges; the film's frames carry the Sample badge |
 
@@ -1431,12 +1474,15 @@ Panel reads "Private preview, export verified, 412 megabytes".
    "iCloud Drive" · "Choose folder"; "Google Drive" · "Not connected"; "Box" · "Planned"; "Dropbox" · "Planned" — each
    with a state symbol + word and a chevron.
 5. `SectionHeader` "Privacy": `ToggleRow` "Cloud processing" · "Off until you choose to upload" (off);
-   `SettingsRow` "Camera invitations" · "Expire in 10 min"; `SettingsRow` "Temporary uploads" · "7-day policy".
+   `SettingsRow` "Camera invitations" · "Expire in 10 min"; `SettingsRow` "Temporary uploads" · "7-day policy";
+   `SettingsRow` "Cloud films" · "Kept until you delete them" → list of cloud films with size and Delete (D-3);
+   `SettingsRow` "Shared links" · "Last 24 hours" → active links with Revoke.
 6. Data group: `SettingsRow` "Export project" (share symbol); "Delete cloud copies" (trash, `destructiveInk`);
    "Download my data" (download symbol).
 7. Footer `InfoCard` (info symbol): "Demo mode does not upload or charge."
-8. "Advanced" (Test mode only): planner configuration ("On this iPhone · rules" or the pinned cloud planner), test
-   backend status, "Help · hello@islanddevcrew.com" as selectable text.
+8. "Advanced" (Test mode only): planner configuration — "Default · On this iPhone · rules"; "Cloud planning ·
+   claude-opus-5-5 · only when a film asks for it"; "Astra · Not configured" (disabled until a model ID is set,
+   D-5) — test backend status, "Help · hello@islanddevcrew.com" as selectable text.
 
 **Copy.** Provider detail sheets (A17) explain scope: iCloud Drive — "Saves a project folder you choose in Files. It
 isn't used to make films." Google Drive — the core archive copy ("Uses the same Google Drive connection as your
@@ -1451,6 +1497,7 @@ uploads, when, and that each film still needs its own consent.
 | Cloud processing | project default upload policy (still per-job consent) |
 | Invitations | room default expiry (5 or 10 min; never longer) |
 | Temporary uploads | default retention (1 / 7 / 30 days) |
+| Cloud films, shared links | owner's `artifacts` (kind film, retention `keep-until-deleted`) and active share-link grants (D-3) |
 
 **States.**
 | State | Treatment |
@@ -1493,7 +1540,7 @@ All are sheets with detents (never imitation system dialogs), built from existin
 | A2 | Recording acknowledgement detail / camera check | ST23, ST24 | Per camera: acknowledged at (time), segment, preset, fps; "Not confirmed" with "Ask Alex to tap Start on that phone" |
 | A3 | Stop one vs stop all | ST24 | "Stop this phone" / "Stop all cameras (n)" / "Keep recording"; stop-all waits for stop acknowledgements and reports counts |
 | A4 | Missing-file repair | ST25, ST35, ST27 | Core missing-file flow: locate by hash in Files/Photos; never re-link a different file |
-| A5 | Consent per selected source | ST37 | Lists each source with bytes and a per-source include switch; what the planner receives; retention |
+| A5 | Consent per selected source | ST37 | Lists each source with bytes and a per-source include switch; what the planner receives (with "Plan the story in the cloud" on: the planning service's name and retention, and the note classes ticked: "Your notes" on, "Your coach's notes" off by default); retention (uploads 7 days, film until deleted, links 24 h) |
 | A6 | Delete scope | ST21, ST39, ST40 | Choices: "Delete this film" · "Delete editing copies (proxies)" · "Delete cloud copies" — originals are never in this sheet; deleting an original stays the core's explicit action |
 | A7 | Quote expiry / reprice | ST37 | "This quote expired" → new quote shown side by side with the old; consent cleared |
 | A8 | Spending limit | ST37, ST38 | Explicit new limit entry; never raised automatically |
@@ -1508,12 +1555,12 @@ All are sheets with detents (never imitation system dialogs), built from existin
 | A17 | Provider scope explanation | ST40 | What each provider is used for and not used for; archive is not processing |
 | A18 | Download recovery | ST39 | Resume, verify by size and hash, or discard a broken partial |
 | A19 | YouTube channel and privacy confirmation [S5, when wired] | ST39 | Deliberate channel choice, privacy (Private default), final confirmation tap; until wired the package sheet saves files only |
-| A20 | Sound choice | ST30–ST33 | "Natural court audio" / "No audio" with "Voices recorded on court will be in the film." Required before creating (SD5); junior mode forces No audio |
+| A20 | Include audio (export) | ST39 (Save, Download, Shared link, Prepare for YouTube) | `ToggleRow` "Include audio" · "Voices recorded on court will be in the file." Off by default; on by default for Rally Pulse and Court Memories; always shown when the film has audio. Off produces a separate verified no-audio file. Junior mode and silent films: no switch, no audio (SD5, D-1) |
 | A21 | Slot sheet | ST22 | Assign / replace / remove a slot; capability notes |
 | A22 | Capture method | ST22 | Record now with this iPhone · Invite other phones · Use videos I already have |
 | A23 | Lesson picker | ST28, ST30, ST39 | Recent lessons + "New lesson" |
 | A24 | Session picker | ST21, ST25 | Core `SessionCard` list filtered to sessions with video |
-| A25 | Film options | ST30–ST33 | Length, aspect (16:9; 9:16 letterboxed), Sound, replays (Coach's Cut), venue, caption |
+| A25 | Film options | ST30–ST33 | Length, aspect (16:9; 9:16 letterboxed), replays (Coach's Cut), venue, caption; a sound line states that the film keeps court audio and files ask at save (SD5) |
 
 ---
 
@@ -1534,17 +1581,17 @@ rest are additions this spec needs.
 | ST27 | multi-angle, final score | oneAngle, missingAngle, buffering, uncertainSync, scoreUnknown, offline, staleFilm | filmMode |
 | ST28 | estimated observation | manualNote, reviewedCue, unsupportedCapability, occluded, noCalibration, rejected | oneAngle |
 | ST29 | five profiles + length | noKeepers, needsNotes, quoteUnavailable, localDraft, noMusicRights | — |
-| ST30 | reviewed example + drill | unknownStat, manualCue, rejectedCue, noDrill, labelledReplay, originalSpeedFallback | noReviewedCue, draftFailed, stale |
-| ST31 | full rallies, optional effects | reduceMotion, cleanAlternate, noLicensedMusic, clipTooShort, contactProtected | — |
-| ST32 | 12/30 → 18/30 | noEarlierEvidence, methodChange, differingSelection, noChange, reflectionOnly | — |
-| ST33 | real B-roll, original sound | oneSource, noBroll, venueHidden, captionOmitted, noNaturalAudio | soundUnchosen |
+| ST30 | reviewed example + drill | unknownStat, manualCue, rejectedCue, noDrill, labelledReplay, originalSpeedFallback, noNaturalAudio | noReviewedCue, draftFailed, stale, juniorMode |
+| ST31 | full rallies, optional effects | reduceMotion, cleanAlternate, noLicensedMusic, clipTooShort, contactProtected, noNaturalAudio | juniorMode |
+| ST32 | 12/30 → 18/30 | noEarlierEvidence, methodChange, differingSelection, noChange, reflectionOnly, noNaturalAudio | juniorMode |
+| ST33 | real B-roll, original sound | oneSource, noBroll, venueHidden, captionOmitted, noNaturalAudio | juniorMode |
 | ST34 | dated lessons | empty, offline, missingClip, coachShare, export, manualLesson | — |
 | ST35 | notes + checklist | unreviewedNote, unsavedEdits, sourceUnavailable, permissionRevoked, conflictedSync | manualLesson |
 | ST36 | versioned plan | invalidWindow, gap, unsupportedEffect, missingAudioRights, olderPointRevision, pendingApproval, rebuild | — |
-| ST37 | sample quote, consent unchecked | demoChargeDisabled, quoteExpired, notSignedIn, aboveCap, noConsent, retentionChoice, localReplay | wifiOnlyCellular, cloudUnavailable |
+| ST37 | sample quote, consent unchecked | demoChargeDisabled, quoteExpired, notSignedIn, aboveCap, noConsent, retentionChoice, localReplay | wifiOnlyCellular, cloudUnavailable, cloudPlanningOn |
 | ST38 | upload/align done, build active | paused, resumed, retryableFailure, terminalFailure, canceled, budgetExhausted, notificationUnavailable, appSuspended | verifying, localJob |
-| ST39 | private film, download, lesson, YouTube | stillVerifying, failedDecode, expiredLink, accessRevoked, partialDownload, oldVersion, archiveDisconnected | juniorMode, localFilm |
-| ST40 | local demo, providers, privacy | realAuthTest, realAuthLive, disconnect, reconnect, tokenExpired, providerPlanned, providerUnavailable, deletionRunning, deletionFailed, dataExport | noConfiguration, juniorMode |
+| ST39 | private film, download, lesson, YouTube | stillVerifying, failedDecode, expiredLink, accessRevoked, partialDownload, oldVersion, archiveDisconnected | juniorMode, localFilm, includeAudioOff, includeAudioOn, noAudioVariantPreparing |
+| ST40 | local demo, providers, privacy | realAuthTest, realAuthLive, disconnect, reconnect, tokenExpired, providerPlanned, providerUnavailable, deletionRunning, deletionFailed, dataExport | noConfiguration, juniorMode, cloudFilmsList |
 
 ---
 
@@ -1605,8 +1652,9 @@ ivory-outline, chartreuse-outline, forest-panel, clay-outline) always paired wit
 
 ## 5. Open questions
 
-1. **Sound default (SD5 / D5).** The spec makes Sound an explicit, unchosen choice on every profile screen. Confirm,
-   or allow "Natural court audio" as a default for Court Memories and Match Broadcast.
+1. ~~**Sound default (SD5 / D5).**~~ **Decided (spec D-1):** the private film keeps court audio; saved and shared
+   files default to no audio behind Include audio, which starts on (and is always shown) for Rally Pulse and Court
+   Memories.
 2. **Studio Home placement.** Push from a Home card (this spec) vs a sheet. Push keeps back navigation simple.
 3. **"Use local replay" (ST37).** The brief's label routes to the local film path; "Make it on this iPhone" would be
    clearer. Kept as the brief says until Jon decides.

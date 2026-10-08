@@ -1,0 +1,188 @@
+{
+  "schemaVersion": "jovra.room.watch-bridge/1",
+  "sample": true,
+  "sessionId": "sample-jon-alex",
+  "hostEpoch": 3,
+  "snapshotSeq": 8,
+  "eventRevision": 42,
+  "bridge": {
+    "bridgeDeviceId": "sample-bridge-phone",
+    "bridgeInstanceId": "sample-bridge-run-1",
+    "channel": "watchconnectivity",
+    "bridgeSeq": 8,
+    "snapshotAgeAtBridgeMs": 1000
+  },
+  "participant": {
+    "memberId": "sample-member-jon",
+    "commandRoles": [
+      "scorer"
+    ],
+    "watchCommandTypes": [
+      "MarkForReview",
+      "PointWon",
+      "Undo"
+    ]
+  },
+  "freshnessPolicy": {
+    "freshMaxMs": 5000,
+    "delayedMaxMs": 15000,
+    "proposalOnly": true
+  },
+  "capabilities": {
+    "recordingHealth": true,
+    "manualScore": true,
+    "markForReview": true,
+    "liveServeSpeed": false,
+    "automatedLineCalls": false,
+    "serveSpeedResults": true
+  },
+  "score": {
+    "eventRevision": 42,
+    "label": "manual",
+    "players": [
+      {
+        "playerId": "jon",
+        "games": 5,
+        "point": "30"
+      },
+      {
+        "playerId": "alex",
+        "games": 4,
+        "point": "15"
+      }
+    ]
+  },
+  "roster": {
+    "rosterRevision": 1,
+    "cameraDeviceIds": [
+      "c1",
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6"
+    ]
+  },
+  "latestServe": {
+    "schemaVersion": "jovra.room.analysis-result/1",
+    "sample": true,
+    "sessionId": "sample-jon-alex",
+    "sourceRefs": [
+      {
+        "deviceId": "c1",
+        "captureInstanceId": "sample-c1-take1",
+        "segmentId": "s1",
+        "frameRange": {
+          "startFrame": 45210,
+          "endFrame": 45330
+        }
+      }
+    ],
+    "producedAt": "2026-10-07T21:28:40Z",
+    "producedAtEventRevision": 42,
+    "reviewState": "notRequired",
+    "scoreEffect": "none",
+    "resultId": "sample-serve-42",
+    "capabilityId": "serveSpeed.manualAssisted",
+    "kind": "serveSpeed",
+    "pointEventId": "sample-point-42",
+    "label": "estimated",
+    "modelVersion": "serve-assist/0.1",
+    "calibrationId": "sample-cal-1",
+    "value": "74",
+    "units": "mph",
+    "uncertainty": {
+      "lower": "70",
+      "upper": "78",
+      "level": "range"
+    },
+    "unavailableReason": null
+  },
+  "devices": [
+    {
+      "deviceId": "c1",
+      "captureInstanceId": "sample-c1-take1",
+      "segmentId": "s1",
+      "deviceSeq": 12,
+      "captureState": "Recording",
+      "ageAtBridgeMs": 1000,
+      "lastReportedElapsedMs": 754000
+    },
+    {
+      "deviceId": "c2",
+      "captureInstanceId": "sample-c2-take1",
+      "segmentId": "s1",
+      "deviceSeq": 11,
+      "captureState": "Recording",
+      "ageAtBridgeMs": 2000,
+      "lastReportedElapsedMs": 753000
+    },
+    {
+      "deviceId": "c3",
+      "captureInstanceId": "sample-c3-take1",
+      "segmentId": "s1",
+      "deviceSeq": 7,
+      "captureState": "Recording",
+      "ageAtBridgeMs": 18000,
+      "lastReportedElapsedMs": 746000
+    },
+    {
+      "deviceId": "c4",
+      "captureInstanceId": "sample-c4-take1",
+      "segmentId": "s1",
+      "deviceSeq": 12,
+      "captureState": "Recording",
+      "ageAtBridgeMs": 1000,
+      "lastReportedElapsedMs": 752000
+    },
+    {
+      "deviceId": "c5",
+      "captureInstanceId": "sample-c5-take1",
+      "segmentId": "s1",
+      "deviceSeq": 12,
+      "captureState": "Recording",
+      "ageAtBridgeMs": 1000,
+      "lastReportedElapsedMs": 754000
+    },
+    {
+      "deviceId": "c6",
+      "captureInstanceId": "sample-c6-take1",
+      "segmentId": "s1",
+      "deviceSeq": 11,
+      "captureState": "Recording",
+      "ageAtBridgeMs": 2000,
+      "lastReportedElapsedMs": 751000
+    }
+  ],
+  "alerts": [
+    {
+      "alertId": "sample-alert-c3",
+      "kind": "cameraUnknown",
+      "deviceId": "c3",
+      "severity": "deferred",
+      "ageAtBridgeMs": 18000
+    }
+  ],
+  "receipts": [
+    {
+      "schemaVersion": "jovra.room.receipt/1",
+      "commandId": "sample-marker-42",
+      "sessionId": "sample-jon-alex",
+      "hostEpoch": 3,
+      "type": "MarkForReview",
+      "status": "Accepted",
+      "reason": null,
+      "canonicalEventRevision": 42,
+      "appliedRecordId": "sample-mark-42",
+      "conflict": null,
+      "deviceResults": []
+    }
+  ],
+  "receiverObservation": {
+    "delivery": "fixture",
+    "transitBounded": true,
+    "transitMs": 0,
+    "processBaselineId": "sample-watch-boot-1",
+    "acceptedAtMonoMs": 0
+  }
+}

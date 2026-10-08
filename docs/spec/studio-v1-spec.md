@@ -78,24 +78,29 @@ sixth tab — that turns real recordings into private, verified films and a last
 - **Five films from the same truth.** Coach's Cut, Match Broadcast, Rally Pulse, Progress Story and Court Memories
   are versioned editing grammars, not filters. Every beat points at a real keeper, note or stat; scores and metrics
   are re-derived from the event log at render time; replays are labelled and never interpolated; court audio stays
-  continuous; effects never cover contact; Reduce Motion gets a clean version by default.
+  continuous in the private film, and a saved or shared file includes audio only when the player leaves "Include
+  audio" on at export (D-1); effects never cover contact; Reduce Motion gets a clean version by default.
 - **An engine built not to invent.** A planner proposes a story made only of IDs and fixed choices. Deterministic code
   validates it against trusted manifests and a trusted reference catalog, compiles an exact edit decision list and
   renders it on the phone with AVFoundation (later, an isolated cloud FFmpeg host, with Remotion only after its licence
   decision). A film is "ready" only after it fully decodes with the planned frame count, timestamp grid, audio sample
   count and overlay checks. Frame-for-frame content equality is proven only for barcode fixture sources; for real
   footage the verifier checks the clock, the counts, the audio and sampled overlay text, not every frame's content
-  (FilmVerifier). The planner is configurable: an on-device rules planner first (free, offline,
-  the fallback), then a server-side model adapter (Claude Opus 5.5 `claude-opus-5-5`, or OpenAI GPT-6 Astra
-  `gpt-6-astra` once access is verified).
+  (FilmVerifier). The planner is configurable: the on-device rules planner is the default (free, offline,
+  the fallback); a server-side Anthropic adapter (Claude Opus 5.5, `claude-opus-5-5`) plans a story only when the
+  player opts in with explicit consent; an OpenAI "Astra" adapter stays disabled until a real, verified model ID is
+  configured (D-5).
 - **Lessons and progress that hold up.** A lesson journal links dates, notes, exact clips, cues, drills and the next
   goal. Progress Story compares dated sessions only when definitions and methods match, with numerators,
   denominators and percentage points ("12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points").
 - **Private by default, owned forever.** Films are private files with chapters, a thumbnail and a source manifest.
   "Prepare for YouTube" builds the file, cover and draft copy; publishing stays the player's own deliberate action.
-  Core v1 stays free (ADR-0013's own-your-footage contract); whether on-device Studio is free or premium is Jon's
-  decision (open question 9); paid cloud production is a later opt-in with a real quote, explicit consent, a spending
-  cap and an idempotent reservation, under its own ADR.
+  Core v1 stays free (ADR-0013's own-your-footage contract), and so does everything Studio does on the device,
+  including all five template films (D-4, a working default pending Jon's answer to open question 9). The
+  model-planned story and cloud production are the paid line: a later
+  opt-in with a real quote, explicit consent, a spending cap and an idempotent reservation, shown only as Sample
+  quotes until a pricing ADR turns on charging. Cloud staging and proxies are kept 7 days by default, cloud films
+  until the player deletes them, share links 24 hours (D-3).
 - **Backend-ready, not backend-dependent.** Stable client interfaces with three adapters — Demo (in-process, fictional,
   no network), Test (an isolated backend reached through configuration) and Live (disabled until activation) — over
   a designed Supabase (Auth, Postgres + RLS) + Cloudflare (gateway Worker, private R2, Workflows, Queues) + separate
@@ -301,7 +306,7 @@ who must see nothing). "Player" is the default actor. Groups are for navigation;
 138. As a player, I want Court Memories built from my real arrival, preparation, match moments and closing moment, so that it feels like my day.
 139. As a player, I want an optional personal caption or dedication, so that the film says what I want it to.
 140. As a player, I want the venue hidden unless I opt in, so that my location stays private.
-141. As a player, I want to choose the sound (natural court audio or no audio) before a film is made, so that voices on court are never shared without my decision.
+141. As a player, I want my private in-app film to keep the court audio, and every file I save, share or prepare for YouTube to show an "Include audio" switch (off by default; on by default only for Rally Pulse and Court Memories, and always shown), so that voices on court never leave my phone without my decision.
 142. As a player, I want no music, narration or generated commentary unless I turn it on, so that films sound like the court.
 143. As a player, I want generated narration, if I ever enable it, labelled as generated, so that nobody mistakes it for a real voice. [S5]
 144. As a player, I want portrait versions letterboxed unless a checked crop keeps the action, so that phone-shaped films never cut players off.
@@ -359,8 +364,8 @@ who must see nothing). "Player" is the default actor. Groups are for navigation;
 184. As a player, I want to tick consent for the selected videos myself before Create is enabled, so that an upload is never assumed. [S4]
 185. As a player, I want an expired quote to require a fresh quote rather than auto-accept, so that a price never changes behind my back. [S4]
 186. As a player, I want a job to stop at my spending limit and ask, never raise it itself, so that I cannot be overcharged. [S4]
-187. As a player, I want to choose how long temporary cloud copies stay (7 days by default), so that I control retention. [S4]
-188. As a player, I want to be told that a model-planned story sends sampled frames to a planning service, so that I consent knowingly. [S4]
+187. As a player, I want to choose how long temporary cloud copies (uploads, proxies, previews) stay (7 days by default), and cloud films kept until I delete them, listed where I can see and delete them, so that I control retention. [S4]
+188. As a player, I want to be told that a model-planned story sends sampled frames, my point events and only the note text I tick to a planning service, and to have it happen only when I opt in, so that I consent knowingly. [S4]
 189. As a player in demo, I want the quote labelled "Sample quote" with charging disabled, so that I am never confused about money.
 190. As a player who is not signed in, I want the cloud option to explain that sign-in is needed while local options stay available, so that I am never blocked.
 191. As a player, I want uploads to resume after my phone sleeps or the network drops, without re-sending finished parts, so that large uploads complete. [S4]
@@ -409,7 +414,7 @@ who must see nothing). "Player" is the default actor. Groups are for navigation;
 225. As a player, I want deleting cloud copies never to delete my local originals, so that cleanup is always safe.
 226. As a player, I want to download all my Studio data, so that I can leave with everything.
 227. As a player, I want deleting my account to revoke Sign in with Apple and remove cloud data while keeping local files unless I choose otherwise, so that deletion is complete and safe. [S4]
-228. As a parent in junior mode, I want Studio films without audio, share links or YouTube preparation, so that my child stays private.
+228. As a parent in junior mode, I want Studio films without audio (in the app and in every saved file, with no Include audio switch), share links or YouTube preparation, so that my child stays private.
 229. As a player filming other people, I want Studio to respect each session's consent record, so that people filmed have agreed.
 
 ### Corrections and staleness
@@ -440,7 +445,7 @@ who must see nothing). "Player" is the default actor. Groups are for navigation;
 ### Founder, developer and platform
 
 246. As the founder, I want every Studio stage reported separately as local code, demo completeness, simulator, physical device, ML benchmark, backend test, live and store status, so that I know what is proven.
-247. As the founder, I want the planner configurable (on-device rules, Claude Opus 5.5, GPT-6 Astra) and pinned per job, so that I can compare and switch without code changes. [S4]
+247. As the founder, I want the planner configurable (on-device rules by default; Claude Opus 5.5 when the player opts in; an Astra adapter that stays off until I configure a real model ID) and pinned per job, so that I can compare and switch without code changes. [S4]
 248. As the founder, I want planners compared on the same fixtures before one becomes the default, so that the choice is evidence-based. [S4]
 249. As the founder, I want each external service activated by a deliberate gated step with its own evidence, so that nothing goes live by accident.
 250. As the founder, I want my old match used as the first real benchmark once I provide it, with synthetic results never claimed as tennis accuracy, so that claims stay honest.
@@ -460,27 +465,31 @@ Decisions referenced elsewhere carry an **SD** number (index in Further Notes).
   film" on the session overview (S09), the Insights root (S15) for lessons, angle insights and Progress Story, and the
   Profile hub (N11) for Studio settings. No sixth tab; Profile is never replaced. Core screens gain only these entry
   rows (an S0 ticket edits those views; this spec does not edit `screens.md`).
-- **SD2 · Local first; on-device Studio pricing is Jon's decision.** S0–S3 need no network or account. All five
+- **SD2 · Local first; everything on the device is free (D-4, working default pending Jon, open question 9).** S0–S3 need no network or account. All five
   profiles render on the device from the rules planner. Recording never waits for Studio, pairing, sync, planning,
   rendering or cloud (hard rule 3). ADR-0013 binds core v1: nothing existing becomes paid, capped, watermarked or
-  login-gated. Whether on-device Studio itself (multi-phone capture, multi-angle replay, the five film styles) is
-  free or premium is **not decided**: Jon's addendum calls Studio "super-premium" and "the moat", and ADR-0013 covered
-  core v1 only (open question 9; ADR-0019 amended). The recommendation is free on device (it costs JOVRA nothing per
-  use); the app reads one entitlement, `StudioEntitlements.localStudio`, which is available in every build until Jon
-  decides, so either answer is a configuration and pricing-ADR change, not a redesign. Under any answer, originals,
-  exports, local films and core v1 are never locked.
-- **SD3 · ADR-0014 "Backend-ready v1: three environments, live only behind activation gates" (accepted
-  2026-10-07).** It records the scope change from ADR-0002 ("a JOVRA cloud account/backend: out of scope for v1") *for
-  opt-in Studio cloud only*: the local project folder stays the source of truth; demo, test and live are separate
-  adapters; live activation requires named evidence (ADR-0014 gates 1–7, `docs/backend/architecture.md` §13). ADR-0002
-  is not edited here. Its "superseded in part by ADR-0014" note is an **open S0 deliverable** (ticket STU-00, made by
-  the ADR's owner); until it lands, ADR-0014's "amends ADR-0002" line is the only cross-reference. The companion Studio ADRs are
+  login-gated. On-device Studio (multi-phone capture, import of extra angles, on-device sync, multi-angle replay,
+  lessons, the five template films rendered with AVFoundation, "Prepare for YouTube" files) is **free**: it costs JOVRA
+  nothing per use (`pricing-and-premium.md` §6, the free/paid line). The paid line is the model-planned story and
+  cloud production (SD4). Jon's addendum calls Studio "super-premium" and "the moat"; this default reads the moat as
+  the JOVRA engine's model planning and cloud production, not a lock on local features. No founder decision on this
+  line is recorded, so it is a working default that S0–S3 build to, not a settled decision (open question 9). The app still reads one
+  entitlement, `StudioEntitlements.localStudio`, true in every build, so a later pricing ADR can change the answer
+  without a redesign. Under any later answer, originals, exports, local films and core v1 are never locked.
+- **SD3 · ADR-0014 "Backend-ready v1: three environments, live only behind activation gates" (accepted 2026-10-07).**
+  It records the scope change from ADR-0002 ("a JOVRA cloud account/backend: out of scope for v1") *for opt-in Studio
+  cloud only*: the local project folder stays the source of truth; demo, test and live are separate adapters; live
+  activation requires named evidence (ADR-0014 gates 1–7, `docs/backend/architecture.md` §13). ADR-0002 is not edited
+  here; it already carries its owner's note "Status: amended by ADR-0014 (backend boundary only)", and ADR-0014's
+  "amends ADR-0002" line is the matching cross-reference (STU-00 keeps only the glossary additions). The companion Studio ADRs are
   ADR-0015 (propose → validate → render), ADR-0016 (planner adapter), ADR-0017 (multi-device capture, post-hoc sync),
   ADR-0018 (RLS plus signing gateway), ADR-0019 (paid cloud opt-in), ADR-0020 (storage providers), ADR-0021 (Postgres
   search, then pgvector) and ADR-0022 (identity), all accepted 2026-10-07.
 - **SD4 · ADR-0019 "Paid cloud production is opt-in" (accepted 2026-10-07 for the boundary and the
   quote → consent → cap → reservation mechanism; retail prices and real charging are not decided).** It restates
-  ADR-0013 and draws the line "on the device is free; per-use cloud cost is opt-in, quoted and paid". Real charging
+  ADR-0013 and draws the line "on the device is free; per-use cloud cost is opt-in, quoted and paid": the paid,
+  opt-in items are the model-planned story (ModelPlanner) and cloud production (upload, cloud normalization, cloud
+  render and verification, hosted preview and share link), D-4. Real charging
   still needs Jon's pricing decision after the benchmarks in `pricing-and-premium.md` §8, a store-payment design and
   the live gates (S5). Until then no money moves: quotes and reservations carry **Sample credits** (the contract
   fixtures use non-zero Sample credits so the ledger arithmetic is exercised), and every reservation still carries a
@@ -489,12 +498,19 @@ Decisions referenced elsewhere carry an **SD** number (index in Further Notes).
   Recommendation carried into that ADR (INFERRED, `pricing-and-premium.md` §5–6): Studio Credits as the single ledger
   for quote, cap, reservation and receipt; per-film buttons plus packs; membership deferred; purchased credits never
   expire (App Review Guideline 3.1.1, OBSERVED); at most a one-time "first film free".
-- **SD5 · Court audio and D5 (exports default to no audio).** D5 is a lead decision and is not silently undone. The
-  resolution (INFERRED, needs Jon's confirmation, Q1): the profile screens carry an explicit **Sound** choice that
-  starts **unchosen** ("Choose sound": Natural court audio · No audio). A film cannot be created until the player
-  picks one, so court audio in a film is always a deliberate choice, never a default. The private in-app preview of a
-  draft uses the chosen route. Junior mode forces No audio. The no-audio variant of any film is a separate verified
-  render (or a verified remux), not a muted player.
+- **SD5 · Court audio and D5 (exports default to no audio), decided as D-1.** D5 is a lead decision and is not
+  silently undone; it is applied at the point where a file leaves the app. (1) **Private in-app films keep court
+  audio**: the film rendered and verified on the device (and its in-app preview) carries the continuous court-audio
+  bed (StoryBrief `primaryAudioPolicy: continuous-primary-court-audio`), because nothing leaves the phone. (2) **Every
+  exported or shared file defaults to no audio**: Save to Photos or Files, Download, a share link and the "Prepare for
+  YouTube" package each show an **Include audio** switch, off by default. (3) **Exception: Rally Pulse and Court
+  Memories**, whose grammar is built on court sound (`story-profiles.json`), start with the switch **on**, and the
+  switch is always shown at export with "Voices recorded on court will be in the file." so the choice is explicit.
+  (4) **Junior mode** forces no audio everywhere (the in-app film too) and hides the switch. (5) A source with no
+  audio gives a no-audio film and no switch. The no-audio file is a separate verified artifact (a verified remux of the
+  same video stream with the audio track removed, or a separate render), recorded as its own DeliveredArtifact with
+  `media.audioCodec: null` and its own verification; it is never a muted player and never the same file with a flag.
+  A share link points at the variant the player chose when creating the link.
 - **SD6 · Glossary.** Studio terms (Further Notes) go to `GLOSSARY.md` through its owner in S0. Studio never redefines
   Sync point, Highlight reel, Clip, Original, Archive or Stat.
 
@@ -590,9 +606,10 @@ written from the research's proposed names; the contract names win, and the earl
 **StoryDirector (profile grammar)**
 - Loads `jovra.story-profiles/2`. `brief(project, profileId, options) -> StoryBrief` where options are length (3 min,
   5 min, Full — "Full" meaning the profile maximum bounded by coverage), aspect (16:9 default; 9:16 letterboxed by
-  default, SD15), sound (SD5), effects intensity (Rally Pulse: Subtle default, Medium, High), shake (off), keep full
-  rallies (on), caption, dedication, venue opt-in. `lint(StoryPlan, profile) -> [Finding]` implements the
-  machine-checkable grammar rules (`film-engine.md` §6, bold rules).
+  default, SD15), the in-app audio policy (SD5: court audio unless junior mode or a silent source), effects intensity
+  (Rally Pulse: Subtle default, Medium, High), shake (off), keep full rallies (on), caption, dedication, venue opt-in.
+  `lint(StoryPlan, profile) -> [Finding]` implements the machine-checkable grammar rules (`film-engine.md` §6, bold
+  rules).
 - **Card text catalog.** Every on-screen string is user-authored or a fixed template with typed slots filled by code
   (names as entered, dates, counts, derived score, metric fraction with provenance). The planner chooses template IDs;
   it never writes text that reaches the picture (story 157).
@@ -604,15 +621,23 @@ written from the research's proposed names; the contract names win, and the earl
   storyPlan?, usage, requestHash, responseHash, providerRequestId}`. Providers: **RulesPlanner** (ADR-0016's
   HeuristicProvider; contract planner kind `heuristic`; deterministic, on device, the default and always the fallback;
   specified by conformance fixtures so a server copy can match it) and **ModelPlanner** (S4, server-side only, reached
-  through CloudClient; the app never holds a model key). No model is the default until the S4 fixture comparison
-  (story 248); `claude-opus-5-5` is the first candidate, not the default.
-  ModelPlanner sub-adapters: Anthropic Messages (`claude-opus-5-5`; OBSERVED 2026-10-07: $4/$20 per million
-  input/output tokens, $2/$10 Batch, images not video, up to 600 images per request, structured JSON output) and
-  OpenAI Responses (`gpt-6-astra`; OBSERVED model page exists, account access UNVERIFIED). Provider, model ID,
-  effort and price-table version are configuration pinned per job and written into the film record; nothing
-  escalates automatically.
+  through CloudClient; the app never holds a model key). **Defaults (D-5):** RulesPlanner is the default planner
+  everywhere. The **Anthropic Messages** sub-adapter (`claude-opus-5-5`, effort `medium`, Batch API for non-urgent
+  films; OBSERVED 2026-10-07: $4/$20 per million input/output tokens, $2/$10 Batch, images not video, up to 600 images
+  per request, structured JSON output through `output_config.format`, forced `tool_choice` rejected) is the only model
+  adapter enabled, and it runs only for a job whose player switched on "Plan the story in the cloud" (ST37) and gave
+  explicit consent at quote acceptance (`consent.modelProvider = true`, ST37 A5); without that consent the job's plan
+  comes from RulesPlanner, and nothing upgrades a job to a model by itself. The **OpenAI Responses** sub-adapter
+  ("Astra") ships **disabled with no model ID configured**: the research names `gpt-6-astra` (model page OBSERVED,
+  account access, structured-output limits and image pricing UNVERIFIED), and the adapter refuses to run
+  (`unavailable: model not configured`) until the founder configures a real model ID that a capability probe accepts.
+  Story 248's fixture comparison still precedes any change to the default; neither model becomes the default planner
+  by configuration alone. Provider, model ID, effort and price-table version are configuration pinned per job and
+  written into the film record; nothing escalates automatically.
 - **SD19 · Frames leaving the device.** A model-planned story sends sampled frames (768×432 or contact sheets,
-  `film-engine.md` §5.5) plus structured events and notes. That requires the per-job cloud consent (ST37), a provider
+  `film-engine.md` §5.5) plus structured events and only the note text classes the owner ticked in the consent
+  (`consent.textClasses`: `ownerNotes` and `ownerLessonNotes` on by default, `coachNotes` off unless ticked; ADR-0016,
+  `security-model.md` §13.14). That requires the per-job cloud consent (ST37), a provider
   retention statement in the consent copy and an App Privacy review before live (ADR-0013 targets "Data Not
   Collected"; Q4). Inline frames per request, not the provider's file store (OBSERVED: the Anthropic Files API is not
   ZDR-eligible). Demo never calls a model.
@@ -630,7 +655,16 @@ written from the research's proposed names; the contract names win, and the earl
   on footage); one audio bed per frame; overlay values derived at render time with numerator/denominator/provenance
   and a profile minimum provenance; required labels (replay, paused, Sample, generated); accessibility (≤ 3 flashes/s,
   text hold `max(2.0 s, 0.6 s + 0.3 s × words)`, a clean alternate whenever motion is used); output limits (profile
-  duration range, ≤ 128 segments for cloud drafts, even dimensions, H.264/HEVC + AAC).
+  duration range, ≤ 128 segments for cloud drafts, even dimensions, H.264/HEVC + AAC). Review round 2 tightened four
+  of them, and the Swift port matches: (a) the plan's `projectId` must equal the trusted context's (`projectMismatch`);
+  (b) a moment may be shown at 1× once: a `live` segment whose session interval overlaps an earlier `live` one is an
+  unlabelled replay (`replayWithoutLabel`) in every profile, not only strictly chronological ones; (c) **every stored
+  contact** on a source that falls inside a live window is protected, whatever the plan's `keeperId` or
+  `protectedFrames` say, and no transition handle may cover one in a live or replay segment; (d) every change of bed
+  source sits on a segment boundary (`bedSwitchNotAtBoundary`), with ≥ 20 ms fades on both sides at a cut and an audio
+  dip spanning the picture transition at a dissolve or dip (`fadeTooShort`). Session time is looked up in half-open
+  coverage intervals, so a segment on the first frame of a restarted recording maps through that restart's own
+  interval.
 - **SD6b · Operation allowlist, enabled one at a time.** An operation is enabled only when its validator rule and its
   barcode-fixture test exist. The names below map onto the `jovra.edit-plan/2` contract fields (ADR-0015 lists the
   same mapping): `live`, `broll`, `replay`, `freeze` and `card` (= segment op `title-card`) are segment ops;
@@ -662,22 +696,24 @@ written from the research's proposed names; the contract names win, and the earl
   noCoverage` — never extrapolates into a gap.
 - **SD9 · States and auto-approval.** The contract states (`jovra.sync-map/1`, `syncfit.py`) are `reference` (the
   primary's reference segment, identity, rate 1; the spec's `single`), `estimated`, `needs-review`, `reviewed`,
-  `manual` (markers only), `from-hints` (no anchors; a capture hint derived from the SourceManifest and checked against
-  it; never cut, never reviewed) and `failed` (fewer than two inlier anchors, an implausible rate, or nothing to fit,
-  which includes no shared coverage; the earlier separate `no-overlap` state was removed because no rule produced it).
-  A restarted segment of the primary is placed from its own capture journal (`from-hints`, rate 1) or is `failed`; its
-  offset is derived, never invented, and it is shown but not cut until a restart-review flow exists. The fitter
-  (`robust-trimmed-ols/1`: Theil–Sen start, one trim at three output frames, exact OLS on the inliers) gives
-  `estimated` only with ≥ 8 inlier anchors, the first, middle and last thirds covered, every inlier residual ≤ ½ output
-  frame, no trimmed outlier, no uncorrected audio and a drift of at most 1000 ppm; otherwise `needs-review` with
-  reasons. A person may mark a piece `reviewed` only with ≥ 3 inlier anchors (with two, an outlier is invisible) and a
-  drift ≤ 1000 ppm. Anchors outside their piece are rejected. Audio-only alignment without sound-travel
-  correction is never auto-approved. In v1 only `reference` and `reviewed` pieces are cut into films (the contract's
-  bundle rule); `estimated` maps are shown and playable in the project player with an "Estimated" label. The 95%
-  prediction-band gate in the first draft of this decision is a **planned tightening** for S2 on real footage (listed
-  as "not covered yet" in `spec/studio/README.md`), not the shipped rule. `reviewed` means a
-  person confirmed it; capability `studio.multiCameraSync` stays `estimated` until a benchmark on real footage
-  promotes it (ADR-0004).
+  `manual` (markers only), `from-hints` (no anchors; a capture hint derived from the SourceManifest and checked
+  against it; never cut, never reviewed) and `failed` (fewer than two inlier anchors, an implausible rate, or nothing
+  to fit, which includes no shared coverage; the earlier separate `no-overlap` state was removed because no rule
+  produced it). A restarted segment of the primary is placed from its own capture journal (`from-hints`, rate 1) or is
+  `failed`; its offset is derived, never invented, and it is shown but not cut until a restart-review flow exists. The
+  fitter (`robust-trimmed-ols/1`: Theil–Sen start, one trim at three output frames, exact OLS on the inliers) gives
+  `estimated` only with ≥ 8 inlier anchors, the first, middle and last thirds covered, every inlier residual ≤ ½
+  output frame, no trimmed outlier, no uncorrected audio and a drift of at most 303 ppm (the 300 ppm stress ceiling
+  plus the 3 ppm fitting tolerance; real phones drift about 8 ppm); otherwise `needs-review` with reasons, and above
+  1000 ppm the reason names a likely frame-rate or timebase mislabel. A person may mark a piece `reviewed` only after
+  confirming the start, middle and end checkpoints of a fit that did not fail and keeps ≥ 3 inlier anchors (with two,
+  an outlier is invisible; `reviewOfWeakFit`). A high drift is a reason to look, not a refusal: a correct fit through
+  a mislabelled timebase is a real map. Anchors outside their piece are rejected. Audio-only alignment without
+  sound-travel correction is never auto-approved. In v1 only `reference` and `reviewed` pieces are cut into films (the
+  contract's bundle rule); `estimated` maps are shown and playable in the project player with an "Estimated" label.
+  The 95% prediction-band gate in the first draft of this decision is a **planned tightening** for S2 on real footage
+  (listed as "not covered yet" in `spec/studio/README.md`), not the shipped rule. `reviewed` means a person confirmed
+  it; capability `studio.multiCameraSync` stays `estimated` until a benchmark on real footage promotes it (ADR-0004).
 - The UI sample "+120 ms, 18 ms/min" (= 300 ppm) is a stress fixture, not a default; realistic drift is 1–50 ppm
   (OBSERVED literature figure ≈ 8 ppm, `multicam-sync.md` §4.6).
 
@@ -745,10 +781,18 @@ written from the research's proposed names; the contract names win, and the earl
 **LocalFilmRenderer (AVFoundation)**
 - `render(edl, sources, output) -> RenderAttempt` writes to a new temporary file. Composition: one track per source
   with A/B tracks for dissolves; `replay` by per-range time scaling of a distinct inserted range (clean-frame rule
-  guarantees no duplicated frames); `freeze` by a one-frame insert scaled to the hold (method to confirm, film-engine
-  R4, UNVERIFIED); overlays with the Core Animation tool (score bug derived from the fold at each session time, metric
-  and cue chips, labels, Sample badge, single 2D annotation); audio mix with the primary bed and volume ramps for
-  `hold-bed` and fades.
+  guarantees no duplicated frames); `freeze` as an exact still (**SD21**, D-2): `AVAssetImageGenerator` with
+  `requestedTimeToleranceBefore` and `requestedTimeToleranceAfter` set to `.zero` (OBSERVED in
+  `AVAssetImageGenerator.h`) extracts the source frame at the freeze's source PTS (taken from the PTS table, after the
+  track's preferred transform, in the output colour space), and the still is drawn as the `contents` of a Core
+  Animation layer (under the annotation and "Paused" label layers) whose visible time range is exactly the freeze
+  segment's output range; underneath, the composition holds the source track paused for that duration (the one source
+  frame's range scaled to the hold), so the picture never shows anything else if the layer is late, and the bed is
+  `hold-bed` or `silence` as planned. The barcode test (every held output frame's barcode equals the source frame's)
+  settles film-engine R4; until it passes on the iOS 26 and iOS 18 paths the method is UNVERIFIED on that path, and an
+  HDR source is frozen only from its SDR render proxy; overlays with the Core Animation tool (score bug derived from
+  the fold at each session time, metric and cue chips, labels, Sample badge, single 2D annotation); audio mix with the
+  primary bed and volume ramps for `hold-bed` and fades.
 - Builder branches: iOS 26 `AVVideoComposition.Configuration` (OBSERVED in the iOS 26.5 SDK headers) vs the iOS 18
   mutable classes. Preview with `AVAssetExportSession`; final via reader → writer at YouTube-recommended H.264
   settings (`film-engine.md` §3.8). Background: `BGContinuedProcessingTask` on iOS 26 (user-initiated, system
@@ -799,10 +843,12 @@ written from the research's proposed names; the contract names win, and the earl
   Android implementation); **cloud room** (Supabase Realtime private channels) opt-in after S4; Wi-Fi Aware waits for
   an iPhone↔Android interop spike (iOS 26+, UNVERIFIED interop).
 - Join codes: a custom-scheme payload handled only by the in-app scanner (`jovra-room:1:<base64url>`), one slot, one
-  use, expiry ≤ 10 min, host endpoints, TLS key pin, 32-byte secret; host approval tap before a role binds; revoke
-  closes the connection and invalidates the code. A 6-digit typed code is a short-range fallback that still needs the
-  approval tap. Permissions: iOS Local Network (`NSLocalNetworkUsageDescription`, `NSBonjourServices`); Android 17
-  apps targeting SDK 37 need `ACCESS_LOCAL_NETWORK` except for picker-resolved services (OBSERVED, Android docs).
+  use, expiry ≤ 10 min, host endpoints, TLS key pin, 32-byte secret; host approval tap before a role binds, after the
+  host checks that both phones show the same 6-digit device code derived from the guest key's thumbprint (the guest's
+  device name is its own claim and never the basis of approval; `security-model.md` §8.2); revoke closes the
+  connection and invalidates the code. A 6-digit typed code is a short-range fallback that still needs the approval
+  tap. Permissions: iOS Local Network (`NSLocalNetworkUsageDescription`, `NSBonjourServices`); Android 17 apps
+  targeting SDK 37 need `ACCESS_LOCAL_NETWORK` except for picker-resolved services (OBSERVED, Android docs).
 - Roles and acknowledgements are persisted as project records on each device; presence carries readiness only.
 
 **CloudClient (demo / test / live)**
@@ -822,8 +868,11 @@ written from the research's proposed names; the contract names win, and the earl
   file; resume never re-sends confirmed parts; Wi-Fi-only honoured.
 
 **StorageProvider adapters**
-- **SD13.** `StorageProvider {id, capability: active | chooseFolder | notConnected | needsReconnect | planned |
-  unavailable(reason), connect(), exportProject(bundle) -> ExportReport, importSources() , quota()}`. Adapters:
+- **SD13.** `StorageProvider {id, capability: active | choose-folder | not-connected | token-expired | disconnected |
+  planned | unavailable(reason), connect(), exportProject(bundle) -> ExportReport, importSources(), quota()}` (the
+  contract's `jovra.storage-providers/1` status values, spelled as in the contract; Swift and Kotlin map them to
+  their own case names; `token-expired` is shown as "Needs reconnect"; ADR-0020).
+  Adapters:
   **Device** (active); **FilesFolder** (any Files location including iCloud Drive via a security-scoped bookmark;
   not CloudKit, not "iCloud on Android"); **GoogleDrive** (wraps the core ArchiveService and its `drive.file`
   connection, D3 — same states: "Awaiting Google Drive setup", Connected, Needs reconnect); **Box** and **Dropbox**
@@ -850,20 +899,25 @@ written from the research's proposed names; the contract names win, and the earl
   `docs/backend/security-model.md`)**. The expansion prompt's "do not trust client owner IDs, roles, job prices or
   provider URLs" and "sandbox media processing" map to: owner and actor columns forced by triggers and column grants,
   roles only in tables, prices and caps computed in SQL, no route accepting a URL, key, bucket or path (T-R2-10), no
-  provider URL stored or followed by the server (provider connections are status rows only; tokens stay on the device,
-  ADR-0020), and media processing in an isolated render host with a probe allowlist, pinned FFmpeg, no outbound network,
-  per-stage timeouts, disk caps and size/type/duration limits (security-model threats T3 and D5). Supabase per
-  environment (Auth: Sign in with Apple native ID token + nonce,
-  email OTP; anonymous sign-in off in live; Postgres 17 + RLS as the ledger; optional Realtime) → one Cloudflare
-  gateway Worker (verifies ES256 JWTs via JWKS with the issuer pinned per environment; authorizes every media operation
-  against Postgres through Hyperdrive with query caching disabled, as a least-privilege `jovra_gateway` role calling
-  named command functions in the non-exposed `app_gateway` schema; orchestration functions belong to a separate
-  `jovra_orchestrator` role; RLS helpers live in `app_private`) → private R2 buckets per environment and retention
-  class (`work`: staging/proxies/frames/previews with 7-day lifecycle; `films`: no lifecycle) → Cloudflare Workflows
-  run each render job (instance ID = job ID, idempotent create) with Postgres as the user-visible ledger → Queues + DLQ
-  carry `{attemptId}` only (the host claims the attempt; the lease token is minted at claim and inputs/outputs come
-  from the attempt row) → an FFmpeg-first render host (Cloudflare Containers standard-4, Cloud Run Jobs fallback;
-  OBSERVED: 4 vCPU / 12 GiB / 20 GB disk, no GPU, 15-minute stop warning).
+  provider URL stored or followed by the server (provider connections are status rows only; tokens stay on the device;
+  model endpoints and render-host origins are Worker configuration; ADR-0020, `security-model.md` §13.17), and media
+  processing in an isolated render host with a probe allowlist, pinned FFmpeg, no outbound network, per-stage
+  timeouts, disk caps and size/type/duration limits (security-model threats T3 and D5). Supabase per environment
+  (Auth: Sign in with Apple native ID token + nonce, email OTP; anonymous sign-in off in live; in test, sign-ups are
+  disabled on the Auth project and a mandatory allow-list hook admits only pre-created testers, never the client's
+  `shouldCreateUser`; Postgres 17 + RLS as the ledger; optional Realtime) → one user-facing Cloudflare gateway Worker
+  (verifies ES256 JWTs via JWKS with the issuer pinned per environment; authorizes every media operation against
+  Postgres through Hyperdrive with query caching disabled, as a least-privilege `jovra_gateway` role calling named
+  command functions in the non-exposed `app_gateway` schema; RLS helpers live in `app_private`) → a separate
+  `jovra-internal` Worker script with no user route (the Workflow, the queue consumer, the reconciler and the
+  render-host callbacks) that alone holds the `jovra_orchestrator` binding, the lease-fenced `*_for_attempt` commands
+  and the host secret, reached from the gateway only through a two-method service binding, so a user-route bug cannot
+  move a job or verify an artifact (`architecture.md` §1, `security-model.md` §13.1) → private R2 buckets per
+  environment and retention class (`work`: staging/proxies/frames/previews kept for the job's chosen 1, 7 or 30
+  days by a daily retention sweep, with a 31-day lifecycle rule as the backstop; `films`: no lifecycle) → Cloudflare Workflows run each render job (instance ID = job ID, idempotent create) with Postgres as the
+  user-visible ledger → Queues + DLQ carry `{attemptId}` only (the host claims the attempt; the lease token is minted
+  at claim and inputs/outputs come from the attempt row) → an FFmpeg-first render host (Cloudflare Containers
+  standard-4, Cloud Run Jobs fallback; OBSERVED: 4 vCPU / 12 GiB / 20 GB disk, no GPU, 15-minute stop warning).
 - Tables (`docs/backend/architecture.md` §4.3, with per-table RLS in `security-model.md` §5): profiles, projects,
   project_members, camera_invites, camera_sources, source_manifests, sync_maps, calibration_versions,
   point_event_revisions, observations, lessons, lesson_clips, story_plans, story_plan_versions, quotes,
@@ -878,21 +932,32 @@ written from the research's proposed names; the contract names win, and the earl
   matches the manifest (OBSERVED: R2 cannot report a whole-object SHA-256 for multipart). Delivery through a
   grant-checking gateway route with Range support; any direct presigned GET lives minutes; the 24-hour share link is a
   gateway token. Revocation stops new capabilities; an issued direct URL lasts until expiry (stated in copy).
+- **SD23 · Retention (D-3).** Staged originals, proxies, frames, PTS tables, contact sheets and previews in the
+  `work` bucket default to **7 days** (the player may choose 1, 7 or 30 at preflight; changing it re-quotes; the
+  quote and its consent carry `retentionDays`). Each object's `retention_until` comes from the accepted quote and the
+  daily retention sweep deletes it within about a day after that date, so copy says "removed within about a day after
+  the N days you chose"; a 31-day R2 lifecycle rule on the work prefixes is only the backstop and must outlive the
+  longest choice. Cloud **films** and their
+  thumbnails, chapters, captions and manifests have no lifecycle: they stay **until the player deletes them**, are
+  listed under the project and in Studio settings where the owner sees and deletes them, and are removed with the
+  project or account (an optional 30- or 90-day expiry is the player's explicit choice). **Share links last 24 hours**
+  by default (never longer; refresh or revoke). Details: `architecture.md` §10.
 - **Upload size and time at preflight.** Baseline arithmetic from the expansion prompt: six × 60 min × 8 Mbps =
   21.6 GB excluding overhead, and at 20 Mbps upload at least 144 min (sample-truth vector `six-angle-upload-time`);
   the three-angle sample is 10.8 GB, at least 72 min at 20 Mbps. ST37 shows the estimated upload time beside the bytes,
   computed from the bytes and the last measured upload rate on this network ("about 1 h 12 min on this Wi-Fi"), or
   "Upload time depends on your connection" when nothing has been measured; it is labelled an estimate and never
   shown as a promise.
-- **Job state machine** (one contract for local and cloud): `draft → quoted → consented → upload_pending → uploading
-  → queued → normalizing → syncing → analyzing → planning → preview_rendering → awaiting_review → final_rendering →
+- **Job state machine** (one contract for local and cloud): `draft → quoted → consented → upload_pending → uploading →
+  queued → normalizing → syncing → analyzing → planning → preview_rendering → awaiting_review → final_rendering →
   verifying → ready`, plus `paused`, `canceled`, `failed_retryable`, `failed_terminal`, `quote_expired`,
   `budget_exceeded`, `deleted`. Local jobs skip the cloud-only states. **`analyzing` in v1 runs no vision analysis**
   (per-angle cloud vision is out of scope through S4): it consolidates the bound event revision, keepers and existing
   observations into the planner's evidence and records "manual review" when nothing more exists. The render queue
-  never names it as analysis: it is folded into the "Build film" stage (`studio-screens.md` ST38). Leases, heartbeats and fencing tokens per
-  attempt; outputs written to new keys and exposed only after verification; transactional outbox + reconciler;
-  budget checked before every stage and retry; failure before `ready` releases unconsumed reservation.
+  never names it as analysis: it is folded into the "Build film" stage (`studio-screens.md` ST38). Leases, heartbeats
+  and fencing tokens per attempt; outputs written to new keys and exposed only after verification; transactional
+  outbox + reconciler; budget checked before every stage and retry; failure before `ready` releases unconsumed
+  reservation.
 - **New tennis compositions** in the founder's Remotion editor (expansion prompt: "add a JOVRA adapter and new tennis
   compositions") are **deferred**: S4's adapter feeds the editor's existing assembler with silent segments and a
   separately verified JOVRA bed, and any new composition (score bug, metric chips, chapter cards as Remotion
@@ -947,12 +1012,12 @@ Status is always reported in separate columns: local code · demo completeness �
 media render · ML benchmark · backend test · live · store · publication (story 246).
 
 **S0 — Reconcile, contracts, demo, every screen and state** (fully specified)
-- Deliverables: ADR-0014…0022 (accepted 2026-10-07; done) and, later, the pricing ADR that turns on real charging
-  (not in S0); glossary additions through its owner; the Studio contracts table above (shipped in
-  `spec/schemas/studio` and `spec/studio`, `RESULT: PASS`; the Swift side is still to do) with JSON Schemas, Python reference (rules planner, EDL compile,
-  validator, sync fit, comparability), golden fixtures and a manifest test that fails when a fixture is unconsumed;
-  `StudioSampleContent`; DemoCloudClient; the fixture room; StudioRouter; all twenty Studio screens and every state in
-  `studio-screens.md` §3 reachable in demo by launch argument; entry rows on S03, S09, S15 and N11.
+- Deliverables: ADR-0014…0022 (accepted 2026-10-07; done) and, later, the pricing ADR that turns on real charging (not
+  in S0); glossary additions through its owner; the Studio contracts table above (shipped in `spec/schemas/studio` and
+  `spec/studio`, `RESULT: PASS`; the Swift side is still to do) with JSON Schemas, Python reference (rules planner,
+  EDL compile, validator, sync fit, comparability), golden fixtures and a manifest test that fails when a fixture is
+  unconsumed; `StudioSampleContent`; DemoCloudClient; the fixture room; StudioRouter; all twenty Studio screens and
+  every state in `studio-screens.md` §3 reachable in demo by launch argument; entry rows on S03, S09, S15 and N11.
 - Acceptance: (a) the starter sample plan passes and each of its documented mutations fails under the extended
   validator; (b) every Studio fixture validates against its schema and the Swift decoders round-trip canonical JSON
   byte for byte; (c) XCUITest visits every Studio route and state with `performAccessibilityAudit`, 44 pt checks, an
@@ -963,17 +1028,18 @@ media render · ML benchmark · backend test · live · store · publication (st
 **S1 — One match to five verified local films** (fully specified)
 - Journey: import or choose one session (the synthetic sample video in CI; Jon's old match when supplied) → Studio
   project with that session as primary (identity SyncMap) → points from the event log (live scoring, Fast Point
-  Review or manual entry) and Marks → keeper candidates, manual keeper/B-roll marking → choose a profile, length and
-  sound → RulesPlanner → StoryPlan → compile → validate → LocalFilmRenderer → FilmVerifier → FilmRecord → attach to a
-  lesson → Progress Story from two lessons → Prepare for YouTube package → delivery screen (local; cloud rows show
-  their demo/test states).
+  Review or manual entry) and Marks → keeper candidates, manual keeper/B-roll marking → choose a profile and length
+  → RulesPlanner → StoryPlan → compile → validate → LocalFilmRenderer → FilmVerifier → FilmRecord (court audio) →
+  attach to a lesson → Progress Story from two lessons → save with and without "Include audio" (each saved file a
+  verified artifact, SD5) → Prepare for YouTube package → delivery screen (local; cloud rows show their demo/test
+  states).
 - Operations: the S1 allowlist (SD6b). Profiles on one angle: Coach's Cut (goal card, examples, freeze + one
   annotation, ½× clean replay only when source fps permits — the 60 fps synthetic fixture does at 30 fps output — cue
   chip, drill card); Match Broadcast (one-angle complete match with chapters; dead time compressed; gap cards; score
   bug from the fold; final card only with complete coverage); Rally Pulse (uncut rallies, cuts between, Subtle
   effects; clean alternate rendered and verified too); Progress Story (two dated sessions, comparison card from
-  ProgressStoryBuilder); Court Memories (B-roll windows from the same session marked by the player, natural sound per
-  the Sound choice, `grade: none`).
+  ProgressStoryBuilder); Court Memories (B-roll windows from the same session marked by the player, court audio in the
+  private film and the Include-audio switch on by default at export (SD5), `grade: none`).
 - Fixtures: barcode sources at 24, 30 and 60 fps with 1 kHz clicks at known frames; a coherent synthetic match
   (ADR-0012 generator extended with barcode and click tracks) whose point events fold to a known score; lesson and
   progress fixtures.
@@ -981,7 +1047,10 @@ media render · ML benchmark · backend test · live · store · publication (st
   FilmVerifier passes: exact frame count, timestamp grid, every output frame's barcode equals the compiled map, clicks
   within ±1 output frame, audio sample count, overlay text equals the fold at sampled frames, Sample badge on every
   frame; (b) mutation tests that must fail: shift a segment by one frame, drop the replay label, put a dissolve over a
-  contact window, bind a stale event revision, request ½× replay from a 30 fps source at 30 fps output; (c) original
+  contact window, bind a stale event revision, request ½× replay from a 30 fps source at 30 fps output, save a file
+with Include audio off that still carries an audio track, hold a freeze whose frames differ from the source frame;
+for each profile the exported no-audio file and the with-audio file both pass FilmVerifier with identical video
+frame counts and barcodes; (c) original
   hashes identical before and after the whole journey, including after a cancelled render and a failed render;
   (d) correcting an early point marks existing films stale and a rebuilt film shows the new later scores (fold oracle);
   (e) denied microphone, no network and a forced render failure leave capture, replay and originals intact; (f)
@@ -1038,7 +1107,8 @@ media render · ML benchmark · backend test · live · store · publication (st
   (tables, gateway API, flows, tickets B-00…B-25) and `docs/backend/security-model.md` (per-table RLS policies,
   command functions, role matrix, T-DB/T-GW/T-R2 tests); none of it is code yet. Quote/consent/cap/reservation with
   Sample credits and no money charged, under a real internal cost cap and a test-environment ceiling (ADR-0019);
-  ModelPlanner adapters behind configuration; private delivery; deletion; remote push only after gate G3b.
+  the Anthropic ModelPlanner adapter behind configuration and the player's per-job consent, the OpenAI adapter disabled
+  until a model ID is configured (D-5); private delivery; deletion; remote push only after gate G3b.
 - Acceptance: pgTAP role-matrix tests with real authenticated owner, unrelated user, camera uploader, coach, viewer
   and unauthenticated roles refusing cross-project metadata, media, thumbnails, proxies, vectors and downloads, expired
   invite reuse, wrong-project upload completion, stale grants and forged demo sessions;
@@ -1124,13 +1194,13 @@ media render · ML benchmark · backend test · live · store · publication (st
 | ID | Decision | Section |
 |---|---|---|
 | SD1 | Optional; inside the five tabs; entry from Home, session, Insights, Profile | Scope |
-| SD2 | Local first; core v1 free (ADR-0013); on-device Studio pricing is Jon's decision (open question 9) | Scope |
-| SD3 | ADR-0014 (accepted): backend-ready adapters, gated activation (partial supersede of ADR-0002 for Studio cloud); companions ADR-0015…0022 | Scope |
-| SD4 | ADR-0019 (accepted for boundary and mechanism): Sample credits and a real internal cost cap until a pricing decision turns on charging; Studio Credits recommended | Scope |
-| SD5 | Sound is an explicit choice (unchosen by default) to honour D5; junior forces no audio | Scope |
+| SD2 | Local first; core v1 free (ADR-0013); everything Studio does on the device is free, including all five template films (D-4: working default pending Jon, open question 9) | Scope |
+| SD3 | ADR-0014 (accepted): backend-ready adapters, gated activation (amends ADR-0002, backend boundary only, for Studio cloud); companions ADR-0015…0022 | Scope |
+| SD4 | ADR-0019 (accepted for boundary and mechanism): the model-planned story and cloud production are the paid opt-in line; Sample quotes, Sample credits and a real internal cost cap until a pricing ADR turns on charging; Studio Credits recommended | Scope |
+| SD5 | Private in-app films keep court audio; exported or shared files default to no audio behind an Include audio switch, on by default (and always shown) only for Rally Pulse and Court Memories; junior forces no audio (D-1) | Scope |
 | SD6 / SD6b | Glossary via owner; operation allowlist enabled one operation at a time | Scope; EDL |
 | SD7 | Integer µs session time, rational source time, one half-up time→frame rounding | Time model |
-| SD9 | Sync states and auto-approval thresholds as in the contract (`robust-trimmed-ols/1`; no `no-overlap`; reviewed needs ≥ 3 inliers and ≤ 1000 ppm); films cut only reviewed maps in v1; Reviewed = human; Validated = benchmark (ADR-0017) | SyncEngine |
+| SD9 | Sync states and auto-approval thresholds as in the contract (`robust-trimmed-ols/1`; no `no-overlap`; estimated needs ≤ 303 ppm; reviewed needs ≥ 3 inliers and the three checkpoints); films cut only reviewed maps in v1; Reviewed = human; Validated = benchmark (ADR-0017) | SyncEngine |
 | SD10 | JOVRA Room v1 over LAN/TLS; QR one-slot codes ≤ 10 min; host approval | Lobby |
 | SD11 | CloudClient with Demo/Test/Live adapters; issuer pinned | CloudClient |
 | SD12 | Supabase + gateway Worker + private R2 + Workflows/Queues + FFmpeg render host (ADR-0014, ADR-0018, ADR-0021, ADR-0022) | Backend |
@@ -1138,16 +1208,61 @@ media render · ML benchmark · backend test · live · store · publication (st
 | SD15 | Portrait = letterboxed landscape until reviewed action-safe reframing (S5) | StoryDirector |
 | SD16 | 1080p H.264/AAC, output fps = primary capture fps, 60 fps capture recommended | Time model |
 | SD17 | `cleanAlternate`; default under Reduce Motion | EDL |
-| SD18 | RulesPlanner (ADR-0016's HeuristicProvider) default and fallback; ModelPlanner server-side, pinned per job; no model default before the fixture comparison (ADR-0016) | Planner |
+| SD18 | RulesPlanner (ADR-0016's HeuristicProvider) default and fallback; Anthropic `claude-opus-5-5` only with the player's explicit per-job consent; Astra adapter disabled until a real model ID is configured; pinned per job (D-5, ADR-0016) | Planner |
 | SD19 | Frames to a model only with per-job consent and a privacy review | Planner |
 | SD20 | Revisions propagate staleness; old films kept as labelled versions | Project store |
+| SD21 | Freeze = exact still (`AVAssetImageGenerator`, zero tolerance) as a Core Animation layer over the paused source duration (D-2) | LocalFilmRenderer |
+| SD23 | Cloud retention: staging and proxies 7 days by default, cloud films until the player deletes them (listed and deletable), share links 24 h (D-3) | Backend |
 | SD22 | Founder's editor reused by pattern through a JOVRA adapter writing its own contracts; frozen-hook recipe replaced; Studio private-draft policy; never modified (ADR-0015) | Backend |
+
+### Decisions (review round 3, 2026-10-07)
+
+Five design questions left open by rounds 1–2 are closed here. Each names where it lands; a later ADR may change one,
+but nothing in Studio may silently diverge from it.
+
+- **D-1 · Audio in films and exports (closes open question 1; SD5).** Private in-app films keep the court audio. Every
+  exported or shared file (Save to Photos or Files, Download, share link, "Prepare for YouTube") defaults to **no
+  audio** behind an **Include audio** switch, honouring D5. Rally Pulse and Court Memories are the exception: their
+  switch starts **on**, and it is always shown at export with "Voices recorded on court will be in the file." Junior
+  mode forces no audio everywhere and hides the switch. A no-audio file is its own verified artifact
+  (`media.audioCodec: null`), never a muted player. Lands in: SD5, stories 141 and 228, ST30–ST33 and ST39,
+  sheet A20, STU-16.
+- **D-2 · Freeze frames (settles film-engine R4's method; SD21).** A freeze is an exact still from
+  `AVAssetImageGenerator` with zero time tolerance, drawn as a Core Animation layer for exactly the freeze segment's
+  output range, over the source track held paused for that duration. Rejected: the scaled one-frame insert as the
+  primary method (INFERRED: its exactness depends on how the compositor samples a scaled range; it remains only the
+  picture underneath the layer). Proof is the barcode test on each composition path; until it passes, the path is
+  UNVERIFIED. Lands in: LocalFilmRenderer, S1 acceptance (b), STU-12, ADR-0015.
+- **D-3 · Cloud retention (SD23).** Staging uploads and proxies (and frames, contact sheets, previews): 7 days by
+  default, 1 or 30 days by the player's choice at preflight. Cloud films: kept until the player deletes them, always
+  visible to the owner with a delete action. Share links: 24 hours. Lands in: SD23, story 187, ST37, ST39, ST40;
+  matches `architecture.md` §10.
+- **D-4 · The free/paid line (working default; open question 9 stays open for Jon; SD2, SD4).** No founder decision
+  on this line is recorded: its only source is `pricing-and-premium.md` §6, while Jon's addendum calls Studio
+  "super-premium" and "the moat", and his words come first in this spec's precedence. So S0–S3 build to the default
+  below and Jon decides (open question 9); the `localStudio` entitlement makes either answer a configuration and
+  pricing-ADR change. The default, from `pricing-and-premium.md` §6: everything Studio
+  does on the device is free, including all five template films rendered with AVFoundation from the rules planner.
+  The model-planned story and cloud production are the paid, opt-in items. Until a pricing ADR, they appear only as
+  Sample quotes with Sample credits under a real internal cost cap; no money moves. Lands in: Solution, SD2, SD4,
+  ST37 copy. ADR-0019's "recommended free, pending Jon (spec open question 9)" says the same thing and needs no
+  amendment until Jon answers.
+- **D-5 · Planner defaults (SD18; ADR-0016).** The on-device rules planner is the default. The Anthropic adapter
+  (`claude-opus-5-5`) runs only when the player switches on "Plan the story in the cloud" and gives explicit consent at
+  quote acceptance (`consent.modelProvider`, with `consent.textClasses` limiting note text). The "Astra" (OpenAI)
+  adapter is disabled until the founder configures a real model ID that its capability probe accepts. No model
+  becomes the default without story 248's fixture comparison. Lands in: Solution, stories 188 and 247, SD18, SD19,
+  S4, ST37 and ST40, ADR-0016. Like D-4, the opt-in framing is a team default: Jon's addendum describes the cloud
+  engine with Opus 5.5 or "Astra" as the planner, so whether cloud planning is opt-in or the normal path for cloud
+  films is part of open question 9.
 
 ### Conflicts recorded (not silently resolved)
 
 - **ADR-0002 (no backend in v1)** vs Jon's backend-ready direction → SD3 (Studio cloud only; local store remains truth).
 - **ADR-0013 (no paywall; "Data Not Collected")** vs paid cloud production and model planning → SD2, SD4, SD19.
-- **D5 (exports default to no audio)** vs profile default court sound (`story-profiles.json`) → SD5, Q1.
+- **D5 (exports default to no audio)** vs profile default court sound (`story-profiles.json`) → **decided, D-1 / SD5**:
+  D5 governs every file that leaves the app; the private in-app film keeps court sound; Rally Pulse and Court Memories
+  export with audio on by default but always show the switch.
 - **Brief vs effects default:** `screens.json` shows Rally Pulse "Effects intensity … Medium"; `story-profiles.json`
   sets `effectIntensity: low`. The default is Subtle (low); Medium appears only as a chosen state in fixtures.
 - **Progress journey labels vs lesson titles:** the brief's journey captions ("Find the rhythm", "Repeat the routine",
@@ -1167,7 +1282,10 @@ media render · ML benchmark · backend test · live · store · publication (st
   run after capture only": v1's live feed is the primary's picture and live scoring, with automatic analysis after
   capture (DirectorCapture; open question 10).
 - **On-device Studio pricing**: SD2 first extended ADR-0013's "free" to every on-device Studio feature; Jon's addendum
-  calls Studio "super-premium". Now an open question (9), with ADR-0019 amended.
+  calls Studio "super-premium". Round 2 made it an open question (9). Round 3 recorded the line in
+  `pricing-and-premium.md` §6 as a decision (D-4) without a founder source; round 4 returned it to a **working
+  default** (on-device free, the model-planned story and cloud production paid and opt-in) with open question 9 open
+  for Jon. ADR-0019's "pending Jon" wording matches this.
 - **Uploads through the gateway** vs the backend brief's "directly in bounded multipart parts, not through an
   in-memory Worker buffer": S4 routes 32 MiB parts through the gateway Worker (ADR-0018) to keep one authorization
   point. The gateway **streams** each part to R2 through a hashing tee and never buffers a part or an original;
@@ -1177,7 +1295,9 @@ media render · ML benchmark · backend test · live · store · publication (st
   already pins the reframe and music validator rules with a Rally Pulse 9:16 fixture; that fixture is ahead of the S1
   product allowlist on purpose and does not enable either operation in S1.
 - **ADR-0016's first title** called `claude-opus-5-5` "the model default"; story 248 requires a comparison first. The
-  ADR is amended; no model is the default before the S4 comparison.
+  ADR is amended (D-5): RulesPlanner is the default; the Anthropic adapter runs only with the player's explicit consent;
+  the Astra adapter is off until a real model ID is configured. `pricing-and-premium.md` §8 recommends defaulting the
+  planner to Opus 5.5; that is not taken, because a default model would send frames without a per-job choice.
 - **Sync sample state:** ST26 shows Camera 2 "Estimated" (the fitter's state before Confirm sync); the stored sample
   record is the same map after confirmation (`reviewed`), because films cut only reviewed maps (SD9,
   `studio-screens.md` §0.6).
@@ -1285,9 +1405,10 @@ checked against the sources and the code; repros were re-run after the fixes
 - Plan `projectId` (LOW) — **accepted**: `projectMismatch` in `edl.validate` and the bundle.
 - Retries after a top-up (LOW) — **accepted**: a reservation remembers every applied `(quote, credits)` request, so
   a redelivered reserve or top-up replays (vector `retries-after-topup-replay`).
-- Rate gate (LOW) — **accepted**: a drift above 1000 ppm adds a needs-review reason; `reviewed` needs ≥ 3 inliers and a
-  plausible drift (`reviewOfWeakFit`; vectors `two-anchors-outlier-undetectable`, `implausible-drift-1500ppm`). The
-  schema's 0.9–1.1 range stays the hard failure bound.
+- Rate gate (LOW) — **accepted**: a drift above 1000 ppm adds a needs-review reason; `reviewed` needs ≥ 3 inliers
+  (`reviewOfWeakFit`; vectors `two-anchors-outlier-undetectable`, `implausible-drift-1500ppm`). The schema's 0.9–1.1
+  range stays the hard failure bound. (Round 3 refined it: `estimated` now needs ≤ 303 ppm, above 1000 ppm the reason
+  names a timebase mislabel, and a person may review a high-drift fit after the three checkpoints; see SD9.)
 - `from-hints` and `no-overlap` unreachable (LOW) — **accepted**: the record check now receives the manifest's capture
   hints (from-hints is reachable and checked; self-tests), and `no-overlap` was removed (it is `failed`).
 
@@ -1319,6 +1440,56 @@ Test-mode only in both docs.
 
 **Rejected outright:** none. The only partial rejection is the cut-only audio rule above.
 
+### Verification decisions (review round 3, 2026-10-07)
+
+The 49 round-2 findings were re-checked against the current files rather than against round 2's own summary above.
+Contract fixes (`spec/`) and backend fixes (`docs/backend/`, ADR-0014/0018/0019/0022) are owned by their own fixers in
+this round; this spec only describes the behaviour they implement. What changed here and in the screens doc and
+ADR-0015/0016/0017/0020/0021:
+
+- **Still open after round 2, now fixed.** ADR-0017 still said the primary is "analysed on court", listed automatic
+  visual anchors (contacts, bounces) and gave the 95% band as the auto-approval rule; it now matches DirectorCapture,
+  "visible events a person marks" and SD9. SD9 had drifted from the fitter: `estimated` needs ≤ 303 ppm (not 1000),
+  and a reviewed map needs ≥ 3 inliers and the three checkpoints, with high drift a reason to look rather than a
+  refusal (`syncfit.py`). SD19 now sends only the consented note classes (`consent.textClasses`), matching ADR-0016
+  and `security-model.md` §13.14 (finding 29). SD12 now names the separate `jovra-internal` Worker and the
+  server-enforced test sign-up, so the spec no longer describes one Worker holding the orchestrator role (findings
+  13, 15). The camera join sheet and SD10 approve by the 6-digit device code, never by the guest's self-chosen name,
+  and the S4 coach-share state shows email-bound invitations approved by a masked, verified email (finding 14's
+  equivalent on the screens). ADR-0020 and SD13 use the contract's provider status values. ADR-0021 sends search
+  text in a request body (finding 27). The EDLValidator bullet states the four round-2 rule tightenings (findings
+  0–2, 7, 8).
+- **Five design questions decided** (Further Notes → Decisions D-1…D-5): audio in films and exports, the freeze
+  method, cloud retention, the free/paid line and planner defaults (round 4: the free/paid line and the opt-in
+  planner framing went back to working defaults with open question 9 reopened, because no founder decision is
+  recorded for them). New ticket STU-16 (export audio); STU-12 and S1 acceptance gain the freeze and no-audio
+  checks.
+- **Confirmed already fixed in round 2** (re-read, no change): findings 34 (Studio tickets), 36 (live feed defined),
+  37 (EDL binding deviation recorded), 38 (six-device sync acceptance), 39 (marked visual events), 40 (ST21 angle
+  tile by stage), 41 (`analyzing` defined, not shown as analysis), 42 (Remotion compositions deferred), 43 (STU-00),
+  44 (upload time at preflight), 45 (dimensions, aspect and codec in FilmVerifier), 46 (mixed Pixel/iPhone media),
+  47 (sandboxing and provider URLs in SD12), 48 (Advanced is Test-mode only in both docs).
+- **Handed to other owners.** (Round 4: ADR-0019's "pending Jon (open question 9)" is correct again, because D-4 is a
+  working default awaiting Jon, not a decision.) The ADR-0014/0018/0019/0022 wording fixes (finding 30) read as done on re-check;
+  `scripts/spec/jsonschema_subset.py` (finding 6) belongs to the core gate and is not edited here.
+
+### Verification decisions (review round 4, 2026-10-07)
+
+The open items after round 3's fix-and-verify pass were settled in the Studio-owned files where the fix was precise
+and local, and registered otherwise in **`docs/spec/studio-open-findings.md`** (each entry with its severity, the
+ticket stage that must close it and a check that can fail). Fixed: the sync map must map every recorded segment of a
+match source (a restarted segment can no longer be dropped); a point's score or metric is bound to that point's keeper
+window; court audio (`primary-bed`, and an `alt-bed` from a match source) plays only under live segments, and a jump on
+the same source is a switch; a reservation funds one job and consumes only exact charged stages; a top-up can never
+reuse the initial quote (`initialQuoteId`); the quote carries `plannerChoice` and the model-provider consent; the
+profile contract carries the export-audio default; the backend designs gained the per-user quota aggregate, the
+planner spend bound, the server-path lesson deletion, the lesson-only observation quota, the plan-by-job key move, the
+host-route denial audit, `volatile` declarations, per-job retention and the cloud no-audio artifact. D-4 and D-5 went
+back to working defaults with open question 9 reopened (no founder decision is recorded). Registered: the small-n sync
+fitter start (SOF-R4-01), the core gate's pattern anchors (SOF-R4-02), Jon's free/paid and planner decision
+(SOF-R4-03), the cost of keeping cloud films indefinitely (SOF-R4-04) and re-verification of findings 13–48
+(SOF-R4-05).
+
 ### Studio tickets (S0–S3)
 
 `docs/spec/tickets.json` is the core DAG and says Studio is outside it; that file belongs to the core workflow and is
@@ -1328,7 +1499,7 @@ in the PR; every ticket keeps capture independent of Studio (hard rule 3).
 
 | ID | Ticket | Depends on | Acceptance | Evidence | Fallback | Out of scope |
 |---|---|---|---|---|---|---|
-| STU-00 | ADR-0002 "superseded in part by ADR-0014" note, through the ADR owner; glossary additions through its owner | — | Note and glossary terms merged; no other core text changed | ADR diff | ADR-0014's "amends" line stays the only link | Any core behaviour |
+| STU-00 | Glossary additions through its owner (ADR-0002 already carries "Status: amended by ADR-0014 (backend boundary only)"; verify it is still there) | — | Glossary terms merged; ADR-0002's amended note present; no other core text changed | glossary diff; `grep -n "amended by ADR-0014" docs/adr/0002-local-first-document-store.md` | ADR-0014's "amends" line stays the link | Any core behaviour |
 | STU-01 | `JovraStudioCore` contract types: decoders for every `jovra.*` Studio schema, canonical JSON, a manifest test that fails when a fixture is unconsumed | core `JovraCore` package | Every record, invalid case and vector under `spec/studio/fixtures` is consumed; canonical re-encoding is byte-identical; ECMA `$` semantics for patterns | `swift test --package-path ios/Packages/JovraStudioCore --filter Contracts`; `python3 scripts/spec/validate_studio.py` | — (pure code) | Media, UI |
 | STU-02 | EDL validator, clean alternate and bed rules in Swift (parity with `edl.py`) | STU-01 | Every `edit-plan.*` invalid case fails with the same code; every valid plan and `edl-context` vector passes as stored | `swift test … --filter EDL` | — | Compiler, renderer |
 | STU-03 | Sync fitter, hints and review gate in Swift (parity with `syncfit.py`, `records.check_sync_map`) | STU-01 | Every sync-fit vector equal to the reference; sync-map invalid cases and hint self-tests reproduced | `swift test … --filter Sync` | — | Anchor extraction |
@@ -1337,10 +1508,11 @@ in the PR; every ticket keeps capture independent of Studio (hard rule 3).
 | STU-06 | Entry rows on S03, S09, S15, N11 | STU-05; core owner's review | Five-tab bar unchanged; core smoke tests green; rows open ST21/ST29/ST34/ST40 | core and Studio UI tests | Rows hidden behind a flag until review | Any other core change |
 | STU-10 | `StudioProjectStore`, `KeeperSelector`, staleness | STU-01, core event fold | Keepers per effective point; correction marks plans and films stale (fold oracle) | `swift test … --filter Project` | — | Multi-angle |
 | STU-11 | `StoryDirector` grammar, `RulesPlanner`, `EDLCompiler` | STU-02, STU-10 | Each profile and length compiles a plan that STU-02 accepts; fallbacks produced when evidence is missing | `swift test … --filter Planner` | Documented fallback per profile | Model planner |
-| STU-12 | `LocalFilmRenderer` (iOS 26 path; iOS 18 path behind `#available`) and barcode/click fixture generation (ADR-0012) | STU-11 | Every S1 operation renders; cancelled and failed renders leave originals' hashes unchanged | `swift test` on macOS + simulator run | iOS 18 path reported UNVERIFIED until a device run | Cloud render |
+| STU-12 | `LocalFilmRenderer` (iOS 26 path; iOS 18 path behind `#available`) and barcode/click fixture generation (ADR-0012) | STU-11 | Every S1 operation renders; `freeze` is the exact still over the paused source duration (SD21) and every held frame's barcode equals the source frame's; cancelled and failed renders leave originals' hashes unchanged | `swift test` on macOS + simulator run | iOS 18 path reported UNVERIFIED until a device run | Cloud render |
 | STU-13 | `FilmVerifier` (frame count, grid, dims/aspect incl. 9:16 letterbox, codec facts, audio, overlay text) | STU-12 | Mutations fail: one-frame shift, missing replay label, dissolve over contact, stale revision, ½× from 30 fps, wrong aspect, wrong profile | `swift test … --filter Verifier` | A failed film is never `ready` | Real-footage frame equality |
 | STU-14 | `LessonJournal`, `ProgressStoryBuilder`, `PrepareForYouTube` | STU-10 | Lesson and progress fixtures; percentage-point deltas; no upload code path | `swift test … --filter Lessons` | Chronology when not comparable | YouTube upload |
-| STU-15 | S1 journey: five verified local films; Jon's old-match gate when the file arrives | STU-11…14 | S1 acceptance (a)–(f) and the old-match checklist | XCUITest journey + FilmVerifier reports | Gate waits for S2 normalization if the file is not CFR/unrotated/SDR | Real tennis accuracy claims |
+| STU-15 | S1 journey: five verified local films; Jon's old-match gate when the file arrives | STU-11…14, STU-16 | S1 acceptance (a)–(f) and the old-match checklist | XCUITest journey + FilmVerifier reports | Gate waits for S2 normalization if the file is not CFR/unrotated/SDR | Real tennis accuracy claims |
+| STU-16 | Export audio (D-1): Include audio switch on Save, Download, share link and YouTube package; no-audio verified artifact | STU-13, STU-14 | Default off for Coach's Cut, Match Broadcast, Progress Story; on and shown for Rally Pulse and Court Memories; junior mode no audio and no switch; the no-audio file has no audio track, the same video frames, and its own passing verification | `swift test … --filter Export` + XCUITest on ST39 | Save offers No audio only | Music, narration |
 | STU-20 | `ProxyNormalizer` (VFR, rotation, HDR, mixed fps) | STU-12 | Embedded-ID conformance 100%; original hashes unchanged | `swift test … --filter Normalize` | Refuse with "needs normalization" | Android media |
 | STU-21 | Anchor extraction (HitDetector reuse, manual markers, marked visual events), Sync desk and sheets, review | STU-03, STU-20 | multicam-sync §8.3 S1–S16 incl. mutations; reviewed needs ≥ 3 inliers | `swift test … --filter SyncS` + XCUITest | Manual markers only | Automatic visual detection |
 | STU-22 | Multi-angle player, `alt-bed`, Match Broadcast replays | STU-21, STU-13 | One audio bed (onset count equals plan); A/V ≤ 1 output frame; bed switches only at boundaries | FilmVerifier + player UI tests | Single-angle player | Live streams |
@@ -1354,11 +1526,14 @@ S4's evidence exists.
 
 ### Open questions for Jon
 
-1. **Court audio in films (D5).** Accept SD5 (explicit Sound choice, no default), or change D5 for Studio films?
+1. ~~**Court audio in films (D5).**~~ **Decided (D-1):** private in-app films keep court audio; saved and shared files
+   default to no audio with an Include audio switch, on by default (and always shown) for Rally Pulse and Court
+   Memories. Tell us if you want a different default.
 2. **Old match.** Please provide the file when S1's synthetic gate passes; it becomes the first real one-angle
    benchmark. Its format (fps, rotation, HDR, length) decides how much of S2's normalization S1 must pull forward.
-3. **Model access.** Confirm which accounts exist for `claude-opus-5-5` and `gpt-6-astra` before S4 planner tests;
-   no key is requested here and none goes into the app.
+3. **Model access.** Confirm which accounts exist for `claude-opus-5-5` and which real model ID "Astra" should map to
+   before S4 planner tests (the Astra adapter stays off until one is configured, D-5); no key is requested here and
+   none goes into the app.
 4. **Privacy label.** Model planning sends sampled frames off the device; confirm accepting the App Privacy change
    for opt-in Studio cloud when S4 nears live.
 5. **Remotion licence.** Does IDC have three or fewer people including contractors? If not, cloud Remotion overlays
@@ -1366,9 +1541,13 @@ S4's evidence exists.
 6. **Pricing structure** for the SD4 ADR after benchmarks (credits + per-film buttons recommended; first film free?).
 7. **Gateway hostname** under the IDC domain doctrine (product lane subdomain until a JOVRA deed exists).
 8. **Coach access.** Is a private lesson export (no account) enough for coaches in v1, with cloud coach grants in S4?
-9. **On-device Studio: free or premium?** Your addendum calls Studio "super-premium" and "the moat"; ADR-0013 keeps
-   core v1 free. Should multi-phone capture, multi-angle replay and the five on-device film styles be free (the
-   recommendation: they cost JOVRA nothing per use) or premium? Nothing already in core may become paid either way.
+9. **On-device Studio: free or premium? Cloud planning: opt-in or the normal cloud path?** (Reopened in round 4: the
+   round-3 "decision" had no founder source.) The working default (D-4, D-5) is: everything on the device is free,
+   including all five template films; the model-planned story and cloud production are the paid, opt-in line, shown
+   only as Sample quotes until a pricing ADR; the rules planner is the default and cloud planning runs only when the
+   player switches it on. Your addendum calls Studio "super-premium" and "the moat" and describes the cloud engine
+   with Opus 5.5 or Astra as the planner, so please confirm or change both. Register entry SOF-R4-03 in `docs/spec/studio-open-findings.md` tracks it. A later pricing ADR can still change this (the `localStudio` entitlement exists for
+   that), but nothing already in core may become paid either way.
 10. **"One feed analysed live".** v1 reads it as the primary's live picture plus live scoring, with automatic analysis
     after capture (as in core). Do you want automatic analysis during capture (for example live hit detection on the
     primary)? That would need its own thermal and battery measurements before it is promised.

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room command receipt (jovra.room.receipt/1)",
+  "description": "The only evidence that a command took effect. Pending until the host decides; then Accepted, Rejected, Expired or Conflicted. A successful send call is never a receipt. Capture requests keep one result per target device. Persisted under (authenticated memberId, commandId) with the command's canonical fingerprint (expiry.ageAtSendMs excluded), so a retry returns this receipt and a different payload under the same id is rejected. Rejections from channel authentication, issuer binding, session and epoch checks are never stored.",
+  "$ref": "#/$defs/receipt",
+  "required": ["schemaVersion"],
+  "$defs": {
+    "receipt": {
+      "type": "object",
+      "required": ["commandId", "sessionId", "hostEpoch", "type", "status", "reason", "canonicalEventRevision", "appliedRecordId", "conflict", "deviceResults"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.room.receipt/1"},
+        "commandId": {"$ref": "room-common.schema.json#/$defs/id"},
+        "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+        "hostEpoch": {"$ref": "room-common.schema.json#/$defs/hostEpoch"},
+        "type": {"$ref": "room-common.schema.json#/$defs/commandType"},
+        "status": {"$ref": "room-common.schema.json#/$defs/receiptStatus"},
+        "reason": {"oneOf": [{"type": "null"}, {"enum": ["offlineDraft", "unauthenticatedChannel", "issuerNotAuthenticated", "surfaceNotPermitted", "noTargets", "wrongSession", "staleEpoch", "unknownEpoch", "notMember", "roleNotGranted", "roleNotPermitted", "commandIdReuse", "ttlTooLong", "expired", "unboundedTransit", "unknownTarget", "baseRevisionStale", "undoTargetInvalid", "hostEpochChanged", "requiresResubmit"]}]},
+        "canonicalEventRevision": {"description": "The host's event revision after deciding (null while Pending).", "oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/revision"}]},
+        "appliedRecordId": {"description": "The event (PointWon/Undo) or note (MarkForReview) the command created, exactly once.", "oneOf": [{"type": "null"}, {"$ref": "room-common.schema.json#/$defs/id"}]},
+        "conflict": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["baseEventRevision", "currentEventRevision"],
+              "additionalProperties": false,
+              "properties": {
+                "baseEventRevision": {"$ref": "room-common.schema.json#/$defs/revision"},
+                "currentEventRevision": {"$ref": "room-common.schema.json#/$defs/revision"}
+              }
+            }
+          ]
+        },
+        "deviceResults": {
+          "type": "array", "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["deviceId", "status", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "deviceId": {"$ref": "room-common.schema.json#/$defs/id"},
+              "status": {"$ref": "room-common.schema.json#/$defs/deviceResultStatus"},
+              "reason": {"oneOf": [{"type": "null"}, {"enum": ["startRequested", "alreadyRecording", "finalizing", "stopRequested", "notRecording", "cameraPermissionDenied", "foregroundRequired", "finalizeFailed", "unreachable", "noAcknowledgement"]}]}
+            }
+          }
+        }
+      }
+    }
+  }
+}

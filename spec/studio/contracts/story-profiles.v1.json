@@ -49,6 +49,11 @@
         "replace a coach observation with a fabricated measurement"
       ],
       "fallback": "Use user notes and manually chosen clips when automatic observations are unavailable.",
+      "exportAudio": {
+        "includeByDefault": false,
+        "switchShown": true,
+        "juniorMode": "no-audio-no-switch"
+      },
       "grammar": {
         "durationSeconds": {
           "min": 180,
@@ -145,6 +150,11 @@
         "present a flat movie as interactive multi-angle replay"
       ],
       "fallback": "A complete one-angle match with chapter markers.",
+      "exportAudio": {
+        "includeByDefault": false,
+        "switchShown": true,
+        "juniorMode": "no-audio-no-switch"
+      },
       "grammar": {
         "durationSeconds": {
           "min": 300,
@@ -223,6 +233,11 @@
         "use an unlicensed popular song"
       ],
       "fallback": "Court-sound highlights with static titles.",
+      "exportAudio": {
+        "includeByDefault": true,
+        "switchShown": true,
+        "juniorMode": "no-audio-no-switch"
+      },
       "grammar": {
         "durationSeconds": {
           "min": 30,
@@ -307,6 +322,11 @@
         "select only successes while implying a complete statistic"
       ],
       "fallback": "A lesson chronology with user-authored reflections and no improvement metric.",
+      "exportAudio": {
+        "includeByDefault": false,
+        "switchShown": true,
+        "juniorMode": "no-audio-no-switch"
+      },
       "grammar": {
         "durationSeconds": {
           "min": 120,
@@ -392,6 +412,11 @@
         "reveal location when hidden"
       ],
       "fallback": "One-camera match excerpts with real stills and original audio.",
+      "exportAudio": {
+        "includeByDefault": true,
+        "switchShown": true,
+        "juniorMode": "no-audio-no-switch"
+      },
       "grammar": {
         "durationSeconds": {
           "min": 120,

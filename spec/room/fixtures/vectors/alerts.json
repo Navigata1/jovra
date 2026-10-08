@@ -1,0 +1,546 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "alerts",
+  "status": "AlertPolicy on the phone (watch spec 'Haptics and alerts'; ADR-0026 §8 as amended); times are phone monotonic ms",
+  "cases": [
+    {
+      "id": "raise-after-3s",
+      "why": "A recording camera Unknown for 3 s raises one deferred alert; the next point delivers its haptic",
+      "acceptanceRows": [
+        6,
+        19
+      ],
+      "steps": [
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 1000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 3999,
+          "op": "tick"
+        },
+        {
+          "t": 4000,
+          "op": "tick"
+        },
+        {
+          "t": 10000,
+          "op": "point"
+        }
+      ],
+      "expect": {
+        "events": [
+          {
+            "t": 4000,
+            "event": "raise",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          },
+          {
+            "t": 10000,
+            "event": "haptic",
+            "alertIds": [
+              "alert-1"
+            ],
+            "pattern": "deferred"
+          }
+        ],
+        "commandsIssued": []
+      }
+    },
+    {
+      "id": "blip-under-3s",
+      "why": "A shorter silence raises nothing",
+      "acceptanceRows": [
+        19
+      ],
+      "steps": [
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 1000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 3500,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 9000,
+          "op": "tick"
+        }
+      ],
+      "expect": {
+        "events": [],
+        "commandsIssued": []
+      }
+    },
+    {
+      "id": "never-recording",
+      "why": "A camera that was never freshly Recording raises nothing when it goes quiet",
+      "acceptanceRows": [
+        19
+      ],
+      "steps": [
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c6",
+          "freshness": "Fresh",
+          "captureState": "Saved"
+        },
+        {
+          "t": 1000,
+          "op": "status",
+          "deviceId": "c6",
+          "freshness": "Unknown",
+          "captureState": "Saved"
+        },
+        {
+          "t": 20000,
+          "op": "tick"
+        }
+      ],
+      "expect": {
+        "events": [],
+        "commandsIssued": []
+      }
+    },
+    {
+      "id": "deferral-45s",
+      "why": "With no point, the deferred haptic fires 45 s after the alert",
+      "acceptanceRows": [
+        19
+      ],
+      "steps": [
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 1000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 4000,
+          "op": "tick"
+        },
+        {
+          "t": 48999,
+          "op": "tick"
+        },
+        {
+          "t": 49000,
+          "op": "tick"
+        }
+      ],
+      "expect": {
+        "events": [
+          {
+            "t": 4000,
+            "event": "raise",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          },
+          {
+            "t": 49000,
+            "event": "haptic",
+            "alertIds": [
+              "alert-1"
+            ],
+            "pattern": "deferred"
+          }
+        ],
+        "commandsIssued": []
+      }
+    },
+    {
+      "id": "collapse",
+      "why": "Two pending alerts collapse into one haptic",
+      "acceptanceRows": [
+        19
+      ],
+      "steps": [
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c2",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 1000,
+          "op": "status",
+          "deviceId": "c2",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 2000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 4000,
+          "op": "tick"
+        },
+        {
+          "t": 5000,
+          "op": "tick"
+        },
+        {
+          "t": 8000,
+          "op": "point"
+        }
+      ],
+      "expect": {
+        "events": [
+          {
+            "t": 4000,
+            "event": "raise",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c2",
+            "severity": "deferred"
+          },
+          {
+            "t": 5000,
+            "event": "raise",
+            "alertId": "alert-2",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          },
+          {
+            "t": 8000,
+            "event": "haptic",
+            "alertIds": [
+              "alert-1",
+              "alert-2"
+            ],
+            "pattern": "deferred"
+          }
+        ],
+        "commandsIssued": []
+      }
+    },
+    {
+      "id": "clear-after-4s",
+      "why": "Fresh again for 4 s clears the alert; a cleared alert drops out of the pending haptic",
+      "acceptanceRows": [
+        19
+      ],
+      "steps": [
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 1000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 4000,
+          "op": "tick"
+        },
+        {
+          "t": 20000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 23999,
+          "op": "tick"
+        },
+        {
+          "t": 24000,
+          "op": "tick"
+        },
+        {
+          "t": 30000,
+          "op": "point"
+        }
+      ],
+      "expect": {
+        "events": [
+          {
+            "t": 4000,
+            "event": "raise",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          },
+          {
+            "t": 24000,
+            "event": "clear",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          }
+        ],
+        "commandsIssued": []
+      }
+    },
+    {
+      "id": "one-per-outage-and-5-min-cap",
+      "why": "One alert per outage; the same camera re-alerts at most once per 5 min",
+      "acceptanceRows": [
+        19
+      ],
+      "steps": [
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 1000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 4000,
+          "op": "tick"
+        },
+        {
+          "t": 5000,
+          "op": "point"
+        },
+        {
+          "t": 20000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 24000,
+          "op": "tick"
+        },
+        {
+          "t": 30000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 33000,
+          "op": "tick"
+        },
+        {
+          "t": 303999,
+          "op": "tick"
+        },
+        {
+          "t": 304000,
+          "op": "tick"
+        },
+        {
+          "t": 305000,
+          "op": "point"
+        }
+      ],
+      "expect": {
+        "events": [
+          {
+            "t": 4000,
+            "event": "raise",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          },
+          {
+            "t": 5000,
+            "event": "haptic",
+            "alertIds": [
+              "alert-1"
+            ],
+            "pattern": "deferred"
+          },
+          {
+            "t": 24000,
+            "event": "clear",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          },
+          {
+            "t": 304000,
+            "event": "raise",
+            "alertId": "alert-2",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          },
+          {
+            "t": 305000,
+            "event": "haptic",
+            "alertIds": [
+              "alert-2"
+            ],
+            "pattern": "deferred"
+          }
+        ],
+        "commandsIssued": []
+      }
+    },
+    {
+      "id": "ack-closes-outage",
+      "why": "Acknowledging clears it on watch and phone, drops its haptic, and the same outage never re-raises",
+      "acceptanceRows": [
+        19
+      ],
+      "steps": [
+        {
+          "t": 0,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Fresh",
+          "captureState": "Recording"
+        },
+        {
+          "t": 1000,
+          "op": "status",
+          "deviceId": "c3",
+          "freshness": "Unknown",
+          "captureState": "Recording"
+        },
+        {
+          "t": 4000,
+          "op": "tick"
+        },
+        {
+          "t": 6000,
+          "op": "ack",
+          "alertId": "alert-1"
+        },
+        {
+          "t": 8000,
+          "op": "point"
+        },
+        {
+          "t": 60000,
+          "op": "tick"
+        },
+        {
+          "t": 305000,
+          "op": "tick"
+        }
+      ],
+      "expect": {
+        "events": [
+          {
+            "t": 4000,
+            "event": "raise",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          },
+          {
+            "t": 6000,
+            "event": "ack",
+            "alertId": "alert-1",
+            "kind": "cameraUnknown",
+            "deviceId": "c3",
+            "severity": "deferred"
+          }
+        ],
+        "commandsIssued": []
+      }
+    },
+    {
+      "id": "own-recording-failed-critical",
+      "why": "The wearer's own phone failing to record is critical: raised and vibrated at once",
+      "acceptanceRows": [
+        19
+      ],
+      "steps": [
+        {
+          "t": 5000,
+          "op": "own",
+          "kind": "ownRecordingFailed",
+          "deviceId": "c1"
+        }
+      ],
+      "expect": {
+        "events": [
+          {
+            "t": 5000,
+            "event": "raise",
+            "alertId": "alert-1",
+            "kind": "ownRecordingFailed",
+            "deviceId": "c1",
+            "severity": "critical"
+          },
+          {
+            "t": 5000,
+            "event": "haptic",
+            "alertIds": [
+              "alert-1"
+            ],
+            "pattern": "critical"
+          }
+        ],
+        "commandsIssued": []
+      }
+    }
+  ]
+}

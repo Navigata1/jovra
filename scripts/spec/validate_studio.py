@@ -264,7 +264,39 @@ def check_bundle(ctx: Ctx, rep: Report) -> None:
     def plan(b, plan_id):
         return [p for p in b["plans"] if p["planId"] == plan_id][0]
 
+    def unmapped_restart(b):
+        # camera-2 restarted (a second recorded segment) but the sync map keeps only its first piece: the one piece
+        # must never stand for the whole recording (the lock is re-pinned so only the sync rule can refuse it)
+        src = b["manifest"]["sources"][1]
+        seg1 = copy.deepcopy(src["segments"][0])
+        seg1.update(segmentId="seg-1", index=1, reason="restart")
+        src["segments"].append(seg1)
+        b["lock"]["sourceManifest"]["sha256"] = bundle.canonical_sha256(b["manifest"])
+
+    def topup_from_initial_quote(b):
+        # one accepted quote funding two holds: the initial reserve and a top-up keyed by the same quote
+        res = b["reservations"]["res-0002"]
+        e0 = res["entries"][0]
+        e0["credits"] = 2
+        top = dict(e0, entryId="e-1b", key=e0["key"] + ":topup:" + res["initialQuoteId"])
+        res["entries"].insert(1, top)
+
+    def topup_leaves_initial_accepted(b):
+        # a real top-up by a second quote, but the initial quote is still 'accepted' rather than superseded
+        res = b["reservations"]["res-0002"]
+        e0 = res["entries"][0]
+        e0["credits"] = 2
+        res["entries"].insert(1, dict(e0, entryId="e-1b", key=e0["key"] + ":topup:quote-test-02"))
+        b["quotes"]["quote-test-02"] = dict(copy.deepcopy(b["quotes"]["quote-test-01"]), quoteId="quote-test-02")
+        res["quoteId"] = "quote-test-02"
+        b["jobs"]["job-film-01"]["quoteId"] = "quote-test-02"
+
     tests = [
+        ("restart-segment-unmapped", "unmappedSegment", unmapped_restart),
+        ("model-film-from-rules-quote", "plannerMismatch",
+         lambda b: b["artifacts"][0]["bindings"]["planner"].update(kind="model", modelId="claude-opus-5-5")),
+        ("topup-from-initial-quote", "moneyMismatch", topup_from_initial_quote),
+        ("topup-leaves-initial-quote-accepted", "moneyMismatch", topup_leaves_initial_accepted),
         ("coverage-rate-tampered", "coverageMismatch",
          lambda b: plan(b, "coach-cut-serve")["sources"][1]["coverage"][0]["rate"].update(num=1_000_000_000)),
         ("sync-not-reviewed", "unreviewedSync",

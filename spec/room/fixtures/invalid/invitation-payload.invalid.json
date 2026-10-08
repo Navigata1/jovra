@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "jovra.room-fixture.invalid-cases/1",
+  "base": "records/invitation-payload.json",
+  "cases": [
+    {
+      "id": "web-url-endpoint",
+      "why": "A QR never makes the client fetch an arbitrary URL",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/endpoints/1",
+          "value": {
+            "kind": "url",
+            "url": "https://jovra.example/join"
+          }
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "hostname-endpoint",
+      "why": "Endpoints are IP literals or DNS-SD instances, never hostnames",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/endpoints/1/address",
+          "value": "court-relay.example.com"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "public-ip-endpoint",
+      "why": "Only private or link-local LAN addresses",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/endpoints/1/address",
+          "value": "8.8.8.8"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "endpointNotAllowed"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "loopback-endpoint",
+      "why": "Loopback is not a peer",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/endpoints/1/address",
+          "value": "127.0.0.1"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "endpointNotAllowed"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "cgnat-endpoint",
+      "why": "Carrier-grade NAT space is not the court LAN",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/endpoints/1/address",
+          "value": "100.64.0.9"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "endpointNotAllowed"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "other-service-type",
+      "why": "Only the JOVRA room service",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/endpoints/0/serviceType",
+          "value": "_http._tcp"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "short-token",
+      "why": "At least 128 bits",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/joinToken",
+          "value": "abc123"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        4
+      ]
+    },
+    {
+      "id": "callback-url",
+      "why": "No URL fields at all",
+      "patch": [
+        {
+          "op": "add",
+          "path": "/callbackUrl",
+          "value": "https://jovra.example/cb"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      },
+      "acceptanceRows": [
+        5
+      ]
+    },
+    {
+      "id": "long-lifetime",
+      "why": "At most 10 minutes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/expiresAt",
+          "value": "2026-10-07T22:10:00Z"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteLifetime"
+      },
+      "acceptanceRows": [
+        4
+      ]
+    }
+  ]
+}

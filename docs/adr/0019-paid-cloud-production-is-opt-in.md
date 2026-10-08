@@ -43,7 +43,10 @@ quoted and paid. Nothing the user already has is ever locked.
 3. **Cap.** The budget is checked before every stage and every retry. A job that would overrun stops at
    `budget_exceeded` with a resumable offer. Model, effort, quality and retention never escalate automatically.
 4. **Idempotent reservation.** The maximum exposure is reserved before any work starts, under the key
-   `(project, plan revision, output spec)`, computed by the server from the stored plan version. The quote and the
+   `(project, plan revision, output spec)`, computed by the server from the stored plan version. While the job has
+   not produced its plan yet, the plan itself stands in for the revision, and an empty revision counts as a value, so
+   two identical "plan by job" quotes still share one key (`docs/backend/security-model.md` §13.6). A revision inside
+   the same job moves the key with it. The quote and the
    consent in it are bound to the same output spec hash, and an accepted quote funds exactly one reservation. The key
    does not include the quote id, so re-quoting identical work can never open a second hold; after `budget_exceeded`
    an accepted re-quote **tops up** the existing reservation (contract vector `budget-exceeded-topup-resumes`). A
@@ -51,7 +54,8 @@ quoted and paid. Nothing the user already has is ever locked.
    `(job, stage)`: a failed attempt is not charged and a retried stage is never charged twice (the pricing research's
    retry overhead is operator cost inside the internal cap). Failure before `ready`, or cancellation, releases every
    unconsumed unit. A film that fails verification is never charged as delivered. Receipts keep the estimate, cap,
-   actual usage and refunds separate. Open caps are bounded per owner and per environment per day.
+   actual usage and refunds separate. Open caps are bounded per owner and per environment per day, and a missing or empty limit refuses
+   rather than allows (`security-model.md` §13.7).
 
 **Who can spend.** Only the project owner can accept a quote, with a real (non-anonymous) account: a live account in
 live, and in test an allow-listed tester whose quotes carry Sample credits (the gateway checks the tester flag in test,

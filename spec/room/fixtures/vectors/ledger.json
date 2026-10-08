@@ -1,0 +1,5764 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "ledger",
+  "status": "Sample host ledger at revision 42 with six members (the host holds scorer and capture-controller) and six recording cameras; each submit names the authenticated channel peer",
+  "cases": [
+    {
+      "id": "duplicate-identical",
+      "why": "An identical retry returns the original receipt; one event",
+      "acceptanceRows": [
+        9
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 43,
+            "eventCount": 1,
+            "tally": {
+              "jon": 1
+            },
+            "securityLog": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-id-different-payload",
+      "why": "Reusing an id with different contents is rejected and security-logged; the original stands",
+      "acceptanceRows": [
+        10
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "alex"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "commandIdReuse",
+            "canonicalEventRevision": 43,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 43,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "commandIdReuse",
+            "canonicalEventRevision": 43,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 43,
+            "eventCount": 1,
+            "tally": {
+              "jon": 1
+            },
+            "securityLog": [
+              {
+                "commandId": "cmd-p43",
+                "code": "commandIdReuse"
+              },
+              {
+                "commandId": "cmd-p43",
+                "code": "commandIdReuse"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "honest-retry-refreshes-age",
+      "why": "D4: a retry that recomputes ageAtSendMs is the same command (the fingerprint excludes it), not an attack",
+      "acceptanceRows": [
+        9,
+        10
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Ready",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-start-c4",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c4"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": [
+              {
+                "deviceId": "c4",
+                "status": "Pending",
+                "reason": null
+              }
+            ]
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-start-c4",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 5000
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c4"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": [
+              {
+                "deviceId": "c4",
+                "status": "Pending",
+                "reason": null
+              }
+            ]
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "securityLog": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-scorers-same-revision",
+      "why": "Two writes against revision 42: one update, one visible conflict",
+      "acceptanceRows": [
+        11
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43-b",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer2",
+              "deviceId": "p-scorer2",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "alex"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer2"
+          },
+          "expect": {
+            "status": "Conflicted",
+            "reason": "baseRevisionStale",
+            "canonicalEventRevision": 43,
+            "appliedRecordId": null,
+            "conflict": {
+              "baseEventRevision": 42,
+              "currentEventRevision": 43
+            },
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43-b2",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer2",
+              "deviceId": "p-scorer2",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 43,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "alex"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer2"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 44,
+            "appliedRecordId": "evt-44",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 44,
+            "eventCount": 2,
+            "tally": {
+              "alex": 1,
+              "jon": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "undo-recomputes",
+      "why": "Undo is an event naming its target; totals are recomputed from the log",
+      "acceptanceRows": [
+        12
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p44",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 43,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "alex"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 44,
+            "appliedRecordId": "evt-44",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-u45",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 44,
+            "payload": {
+              "type": "Undo",
+              "targetEventId": "evt-43"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 45,
+            "appliedRecordId": "evt-45",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 45,
+            "eventCount": 3,
+            "tally": {
+              "alex": 1
+            }
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-u46",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 45,
+            "payload": {
+              "type": "Undo",
+              "targetEventId": "evt-43"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "undoTargetInvalid",
+            "canonicalEventRevision": 45,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-u46b",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 45,
+            "payload": {
+              "type": "Undo",
+              "targetEventId": "evt-45"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "undoTargetInvalid",
+            "canonicalEventRevision": 45,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-u46c",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 44,
+            "payload": {
+              "type": "Undo",
+              "targetEventId": "evt-44"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Conflicted",
+            "reason": "baseRevisionStale",
+            "canonicalEventRevision": 45,
+            "appliedRecordId": null,
+            "conflict": {
+              "baseEventRevision": 44,
+              "currentEventRevision": 45
+            },
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 45,
+            "eventCount": 3,
+            "tally": {
+              "alex": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "viewer-denied",
+      "why": "Pairing or claiming does not grant a role",
+      "acceptanceRows": [
+        14
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-v1",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-viewer",
+              "deviceId": "p-viewer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "viewer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-viewer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "roleNotPermitted",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-v2",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-viewer",
+              "deviceId": "p-viewer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "viewer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-viewer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "roleNotPermitted",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-v3",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-viewer",
+              "deviceId": "w-viewer",
+              "surface": "watch",
+              "bridgeDeviceId": "p-viewer"
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-viewer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "roleNotGranted",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-v4",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-stranger",
+              "deviceId": "p-stranger",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-stranger"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "notMember",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 42,
+            "eventCount": 0,
+            "captureStates": {
+              "c1": "Recording",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Recording",
+              "c5": "Recording",
+              "c6": "Recording"
+            },
+            "securityLog": [
+              {
+                "commandId": "cmd-v3",
+                "code": "roleNotGranted"
+              },
+              {
+                "commandId": "cmd-v4",
+                "code": "notMember"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "forged-issuer",
+      "why": "D1: the issuer must be the authenticated channel peer; a body claiming another member, device or watch is refused and logged",
+      "acceptanceRows": [
+        5,
+        14
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-f1",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-viewer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-viewer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "issuerNotAuthenticated",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-f2",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-viewer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "issuerNotAuthenticated",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-f3",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "w-unknown",
+              "surface": "watch",
+              "bridgeDeviceId": "p-viewer"
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-viewer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "issuerNotAuthenticated",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-f4",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "w-unknown",
+              "surface": "watch",
+              "bridgeDeviceId": "p-scorer"
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "issuerNotAuthenticated",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-f5",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": null,
+          "expect": {
+            "status": "Rejected",
+            "reason": "unauthenticatedChannel",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-f6",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "w-scorer",
+              "surface": "watch",
+              "bridgeDeviceId": "p-scorer"
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 43,
+            "eventCount": 1,
+            "tally": {
+              "jon": 1
+            },
+            "captureStates": {
+              "c1": "Recording",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Recording",
+              "c5": "Recording",
+              "c6": "Recording"
+            },
+            "securityLog": [
+              {
+                "commandId": "cmd-f1",
+                "code": "issuerNotAuthenticated"
+              },
+              {
+                "commandId": "cmd-f2",
+                "code": "issuerNotAuthenticated"
+              },
+              {
+                "commandId": "cmd-f3",
+                "code": "issuerNotAuthenticated"
+              },
+              {
+                "commandId": "cmd-f4",
+                "code": "issuerNotAuthenticated"
+              },
+              {
+                "commandId": "cmd-f5",
+                "code": "unauthenticatedChannel"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "unauthenticated-not-cached",
+      "why": "D10: a non-member cannot burn a member's commandId; ids are scoped to the authenticated member",
+      "acceptanceRows": [
+        10
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-next",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-stranger",
+              "deviceId": "p-stranger",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-stranger"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "notMember",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-next",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-next",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer2",
+              "deviceId": "p-scorer2",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "alex"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer2"
+          },
+          "expect": {
+            "status": "Conflicted",
+            "reason": "baseRevisionStale",
+            "canonicalEventRevision": 43,
+            "appliedRecordId": null,
+            "conflict": {
+              "baseEventRevision": 42,
+              "currentEventRevision": 43
+            },
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 43,
+            "securityLog": [
+              {
+                "commandId": "cmd-next",
+                "code": "notMember"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "epoch-rejection-not-cached",
+      "why": "D10: a command for the next epoch is refused but not burned; after host recovery at that epoch the same bytes apply",
+      "acceptanceRows": [
+        5,
+        17
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-e4",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 4,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "unknownEpoch",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "beginEpoch",
+          "newEpoch": 4
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-e4",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 4,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-e3",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "staleEpoch",
+            "canonicalEventRevision": 43,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "hostEpoch": 4,
+            "eventRevision": 43,
+            "securityLog": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "host-holds-two-roles",
+      "why": "Grants are a set: the host scores and controls capture; a role it does not hold is refused",
+      "acceptanceRows": [
+        14
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-h1",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-host",
+              "deviceId": "c1",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "c1"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-h2",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-host",
+              "deviceId": "c1",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c2"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopOne",
+              "targetLabel": "Camera 2 · far baseline"
+            }
+          },
+          "peer": {
+            "deviceId": "c1"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": [
+              {
+                "deviceId": "c2",
+                "status": "Pending",
+                "reason": null
+              }
+            ]
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-h3",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-host",
+              "deviceId": "c1",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "marker",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "MarkForReview",
+              "reason": "point",
+              "pointEventId": "sample-point-42",
+              "sourceRefs": [
+                {
+                  "deviceId": "c1",
+                  "captureInstanceId": "sample-c1-take1",
+                  "segmentId": "s1",
+                  "frameRange": {
+                    "startFrame": 45210,
+                    "endFrame": 45390
+                  }
+                }
+              ],
+              "note": null
+            }
+          },
+          "peer": {
+            "deviceId": "c1"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "roleNotGranted",
+            "canonicalEventRevision": 43,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "watch-cannot-control-capture",
+      "why": "A watch never issues capture requests, even for a capture-controller (ADR-0026 as amended)",
+      "acceptanceRows": [
+        14,
+        16
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-w1",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "w-controller",
+              "surface": "watch",
+              "bridgeDeviceId": "p-controller"
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "surfaceNotPermitted",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "captureStates": {
+              "c1": "Recording",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Recording",
+              "c5": "Recording",
+              "c6": "Recording"
+            },
+            "securityLog": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "marker-and-bounce-marks",
+      "why": "Marks are source-linked notes with receipts; they never move the score revision",
+      "acceptanceRows": [
+        22
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-m1",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-marker",
+              "deviceId": "w-marker",
+              "surface": "watch",
+              "bridgeDeviceId": "p-marker"
+            },
+            "role": "marker",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "MarkForReview",
+              "reason": "point",
+              "pointEventId": "sample-point-42",
+              "sourceRefs": [
+                {
+                  "deviceId": "c1",
+                  "captureInstanceId": "sample-c1-take1",
+                  "segmentId": "s1",
+                  "frameRange": {
+                    "startFrame": 45210,
+                    "endFrame": 45390
+                  }
+                }
+              ],
+              "note": null
+            }
+          },
+          "peer": {
+            "deviceId": "p-marker"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": "mark-1",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-m2",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-marker",
+              "deviceId": "w-marker",
+              "surface": "watch",
+              "bridgeDeviceId": "p-marker"
+            },
+            "role": "marker",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "MarkForReview",
+              "reason": "uncertainBounce",
+              "pointEventId": null,
+              "sourceRefs": [
+                {
+                  "deviceId": "c1",
+                  "captureInstanceId": "sample-c1-take1",
+                  "segmentId": "s1",
+                  "frameRange": {
+                    "startFrame": 45210,
+                    "endFrame": 45390
+                  }
+                }
+              ],
+              "note": null
+            }
+          },
+          "peer": {
+            "deviceId": "p-marker"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": "mark-2",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-m3",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-marker",
+              "deviceId": "w-marker",
+              "surface": "watch",
+              "bridgeDeviceId": "p-marker"
+            },
+            "role": "marker",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-marker"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "roleNotPermitted",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 42,
+            "eventCount": 0,
+            "markCount": 2,
+            "tally": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "start-denied-or-background",
+      "why": "Start is a request: permission and foreground decide on each phone; no fictitious Recording",
+      "acceptanceRows": [
+        15
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Ready",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "denied"
+          },
+          "c3": {
+            "captureState": "Ready",
+            "reachable": true,
+            "foreground": false,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Ready",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-start",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c2",
+                "c3",
+                "c4"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": [
+              {
+                "deviceId": "c2",
+                "status": "Pending",
+                "reason": null
+              },
+              {
+                "deviceId": "c3",
+                "status": "Pending",
+                "reason": null
+              },
+              {
+                "deviceId": "c4",
+                "status": "Pending",
+                "reason": null
+              }
+            ]
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "deliver",
+          "commandId": "cmd-start",
+          "expect": {
+            "deviceResults": [
+              {
+                "deviceId": "c2",
+                "status": "Denied",
+                "reason": "cameraPermissionDenied"
+              },
+              {
+                "deviceId": "c3",
+                "status": "Denied",
+                "reason": "foregroundRequired"
+              },
+              {
+                "deviceId": "c4",
+                "status": "Accepted",
+                "reason": "startRequested"
+              }
+            ],
+            "summary": {
+              "targets": 3,
+              "byStatus": {
+                "Accepted": 1,
+                "Denied": 2
+              },
+              "banner": "partial"
+            }
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "captureStates": {
+              "c1": "Recording",
+              "c2": "Ready",
+              "c3": "Ready",
+              "c4": "Starting",
+              "c5": "Recording",
+              "c6": "Recording"
+            }
+          }
+        },
+        {
+          "op": "deviceReport",
+          "deviceId": "c4",
+          "captureState": "Recording"
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "captureStates": {
+              "c1": "Recording",
+              "c2": "Ready",
+              "c3": "Ready",
+              "c4": "Recording",
+              "c5": "Recording",
+              "c6": "Recording"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "start-while-finalizing",
+      "why": "D13: a device still finalizing its previous take denies a start and never reports Starting",
+      "acceptanceRows": [
+        15
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Finalizing",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-start-c1",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c1"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": [
+              {
+                "deviceId": "c1",
+                "status": "Pending",
+                "reason": null
+              }
+            ]
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "deliver",
+          "commandId": "cmd-start-c1",
+          "expect": {
+            "deviceResults": [
+              {
+                "deviceId": "c1",
+                "status": "Denied",
+                "reason": "finalizing"
+              }
+            ],
+            "summary": {
+              "targets": 1,
+              "byStatus": {
+                "Denied": 1
+              },
+              "banner": "partial"
+            }
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "captureStates": {
+              "c1": "Finalizing",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Recording",
+              "c5": "Recording",
+              "c6": "Recording"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "stop-all-partial",
+      "why": "A room-wide stop is a fan-out with individual results; no blanket success",
+      "acceptanceRows": [
+        16
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": false,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted",
+            "ackLost": true
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted",
+            "stopFault": true
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Saved",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-stop-all",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": [
+              {
+                "deviceId": "c1",
+                "status": "Pending",
+                "reason": null
+              },
+              {
+                "deviceId": "c2",
+                "status": "Pending",
+                "reason": null
+              },
+              {
+                "deviceId": "c3",
+                "status": "Pending",
+                "reason": null
+              },
+              {
+                "deviceId": "c4",
+                "status": "Pending",
+                "reason": null
+              },
+              {
+                "deviceId": "c5",
+                "status": "Pending",
+                "reason": null
+              },
+              {
+                "deviceId": "c6",
+                "status": "Pending",
+                "reason": null
+              }
+            ]
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "deliver",
+          "commandId": "cmd-stop-all",
+          "expect": {
+            "deviceResults": [
+              {
+                "deviceId": "c1",
+                "status": "Accepted",
+                "reason": "stopRequested"
+              },
+              {
+                "deviceId": "c2",
+                "status": "TimedOut",
+                "reason": "unreachable"
+              },
+              {
+                "deviceId": "c3",
+                "status": "Unknown",
+                "reason": "noAcknowledgement"
+              },
+              {
+                "deviceId": "c4",
+                "status": "Failed",
+                "reason": "finalizeFailed"
+              },
+              {
+                "deviceId": "c5",
+                "status": "Accepted",
+                "reason": "stopRequested"
+              },
+              {
+                "deviceId": "c6",
+                "status": "Accepted",
+                "reason": "notRecording"
+              }
+            ],
+            "summary": {
+              "targets": 6,
+              "byStatus": {
+                "Accepted": 3,
+                "Failed": 1,
+                "TimedOut": 1,
+                "Unknown": 1
+              },
+              "banner": "partial"
+            }
+          }
+        },
+        {
+          "op": "deliver",
+          "commandId": "cmd-stop-all",
+          "expect": {
+            "deviceResults": [
+              {
+                "deviceId": "c1",
+                "status": "Accepted",
+                "reason": "stopRequested"
+              },
+              {
+                "deviceId": "c2",
+                "status": "TimedOut",
+                "reason": "unreachable"
+              },
+              {
+                "deviceId": "c3",
+                "status": "Unknown",
+                "reason": "noAcknowledgement"
+              },
+              {
+                "deviceId": "c4",
+                "status": "Failed",
+                "reason": "finalizeFailed"
+              },
+              {
+                "deviceId": "c5",
+                "status": "Accepted",
+                "reason": "stopRequested"
+              },
+              {
+                "deviceId": "c6",
+                "status": "Accepted",
+                "reason": "notRecording"
+              }
+            ],
+            "summary": {
+              "targets": 6,
+              "byStatus": {
+                "Accepted": 3,
+                "Failed": 1,
+                "TimedOut": 1,
+                "Unknown": 1
+              },
+              "banner": "partial"
+            }
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "captureStates": {
+              "c1": "Finalizing",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Recording",
+              "c5": "Finalizing",
+              "c6": "Saved"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "stop-all-no-cameras",
+      "why": "D12: a capture request with nothing to target is refused, never an Accepted receipt with no results",
+      "acceptanceRows": [
+        16
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {}
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-stop-all",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "noTargets",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "stop-one",
+      "why": "Stop one names one target and touches only it",
+      "acceptanceRows": [
+        16
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-stop-c1",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c1"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopOne",
+              "targetLabel": "Camera 1 · near baseline"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": [
+              {
+                "deviceId": "c1",
+                "status": "Pending",
+                "reason": null
+              }
+            ]
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "deliver",
+          "commandId": "cmd-stop-c1",
+          "expect": {
+            "deviceResults": [
+              {
+                "deviceId": "c1",
+                "status": "Accepted",
+                "reason": "stopRequested"
+              }
+            ],
+            "summary": {
+              "targets": 1,
+              "byStatus": {
+                "Accepted": 1
+              },
+              "banner": "allConfirmed"
+            }
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "captureStates": {
+              "c1": "Finalizing",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Recording",
+              "c5": "Recording",
+              "c6": "Recording"
+            }
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-stop-c9",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c9"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopOne",
+              "targetLabel": "Camera 1 · near baseline"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "unknownTarget",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "capture-expiry",
+      "why": "Capture requests expire on unbounded or excessive age; score commands rely on the revision instead",
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-stop-all",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Expired",
+            "reason": "unboundedTransit",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": false
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-stop-late",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 20000
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Expired",
+            "reason": "expired",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 11000,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-stop-long",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "allCameras",
+              "deviceIds": []
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StopAllRequest",
+              "targetLabel": "All 6 cameras",
+              "confirmed": true
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "ttlTooLong",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-queued-point",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": false
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-old-point",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 5000,
+              "ageAtSendMs": 4000
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 43,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Expired",
+            "reason": "expired",
+            "canonicalEventRevision": 43,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 900,
+            "hostHoldMs": 200
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 43,
+            "captureStates": {
+              "c1": "Recording",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Recording",
+              "c5": "Recording",
+              "c6": "Recording"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "delivery-fails-closed",
+      "why": "D5: a missing, partial or negative transit observation is unbounded transit; it can never extend a TTL",
+      "acceptanceRows": [
+        8
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Ready",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-d1",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c4"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Expired",
+            "reason": "unboundedTransit",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-d2",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c4"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Expired",
+            "reason": "unboundedTransit",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-d3",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 20000
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c4"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Expired",
+            "reason": "unboundedTransit",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": -10000,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-d4",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c4"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Expired",
+            "reason": "unboundedTransit",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          },
+          "delivery": {
+            "transitMs": 100,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-d5",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-controller",
+              "deviceId": "p-controller",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "capture-controller",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 15000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "device",
+              "deviceIds": [
+                "c4"
+              ]
+            },
+            "baseEventRevision": null,
+            "payload": {
+              "type": "StartRequest"
+            }
+          },
+          "peer": {
+            "deviceId": "p-controller"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": [
+              {
+                "deviceId": "c4",
+                "status": "Pending",
+                "reason": null
+              }
+            ]
+          },
+          "delivery": {
+            "transitBounded": true,
+            "transitMs": 40,
+            "hostHoldMs": 0
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "captureStates": {
+              "c1": "Recording",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Ready",
+              "c5": "Recording",
+              "c6": "Recording"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "session-and-epoch",
+      "why": "Commands bound to another session or epoch are refused",
+      "acceptanceRows": [
+        5
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-e1",
+            "sessionId": "other-room",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "wrongSession",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-e2",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 2,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "staleEpoch",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-e3",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 4,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Rejected",
+            "reason": "unknownEpoch",
+            "canonicalEventRevision": 42,
+            "appliedRecordId": null,
+            "conflict": null,
+            "deviceResults": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "restart-no-duplicate",
+      "why": "After process death (or a fold/rotation recreation) an identical retry still applies once",
+      "acceptanceRows": [
+        1,
+        3
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "restart"
+        },
+        {
+          "op": "submit",
+          "command": {
+            "schemaVersion": "jovra.room.command/1",
+            "commandId": "cmd-p43",
+            "sessionId": "sample-jon-alex",
+            "hostEpoch": 3,
+            "issuer": {
+              "memberId": "m-scorer",
+              "deviceId": "p-scorer",
+              "surface": "phone",
+              "bridgeDeviceId": null
+            },
+            "role": "scorer",
+            "issuedAt": "2026-10-07T21:30:00Z",
+            "issuedFreshness": {
+              "basedOnSnapshotSeq": 8,
+              "basedOnFreshness": "Fresh"
+            },
+            "expiry": {
+              "ttlMs": 60000,
+              "ageAtSendMs": 200
+            },
+            "target": {
+              "scope": "session",
+              "deviceIds": []
+            },
+            "baseEventRevision": 42,
+            "payload": {
+              "type": "PointWon",
+              "winnerPlayerId": "jon"
+            }
+          },
+          "peer": {
+            "deviceId": "p-scorer"
+          },
+          "expect": {
+            "status": "Accepted",
+            "reason": null,
+            "canonicalEventRevision": 43,
+            "appliedRecordId": "evt-43",
+            "conflict": null,
+            "deviceResults": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventRevision": 43,
+            "eventCount": 1,
+            "tally": {
+              "jon": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "link-lost-no-stop",
+      "why": "Disconnect never stops cameras",
+      "acceptanceRows": [
+        17
+      ],
+      "initial": {
+        "sessionId": "sample-jon-alex",
+        "hostEpoch": 3,
+        "eventRevision": 42,
+        "members": {
+          "m-scorer": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer",
+            "watchDeviceIds": [
+              "w-scorer"
+            ]
+          },
+          "m-scorer2": {
+            "roles": [
+              "scorer"
+            ],
+            "deviceId": "p-scorer2",
+            "watchDeviceIds": []
+          },
+          "m-viewer": {
+            "roles": [
+              "viewer"
+            ],
+            "deviceId": "p-viewer",
+            "watchDeviceIds": [
+              "w-viewer"
+            ]
+          },
+          "m-marker": {
+            "roles": [
+              "marker"
+            ],
+            "deviceId": "p-marker",
+            "watchDeviceIds": [
+              "w-marker"
+            ]
+          },
+          "m-controller": {
+            "roles": [
+              "capture-controller"
+            ],
+            "deviceId": "p-controller",
+            "watchDeviceIds": [
+              "w-controller"
+            ]
+          },
+          "m-host": {
+            "roles": [
+              "capture-controller",
+              "scorer"
+            ],
+            "deviceId": "c1",
+            "watchDeviceIds": []
+          }
+        },
+        "devices": {
+          "c1": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c2": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c3": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c4": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c5": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          },
+          "c6": {
+            "captureState": "Recording",
+            "reachable": true,
+            "foreground": true,
+            "cameraPermission": "granted"
+          }
+        }
+      },
+      "steps": [
+        {
+          "op": "linkLost",
+          "expect": {
+            "commandsIssued": []
+          }
+        },
+        {
+          "op": "assert",
+          "expect": {
+            "eventCount": 0,
+            "captureStates": {
+              "c1": "Recording",
+              "c2": "Recording",
+              "c3": "Recording",
+              "c4": "Recording",
+              "c5": "Recording",
+              "c6": "Recording"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

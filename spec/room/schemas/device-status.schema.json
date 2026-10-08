@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room device status (jovra.room.device-status/1)",
+  "description": "A camera's own report of its actual capture state (sent about every 2 s in the foreground). Standalone it carries schemaVersion, sessionId and hostEpoch; embedded in a room snapshot it inherits them and the host adds ageAtHostMs. There is no freshness or 'connected' field: freshness is derived by each receiver. Device clocks and durations are not media-alignment evidence.",
+  "$ref": "#/$defs/deviceStatus",
+  "required": ["schemaVersion", "sessionId", "hostEpoch"],
+  "$defs": {
+    "deviceStatus": {
+      "type": "object",
+      "required": ["deviceId", "captureInstanceId", "segmentId", "deviceSeq", "captureState", "lastReportedElapsedMs", "observations"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {"const": "jovra.room.device-status/1"},
+        "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+        "hostEpoch": {"$ref": "room-common.schema.json#/$defs/hostEpoch"},
+        "deviceId": {"description": "Bound to authenticated membership at join, never to a caller-supplied name.", "$ref": "room-common.schema.json#/$defs/id"},
+        "captureInstanceId": {"description": "New for every capture start; deviceSeq may restart with it.", "$ref": "room-common.schema.json#/$defs/id"},
+        "segmentId": {"$ref": "room-common.schema.json#/$defs/id"},
+        "deviceSeq": {"description": "Monotonic within one captureInstanceId.", "$ref": "room-common.schema.json#/$defs/seq"},
+        "captureState": {"$ref": "room-common.schema.json#/$defs/captureState"},
+        "captureRole": {"enum": ["primary", "camera"]},
+        "lastReportedElapsedMs": {"description": "The device's own acknowledged elapsed recording duration at the time of this report. Receivers freeze it; they never extend it with their own clock.", "$ref": "room-common.schema.json#/$defs/durationMs"},
+        "failureReason": {"enum": ["cameraPermissionDenied", "microphonePermissionDenied", "storageFull", "thermalShutdown", "interrupted", "writerFailed", "other"]},
+        "ageAtHostMs": {"description": "Host-measured monotonic age of this device's last report when the snapshot was built. Only the host writes it; a device never asserts its own age.", "$ref": "room-common.schema.json#/$defs/durationMs"},
+        "observations": {
+          "type": "object",
+          "required": ["storageFreeBytes", "estimatedMinutesLeft", "batteryPercent", "charging", "lowPowerMode", "thermal"],
+          "additionalProperties": false,
+          "properties": {
+            "storageFreeBytes": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]},
+            "estimatedMinutesLeft": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]},
+            "batteryPercent": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0, "maximum": 100}]},
+            "charging": {"oneOf": [{"type": "null"}, {"type": "boolean"}]},
+            "lowPowerMode": {"oneOf": [{"type": "null"}, {"type": "boolean"}]},
+            "thermal": {"$ref": "room-common.schema.json#/$defs/thermal"}
+          }
+        }
+      },
+      "if": {"properties": {"captureState": {"const": "Failed"}}, "required": ["captureState"]},
+      "then": {"required": ["failureReason"]},
+      "else": {"not": {"required": ["failureReason"]}}
+    }
+  }
+}

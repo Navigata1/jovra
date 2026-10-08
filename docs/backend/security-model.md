@@ -28,8 +28,8 @@ Principles (INFERRED from the brief and OBSERVED Supabase/R2 behaviour):
    delay revocation. Policies read only `auth.uid()` and the `is_anonymous` claim.
 3. **The client is never authoritative** for `owner_id`, roles, prices, caps, R2 keys, bucket names, URLs, provenance
    `validated`, verification state or job state.
-4. **Privileged changes are named functions**, each re-checking its actor, callable only by the `jovra_gateway`
-   database role. The Supabase secret key (which bypasses RLS, OBSERVED
+4. **Privileged changes are named functions**, each re-checking its actor, callable only by exactly one of the
+   `jovra_gateway` (user routes) or `jovra_orchestrator` (`jovra-internal`) database roles. The Supabase secret key (which bypasses RLS, OBSERVED
    https://supabase.com/docs/guides/api/api-keys) is not used on request paths.
 5. **Short, narrow capabilities.** One object or one session, one operation set, short expiry, hashed at rest,
    checked against rows on every use.
@@ -61,13 +61,14 @@ Principles (INFERRED from the brief and OBSERVED Supabase/R2 behaviour):
    `sub` is a UUID; `role = authenticated`.
 4. Owner, coach, viewer and grant routes require `is_anonymous = false`.
 5. Account-scope deletion and payment-adjacent routes (later) require a **fresh authentication**, not a fresh token:
-   `iat` is reset by every silent refresh, so it proves nothing. The gateway reads the authentication time from the
-   `amr` claim (optional in Supabase JWTs, OBSERVED in the research §3.4; the latest `amr[].timestamp` must be within
-   10 minutes; claim shape **UNVERIFIED**, checked against
-   https://supabase.com/docs/guides/auth/jwt-fields at G1), or, if that claim is unusable, requires a re-authentication
-   bound to the request: a fresh SIWA ID token whose nonce hashes the deletion request id, or an email code from
-   Supabase's reauthentication flow (UNVERIFIED for this use). A refreshed token with an old authentication time gets
-   `401 reauth_required` (T-GW-31).
+   `iat` is reset by every silent refresh, so it proves nothing. The check is server-side and cannot be satisfied by a
+   refresh token: the gateway passes the verified JWT's `session_id` claim to
+   `app_gateway.authenticated_within(p_actor, p_session_id, interval '10 minutes')`, which reads the creation time of
+   that Auth session (SQL in §13.4). A refresh keeps the session; only a new sign-in (SIWA or an email code, done in the
+   app's "Confirm it's you" sheet) creates one (INFERRED from Supabase's session model; the `session_id` claim and
+   `auth.sessions` columns are **UNVERIFIED** and recorded at G1 against https://supabase.com/docs/guides/auth/jwt-fields
+   and https://supabase.com/docs/guides/auth/sessions). The `amr[].timestamp` claim, when present, must agree (a
+   cross-check, never the only proof). A refreshed token of an old session gets `401 reauth_required` (T-GW-31).
 6. The verified `sub` is passed to command functions as `p_actor`; nothing else from the token is trusted for
    authorization.
 
@@ -90,7 +91,7 @@ calls revoke and then deletes the auth user. Whether Supabase performs revocatio
 | `anon` | via PostgREST | unauthenticated requests | **none** on any Studio object (all revoked) |
 | `authenticated` | via PostgREST | signed-in users | column-scoped grants listed per table in §5; USAGE on `app_private`; EXECUTE on the `app_private` helpers only |
 | `jovra_gateway` | yes, via Hyperdrive with query caching disabled (password is a Hyperdrive secret, set by Jon), bound **only** to the user-facing gateway Worker | the gateway's user routes | USAGE on `app_gateway`; EXECUTE on the user-route commands only; **no table privileges anywhere**; `connection limit 20`; `nobypassrls` |
-| `jovra_orchestrator` | yes, via a second Hyperdrive config (caching disabled) bound only to the separate **`jovra-internal` Worker script** (Workflow, queue consumer, render-host routes), never to the user gateway (§13.1) | job orchestration | EXECUTE on `set_job_state`, `reserve_stage`, `claim_attempt`, `heartbeat_attempt`, `finish_attempt`, `register_artifact`, `mark_artifact_verified`, `authorize_attempt_input` and the `*_for_attempt` upload and read variants; nothing else. Because no user-route code runs in a script that holds this binding, a user-route bug or compromised dependency cannot move a job or verify an artifact |
+| `jovra_orchestrator` | yes, via a second Hyperdrive config (caching disabled) bound only to the separate **`jovra-internal` Worker script** (Workflow, queue consumer, render-host routes), never to the user gateway (§13.1) | job orchestration | EXECUTE on `set_job_state`, `reserve_stage`, `claim_attempt`, `heartbeat_attempt`, `finish_attempt`, `register_artifact`, `mark_artifact_verified`, `authorize_attempt_input`, the `*_for_attempt` upload and read variants, the deletion step functions and the reconciler functions (§13.12); nothing else. Because no user-route code runs in a script that holds this binding, a user-route bug or compromised dependency cannot move a job or verify an artifact |
 | `jovra_owner` | no | owns **every** Studio table, every `app_private` helper and trigger function and every `app_gateway` command (one owner, so definer helpers run as the table owner and do not re-enter RLS; tables are not `FORCE ROW LEVEL SECURITY`) | owner of objects; not used by any client; migrations create objects and then `alter … owner to jovra_owner` (T-DB-66) |
 | `service_role` / secret key | — | migrations, operator scripts only | never in the Worker request path, never in an app |
 
@@ -194,7 +195,8 @@ $$;
 
 -- A clip is visible only while (a) its project is not deleted, (b) the lesson owner still holds a role on the clip's
 -- project, and (c) for anyone but the lesson owner, the clip is shareable: the lesson owner owns the project or the
--- project owner approved sharing it. Revoking a coach therefore removes every downstream viewer's access too.
+-- project owner approved sharing exactly this window. Revoking a coach therefore removes every downstream viewer's
+-- access too.
 create or replace function app_private.can_view_lesson_clip(p_clip uuid) returns boolean
 language sql stable security definer set search_path = '' as $$
   select exists (
@@ -207,7 +209,9 @@ language sql stable security definer set search_path = '' as $$
                       and (m.expires_at is null or m.expires_at > now())
                       and (m.role = 'owner' or m.approved_at is not null))
        and (l.owner_id = (select auth.uid())
-            or ((p.owner_id = l.owner_id or c.share_approved_at is not null)
+            or ((p.owner_id = l.owner_id
+                 or (c.share_approved_at is not null      -- approval pinned to what was approved (§13.8)
+                     and c.share_approved_sha256 = app_private.clip_share_fingerprint(c)))
                 and (app_private.lesson_access(c.lesson_id) in ('coach', 'viewer')
                      or exists (select 1 from public.access_grants g
                                  where g.lesson_clip_id = c.id and g.kind = 'lesson_clip_view'
@@ -290,7 +294,14 @@ grant execute on function app_gateway.<name>(…) to jovra_gateway;   -- or to j
 
 A raised exception rolls back the transaction, including any audit row written in it, so **denials are audited by a
 second call** `app_gateway.audit_denial(p_actor_kind, p_actor, p_action, p_target_kind, p_target, p_reason,
-p_request_id)` that the gateway makes after catching the error (INFERRED; T-GW-19 checks denials appear).
+p_request_id)` that the gateway makes after catching the error (INFERRED; T-GW-19 checks denials appear). The
+`jovra-internal` host routes have the same problem and cannot use `audit_denial` (gateway only; "never both", T-DB-57),
+so they call its orchestrator-only twin `app_gateway.audit_denial_for_attempt(p_attempt, p_action, p_reason,
+p_request_id)` after catching a refusal (forged or stale lease token, second claim, unlisted input ref, output over its
+cap, unknown attempt). It is append only: it inserts one `app_ops.audit_events` row with `actor_kind = 'render_attempt'`,
+the attempt id (or null when the id does not resolve), the action and a coded reason, and never reads or changes
+anything else; it takes no lease token, so a refused caller cannot use it to probe one (T-GW-28 and T-GW-19 assert
+the rows).
 
 Commands (signatures abbreviated; all take `p_request_id`):
 
@@ -306,18 +317,20 @@ Commands (signatures abbreviated; all take `p_request_id`):
 | `attach_upload_id`, `record_part`, `complete_upload_check`, `mark_uploaded_unverified`, `abort_upload` | session capability + fresh actor check (user or guest sessions only) | architecture §6.3 (completion requires `current_session_id` and state `uploading`); `record_part` refuses when the project has `deleted_at` |
 | `authorize_output_upload_for_attempt(p_attempt, p_lease_hash, p_output_ref, p_bytes, p_sha256)`, `record_part_for_attempt`, `complete_upload_check_for_attempt`, `mark_output_written_for_attempt`, `authorize_artifact_read_for_attempt(p_attempt, p_lease_hash, p_artifact)` | **orchestrator role only**; current lease | `p_output_ref` ∈ the attempt's `output_plan`, `p_bytes` ≤ that output kind's cap stored in `output_plan` (§13.15); reads only the verify stage's own outputs or listed inputs |
 | `create_quote(p_actor, p_project, p_plan, p_planner_choice, p_output_spec, p_sources, p_retention_days)` | owner | every source resolved through this project's current verified source manifest (else `P0404`); inputs and `output_spec_sha256` computed from rows; `sample` forced true unless paid flag on |
-| `accept_quote(p_actor, p_quote, p_inputs_sha256, p_consent, p_cap_credits, p_idempotency_key)` | owner, real user | one transaction: owner open-cap and environment ceilings; reservation + job + outbox, or a top-up of the held reservation when the quote supersedes its quote; one held reservation per `(project, plan version, output spec)` |
+| `accept_quote(p_actor, p_quote, p_inputs_sha256, p_consent, p_cap_credits, p_idempotency_key)` | owner, real user | one transaction: owner open-cap and environment ceilings; reservation + job + outbox, or a top-up of the held reservation when the quote supersedes its quote; one held reservation per `(project, plan, plan version, output spec)` |
 | `set_job_state(p_job, p_expected, p_new)` | orchestrator role | compare-and-set against the SQL transition table (the contract's); `ready` requires a verified artifact; resume stages restricted as in the contract |
 | `reserve_stage(p_job, p_stage, p_attempt)` → `attempt_id` | orchestrator role | estimate computed in SQL from `rates_version` and inputs with a floor; cap and environment ceiling; stores `input_refs` and `output_plan` from the job's own project; idempotent; no lease yet |
 | `claim_attempt(p_attempt, p_host)` → `lease_token` | orchestrator role (internal route, host credential) | mints the token, stores its hash; second claim refused |
 | `heartbeat_attempt(p_attempt, p_lease_hash)` / `finish_attempt(p_attempt, p_lease_hash, p_outcome, p_outputs, p_measurements)` | orchestrator role; lease fencing | consumption written on success only, once per `(job, stage)` |
 | `register_artifact`, `mark_artifact_verified` | orchestrator role; lease fencing / verify stage | output ref ∈ the attempt's stored `output_plan` |
 | `authorize_artifact_read(p_actor_kind, p_actor, p_artifact)` | owner/coach/viewer/share token (`p_actor_kind` ∈ `user`, `share_link`) | mirrors §5 artifact policies + `viewer_can_see_artifact` logic for an explicit actor; render attempts use `authorize_artifact_read_for_attempt` |
-| `authorize_attempt_input(p_attempt, p_lease_hash, p_input_ref)` | orchestrator role; lease | `p_input_ref` ∈ the attempt's stored `input_refs`; returns the key and verified etag only to the gateway |
+| `authorize_attempt_input(p_attempt, p_lease_hash, p_input_ref)` | orchestrator role; lease | `p_input_ref` ∈ the attempt's stored `input_refs`; returns the key and verified etag only to `jovra-internal` |
 | `create_grant`, `redeem_grant`, `approve_member`, `revoke_grant`, `approve_clip_share`, `revoke_clip_share`, `create_share_link`, `redeem_share_link(p_token_hash)`, `revoke_member` | owner / redeemer / project owner of the footage | share links only for `film`, `preview`, `clip_excerpt`; ≤ 24 h. Every invitation grant is **bound to its intended recipient** (`invitee_email_hmac`); `redeem_grant` succeeds only when the redeemer's confirmed `auth.users.email` matches it, else `P0404` like a missing code (§13.2). `redeem_grant` of a `project_coach` code creates a **pending** membership; `approve_member` (owner) activates it after seeing the redeemer's verified, masked email (never the display name). `revoke_clip_share` and `revoke_grant` are also available to the owner of the project whose footage a clip-bearing grant reaches (§13.8). `revoke_grant` of a `project_coach` grant revokes the linked `project_members` row in the same transaction. Clip-bearing grants need each clip shareable (creator owns the clip's project or the project owner approved it). `redeem_share_link` authorizes one request only: it never writes a grant or `grantee_user_id` |
 | `cancel_job`, `pause_job`, `resume_job`, `review_job` | owner | |
-| `request_deletion(p_actor, p_scope, p_target)` and deletion step functions | owner of target | |
+| `request_deletion(p_actor, p_scope, p_target)` | owner of target (`jovra_gateway`); account scope only after `authenticated_within` (§13.4) | |
+| deletion step functions, `reconcile_orphans`, outbox re-dispatch | **orchestrator role only** (deletion Workflow and reconciler in `jovra-internal`) | act only on `deletion_requests` rows and stored state, never on caller-supplied targets |
 | `audit_denial(…)` | gateway | append only |
+| `audit_denial_for_attempt(p_attempt, p_action, p_reason, p_request_id)` | **orchestrator role only** (`jovra-internal` host routes) | append only; records host-route refusals that the rolled-back command could not (S4, T6, T8) |
 
 Because the helpers in §4 read `auth.uid()`, which is null for `jovra_gateway`, command functions use explicit
 `p_actor` comparisons instead of the helpers (INFERRED; T-DB-36 checks a forged actor fails everywhere).
@@ -333,6 +346,11 @@ create policy <t>_real_users_only on public.<t> as restrictive for all to authen
   using (app_private.is_real_user()) with check (app_private.is_real_user());
 -- anon: no table grants at all, so unauthenticated requests fail before RLS.
 ```
+
+Every INSERT policy's `WITH CHECK` is a call to one per-table predicate function (`app_private.can_insert_<table>`,
+EXECUTE granted to `authenticated` like the helpers above), and the table's `a00_rls_guard` BEFORE trigger calls the
+same function, so a trigger can never answer before RLS does (§13.11). The inline predicates below show what each
+function returns.
 
 Every column used in a policy is indexed (`project_id`, `owner_id`, `user_id`, `grantee_user_id`, `lesson_id`,
 `uploader_user_id`, `redeemed_by_user_id`, `created_by`), and every policy names its role and wraps `auth.uid()` as
@@ -514,7 +532,7 @@ create policy plans_update on public.story_plans for update to authenticated
   with check (app_private.has_project_role(project_id, '{owner,coach}'));
 
 -- story_plan_versions: append-only; clients may add manual/heuristic drafts; validation_state, edl_sha256 and
--- planner_model_id are server-set; 'llm' versions only via app_gateway
+-- planner_model_id are server-set; 'model' versions only via app_gateway
 grant select on public.story_plan_versions to authenticated;
 grant insert (story_plan_id, planner_kind, planner_adapter_version, story_plan, edl,
               bound_source_manifest_revision, bound_sync_map_revision, bound_event_revision)
@@ -523,7 +541,7 @@ create policy versions_select on public.story_plan_versions for select to authen
   using (exists (select 1 from public.story_plans p where p.id = story_plan_id
                   and app_private.has_project_role(p.project_id, '{owner,coach}')));
 create policy versions_insert on public.story_plan_versions for insert to authenticated
-  with check (planner_kind in ('manual', 'heuristic')
+  with check (planner_kind in ('user', 'heuristic')
               and exists (select 1 from public.story_plans p where p.id = story_plan_id
                            and app_private.has_project_role(p.project_id, '{owner,coach}')));
 ```
@@ -658,7 +676,7 @@ Each test runs in `begin … rollback`, authenticates as a seeded fictional user
 |---|---|---|---|
 | T-DB-01 | unauthenticated | select/insert on every `public` Studio table | permission denied |
 | T-DB-02 | — | `tests.rls_enabled('public')` | every table has RLS |
-| T-DB-03 | — | no `security definer` function in `public`; every function in `app_*` **and in `public`** has `search_path=''` in `proconfig`; no function in `app_private`/`app_gateway`/`public` is executable by `public` or `anon` (including functions created after the first migration) | pass |
+| T-DB-03 | — | no `security definer` function in `public`; every function in `app_*` **and in `public`** has `search_path=''` in `proconfig`; no function in `app_private`/`app_gateway`/`public` is executable by `public` or `anon` (including functions created after the first migration); every function in `app_gateway` has `provolatile = 'v'` (the backstop against Hyperdrive result caching, architecture §4.4) | pass |
 | T-DB-04 | authenticated, anon | EXECUTE on any `app_gateway.*` | denied (`function_privs_are`) |
 | T-DB-05 | jovra_gateway, jovra_orchestrator | select/insert on any table in `public`, `app_private`, `app_ops` | denied (`table_privs_are`) |
 | T-DB-06 | unrelated user | select from projects, camera_sources, source_manifests, sync_maps, calibration_versions, point_event_revisions, observations, story_plans, story_plan_versions, quotes, usage_reservations, render_jobs, render_attempts, artifacts of owner A | 0 rows each |
@@ -679,7 +697,7 @@ Each test runs in `begin … rollback`, authenticates as a seeded fictional user
 | T-DB-21 | viewer with `lesson_view` | select observations, projects | 0 rows |
 | T-DB-22 | coach with `lesson_coach` (not a project member) | insert observation with `lesson_id` only | allowed; with a `project_id` they do not coach → denied |
 | T-DB-23 | owner, coach | insert observation with provenance `estimated` or `validated`; update provenance | denied; review of `estimated` → provenance `reviewed`, `reviewed_by = auth.uid()` |
-| T-DB-24 | owner, coach | insert story_plan_versions with `planner_kind = 'llm'` or set `validation_state` | denied |
+| T-DB-24 | owner, coach | insert story_plan_versions with `planner_kind = 'model'` or set `validation_state` | denied |
 | T-DB-25 | coach | select quotes, usage_reservations | 0 rows |
 | T-DB-26 | owner | insert/update quotes, usage_reservations, render_jobs, render_attempts, artifacts, access_grants, deletion_requests | denied (cannot create an unbounded reservation, a job, a grant or a ready artifact) |
 | T-DB-27 | grantee | select access_grants | own grant rows; unrelated user: 0 |
@@ -691,8 +709,8 @@ Each test runs in `begin … rollback`, authenticates as a seeded fictional user
 | T-DB-33 | jovra_gateway | each owner-only command with `p_actor` = unrelated user | `P0404` for every command; audit row via `audit_denial` |
 | T-DB-34 | jovra_gateway | `accept_quote` twice with one key; with expired quote; with changed inputs hash | one job and reservation; `P0410`; `P0409` |
 | T-DB-35 | — | PostgREST config exposes only `public, graphql_public` | pass |
-| T-DB-36 | jovra_gateway | `reserve_stage` beyond cap; same `(job, stage, attempt)` twice | `P0402`; one attempt row |
-| T-DB-37 | jovra_gateway | `finish_attempt` with stale token; after `lease_expired` | rejected; no artifact registered |
+| T-DB-36 | jovra_orchestrator | `reserve_stage` beyond cap; same `(job, stage, attempt)` twice | `P0402`; one attempt row |
+| T-DB-37 | jovra_orchestrator | `finish_attempt` with stale token; after `lease_expired` | rejected; no artifact registered |
 | T-DB-38 | jovra_gateway | `complete_upload_check` with a missing part, wrong last-part size, session bound to another project's source | refused each |
 | T-DB-39 | jovra_gateway | `redeem_camera_invite` after `redeem_by`, twice, after revoke; `issue_guest_capability` before approval or with another device key | refused each |
 | T-DB-40 | user B | similarity search over lesson_embeddings while holding A's `lesson_clip_view` grant | 0 of A's rows |
@@ -712,16 +730,23 @@ Each test runs in `begin … rollback`, authenticates as a seeded fictional user
 | T-DB-54 | owner | insert a row violating a length limit | coded `P0422 field_too_long:<column>`; the error has no `Failing row contains` DETAIL |
 | T-DB-55 | jovra_orchestrator | `reserve_stage` | estimate computed in SQL (a zero estimate is impossible); `input_refs` contain only the job project's verified sources and artifacts |
 | T-DB-56 | jovra_gateway | `accept_quote` for identical work under a second quote while a reservation is held; beyond the owner open-cap or environment ceiling | `P0409` (or a top-up when the quote supersedes); `P0402` |
-| T-DB-57 | jovra_gateway | `authorize_upload('render_host', …)`; any `*_for_attempt` function | `P0422` (actor kind not accepted); permission denied |
+| T-DB-57 | jovra_gateway | `authorize_upload('render_host', …)`; any `*_for_attempt` function; lint query of §13.1 (functions executable by both roles) | `P0422` (actor kind not accepted); permission denied; zero rows |
 | T-DB-58 | stranger (confirmed email ≠ invitee) | redeem a forwarded `project_coach`, `lesson_coach`, `lesson_view`, `film_view` or `lesson_clip_view` code; invitee with an unconfirmed email | `P0404` each (identical to an unknown code); the intended invitee succeeds; the owner's approval view shows the masked verified email, never `display_name` |
 | T-DB-59 | owner of A (former coach of B) | `create_quote` or `review_job` naming B's story plan or plan version; insert `render_jobs`/`quotes` rows (as `jovra_owner` in the test) pairing A with B's plan | `P0404`; FK violation for each composite FK |
 | T-DB-60 | jovra_gateway | two `accept_quote` for identical plan-by-job work (`story_plan_version_id` null); an in-job revise followed by a quote for the new version and the same output | one held reservation and one non-terminal job (`P0409` for the second); the revise moved the reservation key, so the new quote is refused or tops up |
 | T-DB-61 | jovra_gateway | `accept_quote` with no `app_ops.spend_limits` rows; with a NULL limit (inserted by disabling the NOT NULL check in the test) | `P0402` (fail closed) |
 | T-DB-62 | coach (lesson owner) | after the project owner approves a clip, update its `match_start_us`; viewer selects it | `share_approved_at` null, excerpt unlinked; viewer 0 rows and gateway 404 until re-approved and re-rendered; `revoke_clip_share` by the project owner has the same effect |
 | T-DB-63 | pending coach (redeemed, not approved) | select `profiles`, `project_members` | only self; 0 member rows |
-| T-DB-64 | owner | insert `point_event_revisions`, `story_plan_versions`, `sync_maps`, `lessons` past each quota | `P0429` at the boundary, allowed one below it |
+| T-DB-64 | owner | insert `point_event_revisions`, `story_plan_versions`, `sync_maps`, `lessons` past each quota; then create N projects and write just under each project's per-project limit in all of them until the per-user aggregate is reached; as a lesson coach, insert a lesson-only observation (`project_id` null) | `P0429` at the boundary, allowed one below it; the N-project writes stop with `P0429` at the `*user_total` limit (never N × the per-project limit), the counters show one aggregate row per user and day; the lesson-only observation is allowed and counted against the coach's user subject (no `23502`) |
 | T-DB-65 | unrelated user | insert into `point_event_revisions` (and every table with a BEFORE trigger) naming a victim project, with every `parent_revision` value | identical `42501` "new row violates row-level security policy"; the victim's `current_event_revision` and advisory lock untouched |
 | T-DB-66 | — | owner of every `public` Studio table, `app_private` helper and `app_gateway` function; `relforcerowsecurity` on tables helpers read | all `jovra_owner` (`proowner = relowner`); false |
+| T-DB-67 | — and jovra_gateway | (a) lint: every client-insertable table has `a00_rls_guard` and it sorts before every other BEFORE trigger; (b) a server stage inserts a manifest, a server plan version and a server observation through `app_gateway` | (a) pass; (b) allowed (`is_client_path()` false inside the command), while the same insert through PostgREST as an unrelated user is `42501` |
+| T-DB-68 | jovra_gateway, jovra_orchestrator | plan-by-job quotes for two different story plans of one project with the same output spec; then two for the same plan; then a plan-by-job job whose planning stage produces version V reaches `awaiting_review`, and the owner requests a quote naming V with the same output | both holds allowed; the second for the same plan `P0409`; an in-job revise moves `output_spec_sha256` and the version on both job and reservation; the planning stage moved job and reservation to (plan, V, hash of V) in one transaction, so the quote for V is `P0409` (or tops up the held reservation), never a second hold |
+| T-DB-69 | jovra_owner (test only) | disable `b20_pin_shared_clip`, move an approved coach clip's window, re-enable; viewer selects it | 0 rows: `share_approved_sha256` no longer equals the fingerprint |
+| T-DB-70 | owner | insert into a table whose `app_ops.quota_limits` row is missing; insert past a limit | `P0429`; the counter rows are unchanged after the refusal (rolled back) |
+| T-DB-71 | jovra_gateway (two sessions) | two concurrent `accept_quote` calls whose caps together cross the environment daily ceiling | exactly one succeeds, the other `P0402`; `spend_commitments` holds one `cap_open` row |
+| T-DB-72 | jovra_orchestrator | (a) a `plan` stage whose recorded planner fixture's worst case (images, input, `max_tokens`, repair) exceeds the stage reservation; (b) a fixture whose first call leaves too little reservation for the repair; (c) `finish_attempt` with measured tokens above the reservation | (a) refused before any provider call (the fake provider records zero requests), heuristic fallback; (b) no repair call, heuristic fallback; (c) one `stage_overrun` commitment, the job `budget_exceeded`, the next `reserve_stage` sees the overrun in the day's total |
+| T-DB-73 | jovra_orchestrator | lesson-scope deletion of one lesson of a Progress plan that holds two lessons, on the server path (`auth.uid()` null) | the plan keeps the other lesson, its versions are invalid and stale, the request reaches `done` (no `P0401` from `check_story_plan_lessons`); the same `lesson_ids` update by a client who lost access to the remaining lesson is still refused |
 
 ### 6.3 R2 operations matrix (enforced by the gateway; R2 has no notion of users)
 
@@ -757,7 +782,7 @@ No route accepts a bucket name, key, URL or path from a client; keys are derived
 | T-R2-08 | Render attempt reads a listed input → 200; an unlisted key → 404; after lease expiry → 403; writes to an unlisted output ref → 404 |
 | T-R2-08b | A forged queue message naming another project's source as an input (attempt of project A) → the input is never served (404): inputs come only from `render_attempts.input_refs` |
 | T-R2-09 | Render attempt attempts delete or list → no such route (404) |
-| T-R2-10 | Request bodies or query strings containing `key`, `bucket`, `url` or `path` are ignored or rejected (400); derived keys never contain user text |
+| T-R2-10 | Request bodies or query strings containing `key`, `bucket`, `url`, `path`, `endpoint`, `callback`, `webhook` or `baseUrl` are rejected (400); derived keys never contain user text (§13.17) |
 | T-R2-11 | Unauthenticated calls on every media route → 401/404; demo marker → 401 `demo_not_accepted` |
 | T-R2-12 | Deletion request removes every object under the project's prefixes in both simulated buckets; staged sources of other projects untouched; lesson scope removes the lesson's clip excerpts and thumbnails; the reconciler deletes objects with no row in every prefix |
 | T-R2-13 | Presigned GET (when enabled) has `X-Amz-Expires ≤ 300`, method GET, one key, and signed `response-cache-control=private, no-store`, `response-content-disposition` (server filename) and `response-content-type` overrides (deterministic SigV4 test with a fixed clock) |
@@ -765,6 +790,7 @@ No route accepts a bucket name, key, URL or path from a client; keys are derived
 | T-R2-15 | After verification, replace the original's bytes through a second (or stale) session → completion refused; a direct object swap → every later read fails `etagMatches` |
 | T-R2-16 | Deletion: source scope removes the films, previews and excerpts whose `artifact_sources` include it and their share links (after the owner's explicit choice); lesson scope removes plan versions and films derived from the lesson; a coach's account deletion removes their lessons' excerpts under the other owner's prefix; open multipart sessions are aborted and later parts refused; a film's thumbnail, captions and chapters go with it |
 | T-R2-17 | Reconciler race: complete an upload in R2, run the sweep before `mark_uploaded_unverified`, then mark → object still present; an artifact in `writing` is never swept; only objects older than 48 h with no row and no live session are deleted |
+| T-R2-18 | Retention sweep (architecture §10): work objects of a job accepted with `retentionDays` 1 are deleted by the first daily sweep after one day and those of a 30-day job are kept until day 30 (both buckets simulated, clock advanced); the 31-day prefix lifecycle rule exists and no rule is shorter than the longest offered choice; films are never touched by the sweep |
 
 ## 7. R2 layout
 
@@ -827,7 +853,7 @@ carries no user data; opening it creates no account and sets no cookie.
   `finish_attempt` fences stale tokens. Inputs and outputs are authorized only against the lists `reserve_stage` stored
   on the attempt row, never against message fields.
 - The host has no database credential, no model key, no R2 credential in the default design (it reads and writes
-  through the gateway's internal routes), and an egress allowlist of the gateway origin only.
+  through `jovra-internal`'s host routes), and an egress allowlist of the `jovra-internal` origin only.
 
 ### 8.5 Revocation semantics (what the UI may promise)
 
@@ -896,31 +922,33 @@ Mechanisms (INFERRED):
 | T6 | Zombie attempt overwrites good outputs | New keys per attempt, `writing` until verified, lease fencing | T-GW-13 |
 | T8 | Queue message forged or replayed to read another project's media or write unplanned outputs | Messages carry ids only; inputs and outputs authorized against `render_attempts.input_refs`/`output_plan` computed in SQL; lease minted at claim, second claim fenced | T-R2-08b, T-GW-28 |
 | T9 | Verified source swapped after verification (TOCTOU) | One open session per source, per-session keys, completion bound to `current_session_id`, reads pinned to `verified_etag` | T-R2-15, T-GW-25 |
-| T10 | Confused deputy: a row of project A names project B's source, so a server stage copies B's footage into A | Composite `(project_id, source_id)` FKs; quotes, jobs and EDLs resolve sources only through the job project's verified manifest | T-DB-45, T-GW-24 |
+| T10 | Confused deputy: a row of project A names project B's source, parent artifact or excerpt, so a server stage copies or exposes B's footage in A | Composite `(project_id, source_id)` and `(project_id, artifact_id)` FKs on clips, observations, calibrations, artifacts and grants; `check_clip_excerpt`; quotes, jobs and EDLs resolve sources only through the job project's verified manifest | T-DB-45, T-GW-24 |
 | T7 | Event history rewritten to change scores silently | Append-only revisions with parent check; scores derived from the bound revision; stale marking | T-DB-13/14/15 |
 | R1 | User disputes consent or a charge | Quote inputs hash, consent JSON with text version, reservation and receipts, audit events | T-DB-34 |
 | R2 | Disputed deletion | `deletion_requests` states with counts; audit tombstones | T-GW-20 |
 | I1 | Cross-tenant metadata through an RLS gap | Deny by default, restrictive real-user policy, helpers tested under each role, advisors in CI | T-DB-01..44 |
 | I2 | Cross-tenant media by guessing keys or ids | No client-supplied keys; per-request authorization; identical 404 for "missing" and "not yours" | T-R2-01..11 |
 | I3 | A lesson-clip share exposes the whole match | Clip grants reach only the `clip_excerpt` artifact and the clip row | T-DB-20, T-R2-05 |
-| I3b | A coach redistributes the owner's footage through their own lesson | Clips of another owner's project are shareable only after the project owner approves; the approval pins the window and keeper (moving them clears it); the project owner can withdraw it or revoke any grant reaching their footage; access ends when the coach's role ends | T-DB-46, T-DB-62 |
+| I3b | A coach redistributes the owner's footage through their own lesson | Clips of another owner's project are shareable only after the project owner approves; the approval stores a fingerprint of source, window, keeper and revisions and visibility requires it to match (moving the window also clears it by trigger); the project owner can withdraw it or revoke any clip grant reaching their footage; access ends when the coach's role ends | T-DB-46, T-DB-62, T-DB-69 |
 | I3d | A plan or plan version of project B is named in a job, quote or review of project A (confused deputy) | Composite FKs bind plans and versions to their project and versions to their plan; `create_quote` and `review_job` assert them | T-DB-59 |
-| I11 | Existence or revision oracle through a BEFORE trigger that runs before RLS | Every BEFORE trigger on a client-written table first checks the caller's role on `new.project_id` and raises the same `42501` as RLS | T-DB-65 |
+| I11 | Existence or revision oracle through a BEFORE trigger that runs before RLS | `a00_rls_guard` sorts before every other BEFORE trigger and calls the same predicate as the INSERT policy, raising RLS's own `42501` | T-DB-65, T-DB-67 |
 | I12 | A pending coach reads members' display names | `shares_project_with` applies the approval predicate on both sides | T-DB-63 |
 | I3c | A viewer grant launders lesson notes into a plan the attacker can read | `check_story_plan_lessons` (owner/coach access and same owner); planner evidence gathered under the same actor check | T-DB-52 |
-| I4 | Tokens or PII in logs | Allowlisted logger, redaction, log-scrub test; invocation logs off; coded errors before constraints; no secrets in the idempotency store | T-GW-19, T-GW-22, T-DB-47, T-DB-54 |
+| I4 | Tokens or PII in logs (Worker, zone Logpush/WAF, Supabase API gateway) | Allowlisted logger, redaction, log-scrub test; invocation logs off; zone Logpush and WAF logging off or excluding `/s/*` (G2); no user text in query strings; coded errors before constraints; no secrets in the idempotency store | T-GW-19, T-GW-22, T-GW-35, T-DB-47, T-DB-54 |
 | I10 | Cached authorization result after revocation | Hyperdrive query caching disabled; authorization functions `volatile` | T-GW-21 |
 | I5 | Thumbnails, proxies, frames or vectors leak | Same authorization path as films; proxies/frames never client-readable; embeddings under RLS, no viewer access | T-R2-03, T-DB-40 |
 | I6 | Presigned URL leaks and cannot be revoked | Default is gateway streaming; presigned only after spike, GET only, ≤ 5 min | T-R2-13 |
 | I7 | Existence oracle through ids or error messages | Server-generated ids, identical `not_found` responses, no project titles in guest views | T-GW-06, T-R2-01 |
-| I8 | Frames sent to a model provider without consent | `consent.modelProvider` required per job; heuristic otherwise; frames stripped of metadata | gateway test on accept |
+| I8 | Frames or another person's words sent to a model provider without consent | `consent.modelProvider` required per job; heuristic otherwise; frames stripped of metadata; note text only in the consented `textClasses`, coach-authored text excluded by default (§13.14) | gateway test on accept; planner evidence fixture with coach text |
 | I9 | Location metadata in derived media | Metadata stripped from every derived object | render test (fixture with location tag) |
 | D1 | Upload floods exhaust storage or Worker requests | Declared size cap per source, ≤ 6 sources per project, session expiry, abort rule, rate limits; render outputs capped per output kind | T-GW-08, T-GW-36 |
-| D7 | Direct PostgREST inserts (event revisions, plan versions, sync maps, lessons…) exhaust database storage and backups | Per-project and per-user quotas in BEFORE INSERT definer triggers (`P0429`) | T-DB-64 |
-| D8 | Spend limits missing or NULL make the ceiling comparison NULL (never refuses) | Fail closed: no row or a NULL limit is `P0402`; a default owner row; NOT NULL limits | T-DB-61 |
-| D9 | Two identical plan-by-job quotes (NULL plan version) each open a hold; an in-job revise leaves the hold on the old version | `NULLS NOT DISTINCT` unique indexes; revise moves the reservation key in the same transaction | T-DB-60 |
-| D10 | A leaked share link is hammered with Range requests for 24 h | Per-token-hash rate limit and byte budget on `/s/` | T-GW-34 |
-| D2 | Job spam, re-quotes or retry storms burn spend | Quote + consent + reservation cap; one held reservation per (project, plan version, output spec); per-owner open-cap and environment daily ceiling (also in test); stage estimates computed in SQL with a floor; retries reserve first; no automatic escalation | T-GW-10/12, T-DB-36, T-DB-55, T-DB-56 |
+| D7 | Direct PostgREST inserts (event revisions, plan versions, sync maps, lessons…) exhaust database storage and backups, also by spreading writes over many projects | Per-project and per-user daily row, daily byte and lifetime byte quotas in `a20_enforce_quota` (`P0429`), **plus one per-user aggregate counter across every quota'd table** (§13.10), so creating more projects never multiplies a user's allowance; a table without limits refuses | T-DB-64, T-DB-70 |
+| D8 | Spend limits missing or NULL make the ceiling comparison NULL (never refuses); concurrent accepts race the ceiling | Fail closed: no row or a NULL limit is `P0402` (`coalesce(limit, -1)`); a default owner row; NOT NULL limits; one append-only commitment ledger defines "today"; checks serialized by an advisory lock | T-DB-61, T-DB-71 |
+| D9 | Two identical plan-by-job quotes (NULL plan version) each open a hold; an in-job revise leaves the hold on the old version | `NULLS NOT DISTINCT` unique indexes that include `story_plan_id`; revise moves the version and output hash of job and reservation in one transaction | T-DB-60, T-DB-68 |
+| D10 | A leaked share link is hammered with Range requests for 24 h; a caption file is sniffed as HTML | Per-token-hash rate limit and byte budget on `/s/`; `nosniff` and `CSP: sandbox` on every media response; captions as `text/vtt` | T-GW-34, T-R2-14 |
+| D11 | The reconciler deletes an object uploaded or rendered moments before its row exists | Diff against sources, artifacts in every state and live upload sessions; delete only objects older than 48 h with no row | T-R2-17 |
+| R3 | Deletion reports `done` while derived media survive (films with a withdrawn angle, Progress films of a deleted lesson, a coach's excerpts under another prefix, open multipart parts, a film's children, the Apple token) | Deletion enumerates through rows (`artifact_sources`, lesson plans, lesson clips, `parent_artifact_id`), aborts open sessions and refuses parts after `deleted_at`, deletes the Vault token | T-R2-16, T-GW-32 |
+| D2 | Job spam, re-quotes or retry storms burn spend | Quote + consent + reservation cap; one held reservation per (project, plan, plan version, output spec); per-owner open-cap and environment daily ceiling (also in test); stage estimates computed in SQL with a floor; retries reserve first; no automatic escalation | T-GW-10/12, T-DB-36, T-DB-55, T-DB-56 |
 | D3 | Poison queue message loops | Idempotent consumers, bounded retries, mandatory DLQ, alert | T-GW-18 |
 | D4 | OTP email bombing | Supabase 60 s window, allow-list in test, custom SMTP rate limits | local Mailpit test |
 | D5 | Decompression-bomb-like media (huge dimensions, frame counts, durations) | Probe allowlist before decode; dimension/duration caps; per-stage timeouts | render tests |
@@ -931,8 +959,10 @@ Mechanisms (INFERRED):
 | E4 | Camera guest escalates to project read | Guest has no DB identity; `jvg_`/`jvs_` accepted only on upload routes | T-R2-02 |
 | E5 | Coach approves spend or creates public links | Quote, accept, share-link and grant routes are owner-only; clip grants of another owner's footage need that owner's approval | T-DB-25/26/46, T-R2-07 |
 | E8 | A bug or compromised dependency in a user route moves a job or marks an artifact verified | Orchestration functions executable only by `jovra_orchestrator`, whose Hyperdrive binding and host secret exist only in the separate `jovra-internal` Worker; the user gateway reaches it through a service binding with no orchestration methods; render-output uploads use `*_for_attempt` variants; SQL transition table; `ready` needs a verified artifact | T-DB-53, T-DB-57, T-GW-29 |
-| E9 | Anyone holding the test publishable key signs up and spends real model and container money in test | Sign-ups disabled on the test Auth project; mandatory allow-list hook; `accept_quote` in test requires the tester flag | T-GW-30 |
-| E10 | A stolen refresh token or an unlocked phone deletes the account | Deletion checks the authentication time (or a bound re-authentication), never a refreshed `iat` | T-GW-31 |
+| E9 | Anyone holding the test publishable key signs up and spends real model and container money in test | Sign-ups disabled on the test Auth project; mandatory allow-list hook; `accept_quote` in test requires the tester flag; PostgREST writes bounded by quotas | T-GW-30, T-DB-64 |
+| E10 | A stolen refresh token or an unlocked phone deletes the account | Deletion requires a token whose Auth session was created by a sign-in ≤ 10 min ago (`authenticated_within`), never a refreshed `iat` | T-GW-31 |
+| E11 | Helpers and tables owned by different roles, so a definer helper re-enters RLS (recursion or empty results) or a `FORCE RLS` table breaks lookups | One owner (`jovra_owner`) for every table, helper, trigger and command; no `FORCE ROW LEVEL SECURITY` | T-DB-66 |
+| T11 | A client supplies a provider, callback, webhook or model URL that a server component then calls | No such field is accepted; providers run on the device; endpoints are Worker configuration | T-R2-10 |
 | E6 | Render service raises a budget or publishes | No such command accepts a lease token; reservation cap enforced in SQL | T-DB-36 |
 | E7 | Anonymous Supabase user writes Studio rows | Restrictive policy; anonymous sign-in off in live | T-DB-28 |
 
@@ -969,36 +999,133 @@ Mechanisms (INFERRED):
 ## 13. Review round 2 hardening (2026-10-07)
 
 Each item below answers a verified review finding; the table and endpoint changes are in `architecture.md` (§4.3,
-§5, §7, §10, ticket B-25). Labels as above.
+§5, §7, §10, ticket B-25). The SQL is design text to be turned into migrations by B-25; like the rest of this file it
+has not been executed. Names that depend on hosted Supabase internals (`auth.sessions`, `auth.users` columns, Vault,
+the Auth hook payload) are **UNVERIFIED** and checked at G1. Labels as above.
+
+### 13.0 Trigger order and the client-path test (used by several items)
+
+OBSERVED (PostgreSQL CREATE TRIGGER, https://www.postgresql.org/docs/current/sql-createtrigger.html): triggers of the
+same kind on the same event fire in alphabetical order by name. Every BEFORE trigger on a client-written table is
+therefore named with a sort prefix, and the order is part of the design:
+
+| Prefix | Trigger | Job |
+|---|---|---|
+| `a00_` | `rls_guard` | role check, same error as RLS (§13.11) |
+| `a05_` | `set_parent_project` | copies `project_id` from the parent (plan versions, §13.5) |
+| `a10_` | `validate_lengths` | coded length errors (§9) |
+| `a20_` | `enforce_quota` | per-day row and byte quotas (§13.10) |
+| `a30_` | `force_actor_columns` | `created_by`/`reviewed_by` = `auth.uid()` |
+| `a40_` | `assign_next_revision`, `check_event_parent` | advisory lock, revision, parent check |
+| `b20_` | `pin_shared_clip`, `check_clip_excerpt` | clip approval pinning (§13.8, §13.16) |
+
+Server stages (the `app_gateway` definer functions run by `jovra_gateway` or `jovra_orchestrator`) also insert into
+some of these tables (manifests, server-produced plan versions and observations). Triggers distinguish the two paths
+by the `role` setting, which PostgREST sets per request with `set_config('role', 'authenticated', true)` and which a
+`security definer` function does not change (INFERRED from PostgREST's request setup and PostgreSQL's definer
+semantics, which switch `current_user` without touching the `role` setting; T-DB-67 proves it locally):
+
+```sql
+create or replace function app_private.is_client_path() returns boolean
+language sql stable set search_path = '' as $$
+  select coalesce(current_setting('role', true), '') in ('authenticated', 'anon')
+$$;
+revoke execute on function app_private.is_client_path() from public, anon;   -- callable only by definer triggers
+```
 
 ### 13.1 Two Worker scripts (E8)
 
 - **`jovra-gateway`** serves user and guest routes and `/s/`. It holds only the `jovra_gateway` Hyperdrive binding, the
   R2 bindings and a service binding to `jovra-internal`. It has no orchestrator binding, no render-host secret and no
-  Workflow binding that can do more than `create` (job start goes through `jovra-internal.startJob(jobId)`).
+  Workflow or Queue binding (job start goes through `jovra-internal.startJob(jobId)`, architecture §7.2).
 - **`jovra-internal`** holds the `jovra_orchestrator` Hyperdrive binding, the host HMAC secret (or the Container
-  binding), the Workflow class, the Queue consumer, the reconciler cron and the `/internal/v1/attempts/…` routes. Its
+  binding), the R2 bindings for attempt reads and writes, the Workflow classes (`RenderJob` and the deletion
+  Workflow), the Queue consumers, the reconciler cron and the `/internal/v1/attempts/…` routes. Its
   service-binding entrypoint exposes exactly `startJob(jobId)` and `notifyReview(jobId)`, both of which re-read the job
   row and act only on its stored state; it never exposes `set_job_state`, `mark_artifact_verified` or any upload
-  method. Its routes are not on the user hostname (INFERRED: a Worker without a route is reachable only by bindings).
+  method. Its routes are not on the user hostname, and its Wrangler config sets `"workers_dev": false` and
+  `"preview_urls": false`: a Worker without a custom route is otherwise still public on its `*.workers.dev` URL
+  (INFERRED from Wrangler's defaults; checked at G2). The host routes also require the host credential, so exposure
+  alone would not open them.
 - Render-output uploads and verify-stage reads use the `*_for_attempt` command variants (§4.1), fenced by the lease.
-- Tests: T-DB-57; **T-GW-29** parses both Wrangler configs and asserts the user gateway has no orchestrator Hyperdrive
-  binding, no host secret and no route under `/internal/`, and that the service binding's RPC surface is the two
-  methods above.
+  The deletion step functions and the reconciler functions are orchestrator commands; `request_deletion` is a user
+  command.
+
+```jsonc
+// backend/gateway/wrangler.jsonc (user Worker) — sketch; T-GW-29 parses the real file
+{ "name": "jovra-gateway",
+  "hyperdrive": [{ "binding": "DB", "id": "<config for role jovra_gateway, caching disabled>" }],
+  "services":   [{ "binding": "INTERNAL", "service": "jovra-internal", "entrypoint": "JobControl" }],
+  "r2_buckets": [{ "binding": "WORK", "bucket_name": "jovra-<env>-work" },
+                 { "binding": "FILMS", "bucket_name": "jovra-<env>-films" }],
+  "observability": { "logs": { "invocation_logs": false } } }
+  // no "workflows", no "queues", no HOST_HMAC_SECRET, no route matching /internal/*
+```
+
+```sql
+-- One role per command. User variants refuse a render actor before anything else:
+--   if p_actor_kind not in ('user', 'camera_guest') then
+--     raise exception using errcode = 'P0422', message = 'actor_kind_not_accepted'; end if;
+grant execute on function app_gateway.authorize_upload(text, uuid, uuid, bigint, bytea, uuid) to jovra_gateway;
+grant execute on function app_gateway.authorize_output_upload_for_attempt(uuid, bytea, text, bigint, bytea, uuid)
+  to jovra_orchestrator;
+-- T-DB-57 (lint form): this query must return no rows
+select p.oid::regprocedure
+  from pg_catalog.pg_proc p join pg_catalog.pg_namespace n on n.oid = p.pronamespace
+ where n.nspname = 'app_gateway'
+   and has_function_privilege('jovra_gateway', p.oid, 'execute')
+   and has_function_privilege('jovra_orchestrator', p.oid, 'execute');
+```
+
+Tests: T-DB-53, T-DB-57; **T-GW-29** parses both Wrangler configs and asserts the user gateway has no orchestrator
+Hyperdrive binding, no host secret, no Workflow or Queue binding and no route under `/internal/`, that `jovra-internal` has `workers_dev` and `preview_urls` off, and that the
+service binding's RPC surface is the two methods above.
 
 ### 13.2 Invitations bound to their recipient (S7)
 
 - `create_grant` takes the invitee's email from the owner (`inviteeEmail`), stores only
-  `invitee_email_hmac = HMAC-SHA256(server key, lower(trim(email)))` and never logs or returns it. Every invitation kind
+  `invitee_email_hmac = HMAC-SHA256(key, lower(btrim(email)))` and never logs or returns it. Every invitation kind
   needs it (`project_coach`, `lesson_coach`, `lesson_view`, `film_view`, `lesson_clip_view`); `share_link` has no
   invitee (it is a 24 h bearer link by design, §8.3).
-- `redeem_grant` (definer) compares the HMAC of the redeemer's `auth.users.email` and requires `email_confirmed_at is
-  not null`; a mismatch is `P0404`, identical to an unknown code (INFERRED that these `auth.users` columns are readable
-  by the definer owner; checked at G1). A SIWA user with a hidden private-relay email redeems after signing in with
-  the invited address by email code (UNVERIFIED identity-linking behaviour; Q12).
+- The HMAC key lives in Supabase Vault and is read only by `app_private.email_hmac(text)`, a definer function with no
+  EXECUTE grant to any client or login role (only definer functions owned by `jovra_owner` call it). UNVERIFIED at
+  G1: that `jovra_owner` can be granted read on `vault.decrypted_secrets`; if not, the key is held by the operator
+  role that owns the function, which changes T-DB-66's owner rule for this one function and must be recorded there.
+- `redeem_grant` compares the HMAC of the redeemer's `auth.users.email` and requires `email_confirmed_at is not null`;
+  a mismatch is `P0404`, identical to an unknown code. A SIWA user with a hidden private-relay email redeems after
+  signing in with the invited address by email code (UNVERIFIED identity-linking behaviour; Q12). Redemption is
+  rate-limited per user (architecture §5).
 - `approve_member` shows the owner the redeemer's verified email, masked (`j•••@e•••.com`), plus the code both phones
   show; never `display_name`, which the redeemer controls.
-- Tests: T-DB-58, T-DB-51 (still pending until approval).
+
+```sql
+alter table public.access_grants
+  add column invitee_email_hmac bytea,
+  add constraint grants_invitee_ck check ((kind = 'share_link') = (invitee_email_hmac is null));
+
+create or replace function app_private.email_hmac(p_email text) returns bytea
+language sql stable security definer set search_path = '' as $$
+  select extensions.hmac(convert_to(lower(btrim(p_email)), 'UTF8'),
+                         (select decode(s.decrypted_secret, 'hex') from vault.decrypted_secrets s
+                           where s.name = 'jovra_email_hmac_key'),
+                         'sha256')
+$$;
+revoke execute on function app_private.email_hmac(text) from public, anon, authenticated;
+
+-- inside app_gateway.redeem_grant(p_actor uuid, p_token_hash bytea, p_request_id uuid)
+select g.* into v_grant
+  from public.access_grants g
+ where g.token_hash = p_token_hash and g.kind <> 'share_link'
+   and g.revoked_at is null and g.redeemed_at is null and g.redeem_by > now()
+ for update;
+select u.email, u.email_confirmed_at into v_email, v_confirmed_at from auth.users u where u.id = p_actor;
+if v_grant.id is null or v_confirmed_at is null or v_email is null
+   or app_private.email_hmac(v_email) is distinct from v_grant.invitee_email_hmac then
+  raise exception using errcode = 'P0404', message = 'not_found';   -- same code and text as an unknown code
+end if;
+```
+
+Tests: T-DB-58, T-DB-51 (still pending until approval), T-GW-33, T-GW-37 (redemption rate limit).
 
 ### 13.3 Test sign-up enforced on the server (E9)
 
@@ -1006,117 +1133,498 @@ Each item below answers a verified review finding; the table and endpoint change
   "Allow new users to sign up" setting off at G1); testers are created by the operator script with the admin API
   (UNVERIFIED that admin creation still works with sign-ups off; G1 evidence).
 - The `before_user_created` hook (named in `docs/research/studio/backend-architecture.md` §3.3 from the local Supabase
-  config; availability on the chosen hosted plan UNVERIFIED, G1)
-  is mandatory in test and rejects any email whose HMAC is not in the allow-list table.
+  config; availability on the chosen hosted plan, its config keys and its payload shape UNVERIFIED, G1) is mandatory
+  in test and rejects any email whose HMAC is not in `app_ops.tester_allowlist`.
 - `accept_quote` in test also requires `profiles.is_tester = true` (set only by the operator script); that is the only
-  reader of `is_tester`, and no RLS policy uses it.
-- **G1 evidence (T-GW-30):** `POST /auth/v1/otp` with `create_user: true` for an unknown email against the hosted test
-  project is refused and no `auth.users` row appears.
+  reader of `is_tester`, and no RLS policy uses it. The environment name comes from `app_ops.settings`, written by the
+  environment's migration, never from a request.
+
+```toml
+# backend/supabase/config.toml (test profile) — key names UNVERIFIED until G1
+[auth]
+enable_signup = false
+[auth.hook.before_user_created]
+enabled = true
+uri = "pg-functions://postgres/app_private/before_user_created"
+```
+
+```sql
+create table app_ops.tester_allowlist (email_hmac bytea primary key, added_at timestamptz not null default now());
+
+create or replace function app_private.before_user_created(event jsonb) returns jsonb
+language plpgsql security definer set search_path = '' as $$
+begin
+  if not exists (select 1 from app_ops.tester_allowlist a
+                  where a.email_hmac = app_private.email_hmac(event -> 'user' ->> 'email')) then
+    return jsonb_build_object('error', jsonb_build_object('http_code', 403, 'message', 'signup_not_allowed'));
+  end if;
+  return '{}'::jsonb;
+end $$;
+revoke execute on function app_private.before_user_created(jsonb) from public, anon, authenticated;
+grant execute on function app_private.before_user_created(jsonb) to supabase_auth_admin;
+
+-- inside app_gateway.accept_quote, before any write
+if (select s.env from app_ops.settings s) = 'test'
+   and not exists (select 1 from public.profiles p where p.id = p_actor and p.is_tester) then
+  raise exception using errcode = 'P0401', message = 'unauthorized';
+end if;
+```
+
+**G1 evidence (T-GW-30):** `POST /auth/v1/otp` with `create_user: true` for an unknown email against the hosted test
+project is refused and no `auth.users` row appears; the same for an email that is not allow-listed with sign-ups
+temporarily on (proves the hook alone also holds).
 
 ### 13.4 Re-authentication for deletion (E10)
 
-§2.2 step 5. `POST /v1/deletion-requests` with scope `account` returns `401 reauth_required` unless the authentication
-time is within 10 minutes (T-GW-31: a token refreshed 2 minutes ago whose authentication is 2 hours old is refused).
+§2.2 step 5. `POST /v1/deletion-requests` with scope `account` returns `401 reauth_required` unless the token's Auth
+session was created within 10 minutes.
+
+```sql
+create or replace function app_gateway.authenticated_within(p_actor uuid, p_session_id uuid, p_max interval)
+returns boolean language sql volatile security definer set search_path = '' as $$   -- volatile: never cached (T-DB-03)
+  select exists (select 1 from auth.sessions s
+                  where s.id = p_session_id and s.user_id = p_actor
+                    and s.created_at > now() - p_max)
+$$;
+revoke all on function app_gateway.authenticated_within(uuid, uuid, interval) from public, anon, authenticated;
+grant execute on function app_gateway.authenticated_within(uuid, uuid, interval) to jovra_gateway;
+```
+
+T-GW-31: a token refreshed 2 minutes ago whose session was created 2 hours ago is refused; a new email-code sign-in
+then passes; a forged `session_id` of another user's fresh session is refused (`user_id` must equal `sub`).
 
 ### 13.5 Plans bound to their project (I3d)
 
-`story_plans` gets `U (project_id, id)`; `story_plan_versions` gets `project_id` (set by trigger from its plan, never
-by the client) with `FK (project_id, story_plan_id) → story_plans(project_id, id)` and `U (project_id, id)`,
-`U (story_plan_id, id)`; `render_jobs` gets `FK (project_id, story_plan_id) → story_plans(project_id, id)` and
-`FK (story_plan_id, story_plan_version_id) → story_plan_versions(story_plan_id, id)`; `quotes` and
-`usage_reservations` get `FK (project_id, story_plan_version_id) → story_plan_versions(project_id, id)`.
-`create_quote` asserts the plan and version belong to `p_project`; `review_job` asserts
-`version.story_plan_id = job.story_plan_id`. Test T-DB-59.
+```sql
+alter table public.story_plans add constraint story_plans_project_id_id_key unique (project_id, id);
+
+alter table public.story_plan_versions
+  add column project_id uuid not null,                     -- set by a05_set_parent_project, not granted to clients
+  add constraint spv_plan_fk foreign key (project_id, story_plan_id)
+      references public.story_plans (project_id, id) on delete cascade,
+  add constraint spv_project_id_id_key unique (project_id, id),
+  add constraint spv_plan_id_id_key unique (story_plan_id, id);
+
+-- the same two FKs on render_jobs, quotes and usage_reservations (each gains story_plan_id not null)
+alter table public.render_jobs
+  add constraint jobs_plan_fk foreign key (project_id, story_plan_id)
+      references public.story_plans (project_id, id),
+  add constraint jobs_version_fk foreign key (story_plan_id, story_plan_version_id)
+      references public.story_plan_versions (story_plan_id, id);
+-- MATCH SIMPLE: a null story_plan_version_id (plan produced by the job) skips only the second FK.
+
+-- create_quote(p_actor, p_project, p_plan, p_version, …)
+perform 1 from public.story_plans p where p.id = p_plan and p.project_id = p_project;
+if not found then raise exception using errcode = 'P0404', message = 'not_found'; end if;
+if p_version is not null then
+  perform 1 from public.story_plan_versions v
+   where v.id = p_version and v.story_plan_id = p_plan and v.validation_state = 'valid' and not v.stale;
+  if not found then raise exception using errcode = 'P0404', message = 'not_found'; end if;
+end if;
+-- review_job(p_actor, p_job, p_decision, p_version): the same check with p_plan := job.story_plan_id
+```
+
+Test T-DB-59.
 
 ### 13.6 One hold, also without a plan version (D9)
 
 The held-reservation and non-terminal-job unique indexes are `NULLS NOT DISTINCT` (PostgreSQL 15+, OBSERVED
-https://www.postgresql.org/docs/current/sql-createindex.html; Supabase runs Postgres 17 per architecture §1). An
-in-job revise (architecture §7.1) updates `render_jobs.story_plan_version_id` **and** the reservation's
-`story_plan_version_id` and `output_spec_sha256` in one transaction, so a later quote for the new version and the same
-output hits the same key. Test T-DB-60.
+https://www.postgresql.org/docs/current/sql-createindex.html; Supabase runs Postgres 17 per architecture §1) and include
+`story_plan_id`, so two plan-by-job quotes of one plan for the same output collide while two different plans of a
+project do not.
+
+```sql
+create unique index usage_reservations_one_hold on public.usage_reservations
+  (project_id, story_plan_id, story_plan_version_id, output_spec_sha256) nulls not distinct
+  where state = 'held';
+create unique index render_jobs_one_live on public.render_jobs
+  (project_id, story_plan_id, story_plan_version_id, output_spec_sha256) nulls not distinct
+  where state not in ('ready', 'canceled', 'failed_terminal', 'quote_expired', 'deleted');
+```
+
+An in-job revise (architecture §7.1) moves the key of the job **and** of its reservation in one transaction. The
+output hash covers the plan revision (contract `jovra.quote/1`), so both columns move:
+
+```sql
+update public.render_jobs
+   set story_plan_version_id = p_new_version, output_spec_sha256 = v_new_hash
+ where id = p_job;
+update public.usage_reservations
+   set story_plan_version_id = p_new_version, output_spec_sha256 = v_new_hash
+ where id = v_reservation and state = 'held';
+-- unique_violation (another hold or live job already owns the new key) → P0409 'requote_conflict'
+```
+
+The **planning stage** of a plan-by-job job does the same when it produces the version: the job was created and its
+reservation held under `(plan, NULL, hash of the unplanned output)`, and once the plan version V exists the stage's
+success command (`finish_attempt` for the `plan` stage, orchestrator role) runs the two updates above with
+`p_new_version = V` and `v_new_hash` recomputed from V, in the same transaction that records the stage's consumption.
+Otherwise the job would name V while its hold stayed at `(plan, NULL)`, and a later quote naming V with the same output
+would open a second hold and a second job for the same work. A unique violation here is also `P0409` (the stage fails
+`requote_conflict`; nothing is charged twice).
+
+Test T-DB-60, T-DB-68.
 
 ### 13.7 Spend limits fail closed (D8)
 
-`app_ops.spend_limits` limit columns are `NOT NULL CHECK (> 0)`. A default owner row (`scope = 'owner', owner_id =
-null`) applies to every owner without a row of their own; the environment row is required. `accept_quote` and
-`reserve_stage` raise `P0402` when the applicable row is missing. "Environment spend today" = the sum of
-`reserved_cost_micro_usd` added today (UTC) by reservations created or topped up today, plus the new cap. Test
-T-DB-61.
+`app_ops.spend_limits` limit columns are `NOT NULL CHECK (> 0)`, with at most one environment row, one default owner
+row (`owner_id is null`) and one row per owner. Commitments are an append-only ledger, so "today" has one meaning:
+
+```sql
+create unique index spend_limits_env     on app_ops.spend_limits ((true)) where scope = 'environment';
+create unique index spend_limits_default on app_ops.spend_limits ((true)) where scope = 'owner' and owner_id is null;
+create unique index spend_limits_owner   on app_ops.spend_limits (owner_id) where scope = 'owner' and owner_id is not null;
+
+create table app_ops.spend_commitments (
+  id bigint generated always as identity primary key,
+  at timestamptz not null default now(),
+  owner_id uuid not null, reservation_id uuid not null,
+  kind text not null check (kind in ('cap_open', 'cap_topup', 'stage_reserve', 'stage_overrun')),
+  amount_micro_usd bigint not null check (amount_micro_usd > 0));
+create index on app_ops.spend_commitments (at);
+
+-- called by accept_quote (p_kind 'cap_open' or 'cap_topup', p_amount = new cap or top-up delta),
+-- by reserve_stage (p_kind 'stage_reserve', p_amount = SQL estimate) and by finish_attempt when the measured cost
+-- exceeds the stage's reservation (p_kind 'stage_overrun', p_amount = actual - reserved; recorded even when it
+-- crosses the ceiling, then the job goes to budget_exceeded); inserts the commitment when allowed
+create or replace function app_private.commit_spend(p_owner uuid, p_reservation uuid, p_kind text, p_amount bigint)
+returns void language plpgsql security definer set search_path = '' as $$
+declare
+  v_day_start timestamptz := date_trunc('day', now(), 'UTC');
+  v_owner     app_ops.spend_limits;
+  v_env       app_ops.spend_limits;
+  v_open      bigint;
+  v_today     bigint;
+begin
+  perform pg_advisory_xact_lock(hashtext('jovra:spend'));          -- serializes ceiling checks (low volume)
+  select * into v_owner from app_ops.spend_limits l
+   where l.scope = 'owner' and (l.owner_id = p_owner or l.owner_id is null)
+   order by l.owner_id nulls last limit 1;                         -- own row first, else the default row
+  select * into v_env from app_ops.spend_limits l where l.scope = 'environment';
+  select coalesce(sum(c.amount_micro_usd), 0) into v_today from app_ops.spend_commitments c
+   where c.at >= v_day_start
+     and (case when p_kind in ('stage_reserve', 'stage_overrun') then c.kind in ('stage_reserve', 'stage_overrun')
+               else c.kind in ('cap_open', 'cap_topup') end);
+  if p_kind not in ('stage_reserve', 'stage_overrun') then
+    select coalesce(sum(r.cap_cost_micro_usd), 0) into v_open from public.usage_reservations r
+     where r.owner_id = p_owner and r.state = 'held';               -- a top-up's own cap is already in here
+    if v_open + p_amount > coalesce(v_owner.max_open_cap_micro_usd, -1) then
+      raise exception using errcode = 'P0402', message = 'budget_exceeded';
+    end if;
+  end if;
+  -- a missing row makes the record null, so coalesce(…, -1) refuses: no row, no spend. An overrun is already spent:
+  -- it is recorded (so the next reservation sees it) and the caller then stops the job at budget_exceeded.
+  if p_kind <> 'stage_overrun' and v_today + p_amount > coalesce(v_env.daily_ceiling_micro_usd, -1) then
+    raise exception using errcode = 'P0402', message = 'budget_exceeded';
+  end if;
+  insert into app_ops.spend_commitments (owner_id, reservation_id, kind, amount_micro_usd)
+  values (p_owner, p_reservation, p_kind, p_amount);
+end $$;
+revoke execute on function app_private.commit_spend(uuid, uuid, text, bigint) from public, anon, authenticated;
+```
+
+**Planner spend is bounded by its stage reservation (architecture §7.4).** `reserve_stage` for the `plan` stage
+computes the reservation from the worst case the planner call can reach: the image and frame budget, the structured
+input, `max_tokens` for the output and the single repair call, each priced from `rates_version`. The Workflow passes
+the provider `max_tokens`, the image count and the effort that this reservation covers, read back from the attempt row,
+never chosen by the planner adapter; a request whose worst case exceeds the reservation is refused before any provider
+call (`P0402`, the stage falls back to the heuristic planner). The repair call is made only if the remaining
+reservation covers its own worst case. `finish_attempt` writes the measured tokens into `measurements` and
+`actual_cost_micro_usd`; an actual cost above the reservation (a provider counting differently) is committed as
+`stage_overrun` and stops the job at `budget_exceeded`, so the environment ceiling counts real spend, not only
+reservations.
+
+Test T-DB-61 (no rows, NULL limit, default row only), T-DB-71 (two concurrent accepts at the ceiling: one `P0402`),
+T-DB-72 (planner spend).
 
 ### 13.8 Clip share approval pins what was approved (I3b)
 
-Trigger `pin_shared_clip` (BEFORE UPDATE on `lesson_clips`): when `match_start_us`, `match_end_us` or `keeper_ref`
-changes on a clip whose project is not the lesson owner's, it clears `share_approved_at`, sets
-`excerpt_artifact_id = null` and marks the old excerpt for deletion; viewers lose access until the project owner
-approves again and a new excerpt is rendered. `app_gateway.revoke_clip_share(p_actor, p_clip)` (project owner)
-clears the approval. `deletion_scope` gains `lesson_clip`. `revoke_grant` accepts the creator **or** the owner of the
-project whose footage a `lesson_clip_view` grant reaches. Test T-DB-62.
+The approval stores a fingerprint of everything a viewer would see, and visibility requires it to still match
+(`can_view_lesson_clip`, §4), so even a server path that bypassed the trigger could not carry an approval to another
+window. The trigger also clears the approval and unlinks the excerpt, so the UI shows "Needs the owner's approval
+again" instead of silently hiding the clip.
+
+```sql
+alter table public.lesson_clips add column share_approved_sha256 bytea;
+
+create or replace function app_private.clip_share_fingerprint(c public.lesson_clips) returns bytea
+language sql immutable set search_path = '' as $$
+  select extensions.digest(convert_to(concat_ws('|',
+           c.project_id::text, coalesce(c.source_id::text, '-'), c.match_start_us::text, c.match_end_us::text,
+           coalesce(c.keeper_ref, '-'), coalesce(c.sync_map_revision::text, '-'),
+           coalesce(c.event_revision::text, '-')), 'UTF8'), 'sha256')
+$$;
+revoke execute on function app_private.clip_share_fingerprint(public.lesson_clips) from public, anon, authenticated;
+-- called only inside definer helpers (can_view_lesson_clip) and triggers, which run as jovra_owner
+
+create or replace function app_private.pin_shared_clip() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  if app_private.clip_share_fingerprint(new) is distinct from app_private.clip_share_fingerprint(old) then
+    new.share_approved_at     := null;
+    new.share_approved_sha256 := null;
+    if old.excerpt_artifact_id is not null then
+      new.excerpt_artifact_id := null;
+      update public.artifacts set deleted_at = now() where id = old.excerpt_artifact_id;   -- hidden at once
+      insert into app_ops.job_outbox (job_id, kind, payload)                               -- object deleted by jovra-internal
+      values (null, 'delete_artifact', jsonb_build_object('artifactId', old.excerpt_artifact_id));
+    end if;
+  end if;
+  return new;
+end $$;
+create trigger b20_pin_shared_clip before update on public.lesson_clips
+  for each row execute function app_private.pin_shared_clip();
+
+-- app_gateway.approve_clip_share(p_actor, p_clip): owner of c.project_id;
+--   update … set share_approved_at = now(), share_approved_sha256 = app_private.clip_share_fingerprint(c)
+-- app_gateway.revoke_clip_share(p_actor, p_clip): same owner check (else P0404);
+--   update … set share_approved_at = null, share_approved_sha256 = null
+```
+
+`deletion_scope` gains `lesson_clip`. `revoke_grant` accepts the creator **or** the owner of the project whose
+footage a `lesson_clip_view` grant reaches (`g.lesson_clip_id → lesson_clips.project_id → projects.owner_id =
+p_actor`). Tests T-DB-62, T-DB-69.
 
 ### 13.9 Deleting derived media completely (deletion gaps a–f)
 
-- **(a) Source scope.** `lesson_clips` and `observations` use `FK (project_id, source_id) → camera_sources(project_id,
-  id) ON DELETE SET NULL (source_id)` (column list, PostgreSQL 15+, OBSERVED
-  https://www.postgresql.org/docs/current/sql-createtable.html), so `project_id` survives. A new
-  `artifact_sources(artifact_id, project_id, source_id)` table, written by `register_artifact` from the attempt's
-  `input_refs`, lists every artifact derived from a source; the source-scope deletion shows the owner the dependent
-  films, previews and excerpts ("This angle is in 2 films; deleting it deletes them") and, on confirmation, deletes
-  their objects and share links before the rows. A guest angle withdrawn for consent therefore leaves no published
-  film.
-- **(b) Lesson scope.** The workflow removes the lesson id from every `story_plans.lesson_ids`, marks plan versions
-  that used it `invalid` and deletes films rendered from them (objects first), and deletes the Workflow instances of
-  those jobs (planner story text lives in step outputs).
+- **(a) Source scope.** `lesson_clips` and `observations` keep their row and their `project_id` when a source goes,
+  and a new `artifact_sources` table lists every artifact derived from a source; the source-scope deletion shows the
+  owner the dependent films, previews and excerpts ("This angle is in 2 films; deleting it deletes them") and, on
+  confirmation, deletes their objects and share links before the rows. A guest angle withdrawn for consent therefore
+  leaves no published film.
+
+  ```sql
+  alter table public.lesson_clips add constraint lesson_clips_source_fk foreign key (project_id, source_id)
+    references public.camera_sources (project_id, id) on delete set null (source_id);   -- PostgreSQL 15+, OBSERVED
+  alter table public.observations add constraint observations_source_fk foreign key (project_id, source_id)
+    references public.camera_sources (project_id, id) on delete set null (source_id);
+  create table public.artifact_sources (
+    artifact_id uuid not null references public.artifacts (id) on delete cascade,
+    project_id  uuid not null,
+    source_id   uuid not null,
+    primary key (artifact_id, source_id),
+    foreign key (project_id, source_id) references public.camera_sources (project_id, id) on delete cascade);
+  -- RLS on, no client grants; written only by register_artifact from the attempt's input_refs
+  ```
+
+  (`ON DELETE SET NULL (column_list)`: OBSERVED https://www.postgresql.org/docs/current/sql-createtable.html.)
+- **(b) Lesson scope.** The workflow runs, as `jovra_orchestrator`:
+
+  ```sql
+  with affected as (
+    update public.story_plans set lesson_ids = array_remove(lesson_ids, p_lesson)
+     where p_lesson = any (lesson_ids) returning id)
+  update public.story_plan_versions v set validation_state = 'invalid', stale = true
+    from affected a where v.story_plan_id = a.id;
+  -- then: films and previews whose edl_sha256 is a version of an affected plan are deleted (objects first),
+  -- and the Workflow instances of their jobs are deleted (planner story text lives in step outputs)
+  ```
+
+  The `update … lesson_ids` fires `check_story_plan_lessons`. On this server path `auth.uid()` is null, so the
+  trigger skips its per-caller access check (it checks only ids a client path adds) and keeps the same-owner check;
+  otherwise every Progress plan that still holds another lesson would raise and the request would retry forever
+  (architecture §4.4, T-DB-73).
 - **(c) Account scope.** Objects are enumerated through rows the user's data produced, not only by project prefix:
-  the clip excerpts of the user's lessons (`artifacts.lesson_clip_id` → their clips) live under the other owner's
-  prefix and are deleted explicitly before the request reports `done`.
-- **(d) Uploads.** `canceling_jobs` also aborts every open upload session of the target (R2 `abort` first, then the
-  row); `record_part` and `authorize_upload` refuse a project with `deleted_at`.
+
+  ```sql
+  select a.id from public.artifacts a                       -- clip excerpts of the user's lessons, in any project
+    join public.lesson_clips c on c.id = a.lesson_clip_id
+    join public.lessons l      on l.id = c.lesson_id
+   where l.owner_id = p_user
+  union
+  select a.id from public.artifacts a join public.projects p on p.id = a.project_id where p.owner_id = p_user;
+  ```
+
+  Each listed object is deleted before the request reports `done`.
+- **(d) Uploads.** `canceling_jobs` aborts every open upload session of the target (R2 `abort` first, then the row);
+  `authorize_upload`, `record_part` and their `*_for_attempt` variants start with
+  `if exists (select 1 from public.projects where id = v_project and deleted_at is not null) then raise exception
+  using errcode = 'P0410', message = 'gone'; end if;`.
 - **(e) Apple.** `revoking_apple` deletes the Vault-held Apple refresh token after the revoke call (or immediately if
   revoke fails terminally, recording the failure).
-- **(f) Children.** Before the row cascade, the workflow enumerates `artifacts` children (`parent_artifact_id`:
-  thumbnail, captions, chapters) and deletes their objects, since they are keyed by their own ids, not the parent's.
+- **(f) Children.** Before any row cascade, the workflow expands the target set with
+  `select ch.id from public.artifacts ch where ch.parent_artifact_id = any (v_artifact_ids)` (thumbnail, captions,
+  chapters are keyed by their own ids, not the parent's) and deletes their objects too.
 - Tests T-R2-16, T-GW-32.
 
 ### 13.10 Quotas on direct PostgREST writes (D7)
 
-`enforce_quota` (BEFORE INSERT, definer, `app_private`) on every client-insertable table raises `P0429 quota_exceeded`
-past INFERRED starting values (tune after measurement): ≤ 50 `point_event_revisions` per project per day; ≤ 200
-`story_plan_versions` per project per day; ≤ 20 `sync_maps` and ≤ 20 `calibration_versions` per project per day;
-≤ 1,000 `observations` per project per day; ≤ 50 `lessons` and ≤ 500 `lesson_clips` per user per day; and a running
-total of stored JSON bytes per project (≤ 256 MB across revision tables). Test T-DB-64.
+One counter row per (table, subject, UTC day) plus a lifetime row (`day = 'infinity'`), incremented in the inserting
+transaction, and the same pair for the per-user aggregate (`table_name = '*user_total'`, subject `auth.uid()`), which
+every quota'd insert also increments, so per-project limits cannot be multiplied by creating projects. A refusal raises, which also rolls the increment back. A table without a limits row refuses (fail
+closed). Server stages skip quotas; their writes are bounded by reservations.
+
+```sql
+create table app_ops.quota_limits (
+  table_name text primary key,
+  subject text not null check (subject in ('project', 'user')),
+  max_rows_per_day int not null check (max_rows_per_day > 0),
+  max_bytes_per_day bigint not null check (max_bytes_per_day > 0),
+  max_bytes_total bigint not null check (max_bytes_total > 0));
+create table app_ops.quota_counters (
+  table_name text not null, subject_id uuid not null, day date not null,
+  n int not null, bytes bigint not null,
+  primary key (table_name, subject_id, day));
+
+create or replace function app_private.enforce_quota() returns trigger
+language plpgsql security definer set search_path = '' as $$
+declare
+  v_lim     app_ops.quota_limits;
+  v_subject uuid;
+  v_bytes   bigint := octet_length(to_jsonb(new)::text);
+  v_day     app_ops.quota_counters;
+  v_total   app_ops.quota_counters;
+  v_agg     app_ops.quota_limits;
+  v_uday    app_ops.quota_counters;
+  v_utotal  app_ops.quota_counters;
+begin
+  if not app_private.is_client_path() then return new; end if;
+  select * into v_lim from app_ops.quota_limits q where q.table_name = tg_table_name;
+  if not found then raise exception using errcode = 'P0429', message = 'quota_exceeded'; end if;
+  -- a row with no project (a lesson-only observation, allowed by its CHECK) counts against the writing user,
+  -- never against a NULL subject (which would be a raw 23502 on the primary key instead of a quota decision)
+  v_subject := case v_lim.subject when 'user' then (select auth.uid())
+                                  else coalesce((to_jsonb(new) ->> 'project_id')::uuid, (select auth.uid())) end;
+  if v_subject is null then raise exception using errcode = 'P0429', message = 'quota_exceeded'; end if;
+  insert into app_ops.quota_counters as q (table_name, subject_id, day, n, bytes)
+  values (tg_table_name, v_subject, (now() at time zone 'UTC')::date, 1, v_bytes)
+  on conflict (table_name, subject_id, day) do update set n = q.n + 1, bytes = q.bytes + excluded.bytes
+  returning * into v_day;
+  insert into app_ops.quota_counters as q (table_name, subject_id, day, n, bytes)
+  values (tg_table_name, v_subject, 'infinity', 1, v_bytes)
+  on conflict (table_name, subject_id, day) do update set n = q.n + 1, bytes = q.bytes + excluded.bytes
+  returning * into v_total;
+  if v_day.n > v_lim.max_rows_per_day or v_day.bytes > v_lim.max_bytes_per_day
+     or v_total.bytes > v_lim.max_bytes_total then
+    raise exception using errcode = 'P0429', message = 'quota_exceeded';
+  end if;
+  -- the per-user aggregate across every quota'd table and every project: per-project limits alone multiply with
+  -- the number of projects a user creates (D7). Its limits row is '*user_total' (subject 'user'); missing → refuse.
+  select * into v_agg from app_ops.quota_limits q where q.table_name = '*user_total';
+  if not found then raise exception using errcode = 'P0429', message = 'quota_exceeded'; end if;
+  insert into app_ops.quota_counters as q (table_name, subject_id, day, n, bytes)
+  values ('*user_total', (select auth.uid()), (now() at time zone 'UTC')::date, 1, v_bytes)
+  on conflict (table_name, subject_id, day) do update set n = q.n + 1, bytes = q.bytes + excluded.bytes
+  returning * into v_uday;
+  insert into app_ops.quota_counters as q (table_name, subject_id, day, n, bytes)
+  values ('*user_total', (select auth.uid()), 'infinity', 1, v_bytes)
+  on conflict (table_name, subject_id, day) do update set n = q.n + 1, bytes = q.bytes + excluded.bytes
+  returning * into v_utotal;
+  if v_uday.n > v_agg.max_rows_per_day or v_uday.bytes > v_agg.max_bytes_per_day
+     or v_utotal.bytes > v_agg.max_bytes_total then
+    raise exception using errcode = 'P0429', message = 'quota_exceeded';
+  end if;
+  return new;
+end $$;
+create trigger a20_enforce_quota before insert on public.point_event_revisions
+  for each row execute function app_private.enforce_quota();   -- and on every table in the list below
+```
+
+INFERRED starting values (rows/day, bytes/day, bytes total; tune after measurement): `projects` per user 20, 1 MB,
+16 MB; `point_event_revisions` per project 50, 32 MB, 256 MB; `story_plans` per project 50, 1 MB, 16 MB;
+`story_plan_versions` per project 200, 64 MB, 256 MB; `sync_maps` per project 20, 16 MB, 128 MB;
+`calibration_versions` per project 20, 2 MB, 32 MB; `observations` per project (a lesson-only observation counts per
+writing user) 1,000, 4 MB, 64 MB; `lessons` per user
+50, 2 MB, 128 MB; `lesson_clips` per user 500, 1 MB, 32 MB; `provider_connections` per user 10, 64 KB, 64 KB; and the
+per-user aggregate `*user_total` across all of them 2,000, 96 MB, 1 GB (below the sum of the per-table limits, so a
+user who creates many projects reaches it first: about 96 MB a day and 1 GB in total per account, whatever the number
+of projects). Counter
+rows of past days are purged by the reconciler after 7 days (lifetime rows stay until the subject is deleted).
+Updates are not counted: every updatable column is size-checked, so an update cannot grow storage beyond the row cap.
+Tests T-DB-64, T-DB-70.
 
 ### 13.11 BEFORE triggers check the role first (I11)
 
 OBSERVED (PostgreSQL CREATE POLICY documentation, https://www.postgresql.org/docs/current/sql-createpolicy.html, as
-quoted by the reviewer and not re-fetched here): `WITH CHECK` expressions are enforced after BEFORE triggers fire.
-So the first statement of every BEFORE trigger on a client-written table (`check_event_parent`,
-`assign_next_revision`, `enforce_quota`, `force_actor_columns`, `validate_lengths`, `check_story_plan_lessons`,
-`pin_shared_clip`) is `if not app_private.has_project_role(new.project_id, <the insert policy's roles>) then raise
-exception using errcode = '42501', message = 'new row violates row-level security policy'; end if;` (or the lesson
-check for lesson tables), before any lock, lookup or update. Test T-DB-65.
+quoted by the reviewer and not re-fetched here): `WITH CHECK` expressions are enforced after BEFORE triggers fire. So
+every client-insertable table gets `a00_rls_guard`, which sorts before every other BEFORE trigger (§13.0) and raises
+the same error RLS would, before any lock, lookup or update. The guard and the INSERT policy call **the same**
+per-table predicate function, so they cannot drift:
+
+```sql
+create or replace function app_private.can_insert_event_revision(p_project uuid) returns boolean
+language sql stable security definer set search_path = '' as $$
+  select app_private.has_project_role(p_project, '{owner}')
+$$;
+create policy events_insert on public.point_event_revisions for insert to authenticated
+  with check (app_private.can_insert_event_revision(project_id));
+
+create or replace function app_private.rls_guard_point_event_revisions() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  if app_private.is_client_path() and not app_private.can_insert_event_revision(new.project_id) then
+    raise exception using errcode = '42501',
+      message = 'new row violates row-level security policy for table "point_event_revisions"';
+  end if;
+  return new;
+end $$;
+create trigger a00_rls_guard before insert on public.point_event_revisions
+  for each row execute function app_private.rls_guard_point_event_revisions();
+```
+
+The same pair exists for `sync_maps`, `calibration_versions`, `observations`, `lessons`, `lesson_clips`,
+`story_plans`, `story_plan_versions` and `projects`, each predicate being exactly that table's §5 `WITH CHECK` (for
+`story_plan_versions` it resolves the plan's project from `new.story_plan_id`, never from a client-supplied
+`project_id`). `has_project_role` returns false alike for a missing project and someone else's, so the error is
+identical. BEFORE UPDATE triggers need no guard: PostgreSQL applies the UPDATE policy's `USING` filter before the row
+is updated, so they run only on rows the caller can already see, and project columns are not updatable. Tests
+T-DB-65 (identical `42501`, victim's revision and lock untouched), T-DB-67 (a server-stage insert passes the guard;
+lint: every client-insertable table has `a00_rls_guard` and it sorts first).
 
 ### 13.12 The reconciler never deletes fresh media (race)
 
-The daily sweep diffs object keys against `camera_sources`, `artifacts` (every state, including `writing`) **and**
-`app_ops.upload_sessions` in any non-terminal state, and deletes only objects whose `uploaded` time is older than
-48 h (the longest session lifetime) with no row. Test T-R2-17.
+The daily sweep (`jovra-internal`, orchestrator role) lists each prefix and asks Postgres, in batches, which keys are
+orphans. An object is deleted only when it is older than 48 h (the longest session lifetime) **and** no row of any
+kind still names its key:
+
+```sql
+create or replace function app_gateway.reconcile_orphans(p_keys text[], p_uploaded timestamptz[])
+returns setof text language sql volatile security definer set search_path = '' as $$   -- volatile (T-DB-03)
+  select k.obj_key
+    from unnest(p_keys, p_uploaded) as k(obj_key, uploaded_at)
+   where k.uploaded_at < now() - interval '48 hours'
+     and not exists (select 1 from public.camera_sources s where s.r2_key = k.obj_key)
+     and not exists (select 1 from public.artifacts a where a.r2_key = k.obj_key)                -- every state, incl. writing
+     and not exists (select 1 from app_ops.upload_sessions u where u.r2_key = k.obj_key
+                       and (u.state in ('opening', 'open', 'completing')
+                            or u.hard_expires_at > now() - interval '48 hours'))
+$$;
+revoke all on function app_gateway.reconcile_orphans(text[], timestamptz[]) from public, anon, authenticated;
+grant execute on function app_gateway.reconcile_orphans(text[], timestamptz[]) to jovra_orchestrator;
+```
+
+Test T-R2-17.
 
 ### 13.13 Logs outside the Worker
 
 §9. G2 evidence adds: zone Logpush jobs and WAF/Security Events logging for the gateway hostname are off or exclude
 `/s/*` (INFERRED that they record the request URI). Lesson search is `POST /rest/v1/rpc/search_lessons` with the query
-in the body.
+in the body; the app's PostgREST request builder refuses a text filter (`fts`, `like`, `ilike`, `eq` on a text column)
+in a query string (T-GW-35). Tokens never appear in any other path: `/s/` is the only route that carries a secret in
+its URL.
 
 ### 13.14 Consent names the text classes
 
 `quotes.consent` gains `textClasses` (enum array: `ownerNotes`, `ownerLessonNotes`, `coachNotes`), default
 `["ownerNotes", "ownerLessonNotes"]`; coach-authored text is included only if `coachNotes` is ticked, and the copy says
-whose words they are. The planner evidence builder filters by the stored classes. ADR-0016 amended.
+whose words they are. `accept_quote` refuses (`P0422`) a `textClasses` that is not an array of those values. The
+planner evidence builder filters by the stored classes:
+
+```sql
+-- observation text for the plan stage of job j (project p, stored consent v_classes jsonb)
+select o.id, o.body from public.observations o
+ where o.project_id = p.id
+   and ((o.created_by = p.owner_id and v_classes ? 'ownerNotes')
+        or (o.created_by is distinct from p.owner_id and v_classes ? 'coachNotes'));   -- null author = former collaborator
+-- lesson notes: only lessons with l.owner_id = p.owner_id (check_story_plan_lessons) and v_classes ? 'ownerLessonNotes'
+```
+
+ADR-0016's wording must be amended to match (owned outside this change).
 
 ### 13.15 Share links, presigned GETs, money visibility, output size
 
-- `/s/` gets a per-token-hash rate limit (60 requests/min) and a byte budget (3× the artifact size per hour) (INFERRED
-  starting values; T-GW-34).
+- `/s/` gets a per-token-hash rate limit (60 requests/min) and a byte budget (3× the artifact size per hour), counted
+  in a Durable Object keyed by the token hash (INFERRED starting values; T-GW-34).
 - Every media response sets `X-Content-Type-Options: nosniff` and `Content-Security-Policy: sandbox`; captions are
   served as `text/vtt` (T-R2-14).
 - Presigned GETs (only after the spike) sign `response-cache-control`, `response-content-disposition` and
@@ -1128,11 +1636,42 @@ whose words they are. The planner evidence builder filters by the stored classes
 
 ### 13.16 Server-written references are project-constrained (defence in depth)
 
-`artifacts` gets `U (project_id, id)` and composite FKs `(project_id, source_id) → camera_sources(project_id, id)` and
-`(project_id, parent_artifact_id) → artifacts(project_id, id)`; artifact-targeted `access_grants` carry `project_id`
-with `FK (project_id, artifact_id) → artifacts(project_id, id)`; trigger `check_clip_excerpt` requires the excerpt
-artifact's `kind = 'clip_excerpt'`, `lesson_clip_id = clip.id` and `project_id = clip.project_id`. One server bug
-can then no longer register a cross-project parent or excerpt (T-DB-45 extended).
+```sql
+alter table public.artifacts
+  add constraint artifacts_project_id_id_key unique (project_id, id),
+  add constraint artifacts_source_fk foreign key (project_id, source_id)
+      references public.camera_sources (project_id, id) on delete cascade,
+  add constraint artifacts_parent_fk foreign key (project_id, parent_artifact_id)
+      references public.artifacts (project_id, id) on delete cascade;
+alter table public.access_grants
+  add constraint grants_artifact_fk foreign key (project_id, artifact_id)
+      references public.artifacts (project_id, id) on delete cascade,
+  add constraint grants_artifact_project_ck check (artifact_id is null or project_id is not null);
+
+create or replace function app_private.check_clip_excerpt() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  if new.excerpt_artifact_id is not null and not exists (
+       select 1 from public.artifacts a
+        where a.id = new.excerpt_artifact_id and a.kind = 'clip_excerpt'
+          and a.lesson_clip_id = new.id and a.project_id = new.project_id) then
+    raise exception using errcode = 'P0422', message = 'excerpt_mismatch';
+  end if;
+  return new;
+end $$;
+create trigger b20_check_clip_excerpt before insert or update of excerpt_artifact_id on public.lesson_clips
+  for each row execute function app_private.check_clip_excerpt();
+```
+
+One server bug can then no longer register a cross-project parent or excerpt (T-DB-45 extended).
+
+### 13.17 Provider URLs are never client-supplied
+
+Archive providers (Files/iCloud Drive, Google Drive, Box, Dropbox) run on the device with the device's own tokens
+(ADR-0008, ADR-0020); `provider_connections` has no URL, token or endpoint column, and no gateway route accepts a
+provider, callback, webhook or model base URL. Model endpoints and render-host origins are Worker configuration, not
+request data. A request field named `url`, `endpoint`, `callback`, `webhook`, `baseUrl`, `bucket`, `key` or `path` is
+rejected with `400` (T-R2-10 extended).
 
 ## Sources
 
@@ -1140,7 +1679,9 @@ Added in review round 2:
 https://www.postgresql.org/docs/current/sql-createpolicy.html (BEFORE triggers run before `WITH CHECK`, as quoted by the
 reviewer) · https://www.postgresql.org/docs/current/sql-createindex.html (`NULLS NOT DISTINCT`) ·
 https://www.postgresql.org/docs/current/sql-createtable.html (`ON DELETE SET NULL (column)`) ·
-https://supabase.com/docs/guides/auth/jwt-fields (`amr`; UNVERIFIED, read at G1).
+https://supabase.com/docs/guides/auth/jwt-fields (`session_id`, `amr`; UNVERIFIED, read at G1) ·
+https://supabase.com/docs/guides/auth/sessions (session model; UNVERIFIED, read at G1) ·
+https://www.postgresql.org/docs/current/sql-createtrigger.html (same-event triggers fire in name order).
 
 Carried from `docs/research/studio/backend-architecture.md` (read 2026-10-07); refresh at activation.
 

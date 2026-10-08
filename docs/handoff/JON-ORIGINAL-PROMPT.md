@@ -30,3 +30,13 @@ the angles uploaded and processed in the cloud by a JOVRA engine (Opus 5.5 or GP
 analyses, cuts, adds B-roll, angles and metrics, and returns a download link; the user chooses a storyline mode
 (4–5 template profiles, e.g. instructional vs high-energy). Jon calls this the moat. He has an old match video for
 testing, and his video-editing skills are on GitHub. The Studio handoff in `docs/handoff/studio/` structures this.
+
+## Decisions addendum (2026-10-07, third message)
+
+1. Pricing: credits agreed. Story-length tiers 3/5/10/15/20/25/30 minutes ("ESPN extended match highlights with all the
+   data and metrics") plus the full version; price measured by source length and capture quality (SD → HD → 30/60 fps →
+   UHD/4K30/4K60, 1080p120 …). Researchers to lay out the pricing matrix and a clean quote/price-toggle UX.
+2. Remotion: Jon is currently a one-person team.
+3. Jon's OpenAI org has API access to "GPT-6 Astra" and "GPT-6.1 Sol"; together with Opus 5.5 these are the two cloud
+   platforms that hand off back and forth to produce premium films.
+4. Proceed with the Adaptive/Watch v3 handoff (Android 41–60, watchOS 61–65, Wear OS 66–70, iOS foldable 71–72).

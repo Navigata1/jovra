@@ -16,6 +16,9 @@ The rules checked here (backend brief 'Job state and money'; pricing research se
 * consumption is written when a stage attempt succeeds and is keyed by (jobId, stage): a redelivered queue message or
   a later attempt of a stage that was already charged replays instead of charging again, and a failed attempt writes
   nothing (its cost is bounded by the internal cost cap and maxAttempts, never charged to the owner);
+* a reservation belongs to one job, named when the job is created (reserve(job_id=...) or attach_job): consume names
+  that job (jobMismatch otherwise) and a charged stage of the job contract spelled exactly (unknownStage otherwise),
+  so one hold can never be consumed by another job or under a respelled or invented stage;
 * consumption never exceeds the reservation (budget_exceeded instead), unused credits are released, and a failure
   before ready releases everything not consumed;
 * demo identities never reserve; test reservations are Sample; live charging is refused until its own ADR exists;
@@ -23,7 +26,9 @@ The rules checked here (backend brief 'Job state and money'; pricing research se
   (quoteId, credits) request it applied, so a redelivered original reserve or a redelivered top-up returns the
   current state with no charge instead of an error;
 * a stored UsageReservation's entries are tied to it: reserve keys are reserve:<projectId>:<planRevision>:
-  <outputSpecSha256> (the record's own idempotency key; one initial entry, first) or that key plus :topup:<quoteId>;
+  <outputSpecSha256> (the record's own idempotency key; one initial entry, first) or that key plus :topup:<quoteId>,
+  where every top-up quote differs from the record's initialQuoteId (the quote that funded the first hold) and from
+  every other top-up (one accepted quote funds one hold);
   consume keys are consume:<jobId>:<stage>:<attempt> with the record's jobId and a charged stage of the job contract
   (exact spelling); release keys are release:<jobId>:<outcome> matching the record's status; every key's prefix is
   its entry kind.
@@ -116,7 +121,7 @@ class Ledger:
 
     # reservations ------------------------------------------------------------------------------
     def reserve(self, *, quote_id: str, project_id: str, plan_revision: int, output_spec_sha256: str,
-                credits: int, at: str) -> dict:
+                credits: int, at: str, job_id: str | None = None) -> dict:
         require(self.environment != "demo", "demoNeverReserves", "demo identities never write reservations")
         require(self.environment != "live", "liveChargingNotActivated",
                 "live charging needs its own ADR, benchmarks and a margin model (ADR-0013)")
@@ -124,8 +129,9 @@ class Ledger:
         key = (project_id, plan_revision, output_spec_sha256)
         if key in self.by_key:
             r = self.reservations[self.by_key[key]]
-            require((quote_id, credits) in r["reserveRequests"], "idempotencyConflict",
-                    "same idempotency key with different terms (after budget_exceeded, top up instead)")
+            require((quote_id, credits) in r["reserveRequests"] and (job_id is None or job_id == r["jobId"]),
+                    "idempotencyConflict",
+                    "same idempotency key with different terms or another job (after budget_exceeded, top up instead)")
             return {"reservationId": r["reservationId"], "replayed": True, "balance": self.balance}
         q = self._quote(quote_id)
         self._fundable(q, project_id, plan_revision, output_spec_sha256, at)
@@ -134,12 +140,24 @@ class Ledger:
         self.counter += 1
         rid = f"res-{self.counter:04d}"
         self.balance -= credits
-        self.reservations[rid] = {"reservationId": rid, "quoteId": quote_id, "key": key, "capCredits": q["capCredits"],
+        self.reservations[rid] = {"reservationId": rid, "quoteId": quote_id, "initialQuoteId": quote_id,
+                                  "jobId": job_id, "key": key, "capCredits": q["capCredits"],
                                   "reservedCredits": credits, "consumedCredits": 0, "releasedCredits": 0,
                                   "status": "held", "reserveRequests": {(quote_id, credits)}, "topupRequests": set()}
         self.by_key[key] = rid
         q["reservationId"] = rid
         return {"reservationId": rid, "replayed": False, "balance": self.balance}
+
+    def attach_job(self, *, reservation_id: str, job_id: str) -> dict:
+        """Name the one job a reservation funds (at job creation). Repeating the same job replays; another job is a
+        conflict: a hold is never shared between jobs."""
+        r = self._reservation(reservation_id)
+        require(type(job_id) is str and job_id != "", "badIdentifier", "job_id must be a non-empty id")
+        if r["jobId"] == job_id:
+            return {"reservationId": reservation_id, "jobId": job_id, "replayed": True}
+        require(r["jobId"] is None, "jobMismatch", f"reservation {reservation_id} already funds {r['jobId']}")
+        r["jobId"] = job_id
+        return {"reservationId": reservation_id, "jobId": job_id, "replayed": False}
 
     def topup(self, *, reservation_id: str, quote_id: str, credits: int, at: str) -> dict:
         """Raise a held reservation to `credits` under a newly accepted quote for the same key (the budget_exceeded
@@ -152,7 +170,8 @@ class Ledger:
                     "balance": self.balance}
         require(r["status"] == "held", "reservationClosed", f"reservation is {r['status']}")
         q = self._quote(quote_id)
-        require(quote_id != r["quoteId"], "idempotencyConflict", "a top-up needs a new accepted quote")
+        require(quote_id != r["quoteId"] and quote_id != r["initialQuoteId"], "idempotencyConflict",
+                "a top-up needs a new accepted quote")
         self._fundable(q, *r["key"], at)
         require(r["reservedCredits"] < credits <= q["capCredits"], "overCap",
                 "a top-up raises the reservation and stays within the new cap")
@@ -170,6 +189,10 @@ class Ledger:
         require(r["status"] == "held", "reservationClosed", f"reservation is {r['status']}")
         credits_value(credits, "credits")
         credits_value(attempt, "attempt", 1)
+        require(r["jobId"] is not None and job_id == r["jobId"], "jobMismatch",
+                f"reservation {reservation_id} funds job {r['jobId']}, not {job_id!r}")
+        require(type(stage) is str and stage in charged_stages(), "unknownStage",
+                f"{stage!r} is not a charged stage of the job contract (exact spelling)")
         key = (reservation_id, job_id, stage)
         if key in self.consumed_keys:
             require(self.consumed_keys[key]["credits"] == credits, "idempotencyConflict",
@@ -213,7 +236,9 @@ def run_sequence(classes: dict, vector: dict) -> dict:
             elif op == "reserve":
                 got = ledger.reserve(quote_id=args["quoteId"], project_id=args["projectId"],
                                      plan_revision=args["planRevision"], output_spec_sha256=args["outputSpecSha256"],
-                                     credits=args["credits"], at=args["at"])
+                                     credits=args["credits"], at=args["at"], job_id=args.get("jobId"))
+            elif op == "attachJob":
+                got = ledger.attach_job(reservation_id=args["reservationId"], job_id=args["jobId"])
             elif op == "topup":
                 got = ledger.topup(reservation_id=args["reservationId"], quote_id=args["quoteId"],
                                    credits=args["credits"], at=args["at"])
@@ -254,7 +279,9 @@ def _check_entry_key(rec: dict, e: dict, stages: frozenset, topups: list, index:
             require(index == 0, "badEntryKey", "the one initial reserve entry is the first entry; a retried reserve "
                     "replays, it never writes a second hold under another key")
         else:
-            require(index > 0 and parts[5] not in topups, "badEntryKey", f"{e['key']}: one top-up per accepted quote")
+            require(index > 0 and parts[5] not in topups and parts[5] != rec["initialQuoteId"], "badEntryKey",
+                    f"{e['key']}: one top-up per accepted quote, never the quote that funded the initial hold "
+                    f"({rec['initialQuoteId']})")
             topups.append(parts[5])
         return None
     require(rec["jobId"] is not None and len(parts) >= 3 and parts[1] == rec["jobId"], "badEntryKey",
@@ -291,6 +318,9 @@ def check_reservation_record(rec: dict, stages: frozenset | None = None) -> None
     require(sum(1 for e in rec["entries"] if e["kind"] == "release") <= 1, "badEntryKey", "one release per reservation")
     if topups:
         require(rec["quoteId"] == topups[-1], "badEntryKey", "after a top-up, quoteId names the newest quote")
+    else:
+        require(rec["quoteId"] == rec["initialQuoteId"], "badEntryKey",
+                "without a top-up, quoteId is the quote that funded the initial hold")
     require(totals["reserve"] == rec["reservedCredits"] and totals["consume"] == rec["consumedCredits"]
             and totals["release"] == rec["releasedCredits"], "ledgerMismatch", "entry totals differ from the record")
     require(rec["consumedCredits"] + rec["releasedCredits"] <= rec["reservedCredits"], "budgetExceeded",

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Room QR invitation payload (jovra.room.invitation-payload/1)",
+  "description": "Encoded as 'jovra-room:1:' + unpadded base64url(canonical JSON) and read only by the in-app scanner. Not a web URL: it carries no URL field, so a QR can never make the client fetch an arbitrary address or trust an arbitrary certificate. Endpoints are a DNS-SD service instance or a private/link-local LAN address; the host is authenticated by hostKeySha256 (TLS SPKI pin), never by discovery. Contains the join token: never persist or log it. Rendered QR patterns in references are illustrative and must not be scanned.",
+  "type": "object",
+  "required": ["schemaVersion", "sample", "inviteId", "sessionId", "hostEpoch", "hostKeySha256", "joinToken", "nonce", "issuedAt", "expiresAt", "captureRole", "commandRole", "endpoints", "displayCode"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.room.invitation-payload/1"},
+    "sample": {"$ref": "room-common.schema.json#/$defs/sample"},
+    "inviteId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "sessionId": {"$ref": "room-common.schema.json#/$defs/id"},
+    "hostEpoch": {"$ref": "room-common.schema.json#/$defs/hostEpoch"},
+    "hostKeySha256": {"$ref": "room-common.schema.json#/$defs/sha256"},
+    "joinToken": {"$ref": "room-common.schema.json#/$defs/secretToken"},
+    "nonce": {"$ref": "room-common.schema.json#/$defs/nonce"},
+    "issuedAt": {"$ref": "room-common.schema.json#/$defs/dateTime"},
+    "expiresAt": {"$ref": "room-common.schema.json#/$defs/dateTime"},
+    "captureRole": {"enum": ["camera", "none"]},
+    "commandRole": {"$ref": "room-common.schema.json#/$defs/commandRole"},
+    "displayCode": {"$ref": "room-common.schema.json#/$defs/displayCode"},
+    "network": {
+      "description": "Optional court Wi-Fi the host created (Android LocalOnlyHotspot) so the guest can reach the endpoints. The passphrase is a secret like the join token: never persisted outside the OS Wi-Fi configuration, never logged. Joining it is a platform prompt the user approves (UNVERIFIED per platform).",
+      "type": "object",
+      "required": ["kind", "ssid", "passphrase", "security"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "wifi"},
+        "ssid": {"type": "string", "pattern": "^[^\\u0000-\\u001f\\u007f]{1,32}$"},
+        "passphrase": {"type": "string", "pattern": "^[\\u0020-\\u007e]{8,63}$"},
+        "security": {"enum": ["wpa2-psk", "wpa3-sae"]}
+      }
+    },
+    "endpoints": {
+      "type": "array", "minItems": 1, "maxItems": 4,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["kind", "serviceType", "instanceName"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"const": "dnssd"},
+              "serviceType": {"const": "_jovra-room._tcp"},
+              "instanceName": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,62}$"}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["kind", "address", "port"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"const": "lan"},
+              "address": {"description": "An IP literal (never a hostname). The reference additionally requires a private or link-local, non-loopback, non-multicast address.", "type": "string", "pattern": "^([0-9]{1,3}(\\.[0-9]{1,3}){3}|[0-9A-Fa-f:]{2,39})$"},
+              "port": {"type": "integer", "minimum": 1024, "maximum": 65535}
+            }
+          }
+        ]
+      }
+    }
+  }
+}

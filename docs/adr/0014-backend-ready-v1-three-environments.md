@@ -1,6 +1,8 @@
 # Backend-ready v1: three environments, live only behind activation gates
 
 Status: accepted (2026-10-07); amends ADR-0002 (backend boundary only; the local-first document store stands).
+ADR-0002 carries the matching note, added by its owner: "Status: amended by ADR-0014 (backend boundary only)". The
+two notes use one word, "amended"; this ADR does not supersede any part of ADR-0002.
 
 ADR-0002 put "a JOVRA cloud account/backend" out of scope for v1. Jon's Studio direction of 2026-10-07 asks for the
 backend to be designed, built and tested in v1 ("all that rls and thoughtfulness in place and built in"), with auth as

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "disconnect",
+  "status": "The room link is lost on the primary camera; it keeps recording locally",
+  "cases": [
+    {
+      "id": "host-or-network-lost",
+      "why": "Local originals survive; no stop of any kind; cached remote rows become Unknown and keep their last elapsed value",
+      "acceptanceRows": [
+        6,
+        17
+      ],
+      "local": {
+        "deviceId": "c1",
+        "captureState": "Recording",
+        "lastReportedElapsedMs": 754000
+      },
+      "remote": [
+        {
+          "deviceId": "c2",
+          "captureState": "Recording",
+          "lastReportedElapsedMs": 753000
+        },
+        {
+          "deviceId": "c3",
+          "captureState": "Recording",
+          "lastReportedElapsedMs": 746000
+        },
+        {
+          "deviceId": "c4",
+          "captureState": "Recording",
+          "lastReportedElapsedMs": 752000
+        },
+        {
+          "deviceId": "c5",
+          "captureState": "Recording",
+          "lastReportedElapsedMs": 754000
+        },
+        {
+          "deviceId": "c6",
+          "captureState": "Recording",
+          "lastReportedElapsedMs": 751000
+        }
+      ],
+      "expect": {
+        "localCaptureState": "Recording",
+        "commandsIssued": [],
+        "counts": {
+          "enrolled": 5,
+          "fresh": 0,
+          "delayed": 0,
+          "unknown": 5,
+          "reportedRecording": 5,
+          "freshRecording": 0,
+          "canClaimAllRecording": false
+        },
+        "frozenElapsedMs": {
+          "c2": 753000,
+          "c3": 746000,
+          "c4": 752000,
+          "c5": 754000,
+          "c6": 751000
+        },
+        "mayStillBeRecording": {
+          "c2": true,
+          "c3": true,
+          "c4": true,
+          "c5": true,
+          "c6": true
+        }
+      }
+    }
+  ]
+}

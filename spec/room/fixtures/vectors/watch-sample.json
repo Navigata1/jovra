@@ -1,0 +1,314 @@
+{
+  "schemaVersion": "jovra.room-fixture.vectors/1",
+  "kind": "watch-sample",
+  "status": "Sample: design-reference/adaptive/brief/watch-snapshot.sample.json and its jovra.room.watch-bridge/1 adaptation; counts are over the roster",
+  "cases": [
+    {
+      "id": "design-sample-raw",
+      "why": "The unchanged design sample: 5 of 6 fresh, c3 Unknown, c3 elapsed frozen at 12:26",
+      "source": "design",
+      "acceptanceRows": [
+        6
+      ],
+      "expect": {
+        "freshness": {
+          "c1": "Fresh",
+          "c2": "Fresh",
+          "c3": "Unknown",
+          "c4": "Fresh",
+          "c5": "Fresh",
+          "c6": "Fresh"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 5,
+          "delayed": 0,
+          "unknown": 1,
+          "reportedRecording": 6,
+          "freshRecording": 5,
+          "canClaimAllRecording": false
+        },
+        "frozenElapsedMs": {
+          "c3": 746000
+        }
+      }
+    },
+    {
+      "id": "bridge-at-accept",
+      "why": "The adapted bridge record, read the instant it was accepted",
+      "source": "bridge",
+      "nowMonoMs": 0,
+      "currentBaselineId": "sample-watch-boot-1",
+      "bridgePatch": [],
+      "expect": {
+        "freshness": {
+          "c1": "Fresh",
+          "c2": "Fresh",
+          "c3": "Unknown",
+          "c4": "Fresh",
+          "c5": "Fresh",
+          "c6": "Fresh"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 5,
+          "delayed": 0,
+          "unknown": 1,
+          "reportedRecording": 6,
+          "freshRecording": 5,
+          "canClaimAllRecording": false
+        }
+      }
+    },
+    {
+      "id": "watch-holds-3500",
+      "why": "3.5 s later on the watch: 1 s cameras stay fresh, 2 s cameras become delayed",
+      "source": "bridge",
+      "nowMonoMs": 3500,
+      "currentBaselineId": "sample-watch-boot-1",
+      "bridgePatch": [],
+      "expect": {
+        "freshness": {
+          "c1": "Fresh",
+          "c2": "Delayed",
+          "c3": "Unknown",
+          "c4": "Fresh",
+          "c5": "Fresh",
+          "c6": "Delayed"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 3,
+          "delayed": 2,
+          "unknown": 1,
+          "reportedRecording": 6,
+          "freshRecording": 3,
+          "canClaimAllRecording": false
+        }
+      }
+    },
+    {
+      "id": "bridge-stale",
+      "why": "The phone heard every camera recently, but the watch has not heard the bridge for 20 s",
+      "source": "bridge",
+      "nowMonoMs": 20000,
+      "currentBaselineId": "sample-watch-boot-1",
+      "bridgePatch": [],
+      "acceptanceRows": [
+        7
+      ],
+      "expect": {
+        "freshness": {
+          "c1": "Unknown",
+          "c2": "Unknown",
+          "c3": "Unknown",
+          "c4": "Unknown",
+          "c5": "Unknown",
+          "c6": "Unknown"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 0,
+          "delayed": 0,
+          "unknown": 6,
+          "reportedRecording": 6,
+          "freshRecording": 0,
+          "canClaimAllRecording": false
+        }
+      }
+    },
+    {
+      "id": "queued-after-suspension",
+      "why": "A queued context delivered on resume has unbounded transit",
+      "source": "bridge",
+      "nowMonoMs": 0,
+      "currentBaselineId": "sample-watch-boot-1",
+      "acceptanceRows": [
+        8
+      ],
+      "bridgePatch": [
+        {
+          "op": "replace",
+          "path": "/receiverObservation/delivery",
+          "value": "queued"
+        },
+        {
+          "op": "replace",
+          "path": "/receiverObservation/transitBounded",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/receiverObservation/transitMs",
+          "value": null
+        }
+      ],
+      "expect": {
+        "freshness": {
+          "c1": "Unknown",
+          "c2": "Unknown",
+          "c3": "Unknown",
+          "c4": "Unknown",
+          "c5": "Unknown",
+          "c6": "Unknown"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 0,
+          "delayed": 0,
+          "unknown": 6,
+          "reportedRecording": 6,
+          "freshRecording": 0,
+          "canClaimAllRecording": false
+        }
+      }
+    },
+    {
+      "id": "interactive-refresh",
+      "why": "A reachable request/ack bounds transit at 300 ms; 500 ms later",
+      "source": "bridge",
+      "nowMonoMs": 500,
+      "currentBaselineId": "sample-watch-boot-1",
+      "acceptanceRows": [
+        8
+      ],
+      "bridgePatch": [
+        {
+          "op": "replace",
+          "path": "/receiverObservation/delivery",
+          "value": "interactive"
+        },
+        {
+          "op": "replace",
+          "path": "/receiverObservation/transitMs",
+          "value": 300
+        }
+      ],
+      "expect": {
+        "freshness": {
+          "c1": "Fresh",
+          "c2": "Fresh",
+          "c3": "Unknown",
+          "c4": "Fresh",
+          "c5": "Fresh",
+          "c6": "Fresh"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 5,
+          "delayed": 0,
+          "unknown": 1,
+          "reportedRecording": 6,
+          "freshRecording": 5,
+          "canClaimAllRecording": false
+        }
+      }
+    },
+    {
+      "id": "watch-process-restart",
+      "why": "Cached snapshot after the watch app restarted: every age is Unknown",
+      "source": "bridge",
+      "nowMonoMs": 100,
+      "currentBaselineId": "sample-watch-boot-2",
+      "bridgePatch": [],
+      "acceptanceRows": [
+        3
+      ],
+      "expect": {
+        "freshness": {
+          "c1": "Unknown",
+          "c2": "Unknown",
+          "c3": "Unknown",
+          "c4": "Unknown",
+          "c5": "Unknown",
+          "c6": "Unknown"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 0,
+          "delayed": 0,
+          "unknown": 6,
+          "reportedRecording": 6,
+          "freshRecording": 0,
+          "canClaimAllRecording": false
+        }
+      }
+    },
+    {
+      "id": "missing-camera-row",
+      "why": "D8: five fresh recording rows and one enrolled camera with no row is not 'all recording'",
+      "source": "bridge",
+      "nowMonoMs": 0,
+      "currentBaselineId": "sample-watch-boot-1",
+      "acceptanceRows": [
+        6,
+        7
+      ],
+      "bridgePatch": [
+        {
+          "op": "replace",
+          "path": "/devices/2/ageAtBridgeMs",
+          "value": 1000
+        },
+        {
+          "op": "remove",
+          "path": "/devices/5"
+        }
+      ],
+      "expect": {
+        "freshness": {
+          "c1": "Fresh",
+          "c2": "Fresh",
+          "c3": "Fresh",
+          "c4": "Fresh",
+          "c5": "Fresh"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 5,
+          "delayed": 0,
+          "unknown": 1,
+          "reportedRecording": 5,
+          "freshRecording": 5,
+          "canClaimAllRecording": false
+        }
+      }
+    },
+    {
+      "id": "reboot-reused-baseline",
+      "why": "D18: a baseline id reused after a reboot with the clock behind is Unknown, never a crash",
+      "source": "bridge",
+      "nowMonoMs": 100,
+      "currentBaselineId": "sample-watch-boot-1",
+      "acceptanceRows": [
+        3
+      ],
+      "bridgePatch": [
+        {
+          "op": "replace",
+          "path": "/receiverObservation/acceptedAtMonoMs",
+          "value": 50000
+        }
+      ],
+      "expect": {
+        "freshness": {
+          "c1": "Unknown",
+          "c2": "Unknown",
+          "c3": "Unknown",
+          "c4": "Unknown",
+          "c5": "Unknown",
+          "c6": "Unknown"
+        },
+        "counts": {
+          "enrolled": 6,
+          "fresh": 0,
+          "delayed": 0,
+          "unknown": 6,
+          "reportedRecording": 6,
+          "freshRecording": 0,
+          "canClaimAllRecording": false
+        }
+      }
+    }
+  ]
+}
