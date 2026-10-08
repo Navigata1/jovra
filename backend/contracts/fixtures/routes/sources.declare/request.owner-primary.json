@@ -1,0 +1,27 @@
+{
+  "pathParams": {
+    "projectId": "00000000-0000-4000-8000-000000000101"
+  },
+  "headers": {
+    "Authorization": "Bearer sample-access-token-owner-tester",
+    "Idempotency-Key": "00000000-0000-4000-8000-000000000d01",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "slot": "primary_baseline",
+    "localSourceId": "00000000-0000-4000-8000-0000000003AA",
+    "declaredBytes": 3600000000,
+    "declaredSha256": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a",
+    "probeSummary": {
+      "codec": "hevc",
+      "width": 1920,
+      "height": 1080,
+      "fps": {
+        "num": 30,
+        "den": 1
+      },
+      "durationUs": 3600000000,
+      "rotationDegrees": 90
+    }
+  }
+}

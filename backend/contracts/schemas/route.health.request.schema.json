@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GET /v1/health request",
+  "description": "health (jovra-gateway; caller: anyone). Liveness; no data. A request descriptor: pathParams, query, headers and body. No body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "headers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "headers": {
+      "$ref": "#/$defs/headers"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        }
+      }
+    }
+  }
+}

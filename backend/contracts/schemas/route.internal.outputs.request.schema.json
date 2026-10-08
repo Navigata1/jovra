@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /internal/v1/attempts/{attemptId}/outputs request",
+  "description": "internal.outputs (jovra-internal; caller: render host). A request descriptor: pathParams, query, headers and body. JSON body: #/$defs/body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers",
+    "body"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "attemptId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "attemptId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    },
+    "body": {
+      "$ref": "#/$defs/body"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "Authorization",
+        "JOVRA-Lease",
+        "Idempotency-Key",
+        "Content-Type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Authorization": {
+          "$ref": "common.schema.json#/$defs/hostAuthorization"
+        },
+        "JOVRA-Lease": {
+          "$ref": "common.schema.json#/$defs/leaseHeader"
+        },
+        "Idempotency-Key": {
+          "$ref": "common.schema.json#/$defs/idempotencyKeyHeader"
+        },
+        "Content-Type": {
+          "$ref": "common.schema.json#/$defs/jsonContentType"
+        },
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        },
+        "JOVRA-Timestamp": {
+          "$ref": "common.schema.json#/$defs/signatureTimestampHeader"
+        },
+        "JOVRA-Nonce": {
+          "$ref": "common.schema.json#/$defs/signatureNonceHeader"
+        },
+        "JOVRA-Signature": {
+          "$ref": "common.schema.json#/$defs/hostSignatureHeader"
+        }
+      },
+      "dependentRequired": {
+        "JOVRA-Signature": [
+          "JOVRA-Timestamp",
+          "JOVRA-Nonce"
+        ]
+      }
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "outputRef",
+        "kind",
+        "declaredBytes",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "outputRef": {
+          "$ref": "common.schema.json#/$defs/outputRef"
+        },
+        "kind": {
+          "$ref": "common.schema.json#/$defs/artifactKind"
+        },
+        "declaredBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000000
+        },
+        "sha256": {
+          "$ref": "common.schema.json#/$defs/sha256"
+        }
+      }
+    }
+  }
+}

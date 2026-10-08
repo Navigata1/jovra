@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GET /s/{token} request",
+  "description": "shareLinks.open (jovra-gateway; caller: anyone with the link). No cookie, no account; an expired, revoked or unknown token is the same 404. A request descriptor: pathParams, query, headers and body. No body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "token": {
+          "$ref": "common.schema.json#/$defs/shareToken"
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        },
+        "Range": {
+          "$ref": "common.schema.json#/$defs/rangeHeader"
+        }
+      }
+    }
+  }
+}

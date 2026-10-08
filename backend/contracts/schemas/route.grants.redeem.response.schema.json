@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /v1/grants/redeem response",
+  "description": "grants.redeem: a response descriptor (status, headers, body). Success body: JSON. Every response carries X-Request-Id; a JSON body's requestId equals it.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/success"
+    },
+    {
+      "$ref": "#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "success": {
+      "description": "Success: 200 with the §5 envelope {data, requestId}.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": 200
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "type": "object",
+          "required": [
+            "data",
+            "requestId"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/data"
+            },
+            "requestId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            },
+            "clientRequestId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "description": "An error: the §5 envelope with one of this route's codes at its HTTP status.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            401,
+            404,
+            422,
+            429,
+            500
+          ]
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "$ref": "common.schema.json#/$defs/errorBody"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": 401
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "unauthorized",
+                        "demo_not_accepted"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 404
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "not_found"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 422
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "invalid",
+                        "idempotency_key_reused"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 429
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "rate_limited"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 500
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "internal"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "kind",
+        "target",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "project_coach",
+            "lesson_coach",
+            "lesson_view",
+            "film_view",
+            "lesson_clip_view"
+          ]
+        },
+        "target": {
+          "description": "The one target the grant reaches.",
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "projectId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            },
+            "lessonId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            },
+            "artifactId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            },
+            "lessonClipId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "active",
+            "awaiting_owner"
+          ]
+        },
+        "approvalCode": {
+          "description": "project_coach only: six digits the redeemer reads to the owner (INFERRED field name).",
+          "$ref": "common.schema.json#/$defs/deviceCode"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "awaiting_owner"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "approvalCode"
+            ],
+            "properties": {
+              "kind": {
+                "const": "project_coach"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "approvalCode"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
