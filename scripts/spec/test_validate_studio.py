@@ -12,6 +12,7 @@ The repository itself is never modified.  Usage:  python3 scripts/spec/test_vali
 
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 import sys
@@ -44,6 +45,34 @@ def check_probe(ctx, case, rep, where):
 
 
 VECTOR_CHECKERS = {KIND: check_probe}
+'''
+
+NOOP_CHECKER = '''
+
+def check_probe(ctx, case, rep, where):
+    return None  # neither rep.ok nor rep.fail: the validator must not count the case as passed
+
+
+VECTOR_CHECKERS = {KIND: check_probe}
+'''
+
+SELF_TESTS_MODULE = '''\
+"""A temporary cases module that registers only self-tests (test only)."""
+
+
+def probe_passes(ctx, rep):
+    rep.ok("temp-probe self-tests")
+
+
+def probe_fails(ctx, rep):
+    rep.fail("temp-probe self-test", "deliberate failure")
+
+
+def probe_silent(ctx, rep):
+    return None
+
+
+SELF_TESTS = {%s}
 '''
 
 TEMP_PAGE = """\
@@ -159,6 +188,67 @@ class StudioPlumbingTest(unittest.TestCase):
     def test_readme_with_a_per_module_line_fails(self):
         self.box.append("spec/studio/README.md", "\nThe ledger rules are in `ledger.py`.\n")
         self.assertFailsWith(self.box.validate(), "spec/studio/README.md: names module ledger on line")
+
+    def test_readme_with_a_module_bullet_fails(self):
+        # the regression this guard exists for: a per-module "not covered" or decision bullet back in the shared README
+        for name, bullet in (("normalization", "- **Normalization:** original-PTS tables and VFR handling, not covered yet."),
+                             ("sync", "- **Sync:** the 95% prediction-interval gate; syncfit is planned.")):
+            with self.subTest(module=name):
+                box = Sandbox()
+                try:
+                    box.append("spec/studio/README.md", "\n" + bullet + "\n")
+                    self.assertFailsWith(box.validate(), f"spec/studio/README.md: names module {name} on line")
+                finally:
+                    box.close()
+
+    def test_checker_that_neither_passes_nor_fails_fails(self):
+        self.box.write("spec/reference/studio/cases/temp_probe_cases.py", TEMP_CASES + NOOP_CHECKER)
+        self.box.write("spec/studio/modules/temp-probe.md", TEMP_PAGE)
+        self.box.generate()
+        self.assertFailsWith(self.box.validate(), "checker for kind temp-probe neither passed nor failed case two-plus-two")
+
+    def test_self_tests_registered_by_a_cases_module_run(self):
+        module = "spec/reference/studio/cases/temp_probe_cases.py"
+        self.box.write(module, SELF_TESTS_MODULE % '"temp-pass": probe_passes')
+        result = self.box.validate()
+        self.assertPasses(result)
+        self.assertIn("temp-probe self-tests", result.stdout)
+        self.box.write(module, SELF_TESTS_MODULE % '"temp-fail": probe_fails')
+        self.assertFailsWith(self.box.validate(), "temp-probe self-test: deliberate failure")
+        self.box.write(module, SELF_TESTS_MODULE % '"temp-silent": probe_silent')
+        self.assertFailsWith(self.box.validate(), "self-test temp-silent of " + module + " neither passed nor failed")
+
+    def test_self_test_registered_twice_fails(self):
+        self.box.write("spec/reference/studio/cases/temp_probe_cases.py",
+                       SELF_TESTS_MODULE % '"bundle-cross-record": probe_passes')
+        self.assertFailsWith(self.box.validate(), "bundle-cross-record is registered twice")
+
+    def test_module_specific_checks_live_in_their_cases_modules(self):
+        # the validator holds no per-module list: bundle mutations, sync capture-hint and EDL context self-tests and
+        # contract drift checks are SELF_TESTS of the owning cases module
+        validator = (ROOT / "scripts/spec/validate_studio.py").read_text(encoding="utf-8")
+        for name in ("check_bundle", "check_hint_states", "check_context_required", "check_drift", "unmappedSegment",
+                     "contextMissing", "story-profiles.json\"", "credit contract"):
+            self.assertNotIn(name, validator)
+        for module, name in (("bundle", "bundle-cross-record"), ("sync", "sync-capture-hints"),
+                             ("edl", "edl-context-required")):
+            text = (ROOT / f"spec/reference/studio/cases/{module}_cases.py").read_text(encoding="utf-8")
+            self.assertRegex(text, rf"SELF_TESTS = \{{[^}}]*\"{name}\"")
+
+    def test_readme_names_no_module(self):
+        # AC5 as written: `grep -iw <module> spec/studio/README.md` finds nothing for every module page
+        readme = (ROOT / "spec/studio/README.md").read_text(encoding="utf-8").splitlines()
+        for page in sorted((ROOT / "spec/studio/modules").glob("*.md")):
+            if page.name == "README.md":
+                continue
+            word = re.compile(rf"(?<![A-Za-z0-9_]){re.escape(page.stem)}(?![A-Za-z0-9_])", re.IGNORECASE)
+            self.assertEqual([line for line in readme if word.search(line)], [], page.stem)
+
+    def test_readme_holds_no_dated_counts(self):
+        # counts change with every contract ticket; they come from the validator output and --list
+        text = (ROOT / "spec/studio/README.md").read_text(encoding="utf-8")
+        self.assertNotIn("Current result", text)
+        self.assertNotRegex(text, r"\b\d+ (schemas|records|vector cases|module pages|registered kinds|generated files)\b")
 
     def test_list_prints_kinds_modules_and_status(self):
         result = self.box.validate("--list")

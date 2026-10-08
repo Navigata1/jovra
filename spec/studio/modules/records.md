@@ -33,6 +33,18 @@ case count of every kind below and its Swift and Kotlin status.
 
 The sync map, edit plan, render job, quote and usage reservation have their own module pages.
 
+## Invalid cases the review rounds added
+
+The invalid cases of these records cover, from the first round: readiness without full decode, a 48 h link and
+auto-publishing (the delivered film), a laundered cue provenance (a lesson's estimated cue marked reviewed), invite
+escalation and storage-provider overclaims. Review round 1 added: an invite accepted 0.5 s after expiry, and
+reference-catalog duplicates, kind and revision errors. Review round 2 added: ids and hashes with a trailing newline
+(a lesson id, a film's plan hash).
+
+The self-test `records-profile-catalog` (registered in `records_cases.py`) checks that `story-profiles.v1.json` keeps
+the defaults and profile text of `design-reference/studio/brief/story-profiles.json` and passes
+`records.check_profile_catalog`.
+
 ## Decision
 
 - StoryBrief is the planner-facing contract (the research's StoryPlan), so one contract carries one concept.

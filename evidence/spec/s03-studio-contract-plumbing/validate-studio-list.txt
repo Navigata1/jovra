@@ -1,3 +1,4 @@
+$ python3 scripts/spec/validate_studio.py --list
 kind                                  type    count  invalid  module         coverage     swift    kotlin
 edl-context                           vector  4      -        edl            covered      pending  pending
 job-transitions                       vector  32     -        jobstate       covered      pending  pending
@@ -28,3 +29,4 @@ sample-truth                          vector  10     -        bundle         cov
 sound-delay                           vector  48     -        sync           covered      pending  pending
 sync-fit                              vector  17     -        sync           covered      pending  pending
 normalization                         page    -      -        normalization  not-covered  pending  pending
+[exit 0]

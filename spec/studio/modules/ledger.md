@@ -59,6 +59,16 @@ amounts **proposal, not a price**.
 - Ledger sequences (including one hold per quote, the budget-exceeded top-up, retries after a top-up that replay,
   retries not charged twice, fractional-second expiry and boolean credits) and quote credits.
 
+## Invalid cases the review rounds added
+
+The quote and usage-reservation invalid cases cover, from the first round: double consumption, live charging, an
+accepted illustrative quote and a client-set cap. Review round 1 added: a stage charged on two attempts, a quote
+accepted 0.5 s after expiry, and an unbound quote. Review round 2 added: reserve, consume and release entry keys of
+another output, job or stage (or with the wrong prefix or outcome), and a quote hash with a trailing newline.
+
+The self-test `ledger-contract-drift` (registered in `ledger_cases.py`) checks that the quote schema's film classes
+are exactly the classes of `credit-classes.v1.json`, in order.
+
 ## Decision
 
 - Credit minimums and the $0.80 credit budget are copied from the pricing research as a labelled proposal. Money

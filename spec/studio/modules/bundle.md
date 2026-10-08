@@ -13,8 +13,9 @@ kotlin: pending
 `spec/reference/studio/bundle.py` checks the Sample project `sample-court-day` as a whole (the lock against the
 manifest, sync coverage offered for cutting, plans against keepers and the reference catalog, quotes, reservations,
 jobs and films bound to one output) and builds the trusted EDL context and the capture hints from stored records.
-`scripts/spec/validate_studio.py` also runs deliberate mutations of the bundle that must be refused.
-`spec/reference/studio/cases/bundle_cases.py` writes the `sample-truth` vectors. `python3
+`spec/reference/studio/cases/bundle_cases.py` writes the `sample-truth` vectors and registers the self-test
+`bundle-cross-record`: `bundle.check_all` accepts the Sample project and refuses each deliberate mutation in its
+`MUTATIONS` list with the expected code (a later bundle ticket adds a mutation there, not in the validator). `python3
 scripts/spec/validate_studio.py --list` prints the current case count of every kind below and its Swift and Kotlin
 status.
 

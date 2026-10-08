@@ -388,3 +388,63 @@ def check_sync_map(ctx, doc):
 VECTOR_CHECKERS = {"sync-fit": check_sync_vector, "sound-delay": check_sound_vector}
 SCHEMAS = {"jovra.sync-map/1": "sync-map.schema.json"}
 RECORD_RULES = {"jovra.sync-map/1": check_sync_map}
+
+
+# ----- self-tests: from-hints at the record layer ---------------------------------------------------------------
+
+def check_hint_states(ctx, report) -> None:
+    """from-hints is reachable at the record layer, and only with the hint the SourceManifest gives: a camera piece
+    with no anchors, and a restarted segment of the reference device placed from its own capture journal."""
+    manifest = copy.deepcopy(ctx.records["source-manifest"])
+    base = ctx.records["sync-map"]
+    hour = base["sources"][0]["pieces"][0]["sourceDurationUs"]
+    restart_us = hour + 50_000_000
+    cam1 = manifest["sources"][0]
+    first = cam1["segments"][0]
+    cam1["segments"].append(dict(first, segmentId="seg-1", index=1, reason="restart", durationUs=600_000_000,
+                                 fileZeroHostNs=first["fileZeroHostNs"] + restart_us * 1000))
+
+    def doc_with(offset):
+        d = copy.deepcopy(base)
+        t = {"offsetUs": offset, "rate": {"num": 1_000_000_000, "den": 1_000_000_000}}
+        d["sources"][0]["pieces"].append({
+            "segmentId": "seg-1", "sourceDurationUs": 600_000_000,
+            "matchCoverage": {"startUs": syncfit.map_us(t, 0), "endUs": syncfit.map_us(t, 600_000_000)},
+            "transform": t, "fit": None, "anchors": [], "state": "from-hints", "reasons": [], "checkpoints": [],
+            "reviewedAt": None})
+        d["sources"][0]["gaps"] = [{"match": {"startUs": hour, "endUs": syncfit.map_us(t, 0)}, "reason": "restart"}]
+        return d
+
+    def no_anchor_camera3(offset):
+        d = copy.deepcopy(base)
+        t = {"offsetUs": offset, "rate": {"num": 1_000_000_000, "den": 1_000_000_000}}
+        piece = d["sources"][2]["pieces"][0]
+        piece.update(anchors=[], fit=None, transform=t, state="from-hints", reasons=["no anchors; capture hint only"],
+                     matchCoverage={"startUs": syncfit.map_us(t, 0), "endUs": syncfit.map_us(t, piece["sourceDurationUs"])})
+        return d
+
+    hints = studio_bundle.capture_hints(manifest, base)
+    tests = [
+        ("reference restart from its journal", doc_with(restart_us), hints, None),
+        ("reference restart, offset not the journal's", doc_with(restart_us + 1000), hints, "badReference"),
+        ("camera without anchors placed from its hint", no_anchor_camera3(hints["camera-3"]["seg-0"]), hints, None),
+        ("hint-only piece without the manifest hints", no_anchor_camera3(hints["camera-3"]["seg-0"]), {},
+         "syncFitMismatch"),
+    ]
+    for label, doc, h, code in tests:
+        errors = ctx.schemas.validate(doc, "sync-map.schema.json")
+        if errors:
+            report.fail(f"hint self-test {label}", "schema: " + "; ".join(errors[:2]))
+            continue
+        try:
+            records.check_sync_map(doc, hints=h)
+            got = None
+        except Reject as exc:
+            got = exc.code
+        if got != code:
+            report.fail(f"hint self-test {label}", f"got {got}, expected {code}")
+        else:
+            report.ok("hint self-tests")
+
+
+SELF_TESTS = {"sync-capture-hints": check_hint_states}

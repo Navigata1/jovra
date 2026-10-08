@@ -21,10 +21,21 @@ checks what each module registers. A cases module may define any of:
     RECORD_RULES: dict[str, Callable[[ctx, doc], object]]
         schemaVersion -> the reference rule for one record (raises core.Reject).
 
-The validator context `ctx` offers: schemas (the ECMA-262 schema set), profiles (id -> story profile), classes
-(credit-classes contract), transitions and machine (RenderJob contract and its jobstate.Machine), records
-(name -> sample record), bundle (the sample project's records by role), edl_context (the trusted EDL context) and
-fixture(rel) (a parsed file under spec/studio/fixtures).
+    SELF_TESTS: dict[str, Callable[[ctx, rep], None]]
+        Name -> a check of the module's contract that no fixture file expresses: drift between its schema and a
+        shipped contract, deliberate mutations of the Sample project that must be refused, or a refusal the
+        reference must make on its own. The validator calls each once. Names are unique across all cases modules.
+
+Every vector checker (per case) and every self-test must call rep.ok(<count label>) or rep.fail(where, message) at
+least once; one that does neither fails ("... neither passed nor failed ..."), so a checker cannot pass a case
+silently. A raised core.Reject is reported as a failure.
+
+The validator context `ctx` offers: root (the repository root), schemas (the ECMA-262 schema set), profiles_doc and
+profiles (the story-profile catalog and id -> story profile), classes (credit-classes contract), transitions and
+machine (RenderJob contract and its jobstate.Machine), records (name -> sample record), bundle (the sample project's
+records by role), edl_context (the trusted EDL context), fixture(rel) (a parsed file under spec/studio/fixtures) and
+load(rel) (a parsed JSON file relative to the repository root). The context is the one shared piece a contract may
+need to extend (a new contract file or bundle role); everything else is added in its own files.
 
 Every vector kind and schemaVersion a module registers must appear in the `kinds:` front matter of exactly one
 module page (spec/studio/modules/<module>.md), whose `cases:` list names the registering module.
@@ -62,19 +73,24 @@ class Registry:
         self.checkers: dict[str, object] = {}
         self.schemas: dict[str, str] = {}
         self.rules: dict[str, object] = {}
+        self.self_tests: dict[str, object] = {}
         self.owner: dict[str, str] = {}   # registered kind (vector kind or schemaVersion) -> cases module path
+        self.self_test_owner: dict[str, str] = {}   # self-test name -> cases module path
         self.problems: list[str] = []
         for module in modules:
             where = repo_path(module)
-            for attr, target, owns in (("VECTOR_CHECKERS", self.checkers, True), ("SCHEMAS", self.schemas, True),
-                                       ("RECORD_RULES", self.rules, False)):
+            for attr, target, owner in (("VECTOR_CHECKERS", self.checkers, self.owner),
+                                        ("SCHEMAS", self.schemas, self.owner),
+                                        ("RECORD_RULES", self.rules, None),
+                                        ("SELF_TESTS", self.self_tests, self.self_test_owner)):
                 for key, value in getattr(module, attr, {}).items():
                     if key in target:
-                        self.problems.append(f"{key} is registered twice ({self.owner.get(key, '?')} and {where})")
+                        first = (owner or self.owner).get(key, "?")
+                        self.problems.append(f"{key} is registered twice ({first} and {where})")
                         continue
                     target[key] = value
-                    if owns:
-                        self.owner[key] = where
+                    if owner is not None:
+                        owner[key] = where
         for version in self.rules:
             if version not in self.schemas:
                 self.problems.append(f"reference rule for {version} has no registered schema")

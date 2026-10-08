@@ -1,0 +1,47 @@
+# Round 1 negative tests, each in a fresh temporary copy of scripts/spec, spec and design-reference/studio/brief
+
+== R1-a. the verifier's regression: per-module bullets appended to spec/studio/README.md
+$ cat >> spec/studio/README.md
+- **Normalization:** original-PTS tables and VFR handling, not covered yet.
+- **Sync:** the 95% prediction-interval gate; syncfit is planned.
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+FAIL spec/studio/README.md: names module normalization on line 129; per-module text belongs on spec/studio/modules/normalization.md
+FAIL spec/studio/README.md: names module sync on line 130; per-module text belongs on spec/studio/modules/sync.md
+RESULT: FAIL
+[exit 1]
+
+== R1-b. a registered checker that neither passes nor fails (lambda ctx, case, rep, where: None), with its page and generated vectors
+$ cat spec/reference/studio/cases/temp_probe_cases.py
+KIND = "temp-probe"
+
+
+def fixtures(sample):
+    return {"vectors/temp-probe.json": {
+        "schemaVersion": "jovra.studio-fixture.vectors/1", "kind": KIND, "status": "test only",
+        "cases": [{"id": "two-plus-two", "a": 2, "b": 2, "expect": 4}]}}
+
+
+VECTOR_CHECKERS = {KIND: lambda ctx, case, rep, where: None}
+$ python3 spec/reference/studio/generate_studio_fixtures.py
+wrote 64 fixture files, the story-profile catalog and the module index
+[exit 0]
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+FAIL spec/studio/fixtures/vectors/temp-probe.json#two-plus-two: checker for kind temp-probe neither passed nor failed case two-plus-two (it must call rep.ok or rep.fail)
+RESULT: FAIL
+[exit 1]
+
+== R1-c. a self-test that neither passes nor fails
+$ cat spec/reference/studio/cases/temp_probe_cases.py
+SELF_TESTS = {"temp-silent": lambda ctx, rep: None}
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+FAIL self-tests: self-test temp-silent of spec/reference/studio/cases/temp_probe_cases.py neither passed nor failed (it must call rep.ok or rep.fail)
+RESULT: FAIL
+[exit 1]
+
+== R1-d. a self-test name another cases module already registers
+$ cat spec/reference/studio/cases/temp_probe_cases.py
+SELF_TESTS = {"bundle-cross-record": lambda ctx, rep: rep.ok("temp")}
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+FAIL cases modules: bundle-cross-record is registered twice (spec/reference/studio/cases/bundle_cases.py and spec/reference/studio/cases/temp_probe_cases.py)
+RESULT: FAIL
+[exit 1]

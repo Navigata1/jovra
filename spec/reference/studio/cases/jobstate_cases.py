@@ -118,3 +118,35 @@ VECTOR_CHECKERS = {"job-transitions": check_job_vector}
 SCHEMAS = {"jovra.render-job/1": "render-job.schema.json",
            "jovra.render-job-transitions/1": "contracts.schema.json"}
 RECORD_RULES = {"jovra.render-job/1": check_render_job}
+
+
+# ----- self-tests: the render-job schema against the transition contract -------------------------------------
+
+def check_transition_drift(ctx, report) -> None:
+    """RenderJob states and resume stages in render-job.schema.json agree with render-job-transitions.v1.json."""
+    t = ctx.transitions
+    job_schema = ctx.schemas.files["render-job.schema.json"]["$defs"]
+    states = job_schema["state"]["enum"]
+    problems = []
+    if states != t["states"]:
+        problems.append("RenderJob states differ from the transition contract")
+    for key in ("terminal", "resumable", "reservationRequiredFrom", "budgetCheckedBefore", "pausableFrom",
+                "retryableFrom", "terminalFailureFrom", "budgetExceededFrom"):
+        if not set(t[key]) <= set(states):
+            problems.append(f"transition contract {key} names unknown states")
+    for frm, tos in t["forward"].items():
+        if frm not in states or not set(tos) <= set(states):
+            problems.append(f"forward[{frm}] names unknown states")
+    resume = job_schema["resumeStage"]["enum"]
+    union = set(t["pausableFrom"]) | set(t["retryableFrom"]) | set(t["budgetExceededFrom"])
+    if set(resume) != union or len(resume) != len(union):
+        problems.append("render-job resumeStage enum differs from pausableFrom U retryableFrom U budgetExceededFrom")
+    if union & set(t["terminal"]):
+        problems.append("a terminal state can be a resume stage")
+    for problem in problems:
+        report.fail("drift", problem)
+    if not problems:
+        report.ok("drift checks")
+
+
+SELF_TESTS = {"jobstate-contract-drift": check_transition_drift}

@@ -39,3 +39,11 @@ The states come from the backend brief. Terminal states are `ready`, `canceled`,
 ## Vectors
 
 - Job transitions, including resume stages that are refused.
+
+## Invalid cases the review rounds added
+
+Review round 1 added two render-job invalid cases: a ghost artifact on a ready job and a resume stage of `ready`.
+
+The self-test `jobstate-contract-drift` (registered in `jobstate_cases.py`) checks that the render-job schema's states
+and resume stages agree with `render-job-transitions.v1.json` (resume stages are exactly the pausable, retryable and
+budget-exceeded states, and never a terminal one).

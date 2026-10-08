@@ -98,6 +98,24 @@ inside coverage, the current event revision on every overlay, and allowlists. Th
 
 - EDL against a patched trusted context (4): Camera 2 split into two adjacent coverage intervals (a restart).
 
+## Invalid cases the review rounds added
+
+The edit-plan invalid cases cover, from the first round: executable fields, approval or URL fields, unlabelled
+speeds, copied score digits, stale overlay/event/sync revisions, gaps, overruns, forged session time, integral
+floats, transitions that are too long, lack handles or cover a contact, court audio that is out of sync or missing
+during live play, hold-bed over live or over shown time, alt-bed mid-segment, missing consent or disclosure, music
+outside the profile, interpolated slow motion, replays before or outside their original, blind portrait crops, pans
+that are too fast and out-of-order points. Review round 1 added: score digits or unknown ids as overlay refs, a
+relabelled overlay kind, a re-pointed cue overlay keeping `reviewed`, unresolved card text and narration notes,
+self-attested consent and rights, a rights scope overclaim, and forged coverage with matching session time. Review
+round 2 added: an unlabelled live re-showing of a moment, contact protection switched off by a null keeper, a plan of
+another project, a bed returning to the primary mid-segment, and an alternate bed switching hard at a dissolve.
+Review round 3 added: a primary bed returning hard (0 ms fade) at a cut.
+
+The self-tests `edl-context-required` and `edl-schema-refusals` (registered in `edl_cases.py`) check that
+`edl.validate` refuses a plan with no or a partial trusted context (`contextMissing`) and a boolean speed
+(`badSpeed`), and that the schema refuses an empty plan and a plan with a command field.
+
 ## Decisions
 
 - The bed sync tolerance is half an output frame. At the Sample 300 ppm drift, cross-angle primary-bed spans longer

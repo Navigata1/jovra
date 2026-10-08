@@ -59,6 +59,17 @@ of every kind below and its Swift and Kotlin status.
 - Sound delays (48), reproducing the multicam research §4.4 tables within 0.1 ms, including pairwise biases and
   c(T).
 
+## Invalid cases the review rounds added
+
+The sync-map invalid cases cover, from the first round: a forged sync offset or residual, an auto-approved map, an
+incomplete review and extrapolated coverage. Review round 1 added: an anchor outside its piece. Review round 2 added:
+a failed sync piece with coverage and an invented reference restart. Review round 3 added: a `no-overlap` sync state,
+a from-hints offset that is not the journal's, and a 400 ppm map stored as `estimated`.
+
+The self-test `sync-capture-hints` (registered in `sync_cases.py`) checks that `from-hints` is reachable at the record
+layer only with the hint the SourceManifest gives: a restarted reference segment placed from its own journal, a
+camera piece with no anchors, and their refusals when the offset is not the journal's or the hints are missing.
+
 ## Decision
 
 - The match clock is light time on the primary's video clock, with its origin at the earliest coverage, in integer

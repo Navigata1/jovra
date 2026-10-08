@@ -302,3 +302,17 @@ SCHEMAS = {"jovra.quote/1": "quote.schema.json",
            "jovra.usage-reservation/1": "usage-reservation.schema.json",
            "jovra.credit-classes/1": "contracts.schema.json"}
 RECORD_RULES = {"jovra.quote/1": check_quote, "jovra.usage-reservation/1": check_reservation}
+
+
+# ----- self-tests: the quote schema against the credit-classes contract --------------------------------------
+
+def check_class_drift(ctx, report) -> None:
+    """quote.schema.json's film classes are exactly the classes of credit-classes.v1.json, in order."""
+    film = ctx.schemas.files["quote.schema.json"]["properties"]["filmClass"]["enum"]
+    if film != [c["id"] for c in ctx.classes["classes"]]:
+        report.fail("drift", "quote film classes differ from credit-classes.v1.json")
+    else:
+        report.ok("drift checks")
+
+
+SELF_TESTS = {"ledger-contract-drift": check_class_drift}

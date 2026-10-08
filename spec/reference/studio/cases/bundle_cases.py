@@ -4,10 +4,11 @@ spec/studio/modules/bundle.md.
 
 from __future__ import annotations
 
+import copy
 from fractions import Fraction
 
-from studio import syncfit
-from studio.core import delta_pp_display, pct, round_half_up
+from studio import bundle, syncfit
+from studio.core import Reject, delta_pp_display, pct, round_half_up
 
 
 def sample_truth_vectors():
@@ -116,3 +117,101 @@ def check_sample_truth(ctx, case, report, where) -> None:
 
 
 VECTOR_CHECKERS = {"sample-truth": check_sample_truth}
+
+
+# ----- self-tests: the cross-record rules, and deliberate mutations of the Sample project that must fail ---------
+
+def _plan(b, plan_id):
+    return [p for p in b["plans"] if p["planId"] == plan_id][0]
+
+
+def _unmapped_restart(b):
+    # camera-2 restarted (a second recorded segment) but the sync map keeps only its first piece: the one piece
+    # must never stand for the whole recording (the lock is re-pinned so only the sync rule can refuse it)
+    src = b["manifest"]["sources"][1]
+    seg1 = copy.deepcopy(src["segments"][0])
+    seg1.update(segmentId="seg-1", index=1, reason="restart")
+    src["segments"].append(seg1)
+    b["lock"]["sourceManifest"]["sha256"] = bundle.canonical_sha256(b["manifest"])
+
+
+def _topup_from_initial_quote(b):
+    # one accepted quote funding two holds: the initial reserve and a top-up keyed by the same quote
+    res = b["reservations"]["res-0002"]
+    e0 = res["entries"][0]
+    e0["credits"] = 2
+    top = dict(e0, entryId="e-1b", key=e0["key"] + ":topup:" + res["initialQuoteId"])
+    res["entries"].insert(1, top)
+
+
+def _topup_leaves_initial_accepted(b):
+    # a real top-up by a second quote, but the initial quote is still 'accepted' rather than superseded
+    res = b["reservations"]["res-0002"]
+    e0 = res["entries"][0]
+    e0["credits"] = 2
+    res["entries"].insert(1, dict(e0, entryId="e-1b", key=e0["key"] + ":topup:quote-test-02"))
+    b["quotes"]["quote-test-02"] = dict(copy.deepcopy(b["quotes"]["quote-test-01"]), quoteId="quote-test-02")
+    res["quoteId"] = "quote-test-02"
+    b["jobs"]["job-film-01"]["quoteId"] = "quote-test-02"
+
+
+# (label, expected reject code, mutation of a deep copy of the Sample project's records by role)
+MUTATIONS = [
+    ("restart-segment-unmapped", "unmappedSegment", _unmapped_restart),
+    ("model-film-from-rules-quote", "plannerMismatch",
+     lambda b: b["artifacts"][0]["bindings"]["planner"].update(kind="model", modelId="claude-opus-5-5")),
+    ("topup-from-initial-quote", "moneyMismatch", _topup_from_initial_quote),
+    ("topup-leaves-initial-quote-accepted", "moneyMismatch", _topup_leaves_initial_accepted),
+    ("coverage-rate-tampered", "coverageMismatch",
+     lambda b: _plan(b, "coach-cut-serve")["sources"][1]["coverage"][0]["rate"].update(num=1_000_000_000)),
+    ("sync-not-reviewed", "unreviewedSync",
+     lambda b: b["syncMap"]["sources"][1]["pieces"][0].update(state="needs-review")),
+    ("film-bound-to-missing-plan", "unknownPlan",
+     lambda b: b["artifacts"][0]["bindings"].update(editPlanSha256="0" * 64)),
+    ("lock-manifest-hash", "lockMismatch", lambda b: b["lock"]["sourceManifest"].update(sha256="1" * 64)),
+    ("contact-unprotected", "contactUnprotected",
+     lambda b: _plan(b, "court-memories-storyboard")["segments"][2].update(protectedFrames=[])),
+    ("clean-alternate-drift", "cleanAlternateMismatch",
+     lambda b: _plan(b, "rally-pulse-portrait-clean")["segments"][0].update(framing={"mode": "fill"})),
+    ("reservation-of-other-plan", "moneyMismatch",
+     lambda b: b["reservations"]["res-0002"]["idempotencyKey"].update(planRevision=1)),
+    ("cue-provenance-laundered", "provenanceMismatch",
+     lambda b: [x for x in b["lessons"] if x["lessonId"] == "lesson-1007"][0]["cues"][1].update(provenance="reviewed")),
+    ("job-lists-ghost-artifact", "unknownArtifact",
+     lambda b: b["jobs"]["job-film-01"].update(deliveredArtifactIds=["film-court-memories", "ghost-film"])),
+    ("ready-film-unverified", "unverifiedReady",
+     lambda b: b["artifacts"][0]["verification"].update(status="pending")),
+    ("quote-bound-to-other-output", "moneyMismatch",
+     lambda b: b["quotes"]["quote-test-01"].update(outputSpecSha256="c" * 64)),
+    ("catalog-cue-laundered", "provenanceMismatch",
+     lambda b: [r for r in b["references"]["references"] if r["refId"] == "cue-04"][0].update(provenance="reviewed")),
+    ("consent-of-unknown-participant", "unknownParticipant",
+     lambda b: b["references"]["consents"][0].update(participantId="nobody")),
+    ("reservation-entry-of-other-job", "moneyMismatch",
+     lambda b: b["reservations"]["res-0002"]["entries"][1].update(key="consume:job-queue-38:normalizing:1")),
+    ("brief-overlay-unresolved", "untrustedReference",
+     lambda b: [x for x in b["briefs"] if x["briefId"] == "brief-court-memories"][0]["beats"][2]["overlays"][0]
+     .update(refId="6-4")),
+]
+
+
+def check_cross_record(ctx, report) -> None:
+    """bundle.check_all accepts the Sample project, and refuses every mutation in MUTATIONS with its code."""
+    try:
+        counts = bundle.check_all(ctx.bundle)
+        report.ok("cross-record checks")
+        report.log(f"bundle {counts}")
+    except Reject as exc:
+        report.fail("bundle", str(exc))
+        return
+    for label, code, mutate in MUTATIONS:
+        b = copy.deepcopy(ctx.bundle)
+        mutate(b)
+        try:
+            bundle.expect_reject(lambda: bundle.check_all(b), code)
+            report.ok("cross-record mutations rejected")
+        except Reject as exc:
+            report.fail(f"bundle mutation {label}", str(exc))
+
+
+SELF_TESTS = {"bundle-cross-record": check_cross_record}

@@ -21,6 +21,12 @@ module uses. It owns the two fixture formats every cases module writes (schema `
   assertions that do not come from the reference. A vector file's `kind` names the checker its cases module
   registers; the schema does not list the kinds.
 
+The fixtures live under `spec/studio/fixtures/`: `records/` holds the valid records of the one Sample project
+(`sample-court-day`), `invalid/` the invalid-case sets and `vectors/` one file per vector kind.
+
+The self-test `core-provenance-drift` (registered in `core_cases.py`) checks that the provenance enum in
+`studio-common.schema.json` is the app's (`spec/schemas/common.schema.json`), in order.
+
 ## Conventions
 
 - **Versions.** Every record has `schemaVersion: "jovra.<name>/<major>"`, following the starter's

@@ -6,6 +6,7 @@ scripts/spec/validate_studio.py.
 
 from __future__ import annotations
 
+import copy
 from fractions import Fraction
 
 from studio import edl
@@ -341,3 +342,44 @@ def check_edit_plan(ctx, doc):
 VECTOR_CHECKERS = {"edl-context": check_edl_context_vector}
 SCHEMAS = {"jovra.edit-plan/2": "edit-plan.schema.json"}
 RECORD_RULES = {"jovra.edit-plan/2": check_edit_plan}
+
+
+# ----- self-tests: refusals the reference and the schema make on their own -----------------------------------
+
+def check_context_required(ctx, report) -> None:
+    """edl.validate refuses to run on a plan alone or with a partial context (no self-declared coverage, provenance,
+    consent or rights is ever accepted), and refuses type confusion the schema also catches."""
+    plan = ctx.records["edit-plan.coach-cut-serve"]
+    for label, context in (("no context", None), ("empty context", {}),
+                           ("context without references", {k: v for k, v in ctx.edl_context.items() if k != "references"})):
+        try:
+            edl.validate(plan, ctx.profiles, context)
+            report.fail("edl context", f"{label}: accepted")
+        except Reject as exc:
+            if exc.code == "contextMissing":
+                report.ok("context-required self-tests")
+            else:
+                report.fail("edl context", f"{label}: {exc.code}, expected contextMissing")
+    # the Swift and Kotlin ports mirror this refusal rather than relying on their schema layer
+    bad_plan = copy.deepcopy(ctx.records["edit-plan.court-memories-storyboard"])
+    bad_plan["segments"][1]["speed"] = {"num": True, "den": 1}
+    try:
+        edl.validate(bad_plan, ctx.profiles, ctx.edl_context)
+        report.fail("edl type confusion", "speed {num: true} accepted")
+    except Reject as exc:
+        if exc.code == "badSpeed":
+            report.ok("context-required self-tests")
+        else:
+            report.fail("edl type confusion", f"{exc.code}, expected badSpeed")
+
+
+def check_schema_refusals(ctx, report) -> None:
+    """The edit-plan schema is not vacuous: an empty plan and a plan with a command field fail it."""
+    for label, doc in (("empty EDL", {}), ("EDL with a command", {"schemaVersion": "jovra.edit-plan/2", "command": "x"})):
+        if not ctx.schemas.validate(doc, "edit-plan.schema.json"):
+            report.fail("schema self-test", f"{label} passed")
+        else:
+            report.ok("schema self-tests")
+
+
+SELF_TESTS = {"edl-context-required": check_context_required, "edl-schema-refusals": check_schema_refusals}

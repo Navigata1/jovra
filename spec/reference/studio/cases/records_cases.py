@@ -5,6 +5,7 @@ spec/studio/modules/records.md.
 from __future__ import annotations
 
 from studio import records
+from studio.core import Reject
 from studio.cases.patches import add, bad, invalid_docs, rep
 
 
@@ -170,3 +171,32 @@ RECORD_RULES = {
     "jovra.storage-providers/1": _plain(records.check_storage_providers),
     "jovra.reference-catalog/1": _plain(records.check_reference_catalog),
 }
+
+
+# ----- self-tests: the story-profile catalog -----------------------------------------------------------------
+
+DESIGN_PROFILES = "design-reference/studio/brief/story-profiles.json"
+
+
+def check_profile_catalog(ctx, report) -> None:
+    """story-profiles.v1.json keeps the design reference's defaults and profile text, and passes its reference rule."""
+    design = ctx.load(DESIGN_PROFILES)
+    problems = []
+    if design["defaults"] != ctx.profiles_doc["defaults"]:
+        problems.append("profile defaults differ from design-reference")
+    for src in design["profiles"]:
+        mine = ctx.profiles.get(src["id"])
+        if mine is None or any(mine[k] != src[k] for k in src):
+            problems.append(f"profile {src['id']} text differs from {DESIGN_PROFILES}")
+    for problem in problems:
+        report.fail("drift", problem)
+    if not problems:
+        report.ok("drift checks")
+    try:
+        records.check_profile_catalog(ctx.profiles_doc)
+        report.ok("contracts valid (reference)")
+    except Reject as exc:
+        report.fail("story-profiles.v1.json", str(exc))
+
+
+SELF_TESTS = {"records-profile-catalog": check_profile_catalog}
