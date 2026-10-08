@@ -9,11 +9,11 @@ enum AppTab: String, CaseIterable, Identifiable, Hashable {
 
     var title: String {
         switch self {
-        case .home: "Home"
-        case .sessions: "Sessions"
-        case .record: "Record"
-        case .insights: "Insights"
-        case .profile: "Profile"
+        case .home: String(localized: "Home", table: "App")
+        case .sessions: String(localized: "Sessions", table: "App")
+        case .record: String(localized: "Record", table: "App")
+        case .insights: String(localized: "Insights", table: "App")
+        case .profile: String(localized: "Profile", table: "App")
         }
     }
 
@@ -44,7 +44,7 @@ enum AppTab: String, CaseIterable, Identifiable, Hashable {
 
 /// Focused flows that take over the whole screen and hide the tab bar
 /// (capture, replay and compare arrive in later tickets).
-enum FullScreenRoute: String, Identifiable, Hashable {
+enum FullScreenRoute: String, CaseIterable, Identifiable, Hashable {
     case capturePreview
 
     var id: String { rawValue }

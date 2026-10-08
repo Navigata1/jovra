@@ -57,7 +57,7 @@ extension JovraScreen where Accessory == EmptyView {
 /// The obvious "not built yet" state, so placeholder screens are never mistaken for features.
 struct ComingLaterCard: View {
     var symbol: String
-    var title = "Coming in a later ticket"
+    var title = String(localized: "Coming in a later ticket", table: "DesignSystem.Components")
     var message: String
 
     var body: some View {
@@ -77,7 +77,7 @@ struct ComingLaterCard: View {
                 .font(.jovraBody)
                 .foregroundStyle(.jovra(.textSecondary))
                 .fixedSize(horizontal: false, vertical: true)
-            Label("Placeholder screen", systemImage: "hammer")
+            Label(String(localized: "Placeholder screen", table: "DesignSystem.Components"), systemImage: "hammer")
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(.jovra(.textSecondary))
                 .fixedSize(horizontal: false, vertical: true)

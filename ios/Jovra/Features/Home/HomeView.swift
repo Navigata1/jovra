@@ -4,18 +4,18 @@ struct HomeView: View {
     @Environment(AppRouter.self) private var router
 
     var body: some View {
-        JovraScreen(title: "Home", subtitle: "Your game, in focus.") {
+        JovraScreen(title: String(localized: "Home", table: "Home"), subtitle: String(localized: "Your game, in focus.", table: "Home")) {
             Button { router.select(.profile) } label: {
                 AvatarInitial(initial: nil, size: 52)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Profile")
+            .accessibilityLabel(Text("Profile", tableName: "Home"))
         } content: {
             HomeHero { router.select(.record) }
             SampleStatTiles()
             ComingLaterCard(
                 symbol: "house",
-                message: "Your latest session, on-court time and weekly trends, computed from sessions saved on this device, replace the sample tiles above."
+                message: String(localized: "Your latest session, on-court time and weekly trends, computed from sessions saved on this device, replace the sample tiles above.", table: "Home")
             )
         }
     }
@@ -33,23 +33,23 @@ private struct HomeHero: View {
                     .fill(Color.jovra(.textOnEditorial).opacity(0.6))
                     .frame(width: 20, height: 1)
                     .accessibilityHidden(true)
-                Text("A BETTER GAME TOMORROW")
+                Text("A BETTER GAME TOMORROW", tableName: "Home")
                     .font(.jovraKicker)
                     .tracking(2.2)
                     .foregroundStyle(.jovra(.textOnEditorial))
                     .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityLabel("A better game tomorrow")
+                    .accessibilityLabel(Text("A better game tomorrow", tableName: "Home"))
             }
             .padding(.bottom, Space.x3)
-            Text("Ready for\nyour next\nsession?")
+            Text("Ready for\nyour next\nsession?", tableName: "Home")
                 .font(.jovraEditorial)
                 .tracking(-0.4)
                 .foregroundStyle(.jovra(.textOnEditorial))
                 .fixedSize(horizontal: false, vertical: true)
-                .accessibilityLabel("Ready for your next session?")
+                .accessibilityLabel(Text("Ready for your next session?", tableName: "Home"))
                 .accessibilityAddTraits(.isHeader)
             Button(action: recordSession) {
-                Label("Record a session", systemImage: "arrow.right")
+                Label(String(localized: "Record a session", table: "Home"), systemImage: "arrow.right")
                     .labelStyle(TrailingIconLabelStyle())
             }
             .buttonStyle(.jovraAccent)
@@ -65,9 +65,9 @@ private struct SampleStatTiles: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private let tiles: [(value: String, label: String, symbol: String)] = [
-        ("8", "Sessions", "tennisball"),
-        ("6h 42m", "On court", "clock"),
-        ("67%", "First serves", "scope"),
+        (JovraFormat.count(8), String(localized: "Sessions", table: "Home"), "tennisball"),
+        (JovraFormat.duration(seconds: 24_120), String(localized: "On court", table: "Home"), "clock"),
+        (JovraFormat.percent(67), String(localized: "First serves", table: "Home"), "scope"),
     ]
 
     var body: some View {
@@ -75,13 +75,13 @@ private struct SampleStatTiles: View {
             ? AnyLayout(VStackLayout(spacing: Space.x1))
             : AnyLayout(HStackLayout(alignment: .top, spacing: Space.x1))
         VStack(alignment: .leading, spacing: Space.x1 + Space.half) {
-            SectionHeader(title: "This week") {
+            SectionHeader(title: String(localized: "This week", table: "Home")) {
                 ProvenanceBadge(kind: .sample)
             }
             layout {
                 ForEach(tiles, id: \.label) { tile in
                     StatTile(value: tile.value, label: tile.label, symbol: tile.symbol)
-                        .accessibilityLabel("\(tile.label): \(tile.value), sample data")
+                        .accessibilityLabel(Text("\(tile.label): \(tile.value), sample data", tableName: "Home"))
                 }
             }
             .fixedSize(horizontal: false, vertical: true)

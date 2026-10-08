@@ -18,7 +18,7 @@ struct CapturePlaceholderView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.jovra(.textPrimary))
-                .accessibilityLabel("Close")
+                .accessibilityLabel(Text("Close", tableName: "Capture"))
                 .accessibilityIdentifier("capture.close")
             }
             .padding(.horizontal, Space.screenMargin)
@@ -26,15 +26,15 @@ struct CapturePlaceholderView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: Space.x3) {
-                    Text("Frame your court")
+                    Text("Frame your court", tableName: "Capture")
                         .jovraDisplayTitle()
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("capture.title")
                     ComingLaterCard(
                         symbol: "camera.viewfinder",
-                        message: "Court framing, calibration and recording arrive in a later ticket. Video will be saved on this device before any analysis runs."
+                        message: String(localized: "Court framing, calibration and recording arrive in a later ticket. Video will be saved on this device before any analysis runs.", table: "Capture")
                     )
-                    Button("Done") { router.dismissFullScreen() }
+                    Button(String(localized: "Done", table: "Capture")) { router.dismissFullScreen() }
                         .buttonStyle(JovraButtonStyle(kind: .accent, fullWidth: true))
                 }
                 .padding(.horizontal, Space.screenMargin)

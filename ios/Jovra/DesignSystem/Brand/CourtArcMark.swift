@@ -29,7 +29,7 @@ struct CourtArcMark: View {
         }
         .aspectRatio(BrandGeometry.markBounds.width / BrandGeometry.markBounds.height, contentMode: .fit)
         .accessibilityElement()
-        .accessibilityLabel("JOVRA Tennis")
+        .accessibilityLabel(Text(verbatim: "JOVRA Tennis")) // the brand name is never translated
         .accessibilityAddTraits(.isImage)
     }
 }
@@ -82,7 +82,7 @@ struct JovraLockup: View {
         }
         .frame(width: markWidth + gap + wordmarkWidth, height: height)
         .accessibilityElement()
-        .accessibilityLabel("JOVRA Tennis")
+        .accessibilityLabel(Text(verbatim: "JOVRA Tennis")) // the brand name is never translated
         .accessibilityAddTraits(.isImage)
         .accessibilityIdentifier("brand.lockup")
     }
