@@ -10,6 +10,7 @@ struct JovraApp: App {
             AppShell()
                 .preferredColorScheme(appearance.colorScheme)
                 .tint(.jovra(.textPrimary))
+                .environment(\.launchConfiguration, .current)
         }
     }
 }

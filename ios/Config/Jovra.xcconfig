@@ -1,0 +1,15 @@
+// Build settings for the Jovra app target, Debug and Release (attached in ios/project.yml).
+//
+// Google Drive OAuth client (ADR-0008). Defaults are empty: the app reads Drive as not configured
+// and shows "Awaiting Google Drive setup". To configure a build, copy Drive.xcconfig.example to
+// Drive.xcconfig (git-ignored, never committed) and fill in the iOS OAuth client. The values reach
+// Info.plist (JovraDriveClientID, JovraDriveRedirectScheme) and the redirect URL type.
+JOVRA_DRIVE_CLIENT_ID =
+JOVRA_DRIVE_REVERSED_CLIENT_ID =
+JOVRA_DRIVE_XCCONFIG_LOADED = NO
+
+// "Continue with Apple" on Welcome (screen spec open question 1). The Sign in with Apple entitlement
+// is always present; this switch only decides whether the button is offered.
+JOVRA_APPLE_SIGN_IN_ENABLED = YES
+
+#include? "Drive.xcconfig"
