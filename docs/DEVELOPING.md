@@ -4,10 +4,17 @@
 
 | Tool | Version used for ticket #1 | Notes |
 |---|---|---|
-| Xcode | 26.6 (iOS 26.5 simulator SDK) | Deployment target is iOS 17. |
+| Xcode | 26.6 (iOS 26.5 simulator SDK) | Deployment target is iOS 18.0 (ADR-0007). |
 | Swift | 6.2+ (packages declare `swift-tools-version: 6.0`) | App target builds in Swift 6 language mode with complete concurrency checking. |
 | XcodeGen | 2.46 | `brew install xcodegen` |
 | Simulator | iPhone 17 Pro, iOS 26.5 (`83223876-0F7B-4B30-A051-AD9F08BD3C5E` on the build Mac) | Override with `SIMULATOR_ID=<udid>`. |
+
+## Deployment target (ADR-0007)
+
+The app targets **iOS 18.0**. iOS 26-only APIs sit behind `#available` checks with a stated iOS 18 fallback. The build
+Mac has only the iOS 26.5 Simulator runtime, so **iOS 18 runtime behaviour is UNVERIFIED locally**: every simulator
+run and CI job proves the iOS 26 code path only. Report each `#available` fallback as `unverified` until it has run on
+an iOS 18 simulator or device.
 
 ## Layout (ADR-0005)
 
