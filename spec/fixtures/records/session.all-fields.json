@@ -1,0 +1,272 @@
+{
+  "schemaVersion": "1.1.0",
+  "kind": "jovra.session",
+  "id": "ex-session-all-fields",
+  "sport": "tennis",
+  "createdAt": "2026-10-07T18:00:00Z",
+  "updatedAt": "2026-10-07T18:00:00Z",
+  "title": "Contract example: every 1.1 field",
+  "sample": {"label": "Sample", "synthetic": true, "generator": "sample:contractExample@1.1.0"},
+  "sessionKind": "match",
+  "capturePurpose": "match",
+  "players": [
+    {
+      "id": "ex-player-jon",
+      "displayName": "Jon",
+      "handedness": "right",
+      "backhand": "twoHanded",
+      "isSelf": true
+    },
+    {
+      "id": "ex-player-mia",
+      "displayName": "Mia",
+      "handedness": "left",
+      "backhand": "twoHanded",
+      "isSelf": false,
+      "profileId": "ex-profile-mia"
+    }
+  ],
+  "sides": {"A": ["ex-player-jon"], "B": ["ex-player-mia"]},
+  "match": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "toss": {"firstServer": "ex-player-jon", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "ex-point-1", "seq": 1, "type": "point", "recordedServer": "ex-player-jon", "tStartMs": 28000, "tEndMs": 36000, "reviewed": {"winner": "A", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}, "reviewState": "reviewed"},
+      {"id": "ex-point-2", "seq": 2, "type": "point", "recordedServer": "ex-player-jon", "tStartMs": 52000, "tEndMs": 61000, "reviewed": {"winner": "B", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}, "reviewState": "reviewed"},
+      {"id": "ex-point-3", "seq": 3, "type": "point", "recordedServer": "ex-player-jon", "tStartMs": 80000, "tEndMs": 112000, "reviewed": {"winner": "A", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}, "reviewState": "reviewed"},
+      {"id": "ex-void-3", "seq": 4, "type": "void", "target": "ex-point-3", "source": "user"},
+      {"id": "ex-point-3a", "seq": 5, "type": "point", "recordedServer": "ex-player-jon", "tStartMs": 80000, "tEndMs": 95000, "reviewed": {"winner": "A", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}, "reviewState": "reviewed", "parentIds": ["ex-point-3"]},
+      {"id": "ex-point-3b", "seq": 6, "type": "point", "recordedServer": "ex-player-jon", "tStartMs": 99000, "tEndMs": 112000, "reviewed": {"winner": "B", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}, "reviewState": "reviewed", "parentIds": ["ex-point-3"]}
+    ]
+  },
+  "recording": {
+    "mode": "camera",
+    "startedAt": "2026-10-07T17:00:00Z",
+    "timeZone": "America/Chicago",
+    "durationMs": 600000,
+    "segments": [
+      {"id": "ex-segment-0", "index": 0, "file": {"path": "media/segment-000.mp4"}, "startMs": 0, "durationMs": 600000, "frameRate": {"num": 60, "den": 1}, "width": 1920, "height": 1080, "codec": "hevc", "hasAudio": true, "finalized": true}
+    ],
+    "gaps": [],
+    "microphone": "granted",
+    "mediaAvailable": true,
+    "captureEvents": [
+      {"tMs": 300000, "kind": "thermalState", "thermalState": "serious"},
+      {"tMs": 300000, "kind": "courtModeOn"},
+      {"tMs": 420000, "kind": "frameRateChange", "frameRate": {"num": 30, "den": 1}}
+    ],
+    "recovery": {
+      "recoveredAt": "2026-10-07T18:00:00Z",
+      "outcome": "partial",
+      "savedThroughMs": 598000,
+      "truncatedSegmentIds": ["ex-segment-0"],
+      "unrecoverable": [{"path": "media/segment-001.mp4", "reason": "The last 2 seconds could not be decoded."}]
+    }
+  },
+  "marks": [
+    {
+      "id": "ex-mark-1",
+      "tMs": 30000,
+      "kind": "point",
+      "note": "Great point",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    }
+  ],
+  "shots": [
+    {
+      "id": "ex-shot-1",
+      "pointId": "ex-point-1",
+      "tMs": 30500,
+      "hitter": "ex-player-jon",
+      "shotIndex": 1,
+      "stroke": "serve",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "ex-shot-2",
+      "pointId": "ex-point-1",
+      "tMs": 31400,
+      "hitter": "ex-player-mia",
+      "shotIndex": 2,
+      "stroke": "forehand",
+      "placement": {"court": {"x": 2.1, "y": -9.4}, "zone": "deep", "inOut": "in", "calibrationId": "ex-calibration-1"},
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    }
+  ],
+  "calibrations": [
+    {
+      "id": "ex-calibration-1",
+      "method": "fourTap",
+      "frameMs": 1000,
+      "imagePoints": [{"x": 0.12, "y": 0.86}, {"x": 0.88, "y": 0.86}, {"x": 0.63, "y": 0.31}, {"x": 0.37, "y": 0.31}],
+      "courtPoints": [
+        {"x": -4.115, "y": -11.885},
+        {"x": 4.115, "y": -11.885},
+        {"x": 4.115, "y": 11.885},
+        {"x": -4.115, "y": 11.885}
+      ],
+      "residualPx": 1.4,
+      "status": "cameraMoved",
+      "staleFromMs": 420000,
+      "camera": {
+        "lens": "wide",
+        "width": 1920,
+        "height": 1080,
+        "frameRate": {"num": 60, "den": 1},
+        "zoomFactor": "1.0"
+      },
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    }
+  ],
+  "annotations": [],
+  "voiceNotes": [],
+  "comparisons": [
+    {
+      "id": "ex-comparison-1",
+      "title": "Serve now and then",
+      "left": {"sessionId": "ex-session-all-fields", "syncTimeMs": 30500},
+      "right": {"sessionId": "ex-session-other", "syncTimeMs": 1803000, "nudgeFrames": 1},
+      "syncedAt": "contact",
+      "createdAt": "2026-10-07T18:00:00Z",
+      "note": "Keep the toss position consistent."
+    }
+  ],
+  "derivedValues": [
+    {
+      "id": "ex-derived-speed",
+      "key": "serveSpeed.estimate",
+      "value": 104,
+      "unit": "mph",
+      "label": "Estimated average speed, contact→bounce",
+      "scope": {"pointId": "ex-point-1", "serveMarkId": "ex-serve-mark-1"},
+      "provenance": {
+        "status": "estimated",
+        "source": "model:serveSpeed.manualAssisted@1.0.0",
+        "capabilityId": "serveSpeed.manualAssisted",
+        "capabilityVersion": "1.0.0",
+        "calibrationId": "ex-calibration-1",
+        "sample": true
+      }
+    }
+  ],
+  "analysis": {
+    "state": "paused",
+    "reason": "Analysis pauses if you leave JOVRA",
+    "excludedSide": "left",
+    "runs": [{"capabilityId": "audio.hitDetection", "capabilityVersion": "1.0.0", "status": "skipped"}]
+  },
+  "review": {"state": "inProgress", "updatedAt": "2026-10-07T18:00:00Z"},
+  "archive": {
+    "state": "backedUp",
+    "provider": "googleDrive",
+    "manifest": "archive.json",
+    "backedUpAt": "2026-10-07T18:00:00Z",
+    "copy": "rallyOnlyCopy",
+    "restoredAt": "2026-10-07T18:00:00Z"
+  },
+  "storage": {"originals": "onDevice", "includeInDeviceBackup": false},
+  "consent": {
+    "status": "writtenFormAttached",
+    "competitionMode": true,
+    "juniorPlayerIds": ["ex-player-mia"],
+    "writtenConsents": [
+      {"id": "ex-consent-1", "attachment": {"path": "consent/written-consent.pdf", "mimeType": "application/pdf"}, "coversPlayerIds": ["ex-player-mia"], "attachedAt": "2026-10-07T16:55:00Z"}
+    ],
+    "withdrawnAt": "2026-10-07T17:09:00Z"
+  },
+  "rallyPlayback": {
+    "preRollMs": 1500,
+    "postRollMs": 2500,
+    "clips": [
+      {"targetId": "ex-point-1", "preRollMs": 2000, "postRollMs": 4000},
+      {"targetId": "ex-mark-1", "excluded": true}
+    ]
+  },
+  "serveMarks": [
+    {
+      "id": "ex-serve-mark-1",
+      "pointId": "ex-point-1",
+      "shotId": "ex-shot-1",
+      "contactFrame": {"value": 1830, "timescale": 60},
+      "bounceFrame": {"value": 1854, "timescale": 60},
+      "bounceCourt": {"x": -2.4, "y": 5.1},
+      "bounceImage": {"x": 0.44, "y": 0.39},
+      "serverPosition": {"x": 0.3, "y": -11.885},
+      "contactDefaulted": true,
+      "servedTo": "deuce",
+      "calibrationId": "ex-calibration-1",
+      "outlierConfirmed": false,
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    }
+  ],
+  "swings": [
+    {
+      "id": "ex-swing-serve",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "ex-serve-mark-1",
+      "clip": {"fromMs": 29500, "toMs": 31500},
+      "keyMoments": [
+        {"name": "tossRelease", "time": {"value": 1759, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "trophy", "time": {"value": 1801, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "racketDrop", "time": {"value": 1822, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 1830, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "landing", "time": {"value": 1846, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "tossPeak", "time": {"value": 1790, "timescale": 60}, "imagePoint": {"x": 0.47, "y": 0.22}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "ex-swing-forehand",
+      "kind": "stroke",
+      "stroke": "forehand",
+      "shotId": "ex-shot-2",
+      "markId": "ex-mark-1",
+      "clip": {"fromMs": 30400, "toMs": 32400},
+      "keyMoments": [
+        {"name": "ready", "time": {"value": 7440, "timescale": 240}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "unitTurn", "time": {"value": 7476, "timescale": 240}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "racketDrop", "time": {"value": 7512, "timescale": 240}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 7536, "timescale": 240}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "finish", "time": {"value": 7584, "timescale": 240}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ],
+      "reviewChecks": [
+        {"check": "contactTiming", "status": "looksGood"},
+        {"check": "followThrough", "status": "workOnIt"},
+        {"check": "balance", "status": "notReviewed"}
+      ]
+    }
+  ],
+  "exports": [
+    {
+      "id": "ex-export-clip",
+      "kind": "clip",
+      "createdAt": "2026-10-07T17:20:00Z",
+      "eventLogVersion": 3,
+      "includesAudio": false,
+      "facesBlurred": true,
+      "rallyOnly": false,
+      "range": {"fromMs": 26500, "toMs": 40000},
+      "pointIds": ["ex-point-1"],
+      "destination": "photos",
+      "status": "done"
+    },
+    {
+      "id": "ex-export-condensed",
+      "kind": "condensedMatch",
+      "createdAt": "2026-10-07T18:00:00Z",
+      "eventLogVersion": 6,
+      "includesAudio": false,
+      "rallyOnly": true,
+      "file": {"path": "exports/condensed.mp4", "mimeType": "video/mp4"},
+      "destination": "app",
+      "status": "failed",
+      "failureReason": "Not enough space on this iPhone."
+    }
+  ]
+}

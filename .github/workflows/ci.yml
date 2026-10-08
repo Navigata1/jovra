@@ -26,6 +26,26 @@ jobs:
         working-directory: ios/Packages/JovraCore
         run: swift test
 
+  # Shared contracts (spec/README.md): fixtures regenerate byte-for-byte, every document validates and the
+  # engine re-run agrees, and the contract tooling's own tests pass. Python standard library only.
+  spec:
+    name: spec
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate fixtures (must not change a byte)
+        run: |
+          python3 spec/reference/generate_fixtures.py
+          git status --porcelain spec
+          test -z "$(git status --porcelain spec)"
+      - name: Validate contracts and fixtures
+        run: python3 scripts/spec/validate.py
+      - name: Contract tooling tests
+        run: python3 -m unittest discover -s scripts/spec -p 'test_*.py' -v
+
   # Manual only: macOS minutes on a private repo are scarce (ADR-0006). Simulator UI suites run on
   # the build Mac and their evidence is attached to the PR instead.
   ios-app:

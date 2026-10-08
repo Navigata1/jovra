@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA practice plan",
   "description": "Evidence-linked practice (P1-06): deterministic rules over computed stats, each item carrying the evidence row and clips that triggered it. Labelled 'Suggested practice'; fully editable.",
+  "$comment": "Schema 1.1.0 (T02) added, all optional: drillLogs (drill session logs), goals[].window / targetDate / createdAt, items[].drill.sets.",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "createdAt", "updatedAt", "title", "label", "items"],
   "additionalProperties": false,
@@ -17,7 +18,8 @@
     "playerId": {"$ref": "common.schema.json#/$defs/id"},
     "basedOnSessions": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
     "items": {"type": "array", "items": {"$ref": "#/$defs/item"}},
-    "goals": {"type": "array", "items": {"$ref": "#/$defs/goal"}}
+    "goals": {"type": "array", "items": {"$ref": "#/$defs/goal"}},
+    "drillLogs": {"type": "array", "items": {"$ref": "#/$defs/drillLog"}, "description": "Since 1.1.0. One entry per drill session (S15 drillSession)."}
   },
   "$defs": {
     "item": {
@@ -35,7 +37,8 @@
             "title": {"type": "string", "minLength": 1, "maxLength": 80},
             "instructions": {"type": "string", "minLength": 1, "maxLength": 1000},
             "durationMinutes": {"type": "integer", "minimum": 1, "maximum": 180},
-            "reps": {"type": "integer", "minimum": 1, "maximum": 1000}
+            "sets": {"type": "integer", "minimum": 1, "maximum": 50, "description": "Since 1.1.0 ('3 sets of 10')."},
+            "reps": {"type": "integer", "minimum": 1, "maximum": 1000, "description": "Repetitions per set when sets is present."}
           }
         },
         "origin": {
@@ -90,7 +93,39 @@
         "stat": {"type": "string", "minLength": 1, "maxLength": 80},
         "target": {"type": "integer", "minimum": 0, "maximum": 100, "description": "Target displayed percentage."},
         "sessionKind": {"enum": ["match", "tiebreakOnly", "practiceSet", "servePractice", "strokePractice", "rally", "lesson", "drill"]},
-        "achievedAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+        "achievedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "window": {"enum": ["fourWeeks", "threeMonths", "year"], "description": "Since 1.1.0. The progress window the goal is evaluated over ('over 4 weeks')."},
+        "targetDate": {"$ref": "common.schema.json#/$defs/date", "description": "Since 1.1.0 (story 285: a goal with a target and date)."},
+        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    },
+    "drillLog": {
+      "description": "Since 1.1.0. A drill session: timer, set counter and the manual In / Out tally saved as a practice log. Finishing it marks the drill done and advances linked goals.",
+      "type": "object",
+      "required": ["id", "itemId", "startedAt", "status", "setsCompleted"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "itemId": {"$ref": "common.schema.json#/$defs/id", "description": "The plan item whose drill was run."},
+        "drillTitle": {"type": "string", "minLength": 1, "maxLength": 80, "description": "Snapshot, so the log stays readable after the plan is edited."},
+        "startedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "finishedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "activeSeconds": {"type": "integer", "minimum": 0, "description": "Timer time, pauses excluded."},
+        "status": {"enum": ["inProgress", "finished", "abandoned"]},
+        "setsPlanned": {"type": "integer", "minimum": 1, "maximum": 50},
+        "setsCompleted": {"type": "integer", "minimum": 0, "maximum": 50},
+        "tally": {
+          "type": "object",
+          "required": ["in", "out"],
+          "additionalProperties": false,
+          "properties": {
+            "in": {"type": "integer", "minimum": 0},
+            "out": {"type": "integer", "minimum": 0}
+          }
+        },
+        "recordedSessionId": {"$ref": "common.schema.json#/$defs/id", "description": "The session recorded with 'Record this drill'."},
+        "goalIds": {"type": "array", "uniqueItems": true, "items": {"$ref": "common.schema.json#/$defs/id"}},
+        "sample": {"type": "boolean"}
       }
     }
   }

@@ -3,6 +3,7 @@ output; generate_fixtures.py refuses to write a case whose engine output disagre
 
 from __future__ import annotations
 
+from jovra_ref import conformance
 from jovra_ref.dsl import LogBuilder
 
 from .common import (ADV_FINAL_BO3, ADV_SET_BO1, BEST_OF_1, CLUB_BO3, COMAN_BO3, FAST4, NOAD_MTB, PRO_SET_8,
@@ -10,6 +11,7 @@ from .common import (ADV_FINAL_BO3, ADV_SET_BO1, BEST_OF_1, CLUB_BO3, COMAN_BO3,
                      USTA_MTB,
                      doubles, holds, pressure, pts, ratio, singles, tbcall)
 
+ORDER = 10
 CASES = []
 
 
@@ -1439,3 +1441,41 @@ def e10():
     return make("E10-unknown-player-voided-event",
                 "Rejected: player fields are checked on every logged event, voided ones included (like unknownEventType)",
                 ["log contract", "decision 21"], singles(CLUB_BO3), lb, [], [], {"code": "unknownPlayer"})
+
+
+def generate(ctx) -> int:
+    """Write spec/fixtures/scoring/<id>.json for every case; refuse all of them if any hand assertion disagrees."""
+    out = ctx.fixtures / "scoring"
+    failures = []
+    for build in CASES:
+        c = build()
+        fixture_input = dict(c["setup"])
+        fixture_input["log"] = c["log"]
+        assertions = [{"checkpoint": cp, "path": path, "equals": value} for cp, path, value in c["assertions"]]
+        doc = {
+            "schemaVersion": ctx.version,
+            "kind": "jovra.fixture.scoring",
+            "id": c["id"],
+            "title": c["title"],
+            "covers": c["covers"],
+            "input": fixture_input,
+        }
+        if c["expectError"] is not None:
+            code = conformance.run_scoring_error(fixture_input)
+            if code != c["expectError"]["code"]:
+                failures.append(f"{c['id']}: expected error {c['expectError']['code']}, engine {code}")
+                continue
+            doc["expectError"] = c["expectError"]
+        else:
+            checkpoints = conformance.run_scoring(fixture_input, c["checkpoints"])
+            problems = conformance.check_assertions(checkpoints, assertions)
+            if problems:
+                failures += [f"{c['id']}: {p}" for p in problems]
+                continue
+            doc["assertions"] = assertions
+            doc["checkpoints"] = checkpoints
+        ctx.write_json(out / f"{c['id']}.json", doc)
+    if failures:
+        raise SystemExit("\n".join(failures) + f"\n{len(failures)} hand assertion(s) disagree with the engine; "
+                         "nothing trusted")
+    return len(CASES)

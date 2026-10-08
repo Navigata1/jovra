@@ -9,9 +9,10 @@ here first, as a fixture change, and then in both apps.
 spec/
   schemas/      JSON Schema 2020-12, schemaVersion "1.x.y" on every record
   contracts/    shipped data both apps read: capability-registry.v1.json, csv/points.v1.json, csv/stats.v1.json
-  reference/    Python 3 standard-library reference engine + fixture generator
+  reference/    Python 3 standard-library reference engine + fixture generator (cases/ = one module per source)
   fixtures/     golden cases: scoring/ (S01-S64, E01-E10), stats/ (T01-T04), units/ (U01), sample/, records/
-scripts/spec/validate.py      validates everything and re-runs the engine; non-zero exit on any mismatch
+scripts/spec/validate.py          validates everything and re-runs the engine; non-zero exit on any mismatch
+scripts/spec/test_contracts.py    tests of the contract tooling itself (plumbing by convention, closed objects, T02)
 ```
 
 Run both from the repo root:
@@ -19,7 +20,52 @@ Run both from the repo root:
 ```
 python3 spec/reference/generate_fixtures.py   # rewrites spec/fixtures (deterministic: same bytes every run)
 python3 scripts/spec/validate.py               # schema + engine conformance; add -v for detail
+python3 -m unittest discover -s scripts/spec -p 'test_*.py'   # the tooling's own tests
 ```
+
+CI runs all three (job `spec`) and fails if regenerating changes any committed byte.
+
+## Changing the contracts (rule since T02)
+
+T02 completed the v1 contracts up front: every v1 session field, the registry entries later tickets switch on, the
+sample media manifest and the plumbing below. **From here on, a contract gap is fixed in its own small contract-fix PR
+(schema, cases module, fixtures, README) that merges before the feature PR that needs it.** A feature PR never edits a
+schema, the registry list or the plumbing. Changing a capability's status is a one-line change in
+`cases/records.py` plus the benchmark record its gate requires (ADR-0004).
+
+Within major version 1 every schema change is additive: new properties are optional and enums only gain values, so
+a document written at 1.0.0 still validates. Existing fixtures keep their bytes; new examples are new files.
+
+## Plumbing by convention
+
+Adding a fixture kind means adding files, never editing a shared list:
+
+1. **Schema by name.** A document's `kind` names its schema: drop `jovra.`, dots become hyphens, camelCase becomes
+   kebab-case (`jovra.fixture.rally` -> `schemas/fixture-rally.schema.json`, `jovra.sampleMediaManifest` ->
+   `schemas/sample-media-manifest.schema.json`). The validator fails a document whose schema file is missing, and a
+   schema whose `kind` const maps to a different file name (`jovra_ref/conformance.py` `schema_file_for_kind`).
+2. **Generator by discovery.** `generate_fixtures.py` imports every module in `reference/cases/` and runs each one
+   that defines `generate(ctx) -> int`, ordered by its `ORDER` (default 100) then name. `ctx` carries `fixtures`,
+   `contracts`, `write_json` and the default `version`.
+3. **Extra checks by discovery.** A cases module may export `CHECKS = {kind: check(path, doc, docs) -> [problem]}`;
+   the validator runs them after schema validation (the sample media manifest does).
+
+`scripts/spec/test_contracts.py` proves it on a copy of the tree: a temporary cases module with a new kind generates
+and validates with no other edit, and deleting its schema makes validation fail.
+
+## Schema versions
+
+| Schema | Version | Since |
+|---|---|---|
+| `session` | 1.1.0 | T02: every remaining v1 field, all optional (list in the schema's `$comment`) |
+| `practice-plan` | 1.1.0 | T02: drill session logs, dated goals with a progress window, drill sets |
+| `archive-manifest` | 1.1.0 | T02: the `rallyOnlyCopy` role (the Space Saver copy; `spaceSaver` is its 1.0 name), upload states `waitingForNetwork` and `cancelled` |
+| `export` | 1.1.0 | T02: event-log version per session, face blur flag, Share Pack audience, new file roles (story 219: the export schema is published and versioned) |
+| `sample-media-manifest` | 1.0.0 | T02: new |
+| all others | 1.0.0 | |
+
+The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) and `faceBlur` (ungated) were added at
+`disabled`; no other status changed.
 
 ## Schemas
 
@@ -31,7 +77,8 @@ python3 scripts/spec/validate.py               # schema + engine conformance; ad
 | `archive-manifest.schema.json` | per-session upload journal | resumable state machine, pre-generated Drive ids, size + MD5 (+ SHA-256) verification; `backedUp` is invalid without a passing verification; no tokens or session URIs (Keychain reference only) |
 | `capability-registry.schema.json` | `contracts/capability-registry.v1.json` | status, label, requirements and benchmark gate per capability (ADR-0004, D10) |
 | `practice-plan.schema.json` | practice plan | every item carries its evidence row, rule id and availability |
-| `export.schema.json` | `export.json` at the root of an export | `includesAudio` false by default (D5) |
+| `export.schema.json` | `export.json` at the root of an export | `includesAudio` false by default (D5); each session names the event-log version it was built from |
+| `sample-media-manifest.schema.json` | `fixtures/sample/media-manifest.json` | the synthetic sample media: stable media id, file name, duration, frame rate, size and session coverage for each of the 8 sample sessions and the 3 lab clips. The sample library (T09) and the renderer (T11) both read it; files are rendered, never committed |
 | `csv-contract.schema.json` | `contracts/csv/*.v1.json` | column order, nullability, quoting, line endings |
 | `engine-output.schema.json` | fold and stats outputs | the exact shape both platforms must produce |
 | `fixture-*.schema.json` | the fixtures themselves | |
@@ -55,7 +102,8 @@ fixture change immediately fails whichever platform has not caught up.
 | `jovra.fixture.pct` | `ratio`, `delta` (percentage points from the displayed integers) and `pool` (sum numerators and denominators) | Deep equality per case |
 | `jovra.fixture.units` | `convert` (exact, half-up at `places`), `display` (half-up once to the unit's step; same unit returns the stored text untouched), `gaugeHint` | Deep equality per case |
 | `jovra.fixture.sample` | Load `jon-vs-alex.session.json` with the app's real session decoder, build the engine input from it, fold, compute stats, export both CSVs. | Fold + stats deep-equal; **CSV byte-for-byte** with the golden files; `overview` holds the screen-9 numbers |
-| records (`equipment`, `practice plan`, `export`, `archive`, registry) | Decode with the app's real model types and re-encode. | Must decode without loss; schema-valid |
+| records (`equipment`, `practice plan`, `export`, `archive`, registry, sample media manifest) | Decode with the app's real model types and re-encode. | Must decode without loss; schema-valid |
+| `records/*.all-fields.json` | The 1.1 contract examples (session, practice plan, export, archive): every field added in 1.1 appears at least once. Decode and re-encode. | Must round-trip; the validator also checks that adding an unknown property to any object in them fails |
 
 `assertions` in each fixture are the hand-derived subset of the expected output that was worked out from
 `docs/research/tennis-rules-and-stats.md` before the engine ran. The generator refuses to write a fixture whose
@@ -113,7 +161,9 @@ Implementation notes for the ports:
   screen-9 overview, all sixteen constraints (C15 is `partial`: its timestamp clause is waived, decision 18), and golden
   CSVs; `export.json` and `archive.json` whose sizes and hashes
   are checked against those files.
-- **Records**: equipment and practice-plan examples (Sample), and the v1 capability registry.
+- **Records**: equipment and practice-plan examples (Sample), the v1 capability registry, and the four 1.1 contract
+  examples (`*.all-fields.json`, Sample).
+- **Sample media manifest**: 11 entries, Sample and synthetic (8 session videos, 3 lab clips).
 
 ## Decisions taken where the rules doc left room
 

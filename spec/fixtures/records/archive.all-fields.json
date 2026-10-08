@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.1.0",
+  "kind": "jovra.archiveManifest",
+  "sessionId": "ex-session-all-fields",
+  "provider": "googleDrive",
+  "scope": "https://www.googleapis.com/auth/drive.file",
+  "createdAt": "2026-10-07T18:00:00Z",
+  "updatedAt": "2026-10-07T18:00:00Z",
+  "sample": true,
+  "spaceSaver": true,
+  "includesAudio": false,
+  "remoteFolder": {"displayPath": "JOVRA/2026/2026-10-07 Contract example"},
+  "files": [
+    {
+      "role": "sidecar",
+      "localPath": "session.all-fields.json",
+      "mimeType": "application/json",
+      "bytes": 11174,
+      "md5": "56df0a59fa16332b778abf4e6c26bf99",
+      "sha256": "2ad7fabc8ddd364228e7f53c09294d9997efeabc4bd333b46547d36809de0cc7",
+      "remote": {
+        "name": "session.jovra.json",
+        "fileId": "SAMPLE-not-a-drive-id-0002",
+        "appProperties": {"jovraSessionId": "ex-session-all-fields", "jovraRole": "sidecar"}
+      },
+      "upload": {
+        "lastConfirmedOffset": 0,
+        "attempts": 1,
+        "wifiOnly": true,
+        "updatedAt": "2026-10-07T18:00:00Z",
+        "state": "waitingForNetwork",
+        "lastError": {"code": "network", "message": "Waiting for a connection"}
+      }
+    },
+    {
+      "role": "rallyOnlyCopy",
+      "localPath": "exports/rally-only.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 1700000000,
+      "eventLogVersion": 6,
+      "remote": {"name": "rally-only.mp4"},
+      "upload": {
+        "lastConfirmedOffset": 0,
+        "attempts": 0,
+        "wifiOnly": true,
+        "updatedAt": "2026-10-07T18:00:00Z",
+        "state": "queued"
+      }
+    }
+  ]
+}
