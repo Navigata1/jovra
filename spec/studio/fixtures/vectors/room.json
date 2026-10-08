@@ -1,0 +1,696 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "room",
+  "status": "hand-written expectations (ADR-0027 vectors, freshness, framing, QR, grants, the approval code from fixed public keys); transcriptStep cases name a step of a room transcript by its note",
+  "cases": [
+    {
+      "id": "approval-code-fixed-keys",
+      "op": "approvalCode",
+      "hostSpkiHex": "3059301306072a8648ce3d020106082a8648ce3d030107034200046b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c2964fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5",
+      "guestSpkiHex": "3059301306072a8648ce3d020106082a8648ce3d0301070342000460fed4ba255a9d31c961eb74c6356d68c049b8923b61fa6ce669622e60f29fb67903fe1008b8bc99a41ae9e95628bc64f2f1b20c2d7e9f5177a3c294d4462299",
+      "qrNonce": "qrNonceFixedVector0001",
+      "hostNonce": "hostNonceFixedVector01",
+      "guestNonce": "guestNonceFixedVector1",
+      "expect": {
+        "hostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+        "guestKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+        "commitment": "e6cd773220cd095eff498ce6d6e53204cc6ea212fc3517e101cc26d4f1df4ebe",
+        "digest": "23a8dc1370fec6d3d6f002c3adf49f7b0bdfc4e7805a2435a508be6032a75066",
+        "code": "268947"
+      },
+      "hand": "printf 'jovra-room-sas|<hostKey>|<guestKey>|<qrNonce>|<hostNonce>|<guestNonce>' | shasum -a 256 -> 23a8dc13...; 0x23a8dc13 = 598268947; 598268947 mod 1000000 = 268947 (bc, 2026-10-08)"
+    },
+    {
+      "id": "typed-code-channel-binding",
+      "op": "channelCode",
+      "exporter": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff",
+      "hostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "guestKeySha256": "b6457b21efacef1eaa0d1adb4bca3cc185ef757aa1e865ae324721b99b96f791",
+      "expect": {
+        "code": "654318"
+      },
+      "hand": "0xfbeda06e = 4226654318; mod 1000000 = 654318"
+    },
+    {
+      "id": "typed-code-mitm-differs",
+      "op": "channelCode",
+      "exporter": "ffeeddccbbaa99887766554433221100ffeeddccbbaa99887766554433221100",
+      "hostKeySha256": "99249c4e7115b5402c60286a0cc21f9b8fb8c4bdbc04fff2cd9500420f37d5a2",
+      "guestKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "expect": {
+        "code": "032799"
+      },
+      "hand": "0xf78a405f = 4153032799; mod 1000000 = 032799: the guest's screen differs from the host's 654318"
+    },
+    {
+      "id": "frame-encode",
+      "op": "frameEncode",
+      "canonicalJson": "{\"body\":{\"batteryPct\":78,\"captureState\":\"Recording\",\"droppedFrames\":0,\"freeBytes\":40000000000,\"savedThroughMs\":754000,\"segmentId\":\"seg-c2-001\",\"segmentIndex\":0,\"thermal\":\"nominal\"},\"deviceId\":\"device-alex\",\"hostEpoch\":1,\"roomId\":\"room-court-day\",\"schemaVersion\":\"jovra.room/1\",\"sentMonoNs\":9000000000,\"seq\":7,\"type\":\"heartbeat\"}",
+      "expect": {
+        "prefixHex": "00000148",
+        "length": 328
+      },
+      "hand": "printf '%s' <json> | wc -c -> 328 = 0x148"
+    },
+    {
+      "id": "frame-two-in-a-row",
+      "op": "frameDecode",
+      "streamHex": "000000027b7d000000027b7d",
+      "expect": {
+        "messages": 2
+      }
+    },
+    {
+      "id": "frame-over-max",
+      "op": "frameDecode",
+      "streamHex": "000100017b7d",
+      "expect": {
+        "code": "frameTooLong"
+      }
+    },
+    {
+      "id": "frame-at-max-declared-truncated",
+      "op": "frameDecode",
+      "streamHex": "000100007b7d",
+      "expect": {
+        "code": "truncatedFrame"
+      }
+    },
+    {
+      "id": "frame-short-prefix",
+      "op": "frameDecode",
+      "streamHex": "0000",
+      "expect": {
+        "code": "truncatedFrame"
+      }
+    },
+    {
+      "id": "frame-not-object",
+      "op": "frameDecode",
+      "streamHex": "000000035b315d",
+      "expect": {
+        "code": "malformedFrame"
+      }
+    },
+    {
+      "id": "frame-float",
+      "op": "frameDecode",
+      "streamHex": "000000097b2261223a312e357d",
+      "expect": {
+        "code": "malformedFrame"
+      }
+    },
+    {
+      "id": "frame-duplicate-key",
+      "op": "frameDecode",
+      "streamHex": "0000000d7b2261223a312c2261223a327d",
+      "expect": {
+        "code": "duplicateKey"
+      }
+    },
+    {
+      "id": "freshness-0ms",
+      "op": "freshness",
+      "ageMs": 0,
+      "state": "Recording",
+      "expect": {
+        "band": "Fresh"
+      }
+    },
+    {
+      "id": "freshness-5000ms",
+      "op": "freshness",
+      "ageMs": 5000,
+      "state": "Recording",
+      "expect": {
+        "band": "Fresh"
+      }
+    },
+    {
+      "id": "freshness-5001ms",
+      "op": "freshness",
+      "ageMs": 5001,
+      "state": "Recording",
+      "expect": {
+        "band": "Delayed"
+      }
+    },
+    {
+      "id": "freshness-15000ms",
+      "op": "freshness",
+      "ageMs": 15000,
+      "state": "Recording",
+      "expect": {
+        "band": "Delayed"
+      }
+    },
+    {
+      "id": "freshness-15001ms",
+      "op": "freshness",
+      "ageMs": 15001,
+      "state": "Recording",
+      "expect": {
+        "band": "Unknown"
+      }
+    },
+    {
+      "id": "silent-42s",
+      "op": "freshness",
+      "ageMs": 42000,
+      "state": "Recording",
+      "expect": {
+        "band": "Unknown",
+        "label": "No contact for 0:42 · may still be recording"
+      }
+    },
+    {
+      "id": "unheard-since-restart",
+      "op": "freshness",
+      "ageMs": null,
+      "state": "Recording",
+      "expect": {
+        "band": "Unknown",
+        "label": "No contact · may still be recording"
+      }
+    },
+    {
+      "id": "delayed-ready",
+      "op": "freshness",
+      "ageMs": 8000,
+      "state": "Ready",
+      "expect": {
+        "band": "Delayed",
+        "label": "No contact for 0:08"
+      }
+    },
+    {
+      "id": "stop-all-partial-results",
+      "op": "perDevice",
+      "targets": [
+        "device-jon",
+        "device-alex",
+        "device-sam",
+        "device-kai"
+      ],
+      "outcomes": {
+        "device-jon": [
+          "Accepted",
+          null
+        ],
+        "device-alex": [
+          "Accepted",
+          null
+        ],
+        "device-sam": [
+          "Failed",
+          "finalizeFailed"
+        ]
+      },
+      "nowMs": 10001,
+      "deadlineMs": 10000,
+      "expect": [
+        {
+          "deviceId": "device-jon",
+          "result": "Accepted",
+          "reason": null
+        },
+        {
+          "deviceId": "device-alex",
+          "result": "Accepted",
+          "reason": null
+        },
+        {
+          "deviceId": "device-sam",
+          "result": "Failed",
+          "reason": "finalizeFailed"
+        },
+        {
+          "deviceId": "device-kai",
+          "result": "Unknown",
+          "reason": "noAcknowledgement"
+        }
+      ]
+    },
+    {
+      "id": "stop-all-before-deadline",
+      "op": "perDevice",
+      "targets": [
+        "device-jon",
+        "device-kai"
+      ],
+      "outcomes": {
+        "device-jon": [
+          "Accepted",
+          null
+        ]
+      },
+      "nowMs": 10000,
+      "deadlineMs": 10000,
+      "expect": [
+        {
+          "deviceId": "device-jon",
+          "result": "Accepted",
+          "reason": null
+        },
+        {
+          "deviceId": "device-kai",
+          "result": "Pending",
+          "reason": null
+        }
+      ]
+    },
+    {
+      "id": "host-controls-is-capture-controller",
+      "op": "grantsFromPermissions",
+      "permissions": [
+        "record-local",
+        "upload-own-source",
+        "view-own-preview",
+        "host-controls"
+      ],
+      "expect": [
+        "capture-controller",
+        "viewer"
+      ]
+    },
+    {
+      "id": "camera-permissions-are-viewer",
+      "op": "grantsFromPermissions",
+      "permissions": [
+        "record-local",
+        "upload-own-source",
+        "view-own-preview"
+      ],
+      "expect": [
+        "viewer"
+      ]
+    },
+    {
+      "id": "permit-viewer-stopAll",
+      "op": "grantPermits",
+      "grant": "viewer",
+      "type": "stopAll",
+      "expect": {
+        "allowed": false
+      }
+    },
+    {
+      "id": "permit-viewer-bookmark",
+      "op": "grantPermits",
+      "grant": "viewer",
+      "type": "bookmark",
+      "expect": {
+        "allowed": false
+      }
+    },
+    {
+      "id": "permit-marker-bookmark",
+      "op": "grantPermits",
+      "grant": "marker",
+      "type": "bookmark",
+      "expect": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "permit-scorer-stopAll",
+      "op": "grantPermits",
+      "grant": "scorer",
+      "type": "stopAll",
+      "expect": {
+        "allowed": false
+      }
+    },
+    {
+      "id": "permit-capture-controller-stopAll",
+      "op": "grantPermits",
+      "grant": "capture-controller",
+      "type": "stopAll",
+      "expect": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "permit-capture-controller-recordingIntent",
+      "op": "grantPermits",
+      "grant": "capture-controller",
+      "type": "recordingIntent",
+      "expect": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "qr-valid",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MTA6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LXYxIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsImpvaW5Ub2tlbiI6Imw4WkVvQmJLXzV0U2UxdnR0UHoyM3hkWkhBWkZyWGNOMlFzS19zVkJNMVUiLCJub25jZSI6IlRKWFNwb1ViQWgzVmhDeHZXZ1c3MEEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "result": "ok"
+      }
+    },
+    {
+      "id": "qr-public-endpoint",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiOC44LjguOCIsImtpbmQiOiJsYW4iLCJwb3J0Ijo0NzEwMH1dLCJleHBpcmVzQXQiOiIyMDI2LTEwLTA3VDIwOjEwOjAwWiIsImhvc3RFcG9jaCI6MSwiaG9zdEtleVNoYTI1NiI6IjVjZDI1MmZiMGNlODkzMjQzNmZhZjhjY2QxMDQwOTgxYjg5ZWU0YWQ2YjlmZTllMmEyYjdlNzFhYWNiMjdjZDMiLCJpbnZpdGVJZCI6Imludi12MSIsImlzc3VlZEF0IjoiMjAyNi0xMC0wN1QyMDowMDowMFoiLCJqb2luVG9rZW4iOiJsOFpFb0JiS181dFNlMXZ0dFB6MjN4ZFpIQVpGclhjTjJRc0tfc1ZCTTFVIiwibm9uY2UiOiJUSlhTcG9VYkFoM1ZoQ3h2V2dXNzBBIiwic2FtcGxlIjp0cnVlLCJzY2hlbWFWZXJzaW9uIjoiam92cmEucm9vbS5pbnZpdGF0aW9uLXBheWxvYWQvMSIsInNlc3Npb25JZCI6InJvb20tY291cnQtZGF5In0",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "endpointNotAllowed"
+      }
+    },
+    {
+      "id": "qr-cgnat-endpoint",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTAwLjY0LjAuNyIsImtpbmQiOiJsYW4iLCJwb3J0Ijo0NzEwMH1dLCJleHBpcmVzQXQiOiIyMDI2LTEwLTA3VDIwOjEwOjAwWiIsImhvc3RFcG9jaCI6MSwiaG9zdEtleVNoYTI1NiI6IjVjZDI1MmZiMGNlODkzMjQzNmZhZjhjY2QxMDQwOTgxYjg5ZWU0YWQ2YjlmZTllMmEyYjdlNzFhYWNiMjdjZDMiLCJpbnZpdGVJZCI6Imludi12MSIsImlzc3VlZEF0IjoiMjAyNi0xMC0wN1QyMDowMDowMFoiLCJqb2luVG9rZW4iOiJsOFpFb0JiS181dFNlMXZ0dFB6MjN4ZFpIQVpGclhjTjJRc0tfc1ZCTTFVIiwibm9uY2UiOiJUSlhTcG9VYkFoM1ZoQ3h2V2dXNzBBIiwic2FtcGxlIjp0cnVlLCJzY2hlbWFWZXJzaW9uIjoiam92cmEucm9vbS5pbnZpdGF0aW9uLXBheWxvYWQvMSIsInNlc3Npb25JZCI6InJvb20tY291cnQtZGF5In0",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "endpointNotAllowed"
+      }
+    },
+    {
+      "id": "qr-loopback-endpoint",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTI3LjAuMC4xIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MTA6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LXYxIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsImpvaW5Ub2tlbiI6Imw4WkVvQmJLXzV0U2UxdnR0UHoyM3hkWkhBWkZyWGNOMlFzS19zVkJNMVUiLCJub25jZSI6IlRKWFNwb1ViQWgzVmhDeHZXZ1c3MEEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "endpointNotAllowed"
+      }
+    },
+    {
+      "id": "qr-low-port",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjgwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MTA6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LXYxIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsImpvaW5Ub2tlbiI6Imw4WkVvQmJLXzV0U2UxdnR0UHoyM3hkWkhBWkZyWGNOMlFzS19zVkJNMVUiLCJub25jZSI6IlRKWFNwb1ViQWgzVmhDeHZXZ1c3MEEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "endpointNotAllowed"
+      }
+    },
+    {
+      "id": "qr-link-local-v6",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiZmU4MDo6MSIsImtpbmQiOiJsYW4iLCJwb3J0Ijo0NzEwMH1dLCJleHBpcmVzQXQiOiIyMDI2LTEwLTA3VDIwOjEwOjAwWiIsImhvc3RFcG9jaCI6MSwiaG9zdEtleVNoYTI1NiI6IjVjZDI1MmZiMGNlODkzMjQzNmZhZjhjY2QxMDQwOTgxYjg5ZWU0YWQ2YjlmZTllMmEyYjdlNzFhYWNiMjdjZDMiLCJpbnZpdGVJZCI6Imludi12MSIsImlzc3VlZEF0IjoiMjAyNi0xMC0wN1QyMDowMDowMFoiLCJqb2luVG9rZW4iOiJsOFpFb0JiS181dFNlMXZ0dFB6MjN4ZFpIQVpGclhjTjJRc0tfc1ZCTTFVIiwibm9uY2UiOiJUSlhTcG9VYkFoM1ZoQ3h2V2dXNzBBIiwic2FtcGxlIjp0cnVlLCJzY2hlbWFWZXJzaW9uIjoiam92cmEucm9vbS5pbnZpdGF0aW9uLXBheWxvYWQvMSIsInNlc3Npb25JZCI6InJvb20tY291cnQtZGF5In0",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "result": "ok"
+      }
+    },
+    {
+      "id": "qr-web-url",
+      "op": "joinerQr",
+      "qr": "https://example.com/join?code=JVR-417",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "notJovraRoomCode"
+      }
+    },
+    {
+      "id": "qr-padded",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MTA6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LXYxIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsImpvaW5Ub2tlbiI6Imw4WkVvQmJLXzV0U2UxdnR0UHoyM3hkWkhBWkZyWGNOMlFzS19zVkJNMVUiLCJub25jZSI6IlRKWFNwb1ViQWgzVmhDeHZXZ1c3MEEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ==",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "malformedPayload"
+      }
+    },
+    {
+      "id": "qr-not-canonical",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:ewogInNjaGVtYVZlcnNpb24iOiAiam92cmEucm9vbS5pbnZpdGF0aW9uLXBheWxvYWQvMSIsCiAic2FtcGxlIjogdHJ1ZSwKICJpbnZpdGVJZCI6ICJpbnYtdjEiLAogInNlc3Npb25JZCI6ICJyb29tLWNvdXJ0LWRheSIsCiAiaG9zdEVwb2NoIjogMSwKICJob3N0S2V5U2hhMjU2IjogIjVjZDI1MmZiMGNlODkzMjQzNmZhZjhjY2QxMDQwOTgxYjg5ZWU0YWQ2YjlmZTllMmEyYjdlNzFhYWNiMjdjZDMiLAogImpvaW5Ub2tlbiI6ICJsOFpFb0JiS181dFNlMXZ0dFB6MjN4ZFpIQVpGclhjTjJRc0tfc1ZCTTFVIiwKICJub25jZSI6ICJUSlhTcG9VYkFoM1ZoQ3h2V2dXNzBBIiwKICJpc3N1ZWRBdCI6ICIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsCiAiZXhwaXJlc0F0IjogIjIwMjYtMTAtMDdUMjA6MTA6MDBaIiwKICJjYXB0dXJlUm9sZSI6ICJjYW1lcmEiLAogImNvbW1hbmRSb2xlIjogInZpZXdlciIsCiAiZGlzcGxheUNvZGUiOiAiSlZSLTQxNyIsCiAiZW5kcG9pbnRzIjogWwogIHsKICAgImtpbmQiOiAiZG5zc2QiLAogICAic2VydmljZVR5cGUiOiAiX2pvdnJhLXJvb20uX3RjcCIsCiAgICJpbnN0YW5jZU5hbWUiOiAiam92cmEtazdtMnE5eDRkMSIKICB9LAogIHsKICAgImtpbmQiOiAibGFuIiwKICAgImFkZHJlc3MiOiAiMTkyLjE2OC4xLjIwIiwKICAgInBvcnQiOiA0NzEwMAogIH0KIF0KfQ",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "nonCanonicalPayload"
+      }
+    },
+    {
+      "id": "qr-11-minutes",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MTE6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LXYxIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsImpvaW5Ub2tlbiI6Imw4WkVvQmJLXzV0U2UxdnR0UHoyM3hkWkhBWkZyWGNOMlFzS19zVkJNMVUiLCJub25jZSI6IlRKWFNwb1ViQWgzVmhDeHZXZ1c3MEEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "inviteLifetime"
+      }
+    },
+    {
+      "id": "qr-16-byte-secret",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MTA6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LXYxIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsImpvaW5Ub2tlbiI6IkFRRUJBUUVCQVFFQkFRRUJBUUVCQVEiLCJub25jZSI6IlRKWFNwb1ViQWgzVmhDeHZXZ1c3MEEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "secretLength"
+      }
+    },
+    {
+      "id": "qr-camera-with-control",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoiY2FwdHVyZS1jb250cm9sbGVyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MTA6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LXYxIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsImpvaW5Ub2tlbiI6Imw4WkVvQmJLXzV0U2UxdnR0UHoyM3hkWkhBWkZyWGNOMlFzS19zVkJNMVUiLCJub25jZSI6IlRKWFNwb1ViQWgzVmhDeHZXZ1c3MEEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ",
+      "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+      "expect": {
+        "code": "cameraCannotControl"
+      }
+    },
+    {
+      "id": "qr-wrong-host-key",
+      "op": "joinerQr",
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MTA6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LXYxIiwiaXNzdWVkQXQiOiIyMDI2LTEwLTA3VDIwOjAwOjAwWiIsImpvaW5Ub2tlbiI6Imw4WkVvQmJLXzV0U2UxdnR0UHoyM3hkWkhBWkZyWGNOMlFzS19zVkJNMVUiLCJub25jZSI6IlRKWFNwb1ViQWgzVmhDeHZXZ1c3MEEiLCJzYW1wbGUiOnRydWUsInNjaGVtYVZlcnNpb24iOiJqb3ZyYS5yb29tLmludml0YXRpb24tcGF5bG9hZC8xIiwic2Vzc2lvbklkIjoicm9vbS1jb3VydC1kYXkifQ",
+      "observedHostKeySha256": "99249c4e7115b5402c60286a0cc21f9b8fb8c4bdbc04fff2cd9500420f37d5a2",
+      "expect": {
+        "code": "hostKeyMismatch"
+      }
+    },
+    {
+      "id": "adr27-older-epoch",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st24-contact-lost",
+      "note": "old-epoch",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "staleEpoch"
+        }
+      }
+    },
+    {
+      "id": "adr27-replayed-seq",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st24-contact-lost",
+      "note": "replayed-seq",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "seqNotIncreasing"
+        }
+      }
+    },
+    {
+      "id": "adr27-same-id-same-payload",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st24-contact-lost",
+      "note": "retry-receipt",
+      "expect": {
+        "receipt": {
+          "commandId": "cmd-a1",
+          "issuerDeviceId": "device-alex",
+          "status": "Accepted",
+          "reason": null,
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "id": "adr27-same-id-other-payload",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st24-contact-lost",
+      "note": "reuse-receipt",
+      "expect": {
+        "receipt": {
+          "commandId": "cmd-a1",
+          "issuerDeviceId": "device-alex",
+          "status": "Rejected",
+          "reason": "commandIdReuse",
+          "securityEvent": true,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "id": "adr27-viewer-stop-all",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st24-contact-lost",
+      "note": "viewer-stop-all-receipt",
+      "expect": {
+        "receipt": {
+          "commandId": "cmd-x1",
+          "issuerDeviceId": "device-alex",
+          "status": "Rejected",
+          "reason": "grantNotPermitted",
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "id": "adr27-partial-stop-all",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st24-contact-lost",
+      "note": "stop-all-partial",
+      "expect": {
+        "receipt": {
+          "commandId": "cmd-stop-all",
+          "issuerDeviceId": "device-jon",
+          "status": "Accepted",
+          "reason": null,
+          "securityEvent": false,
+          "eventRevision": 2,
+          "perDevice": [
+            {
+              "deviceId": "device-jon",
+              "result": "Accepted",
+              "reason": null
+            },
+            {
+              "deviceId": "device-alex",
+              "result": "Accepted",
+              "reason": null
+            },
+            {
+              "deviceId": "device-sam",
+              "result": "Failed",
+              "reason": "finalizeFailed"
+            },
+            {
+              "deviceId": "device-kai",
+              "result": "Unknown",
+              "reason": "noAcknowledgement"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "adr27-stale-revision-conflicted",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st24-contact-lost",
+      "note": "stale-revision-receipt",
+      "expect": {
+        "receipt": {
+          "commandId": "cmd-a2",
+          "issuerDeviceId": "device-alex",
+          "status": "Conflicted",
+          "reason": "baseRevisionStale",
+          "securityEvent": false,
+          "eventRevision": 1,
+          "perDevice": []
+        }
+      }
+    },
+    {
+      "id": "freshness-silent-camera-42s",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st24-contact-lost",
+      "note": "silent-42s",
+      "expect": {
+        "recordingOn": {
+          "n": 3,
+          "m": 4
+        },
+        "row": {
+          "deviceId": "device-kai",
+          "slot": "far-left-corner",
+          "freshness": "Unknown",
+          "contactAgeMs": 42000,
+          "state": "Recording",
+          "label": "No contact for 0:42 · may still be recording",
+          "ready": null,
+          "stillAgeMs": null
+        }
+      }
+    },
+    {
+      "id": "adr27-typed-code-unbound",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st23-trust",
+      "note": "typed-code-unbound",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "typedCodeNeedsChannelBinding"
+        }
+      }
+    },
+    {
+      "id": "adr27-reused-code",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st23-trust",
+      "note": "reused-code",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "inviteUsed"
+        }
+      }
+    },
+    {
+      "id": "adr27-expired-code",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st23-trust",
+      "note": "expired-code",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "inviteExpired"
+        }
+      }
+    },
+    {
+      "id": "story40-slot-full",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st23-trust",
+      "note": "slot-full",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "slotFull"
+        }
+      }
+    },
+    {
+      "id": "adr27-revoke-closes",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st23-trust",
+      "note": "revoked-closes",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "revokedPeer"
+        }
+      }
+    },
+    {
+      "id": "adr27-revoke-voids-code",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st23-trust",
+      "note": "revoked-code-void",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "inviteRevoked"
+        }
+      }
+    },
+    {
+      "id": "adr27-transfer-voids-codes",
+      "op": "transcriptStep",
+      "transcript": "room-transcript.st23-trust",
+      "note": "transfer-voids-code",
+      "expect": {
+        "verdict": {
+          "accepted": false,
+          "code": "inviteRevoked"
+        }
+      }
+    }
+  ]
+}
