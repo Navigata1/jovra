@@ -103,7 +103,7 @@ def main() -> int:
     created = body[0] if isinstance(body, list) and body else {}
     project_id = created.get("id", "")
     checks.check(status == 201 and created.get("owner_id") == OWNER[1] and created.get("revision") == 1,
-                 "owner creates a project; owner_id comes from the token", f"HTTP {status} {summary(body)}")
+                 "owner creates a project; owner_id comes from the token", f"HTTP {status}")
     status, body = request("GET", f"{rest}/project_members?select=user_id,role&project_id=eq.{project_id}", owner)
     checks.check(status == 200 and body == [{"user_id": OWNER[1], "role": "owner"}],
                  "the owner membership row follows the project", f"HTTP {status}")
