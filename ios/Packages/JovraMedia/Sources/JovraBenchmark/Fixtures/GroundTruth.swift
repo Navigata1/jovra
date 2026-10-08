@@ -13,6 +13,18 @@ public struct RationalTime: Codable, Hashable, Sendable, Comparable, CustomStrin
         self.timescale = timescale
     }
 
+    enum CodingKeys: String, CodingKey { case value, timescale }
+
+    /// Decoded JSON is checked, not trusted: a non-positive timescale is a decoding error, not a trap.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let timescale = try c.decode(Int64.self, forKey: .timescale)
+        guard timescale > 0 else {
+            throw DecodingError.dataCorruptedError(forKey: .timescale, in: c, debugDescription: "timescale must be positive, got \(timescale)")
+        }
+        self.init(value: try c.decode(Int64.self, forKey: .value), timescale: timescale)
+    }
+
     public static func < (lhs: RationalTime, rhs: RationalTime) -> Bool {
         Rational(lhs) < Rational(rhs)
     }
@@ -51,6 +63,18 @@ public struct GroundTruth: Codable, Hashable, Sendable {
         public let num: Int
         public let den: Int
         public var frameRate: FrameRate { FrameRate(frames: num, perSeconds: den) }
+
+        enum CodingKeys: String, CodingKey { case num, den }
+
+        /// A non-positive rate is a decoding error, so `frameRate` can never trap.
+        public init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            num = try c.decode(Int.self, forKey: .num)
+            den = try c.decode(Int.self, forKey: .den)
+            guard num > 0, den > 0 else {
+                throw DecodingError.dataCorruptedError(forKey: .num, in: c, debugDescription: "frame rate \(num)/\(den) must be positive")
+            }
+        }
     }
 
     public struct HDR: Codable, Hashable, Sendable {
@@ -69,7 +93,10 @@ public struct GroundTruth: Codable, Hashable, Sendable {
         public let displayWidth: Int
         public let displayHeight: Int
         public let orientation: String
+        /// Nominal rate; for a variable-frame-rate clip, the median frame duration's rate.
         public let frameRate: Rate
+        /// Frame durations vary (a phone-style VFR clip); frameCount / frameRate is still the duration.
+        public let variableFrameRate: Bool
         public let frameCount: Int
         public let duration: RationalTime
         public let hdr: HDR?

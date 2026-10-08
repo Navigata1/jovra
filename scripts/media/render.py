@@ -2,6 +2,8 @@
 """Render JOVRA's media fixtures and write their ground truth.
 
     python3 scripts/media/render.py            render missing clips, write spec/fixtures/media/<set>/*.truth.json
+                                               (refuses to rewrite a committed hash from a cached clip whose
+                                               renderer source is unchanged: that clip was altered)
     python3 scripts/media/render.py --check    render missing clips, then fail unless every committed truth file
                                                (including each clip's decoded-frame hash) is reproduced byte-for-byte
     python3 scripts/media/render.py --force    re-encode every clip even when the cache has it
@@ -87,6 +89,18 @@ def clip_truth(module, clip, cache_root: Path, force: bool, log) -> tuple[str, i
         hasher.add(levels)
     if hasher.frames != clip.frame_count:
         raise RenderError(f"{clip.id}: decoded {hasher.frames} frames, expected {clip.frame_count}")
+    if clip.variable_frame_rate and encode.video_presentation_ticks(out) != (clip.vfr_timescale, clip.presentation_ticks()):
+        raise RenderError(f"{clip.id}: the encoded presentation times are not the variable-frame-rate schedule "
+                          f"(this ffmpeg rounded them back to a constant rate?)")
+    if action != "rendered":
+        committed = TRUTH_DIR / module.SET / f"{clip.id}.truth.json"
+        if committed.exists():
+            old = json.loads(committed.read_text(encoding="utf-8"))
+            if old["renderer"]["sourceHash"] == src_hash and old["signature"]["decodedFramesSha256"] != hasher.hexdigest():
+                raise RenderError(f"{clip.id}: the cached {out.name} decodes to sig {hasher.hexdigest()[:12]} but the committed "
+                                  f"truth says {old['signature']['decodedFramesSha256'][:12]} for the same renderer source, so "
+                                  f"the cached clip or the committed truth was altered. Re-render it with --force; if the "
+                                  f"hash still differs, the committed truth is wrong")
     try:
         cache_rel = out.relative_to(ROOT).as_posix()
     except ValueError:
@@ -121,14 +135,14 @@ def main(argv: list[str]) -> int:
         src_hash = truth.source_hash(ROOT, Path(module.__file__))
         print(f"==> set {module.SET} (renderer hash {src_hash[:16]})")
         for clip in module.clips():
+            path = TRUTH_DIR / module.SET / f"{clip.id}.truth.json"
+            produced.add(path)   # a clip that fails to render keeps its committed truth (never pruned as stale)
             try:
                 text, size = clip_truth(module, clip, args.cache, args.force, print)
             except RenderError as e:
                 failures.append(str(e))
                 continue
             total += size
-            path = TRUTH_DIR / module.SET / f"{clip.id}.truth.json"
-            produced.add(path)
             if args.check:
                 if not path.exists():
                     failures.append(f"{path.relative_to(ROOT)} is not committed")

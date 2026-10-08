@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA benchmark record",
-  "description": "One run of the benchmark harness (JovraBenchmark): which estimator and method version ran on which ground-truth clips, every output it produced, the metrics, and, for a gating run, the floor and the verdict. Capability status changes only through a committed record (ADR-0004). A gating run uses held-out seeds only; a tuning run carries no verdict. scripts/spec/validate.py re-scores every record from its outputs and the committed ground truth.",
+  "description": "One run of the benchmark harness (JovraBenchmark): which estimator and method version ran on which ground-truth clips, every output it produced, the metrics, and, for a gating run, the floor and the verdict. Capability status changes only through a committed record (ADR-0004). A gating run uses held-out seeds only; a tuning run carries no verdict; each clip appears once; only a candidate estimator names a capability, with that capability's registry gate as its floor. scripts/spec/validate.py re-scores every record from its outputs and the committed ground truth.",
   "type": "object",
   "required": ["schemaVersion", "kind", "runId", "at", "harness", "task", "estimator", "capabilityId", "mode", "band", "clips", "metrics", "floor", "verdict"],
   "additionalProperties": false,
@@ -132,6 +132,11 @@
     {
       "if": {"properties": {"mode": {"const": "tuning"}}},
       "then": {"properties": {"verdict": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"estimator": {"properties": {"role": {"enum": ["oracle", "null"]}}}}},
+      "then": {"properties": {"capabilityId": {"const": null}}},
+      "description": "Oracle and null runs are harness self-tests: they never name a capability (ADR-0004). validate.py also requires a record that names a capability to use that capability's registry gate as its floor."
     },
     {
       "if": {"properties": {"task": {"properties": {"id": {"const": "eventTimes"}}}}},

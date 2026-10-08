@@ -1,6 +1,6 @@
-"""The import fixture set: HEVC and H.264, 24 to 240 fps (and 29.97), HDR (HLG), portrait by rotation
-matrix (as an iPhone writes it) and by native portrait pixels, landscape, an unsupported codec (FFV1 in
-QuickTime) and a byte-identical duplicate pair.
+"""The import fixture set: HEVC and H.264, 24 to 240 fps (and 29.97), variable frame rate (as Android phones
+write it), HDR (HLG), portrait by rotation matrix (as an iPhone writes it) and by native portrait pixels,
+landscape, an unsupported codec (FFV1 in QuickTime) and a byte-identical duplicate pair.
 
 Every clip shows the frame code, an arrow that points to the top of the *displayed* picture and a
 per-clip colour key, all in whole signature cells.
@@ -60,16 +60,16 @@ class _Painter:
 
 def _clip(clip_id: str, file: str, description: str, codec: str, size: tuple[int, int], rate: Rate, frames: int,
           grid=(16, 9), rotation=0, bit_depth=8, hdr=None, audio_seed=None, supported=True,
-          background=COURT, key=ACCENT_RED, duplicate_of=None) -> ClipSpec:
+          background=COURT, key=ACCENT_RED, duplicate_of=None, vfr_timescale=0, vfr_cycle=(), silent_audio=False) -> ClipSpec:
     width, height = size
     audio = None
     if audio_seed is not None:
         samples = frames * rate.den * 48_000 // rate.num
-        audio = AudioSpec(events=hit_schedule(audio_seed, samples))
+        audio = AudioSpec(events=() if silent_audio else hit_schedule(audio_seed, samples))
     return ClipSpec(
         id=clip_id, file=file, description=description, codec=codec, width=width, height=height, rate=rate,
         frame_count=frames, grid=grid, rotation=rotation, bit_depth=bit_depth, hdr=hdr, audio=audio,
-        supported=supported, seed=audio_seed, duplicate_of=duplicate_of,
+        supported=supported, seed=audio_seed, duplicate_of=duplicate_of, vfr_timescale=vfr_timescale, vfr_cycle=vfr_cycle,
         paint=_Painter(width, height, grid, rotation, bit_depth, background, key),
     )
 
@@ -97,6 +97,13 @@ def clips() -> list[ClipSpec]:
         _clip("h264-360p2997-landscape", "h264-360p29.97-landscape.mp4",
               "H.264 High, 640x360 landscape, 30000/1001 fps (29.97), no audio track.",
               "h264", (640, 360), Rate(30000, 1001), 60, key=BLACK),
+        # Like the Android 13 originals in docs/fixtures/real-footage.md: nominal 30 fps at timescale 30000 with
+        # the odd 749-tick (40 fps) frame and its long neighbour. The shortest frame must not set the rate.
+        _clip("hevc-720p30-vfr", "hevc-720p30-vfr.mp4",
+              "HEVC Main, 1280x720 landscape, variable frame rate around a nominal 30 fps (frame durations of "
+              "749 to 1251 ticks of 1/30000 s in a 10-frame cycle, median 1000), AAC audio without events.",
+              "hevc", (1280, 720), Rate(30), 60, audio_seed=111, silent_audio=True, background=SURROUND, key=ACCENT_RED,
+              vfr_timescale=30000, vfr_cycle=(1000, 1000, 1000, 1000, 749, 1251, 1000, 1000, 1000, 1000)),
         _clip("ffv1-unsupported", "ffv1-unsupported.mov",
               "FFV1 in QuickTime: a codec neither iOS nor Android decodes; import must reject it with a reason.",
               "ffv1", (640, 360), Rate(30), 30, supported=False),

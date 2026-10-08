@@ -16,6 +16,7 @@ from . import audio, signature
 from .clip import ClipSpec
 
 FFMPEG = shutil.which("ffmpeg") or "ffmpeg"
+FFPROBE = shutil.which("ffprobe") or "ffprobe"
 
 
 def ffmpeg_version() -> str:
@@ -46,6 +47,24 @@ def _video_args(clip: ClipSpec) -> list[str]:
     raise ValueError(f"unknown codec {clip.codec}")
 
 
+def _timing_args(clip: ClipSpec) -> list[str]:
+    """Variable frame rate: give frame N the presentation time ``clip.presentation_ticks()[N]`` and keep every
+    frame as is (no CFR duplication or dropping)."""
+    if not clip.variable_frame_rate:
+        return []
+    ticks = clip.presentation_ticks()
+    nominal = sum(clip.vfr_cycle) // len(clip.vfr_cycle)
+    period = len(clip.vfr_cycle)
+    expr = f"N*{nominal}"
+    for k in range(1, period):
+        offset = ticks[k] - k * nominal
+        if offset:
+            expr = f"{expr}+if(eq(mod(N\\,{period})\\,{k})\\,{offset}\\,0)"
+    # -enc_time_base: without it the encoder takes 1/rate as its time base and rounds every timestamp back to CFR.
+    return ["-vf", f"settb=1/{clip.vfr_timescale},setpts={expr}", "-fps_mode", "passthrough",
+            "-enc_time_base:v", f"1/{clip.vfr_timescale}", "-video_track_timescale", str(clip.vfr_timescale)]
+
+
 def encode(clip: ClipSpec, out: Path, check_frame) -> None:
     """Draw every frame, pipe it to ffmpeg and write ``out``. ``check_frame(index, canvas)`` sees each
     source frame first (the renderer uses it for the signature margin check)."""
@@ -62,8 +81,8 @@ def encode(clip: ClipSpec, out: Path, check_frame) -> None:
             cmd += ["-i", str(wav)]
             maps += ["-map", "1:a:0", "-c:a", "aac", "-b:a", "96k", "-ar", "48000", "-flags:a", "+bitexact"]
         partial = out.with_name(out.name + ".partial" + out.suffix)
-        cmd += maps + _video_args(clip) + ["-frames:v", str(clip.frame_count), "-f",
-                                          "mov" if clip.container == "mov" else "mp4", str(partial)]
+        cmd += maps + _video_args(clip) + _timing_args(clip) + ["-frames:v", str(clip.frame_count), "-f",
+                                                               "mov" if clip.container == "mov" else "mp4", str(partial)]
         proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
         try:
             for i in range(clip.frame_count):
@@ -99,6 +118,20 @@ def set_rotation(path: Path, degrees: int, width: int, height: int) -> None:
     }
     data[offset: offset + 36] = struct.pack(">9i", *matrices[degrees])
     path.write_bytes(bytes(data))
+
+
+def video_presentation_ticks(path: Path) -> tuple[int, list[int]]:
+    """The video track's time base denominator and every frame's presentation time in it, sorted and counted
+    from the first frame (muxers may start the track at an offset)."""
+    out = subprocess.run([FFPROBE, "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=time_base:packet=pts",
+                          "-of", "compact=p=0:nk=1", str(path)], capture_output=True, text=True, check=True).stdout
+    lines = [line for line in out.splitlines() if line.strip()]
+    time_base = next(line for line in lines if "/" in line)
+    num, den = (int(x) for x in time_base.split("/"))
+    if num != 1:
+        raise RuntimeError(f"{path.name}: unexpected video time base {time_base}")
+    ticks = sorted(int(line) for line in lines if "/" not in line)
+    return den, [t - ticks[0] for t in ticks]
 
 
 def decoded_signatures(clip: ClipSpec, path: Path):

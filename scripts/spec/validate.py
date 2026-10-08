@@ -8,7 +8,9 @@
    hand-written assertions must hold, the sample match must satisfy C1-C16, CSV exports must match
    byte-for-byte, and file sizes/hashes quoted in export/archive examples must match the files.
 5. Media ground truth is internally consistent, and every benchmark record is re-scored from its outputs and
-   the committed ground truth (spec/reference/jovra_ref/benchmark.py); gating runs use held-out seeds only.
+   the committed ground truth (spec/reference/jovra_ref/benchmark.py); gating runs use held-out seeds only,
+   each clip counts once, and a record naming a capability is a candidate run on that capability's registry
+   gate (ADR-0004). Malformed numbers are reported as failures, never crashes.
 
 Exit status is non-zero on any failure.  Usage:  python3 scripts/spec/validate.py [-v]
 """
@@ -352,6 +354,17 @@ def check_references(docs: dict, rep: Report) -> None:
 
 def check_ground_truth(path: Path, doc: dict, docs: dict, rep: Report) -> None:
     where = str(path.relative_to(ROOT))
+    try:
+        problems = ground_truth_problems(path, doc, docs)
+    except (ArithmeticError, ValueError, KeyError, TypeError) as e:   # malformed input is a failure, not a crash
+        problems = [f"malformed ground truth: {type(e).__name__}: {e}"]
+    for p in problems:
+        rep.fail(where, p)
+    if not problems:
+        rep.ok("media ground truth")
+
+
+def ground_truth_problems(path: Path, doc: dict, docs: dict) -> list[str]:
     problems = []
     set_name, _, clip_id = doc["id"].partition("/")
     if set_name != doc["set"] or path.parent.name != doc["set"] or path.name != f"{clip_id}.truth.json":
@@ -392,16 +405,39 @@ def check_ground_truth(path: Path, doc: dict, docs: dict, rep: Report) -> None:
         if original is None or original["set"] != doc["set"] or original["video"] != v \
                 or original["signature"]["decodedFramesSha256"] != sig["decodedFramesSha256"]:
             problems.append(f"duplicateOf {doc['duplicateOf']} is missing or not the same media")
-    for p in problems:
-        rep.fail(where, p)
-    if not problems:
-        rep.ok("media ground truth")
+    return problems
 
 
 def check_benchmark_record(path: Path, doc: dict, docs: dict, rep: Report) -> None:
     where = str(path.relative_to(ROOT)) if path.is_absolute() else str(path)
+    try:
+        problems = benchmark_record_problems(doc, docs)
+    except (ArithmeticError, ValueError, KeyError, TypeError) as e:   # malformed input is a failure, not a crash
+        problems = [f"malformed record: {type(e).__name__}: {e}"]
+    for p in problems:
+        rep.fail(where, p)
+    if not problems:
+        rep.ok("benchmark records")
+
+
+def benchmark_record_problems(doc: dict, docs: dict) -> list[str]:
     truths = {d["id"]: d for d in docs.values() if d.get("kind") == "jovra.groundTruth"}
     problems = []
+    ids = [clip["truthId"] for clip in doc["clips"]]
+    repeated = sorted({i for i in ids if ids.count(i) > 1})
+    if repeated:
+        problems.append(f"clips repeat {', '.join(repeated)}: each clip counts once")
+    capability = doc["capabilityId"]
+    if capability is not None:
+        gates = registry_gates(docs)
+        if doc["estimator"]["role"] != "candidate":
+            problems.append(f"a {doc['estimator']['role']} record cannot back {capability}; only a candidate can (ADR-0004)")
+        if capability not in gates:
+            problems.append(f"{capability} is not in the capability registry")
+        elif gates[capability] is None:
+            problems.append(f"{capability} has no research gate in the capability registry")
+        elif doc["floor"] is not None and canon(doc["floor"]["metrics"]) != canon(gates[capability]["metrics"]):
+            problems.append(f"the floor is not {capability}'s registry gate")
     for clip in doc["clips"]:
         truth = truths.get(clip["truthId"])
         if truth is None:
@@ -427,10 +463,26 @@ def check_benchmark_record(path: Path, doc: dict, docs: dict, rep: Report) -> No
         expected = benchmark.verdict(metrics, doc["floor"]) if doc["mode"] == "gate" else None
         if canon(expected) != canon(doc["verdict"]):
             problems.append("verdict differs from the floor applied to the re-scored metrics")
-    for p in problems:
-        rep.fail(where, p)
-    if not problems:
-        rep.ok("benchmark records")
+    return problems
+
+
+def registry_gates(docs: dict) -> dict[str, dict | None]:
+    """capability id -> its research gate (None without one), from the committed capability registry."""
+    return {c["id"]: c["gate"] for d in docs.values() if d.get("kind") == "jovra.capabilityRegistry"
+            for c in d["capabilities"]}
+
+
+def candidate_on_gate(record: dict, docs: dict) -> dict:
+    """A copy of ``record`` as a candidate run backing audio.hitDetection on that capability's registry gate,
+    with the verdict recomputed: the shape a real capability record has."""
+    doc = json.loads(canon(record))
+    doc["estimator"] = {"id": "selfTest.candidate", "methodVersion": "0", "role": "candidate"}
+    doc["capabilityId"] = "audio.hitDetection"
+    gate = registry_gates(docs)["audio.hitDetection"]
+    doc["floor"] = {"source": "spec/contracts/capability-registry.v1.json gate of audio.hitDetection",
+                    "metrics": json.loads(canon(gate["metrics"]))}
+    doc["verdict"] = benchmark.verdict(doc["metrics"], doc["floor"])
+    return doc
 
 
 def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
@@ -454,6 +506,11 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
     schema_cases.append(("benchmark-record.schema.json", bad, False, "tuning run carrying a verdict"))
     ok = json.loads(canon(record)); ok["mode"] = "tuning"; ok["verdict"] = None
     schema_cases.append(("benchmark-record.schema.json", ok, True, "tuning run without a verdict"))
+    for role in ("oracle", "null"):
+        bad = json.loads(canon(record)); bad["estimator"]["role"] = role; bad["capabilityId"] = "audio.hitDetection"
+        schema_cases.append(("benchmark-record.schema.json", bad, False, f"a {role} record naming a capability"))
+    candidate = candidate_on_gate(record, docs)
+    schema_cases.append(("benchmark-record.schema.json", candidate, True, "a candidate record naming a capability"))
     for schema, instance, must_pass, label in schema_cases:
         errors = schemas.validate(instance, schema)
         if (not errors) != must_pass:
@@ -468,13 +525,41 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
     bad = json.loads(canon(record)); bad["clips"][0]["truthId"] = tuning["id"]
     bad["clips"][0]["seed"], bad["clips"][0]["split"] = tuning["seed"], "heldOut"
     check_cases.append((bad, "a tuning clip relabelled heldOut"))
+    bad = json.loads(canon(record)); bad["clips"] = bad["clips"] * 3
+    bad["metrics"] = benchmark.SCORERS[bad["task"]["id"]](bad, {d["id"]: d for d in docs.values() if d.get("kind") == "jovra.groundTruth"})
+    bad["verdict"] = benchmark.verdict(bad["metrics"], bad["floor"])
+    check_cases.append((bad, "the same clip pooled three times (an inflated denominator)"))
+    oracle = next((d for d in docs.values() if d.get("kind") == "jovra.benchmarkRecord" and d["mode"] == "gate"
+                   and d["estimator"]["role"] == "oracle"), record)
+    bad = json.loads(canon(oracle)); bad["capabilityId"] = "audio.hitDetection"
+    check_cases.append((bad, "an oracle record naming a capability"))
+    bad = json.loads(canon(candidate)); bad["floor"] = json.loads(canon(record["floor"]))
+    bad["verdict"] = benchmark.verdict(bad["metrics"], bad["floor"])
+    check_cases.append((bad, "a capability record gated by a self-declared floor instead of the registry gate"))
+    bad = json.loads(canon(candidate)); bad["capabilityId"] = "scoring.manual"
+    check_cases.append((bad, "a capability record for a capability without a gate"))
+    bad = json.loads(canon(record)); bad["task"]["tolerance"]["timescale"] = 0
+    check_cases.append((bad, "a zero timescale (reported, not a crash)"))
+    bad = json.loads(canon(record)); bad["floor"]["metrics"][0]["threshold"] = "1e-3"
+    check_cases.append((bad, "a threshold that is not a plain decimal (reported, not a crash)"))
     for instance, label in check_cases:
         probe = Report(False)
-        check_benchmark_record(Path("media self-test"), instance, docs, probe)
+        try:
+            check_benchmark_record(Path("media self-test"), instance, docs, probe)
+        except Exception as e:  # noqa: BLE001 - a crash is itself the failure under test
+            rep.fail("media self-test", f"{label}: the record check crashed ({type(e).__name__}: {e})")
+            continue
         if not probe.failures:
             rep.fail("media self-test", f"{label}: expected the record check to fail")
         else:
             rep.ok("media self-tests")
+    probe = Report(False)
+    check_benchmark_record(Path("media self-test"), candidate, docs, probe)
+    if probe.failures:
+        rep.fail("media self-test", "a candidate record on its capability's registry gate: expected the record check to pass, "
+                 + "; ".join(probe.failures))
+    else:
+        rep.ok("media self-tests")
     truth_path = next(p for p, d in docs.items() if d is truth)
     truth_cases = []
     bad = json.loads(canon(truth)); bad["events"][0]["frame"] += 1
@@ -483,9 +568,17 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
     truth_cases.append((bad, "a duration that is not frameCount / frameRate"))
     bad = json.loads(canon(truth)); bad["video"]["displayWidth"], bad["video"]["displayHeight"] = 360, 640
     truth_cases.append((bad, "a display size that ignores the rotation"))
+    bad = json.loads(canon(truth)); bad["video"]["duration"]["timescale"] = 0
+    truth_cases.append((bad, "a zero duration timescale (reported, not a crash)"))
+    bad = json.loads(canon(truth)); bad["video"]["frameRate"]["num"] = 0
+    truth_cases.append((bad, "a zero frame rate (reported, not a crash)"))
     for instance, label in truth_cases:
         probe = Report(False)
-        check_ground_truth(truth_path, instance, docs, probe)
+        try:
+            check_ground_truth(truth_path, instance, docs, probe)
+        except Exception as e:  # noqa: BLE001 - a crash is itself the failure under test
+            rep.fail("media self-test", f"{label}: the ground-truth check crashed ({type(e).__name__}: {e})")
+            continue
         if not probe.failures:
             rep.fail("media self-test", f"{label}: expected the ground-truth check to fail")
         else:

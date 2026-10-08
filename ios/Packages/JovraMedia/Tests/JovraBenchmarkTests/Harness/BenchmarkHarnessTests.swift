@@ -85,7 +85,9 @@ struct BenchmarkHarnessTests {
 /// Counts calls so a refusal can be shown to happen before any estimation.
 final class CountingEstimator: BenchmarkEstimator, @unchecked Sendable {
     let calls = Counter()
-    var identity: EstimatorIdentity { EstimatorIdentity(id: "spy.eventTimes", methodVersion: "0", role: .candidate) }
+    let role: EstimatorRole
+    init(role: EstimatorRole = .candidate) { self.role = role }
+    var identity: EstimatorIdentity { EstimatorIdentity(id: "spy.eventTimes", methodVersion: "0", role: role) }
     func estimate(_ clip: BenchmarkClip) async throws -> [RationalTime] {
         calls.increment()
         return []

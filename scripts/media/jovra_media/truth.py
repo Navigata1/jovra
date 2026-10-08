@@ -68,6 +68,7 @@ def document(set_name: str, clip: ClipSpec, src_hash: str, media_path: str, marg
             "displayHeight": display_h,
             "orientation": orientation,
             "frameRate": {"num": clip.rate.num, "den": clip.rate.den},
+            "variableFrameRate": clip.variable_frame_rate,
             "frameCount": clip.frame_count,
             "duration": rational(duration.numerator, duration.denominator),
             "hdr": {"transfer": "hlg", "primaries": "bt2020", "matrix": "bt2020nc"} if clip.hdr == "hlg" else None,

@@ -7,6 +7,11 @@ public enum HarnessError: Error, Equatable, CustomStringConvertible {
     case clipHasNoSplit(clipIDs: [String])
     case gateNeedsFloor
     case mixedBands([String])
+    case duplicateClips([String])
+    case selfTestEstimatorCannotBackCapability(role: EstimatorRole, capabilityId: String)
+    case unknownCapability(String)
+    case capabilityHasNoGate(String)
+    case floorIsNotCapabilityGate(capabilityId: String)
 
     public var description: String {
         switch self {
@@ -16,6 +21,11 @@ public enum HarnessError: Error, Equatable, CustomStringConvertible {
         case .clipHasNoSplit(let ids): "Clips without a tuning/held-out split cannot be benchmarked: \(ids.joined(separator: ", "))"
         case .gateNeedsFloor: "A gating run needs a floor"
         case .mixedBands(let bands): "One record covers one band, got \(bands.joined(separator: ", "))"
+        case .duplicateClips(let ids): "Each clip counts once; listed more than once: \(ids.joined(separator: ", "))"
+        case .selfTestEstimatorCannotBackCapability(let role, let id): "The \(role.rawValue) estimator is a harness self-test and cannot back capability \(id); only a candidate can"
+        case .unknownCapability(let id): "No capability \(id) in \(CapabilityRegistryGates.path)"
+        case .capabilityHasNoGate(let id): "Capability \(id) has no research gate in \(CapabilityRegistryGates.path)"
+        case .floorIsNotCapabilityGate(let id): "A run that names \(id) must use its registry gate as the floor (omit --floor to use it)"
         }
     }
 }
@@ -23,7 +33,8 @@ public enum HarnessError: Error, Equatable, CustomStringConvertible {
 /// Loads ground truth, runs an estimator on every clip, scores the outputs and writes a benchmark record with
 /// the estimator's method version. Tuning seeds and held-out seeds never mix: a gating run accepts held-out
 /// clips only (it refuses before the estimator runs), and a tuning run accepts tuning clips only and has no
-/// verdict.
+/// verdict. Each clip counts once. A run that names a capability must come from a `candidate` estimator and
+/// use that capability's registry gate as its floor (ADR-0004); every refusal happens before estimation.
 public struct BenchmarkHarness: Sendable {
     public static let version = "1.0.0"
 
@@ -38,6 +49,18 @@ public struct BenchmarkHarness: Sendable {
         capabilityId: String? = nil, runId: String, at: Date
     ) async throws -> BenchmarkRecord where Estimator.Output == Task.Output {
         guard !clipIDs.isEmpty else { throw HarnessError.noClips }
+        let repeated = Dictionary(grouping: clipIDs, by: { $0 }).filter { $0.value.count > 1 }.keys.sorted()
+        guard repeated.isEmpty else { throw HarnessError.duplicateClips(repeated) }
+        if let capabilityId {
+            let role = estimator.identity.role
+            guard role == .candidate else {
+                throw HarnessError.selfTestEstimatorCannotBackCapability(role: role, capabilityId: capabilityId)
+            }
+            let gate = try Floor.capabilityGate(capabilityId, catalog: catalog)
+            if let floor, floor.metrics != gate.metrics {
+                throw HarnessError.floorIsNotCapabilityGate(capabilityId: capabilityId)
+            }
+        }
         let truths = try clipIDs.map { try catalog.truth(id: $0) }
         let unsplit = truths.filter { $0.split == nil || $0.seed == nil }.map(\.id)
         guard unsplit.isEmpty else { throw HarnessError.clipHasNoSplit(clipIDs: unsplit) }

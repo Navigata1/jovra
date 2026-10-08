@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import bisect
 import hashlib
+import re
 from decimal import Decimal
 from fractions import Fraction
 
@@ -24,7 +25,18 @@ TASK_EVENT_TIMES = "eventTimes"
 
 
 def rt(obj: dict) -> Fraction:
-    return Fraction(obj["value"], obj["timescale"])
+    """A rational time; a non-positive or non-integer timescale is a ValueError, never a ZeroDivisionError."""
+    value, timescale = obj["value"], obj["timescale"]
+    if not isinstance(value, int) or not isinstance(timescale, int) or isinstance(timescale, bool) or timescale <= 0:
+        raise ValueError(f"rational time {value!r}/{timescale!r} needs integers and a positive timescale")
+    return Fraction(value, timescale)
+
+
+def threshold(text) -> Fraction:
+    """A floor threshold: a plain decimal such as "0.95" (no exponent, sign or spaces), else ValueError."""
+    if not isinstance(text, str) or re.fullmatch(r"[0-9]+(\.[0-9]+)?", text) is None:
+        raise ValueError(f"threshold {text!r} is not a plain decimal")
+    return Fraction(Decimal(text))
 
 
 def truth_events_sha256(truth: dict) -> str:
@@ -96,8 +108,8 @@ def verdict(metrics: list[dict], floor: dict) -> dict:
     for f in floor["metrics"]:
         m = by_name.get(f["name"])
         exact = None if m is None or m["exact"] is None else Fraction(m["exact"]["n"], m["exact"]["d"])
-        threshold = Fraction(Decimal(f["threshold"]))
-        ok = exact is not None and (exact >= threshold if f["comparator"] == ">=" else exact <= threshold)
+        limit = threshold(f["threshold"])
+        ok = exact is not None and (exact >= limit if f["comparator"] == ">=" else exact <= limit)
         check = {"name": f["name"], "comparator": f["comparator"], "threshold": f["threshold"],
                  "value": None if m is None else m["value"], "passed": ok}
         if "unit" in f:

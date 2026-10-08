@@ -23,6 +23,19 @@ public struct Floor: Codable, Hashable, Sendable {
             self.threshold = threshold
             self.unit = unit
         }
+
+        enum CodingKeys: String, CodingKey { case name, comparator, threshold, unit }
+
+        /// A threshold that is not a plain decimal ("1e-3", "-1", "") is a decoding error, not a trap.
+        public init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            let threshold = try c.decode(String.self, forKey: .threshold)
+            guard Rational(decimal: threshold) != nil else {
+                throw DecodingError.dataCorruptedError(forKey: .threshold, in: c, debugDescription: "threshold \(threshold.debugDescription) is not a plain decimal such as 0.95")
+            }
+            self.init(name: try c.decode(String.self, forKey: .name), comparator: try c.decode(Comparator.self, forKey: .comparator),
+                      threshold: threshold, unit: try c.decodeIfPresent(String.self, forKey: .unit))
+        }
     }
 
     public let source: String
@@ -46,13 +59,13 @@ public struct Floor: Codable, Hashable, Sendable {
 
     public static let builtIn: [String: Floor] = ["harnessSelfTest": harnessSelfTest]
 
-    /// Applies the floor to exact metric values. An undefined or missing metric fails.
+    /// Applies the floor to exact metric values. An undefined or missing metric fails (so does an unparsable
+    /// threshold, which decoding already refuses).
     public func verdict(for metrics: [MetricResult]) -> Verdict {
         let checks = self.metrics.map { floorMetric -> Verdict.Check in
             let metric = metrics.first { $0.name == floorMetric.name }
-            let threshold = Rational(decimal: floorMetric.threshold)!
             let passed: Bool
-            if let exact = metric?.exact {
+            if let exact = metric?.exact, let threshold = Rational(decimal: floorMetric.threshold) {
                 passed = floorMetric.comparator == .atLeast ? exact >= threshold : exact <= threshold
             } else {
                 passed = false

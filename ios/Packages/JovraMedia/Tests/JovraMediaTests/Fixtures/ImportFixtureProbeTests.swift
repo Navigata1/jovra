@@ -23,6 +23,7 @@ struct ImportFixtureProbeTests {
         #expect(video.codec.name == truth.video.codec)
         #expect(video.fourCC == truth.video.fourCC)
         #expect(video.frameRate == truth.video.frameRate.frameRate)
+        #expect(video.isVariableFrameRate == truth.video.variableFrameRate)
         #expect(video.isHDR == (truth.video.hdr != nil))
         #expect(video.orientation.rawValue == truth.video.orientation)
         #expect(video.rotationDegrees == truth.video.rotationDegrees)
@@ -36,7 +37,7 @@ struct ImportFixtureProbeTests {
         }
     }
 
-    @Test("the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps and an unsupported codec")
+    @Test("the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec")
     func setCoverage() throws {
         let truths = try Self.catalog.truths(inSet: "import")
         #expect(Set(truths.map(\.video.codec)).isSuperset(of: ["h264", "hevc"]))
@@ -46,6 +47,7 @@ struct ImportFixtureProbeTests {
         let rates = Set(truths.map { $0.video.frameRate.frameRate })
         #expect(rates.isSuperset(of: [FrameRate(frames: 24), .fps30, .fps60, .fps240, FrameRate(frames: 30000, perSeconds: 1001)]))
         #expect(truths.contains { !$0.video.supported })
+        #expect(truths.contains { $0.video.variableFrameRate && $0.video.frameRate.frameRate == .fps30 })
     }
 
     @Test("the duplicate pair is byte-identical under two names")

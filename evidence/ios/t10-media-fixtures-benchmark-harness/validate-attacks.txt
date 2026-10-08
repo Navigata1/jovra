@@ -1,0 +1,14 @@
+# The verifier's round-1 records, placed in a scratch copy of spec/benchmarks/ (not committed):
+#   attack-oracle-capability:   the oracle gate record naming audio.hitDetection, floor harnessSelfTest
+#   attack-candidate-selffloor: a candidate naming audio.hitDetection with the self-test floor, not the registry gate
+#   attack-duplicate-clips:     the null gate record over 3 copies of harness/events-s23, re-scored (21 expected events)
+#   attack-zero-timescale:      a tolerance with timescale 0
+$ python3 scripts/spec/validate.py
+FAIL spec/benchmarks/attack-oracle-capability.json: schema benchmark-record.schema.json: $.capabilityId: expected const None, got 'audio.hitDetection'
+FAIL spec/benchmarks/attack-zero-timescale.json: schema benchmark-record.schema.json: $.task.tolerance.timescale: 0 < minimum 1
+FAIL spec/benchmarks/attack-candidate-selffloor.json: the floor is not audio.hitDetection's registry gate
+FAIL spec/benchmarks/attack-duplicate-clips.json: clips repeat harness/events-s23: each clip counts once
+benchmark records            3
+media self-tests             24
+RESULT: FAIL (4 failure(s))
+exit 1

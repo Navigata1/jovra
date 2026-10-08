@@ -4,9 +4,10 @@
 //     --estimator oracle.eventTimes --clip harness/events-s23 --mode gate --floor harnessSelfTest \
 //     --out spec/fixtures/media/benchmark/oracle.gate.json
 //
-// Options: --tolerance VALUE/TIMESCALE (event tasks, default 50/1000), --capability ID, --run-id ID,
-// --repo PATH (default: the repository containing the current directory). `jovra-benchmark list` prints the
-// registered estimators and floors.
+// Options: --tolerance VALUE/TIMESCALE (event tasks, default 50/1000), --capability ID (candidate estimators
+// only; the floor defaults to, and must equal, that capability's registry gate), --run-id ID, --repo PATH
+// (default: the repository containing the current directory). Each --clip counts once.
+// `jovra-benchmark list` prints the registered estimators and floors.
 // Exit status: 0 record written (tuning run, or gate passed); 3 record written and the gate FAILED;
 // 2 refused or invalid (no record written).
 
@@ -48,16 +49,18 @@ case "run":
     guard let clips = options["clip"], !clips.isEmpty else { fail("give at least one --clip set/id") }
     guard let mode = one("mode").flatMap(RunMode.init(rawValue:)) else { fail("--mode gate|tuning") }
     guard let out = one("out") else { fail("--out PATH") }
-    var floor: Floor?
-    if let name = one("floor") {
-        guard let found = Floor.builtIn[name] else { fail("unknown floor \(name); known: \(Floor.builtIn.keys.sorted())") }
-        floor = found
-    }
     let catalog: MediaFixtureCatalog
     do {
         catalog = try MediaFixtureCatalog.locate(from: URL(fileURLWithPath: one("repo") ?? FileManager.default.currentDirectoryPath))
     } catch {
         fail("\(error)")
+    }
+    var floor: Floor?
+    if let name = one("floor") {
+        guard let found = Floor.builtIn[name] else { fail("unknown floor \(name); known: \(Floor.builtIn.keys.sorted())") }
+        floor = found
+    } else if let capability = one("capability"), mode == .gate {
+        do { floor = try Floor.capabilityGate(capability, catalog: catalog) } catch { fail("\(error)") }
     }
     let now = Date()
     let stamp = ISO8601DateFormatter().string(from: now).replacingOccurrences(of: "-", with: "").replacingOccurrences(of: ":", with: "")

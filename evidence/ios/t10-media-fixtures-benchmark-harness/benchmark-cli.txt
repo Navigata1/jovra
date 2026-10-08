@@ -30,3 +30,21 @@ $ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s11 --
 jovra-benchmark: Refusing to gate on tuning seeds: harness/events-s11. Gate on held-out seeds only.
 exit 2
 no record written
+
+# Verifier round 1: provenance and denominators (refused before the estimator runs)
+
+$ jovra-benchmark run --estimator oracle.eventTimes --clip harness/events-s23 --mode gate --floor harnessSelfTest --capability audio.hitDetection --out <scratch>/refused.json
+jovra-benchmark: The oracle estimator is a harness self-test and cannot back capability audio.hitDetection; only a candidate can
+exit 2
+no record written
+
+$ jovra-benchmark run --estimator null.eventTimes --clip harness/events-s23 --mode gate --capability audio.hitDetection --out <scratch>/refused.json
+jovra-benchmark: The null estimator is a harness self-test and cannot back capability audio.hitDetection; only a candidate can
+exit 2
+no record written
+
+$ jovra-benchmark run --estimator null.eventTimes --clip harness/events-s23 --clip harness/events-s23 --clip harness/events-s23 --mode gate --floor harnessSelfTest --out <scratch>/refused.json
+jovra-benchmark: Each clip counts once; listed more than once: harness/events-s23
+exit 2
+no record written
+

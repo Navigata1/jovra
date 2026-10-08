@@ -35,7 +35,7 @@
     "duplicateOf": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/truthId"}]},
     "video": {
       "type": "object",
-      "required": ["codec", "fourCC", "bitDepth", "codedWidth", "codedHeight", "rotationDegrees", "displayWidth", "displayHeight", "orientation", "frameRate", "frameCount", "duration", "hdr", "supported"],
+      "required": ["codec", "fourCC", "bitDepth", "codedWidth", "codedHeight", "rotationDegrees", "displayWidth", "displayHeight", "orientation", "frameRate", "variableFrameRate", "frameCount", "duration", "hdr", "supported"],
       "additionalProperties": false,
       "properties": {
         "codec": {"enum": ["h264", "hevc", "ffv1"]},
@@ -47,7 +47,8 @@
         "displayWidth": {"type": "integer", "minimum": 2},
         "displayHeight": {"type": "integer", "minimum": 2},
         "orientation": {"enum": ["landscape", "portrait", "square"]},
-        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate"},
+        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate", "description": "Nominal rate: the rate of the median frame duration. A probe must report this, never 1 / the shortest frame."},
+        "variableFrameRate": {"type": "boolean", "description": "Frame durations vary around frameRate (as phone originals do); frameCount / frameRate is still the duration."},
         "frameCount": {"type": "integer", "minimum": 1},
         "duration": {"$ref": "#/$defs/rationalTime"},
         "hdr": {

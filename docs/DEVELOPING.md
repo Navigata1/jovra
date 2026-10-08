@@ -45,7 +45,7 @@ All scripts live in `scripts/ios/` and keep derived data in `.derivedData/` at t
 | `scripts/ios/generate.sh` | Generates `ios/Jovra.xcodeproj` from `ios/project.yml`. |
 | `scripts/ios/test.sh` | `swift test` for JovraCore and JovraMedia, then `xcodebuild test` for `JovraTests` on the simulator. |
 | `scripts/ios/ui-test.sh [ticket]` | Runs `JovraUITests`, then a system-appearance pass with the simulator in light and in dark; exports the named screenshots to `evidence/ios/<ticket>/` (default: branch name minus `ticket/`). Restores the simulator's appearance. |
-| `python3 scripts/media/render.py [--check]` | Renders the media fixtures (frame counters, fixture camera, import set, harness clips) into `.cache/media/` and writes their ground truth; `--check` fails unless the committed ground truth and decoded-frame hashes are reproduced. Needs ffmpeg. See `scripts/media/README.md`. `test.sh` runs it first. |
+| `python3 scripts/media/render.py [--check]` | Renders the media fixtures (frame counters, fixture camera, import set, harness clips) into `.cache/media/` and writes their ground truth; `--check` fails unless the committed ground truth and decoded-frame hashes are reproduced. Needs ffmpeg. See `scripts/media/README.md`. `test.sh` runs `--check` first (it never rewrites committed truth). |
 | `swift run --package-path ios/Packages/JovraMedia jovra-benchmark run ...` | Runs a registered estimator through the benchmark harness and writes a benchmark record (`scripts/media/README.md`). |
 | `scripts/ios/render-app-icon.sh [proof.png]` | Re-renders `AppIcon-1024.png` from `BrandGeometry.swift` (and optionally a brand proof sheet). Run after changing the mark. |
 

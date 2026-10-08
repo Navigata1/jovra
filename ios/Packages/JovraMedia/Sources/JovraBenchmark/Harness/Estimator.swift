@@ -88,7 +88,11 @@ public struct MetricResult: Codable, Hashable, Sendable {
             exact = nil
         } else {
             let f = try c.nestedContainer(keyedBy: FractionKeys.self, forKey: .exact)
-            exact = Rational(try f.decode(Int64.self, forKey: .n), try f.decode(Int64.self, forKey: .d))
+            let d = try f.decode(Int64.self, forKey: .d)
+            guard d > 0 else {
+                throw DecodingError.dataCorruptedError(forKey: .d, in: f, debugDescription: "fraction denominator must be positive, got \(d)")
+            }
+            exact = Rational(try f.decode(Int64.self, forKey: .n), d)
         }
     }
 

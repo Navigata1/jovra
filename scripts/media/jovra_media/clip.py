@@ -62,7 +62,29 @@ class ClipSpec:
     seed: int | None = None
     split: str | None = None     # "tuning" | "heldOut" for benchmark clips
     duplicate_of: str | None = None   # id of a clip in the same set whose bytes this file copies
+    # Variable frame rate, as phone originals have it: frame durations cycle through ``vfr_cycle`` ticks of
+    # 1/``vfr_timescale`` s. The cycle must average exactly one frame at ``rate``, so the duration stays
+    # frame_count / rate and ``rate`` is the nominal (median-duration) rate. Empty: constant frame rate.
+    vfr_timescale: int = 0
+    vfr_cycle: tuple[int, ...] = ()
     extra: dict = field(default_factory=dict)   # set-specific truth (court corners, ...)
+
+    @property
+    def variable_frame_rate(self) -> bool:
+        return bool(self.vfr_cycle)
+
+    def presentation_ticks(self) -> list[int]:
+        """Each frame's presentation time in 1/vfr_timescale s (variable-frame-rate clips only)."""
+        nominal = Fraction(self.vfr_timescale) / self.rate.fraction
+        if nominal.denominator != 1 or sum(self.vfr_cycle) != nominal * len(self.vfr_cycle) \
+                or self.frame_count % len(self.vfr_cycle) or sorted(self.vfr_cycle)[len(self.vfr_cycle) // 2] != nominal:
+            raise ValueError(f"{self.id}: the VFR cycle must average, and have its median at, one frame at {self.rate.ffmpeg()} fps "
+                             "and divide the frame count")
+        ticks, t = [], 0
+        for i in range(self.frame_count):
+            ticks.append(t)
+            t += self.vfr_cycle[i % len(self.vfr_cycle)]
+        return ticks
 
     @property
     def container(self) -> str:

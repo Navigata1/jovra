@@ -1,0 +1,22 @@
+# cached fc-060 replaced by a re-encode with frame 30 removed (119 frames)
+$ python3 scripts/media/render.py --set frameCounter
+FAIL fc-060: decoded 119 frames, expected 120
+exit 1
+committed fc-060.truth.json unchanged: yes
+$ python3 scripts/media/render.py --check --set frameCounter
+FAIL fc-060: decoded 119 frames, expected 120
+decoded-frame hash check: FAIL
+exit 1
+(restored with --force; committed truth unchanged: yes)
+
+# cached fc-060 replaced by a re-encode with frame 30 duplicated (120 frames)
+$ python3 scripts/media/render.py --set frameCounter
+FAIL fc-060: the cached frame-counter-060fps.mp4 decodes to sig 5d6315475b6c but the committed truth says 67fc241469a7 for the same renderer source, so the cached clip or the committed truth was altered. Re-render it with --force; if the hash still differs, the committed truth is wrong
+exit 1
+committed fc-060.truth.json unchanged: yes
+$ python3 scripts/media/render.py --check --set frameCounter
+FAIL fc-060: the cached frame-counter-060fps.mp4 decodes to sig 5d6315475b6c but the committed truth says 67fc241469a7 for the same renderer source, so the cached clip or the committed truth was altered. Re-render it with --force; if the hash still differs, the committed truth is wrong
+decoded-frame hash check: FAIL
+exit 1
+(restored with --force; committed truth unchanged: yes)
+
