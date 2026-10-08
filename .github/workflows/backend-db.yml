@@ -68,6 +68,10 @@ jobs:
         if: failure()
         run: docker logs "$(docker ps --filter name=supabase_auth --format '{{.Names}}' | head -1)" 2>&1 | tail -80
 
+      - name: Database log on failure
+        if: failure()
+        run: docker logs "$(docker ps -a --filter name=supabase_db --format '{{.Names}}' | head -1)" 2>&1 | tail -80
+
       - name: supabase stop
         if: always()
         run: supabase stop --no-backup

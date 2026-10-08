@@ -59,7 +59,7 @@ alter function app_gateway.t67_insert_project(uuid) owner to jovra_owner;
 revoke all on function app_gateway.t67_insert_project(uuid) from public;
 grant execute on function app_gateway.t67_insert_project(uuid) to jovra_gateway, authenticated;
 grant usage on schema app_gateway to authenticated;
-grant jovra_gateway to current_user;
+grant jovra_gateway to postgres;
 
 -- jovra_gateway can reach nothing but app_gateway, so the call stores its result in a setting for the checks below.
 select set_config('t67.victim', tests.get_supabase_uid('victim')::text, true);

@@ -35,9 +35,10 @@ begin
 end
 $$;
 
--- The migrating role creates objects and then hands them to jovra_owner; ALTER ... OWNER needs SET on the new
--- owner, and inheriting it keeps the operator's fixture and seed writes working.
-grant jovra_owner to current_user with inherit true, set true;
+-- The migrating role (postgres on Supabase) creates objects and then hands them to jovra_owner; ALTER ... OWNER
+-- needs SET on the new owner, and inheriting it keeps the operator's seed writes working. The grantee is named:
+-- a CURRENT_USER role spec carries no name for Supabase's role hooks to check.
+grant jovra_owner to postgres;
 grant usage, create on schema public, app_private, app_gateway, app_ops to jovra_owner;
 grant usage on schema app_gateway to jovra_gateway, jovra_orchestrator;
 
