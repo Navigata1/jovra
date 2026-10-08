@@ -6,7 +6,12 @@
   "createdAt": "2026-10-07T18:00:00Z",
   "updatedAt": "2026-10-07T18:00:00Z",
   "title": "Contract example: every 1.1 field",
-  "sample": {"label": "Sample", "synthetic": true, "generator": "sample:contractExample@1.1.0"},
+  "sample": {
+    "label": "Sample",
+    "synthetic": true,
+    "generator": "sample:contractExample@1.1.0",
+    "mediaIds": ["sample-media.2026-10-04-behind-baseline-12-serves"]
+  },
   "sessionKind": "match",
   "capturePurpose": "match",
   "players": [
@@ -141,7 +146,7 @@
     {
       "id": "ex-derived-speed",
       "key": "serveSpeed.estimate",
-      "value": 104,
+      "value": 96,
       "unit": "mph",
       "label": "Estimated average speed, contact→bounce",
       "scope": {"pointId": "ex-point-1", "serveMarkId": "ex-serve-mark-1"},
@@ -197,7 +202,7 @@
       "bounceFrame": {"value": 1854, "timescale": 60},
       "bounceCourt": {"x": -2.4, "y": 5.1},
       "bounceImage": {"x": 0.44, "y": 0.39},
-      "serverPosition": {"x": 0.3, "y": -11.885},
+      "serverPosition": {"x": 0, "y": -11.885},
       "contactDefaulted": true,
       "servedTo": "deuce",
       "calibrationId": "ex-calibration-1",

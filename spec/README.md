@@ -78,7 +78,7 @@ The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) a
 | `capability-registry.schema.json` | `contracts/capability-registry.v1.json` | status, label, requirements and benchmark gate per capability (ADR-0004, D10) |
 | `practice-plan.schema.json` | practice plan | every item carries its evidence row, rule id and availability |
 | `export.schema.json` | `export.json` at the root of an export | `includesAudio` false by default (D5); each session names the event-log version it was built from |
-| `sample-media-manifest.schema.json` | `fixtures/sample/media-manifest.json` | the synthetic sample media: stable media id, file name, duration, frame rate, size and session coverage for each of the 8 sample sessions and the 3 lab clips. The sample library (T09) and the renderer (T11) both read it; files are rendered, never committed |
+| `sample-media-manifest.schema.json` | `fixtures/sample/media-manifest.json` | the synthetic sample media: stable media id, file name, duration, frame rate, size and session coverage for each of the 8 sample sessions and the 3 lab clips. The sample library (T09) and the renderer (T11) both read it; a sample session names its media in `session.sample.mediaIds`; files are rendered, never committed |
 | `csv-contract.schema.json` | `contracts/csv/*.v1.json` | column order, nullability, quoting, line endings |
 | `engine-output.schema.json` | fold and stats outputs | the exact shape both platforms must produce |
 | `fixture-*.schema.json` | the fixtures themselves | |
@@ -86,7 +86,27 @@ The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) a
 No schema has an `$id`: references are relative file references (`common.schema.json#/$defs/id`), so any 2020-12
 validator resolves them when loading from disk, and no URL appears before it resolves (IDC domain rule 1).
 The bundled checker (`scripts/spec/jsonschema_subset.py`) refuses keywords it does not implement, so no schema can
-rely on a silently ignored keyword.
+rely on a silently ignored keyword. `pattern` is ECMA-262, as 2020-12 specifies: `$` is the end of the input, so
+`^…$` rejects a value ending in a newline (Python's and java.util.regex's `$` would accept it; the checker rewrites `$`
+as `\Z`), and the checker refuses `\d`, `\w`, `\s` and `\b`, whose Unicode meaning differs between engines. Ports must
+anchor the same way; the validators' self-tests reject an id, a timestamp and a SHA-256 that end in a newline.
+
+**Reference integrity** (`jovra_ref/references.py`, run by the validator and by the generator before it writes a
+contract example). The schema cannot say that an id names a record that exists, so these rules sit beside it and the
+ports' decoders (T03) apply them too:
+
+- Session: `consent.juniorPlayerIds` and `writtenConsents[].coversPlayerIds` and `shots[].hitter` name players;
+  `serveMarks[].pointId`/`shotId`/`calibrationId`, `swings[].shotId`/`serveMarkId`/`markId`,
+  `rallyPlayback.clips[].targetId` (a point or a mark), `exports[].pointIds`, `shots[].pointId`,
+  `shots[].placement.calibrationId`, `derivedValues[].scope.*` and `provenance.calibrationId`, and
+  `recording.recovery.truncatedSegmentIds` name records in the same document; `exports[].eventLogVersion` is at most
+  the log's highest `seq` (0 without a log); `sample.mediaIds` name entries of the sample media manifest, and a session
+  the manifest lists names only its own media.
+- A `contactDefaulted` serve mark sits on the centre mark of a baseline (x 0, y ±11.885), and a stored
+  `serveSpeed.estimate` in mph equals the mark's ground distance over its flight time (`serve_speed_mph`).
+- Practice plan: `drillLogs[].itemId` and `goalIds` name the plan's items and goals. Export and archive manifests:
+  no session or file claims a later event-log version than its session's log; export files name a listed session.
+- Every `{fromMs, toMs}` range in any document runs forwards (`fromMs <= toMs`; an empty half-open range is allowed).
 
 ## How a platform consumes the fixtures
 
@@ -103,7 +123,7 @@ fixture change immediately fails whichever platform has not caught up.
 | `jovra.fixture.units` | `convert` (exact, half-up at `places`), `display` (half-up once to the unit's step; same unit returns the stored text untouched), `gaugeHint` | Deep equality per case |
 | `jovra.fixture.sample` | Load `jon-vs-alex.session.json` with the app's real session decoder, build the engine input from it, fold, compute stats, export both CSVs. | Fold + stats deep-equal; **CSV byte-for-byte** with the golden files; `overview` holds the screen-9 numbers |
 | records (`equipment`, `practice plan`, `export`, `archive`, registry, sample media manifest) | Decode with the app's real model types and re-encode. | Must decode without loss; schema-valid |
-| `records/*.all-fields.json` | The 1.1 contract examples (session, practice plan, export, archive): every field added in 1.1 appears at least once. Decode and re-encode. | Must round-trip; the validator also checks that adding an unknown property to any object in them fails |
+| `records/*.all-fields.json` | The 1.1 contract examples (session, practice plan, export, archive): every field added in 1.1 appears at least once. Decode and re-encode. | Must round-trip; the validator also checks that adding an unknown property to any object in them fails, and that every id they hold resolves (reference integrity above) |
 
 `assertions` in each fixture are the hand-derived subset of the expected output that was worked out from
 `docs/research/tennis-rules-and-stats.md` before the engine ran. The generator refuses to write a fixture whose
@@ -130,6 +150,7 @@ Implementation notes for the ports:
 | `stats.py` | Every stat in rules §6 with the shared integer `pct`, pooling and percentage-point deltas |
 | `units.py` | Exact factors (lb↔kg↔N, mph↔km/h↔m/s, mm/cm/m/in/ft, cm²/in², g/oz), display steps, gauge help ranges |
 | `csv_export.py` | `points.csv` and `stats.csv`, driven by the hand-written contracts |
+| `references.py` | Reference integrity of 1.1 records (ids resolve, ranges run forwards, log versions, sample media ids) and the contract example's serve speed from its mark |
 | `sample_match.py` | The Jon vs Alex generator (seeded SplitMix64, independent of Python's `random`) and the C1-C16 checker |
 
 ## Fixture inventory

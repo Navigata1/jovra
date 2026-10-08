@@ -22,8 +22,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = ROOT / "spec"
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(SPEC / "reference"))
 
-from jsonschema_subset import SchemaSet  # noqa: E402
+from jsonschema_subset import SchemaSet, ecma_pattern  # noqa: E402
+
+from jovra_ref import references  # noqa: E402
 
 GENERATOR = Path("spec/reference/generate_fixtures.py")
 VALIDATOR = Path("scripts/spec/validate.py")
@@ -277,6 +280,170 @@ def generate(ctx) -> int:
                     copy_path = self.tmp / "spec" / folder / path.relative_to(SPEC / folder)
                     with self.subTest(file=str(path.relative_to(ROOT))):
                         self.assertEqual(copy_path.read_bytes(), path.read_bytes())
+
+
+class PatternAnchorTests(SchemasFixture):
+    """JSON Schema 2020-12 'pattern' is ECMA-262: '$' is the end of the input, never 'before a final newline'."""
+
+    def test_a_session_id_or_timestamp_ending_in_a_newline_is_rejected(self):
+        session = load(ALL_FIELDS_SESSION)
+        for field in ("id", "createdAt"):
+            with self.subTest(field=field):
+                bad = dict(session, **{field: session[field] + "\n"})
+                self.assertNotEqual(self.errors(bad, "session.schema.json"), [])
+
+    def test_dollar_becomes_end_of_input_except_when_escaped_or_inside_a_class(self):
+        self.assertEqual(ecma_pattern("^a$"), "^a\\Z")
+        self.assertEqual(ecma_pattern("^[$]\\$$"), "^[$]\\$\\Z")
+        self.assertEqual(ecma_pattern("^(x|y$)$"), "^(x|y\\Z)\\Z")
+
+    def test_a_schema_using_a_class_escape_whose_meaning_differs_from_ecma_is_refused(self):
+        schemas = SchemaSet(SPEC / "schemas")
+        schemas.files["probe.schema.json"] = {"type": "string", "pattern": "^\\d+$"}
+        self.assertTrue(any("probe.schema.json" in p and "\\d" in p for p in schemas.check_all()))
+
+
+def session_problems(doc: dict) -> list[str]:
+    return references.session_problems(doc, load(MEDIA_MANIFEST))
+
+
+class SessionReferenceTests(unittest.TestCase):
+    """Every id a 1.1 field holds must name a record that exists (verifier round 1, finding 4)."""
+
+    def mutated(self, mutate) -> dict:
+        doc = load(ALL_FIELDS_SESSION)
+        mutate(doc)
+        return doc
+
+    def test_the_contract_example_has_no_dangling_reference(self):
+        self.assertEqual(session_problems(load(ALL_FIELDS_SESSION)), [])
+
+    def test_each_dangling_reference_or_inverted_range_is_reported(self):
+        mutations = {
+            "junior player": lambda d: d["consent"].update(juniorPlayerIds=["nobody"]),
+            "written consent player": lambda d: d["consent"]["writtenConsents"][0].update(coversPlayerIds=["nobody"]),
+            "serve mark calibration": lambda d: d["serveMarks"][0].update(calibrationId="nope"),
+            "serve mark point": lambda d: d["serveMarks"][0].update(pointId="nope"),
+            "serve mark shot": lambda d: d["serveMarks"][0].update(shotId="nope"),
+            "swing serve mark": lambda d: d["swings"][0].update(serveMarkId="nope"),
+            "swing shot": lambda d: d["swings"][1].update(shotId="nope"),
+            "swing mark": lambda d: d["swings"][1].update(markId="nope"),
+            "rally clip target": lambda d: d["rallyPlayback"]["clips"][0].update(targetId="nope"),
+            "export log version": lambda d: d["exports"][0].update(eventLogVersion=7),
+            "export point": lambda d: d["exports"][0].update(pointIds=["nope"]),
+            "export range": lambda d: d["exports"][0].update(range={"fromMs": 40_000, "toMs": 26_500}),
+            "swing clip range": lambda d: d["swings"][0].update(clip={"fromMs": 2, "toMs": 1}),
+            "shot point": lambda d: d["shots"][0].update(pointId="nope"),
+            "shot hitter": lambda d: d["shots"][0].update(hitter="nobody"),
+            "placement calibration": lambda d: d["shots"][1]["placement"].update(calibrationId="nope"),
+            "derived value scope": lambda d: d["derivedValues"][0]["scope"].update(serveMarkId="nope"),
+            "derived value calibration": lambda d: d["derivedValues"][0]["provenance"].update(calibrationId="nope"),
+            "truncated segment": lambda d: d["recording"]["recovery"].update(truncatedSegmentIds=["nope"]),
+            "sample media id": lambda d: d["sample"].update(mediaIds=["sample-media.nope"]),
+        }
+        for label, mutate in mutations.items():
+            with self.subTest(mutation=label):
+                self.assertNotEqual(session_problems(self.mutated(mutate)), [], label)
+
+    def test_an_empty_range_is_allowed(self):
+        doc = self.mutated(lambda d: d["exports"][0].update(range={"fromMs": 5, "toMs": 5}))
+        self.assertEqual(session_problems(doc), [])
+
+    def test_a_session_without_a_log_has_event_log_version_zero(self):
+        doc = self.mutated(lambda d: d.pop("match"))
+        doc["exports"] = [dict(doc["exports"][0], eventLogVersion=0, pointIds=[])]
+        doc.pop("serveMarks"), doc.pop("swings"), doc.pop("derivedValues"), doc.pop("rallyPlayback")
+        for shot in doc["shots"]:
+            shot.pop("pointId")
+        self.assertEqual(session_problems(doc), [])
+        doc["exports"][0]["eventLogVersion"] = 1
+        self.assertNotEqual(session_problems(doc), [])
+
+
+class SampleMediaReferenceTests(unittest.TestCase):
+    """T09: 'Every media id in the installed sessions exists in the sample media manifest'."""
+
+    def test_the_session_schema_has_a_place_for_sample_media_ids(self):
+        sample_info = load(SPEC / "schemas/session.schema.json")["$defs"]["sampleInfo"]
+        self.assertIn("mediaIds", sample_info["properties"])
+        self.assertNotIn("mediaIds", sample_info["required"])
+
+    def test_the_contract_example_references_media_that_exist_in_the_manifest(self):
+        ids = load(ALL_FIELDS_SESSION)["sample"]["mediaIds"]
+        known = {m["mediaId"] for m in load(MEDIA_MANIFEST)["media"]}
+        self.assertTrue(ids)
+        self.assertLessEqual(set(ids), known)
+
+    def test_a_manifest_session_may_only_reference_its_own_media(self):
+        manifest = load(MEDIA_MANIFEST)
+        jon_vs_alex = load(SPEC / "fixtures/sample/jon-vs-alex.session.json")
+        own = next(m["mediaId"] for m in manifest["media"] if m["sessionId"] == jon_vs_alex["id"])
+        other = next(m["mediaId"] for m in manifest["media"] if m["sessionId"] != jon_vs_alex["id"])
+        doc = copy.deepcopy(jon_vs_alex)
+        doc["sample"]["mediaIds"] = [own]
+        self.assertEqual(references.session_problems(doc, manifest), [])
+        doc["sample"]["mediaIds"] = [other]
+        self.assertNotEqual(references.session_problems(doc, manifest), [])
+
+
+class ServeSpeedExampleTests(unittest.TestCase):
+    """Hard rule 1: the example's speed is computed from its own serve mark (verifier round 1, finding 3)."""
+
+    def test_defaulted_contact_sits_on_the_centre_mark_of_the_servers_baseline(self):
+        mark = load(ALL_FIELDS_SESSION)["serveMarks"][0]
+        self.assertTrue(mark["contactDefaulted"])
+        self.assertEqual(mark["serverPosition"], {"x": 0, "y": -11.885})  # near baseline (toss: A starts near)
+
+    def test_the_estimate_is_the_ground_distance_over_the_flight_time(self):
+        doc = load(ALL_FIELDS_SESSION)
+        mark = doc["serveMarks"][0]
+        speed = next(v for v in doc["derivedValues"] if v["scope"].get("serveMarkId") == mark["id"])
+        # by hand: (0, -11.885) -> (-2.4, 5.1) is sqrt(2.4^2 + 16.985^2) = 17.154 m; frames 1830 -> 1854 at 60 fps
+        # are 0.400 s; 42.885 m/s / 0.44704 = 95.93 mph, shown as 96.
+        self.assertEqual((speed["value"], speed["unit"]), (96, "mph"))
+        self.assertEqual(references.serve_speed_mph(mark), 96)
+
+    def test_a_typed_speed_that_disagrees_with_the_mark_is_reported(self):
+        doc = load(ALL_FIELDS_SESSION)
+        doc["derivedValues"][0]["value"] = 104
+        self.assertTrue(any("serve" in p and "104" in p for p in session_problems(doc)))
+        doc = load(ALL_FIELDS_SESSION)
+        doc["serveMarks"][0]["serverPosition"] = {"x": 0.3, "y": -11.885}
+        self.assertTrue(any("contactDefaulted" in p for p in session_problems(doc)))
+
+
+class PracticePlanAndManifestReferenceTests(unittest.TestCase):
+    def test_drill_logs_must_name_an_item_and_goals_of_their_plan(self):
+        plan = load(ALL_FIELDS_PLAN)
+        self.assertEqual(references.practice_plan_problems(plan), [])
+        bad = copy.deepcopy(plan)
+        bad["drillLogs"][0]["itemId"] = "nope"
+        self.assertNotEqual(references.practice_plan_problems(bad), [])
+        bad = copy.deepcopy(plan)
+        bad["drillLogs"][0]["goalIds"] = ["nope"]
+        self.assertNotEqual(references.practice_plan_problems(bad), [])
+
+    def test_an_export_cannot_claim_a_log_version_its_session_never_had(self):
+        export = load(ALL_FIELDS_EXPORT)
+        sessions = {s["id"]: s for s in (load(ALL_FIELDS_SESSION),)}
+        self.assertEqual(references.export_problems(export, sessions), [])
+        export["sessions"][0]["eventLogVersion"] = 99
+        self.assertNotEqual(references.export_problems(export, sessions), [])
+
+    def test_validator_fails_a_tree_whose_session_points_at_a_missing_calibration(self):
+        tmp = Path(tempfile.mkdtemp(prefix="jovra-t02-ref-"))
+        try:
+            shutil.copytree(SPEC, tmp / "spec", ignore=shutil.ignore_patterns("__pycache__"))
+            shutil.copytree(ROOT / "scripts/spec", tmp / "scripts/spec", ignore=shutil.ignore_patterns("__pycache__"))
+            path = tmp / "spec/fixtures/records/session.all-fields.json"
+            doc = load(path)
+            doc["serveMarks"][0]["calibrationId"] = "nope"
+            path.write_text(json.dumps(doc), encoding="utf-8")
+            result = run(VALIDATOR, tmp)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("serveMarks[0].calibrationId 'nope'", result.stdout)
+        finally:
+            shutil.rmtree(tmp)
 
 
 class ValidatorTests(unittest.TestCase):

@@ -1,8 +1,10 @@
 """Contract examples (T02): one document per 1.1 record type carrying every field added in 1.1.
 
 They are the documents T03 round-trips and the validator's closed-object self-test mutates. They are labelled
-Sample and are not demo content: no screen shows them. Times, ids and positions are illustrative but consistent
-(the match log folds, file sizes and hashes match the files they name).
+Sample and are not demo content: no screen shows them. Times, ids and positions are illustrative but consistent:
+the match log folds, every id resolves (jovra_ref/references.py), the serve speed is computed from its serve mark
+(CLAUDE.md hard rule 1), and file sizes and hashes match the files they name. The generator refuses to write a
+session that breaks any of these.
 """
 
 from __future__ import annotations
@@ -11,14 +13,23 @@ import copy
 import hashlib
 import json
 
-from jovra_ref import scoring
+from jovra_ref import references, scoring
 
-from . import records
+from . import records, sample_media
 
 ORDER = 70
 VERSION = "1.1.0"
 T = "2026-10-07T18:00:00Z"
 JON, MIA = "ex-player-jon", "ex-player-mia"
+# Jon serves from the near end (toss: side A starts near), so the defaulted contact is the centre mark of the near
+# baseline: x 0, y -11.885 in court metres (common.point2, origin at the centre of the net).
+NEAR_CENTRE_MARK = {"x": 0, "y": -references.BASELINE_Y}
+SERVE_MARK = {
+    "id": "ex-serve-mark-1", "pointId": "ex-point-1", "shotId": "ex-shot-1",
+    "contactFrame": {"value": 1830, "timescale": 60}, "bounceFrame": {"value": 1854, "timescale": 60},
+    "bounceCourt": {"x": -2.4, "y": 5.1}, "bounceImage": {"x": 0.44, "y": 0.39},
+    "serverPosition": NEAR_CENTRE_MARK, "contactDefaulted": True, "servedTo": "deuce",
+}
 SAMPLE_PROV = {"status": "manual", "source": "user", "sample": True}
 
 
@@ -49,7 +60,8 @@ def session() -> dict:
         "createdAt": T,
         "updatedAt": T,
         "title": "Contract example: every 1.1 field",
-        "sample": {"label": "Sample", "synthetic": True, "generator": "sample:contractExample@1.1.0"},
+        "sample": {"label": "Sample", "synthetic": True, "generator": "sample:contractExample@1.1.0",
+                   "mediaIds": ["sample-media.2026-10-04-behind-baseline-12-serves"]},
         "sessionKind": "match",
         "capturePurpose": "match",
         "players": [
@@ -112,7 +124,8 @@ def session() -> dict:
             "syncedAt": "contact", "createdAt": T, "note": "Keep the toss position consistent.",
         }],
         "derivedValues": [
-            {"id": "ex-derived-speed", "key": "serveSpeed.estimate", "value": 104, "unit": "mph",
+            {"id": "ex-derived-speed", "key": "serveSpeed.estimate", "value": references.serve_speed_mph(SERVE_MARK),
+             "unit": "mph",
              "label": "Estimated average speed, contact→bounce",
              "scope": {"pointId": "ex-point-1", "serveMarkId": "ex-serve-mark-1"},
              "provenance": {"status": "estimated", "source": "model:serveSpeed.manualAssisted@1.0.0",
@@ -138,13 +151,7 @@ def session() -> dict:
             "clips": [{"targetId": "ex-point-1", "preRollMs": 2000, "postRollMs": 4000},
                       {"targetId": "ex-mark-1", "excluded": True}],
         },
-        "serveMarks": [{
-            "id": "ex-serve-mark-1", "pointId": "ex-point-1", "shotId": "ex-shot-1",
-            "contactFrame": {"value": 1830, "timescale": 60}, "bounceFrame": {"value": 1854, "timescale": 60},
-            "bounceCourt": {"x": -2.4, "y": 5.1}, "bounceImage": {"x": 0.44, "y": 0.39},
-            "serverPosition": {"x": 0.3, "y": -11.885}, "contactDefaulted": True, "servedTo": "deuce",
-            "calibrationId": calibration_id, "outlierConfirmed": False, "provenance": mark_prov,
-        }],
+        "serveMarks": [dict(SERVE_MARK, calibrationId=calibration_id, outlierConfirmed=False, provenance=mark_prov)],
         "swings": [
             {"id": "ex-swing-serve", "kind": "serve", "stroke": "serve", "serveMarkId": "ex-serve-mark-1",
              "clip": {"fromMs": 29_500, "toMs": 31_500},
@@ -176,6 +183,9 @@ def session() -> dict:
     fixture_input = {"format": doc["match"]["format"], "players": doc["players"], "sides": doc["sides"],
                      "toss": doc["match"]["toss"], "log": log}
     scoring.fold(fixture_input, log)  # the example's log must stay foldable
+    problems = references.session_problems(doc, sample_media.manifest())
+    if problems:
+        raise ValueError("contract example session is inconsistent: " + "; ".join(problems))
     return doc
 
 
@@ -246,7 +256,15 @@ def generate(ctx) -> int:
     session_doc = session()
     session_path = out / "session.all-fields.json"
     ctx.write_json(session_path, session_doc)
-    ctx.write_json(out / "practice-plan.all-fields.json", practice_plan(jon_vs_alex))
-    ctx.write_json(out / "export.all-fields.json", export_manifest(session_path, session_doc))
-    ctx.write_json(out / "archive.all-fields.json", archive_manifest(session_path, session_doc))
+    plan = practice_plan(jon_vs_alex)
+    export = export_manifest(session_path, session_doc)
+    archive = archive_manifest(session_path, session_doc)
+    sessions = {session_doc["id"]: session_doc}
+    problems = references.practice_plan_problems(plan) + references.export_problems(export, sessions) \
+        + references.archive_problems(archive, sessions)
+    if problems:
+        raise ValueError("contract examples are inconsistent: " + "; ".join(problems))
+    ctx.write_json(out / "practice-plan.all-fields.json", plan)
+    ctx.write_json(out / "export.all-fields.json", export)
+    ctx.write_json(out / "archive.all-fields.json", archive)
     return 4

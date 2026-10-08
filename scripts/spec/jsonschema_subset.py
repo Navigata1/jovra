@@ -1,7 +1,12 @@
-"""A minimal, dependency-free JSON Schema (draft 2020-12) checker for the subset JOVRA's schemas use.
+r"""A minimal, dependency-free JSON Schema (draft 2020-12) checker for the subset JOVRA's schemas use.
 
 It refuses any keyword it does not implement (``check_schema``), so a schema can never rely on a
 keyword that is silently ignored here. ``format`` is treated as an annotation, as 2020-12 allows.
+
+``pattern`` and ``patternProperties`` are ECMA-262 regular expressions (2020-12 section 6.4). Python's ``re`` differs in
+two ways that matter here: ``$`` also matches before a final newline, and ``\d``/``\w``/``\s``/``\b`` follow Unicode
+rules. ``ecma_pattern`` rewrites ``$`` as ``\Z`` (end of input), and ``check_schema`` refuses those class escapes.
+The Swift and Kotlin ports need the same care: java.util.regex ``$`` also matches before a final line terminator.
 """
 
 from __future__ import annotations
@@ -18,10 +23,46 @@ ASSERTIONS = {"type", "enum", "const", "required", "minProperties", "maxProperti
               "minItems", "maxItems", "uniqueItems", "minimum", "maximum", "exclusiveMinimum",
               "exclusiveMaximum", "multipleOf", "minLength", "maxLength", "pattern"}
 SUPPORTED = ANNOTATIONS | APPLICATORS | ASSERTIONS
+# Class escapes whose Python (Unicode) meaning differs from ECMA-262's; schemas spell classes out instead.
+NON_ECMA_ESCAPES = ("\\d", "\\D", "\\w", "\\W", "\\s", "\\S", "\\b", "\\B")
 
 
 class SchemaError(Exception):
     pass
+
+
+def ecma_pattern(pattern: str) -> str:
+    r"""Translate an ECMA-262 pattern (no flags) to Python: every unescaped '$' outside a character class becomes '\Z'.
+
+    Without the multiline flag ECMA '$' matches only at the very end of the input, so '^[a-z]+$' rejects 'id\n'.
+    Python's '$' also matches just before a final newline, which would accept it."""
+    out, i, in_class = [], 0, False
+    while i < len(pattern):
+        ch = pattern[i]
+        if ch == "\\":
+            out.append(pattern[i:i + 2])
+            i += 2
+            continue
+        if ch == "[" and not in_class:
+            in_class = True
+        elif ch == "]" and in_class:
+            in_class = False
+        out.append("\\Z" if ch == "$" and not in_class else ch)
+        i += 1
+    return "".join(out)
+
+
+def non_ecma_escapes(pattern: str) -> list[str]:
+    """The class escapes in a pattern whose meaning differs between Python and ECMA-262 (escaped backslashes skipped)."""
+    found, i = [], 0
+    while i < len(pattern):
+        if pattern[i] == "\\":
+            if pattern[i:i + 2] in NON_ECMA_ESCAPES:
+                found.append(pattern[i:i + 2])
+            i += 2
+            continue
+        i += 1
+    return found
 
 
 def json_type(value) -> str:
@@ -94,11 +135,16 @@ class SchemaSet:
                 self.resolve(schema["$ref"], file)
             except SchemaError as exc:
                 problems.append(f"{file}{where}: {exc}")
-        if "pattern" in schema:
+        patterns = ([schema["pattern"]] if isinstance(schema.get("pattern"), str) else []) \
+            + list(schema.get("patternProperties", {}))
+        for pattern in patterns:
             try:
-                re.compile(schema["pattern"])
+                re.compile(ecma_pattern(pattern))
             except re.error as exc:
-                problems.append(f"{file}{where}: bad pattern ({exc})")
+                problems.append(f"{file}{where}: bad pattern {pattern!r} ({exc})")
+            for escape in non_ecma_escapes(pattern):
+                problems.append(f"{file}{where}: pattern {pattern!r} uses {escape}, whose meaning differs from "
+                                "ECMA-262; spell the class out, e.g. [0-9]")
         for key in ("$defs", "properties", "patternProperties"):
             for sub_key, sub in schema.get(key, {}).items():
                 problems += self._check(sub, file, f"{where}/{key}/{sub_key}")
@@ -130,7 +176,7 @@ class SchemaSet:
 
     def _pattern(self, pattern: str) -> re.Pattern:
         if pattern not in self._patterns:
-            self._patterns[pattern] = re.compile(pattern)
+            self._patterns[pattern] = re.compile(ecma_pattern(pattern))
         return self._patterns[pattern]
 
     def _validate(self, value, schema, file: str, path: str) -> list[str]:

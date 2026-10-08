@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA session document (session.json / session.jovra.json)",
   "description": "One session folder's document (ADR-0002). The same JSON is the Drive sidecar and the export format. Scores are never stored: the match log is folded by the scoring engine (ADR-0003).",
-  "$comment": "Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt. Bookmark notes reuse marks[].note.",
+  "$comment": "Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, sample.mediaIds (sample media manifest ids), analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt. Bookmark notes reuse marks[].note. Ids these fields hold must resolve inside the document (jovra_ref/references.py).",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "sport", "createdAt", "updatedAt", "title", "sessionKind", "players", "recording", "storage", "archive"],
   "additionalProperties": false,
@@ -55,7 +55,15 @@
       "properties": {
         "label": {"const": "Sample"},
         "synthetic": {"type": "boolean"},
-        "generator": {"type": "string", "minLength": 1, "maxLength": 120}
+        "generator": {"type": "string", "minLength": 1, "maxLength": 120},
+        "mediaIds": {
+          "description": "Since 1.1.0. The sample media this session plays, by the stable mediaId of spec/fixtures/sample/media-manifest.json (its session video and any lab clips). Every id must exist in the manifest, and a session the manifest lists may only name its own media (scripts/spec/validate.py, jovra_ref/references.py). The sample library (T09) installs sessions with these ids; the renderer (T11) writes the files they name.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "common.schema.json#/$defs/id"}
+        }
       }
     },
     "player": {

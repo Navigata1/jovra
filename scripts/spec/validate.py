@@ -9,6 +9,8 @@
 4. The reference engine (spec/reference) is re-run on every fixture: expected outputs must match exactly,
    hand-written assertions must hold, the sample match must satisfy C1-C16, CSV exports must match
    byte-for-byte, and file sizes/hashes quoted in export/archive examples must match the files.
+5. Reference integrity (jovra_ref/references.py): every id a record holds names a record that exists, ranges run
+   forwards, event-log versions are not later than the log, sample media ids exist in the sample media manifest.
 
 Exit status is non-zero on any failure.  Usage:  python3 scripts/spec/validate.py [-v]
 """
@@ -27,7 +29,7 @@ sys.path.insert(0, str(SPEC / "reference"))
 
 from jsonschema_subset import SchemaSet  # noqa: E402
 
-from jovra_ref import conformance, csv_export, sample_match, scoring, stats  # noqa: E402
+from jovra_ref import conformance, csv_export, references, sample_match, scoring, stats  # noqa: E402
 
 
 
@@ -122,6 +124,11 @@ def schema_self_tests(schemas: SchemaSet, rep: Report) -> None:
     next(c for c in bad["constraints"] if c["id"] == "C15")["status"] = "pass"
     cases.append(("fixture-sample.schema.json", bad, False, "waiver hidden under status pass"))
     cases.append(("session.schema.json", session, True, "a schemaVersion 1.0.0 document after the 1.1 bump"))
+    # JSON Schema patterns are ECMA-262: '$' is the end of the input, so a trailing newline must not pass '^...$'
+    cases.append(("session.schema.json", dict(session, id=session["id"] + "\n"), False, "id ending in a newline"))
+    cases.append(("session.schema.json", dict(session, createdAt=session["createdAt"] + "\n"), False,
+                  "createdAt ending in a newline"))
+    cases.append(("common.schema.json#sha256", "a" * 64 + "\n", False, "sha256 ending in a newline"))
     for schema, instance, must_pass, label in cases:
         file, _, definition = schema.partition("#")
         target = {"$ref": f"{file}#/$defs/{definition}"} if definition else schemas.files[file]
@@ -359,6 +366,23 @@ def check_references(docs: dict, rep: Report) -> None:
         for use in s.get("equipmentUse", []):
             if use["racketId"] not in rackets or ("stringJobId" in use and use["stringJobId"] not in jobs):
                 rep.fail("session", f"{s['id']} equipmentUse references unknown equipment")
+    manifests = [d for _, d in by_kind.get("jovra.sampleMediaManifest", [])]
+    manifest = manifests[0] if len(manifests) == 1 else None
+    if len(manifests) != 1:
+        rep.fail("sample media manifest", f"expected exactly one, found {len(manifests)}")
+    per_kind = {
+        "jovra.session": lambda d: references.session_problems(d, manifest),
+        "jovra.practicePlan": references.practice_plan_problems,
+        "jovra.export": lambda d: references.export_problems(d, sessions),
+        "jovra.archiveManifest": lambda d: references.archive_problems(d, sessions),
+    }
+    for path, d in sorted(docs.items()):
+        rule = per_kind.get(d["kind"], references.time_range_problems)
+        problems = rule(d)
+        for problem in problems:
+            rep.fail(str(path.relative_to(ROOT)), problem)
+        if not problems:
+            rep.ok("reference-integrity documents")
     for path, plan in by_kind.get("jovra.practicePlan", []):
         for item in plan["items"]:
             for ev in item["evidence"]:

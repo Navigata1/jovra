@@ -36,9 +36,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(SPEC / "reference"))
 sys.path.insert(0, str(SPEC / "reference" / "studio"))
 
-import re  # noqa: E402
-
-from jsonschema_subset import SchemaSet  # noqa: E402
+from jsonschema_subset import SchemaSet  # noqa: E402  (ECMA-262 pattern anchors since T02)
 
 from studio import bundle, edl, jobstate, ledger, records, syncfit  # noqa: E402
 from studio.core import Reject, apply_patch, delta_pp_display, pct, round_half_up  # noqa: E402
@@ -68,37 +66,6 @@ SCHEMA_BY_VERSION = {
 }
 
 
-def ecma_pattern(pattern: str) -> str:
-    r"""JSON Schema 2020-12 'pattern' is an ECMA-262 regex: without the multiline flag, '$' matches only at the very end
-    of the input. Python's '$' also matches before a trailing newline, so 'c01\n' would pass '^...$'. Rewrite every
-    unescaped '$' outside a character class as '\Z' (Python's end-of-input anchor)."""
-    out, i, in_class = [], 0, False
-    while i < len(pattern):
-        ch = pattern[i]
-        if ch == "\\":
-            out.append(pattern[i:i + 2])
-            i += 2
-            continue
-        if ch == "[" and not in_class:
-            in_class = True
-        elif ch == "]" and in_class:
-            in_class = False
-        out.append("\\Z" if ch == "$" and not in_class else ch)
-        i += 1
-    return "".join(out)
-
-
-class StudioSchemaSet(SchemaSet):
-    """The shared subset checker with ECMA-262 end anchors (scripts/spec/jsonschema_subset.py uses re.search, whose '$'
-    accepts a trailing newline; that file belongs to the core gate, so Studio corrects the semantics here and the Swift
-    and Kotlin ports must follow ECMA, not Python)."""
-
-    def _pattern(self, pattern: str) -> re.Pattern:
-        if pattern not in self._patterns:
-            self._patterns[pattern] = re.compile(ecma_pattern(pattern))
-        return self._patterns[pattern]
-
-
 class Report:
     def __init__(self, verbose: bool):
         self.verbose = verbose
@@ -124,7 +91,7 @@ class Ctx:
     """Loaded schemas, contracts and the sample project's records."""
 
     def __init__(self):
-        self.schemas = StudioSchemaSet(SCHEMAS)
+        self.schemas = SchemaSet(SCHEMAS)
         self.profiles_doc = load(STUDIO / "contracts" / "story-profiles.v1.json")
         self.profiles = {p["id"]: p for p in self.profiles_doc["profiles"]}
         self.transitions = load(STUDIO / "contracts" / "render-job-transitions.v1.json")
@@ -192,6 +159,12 @@ def check_schemas(ctx: Ctx, rep: Report) -> None:
         rep.fail("schema self-test", "pattern anchors are not ECMA-262 ('$' must not accept a trailing newline)")
     else:
         rep.ok("schema self-tests")
+    lock = ctx.records["project-lock"]
+    for field in ("projectId", "createdAt"):  # a value ending in a newline must not pass '^...$' (issue #4)
+        if not ctx.schemas.validate(dict(lock, **{field: lock[field] + "\n"}), "project-lock.schema.json"):
+            rep.fail("schema self-test", f"project-lock {field} ending in a newline passed")
+        else:
+            rep.ok("schema self-tests")
     for label, doc, schema in (("empty EDL", {}, "edit-plan.schema.json"),
                                ("EDL with a command", {"schemaVersion": "jovra.edit-plan/2", "command": "x"}, "edit-plan.schema.json")):
         if not ctx.schemas.validate(doc, schema):
