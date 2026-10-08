@@ -78,3 +78,36 @@ files: reviews.txt s03-dark-home.png s03-light-home.png
 side-by-side: 2 reviewed pair(s) -> /privateevidence/ios/t19-home-dashboard/side-by-side.html
 exit 0  (expected 0)
 files: reviews.txt s03-dark-home.png s03-light-home.png side-by-side.html 
+
+=== Verifier round 1 fixes (2026-10-07, simulator JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22) ===
+
+--- RED: tab bar textClipped exemption removed, new pseudo-locale tests, before the tab bar fix ---
+Total: 0 passed, 4 failed, 0 skipped in 1 classes (xcresult summary: 0 passed, 4 failed, 0 skipped; result Failed)
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): XCTAssertTrue failed - home: “8” bypassed the String Catalogs
+FAILED PseudoLocaleUITests/testTabTitlesFitInTheDoubleLengthPseudoLocale(): XCTAssertFalse failed - tab.sessions title is truncated on screen (home selected): “Sessions Sessi...”
+FAILED PseudoLocaleUITests/testTabTitlesFitInTheDoubleLengthPseudoLocaleAtLargestAccessibilityTextSize(): XCTAssertFalse failed - tab.home title is truncated on screen (home selected): “Home Ho...”
+FAILED PseudoLocaleUITests/testTabTitlesFitInThePseudoLocaleAtLargestAccessibilityTextSize(): Text clipped
+Total: 0 passed, 1 failed, 0 skipped in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): XCTAssertTrue failed - home: “6h 42m” bypassed the String Catalogs
+(discovery run with the audit line disabled, before the Profile fix:)
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): XCTAssertEqual failed: ("["home: “6h 42m”", "profile: “Questions: hello@islanddevcrew.com”"]") is not equal to ("[]") - visible text that bypassed the String Catalogs
+
+--- RED: reportedProblems test against a stub returning only problems ---
+Failing tests: LaunchConfigurationTests.reportedProblems()
+LaunchConfigurationTests.swift:103: Expectation failed: (unknown.reportedProblems → ["-reduceMotion: unknown value “sometimes” (expected YES or NO)"]) == (["-reduceMotion: unknown value “sometimes” (expected YES or NO)", "-startRoute: unknown route “nowhere” (expected home, sessions, record, insights, profile, capturePreview)"])
+
+--- Intermediate: 2 pt title gutter with two lines (rejected; audit flagged shrink and truncation) ---
+Total: 2 passed, 2 failed, 0 skipped in 1 classes (xcresult summary: 2 passed, 2 failed, 0 skipped; result Failed)
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): Text clipped
+FAILED PseudoLocaleUITests/testTabTitlesFitInThePseudoLocaleAtLargestAccessibilityTextSize(): Text clipped
+--- Intermediate: ViewThatFits one-line / caption2 / wrap (rejected; one-line titles flagged, English Sessions changed height at AX5) ---
+Total: 2 passed, 3 failed, 0 skipped in 2 classes (xcresult summary: 2 passed, 3 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): XCTAssertEqualWithAccuracy failed: ("59.33333333333326") is not equal to ("60.666666666666515") +/- ("0.5") - tab.sessions title stays on one line
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): Text clipped
+FAILED PseudoLocaleUITests/testTabTitlesFitInTheDoubleLengthPseudoLocale(): Text clipped
+
+--- GREEN: final tab bar (3-line wrap, 2 pt column gap, 3 pt edge inset) ---
+Total: 4 passed, 1 failed, 0 skipped in 2 classes (xcresult summary: 4 passed, 1 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): Contrast failed
+(the remaining failure is the documented Contrast issue on this simulator; same test with the contrast audit temporarily excluded, not committed:)
+Total: 1 passed, 0 failed, 0 skipped in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
