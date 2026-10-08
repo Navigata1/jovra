@@ -185,6 +185,8 @@ The references are AI-generated rasters, so pixel diffs mean nothing. Name scree
 reference `sNN-…`, run `scripts/ios/side_by_side.py evidence/ios/<ticket>`, compare each pair, and add
 one line per screenshot to `evidence/ios/<ticket>/reviews.txt`:
 `s03-light-home: <reviewer> — <verdict and notes>`. The page is written only when every pair has one.
+Screen numbers pick the folder: 01–20 `design-reference/screens`, 21–40 `design-reference/studio/screens`,
+41 and up `design-reference/adaptive/screens` (Android, watchOS, Wear OS and the iOS fold screens 71–72).
 
 ## What the UI smoke test checks
 

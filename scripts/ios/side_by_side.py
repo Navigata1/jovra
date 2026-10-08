@@ -4,8 +4,9 @@
 Usage: scripts/ios/side_by_side.py evidence/ios/<ticket> [--reviews FILE] [--out FILE]
 
 Screenshots are paired with references by screen number: a screenshot named sNN-<anything>.png (or
-.jpg) pairs with design-reference/screens/NN-*.png (screens 01-20) or
-design-reference/studio/screens/NN-*.png (21-40). Other screenshots are left out of the page.
+.jpg) pairs with design-reference/screens/NN-*.png (screens 01-20),
+design-reference/studio/screens/NN-*.png (21-40) or design-reference/adaptive/screens/NN-*.png (41 and
+up: Android, watchOS, Wear OS and iOS fold). Other screenshots are left out of the page.
 
 The references are AI-generated rasters, so pixel diffs mean nothing (spec, Testing Decisions): a
 person or agent compares each pair and writes one reviewer line per screenshot in
@@ -40,8 +41,15 @@ class Pair:
     reference: pathlib.Path | None
 
 
+REFERENCE_FOLDERS = (  # (last screen number, folder), in screen order
+    (20, "design-reference/screens"),
+    (40, "design-reference/studio/screens"),
+    (99, "design-reference/adaptive/screens"),
+)
+
+
 def reference_for(screen: int, repo: pathlib.Path) -> pathlib.Path | None:
-    folder = repo / ("design-reference/screens" if screen <= 20 else "design-reference/studio/screens")
+    folder = repo / next(path for last, path in REFERENCE_FOLDERS if screen <= last)
     matches = sorted(folder.glob(f"{screen:02d}-*.png"))
     return matches[0] if matches else None
 

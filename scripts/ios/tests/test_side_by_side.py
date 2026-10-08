@@ -17,7 +17,7 @@ class SideBySideTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.evidence = pathlib.Path(self.temp.name) / "evidence" / "ios" / "t19-home-dashboard"
         self.evidence.mkdir(parents=True)
-        for name in ("s03-light-home.png", "s03-dark-home.jpg", "s21-light-studio-home.png", "pseudo-1-home.png"):
+        for name in ("s03-light-home.png", "s03-dark-home.jpg", "s21-light-studio-home.png", "s71-light-ios-fold-studio.png", "pseudo-1-home.png"):
             (self.evidence / name).write_bytes(PNG)
 
     def tearDown(self):
@@ -33,12 +33,14 @@ class SideBySideTests(unittest.TestCase):
             (3, "s03-dark-home.jpg", "design-reference/screens/03-home.png"),
             (3, "s03-light-home.png", "design-reference/screens/03-home.png"),
             (21, "s21-light-studio-home.png", "design-reference/studio/screens/21-studio-home.png"),
+            (71, "s71-light-ios-fold-studio.png", "design-reference/adaptive/screens/71-ios-fold-studio.png"),
         ])
 
     def test_a_pair_without_a_reviewer_line_fails_and_writes_no_page(self):
         status = self.run_generator(
             "s03-light-home: Claude (T19 agent) — matches the reference; tiles follow the spec order\n"
             "s21-light-studio-home: Jon — approved\n"
+            "s71-light-ios-fold-studio: Jon — approved\n"
         )
         self.assertEqual(status, 2)
         self.assertFalse((self.evidence / "side-by-side.html").exists())
@@ -48,6 +50,7 @@ class SideBySideTests(unittest.TestCase):
             "s03-light-home: TODO\n"
             "s03-dark-home: Claude (T19 agent) — matches\n"
             "s21-light-studio-home: Jon — approved\n"
+            "s71-light-ios-fold-studio: Jon — approved\n"
         )
         self.assertEqual(status, 2)
 
@@ -57,6 +60,7 @@ class SideBySideTests(unittest.TestCase):
             "s03-light-home: Claude (T19 agent) — matches the reference; tiles follow the spec order\n"
             "s03-dark-home: Claude (T19 agent) — matches; forest card keeps contrast\n"
             "s21-light-studio-home: Jon — approved\n"
+            "s71-light-ios-fold-studio: Jon — approved\n"
         )
         self.assertEqual(status, 0)
         page = (self.evidence / "side-by-side.html").read_text()
@@ -64,10 +68,11 @@ class SideBySideTests(unittest.TestCase):
         self.assertIn(os.path.relpath(ROOT / "design-reference/screens/03-home.png", self.evidence), page)
         self.assertIn('src="s03-dark-home.jpg"', page)
         self.assertIn("Jon — approved", page)
+        self.assertIn(os.path.relpath(ROOT / "design-reference/adaptive/screens/71-ios-fold-studio.png", self.evidence), page)
         self.assertNotIn("pseudo-1-home", page)
 
     def test_a_screen_number_without_a_reference_is_an_error(self):
-        (self.evidence / "s41-light-nowhere.png").write_bytes(PNG)
+        (self.evidence / "s99-light-nowhere.png").write_bytes(PNG)
         status = self.run_generator("")
         self.assertEqual(status, 1)
 
