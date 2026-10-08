@@ -1,0 +1,1473 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "progress-comparison",
+  "status": "expect from spec/reference/studio/progress.py; assert blocks hand-derived from stories 134-137 and the core pct rule",
+  "cases": [
+    {
+      "id": "sample-serve-practice",
+      "why": "Story 134: the Sample serve practice, 12 / 30 on Sep 9 and 18 / 30 on Oct 7",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 20,
+        "deltaDisplay": "+20 percentage points",
+        "summary": "12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points",
+        "claim": "change"
+      },
+      "assert": {
+        "comparable": true,
+        "reasons": [],
+        "pct": [
+          40,
+          60
+        ],
+        "deltaPercentagePoints": 20,
+        "summary": "12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points",
+        "claim": "change"
+      }
+    },
+    {
+      "id": "later-method-version-changed",
+      "why": "Story 135: the later session was tagged with method version 2",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "2",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": false,
+        "reasons": [
+          "methodChange"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasonsInclude": [
+          "methodChange"
+        ],
+        "deltaPercentagePoints": null,
+        "claim": "chronology"
+      }
+    },
+    {
+      "id": "later-capability-version-changed",
+      "why": "A capability version change is a method change too",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": "0.1.0",
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": "0.2.0",
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": false,
+        "reasons": [
+          "methodChange"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "methodChange"
+        ],
+        "claim": "chronology"
+      }
+    },
+    {
+      "id": "user-chosen-one-side",
+      "why": "Story 136: hand-picked examples on one side only cannot be compared with all",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "user-chosen",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": "Examples you chose"
+        },
+        "comparable": false,
+        "reasons": [
+          "differingSelection"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "differingSelection"
+        ],
+        "laterSelectionLabel": "Examples you chose",
+        "earlierSelectionLabel": null
+      }
+    },
+    {
+      "id": "user-chosen-both-sides",
+      "why": "Both sides hand-picked: the rule matches, and each side is labelled",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "user-chosen",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "user-chosen",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": "Examples you chose"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": "Examples you chose"
+        },
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 20,
+        "deltaDisplay": "+20 percentage points",
+        "summary": "12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points",
+        "claim": "change"
+      },
+      "assert": {
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 20,
+        "earlierSelectionLabel": "Examples you chose",
+        "laterSelectionLabel": "Examples you chose"
+      }
+    },
+    {
+      "id": "seeded-random-vs-all",
+      "why": "A seeded random sample is not the same selection as all",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "seeded-random",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": false,
+        "reasons": [
+          "differingSelection"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "differingSelection"
+        ]
+      }
+    },
+    {
+      "id": "earlier-estimated",
+      "why": "Both sides must be at least Reviewed before any change is stated",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "estimated"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": false,
+        "reasons": [
+          "notReviewed"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "notReviewed"
+        ],
+        "claim": "chronology"
+      }
+    },
+    {
+      "id": "later-manual",
+      "why": "Manual (unreviewed) evidence on one side drops the comparison",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "manual"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": false,
+        "reasons": [
+          "notReviewed"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "notReviewed"
+        ]
+      }
+    },
+    {
+      "id": "both-validated",
+      "why": "Validated counts as at least Reviewed",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "validated"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "validated"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 20,
+        "deltaDisplay": "+20 percentage points",
+        "summary": "12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points",
+        "claim": "change"
+      },
+      "assert": {
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 20
+      }
+    },
+    {
+      "id": "match-vs-practice",
+      "why": "A match is not compared with a practice",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "match",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": false,
+        "reasons": [
+          "sessionKindChange"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "sessionKindChange"
+        ]
+      }
+    },
+    {
+      "id": "different-stat-definition",
+      "why": "The later scope counts another stat",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "second-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": false,
+        "reasons": [
+          "statDefinitionChange"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "statDefinitionChange"
+        ]
+      }
+    },
+    {
+      "id": "several-reasons-in-order",
+      "why": "Every reason is reported, in the fixed order",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "match",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "2",
+          "capabilityVersion": null,
+          "selectionRule": "user-chosen",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "estimated"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 12,
+          "denominator": 30,
+          "pct": 40,
+          "display": "12 / 30 · 40%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": "Examples you chose"
+        },
+        "comparable": false,
+        "reasons": [
+          "methodChange",
+          "sessionKindChange",
+          "differingSelection",
+          "notReviewed"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "methodChange",
+          "sessionKindChange",
+          "differingSelection",
+          "notReviewed"
+        ]
+      }
+    },
+    {
+      "id": "no-change",
+      "why": "Same fraction: 0 percentage points, never a claim of change",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 0,
+        "deltaDisplay": "0 percentage points",
+        "summary": "18 / 30 · 60% → 18 / 30 · 60%, 0 percentage points",
+        "claim": "no-change"
+      },
+      "assert": {
+        "comparable": true,
+        "deltaPercentagePoints": 0,
+        "deltaDisplay": "0 percentage points",
+        "claim": "no-change"
+      }
+    },
+    {
+      "id": "decline",
+      "why": "18 / 30 to 15 / 30: 60% to 50%",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 15,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 15,
+          "denominator": 30,
+          "pct": 50,
+          "display": "15 / 30 · 50%",
+          "selectionLabel": null
+        },
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": -10,
+        "deltaDisplay": "-10 percentage points",
+        "summary": "18 / 30 · 60% → 15 / 30 · 50%, -10 percentage points",
+        "claim": "change"
+      },
+      "assert": {
+        "comparable": true,
+        "pct": [
+          60,
+          50
+        ],
+        "deltaPercentagePoints": -10,
+        "deltaDisplay": "-10 percentage points"
+      }
+    },
+    {
+      "id": "one-point-singular",
+      "why": "1 / 4 (25%) to 13 / 50 (26%): one percentage point, singular",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 1,
+          "denominator": 4,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 13,
+          "denominator": 50,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 1,
+          "denominator": 4,
+          "pct": 25,
+          "display": "1 / 4 · 25%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 13,
+          "denominator": 50,
+          "pct": 26,
+          "display": "13 / 50 · 26%",
+          "selectionLabel": null
+        },
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 1,
+        "deltaDisplay": "+1 percentage point",
+        "summary": "1 / 4 · 25% → 13 / 50 · 26%, +1 percentage point",
+        "claim": "change"
+      },
+      "assert": {
+        "comparable": true,
+        "pct": [
+          25,
+          26
+        ],
+        "deltaPercentagePoints": 1,
+        "deltaDisplay": "+1 percentage point"
+      }
+    },
+    {
+      "id": "delta-from-displayed-integers",
+      "why": "1 / 8 is 12.5% shown 13%, 5 / 16 is 31.25% shown 31%: the delta is 31 - 13 = 18 from the shown numbers, not 18.75 rounded to 19",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 1,
+          "denominator": 8,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 5,
+          "denominator": 16,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 1,
+          "denominator": 8,
+          "pct": 13,
+          "display": "1 / 8 · 13%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 5,
+          "denominator": 16,
+          "pct": 31,
+          "display": "5 / 16 · 31%",
+          "selectionLabel": null
+        },
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 18,
+        "deltaDisplay": "+18 percentage points",
+        "summary": "1 / 8 · 13% → 5 / 16 · 31%, +18 percentage points",
+        "claim": "change"
+      },
+      "assert": {
+        "comparable": true,
+        "pct": [
+          13,
+          31
+        ],
+        "deltaPercentagePoints": 18
+      }
+    },
+    {
+      "id": "half-up-at-ties",
+      "why": "3 / 8 is 37.5% shown 38% and 5 / 8 is 62.5% shown 63% (half up; half even would give 62)",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 3,
+          "denominator": 8,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 5,
+          "denominator": 8,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 3,
+          "denominator": 8,
+          "pct": 38,
+          "display": "3 / 8 · 38%",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 5,
+          "denominator": 8,
+          "pct": 63,
+          "display": "5 / 8 · 63%",
+          "selectionLabel": null
+        },
+        "comparable": true,
+        "reasons": [],
+        "deltaPercentagePoints": 25,
+        "deltaDisplay": "+25 percentage points",
+        "summary": "3 / 8 · 38% → 5 / 8 · 63%, +25 percentage points",
+        "claim": "change"
+      },
+      "assert": {
+        "comparable": true,
+        "pct": [
+          38,
+          63
+        ],
+        "deltaPercentagePoints": 25
+      }
+    },
+    {
+      "id": "no-earlier-evidence",
+      "why": "0 / 0 earlier: shown as an em dash and not comparable",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 0,
+          "denominator": 0,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "numerator": 0,
+          "denominator": 0,
+          "pct": null,
+          "display": "0 / 0 · —",
+          "selectionLabel": null
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "numerator": 18,
+          "denominator": 30,
+          "pct": 60,
+          "display": "18 / 30 · 60%",
+          "selectionLabel": null
+        },
+        "comparable": false,
+        "reasons": [
+          "emptySample"
+        ],
+        "deltaPercentagePoints": null,
+        "deltaDisplay": null,
+        "summary": null,
+        "claim": "chronology"
+      },
+      "assert": {
+        "comparable": false,
+        "reasons": [
+          "emptySample"
+        ],
+        "earlierDisplay": "0 / 0 · —"
+      }
+    },
+    {
+      "id": "not-chronological",
+      "why": "The later scope must be dated after the earlier one",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 18,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "rejectCode": "notChronological"
+      },
+      "assert": {
+        "rejectCode": "notChronological"
+      }
+    },
+    {
+      "id": "numerator-above-denominator",
+      "why": "31 / 30 is not a fraction of attempts",
+      "input": {
+        "statDefinitionId": "first-serve-in-pct",
+        "earlier": {
+          "date": "2026-09-09",
+          "sessionIds": [
+            "session-0909"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 12,
+          "denominator": 30,
+          "provenance": "reviewed"
+        },
+        "later": {
+          "date": "2026-10-07",
+          "sessionIds": [
+            "session-1007"
+          ],
+          "sessionKind": "practice",
+          "statDefinitionId": "first-serve-in-pct",
+          "methodId": "manual-tagging-v1",
+          "methodVersion": "1",
+          "capabilityVersion": null,
+          "selectionRule": "all",
+          "numerator": 31,
+          "denominator": 30,
+          "provenance": "reviewed"
+        }
+      },
+      "expect": {
+        "rejectCode": "badFraction"
+      },
+      "assert": {
+        "rejectCode": "badFraction"
+      }
+    }
+  ]
+}

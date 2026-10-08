@@ -1,0 +1,2896 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "staleness",
+  "status": "expect from spec/reference/studio/staleness.py; plan and film inputs derived from the Sample records (fromRecord) or hand-written; assert blocks are hand-derived literals",
+  "cases": [
+    {
+      "id": "event-revision-stales-the-project",
+      "why": "Story 231: correcting a point (event revision 3 to 4) stales every plan of the project and its film, labelled and kept; the other project's plan and film stay current",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            },
+            {
+              "planId": "other-coach-cut",
+              "planRevision": 1,
+              "projectId": "other-court-day",
+              "editPlanSha256": "e5e24829828069de7867586ef60d12d28815e3d68d1d2d9463eeb78dbbf55725",
+              "bindings": {
+                "eventRevision": 1,
+                "syncRevision": 1,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1"
+              ],
+              "keeperIds": [
+                "k-01"
+              ],
+              "fromRecord": null
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": false,
+              "fromRecord": "records/delivered-artifact.film.json"
+            },
+            {
+              "artifactId": "film-other",
+              "projectId": "other-court-day",
+              "editPlanSha256": "e5e24829828069de7867586ef60d12d28815e3d68d1d2d9463eeb78dbbf55725",
+              "stale": false,
+              "fromRecord": null
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "event",
+            "projectId": "sample-court-day",
+            "revision": 4,
+            "changedPointIds": [
+              "p-003"
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "current": {
+          "sample-court-day": {
+            "eventRevision": 4,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1
+          },
+          "other-court-day": {
+            "eventRevision": 1,
+            "syncRevision": 1,
+            "keeperCatalogRevision": 1
+          }
+        },
+        "plans": [
+          {
+            "planId": "coach-cut-serve",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-final",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "match-broadcast-set-1",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "other-coach-cut",
+            "projectId": "other-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          }
+        ],
+        "films": [
+          {
+            "artifactId": "film-court-memories",
+            "projectId": "sample-court-day",
+            "planId": "court-memories-final",
+            "status": "stale",
+            "label": "Made before a correction",
+            "reasons": [
+              "event-revision"
+            ],
+            "keptAsVersion": true
+          },
+          {
+            "artifactId": "film-other",
+            "projectId": "other-court-day",
+            "planId": "other-coach-cut",
+            "status": "current",
+            "label": null,
+            "reasons": [],
+            "keptAsVersion": true
+          }
+        ],
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "match-broadcast-set-1",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "staleFilmIds": [
+          "film-court-memories"
+        ]
+      },
+      "assert": {
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "match-broadcast-set-1",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "staleFilmIds": [
+          "film-court-memories"
+        ],
+        "currentPlanIds": [
+          "other-coach-cut"
+        ],
+        "currentFilmIds": [
+          "film-other"
+        ],
+        "filmLabels": {
+          "film-court-memories": "Made before a correction",
+          "film-other": null
+        }
+      }
+    },
+    {
+      "id": "sync-camera-2-spares-a-camera-1-plan",
+      "why": "A sync change on Camera 2 (revision 2 to 3) stales every plan that cuts or plays Camera 2; the one-angle plan on Camera 1 stays current, carried to sync revision 3",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            },
+            {
+              "planId": "one-angle-excerpt",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4443cd6b65ebe59b64a4ffad1798121d401d3ccffa0001f91b69d94ff1f8b3cf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1"
+              ],
+              "keeperIds": [
+                "k-02"
+              ],
+              "fromRecord": null
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": false,
+              "fromRecord": "records/delivered-artifact.film.json"
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "sync",
+            "projectId": "sample-court-day",
+            "revision": 3,
+            "sourceIds": [
+              "camera-2"
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "current": {
+          "sample-court-day": {
+            "eventRevision": 3,
+            "syncRevision": 3,
+            "keeperCatalogRevision": 1
+          },
+          "other-court-day": {
+            "eventRevision": 1,
+            "syncRevision": 1,
+            "keeperCatalogRevision": 1
+          }
+        },
+        "plans": [
+          {
+            "planId": "coach-cut-serve",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-final",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "match-broadcast-set-1",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "one-angle-excerpt",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 3,
+              "keeperCatalogRevision": 1
+            }
+          }
+        ],
+        "films": [
+          {
+            "artifactId": "film-court-memories",
+            "projectId": "sample-court-day",
+            "planId": "court-memories-final",
+            "status": "stale",
+            "label": "Made before a correction",
+            "reasons": [
+              "sync-revision"
+            ],
+            "keptAsVersion": true
+          }
+        ],
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "match-broadcast-set-1",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "staleFilmIds": [
+          "film-court-memories"
+        ]
+      },
+      "assert": {
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "match-broadcast-set-1",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "currentPlanIds": [
+          "one-angle-excerpt"
+        ],
+        "bindings": {
+          "one-angle-excerpt": {
+            "eventRevision": 3,
+            "syncRevision": 3,
+            "keeperCatalogRevision": 1
+          }
+        },
+        "staleFilmIds": [
+          "film-court-memories"
+        ]
+      }
+    },
+    {
+      "id": "sync-camera-1-stales-every-plan-using-it",
+      "why": "A sync change on Camera 1 stales every plan, the one-angle plan too",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            },
+            {
+              "planId": "one-angle-excerpt",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4443cd6b65ebe59b64a4ffad1798121d401d3ccffa0001f91b69d94ff1f8b3cf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1"
+              ],
+              "keeperIds": [
+                "k-02"
+              ],
+              "fromRecord": null
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": false,
+              "fromRecord": "records/delivered-artifact.film.json"
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "sync",
+            "projectId": "sample-court-day",
+            "revision": 3,
+            "sourceIds": [
+              "camera-1"
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "current": {
+          "sample-court-day": {
+            "eventRevision": 3,
+            "syncRevision": 3,
+            "keeperCatalogRevision": 1
+          },
+          "other-court-day": {
+            "eventRevision": 1,
+            "syncRevision": 1,
+            "keeperCatalogRevision": 1
+          }
+        },
+        "plans": [
+          {
+            "planId": "coach-cut-serve",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-final",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "match-broadcast-set-1",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "one-angle-excerpt",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "sync-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          }
+        ],
+        "films": [
+          {
+            "artifactId": "film-court-memories",
+            "projectId": "sample-court-day",
+            "planId": "court-memories-final",
+            "status": "stale",
+            "label": "Made before a correction",
+            "reasons": [
+              "sync-revision"
+            ],
+            "keptAsVersion": true
+          }
+        ],
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "match-broadcast-set-1",
+          "one-angle-excerpt",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "staleFilmIds": [
+          "film-court-memories"
+        ]
+      },
+      "assert": {
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "match-broadcast-set-1",
+          "one-angle-excerpt",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "currentPlanIds": []
+      }
+    },
+    {
+      "id": "keeper-k04-change",
+      "why": "Changing keeper k-04 (catalog revision 1 to 2) stales the plans that use it; the final film's plan does not use it, so the plan is carried to revision 2 and the film stays current",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": false,
+              "fromRecord": "records/delivered-artifact.film.json"
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "keepers",
+            "projectId": "sample-court-day",
+            "revision": 2,
+            "keeperIds": [
+              "k-04"
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "current": {
+          "sample-court-day": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 2
+          },
+          "other-court-day": {
+            "eventRevision": 1,
+            "syncRevision": 1,
+            "keeperCatalogRevision": 1
+          }
+        },
+        "plans": [
+          {
+            "planId": "coach-cut-serve",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-final",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "court-memories-storyboard",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "match-broadcast-set-1",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          }
+        ],
+        "films": [
+          {
+            "artifactId": "film-court-memories",
+            "projectId": "sample-court-day",
+            "planId": "court-memories-final",
+            "status": "current",
+            "label": null,
+            "reasons": [],
+            "keptAsVersion": true
+          }
+        ],
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "staleFilmIds": []
+      },
+      "assert": {
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "currentPlanIds": [
+          "court-memories-final",
+          "match-broadcast-set-1"
+        ],
+        "bindings": {
+          "court-memories-final": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 2
+          }
+        },
+        "staleFilmIds": [],
+        "filmLabels": {
+          "film-court-memories": null
+        }
+      }
+    },
+    {
+      "id": "keeper-k01-change-stales-the-film",
+      "why": "Changing keeper k-01 stales the two storyboards and the final plan, so the delivered film is made before a correction",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": false,
+              "fromRecord": "records/delivered-artifact.film.json"
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "keepers",
+            "projectId": "sample-court-day",
+            "revision": 2,
+            "keeperIds": [
+              "k-01"
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "current": {
+          "sample-court-day": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 2
+          },
+          "other-court-day": {
+            "eventRevision": 1,
+            "syncRevision": 1,
+            "keeperCatalogRevision": 1
+          }
+        },
+        "plans": [
+          {
+            "planId": "coach-cut-serve",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "court-memories-final",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "match-broadcast-set-1",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait-clean",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          }
+        ],
+        "films": [
+          {
+            "artifactId": "film-court-memories",
+            "projectId": "sample-court-day",
+            "planId": "court-memories-final",
+            "status": "stale",
+            "label": "Made before a correction",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "keptAsVersion": true
+          }
+        ],
+        "stalePlanIds": [
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean"
+        ],
+        "staleFilmIds": [
+          "film-court-memories"
+        ]
+      },
+      "assert": {
+        "stalePlanIds": [
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean"
+        ],
+        "staleFilmIds": [
+          "film-court-memories"
+        ],
+        "filmReasons": {
+          "film-court-memories": [
+            "keeper-revision"
+          ]
+        }
+      }
+    },
+    {
+      "id": "keeper-then-event",
+      "why": "Two changes in order: keeper k-04, then a point correction; every plan is stale and each lists the reasons that apply",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": false,
+              "fromRecord": "records/delivered-artifact.film.json"
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "keepers",
+            "projectId": "sample-court-day",
+            "revision": 2,
+            "keeperIds": [
+              "k-04"
+            ]
+          },
+          {
+            "kind": "event",
+            "projectId": "sample-court-day",
+            "revision": 4
+          }
+        ]
+      },
+      "expect": {
+        "current": {
+          "sample-court-day": {
+            "eventRevision": 4,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 2
+          },
+          "other-court-day": {
+            "eventRevision": 1,
+            "syncRevision": 1,
+            "keeperCatalogRevision": 1
+          }
+        },
+        "plans": [
+          {
+            "planId": "coach-cut-serve",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision",
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-final",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "court-memories-storyboard",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision",
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision",
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "match-broadcast-set-1",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision",
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "event-revision",
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          }
+        ],
+        "films": [
+          {
+            "artifactId": "film-court-memories",
+            "projectId": "sample-court-day",
+            "planId": "court-memories-final",
+            "status": "stale",
+            "label": "Made before a correction",
+            "reasons": [
+              "event-revision"
+            ],
+            "keptAsVersion": true
+          }
+        ],
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "match-broadcast-set-1",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "staleFilmIds": [
+          "film-court-memories"
+        ]
+      },
+      "assert": {
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-final",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "match-broadcast-set-1",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "planReasons": {
+          "court-memories-final": [
+            "event-revision"
+          ],
+          "coach-cut-serve": [
+            "event-revision",
+            "keeper-revision"
+          ]
+        },
+        "current": {
+          "eventRevision": 4,
+          "syncRevision": 2,
+          "keeperCatalogRevision": 2
+        }
+      }
+    },
+    {
+      "id": "old-version-kept",
+      "why": "A film already made before an earlier correction stays a labelled version; a change that spares its plan neither deletes nor relabels anything",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": false,
+              "fromRecord": "records/delivered-artifact.film.json"
+            },
+            {
+              "artifactId": "film-court-memories-v1",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": true,
+              "fromRecord": null
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "keepers",
+            "projectId": "sample-court-day",
+            "revision": 2,
+            "keeperIds": [
+              "k-04"
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "current": {
+          "sample-court-day": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 2
+          },
+          "other-court-day": {
+            "eventRevision": 1,
+            "syncRevision": 1,
+            "keeperCatalogRevision": 1
+          }
+        },
+        "plans": [
+          {
+            "planId": "coach-cut-serve",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-final",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "court-memories-storyboard",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "court-memories-storyboard-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "match-broadcast-set-1",
+            "projectId": "sample-court-day",
+            "status": "current",
+            "reasons": [],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 2
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          },
+          {
+            "planId": "rally-pulse-portrait-clean",
+            "projectId": "sample-court-day",
+            "status": "stale",
+            "reasons": [
+              "keeper-revision"
+            ],
+            "bindings": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            }
+          }
+        ],
+        "films": [
+          {
+            "artifactId": "film-court-memories",
+            "projectId": "sample-court-day",
+            "planId": "court-memories-final",
+            "status": "current",
+            "label": null,
+            "reasons": [],
+            "keptAsVersion": true
+          },
+          {
+            "artifactId": "film-court-memories-v1",
+            "projectId": "sample-court-day",
+            "planId": "court-memories-final",
+            "status": "stale",
+            "label": "Made before a correction",
+            "reasons": [],
+            "keptAsVersion": true
+          }
+        ],
+        "stalePlanIds": [
+          "coach-cut-serve",
+          "court-memories-storyboard",
+          "court-memories-storyboard-clean",
+          "rally-pulse-portrait",
+          "rally-pulse-portrait-clean"
+        ],
+        "staleFilmIds": [
+          "film-court-memories-v1"
+        ]
+      },
+      "assert": {
+        "staleFilmIds": [
+          "film-court-memories-v1"
+        ],
+        "currentFilmIds": [
+          "film-court-memories"
+        ],
+        "filmLabels": {
+          "film-court-memories-v1": "Made before a correction",
+          "film-court-memories": null
+        },
+        "keptAsVersion": true
+      }
+    },
+    {
+      "id": "revision-must-increase",
+      "why": "Revisions only move forward: event revision 3 is already current",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "stale": false,
+              "fromRecord": "records/delivered-artifact.film.json"
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "event",
+            "projectId": "sample-court-day",
+            "revision": 3
+          }
+        ]
+      },
+      "expect": {
+        "rejectCode": "revisionNotIncreasing"
+      },
+      "assert": {
+        "rejectCode": "revisionNotIncreasing"
+      }
+    },
+    {
+      "id": "film-without-its-plan",
+      "why": "A film whose plan is not listed cannot be judged",
+      "input": {
+        "state": {
+          "projects": {
+            "sample-court-day": {
+              "eventRevision": 3,
+              "syncRevision": 2,
+              "keeperCatalogRevision": 1
+            },
+            "other-court-day": {
+              "eventRevision": 1,
+              "syncRevision": 1,
+              "keeperCatalogRevision": 1
+            }
+          },
+          "plans": [
+            {
+              "planId": "coach-cut-serve",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "dacab0273a0d96436b11f827747617c6dfb7b4ec5e63e9df21bfaa2efd34c95a",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.coach-cut-serve.json"
+            },
+            {
+              "planId": "court-memories-final",
+              "planRevision": 2,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4d768ced3b6181944a086e7a79cfab5d7e95f86730d5262a58fca57b290a50b3",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-final.json"
+            },
+            {
+              "planId": "court-memories-storyboard",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "030d655bcfb3a592623276ad8774319edb085d1fd46164f8347e8aa9c15490f7",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.json"
+            },
+            {
+              "planId": "court-memories-storyboard-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "83048d6b1b83c623df2cdc0a16d49531a3cf3636d93fac9f5788cf27f6b9d5bf",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "broll-1",
+                "broll-2",
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-01",
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.court-memories-storyboard.clean.json"
+            },
+            {
+              "planId": "match-broadcast-set-1",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "b434dd537fb83788942e38a117d52c41e223a98f1e76145b33875a9608ad90e9",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [],
+              "fromRecord": "records/edit-plan.match-broadcast-set-1.json"
+            },
+            {
+              "planId": "rally-pulse-portrait",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "8cfea1fb644319c7e7788f59733fd0ec1c09c80fcf7ae7d315f6db64cb04d1ee",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.json"
+            },
+            {
+              "planId": "rally-pulse-portrait-clean",
+              "planRevision": 1,
+              "projectId": "sample-court-day",
+              "editPlanSha256": "4bad0087e3cbcd74ca46aace990de3e7700f57f08a61c6e7dcca1796d944deae",
+              "bindings": {
+                "eventRevision": 3,
+                "syncRevision": 2,
+                "keeperCatalogRevision": 1
+              },
+              "sourceIds": [
+                "camera-1",
+                "camera-2"
+              ],
+              "keeperIds": [
+                "k-02",
+                "k-03",
+                "k-04"
+              ],
+              "fromRecord": "records/edit-plan.rally-pulse-portrait.clean.json"
+            }
+          ],
+          "films": [
+            {
+              "artifactId": "film-court-memories",
+              "projectId": "sample-court-day",
+              "editPlanSha256": "552739480381c35b64fe1f3b6d53679fae0e4e6ed8c4feb2604d8d1d7435a50c",
+              "stale": false,
+              "fromRecord": null
+            }
+          ]
+        },
+        "changes": [
+          {
+            "kind": "event",
+            "projectId": "sample-court-day",
+            "revision": 4
+          }
+        ]
+      },
+      "expect": {
+        "rejectCode": "unknownPlan"
+      },
+      "assert": {
+        "rejectCode": "unknownPlan"
+      }
+    }
+  ]
+}

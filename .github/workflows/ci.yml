@@ -42,6 +42,30 @@ jobs:
           BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
         run: scripts/l10n/check.sh
 
+  # Media fixtures (T10): render every clip with ffmpeg on Ubuntu (cached by the renderer's hash), decode it
+  # back and require each clip's decoded-frame signature hash and ground truth to equal the committed files,
+  # then validate the shared contracts, including ground truth and benchmark records (re-scored in Python).
+  media-fixtures:
+    name: media-fixtures
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg
+          ffmpeg -hide_banner -version | head -1
+      - name: Restore rendered media
+        uses: actions/cache@v4
+        with:
+          path: .cache/media
+          key: media-${{ runner.os }}-${{ hashFiles('scripts/media/**/*.py') }}
+      - name: Render media fixtures and check decoded-frame hashes
+        run: python3 scripts/media/render.py --check
+      - name: Validate contracts (schemas, ground truth, benchmark records)
+        run: python3 scripts/spec/validate.py
+
   # Manual only: macOS minutes on a private repo are scarce (ADR-0006). Simulator UI suites run on
   # the build Mac and their evidence is attached to the PR instead.
   ios-app:
@@ -53,6 +77,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
         run: brew install xcodegen
+      - name: Render media fixtures (JovraMedia tests read them)
+        run: |
+          brew install ffmpeg
+          python3 scripts/media/render.py --check
       - name: swift test (JovraCore, JovraMedia)
         run: |
           swift test --package-path ios/Packages/JovraCore

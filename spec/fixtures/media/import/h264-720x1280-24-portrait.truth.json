@@ -1,0 +1,55 @@
+{
+  "audio": null,
+  "band": "synthetic",
+  "description": "H.264 High, native 720x1280 portrait pixels, 24 fps, no audio track.",
+  "duplicateOf": null,
+  "frameCode": {
+    "cells": 16,
+    "encodes": "frameIndex"
+  },
+  "id": "import/h264-720x1280-24-portrait",
+  "kind": "jovra.groundTruth",
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/import-c057f208a9012761/h264-720x1280-24fps-portrait.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "c057f208a9012761bda6be0460390c3397f4a0f33120eda86798dbd4edcfca73"
+  },
+  "schemaVersion": "1.0.0",
+  "seed": null,
+  "set": "import",
+  "signature": {
+    "columns": 9,
+    "decodedFramesSha256": "0cdcd1d4dca0f70322bf4e74c66e793378c8b18f3ac3464ae4b21b9b68eecbbf",
+    "frameCount": 48,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 24,
+    "rows": 16
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 1280,
+    "codedWidth": 720,
+    "displayHeight": 1280,
+    "displayWidth": 720,
+    "duration": {
+      "timescale": 1,
+      "value": 2
+    },
+    "fourCC": "avc1",
+    "frameCount": 48,
+    "frameRate": {
+      "den": 1,
+      "num": 24
+    },
+    "hdr": null,
+    "orientation": "portrait",
+    "rotationDegrees": 0,
+    "supported": true,
+    "variableFrameRate": false
+  }
+}

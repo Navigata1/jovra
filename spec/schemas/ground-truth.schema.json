@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA media fixture ground truth",
+  "description": "Exact facts about one rendered media fixture (scripts/media/render.py): what was encoded, what a probe must report, the expected decoded-frame signature hash, and any events with their exact times. The media itself is not committed; it renders into the git-ignored cache path named here, keyed by the renderer's source hash.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "set", "description", "band", "renderer", "media", "seed", "split", "duplicateOf", "video", "audio", "frameCode", "signature"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.groundTruth"},
+    "id": {"$ref": "#/$defs/truthId"},
+    "set": {"$ref": "#/$defs/setName"},
+    "description": {"type": "string", "minLength": 1, "maxLength": 300},
+    "band": {"enum": ["synthetic"], "description": "Rendered fixtures are synthetic; real footage never has committed ground truth here (docs/fixtures/real-footage.md)."},
+    "renderer": {
+      "type": "object",
+      "required": ["script", "sourceHash"],
+      "additionalProperties": false,
+      "properties": {
+        "script": {"const": "scripts/media/render.py"},
+        "sourceHash": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": ["path", "container"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"type": "string", "pattern": "^\\.cache/media/[A-Za-z0-9]+-[0-9a-f]{16}/[A-Za-z0-9][A-Za-z0-9._-]{0,120}$", "description": "Repository-relative path of the rendered file."},
+        "container": {"enum": ["mp4", "mov"]}
+      }
+    },
+    "seed": {"type": ["integer", "null"], "minimum": 0},
+    "split": {"enum": ["tuning", "heldOut", null], "description": "Benchmark split. Gating runs accept heldOut clips only."},
+    "duplicateOf": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/truthId"}]},
+    "video": {
+      "type": "object",
+      "required": ["codec", "fourCC", "bitDepth", "codedWidth", "codedHeight", "rotationDegrees", "displayWidth", "displayHeight", "orientation", "frameRate", "variableFrameRate", "frameCount", "duration", "hdr", "supported"],
+      "additionalProperties": false,
+      "properties": {
+        "codec": {"enum": ["h264", "hevc", "ffv1"]},
+        "fourCC": {"enum": ["avc1", "hvc1", "FFV1"]},
+        "bitDepth": {"enum": [8, 10]},
+        "codedWidth": {"type": "integer", "minimum": 2, "multipleOf": 2},
+        "codedHeight": {"type": "integer", "minimum": 2, "multipleOf": 2},
+        "rotationDegrees": {"enum": [0, 90, 180, 270], "description": "Clockwise display rotation from the track matrix."},
+        "displayWidth": {"type": "integer", "minimum": 2},
+        "displayHeight": {"type": "integer", "minimum": 2},
+        "orientation": {"enum": ["landscape", "portrait", "square"]},
+        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate", "description": "Nominal rate: the rate of the median frame duration. A probe must report this, never 1 / the shortest frame."},
+        "variableFrameRate": {"type": "boolean", "description": "Frame durations vary around frameRate (as phone originals do); frameCount / frameRate is still the duration."},
+        "frameCount": {"type": "integer", "minimum": 1},
+        "duration": {"$ref": "#/$defs/rationalTime"},
+        "hdr": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["transfer", "primaries", "matrix"],
+              "additionalProperties": false,
+              "properties": {
+                "transfer": {"enum": ["hlg", "pq"]},
+                "primaries": {"const": "bt2020"},
+                "matrix": {"const": "bt2020nc"}
+              }
+            }
+          ]
+        },
+        "supported": {"type": "boolean", "description": "False for a codec the apps must refuse to import, with a reason."}
+      },
+      "allOf": [
+        {"if": {"properties": {"hdr": {"type": "object"}}}, "then": {"properties": {"bitDepth": {"const": 10}, "codec": {"const": "hevc"}}}},
+        {"if": {"properties": {"codec": {"const": "h264"}}}, "then": {"properties": {"fourCC": {"const": "avc1"}}}},
+        {"if": {"properties": {"codec": {"const": "hevc"}}}, "then": {"properties": {"fourCC": {"const": "hvc1"}}}},
+        {"if": {"properties": {"codec": {"const": "ffv1"}}}, "then": {"properties": {"fourCC": {"const": "FFV1"}, "supported": {"const": false}}}}
+      ]
+    },
+    "audio": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["codec", "sampleRate", "channels", "sampleCount"],
+          "additionalProperties": false,
+          "properties": {
+            "codec": {"const": "aac"},
+            "sampleRate": {"const": 48000},
+            "channels": {"enum": [1, 2]},
+            "sampleCount": {"type": "integer", "minimum": 1}
+          }
+        }
+      ]
+    },
+    "frameCode": {
+      "type": "object",
+      "required": ["cells", "encodes"],
+      "additionalProperties": false,
+      "description": "Every frame burns in its own index: the first `cells` signature cells in row-major order, most significant bit first, white for 1.",
+      "properties": {
+        "cells": {"const": 16},
+        "encodes": {"const": "frameIndex"}
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["method", "columns", "rows", "minimumMargin", "frameCount", "decodedFramesSha256"],
+      "additionalProperties": false,
+      "description": "jovra.cellLuma.v1 (scripts/media/jovra_media/signature.py): per cell of the coded picture, the mean luma of its central half reduced to 8 bits and quantized to mean // 64; SHA-256 over every decoded frame's levels in presentation order.",
+      "properties": {
+        "method": {"const": "jovra.cellLuma.v1"},
+        "columns": {"type": "integer", "minimum": 1, "maximum": 64},
+        "rows": {"type": "integer", "minimum": 1, "maximum": 64},
+        "minimumMargin": {"type": "integer", "minimum": 12, "description": "Smallest distance, in 8-bit code values, between any source cell mean and a quantization boundary."},
+        "frameCount": {"type": "integer", "minimum": 1},
+        "decodedFramesSha256": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "time", "sample", "frame"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {"enum": ["hit"]},
+          "time": {"$ref": "#/$defs/rationalTime"},
+          "sample": {"type": "integer", "minimum": 0, "description": "Onset as a 48 kHz sample index; time = sample / 48000."},
+          "frame": {"type": "integer", "minimum": 0, "description": "Video frame on screen at the onset: floor(time x frame rate)."}
+        }
+      }
+    },
+    "court": {
+      "type": "object",
+      "required": ["space", "order", "points"],
+      "additionalProperties": false,
+      "properties": {
+        "space": {"const": "displayPixels"},
+        "order": {"const": "topLeft,topRight,bottomRight,bottomLeft"},
+        "points": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["x", "y"],
+            "additionalProperties": false,
+            "properties": {"x": {"type": "integer", "minimum": 0}, "y": {"type": "integer", "minimum": 0}}
+          }
+        }
+      }
+    },
+    "flashCell": {
+      "type": "object",
+      "required": ["column", "row"],
+      "additionalProperties": false,
+      "description": "Signature cell that turns white on the frame of each event onset and the frame after it.",
+      "properties": {"column": {"type": "integer", "minimum": 0}, "row": {"type": "integer", "minimum": 0}}
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"split": {"enum": ["tuning", "heldOut"]}}}, "then": {"properties": {"seed": {"type": "integer"}}, "required": ["events"]}}
+  ],
+  "$defs": {
+    "truthId": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*/[a-z0-9][a-z0-9-]{0,63}$"},
+    "setName": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$"},
+    "rationalTime": {
+      "description": "A media time as value/timescale seconds, reduced (ADR: media times are stored as rationals).",
+      "type": "object",
+      "required": ["value", "timescale"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"type": "integer", "minimum": 0},
+        "timescale": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

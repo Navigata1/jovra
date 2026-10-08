@@ -1,0 +1,48 @@
+delete-body:progress.compare: RESULT: FAIL; 22 FAIL lines
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#sample-serve-practice: reference output differs from the stored expectation: {}
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#later-method-version-changed: reference output differs from the stored expectation: {}
+delete-body:keepers.candidates: RESULT: FAIL; 27 FAIL lines
+    FAIL spec/studio/fixtures/vectors/keepers.json#jon-vs-alex-one-per-point: reference output differs from the stored expectation
+    FAIL spec/studio/fixtures/vectors/keepers.json#voided-point-is-not-a-keeper: reference output differs from the stored expectation
+delete-body:staleness.propagate: RESULT: FAIL; 10 FAIL lines
+    FAIL spec/studio/fixtures/vectors/staleness.json#event-revision-stales-the-project: reference output differs from the stored expectation
+    FAIL spec/studio/fixtures/vectors/staleness.json#sync-camera-2-spares-a-camera-1-plan: reference output differs from the stored expectation
+pre-roll-1s (regenerated): RESULT: FAIL; 12 FAIL lines
+    FAIL spec/studio/fixtures/vectors/keepers.json#jon-vs-alex-one-per-point: k-bfee0b5d-d021-59e7-a55c-9e1f2bb1ab46 session {'startUs': 3227736000, 'endUs': 3240000000}, hand value [3227236000, 3240000000]
+    FAIL spec/studio/fixtures/vectors/keepers.json#voided-point-is-not-a-keeper: k-v-3 session {'startUs': 39000000, 'endUs': 46500000}, hand value [38500000, 46500000]
+estimated-never-absorbed (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/keepers.json#estimated-hit-inside-reviewed-window: k-e-1 contacts [[31000000, 'reviewed', None, 30750000, 31250000], [31100000, 'estimated', 'Estimated', 30850000, 31350000]], hand value [[3100000
+estimated-narrower-protection (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/keepers.json#estimated-hit-outside-is-labelled: k-e-1 contacts [[31000000, 'reviewed', None, 30750000, 31250000], [32000000, 'estimated', 'Estimated', 31875000, 32125000]], hand value [[31000000, 
+no-cross-angle-dedupe (regenerated): RESULT: FAIL; 3 FAIL lines
+    FAIL spec/studio/fixtures/vectors/keepers.json#same-point-two-angles-one-keeper: k-p-003 session {'startUs': 10700000, 'endUs': 22100000}, hand value [10500000, 22100000]
+    FAIL spec/studio/fixtures/vectors/keepers.json#same-point-two-angles-one-keeper: k-p-003 seen from differs
+needs-review-angle-offered (regenerated): RESULT: FAIL; 2 FAIL lines
+    FAIL spec/studio/fixtures/vectors/keepers.json#same-point-two-angles-one-keeper: k-p-003 views differ from ['camera-1', 'camera-2']
+    FAIL spec/studio/fixtures/vectors/keepers.json#primary-angle-missing: k-e-1 views differ from ['camera-2']
+rally-pulse-ignores-pressure (regenerated): RESULT: FAIL; 3 FAIL lines
+    FAIL spec/studio/fixtures/vectors/keepers.json#rally-pulse-order: order: ['k-p2', 'k-p5', 'k-p1', 'k-p4', 'k-p6'], hand value ['k-p4', 'k-p6', 'k-p2', 'k-p5', 'k-p1']
+    FAIL spec/studio/fixtures/vectors/keepers.json#rally-pulse-limit: order: ['k-p2', 'k-p5', 'k-p1'], hand value ['k-p4', 'k-p6', 'k-p2']
+exclusion-ignored (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/keepers.json#excluded-keeper-never-offered: order: ['k-p1', 'k-p2', 'k-p3', 'k-p4', 'k-p5', 'k-p6'], hand value ['k-p1', 'k-p3', 'k-p4', 'k-p5', 'k-p6']
+delta-from-exact-fractions (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#delta-from-displayed-integers: deltaPercentagePoints: 19, hand value 18
+method-version-ignored (regenerated): RESULT: FAIL; 5 FAIL lines
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#later-method-version-changed: comparable: True, hand value False
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#later-method-version-changed: claim: 'change', hand value 'chronology'
+selection-rule-ignored (regenerated): RESULT: FAIL; 5 FAIL lines
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#user-chosen-one-side: comparable: True, hand value False
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#user-chosen-one-side: reasons: [], hand value ['differingSelection']
+half-even-pct (regenerated): RESULT: FAIL; 4 FAIL lines
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#delta-from-displayed-integers: deltaPercentagePoints: 19, hand value 18
+    FAIL spec/studio/fixtures/vectors/progress-comparison.json#delta-from-displayed-integers: pct: [12, 31], hand value [13, 31]
+sync-change-stales-every-plan (regenerated): RESULT: FAIL; 13 FAIL lines
+    FAIL spec/studio/fixtures/vectors/staleness.json#sync-camera-2-spares-a-camera-1-plan: stalePlanIds: ['coach-cut-serve', 'court-memories-final', 'court-memories-storyboard', 'court-memories-storyboard-clean', 'match-broadcast-set-
+    FAIL spec/studio/fixtures/vectors/staleness.json#sync-camera-2-spares-a-camera-1-plan: current plans differ
+event-change-crosses-projects (regenerated): RESULT: FAIL; 5 FAIL lines
+    FAIL spec/studio/fixtures/vectors/staleness.json#event-revision-stales-the-project: stalePlanIds: ['coach-cut-serve', 'court-memories-final', 'court-memories-storyboard', 'court-memories-storyboard-clean', 'match-broadcast-set-1',
+    FAIL spec/studio/fixtures/vectors/staleness.json#event-revision-stales-the-project: staleFilmIds: ['film-court-memories', 'film-other'], hand value ['film-court-memories']
+film-dropped-when-stale (regenerated): RESULT: FAIL; 6 FAIL lines
+    FAIL spec/studio/fixtures/vectors/staleness.json#event-revision-stales-the-project: a film was dropped
+    FAIL spec/studio/fixtures/vectors/staleness.json#sync-camera-2-spares-a-camera-1-plan: a film was dropped
+caught 17 of 17 mutations

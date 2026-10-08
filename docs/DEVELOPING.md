@@ -53,12 +53,14 @@ All scripts live in `scripts/ios/` and keep derived data in `.derivedData/` at t
 | Command | What it does |
 |---|---|
 | `scripts/ios/generate.sh` | Generates `ios/Jovra.xcodeproj` from `ios/project.yml`. |
-| `scripts/ios/test.sh` | `swift test` for JovraCore and JovraMedia, then `xcodebuild test` for `JovraTests` on the simulator; prints per-class counts and the `.xcresult` path. |
+| `scripts/ios/test.sh` | `swift test` for JovraCore and JovraMedia, then `xcodebuild test` for `JovraTests` on the simulator (renders the media fixtures with `render.py --check` first); prints per-class counts and the `.xcresult` path. |
 | `scripts/ios/ui-test.sh [-only-testing JovraUITests/<Class>[/<test>]]... [ticket]` | With `-only-testing` (repeatable), runs only those classes or tests, so a ticket shows exactly its own. Without it, runs all of `JovraUITests`, then a system-appearance pass with the simulator in light and in dark (restored afterwards). Prints per-class counts and the `.xcresult` path, and exports every named screenshot to `evidence/ios/<ticket>/` (default: branch name minus `ticket/` and the `t` before the number, so `ticket/t06-x` gives `06-x`). |
 | `scripts/ios/check-build-config.sh` | Builds the app unsigned (no team) without and with a test Drive xcconfig; checks the entitlements in the binary, every v1 Info.plist key, that every URL type registers one valid (non-empty) scheme, the unconfigured (placeholder) and the configured Drive client, and that the unsigned build installs and runs. |
 | `scripts/ios/side_by_side.py evidence/ios/<ticket>` | Pairs `sNN-*` screenshots with reference PNG NN and writes `side-by-side.html`; exits non-zero until every pair has a reviewer line in `reviews.txt`. |
 | `scripts/ios/xcresult-summary.py <bundle.xcresult>` | Per-class passed/failed/skipped/expected-failure (XCTExpectFailure) counts, so every test case is counted; the device and the bundle path. |
 | `scripts/l10n/check.sh` | The localization tools' tests, the literal-string lint, the copy lint and (with `BRANCH` and `BASE`) the String Catalog ownership check. CI job `l10n`. |
+| `python3 scripts/media/render.py [--check]` | Renders the media fixtures (frame counters, fixture camera, import set, harness clips) into `.cache/media/` and writes their ground truth; `--check` fails unless the committed ground truth and decoded-frame hashes are reproduced. Needs ffmpeg. See `scripts/media/README.md`. `test.sh` runs `--check` first (it never rewrites committed truth). |
+| `swift run --package-path ios/Packages/JovraMedia jovra-benchmark run ...` | Runs a registered estimator through the benchmark harness and writes a benchmark record (`scripts/media/README.md`). |
 | `scripts/ios/render-app-icon.sh [proof.png]` | Re-renders `AppIcon-1024.png` from `BrandGeometry.swift` (and optionally a brand proof sheet). Run after changing the mark. |
 
 Single package directly: `swift test --package-path ios/Packages/JovraCore`.
@@ -267,6 +269,8 @@ it when you finish a ticket: `rm -rf .derivedData`.
 - `l10n`: `scripts/l10n/check.sh` on Ubuntu: the localization and side-by-side tools' own tests
   (negative tests included), the literal-string lint, the copy lint, and on pull requests the String
   Catalog ownership check against the base branch.
+- `media-fixtures`: on Ubuntu, `render.py --check` (renders with apt's ffmpeg and requires the committed
+  decoded-frame hashes) and `scripts/spec/validate.py`.
 - `ios-app (manual)`: `workflow_dispatch` only. On macOS it runs both package test suites, generates
   the project, builds the app and runs `JovraTests`. Simulator UI suites run on the build Mac, and
   their evidence goes on the PR (ADR-0006).
