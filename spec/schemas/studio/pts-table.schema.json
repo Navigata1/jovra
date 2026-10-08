@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio PTS table (jovra.pts-table/1)",
+  "description": "The table kept beside one render proxy: the original's decoded presentation-timestamp index (run-length encoded, rational timescale), the render proxy's constant-frame-rate clock (track timescale lcm(fps num, 1000), zero start), its geometry (rotation baked exactly once, no display rotation left) and colour (SDR; an HDR original declares its tone-map method), and the run-length map from every proxy frame to the original frame it shows. Its canonical SHA-256 is what a SourceManifest render proxy binds as ptsTableSha256. The reference (spec/reference/studio/normalization.py) rebuilds the map from the index with the one half-up rule and requires identical runs.",
+  "type": "object",
+  "required": ["schemaVersion", "sample", "sourceId", "normalizerVersion", "original", "proxy", "runs"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.pts-table/1"},
+    "sample": {"$ref": "studio-common.schema.json#/$defs/sample"},
+    "sourceId": {"$ref": "studio-common.schema.json#/$defs/id"},
+    "normalizerVersion": {"type": "string", "pattern": "^[a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "original": {
+      "type": "object",
+      "required": ["timescale", "nominalFps", "pts", "endPts", "frameCount", "width", "height", "rotationDegrees",
+                   "hdr", "transfer"],
+      "additionalProperties": false,
+      "properties": {
+        "timescale": {
+          "description": "The original video track's media timescale; every PTS below is an integer on it.",
+          "$ref": "studio-common.schema.json#/$defs/posInt"
+        },
+        "nominalFps": {"$ref": "studio-common.schema.json#/$defs/fps"},
+        "pts": {
+          "description": "The decoded presentation timestamps in presentation order, run-length encoded: a run is count frames at value, value + step, value + 2 step, ... (frame indexes are positions in this order, which is what an embedded frame ID encodes). Canonical greedy form; see the module page.",
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/ptsRun"}
+        },
+        "endPts": {
+          "description": "The end of the last frame (its PTS plus its duration), on the original timescale.",
+          "$ref": "studio-common.schema.json#/$defs/nonNegInt"
+        },
+        "frameCount": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "width": {"$ref": "#/$defs/edge"},
+        "height": {"$ref": "#/$defs/edge"},
+        "rotationDegrees": {"enum": [0, 90, 180, 270]},
+        "hdr": {"type": "boolean"},
+        "transfer": {"enum": ["bt709", "srgb", "hlg", "pq", "unknown"]}
+      }
+    },
+    "proxy": {
+      "type": "object",
+      "required": ["fps", "timescale", "frameDurationTicks", "startPts", "frameCount", "width", "height",
+                   "rotationAppliedDegrees", "displayRotationDegrees", "transfer", "bitDepth", "toneMap", "upconverted"],
+      "additionalProperties": false,
+      "properties": {
+        "fps": {"$ref": "studio-common.schema.json#/$defs/fps"},
+        "timescale": {
+          "description": "Track timescale, exactly lcm(fps.num, 1000): 3000 for 24, 30, 60 and 120 fps, 30000 for 30000/1001, 1000 for 25.",
+          "$ref": "studio-common.schema.json#/$defs/posInt"
+        },
+        "frameDurationTicks": {
+          "description": "timescale * fps.den / fps.num, an integer by construction; proxy frame k has PTS k * frameDurationTicks.",
+          "$ref": "studio-common.schema.json#/$defs/posInt"
+        },
+        "startPts": {"description": "Render proxies start at zero.", "const": 0},
+        "frameCount": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "width": {"$ref": "#/$defs/edge"},
+        "height": {"$ref": "#/$defs/edge"},
+        "rotationAppliedDegrees": {
+          "description": "The rotation baked into the pixels, exactly the original's rotationDegrees.",
+          "enum": [0, 90, 180, 270]
+        },
+        "displayRotationDegrees": {
+          "description": "Rotation left in the container (track matrix or side data). Always 0: a kept rotation would be applied a second time by players.",
+          "const": 0
+        },
+        "transfer": {"const": "bt709"},
+        "bitDepth": {"const": 8},
+        "toneMap": {
+          "description": "Required exactly when the original is HDR; null for an SDR original.",
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/toneMap"}]
+        },
+        "upconverted": {
+          "description": "True exactly when the proxy rate is above the original's nominal rate (frames are duplicated; the angle is labelled with its source rate).",
+          "type": "boolean"
+        }
+      }
+    },
+    "runs": {
+      "description": "Proxy frame -> original frame, run-length encoded in canonical greedy form: proxy frames proxyFrame .. proxyFrame + count - 1 show original frames originalFrame + j * originalStep (step 0 holds a frame). originalPts is the PTS of originalFrame.",
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/slotRun"}
+    }
+  },
+  "$defs": {
+    "edge": {"type": "integer", "minimum": 2, "maximum": 7680},
+    "ptsRun": {
+      "type": "object",
+      "required": ["value", "step", "count"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "step": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "count": {"$ref": "studio-common.schema.json#/$defs/posInt"}
+      }
+    },
+    "slotRun": {
+      "type": "object",
+      "required": ["proxyFrame", "count", "originalFrame", "originalStep", "originalPts"],
+      "additionalProperties": false,
+      "properties": {
+        "proxyFrame": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "count": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "originalFrame": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "originalStep": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "originalPts": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"}
+      }
+    },
+    "toneMap": {
+      "type": "object",
+      "required": ["method", "params", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "description": "ffmpeg zscale+tonemap, ffmpeg libplacebo, Apple VideoToolbox/AVFoundation, or Media3 Transformer's OpenGL tone map (multicam-sync research 5.4).",
+          "enum": ["ffmpeg-zscale-tonemap", "ffmpeg-libplacebo", "avfoundation-videotoolbox", "media3-opengl"]
+        },
+        "params": {
+          "description": "The method's parameters as one canonical string, so every angle of a film can be checked for the same method and parameters.",
+          "type": "string",
+          "pattern": "^[a-z0-9=.,:_-]{1,120}$"
+        },
+        "version": {"type": "string", "pattern": "^[a-z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    }
+  }
+}

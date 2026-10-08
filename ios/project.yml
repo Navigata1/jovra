@@ -3,7 +3,7 @@ name: Jovra
 options:
   bundleIdPrefix: com.islanddevcrew
   deploymentTarget:
-    iOS: "17.0"
+    iOS: "18.0"
   createIntermediateGroups: true
   developmentLanguage: en
 settings:
@@ -14,6 +14,9 @@ settings:
     CURRENT_PROJECT_VERSION: "1"
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     DEVELOPMENT_TEAM: ""
+    # String Catalogs (one table per owned area, ios/Jovra/Resources/Localization).
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
 packages:
   JovraCore:
     path: Packages/JovraCore
@@ -28,6 +31,19 @@ targets:
     dependencies:
       - package: JovraCore
       - package: JovraMedia
+    # Drive OAuth client and feature switches; optionally includes the git-ignored Drive.xcconfig.
+    configFiles:
+      Debug: Config/Jovra.xcconfig
+      Release: Config/Jovra.xcconfig
+    # Every v1 key and capability lands here (T06) so feature tickets never edit the project.
+    # Both entitlements build and run on the simulator unsigned (no team); see docs/DEVELOPING.md.
+    entitlements:
+      path: Jovra/Resources/Jovra.entitlements
+      properties:
+        com.apple.developer.applesignin:
+          - Default
+        com.apple.developer.healthkit: true
+        com.apple.developer.healthkit.access: []
     info:
       path: Jovra/Resources/Info.plist
       properties:
@@ -52,6 +68,29 @@ targets:
         NSCameraUsageDescription: "JOVRA uses the camera to record your tennis sessions. Videos are saved on this device."
         NSMicrophoneUsageDescription: "Optional. JOVRA can use the microphone to capture audio for hit detection and voice notes. Recording works without it."
         NSPhotoLibraryAddUsageDescription: "JOVRA saves clips and exports you choose to your photo library."
+        NSHealthUpdateUsageDescription: "If you turn on Apple Health in Settings, JOVRA saves each tennis session as a workout with only its start time, end time and session reference, nothing else."
+        # Analysis and long exports: an overnight processing task on power (iOS 18+) and
+        # user-started continued-processing tasks (iOS 26+, identifiers ...continued.<job>).
+        BGTaskSchedulerPermittedIdentifiers:
+          - com.islanddevcrew.jovra.processing.overnight
+          - com.islanddevcrew.jovra.continued.*
+        UIBackgroundModes:
+          - processing
+        CFBundleURLTypes:
+          # Deep links for App Intents and Shortcuts ("Start singles recording", "Show last match").
+          - CFBundleURLName: com.islanddevcrew.jovra.deeplink
+            CFBundleTypeRole: Viewer
+            CFBundleURLSchemes:
+              - jovra
+          # Google Drive OAuth redirect: the reversed client id (an inert placeholder until Drive.xcconfig exists).
+          - CFBundleURLName: com.islanddevcrew.jovra.drive-oauth
+            CFBundleTypeRole: Viewer
+            CFBundleURLSchemes:
+              - $(JOVRA_DRIVE_REVERSED_CLIENT_ID)
+        JovraDriveClientID: $(JOVRA_DRIVE_CLIENT_ID)
+        JovraDriveRedirectScheme: $(JOVRA_DRIVE_REVERSED_CLIENT_ID)
+        JovraDriveXcconfigLoaded: $(JOVRA_DRIVE_XCCONFIG_LOADED)
+        JovraAppleSignInEnabled: $(JOVRA_APPLE_SIGN_IN_ENABLED)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra
@@ -80,6 +119,8 @@ targets:
     platform: iOS
     sources:
       - path: JovraUITests
+      # The launch-argument contract, shared with the app so tests and app cannot drift apart.
+      - path: Jovra/Platform/LaunchConfiguration/LaunchConfiguration.swift
     dependencies:
       - target: Jovra
     settings:

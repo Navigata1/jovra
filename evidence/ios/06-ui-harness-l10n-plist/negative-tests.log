@@ -1,0 +1,243 @@
+$ python3 -m unittest (scripts/l10n/tests, scripts/ios/tests), then both lints over the shell
+test_catalogs_outside_the_localization_folder_and_non_ticket_branches_fail (tests.test_catalog_ownership.CatalogOwnershipTests.test_catalogs_outside_the_localization_folder_and_non_ticket_branches_fail) ... ok
+test_changes_without_catalogs_always_pass (tests.test_catalog_ownership.CatalogOwnershipTests.test_changes_without_catalogs_always_pass) ... ok
+test_pr_fixture_editing_another_areas_table_fails (tests.test_catalog_ownership.CatalogOwnershipTests.test_pr_fixture_editing_another_areas_table_fails) ... ok
+test_pr_fixture_editing_its_own_table_passes (tests.test_catalog_ownership.CatalogOwnershipTests.test_pr_fixture_editing_its_own_table_passes) ... ok
+test_the_localization_owner_may_edit_any_table (tests.test_catalog_ownership.CatalogOwnershipTests.test_the_localization_owner_may_edit_any_table) ... ok
+test_the_most_specific_owned_area_owns_a_table (tests.test_catalog_ownership.CatalogOwnershipTests.test_the_most_specific_owned_area_owns_a_table) ... ok
+test_a_seeded_line_call_fails (tests.test_copy_lint.CopyLintTests.test_a_seeded_line_call_fails) ... ok
+test_an_entry_comment_can_allow_one_rule_with_a_reason (tests.test_copy_lint.CopyLintTests.test_an_entry_comment_can_allow_one_rule_with_a_reason) ... ok
+test_every_banned_term (tests.test_copy_lint.CopyLintTests.test_every_banned_term) ... ok
+test_every_catalog_in_the_app_passes (tests.test_copy_lint.CopyLintTests.test_every_catalog_in_the_app_passes) ... ok
+test_honest_wording_passes (tests.test_copy_lint.CopyLintTests.test_honest_wording_passes) ... ok
+test_keys_are_checked_as_well_as_values (tests.test_copy_lint.CopyLintTests.test_keys_are_checked_as_well_as_values) ... ok
+test_a_file_can_opt_out_with_a_reason (tests.test_literal_lint.LiteralLintTests.test_a_file_can_opt_out_with_a_reason) ... ok
+test_a_literal_seeded_into_a_copy_of_the_shell_fails (tests.test_literal_lint.LiteralLintTests.test_a_literal_seeded_into_a_copy_of_the_shell_fails) ... ok
+test_accepts_a_literal_key_with_an_explicit_table (tests.test_literal_lint.LiteralLintTests.test_accepts_a_literal_key_with_an_explicit_table) ... ok
+test_accepts_verbatim_text_and_strings_without_letters (tests.test_literal_lint.LiteralLintTests.test_accepts_verbatim_text_and_strings_without_letters) ... ok
+test_flags_a_hard_coded_text_literal (tests.test_literal_lint.LiteralLintTests.test_flags_a_hard_coded_text_literal) ... ok
+test_flags_controls_modifiers_and_labelled_arguments (tests.test_literal_lint.LiteralLintTests.test_flags_controls_modifiers_and_labelled_arguments) ... ok
+test_flags_display_property_defaults (tests.test_literal_lint.LiteralLintTests.test_flags_display_property_defaults) ... ok
+test_flags_literals_returned_by_a_display_property (tests.test_literal_lint.LiteralLintTests.test_flags_literals_returned_by_a_display_property) ... ok
+test_ignores_previews_and_marked_lines (tests.test_literal_lint.LiteralLintTests.test_ignores_previews_and_marked_lines) ... ok
+test_the_shell_passes (tests.test_literal_lint.LiteralLintTests.test_the_shell_passes) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.036s
+
+OK
+test_a_pair_without_a_reviewer_line_fails_and_writes_no_page (tests.test_side_by_side.SideBySideTests.test_a_pair_without_a_reviewer_line_fails_and_writes_no_page) ... ok
+test_a_placeholder_reviewer_line_does_not_count (tests.test_side_by_side.SideBySideTests.test_a_placeholder_reviewer_line_does_not_count) ... ok
+test_a_screen_number_without_a_reference_is_an_error (tests.test_side_by_side.SideBySideTests.test_a_screen_number_without_a_reference_is_an_error) ... ok
+test_every_pair_reviewed_writes_the_page (tests.test_side_by_side.SideBySideTests.test_every_pair_reviewed_writes_the_page) ... ok
+test_pairs_screenshots_with_references_by_screen_number (tests.test_side_by_side.SideBySideTests.test_pairs_screenshots_with_references_by_screen_number) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.006s
+
+OK
+literal lint: 0 violation(s) in 27 Swift file(s)
+exit 0
+copy lint: 0 finding(s) in 9 catalog(s)
+exit 0
+
+=== Negative 1: literal lint on a copy of the shell with a seeded Text literal
+Jovra/Features/Home/HomeView.swift:105: hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:)): Text("Seeded literal")
+literal lint: 1 violation(s) in 27 Swift file(s)
+exit 1  (expected 1)
+
+=== Negative 2: copy lint on a copy of Home.xcstrings with a seeded "line call" string
+Home.xcstrings: “Line call: out”: line-call: “Line call: out” (no officiating-grade line calls (CLAUDE.md rule 1))
+copy lint: 1 finding(s) in 1 catalog(s)
+exit 1  (expected 1)
+
+=== Negative 3: String Catalog ownership on the PR fixture (T23 edits Home, owned by T19)
+{
+  "description": "T23 (framing) edits Home's table, which belongs to T19: the check must fail.",
+  "branch": "ticket/t23-framing-calibration",
+  "changed": [
+    "ios/Jovra/Features/Capture/Framing/FramingView.swift",
+    "ios/Jovra/Resources/Localization/Capture.Framing.xcstrings",
+    "ios/Jovra/Resources/Localization/Home.xcstrings"
+  ]
+}
+ios/Jovra/Resources/Localization/Home.xcstrings: table Home belongs to T19 (ios/Jovra/Features/Home), not T23
+catalog ownership: 2 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 1 problem(s)
+exit 1  (expected 1)
+--- the passing fixture (T23 edits only Capture.Framing)
+catalog ownership: 1 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 0 problem(s)
+exit 0  (expected 0)
+
+=== Negative 4: side-by-side generator with a pair lacking a reviewer line
+side-by-side: 1 of 2 pair(s) have no reviewer line in /privateevidence/ios/t19-home-dashboard/reviews.txt.
+Compare each pair, then add one line per screenshot, for example:
+  s03-dark-home: <reviewer> — <verdict and notes against 03-home.png>
+exit 2  (expected 2)
+files: reviews.txt s03-dark-home.png s03-light-home.png 
+--- after adding the missing line
+side-by-side: 2 reviewed pair(s) -> /privateevidence/ios/t19-home-dashboard/side-by-side.html
+exit 0  (expected 0)
+files: reviews.txt s03-dark-home.png s03-light-home.png side-by-side.html 
+
+=== Verifier round 1 fixes (2026-10-07, simulator JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22) ===
+
+--- RED: tab bar textClipped exemption removed, new pseudo-locale tests, before the tab bar fix ---
+Total: 0 passed, 4 failed, 0 skipped in 1 classes (xcresult summary: 0 passed, 4 failed, 0 skipped; result Failed)
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): XCTAssertTrue failed - home: “8” bypassed the String Catalogs
+FAILED PseudoLocaleUITests/testTabTitlesFitInTheDoubleLengthPseudoLocale(): XCTAssertFalse failed - tab.sessions title is truncated on screen (home selected): “Sessions Sessi...”
+FAILED PseudoLocaleUITests/testTabTitlesFitInTheDoubleLengthPseudoLocaleAtLargestAccessibilityTextSize(): XCTAssertFalse failed - tab.home title is truncated on screen (home selected): “Home Ho...”
+FAILED PseudoLocaleUITests/testTabTitlesFitInThePseudoLocaleAtLargestAccessibilityTextSize(): Text clipped
+Total: 0 passed, 1 failed, 0 skipped in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): XCTAssertTrue failed - home: “6h 42m” bypassed the String Catalogs
+(discovery run with the audit line disabled, before the Profile fix:)
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): XCTAssertEqual failed: ("["home: “6h 42m”", "profile: “Questions: hello@islanddevcrew.com”"]") is not equal to ("[]") - visible text that bypassed the String Catalogs
+
+--- RED: reportedProblems test against a stub returning only problems ---
+Failing tests: LaunchConfigurationTests.reportedProblems()
+LaunchConfigurationTests.swift:103: Expectation failed: (unknown.reportedProblems → ["-reduceMotion: unknown value “sometimes” (expected YES or NO)"]) == (["-reduceMotion: unknown value “sometimes” (expected YES or NO)", "-startRoute: unknown route “nowhere” (expected home, sessions, record, insights, profile, capturePreview)"])
+
+--- Intermediate: 2 pt title gutter with two lines (rejected; audit flagged shrink and truncation) ---
+Total: 2 passed, 2 failed, 0 skipped in 1 classes (xcresult summary: 2 passed, 2 failed, 0 skipped; result Failed)
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): Text clipped
+FAILED PseudoLocaleUITests/testTabTitlesFitInThePseudoLocaleAtLargestAccessibilityTextSize(): Text clipped
+--- Intermediate: ViewThatFits one-line / caption2 / wrap (rejected; one-line titles flagged, English Sessions changed height at AX5) ---
+Total: 2 passed, 3 failed, 0 skipped in 2 classes (xcresult summary: 2 passed, 3 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): XCTAssertEqualWithAccuracy failed: ("59.33333333333326") is not equal to ("60.666666666666515") +/- ("0.5") - tab.sessions title stays on one line
+FAILED PseudoLocaleUITests/testEveryTabPassesTheTextClippedAuditInThePseudoLocale(): Text clipped
+FAILED PseudoLocaleUITests/testTabTitlesFitInTheDoubleLengthPseudoLocale(): Text clipped
+
+--- GREEN: final tab bar (3-line wrap, 2 pt column gap, 3 pt edge inset) ---
+Total: 4 passed, 1 failed, 0 skipped in 2 classes (xcresult summary: 4 passed, 1 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): Contrast failed
+(the remaining failure is the documented Contrast issue on this simulator; same test with the contrast audit temporarily excluded, not committed:)
+Total: 1 passed, 0 failed, 0 skipped in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+
+=== Verifier round 2 fixes (2026-10-07, simulator JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22) ===
+
+--- RED: the new l10n tool tests against the HEAD (ae20ecb) scripts ---
+ERROR: test_a_renamed_catalog_reports_the_deleted_table_too (tests.test_catalog_ownership.ChangedFilesTests.test_a_renamed_catalog_reports_the_deleted_table_too)
+ERROR: test_a_verbatim_text_with_a_banned_claim_fails (tests.test_copy_lint.SwiftCopyLintTests.test_a_verbatim_text_with_a_banned_claim_fails)
+ERROR: test_an_accessibility_label_with_a_banned_claim_fails (tests.test_copy_lint.SwiftCopyLintTests.test_an_accessibility_label_with_a_banned_claim_fails)
+ERROR: test_comments_are_not_copy_and_a_line_can_allow_one_rule_with_a_reason (tests.test_copy_lint.SwiftCopyLintTests.test_comments_are_not_copy_and_a_line_can_allow_one_rule_with_a_reason)
+ERROR: test_the_app_sources_pass_and_the_cli_covers_them (tests.test_copy_lint.SwiftCopyLintTests.test_the_app_sources_pass_and_the_cli_covers_them)
+FAIL: test_a_table_inside_a_nested_call_or_interpolation_does_not_count (tests.test_literal_lint.LiteralLintTests.test_a_table_inside_a_nested_call_or_interpolation_does_not_count)
+FAIL: test_flags_a_localized_string_key_built_from_a_literal (tests.test_literal_lint.LiteralLintTests.test_flags_a_localized_string_key_built_from_a_literal)
+FAIL: test_flags_alert_and_confirmation_dialog_titles (tests.test_literal_lint.LiteralLintTests.test_flags_alert_and_confirmation_dialog_titles)
+FAIL: test_flags_navigation_links_and_badges (tests.test_literal_lint.LiteralLintTests.test_flags_navigation_links_and_badges)
+Ran 31 tests in 0.189s
+FAILED (failures=4, errors=5)
+
+=== Negative 5: rename another ticket's table (scratch repo; git mv Home.xcstrings Capture.Framing.xcstrings on ticket/t23-framing-calibration)
+--- before (HEAD ae20ecb script, git's default rename detection):
+catalog ownership: 1 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 0 problem(s)
+exit 0  (the defect: 0)
+--- after (--no-renames):
+ios/Jovra/Resources/Localization/Home.xcstrings: table Home belongs to T19 (ios/Jovra/Features/Home), not T23
+catalog ownership: 2 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 1 problem(s)
+exit 1  (expected 1)
+
+=== Negative 6: copy lint on Swift verbatim text
+literal lint: 0 violation(s) in 1 Swift file(s)
+exit 0  (literal lint accepts verbatim text)
+Seeded.swift: “line 1”: rpm: “"Automatic line call, spin RPM 3000"” (no spin RPM (CLAUDE.md rule 1))
+Seeded.swift: “line 1”: line-call: “"Automatic line call, spin RPM 3000"” (no officiating-grade line calls (CLAUDE.md rule 1))
+copy lint: 2 finding(s) in 0 catalog(s) and 1 Swift file(s)
+exit 1  (expected 1)
+
+=== Negative 7: literal lint on the APIs it used to miss
+Missed.swift:1: hard-coded accessibility or title literal (pass a String(localized:table:) or Text): .alert("Delete session?", isPresented: $shown)
+Missed.swift:2: hard-coded accessibility or title literal (pass a String(localized:table:) or Text): .confirmationDialog("Discard clip?", isPresented: $shown)
+Missed.swift:3: hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:)): NavigationLink("Open settings")
+Missed.swift:4: hard-coded accessibility or title literal (pass a String(localized:table:) or Text): .badge("New")
+Missed.swift:5: LocalizedStringKey from a literal without a table (pass tableName: to the view): LocalizedStringKey("Literal key")
+Missed.swift:6: hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:)): Text("Shots \(String(localized: "rally", table: "Home"))")
+literal lint: 6 violation(s) in 1 Swift file(s)
+exit 1  (expected 1)
+
+=== Shell: lints after round 2
+literal lint: 0 violation(s) in 27 Swift file(s)
+copy lint: 0 finding(s) in 9 catalog(s) and 27 Swift file(s)
+Ran 31 tests in 0.261s
+
+OK
+
+=== Negative 8: the URL-scheme validity check in check-build-config.sh on a synthetic Info.plist
+--- with an empty Drive scheme (what HEAD ae20ecb built without Drive.xcconfig):
+FAIL: URL schemes: com.islanddevcrew.jovra.drive-oauth: invalid scheme ''
+failures 1
+--- with the placeholder scheme:
+ok:   URL schemes valid: 2 URL type(s), all valid
+failures 0
+
+=== RED (Swift): JovraFormatTests.hugeValuesDoNotTrap before the clamp: the test host trapped converting 9.3e18 to Int
+Failing tests: -[JovraFormatTests hugeValuesDoNotTrap(seconds:)]  ** TEST FAILED ** (result bundle not kept)
+
+=== RED: scripts/ios/tests/test_xcresult_summary.py before format_table/totals existed
+ERROR: test_an_expected_failure_is_counted_in_its_own_column  (AttributeError; Ran 6 tests, FAILED (errors=1))
+
+=== Tool tests after round 2
+Ran 31 tests in 0.212s
+
+OK
+Ran 6 tests in 0.008s
+OK
+
+=== Round 3 (2026-10-08, after merging origin/main dd2d0c3; HEAD 2fe3037, simulator JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22) ===
+
+=== Negative 1 (round 3): literal lint on a copy of the shell with a seeded Text literal
+Jovra/Features/Home/HomeView.swift:36: hard-coded text literal (use a catalog key with tableName:, or Text(verbatim:)): Text("Seeded literal")
+literal lint: 1 violation(s) in 27 Swift file(s)
+exit 1  (expected 1)
+--- the unmodified shell
+literal lint: 0 violation(s) in 27 Swift file(s)
+exit 0  (expected 0)
+
+=== Negative 2 (round 3): copy lint on a copy of Home.xcstrings with a seeded "line call" string
+Home.xcstrings: “Line call: out”: line-call: “Line call: out” (no officiating-grade line calls (CLAUDE.md rule 1))
+copy lint: 1 finding(s) in 1 catalog(s) and 0 Swift file(s)
+exit 1  (expected 1)
+--- every catalog and Swift file in the app
+copy lint: 0 finding(s) in 9 catalog(s) and 27 Swift file(s)
+exit 0  (expected 0)
+
+=== Negative 3 (round 3): String Catalog ownership on the PR fixture, against the merged docs/spec/tickets.json
+--- pr-edits-another-areas-table (ticket/t23-framing-calibration)
+ios/Jovra/Resources/Localization/Home.xcstrings: table Home belongs to T19 (ios/Jovra/Features/Home), not T23
+catalog ownership: 2 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 1 problem(s)
+exit 1  (expected 1)
+--- pr-edits-its-own-table (ticket/t23-framing-calibration)
+catalog ownership: 1 changed catalog(s) on ticket/t23-framing-calibration (ticket T23), 0 problem(s)
+exit 0  (expected 0)
+--- this branch against origin/main
+catalog ownership: 9 changed catalog(s) on ticket/t06-ui-harness-l10n-plist (ticket T06), 0 problem(s)
+exit 0  (expected 0)
+
+=== Negative 4 (round 3): side-by-side generator with a pair lacking a reviewer line (incl. adaptive screen 71)
+side-by-side: 1 of 3 pair(s) have no reviewer line in /private/evidence/ios/t19-home-dashboard/reviews.txt.
+Compare each pair, then add one line per screenshot, for example:
+  s03-dark-home: <reviewer> — <verdict and notes against 03-home.png>
+exit 2  (expected 2)
+files: reviews.txt s03-dark-home.png s03-light-home.png s71-light-ios-fold-studio.png 
+--- after adding the missing line
+side-by-side: 3 reviewed pair(s) -> /private/evidence/ios/t19-home-dashboard/side-by-side.html
+exit 0  (expected 0)
+files: reviews.txt s03-dark-home.png s03-light-home.png s71-light-ios-fold-studio.png side-by-side.html 
+design-reference/adaptive/screens/71-ios-fold-studio.png
+design-reference/screens/03-home.png
+
+=== Tool tests, round 3
+Ran 31 tests in 0.217s
+
+OK
+Ran 6 tests in 0.008s
+OK
+
+--- RED (round 3, before the fix): test_side_by_side.py with screen 71 added, against side_by_side.py at 9831823 (every screen > 20 looked up in design-reference/studio/screens)
+side-by-side: s71-light-ios-fold-studio.png names screen 71, which has no reference PNG
+side-by-side: s99-light-nowhere.png names screen 99, which has no reference PNG
+Ran 6 tests in 0.008s
+FAILED (failures=3, errors=1)
+  (the error: test_pairs_screenshots_with_references_by_screen_number; screen 71's reference was None)
+--- GREEN (round 3, 2fe3037: 41 and up -> design-reference/adaptive/screens)
+Ran 6 tests in 0.011s
+OK

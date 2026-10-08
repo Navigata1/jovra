@@ -1,0 +1,446 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/pts-table.sample-corner.json",
+  "cases": [
+    {
+      "id": "rotation-not-swapped",
+      "why": "A quarter-turn proxy keeps the display orientation (1080x1920), not the coded one",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/width",
+          "value": 1920
+        },
+        {
+          "op": "replace",
+          "path": "/proxy/height",
+          "value": 1080
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "proxyRotation"
+      }
+    },
+    {
+      "id": "rotation-not-applied",
+      "why": "The rotation is baked into the pixels exactly once",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/rotationAppliedDegrees",
+          "value": 0
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "proxyRotation"
+      }
+    },
+    {
+      "id": "rotation-applied-twice",
+      "why": "Display rotation left in the container would be applied again by players",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/displayRotationDegrees",
+          "value": 90
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "hdr-tone-map-omitted",
+      "why": "An HDR original declares its tone-map method",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/toneMap",
+          "value": null
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "toneMapUndeclared"
+      }
+    },
+    {
+      "id": "tone-map-unknown-method",
+      "why": "Tone-map methods come from the closed list",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/toneMap/method",
+          "value": "auto"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "sdr-tone-mapped",
+      "why": "An SDR original is not tone-mapped",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/original/hdr",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/original/transfer",
+          "value": "bt709"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "toneMapOnSdr"
+      }
+    },
+    {
+      "id": "proxy-left-hdr",
+      "why": "A render proxy is 8-bit BT.709",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/transfer",
+          "value": "hlg"
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "track-timescale-600",
+      "why": "The track timescale is lcm(fps num, 1000)",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/timescale",
+          "value": 600
+        },
+        {
+          "op": "replace",
+          "path": "/proxy/frameDurationTicks",
+          "value": 20
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badTimescale"
+      }
+    },
+    {
+      "id": "nonzero-start",
+      "why": "Render proxies start at zero",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/startPts",
+          "value": 1001
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    },
+    {
+      "id": "half-even-selection-forged",
+      "why": "Runs computed with half-even ties select frame 30 for slot 30",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/runs",
+          "value": [
+            {
+              "proxyFrame": 0,
+              "count": 60,
+              "originalFrame": 0,
+              "originalStep": 1,
+              "originalPts": 0
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "ptsTableMismatch"
+      }
+    },
+    {
+      "id": "frame-count-off-by-one",
+      "why": "The proxy frame count follows the half-up rule",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/frameCount",
+          "value": 61
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "ptsTableMismatch"
+      }
+    },
+    {
+      "id": "pts-runs-not-canonical",
+      "why": "An equivalent but non-canonical PTS index would hash differently",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/original/pts",
+          "value": [
+            {
+              "value": 0,
+              "step": 0,
+              "count": 1
+            },
+            {
+              "value": 22,
+              "step": 0,
+              "count": 1
+            },
+            {
+              "value": 39,
+              "step": 24,
+              "count": 2
+            },
+            {
+              "value": 78,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 117,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 162,
+              "step": 17,
+              "count": 2
+            },
+            {
+              "value": 200,
+              "step": 22,
+              "count": 2
+            },
+            {
+              "value": 239,
+              "step": 24,
+              "count": 2
+            },
+            {
+              "value": 278,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 317,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 362,
+              "step": 17,
+              "count": 2
+            },
+            {
+              "value": 400,
+              "step": 22,
+              "count": 2
+            },
+            {
+              "value": 439,
+              "step": 24,
+              "count": 2
+            },
+            {
+              "value": 478,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 517,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 562,
+              "step": 17,
+              "count": 2
+            },
+            {
+              "value": 610,
+              "step": 12,
+              "count": 2
+            },
+            {
+              "value": 639,
+              "step": 24,
+              "count": 2
+            },
+            {
+              "value": 678,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 717,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 762,
+              "step": 17,
+              "count": 2
+            },
+            {
+              "value": 800,
+              "step": 22,
+              "count": 2
+            },
+            {
+              "value": 839,
+              "step": 24,
+              "count": 2
+            },
+            {
+              "value": 878,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 917,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 962,
+              "step": 17,
+              "count": 2
+            },
+            {
+              "value": 1000,
+              "step": 22,
+              "count": 2
+            },
+            {
+              "value": 1039,
+              "step": 24,
+              "count": 2
+            },
+            {
+              "value": 1078,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 1117,
+              "step": 23,
+              "count": 2
+            },
+            {
+              "value": 1162,
+              "step": 17,
+              "count": 2
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badPtsIndex"
+      }
+    },
+    {
+      "id": "pts-frame-count-wrong",
+      "why": "The PTS index counts the original's frames",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/original/frameCount",
+          "value": 61
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badPtsIndex"
+      }
+    },
+    {
+      "id": "end-before-last-frame",
+      "why": "endPts follows the last frame",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/original/endPts",
+          "value": 1179
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badPtsIndex"
+      }
+    },
+    {
+      "id": "upconversion-unlabelled",
+      "why": "A 60 fps proxy of a 30 fps source is labelled upconverted",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/fps",
+          "value": {
+            "num": 60,
+            "den": 1
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/proxy/frameDurationTicks",
+          "value": 50
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "unlabelledUpconversion"
+      }
+    },
+    {
+      "id": "short-edge-not-even",
+      "why": "The proxy keeps the display aspect with an even short edge",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/width",
+          "value": 1078
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "badDimensions"
+      }
+    },
+    {
+      "id": "fps-as-float",
+      "why": "Rates are exact rationals, never floats",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/proxy/fps",
+          "value": {
+            "num": 29.97,
+            "den": 1
+          }
+        }
+      ],
+      "expect": {
+        "layer": "schema"
+      }
+    }
+  ]
+}

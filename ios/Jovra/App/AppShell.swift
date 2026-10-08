@@ -3,7 +3,13 @@ import SwiftUI
 /// The five-tab shell. Focused flows are presented as full-screen routes (via `AppRouter`); while one
 /// is up the tab bar is removed, not just covered.
 struct AppShell: View {
-    @State private var router = AppRouter()
+    /// Starts on the tab or full-screen route named by the `-startRoute` launch argument, if any.
+    @State private var router: AppRouter = {
+        let launch = LaunchConfiguration.current
+        let router = AppRouter(selectedTab: launch.startTab ?? .home)
+        if let route = launch.startFullScreenRoute { router.present(route) }
+        return router
+    }()
 
     private var selection: Binding<AppTab> {
         Binding(get: { router.selectedTab }, set: { router.select($0) })
