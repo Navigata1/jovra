@@ -12,6 +12,7 @@ edit it by hand. A new page appears here when the generator runs. Each page's fr
 - [keepers](keepers.md)
 - [ledger](ledger.md)
 - [normalization](normalization.md)
+- [planner](planner.md)
 - [progress](progress.md)
 - [records](records.md)
 - [sync](sync.md)

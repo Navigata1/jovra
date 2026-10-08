@@ -1,0 +1,4799 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "planner",
+  "status": "Sample: expect from spec/reference/studio/planner.py over the sample-court-day context; assert blocks are hand-derived beat lists and estimates worked from the keeper windows",
+  "cases": [
+    {
+      "id": "context-sample-court-day",
+      "why": "The sample-court-day planning context every other case starts from (its contextPatch applies to this)",
+      "op": "context",
+      "input": {},
+      "expect": {
+        "context": {
+          "projectId": "sample-court-day",
+          "sample": true,
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "coverageSeconds": 3600,
+          "primaryHasAudio": true,
+          "juniorMode": false,
+          "pointCoverageComplete": false,
+          "keepers": [
+            {
+              "keeperId": "k-01",
+              "origin": "point",
+              "eventRefs": [
+                "p-003"
+              ],
+              "session": {
+                "startUs": 12000000,
+                "endUs": 19500000
+              },
+              "slots": [
+                "near-baseline",
+                "far-baseline"
+              ],
+              "selection": "manual",
+              "provenance": "manual",
+              "markIds": [],
+              "lessonClipIds": [],
+              "facts": {
+                "index": 2,
+                "rallyLength": 14,
+                "rallyReal": true,
+                "breakPoint": false,
+                "setPoint": false,
+                "matchPoint": false,
+                "provenance": "manual"
+              }
+            },
+            {
+              "keeperId": "k-02",
+              "origin": "point",
+              "eventRefs": [
+                "p-041"
+              ],
+              "session": {
+                "startUs": 1196000000,
+                "endUs": 1264000000
+              },
+              "slots": [
+                "near-baseline"
+              ],
+              "selection": "manual",
+              "provenance": "reviewed",
+              "markIds": [],
+              "lessonClipIds": [
+                "l3-clip-1"
+              ],
+              "facts": {
+                "index": 40,
+                "rallyLength": 9,
+                "rallyReal": true,
+                "breakPoint": true,
+                "setPoint": false,
+                "matchPoint": false,
+                "provenance": "reviewed"
+              }
+            },
+            {
+              "keeperId": "k-03",
+              "origin": "point",
+              "eventRefs": [
+                "p-067",
+                "p-068"
+              ],
+              "session": {
+                "startUs": 1998000000,
+                "endUs": 2085000000
+              },
+              "slots": [
+                "near-baseline"
+              ],
+              "selection": "manual",
+              "provenance": "manual",
+              "markIds": [],
+              "lessonClipIds": [],
+              "facts": {
+                "index": 66,
+                "rallyLength": 6,
+                "rallyReal": true,
+                "breakPoint": false,
+                "setPoint": false,
+                "matchPoint": false,
+                "provenance": "manual"
+              }
+            },
+            {
+              "keeperId": "k-04",
+              "origin": "point",
+              "eventRefs": [
+                "p-090"
+              ],
+              "session": {
+                "startUs": 2498000000,
+                "endUs": 2620000000
+              },
+              "slots": [
+                "near-baseline",
+                "far-baseline"
+              ],
+              "selection": "heuristic",
+              "provenance": "estimated",
+              "markIds": [],
+              "lessonClipIds": [],
+              "facts": {
+                "index": 89,
+                "rallyLength": 11,
+                "rallyReal": false,
+                "breakPoint": false,
+                "setPoint": false,
+                "matchPoint": false,
+                "provenance": "estimated"
+              }
+            }
+          ],
+          "brolls": [
+            {
+              "brollId": "b-01",
+              "chapter": "arrival",
+              "durationMs": 60000,
+              "depictsThisMatch": true,
+              "revealsLocation": false
+            },
+            {
+              "brollId": "b-02",
+              "chapter": "after",
+              "durationMs": 90000,
+              "depictsThisMatch": true,
+              "revealsLocation": false
+            }
+          ],
+          "references": [
+            {
+              "refId": "p-041",
+              "kind": "score",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "p-090",
+              "kind": "score",
+              "provenance": "manual"
+            },
+            {
+              "refId": "game-07",
+              "kind": "score",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "game-08",
+              "kind": "score",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "stat-first-serve-in",
+              "kind": "metric",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "note-caption",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-goal",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-drill",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-next",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-players",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-lesson-2",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "l3-note-1",
+              "kind": "note",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "l3-note-2",
+              "kind": "note",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "ann-01",
+              "kind": "annotation",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "cue-03",
+              "kind": "cue",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "cue-04",
+              "kind": "cue",
+              "provenance": "estimated"
+            }
+          ],
+          "notes": [
+            {
+              "noteId": "note-caption",
+              "use": "caption",
+              "date": null
+            },
+            {
+              "noteId": "note-goal",
+              "use": "goal",
+              "date": null
+            },
+            {
+              "noteId": "note-drill",
+              "use": "drill",
+              "date": null
+            },
+            {
+              "noteId": "note-next",
+              "use": "next",
+              "date": null
+            },
+            {
+              "noteId": "note-players",
+              "use": "players",
+              "date": null
+            },
+            {
+              "noteId": "note-lesson-2",
+              "use": "lesson",
+              "date": "2026-09-23"
+            },
+            {
+              "noteId": "l3-note-1",
+              "use": "lesson",
+              "date": "2026-10-07"
+            },
+            {
+              "noteId": "l3-note-2",
+              "use": "lesson",
+              "date": "2026-10-07"
+            }
+          ],
+          "lessons": [
+            {
+              "lessonId": "lesson-0909",
+              "date": "2026-09-09",
+              "noteIds": []
+            },
+            {
+              "lessonId": "lesson-0923",
+              "date": "2026-09-23",
+              "noteIds": [
+                "note-lesson-2"
+              ]
+            },
+            {
+              "lessonId": "lesson-1007",
+              "date": "2026-10-07",
+              "noteIds": [
+                "l3-note-1",
+                "l3-note-2"
+              ]
+            }
+          ],
+          "cues": [
+            {
+              "cueId": "cue-03",
+              "keeperId": "k-02",
+              "provenance": "reviewed"
+            },
+            {
+              "cueId": "cue-04",
+              "keeperId": "k-02",
+              "provenance": "estimated"
+            }
+          ],
+          "annotations": [
+            {
+              "refId": "ann-01",
+              "keeperId": "k-02"
+            }
+          ],
+          "progress": {
+            "statId": "stat-first-serve-in",
+            "statDefinitionId": "first-serve-in-pct",
+            "earlier": {
+              "date": "2026-09-09",
+              "sessionIds": [
+                "session-0909"
+              ],
+              "sessionKind": "practice",
+              "statDefinitionId": "first-serve-in-pct",
+              "methodId": "manual-tagging-v1",
+              "methodVersion": "1",
+              "capabilityVersion": null,
+              "selectionRule": "all",
+              "numerator": 12,
+              "denominator": 30,
+              "provenance": "reviewed"
+            },
+            "later": {
+              "date": "2026-10-07",
+              "sessionIds": [
+                "session-1007"
+              ],
+              "sessionKind": "practice",
+              "statDefinitionId": "first-serve-in-pct",
+              "methodId": "manual-tagging-v1",
+              "methodVersion": "1",
+              "capabilityVersion": null,
+              "selectionRule": "all",
+              "numerator": 18,
+              "denominator": 30,
+              "provenance": "reviewed"
+            },
+            "dates": {
+              "k-02": "2026-09-09",
+              "k-04": "2026-10-07"
+            },
+            "selectionRule": "all"
+          },
+          "rights": [
+            {
+              "rightsRecordId": "rights-track-01",
+              "assetId": "track-01"
+            }
+          ],
+          "consents": [
+            {
+              "consentRecordId": "consent-voice-jon",
+              "scope": [
+                "narration-voice"
+              ],
+              "granted": true
+            }
+          ]
+        }
+      },
+      "assert": {
+        "coverageSeconds": 3600,
+        "primaryHasAudio": true,
+        "bindings": {
+          "eventRevision": 3,
+          "syncRevision": 2,
+          "keeperCatalogRevision": 1,
+          "brollCatalogRevision": 1
+        },
+        "keepers": {
+          "k-01": [
+            [
+              "near-baseline",
+              "far-baseline"
+            ],
+            [],
+            true,
+            false,
+            7500
+          ],
+          "k-02": [
+            [
+              "near-baseline"
+            ],
+            [
+              "l3-clip-1"
+            ],
+            true,
+            true,
+            68000
+          ],
+          "k-03": [
+            [
+              "near-baseline"
+            ],
+            [],
+            true,
+            false,
+            87000
+          ],
+          "k-04": [
+            [
+              "near-baseline",
+              "far-baseline"
+            ],
+            [],
+            false,
+            false,
+            122000
+          ]
+        },
+        "cues": {
+          "cue-03": [
+            "k-02",
+            "reviewed"
+          ],
+          "cue-04": [
+            "k-02",
+            "estimated"
+          ]
+        },
+        "notes": {
+          "note-caption": "caption",
+          "note-goal": "goal",
+          "note-drill": "drill",
+          "note-next": "next",
+          "note-players": "players",
+          "note-lesson-2": "lesson",
+          "l3-note-1": "lesson",
+          "l3-note-2": "lesson"
+        },
+        "brollMs": {
+          "b-01": 60000,
+          "b-02": 90000
+        },
+        "lessons": {
+          "lesson-0909": [],
+          "lesson-0923": [
+            "note-lesson-2"
+          ],
+          "lesson-1007": [
+            "l3-note-1",
+            "l3-note-2"
+          ]
+        }
+      }
+    },
+    {
+      "id": "coach-cut-3min",
+      "why": "Coach's Cut, 3 min: goal card, the reviewed-cue example k-02 at 1x, a paused frame with annotation ann-01 and cue cue-03, a labelled half-speed replay, then the player's chosen k-01 and k-03, the drill and next-checkpoint cards. k-03 brings it over 3 min, allowed only to reach the profile minimum",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-goal",
+              "templateId": "card.goal",
+              "reasonForReview": "The player's goal note opens the film."
+            },
+            {
+              "beatId": "b02",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02 at original speed; reviewed cue cue-03."
+            },
+            {
+              "beatId": "b03",
+              "role": "cue",
+              "treatment": "freeze",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "annotation",
+                  "refId": "ann-01"
+                },
+                {
+                  "kind": "cue",
+                  "refId": "cue-03"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Paused on k-02 with annotation ann-01 and cue cue-03."
+            },
+            {
+              "beatId": "b04",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Labelled replay of k-02 at 1/2 speed."
+            },
+            {
+              "beatId": "b05",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01 at original speed."
+            },
+            {
+              "beatId": "b06",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03 at original speed."
+            },
+            {
+              "beatId": "b07",
+              "role": "drill",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-drill",
+              "templateId": "card.drill",
+              "reasonForReview": "The player's practice drill note."
+            },
+            {
+              "beatId": "b08",
+              "role": "checkpoint",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-next",
+              "templateId": "card.next-checkpoint",
+              "reasonForReview": "The player's next checkpoint note."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "estimate": {
+          "totalMs": 184500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 2000
+            },
+            {
+              "beatId": "b04",
+              "ms": 8000
+            },
+            {
+              "beatId": "b05",
+              "ms": 7500
+            },
+            {
+              "beatId": "b06",
+              "ms": 87000
+            },
+            {
+              "beatId": "b07",
+              "ms": 4000
+            },
+            {
+              "beatId": "b08",
+              "ms": 4000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "beats": [
+          "goal title-card card.goal",
+          "example live k-02 near-baseline",
+          "cue freeze k-02 near-baseline",
+          "replay replay k-02 near-baseline 1/2",
+          "example live k-01 near-baseline",
+          "example live k-03 near-baseline",
+          "drill title-card card.drill",
+          "checkpoint title-card card.next-checkpoint"
+        ],
+        "estimateMs": 184500,
+        "fallback": null,
+        "belowMinimum": false,
+        "omitted": [],
+        "unresolved": [],
+        "overlays": {
+          "b02": [
+            "score:p-041"
+          ],
+          "b03": [
+            "annotation:ann-01",
+            "cue:cue-03"
+          ]
+        },
+        "notes": {
+          "b01": "note-goal",
+          "b07": "note-drill",
+          "b08": "note-next"
+        }
+      }
+    },
+    {
+      "id": "coach-cut-5min",
+      "why": "Coach's Cut, 5min: the same three examples (the most it shows); 3 min 5 s of real material is not padded",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-goal",
+              "templateId": "card.goal",
+              "reasonForReview": "The player's goal note opens the film."
+            },
+            {
+              "beatId": "b02",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02 at original speed; reviewed cue cue-03."
+            },
+            {
+              "beatId": "b03",
+              "role": "cue",
+              "treatment": "freeze",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "annotation",
+                  "refId": "ann-01"
+                },
+                {
+                  "kind": "cue",
+                  "refId": "cue-03"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Paused on k-02 with annotation ann-01 and cue cue-03."
+            },
+            {
+              "beatId": "b04",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Labelled replay of k-02 at 1/2 speed."
+            },
+            {
+              "beatId": "b05",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01 at original speed."
+            },
+            {
+              "beatId": "b06",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03 at original speed."
+            },
+            {
+              "beatId": "b07",
+              "role": "drill",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-drill",
+              "templateId": "card.drill",
+              "reasonForReview": "The player's practice drill note."
+            },
+            {
+              "beatId": "b08",
+              "role": "checkpoint",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-next",
+              "templateId": "card.next-checkpoint",
+              "reasonForReview": "The player's next checkpoint note."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 3 min 5 s of real material, so this film is shorter than 5 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 184500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 2000
+            },
+            {
+              "beatId": "b04",
+              "ms": 8000
+            },
+            {
+              "beatId": "b05",
+              "ms": 7500
+            },
+            {
+              "beatId": "b06",
+              "ms": 87000
+            },
+            {
+              "beatId": "b07",
+              "ms": 4000
+            },
+            {
+              "beatId": "b08",
+              "ms": 4000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 300,
+        "beats": [
+          "goal title-card card.goal",
+          "example live k-02 near-baseline",
+          "cue freeze k-02 near-baseline",
+          "replay replay k-02 near-baseline 1/2",
+          "example live k-01 near-baseline",
+          "example live k-03 near-baseline",
+          "drill title-card card.drill",
+          "checkpoint title-card card.next-checkpoint"
+        ],
+        "estimateMs": 184500,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 3 min 5 s of real material, so this film is shorter than 5 min. Nothing is padded."
+        ]
+      }
+    },
+    {
+      "id": "coach-cut-full",
+      "why": "Coach's Cut, full: the same three examples (the most it shows); 3 min 5 s of real material is not padded",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 600,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-goal",
+              "templateId": "card.goal",
+              "reasonForReview": "The player's goal note opens the film."
+            },
+            {
+              "beatId": "b02",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02 at original speed; reviewed cue cue-03."
+            },
+            {
+              "beatId": "b03",
+              "role": "cue",
+              "treatment": "freeze",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "annotation",
+                  "refId": "ann-01"
+                },
+                {
+                  "kind": "cue",
+                  "refId": "cue-03"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Paused on k-02 with annotation ann-01 and cue cue-03."
+            },
+            {
+              "beatId": "b04",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Labelled replay of k-02 at 1/2 speed."
+            },
+            {
+              "beatId": "b05",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01 at original speed."
+            },
+            {
+              "beatId": "b06",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03 at original speed."
+            },
+            {
+              "beatId": "b07",
+              "role": "drill",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-drill",
+              "templateId": "card.drill",
+              "reasonForReview": "The player's practice drill note."
+            },
+            {
+              "beatId": "b08",
+              "role": "checkpoint",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-next",
+              "templateId": "card.next-checkpoint",
+              "reasonForReview": "The player's next checkpoint note."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 3 min 5 s of real material, so this film is shorter than 10 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 184500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 2000
+            },
+            {
+              "beatId": "b04",
+              "ms": 8000
+            },
+            {
+              "beatId": "b05",
+              "ms": 7500
+            },
+            {
+              "beatId": "b06",
+              "ms": 87000
+            },
+            {
+              "beatId": "b07",
+              "ms": 4000
+            },
+            {
+              "beatId": "b08",
+              "ms": 4000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 600,
+        "beats": [
+          "goal title-card card.goal",
+          "example live k-02 near-baseline",
+          "cue freeze k-02 near-baseline",
+          "replay replay k-02 near-baseline 1/2",
+          "example live k-01 near-baseline",
+          "example live k-03 near-baseline",
+          "drill title-card card.drill",
+          "checkpoint title-card card.next-checkpoint"
+        ],
+        "estimateMs": 184500,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 3 min 5 s of real material, so this film is shorter than 10 min. Nothing is padded."
+        ]
+      }
+    },
+    {
+      "id": "match-broadcast-3min",
+      "why": "ST29: 3min is outside the profile's range, so the length is offered disabled with this reason",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "refusal": {
+          "code": "lengthUnavailable",
+          "message": "Match Broadcast needs at least 5 min."
+        },
+        "directions": null
+      },
+      "assert": {
+        "refusal": [
+          "lengthUnavailable",
+          "Match Broadcast needs at least 5 min."
+        ]
+      }
+    },
+    {
+      "id": "rally-pulse-5min",
+      "why": "ST29: 5min is outside the profile's range, so the length is offered disabled with this reason",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "refusal": {
+          "code": "lengthUnavailable",
+          "message": "Rally Pulse films are up to 3 min."
+        },
+        "directions": null
+      },
+      "assert": {
+        "refusal": [
+          "lengthUnavailable",
+          "Rally Pulse films are up to 3 min."
+        ]
+      }
+    },
+    {
+      "id": "match-broadcast-5min",
+      "why": "Match Broadcast, 5 min: intro card, every kept point in match order on the wide angle, far-baseline replays right after k-01 and k-04 (the second only to reach 5 min); no final score card because the recorded points do not cover the match",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-match-broadcast-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "match-broadcast",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.relive-match",
+          "audience": "self",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "intro",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-players",
+              "templateId": "card.match-intro",
+              "reasonForReview": "Players as entered open the match."
+            },
+            {
+              "beatId": "b02",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01 in match order."
+            },
+            {
+              "beatId": "b03",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "far-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Replay of k-01 from the far-baseline angle after the point."
+            },
+            {
+              "beatId": "b04",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02 in match order."
+            },
+            {
+              "beatId": "b05",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03 in match order."
+            },
+            {
+              "beatId": "b06",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-090"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-04 in match order."
+            },
+            {
+              "beatId": "b07",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "far-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Replay of k-04 from the far-baseline angle after the point."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Final score",
+              "missingEvidence": "The recorded points do not cover the whole match."
+            }
+          ],
+          "unresolved": []
+        },
+        "estimate": {
+          "totalMs": 304500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 8000
+            },
+            {
+              "beatId": "b04",
+              "ms": 68000
+            },
+            {
+              "beatId": "b05",
+              "ms": 87000
+            },
+            {
+              "beatId": "b06",
+              "ms": 122000
+            },
+            {
+              "beatId": "b07",
+              "ms": 8000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 300,
+        "beats": [
+          "intro title-card card.match-intro",
+          "point live k-01 near-baseline",
+          "replay replay k-01 far-baseline 1/2",
+          "point live k-02 near-baseline",
+          "point live k-03 near-baseline",
+          "point live k-04 near-baseline",
+          "replay replay k-04 far-baseline 1/2"
+        ],
+        "estimateMs": 304500,
+        "fallback": null,
+        "belowMinimum": false,
+        "omitted": [
+          "Final score"
+        ],
+        "unresolved": [],
+        "overlays": {
+          "b04": [
+            "score:p-041"
+          ],
+          "b06": [
+            "score:p-090"
+          ]
+        },
+        "notes": {
+          "b01": "note-players"
+        }
+      }
+    },
+    {
+      "id": "match-broadcast-full",
+      "why": "Match Broadcast, Full = min(7200 s, 3600 s of recording) = 60 min; 5 min 5 s of real material",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-match-broadcast-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "match-broadcast",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.relive-match",
+          "audience": "self",
+          "durationTargetSeconds": 3600,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "intro",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-players",
+              "templateId": "card.match-intro",
+              "reasonForReview": "Players as entered open the match."
+            },
+            {
+              "beatId": "b02",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01 in match order."
+            },
+            {
+              "beatId": "b03",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "far-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Replay of k-01 from the far-baseline angle after the point."
+            },
+            {
+              "beatId": "b04",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02 in match order."
+            },
+            {
+              "beatId": "b05",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03 in match order."
+            },
+            {
+              "beatId": "b06",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-090"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-04 in match order."
+            },
+            {
+              "beatId": "b07",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "far-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Replay of k-04 from the far-baseline angle after the point."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Final score",
+              "missingEvidence": "The recorded points do not cover the whole match."
+            }
+          ],
+          "unresolved": [
+            "About 5 min 5 s of real material, so this film is shorter than 60 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 304500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 8000
+            },
+            {
+              "beatId": "b04",
+              "ms": 68000
+            },
+            {
+              "beatId": "b05",
+              "ms": 87000
+            },
+            {
+              "beatId": "b06",
+              "ms": 122000
+            },
+            {
+              "beatId": "b07",
+              "ms": 8000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 3600,
+        "beats": [
+          "intro title-card card.match-intro",
+          "point live k-01 near-baseline",
+          "replay replay k-01 far-baseline 1/2",
+          "point live k-02 near-baseline",
+          "point live k-03 near-baseline",
+          "point live k-04 near-baseline",
+          "replay replay k-04 far-baseline 1/2"
+        ],
+        "estimateMs": 304500,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 5 min 5 s of real material, so this film is shorter than 60 min. Nothing is padded."
+        ]
+      }
+    },
+    {
+      "id": "rally-pulse-3min",
+      "why": "Rally Pulse, 3min (Full = its 3 min maximum): the break point k-02 and the real rallies k-01 (14 shots) and k-03 (6) whole, in time order, then a static close; the estimated k-04 rally is not real",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-rally-pulse-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "rally-pulse",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.worth-keeping",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "opening",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01: a whole rally."
+            },
+            {
+              "beatId": "b02",
+              "role": "key-exchange",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02: a whole rally."
+            },
+            {
+              "beatId": "b03",
+              "role": "payoff",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03: a whole rally."
+            },
+            {
+              "beatId": "b04",
+              "role": "close",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.accent",
+              "reasonForReview": "A quiet static close on court sound."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 2 min 44 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 164000,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 7500
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 87000
+            },
+            {
+              "beatId": "b04",
+              "ms": 1500
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "beats": [
+          "opening live k-01 near-baseline",
+          "key-exchange live k-02 near-baseline",
+          "payoff live k-03 near-baseline",
+          "close title-card card.accent"
+        ],
+        "estimateMs": 164000,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 2 min 44 s of real material, so this film is shorter than 3 min. Nothing is padded."
+        ],
+        "effectIntensity": "low",
+        "cleanAlternate": true,
+        "overlays": {
+          "b02": [
+            "score:p-041"
+          ]
+        }
+      }
+    },
+    {
+      "id": "rally-pulse-full",
+      "why": "Rally Pulse, full (Full = its 3 min maximum): the break point k-02 and the real rallies k-01 (14 shots) and k-03 (6) whole, in time order, then a static close; the estimated k-04 rally is not real",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-rally-pulse-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "rally-pulse",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.worth-keeping",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "opening",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01: a whole rally."
+            },
+            {
+              "beatId": "b02",
+              "role": "key-exchange",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02: a whole rally."
+            },
+            {
+              "beatId": "b03",
+              "role": "payoff",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03: a whole rally."
+            },
+            {
+              "beatId": "b04",
+              "role": "close",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.accent",
+              "reasonForReview": "A quiet static close on court sound."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 2 min 44 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 164000,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 7500
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 87000
+            },
+            {
+              "beatId": "b04",
+              "ms": 1500
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "beats": [
+          "opening live k-01 near-baseline",
+          "key-exchange live k-02 near-baseline",
+          "payoff live k-03 near-baseline",
+          "close title-card card.accent"
+        ],
+        "estimateMs": 164000,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 2 min 44 s of real material, so this film is shorter than 3 min. Nothing is padded."
+        ],
+        "effectIntensity": "low",
+        "cleanAlternate": true,
+        "overlays": {
+          "b02": [
+            "score:p-041"
+          ]
+        }
+      }
+    },
+    {
+      "id": "progress-story-3min",
+      "why": "Progress Story, 3 min: goal, the dated early (k-02, Sep 9) and recent (k-04, Oct 7) evidence, the what-changed card and the next goal; the lesson cards do not fit",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "progress-story",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-progress-story-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "progress-story",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.growing-game",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-goal",
+              "templateId": "card.goal",
+              "reasonForReview": "The dated starting goal."
+            },
+            {
+              "beatId": "b02",
+              "role": "early-evidence",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "metric",
+                  "refId": "stat-first-serve-in"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Earliest dated example (2026-09-09)."
+            },
+            {
+              "beatId": "b03",
+              "role": "recent-evidence",
+              "treatment": "live",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Latest dated example (2026-10-07)."
+            },
+            {
+              "beatId": "b04",
+              "role": "what-changed",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "metric",
+                  "refId": "stat-first-serve-in"
+                }
+              ],
+              "noteId": null,
+              "templateId": "card.what-changed",
+              "reasonForReview": "The stored before and after comparison."
+            },
+            {
+              "beatId": "b05",
+              "role": "next-goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-next",
+              "templateId": "card.next-goal",
+              "reasonForReview": "The next practice goal."
+            }
+          ],
+          "comparisons": [
+            {
+              "comparisonId": "cmp-first-serve-in-pct",
+              "statId": "stat-first-serve-in",
+              "metricDefinitionId": "first-serve-in-pct",
+              "methodId": "manual-tagging-v1",
+              "selectionRule": "all",
+              "claim": "change",
+              "before": {
+                "date": "2026-09-09",
+                "sessionIds": [
+                  "session-0909"
+                ],
+                "numerator": 12,
+                "denominator": 30,
+                "provenance": "reviewed"
+              },
+              "after": {
+                "date": "2026-10-07",
+                "sessionIds": [
+                  "session-1007"
+                ],
+                "numerator": 18,
+                "denominator": 30,
+                "provenance": "reviewed"
+              },
+              "display": {
+                "before": "12 / 30 · 40%",
+                "after": "18 / 30 · 60%",
+                "delta": "+20 percentage points"
+              }
+            }
+          ],
+          "omitted": [],
+          "unresolved": []
+        },
+        "estimate": {
+          "totalMs": 202000,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 122000
+            },
+            {
+              "beatId": "b04",
+              "ms": 4000
+            },
+            {
+              "beatId": "b05",
+              "ms": 4000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "beats": [
+          "goal title-card card.goal",
+          "early-evidence live k-02 near-baseline",
+          "recent-evidence live k-04 near-baseline",
+          "what-changed title-card card.what-changed",
+          "next-goal title-card card.next-goal"
+        ],
+        "estimateMs": 202000,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [],
+        "comparisons": [
+          [
+            "12 / 30 · 40%",
+            "18 / 30 · 60%",
+            "+20 percentage points"
+          ]
+        ],
+        "overlays": {
+          "b02": [
+            "metric:stat-first-serve-in"
+          ],
+          "b04": [
+            "metric:stat-first-serve-in"
+          ]
+        }
+      }
+    },
+    {
+      "id": "progress-story-5min",
+      "why": "Progress Story, 5min: adds the Sep 23 and Oct 7 lesson cards and a half-speed replay of the recent evidence",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "progress-story",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-progress-story-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "progress-story",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.growing-game",
+          "audience": "self",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-goal",
+              "templateId": "card.goal",
+              "reasonForReview": "The dated starting goal."
+            },
+            {
+              "beatId": "b02",
+              "role": "early-evidence",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "metric",
+                  "refId": "stat-first-serve-in"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Earliest dated example (2026-09-09)."
+            },
+            {
+              "beatId": "b03",
+              "role": "lesson",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-lesson-2",
+              "templateId": "card.lesson",
+              "reasonForReview": "Lesson of 2026-09-23."
+            },
+            {
+              "beatId": "b04",
+              "role": "lesson",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "l3-note-1",
+              "templateId": "card.lesson",
+              "reasonForReview": "Lesson of 2026-10-07."
+            },
+            {
+              "beatId": "b05",
+              "role": "recent-evidence",
+              "treatment": "live",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Latest dated example (2026-10-07)."
+            },
+            {
+              "beatId": "b06",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Labelled replay of k-04 at 1/2 speed."
+            },
+            {
+              "beatId": "b07",
+              "role": "what-changed",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "metric",
+                  "refId": "stat-first-serve-in"
+                }
+              ],
+              "noteId": null,
+              "templateId": "card.what-changed",
+              "reasonForReview": "The stored before and after comparison."
+            },
+            {
+              "beatId": "b08",
+              "role": "next-goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-next",
+              "templateId": "card.next-goal",
+              "reasonForReview": "The next practice goal."
+            }
+          ],
+          "comparisons": [
+            {
+              "comparisonId": "cmp-first-serve-in-pct",
+              "statId": "stat-first-serve-in",
+              "metricDefinitionId": "first-serve-in-pct",
+              "methodId": "manual-tagging-v1",
+              "selectionRule": "all",
+              "claim": "change",
+              "before": {
+                "date": "2026-09-09",
+                "sessionIds": [
+                  "session-0909"
+                ],
+                "numerator": 12,
+                "denominator": 30,
+                "provenance": "reviewed"
+              },
+              "after": {
+                "date": "2026-10-07",
+                "sessionIds": [
+                  "session-1007"
+                ],
+                "numerator": 18,
+                "denominator": 30,
+                "provenance": "reviewed"
+              },
+              "display": {
+                "before": "12 / 30 · 40%",
+                "after": "18 / 30 · 60%",
+                "delta": "+20 percentage points"
+              }
+            }
+          ],
+          "omitted": [],
+          "unresolved": [
+            "About 3 min 38 s of real material, so this film is shorter than 5 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 218000,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 4000
+            },
+            {
+              "beatId": "b04",
+              "ms": 4000
+            },
+            {
+              "beatId": "b05",
+              "ms": 122000
+            },
+            {
+              "beatId": "b06",
+              "ms": 8000
+            },
+            {
+              "beatId": "b07",
+              "ms": 4000
+            },
+            {
+              "beatId": "b08",
+              "ms": 4000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 300,
+        "beats": [
+          "goal title-card card.goal",
+          "early-evidence live k-02 near-baseline",
+          "lesson title-card card.lesson",
+          "lesson title-card card.lesson",
+          "recent-evidence live k-04 near-baseline",
+          "replay replay k-04 near-baseline 1/2",
+          "what-changed title-card card.what-changed",
+          "next-goal title-card card.next-goal"
+        ],
+        "estimateMs": 218000,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 3 min 38 s of real material, so this film is shorter than 5 min. Nothing is padded."
+        ],
+        "comparisons": [
+          [
+            "12 / 30 · 40%",
+            "18 / 30 · 60%",
+            "+20 percentage points"
+          ]
+        ],
+        "notes": {
+          "b01": "note-goal",
+          "b03": "note-lesson-2",
+          "b04": "l3-note-1",
+          "b08": "note-next"
+        }
+      }
+    },
+    {
+      "id": "progress-story-full",
+      "why": "Progress Story, full: adds the Sep 23 and Oct 7 lesson cards and a half-speed replay of the recent evidence",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "progress-story",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-progress-story-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "progress-story",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.growing-game",
+          "audience": "self",
+          "durationTargetSeconds": 360,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-goal",
+              "templateId": "card.goal",
+              "reasonForReview": "The dated starting goal."
+            },
+            {
+              "beatId": "b02",
+              "role": "early-evidence",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "metric",
+                  "refId": "stat-first-serve-in"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Earliest dated example (2026-09-09)."
+            },
+            {
+              "beatId": "b03",
+              "role": "lesson",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-lesson-2",
+              "templateId": "card.lesson",
+              "reasonForReview": "Lesson of 2026-09-23."
+            },
+            {
+              "beatId": "b04",
+              "role": "lesson",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "l3-note-1",
+              "templateId": "card.lesson",
+              "reasonForReview": "Lesson of 2026-10-07."
+            },
+            {
+              "beatId": "b05",
+              "role": "recent-evidence",
+              "treatment": "live",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Latest dated example (2026-10-07)."
+            },
+            {
+              "beatId": "b06",
+              "role": "replay",
+              "treatment": "replay",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": 2,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Labelled replay of k-04 at 1/2 speed."
+            },
+            {
+              "beatId": "b07",
+              "role": "what-changed",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "metric",
+                  "refId": "stat-first-serve-in"
+                }
+              ],
+              "noteId": null,
+              "templateId": "card.what-changed",
+              "reasonForReview": "The stored before and after comparison."
+            },
+            {
+              "beatId": "b08",
+              "role": "next-goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-next",
+              "templateId": "card.next-goal",
+              "reasonForReview": "The next practice goal."
+            }
+          ],
+          "comparisons": [
+            {
+              "comparisonId": "cmp-first-serve-in-pct",
+              "statId": "stat-first-serve-in",
+              "metricDefinitionId": "first-serve-in-pct",
+              "methodId": "manual-tagging-v1",
+              "selectionRule": "all",
+              "claim": "change",
+              "before": {
+                "date": "2026-09-09",
+                "sessionIds": [
+                  "session-0909"
+                ],
+                "numerator": 12,
+                "denominator": 30,
+                "provenance": "reviewed"
+              },
+              "after": {
+                "date": "2026-10-07",
+                "sessionIds": [
+                  "session-1007"
+                ],
+                "numerator": 18,
+                "denominator": 30,
+                "provenance": "reviewed"
+              },
+              "display": {
+                "before": "12 / 30 · 40%",
+                "after": "18 / 30 · 60%",
+                "delta": "+20 percentage points"
+              }
+            }
+          ],
+          "omitted": [],
+          "unresolved": [
+            "About 3 min 38 s of real material, so this film is shorter than 6 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 218000,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 4000
+            },
+            {
+              "beatId": "b04",
+              "ms": 4000
+            },
+            {
+              "beatId": "b05",
+              "ms": 122000
+            },
+            {
+              "beatId": "b06",
+              "ms": 8000
+            },
+            {
+              "beatId": "b07",
+              "ms": 4000
+            },
+            {
+              "beatId": "b08",
+              "ms": 4000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 360,
+        "beats": [
+          "goal title-card card.goal",
+          "early-evidence live k-02 near-baseline",
+          "lesson title-card card.lesson",
+          "lesson title-card card.lesson",
+          "recent-evidence live k-04 near-baseline",
+          "replay replay k-04 near-baseline 1/2",
+          "what-changed title-card card.what-changed",
+          "next-goal title-card card.next-goal"
+        ],
+        "estimateMs": 218000,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 3 min 38 s of real material, so this film is shorter than 6 min. Nothing is padded."
+        ],
+        "comparisons": [
+          [
+            "12 / 30 · 40%",
+            "18 / 30 · 60%",
+            "+20 percentage points"
+          ]
+        ],
+        "notes": {
+          "b01": "note-goal",
+          "b03": "note-lesson-2",
+          "b04": "l3-note-1",
+          "b08": "note-next"
+        }
+      }
+    },
+    {
+      "id": "court-memories-3min",
+      "why": "Court Memories, 3min: arrival B-roll, the day's moments in time order (k-02, lesson-linked break point, is the highlight), after B-roll; no score bug",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "arrival",
+              "treatment": "broll",
+              "keeperId": null,
+              "brollId": "b-01",
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "B-roll b-01 for the arrival."
+            },
+            {
+              "beatId": "b02",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01, a real moment of the day."
+            },
+            {
+              "beatId": "b03",
+              "role": "highlight",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02, the top-ranked moment."
+            },
+            {
+              "beatId": "b04",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03, a real moment of the day."
+            },
+            {
+              "beatId": "b05",
+              "role": "after",
+              "treatment": "broll",
+              "keeperId": null,
+              "brollId": "b-02",
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "B-roll b-02 for after the match."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 2 min 55 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 174500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 6000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            },
+            {
+              "beatId": "b05",
+              "ms": 6000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "beats": [
+          "arrival broll b-01",
+          "match-moment live k-01 near-baseline",
+          "highlight live k-02 near-baseline",
+          "match-moment live k-03 near-baseline",
+          "after broll b-02"
+        ],
+        "estimateMs": 174500,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 2 min 55 s of real material, so this film is shorter than 3 min. Nothing is padded."
+        ],
+        "omitted": [],
+        "overlays": {},
+        "cleanAlternate": true
+      }
+    },
+    {
+      "id": "court-memories-5min",
+      "why": "Court Memories, 5min: arrival B-roll, the day's moments in time order (k-02, lesson-linked break point, is the highlight), after B-roll; no score bug",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "arrival",
+              "treatment": "broll",
+              "keeperId": null,
+              "brollId": "b-01",
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "B-roll b-01 for the arrival."
+            },
+            {
+              "beatId": "b02",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01, a real moment of the day."
+            },
+            {
+              "beatId": "b03",
+              "role": "highlight",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02, the top-ranked moment."
+            },
+            {
+              "beatId": "b04",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03, a real moment of the day."
+            },
+            {
+              "beatId": "b05",
+              "role": "after",
+              "treatment": "broll",
+              "keeperId": null,
+              "brollId": "b-02",
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "B-roll b-02 for after the match."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 2 min 55 s of real material, so this film is shorter than 5 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 174500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 6000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            },
+            {
+              "beatId": "b05",
+              "ms": 6000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 300,
+        "beats": [
+          "arrival broll b-01",
+          "match-moment live k-01 near-baseline",
+          "highlight live k-02 near-baseline",
+          "match-moment live k-03 near-baseline",
+          "after broll b-02"
+        ],
+        "estimateMs": 174500,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 2 min 55 s of real material, so this film is shorter than 5 min. Nothing is padded."
+        ],
+        "omitted": [],
+        "overlays": {},
+        "cleanAlternate": true
+      }
+    },
+    {
+      "id": "court-memories-full",
+      "why": "Court Memories, full: arrival B-roll, the day's moments in time order (k-02, lesson-linked break point, is the highlight), after B-roll; no score bug",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 480,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "arrival",
+              "treatment": "broll",
+              "keeperId": null,
+              "brollId": "b-01",
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "B-roll b-01 for the arrival."
+            },
+            {
+              "beatId": "b02",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01, a real moment of the day."
+            },
+            {
+              "beatId": "b03",
+              "role": "highlight",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02, the top-ranked moment."
+            },
+            {
+              "beatId": "b04",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03, a real moment of the day."
+            },
+            {
+              "beatId": "b05",
+              "role": "after",
+              "treatment": "broll",
+              "keeperId": null,
+              "brollId": "b-02",
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "B-roll b-02 for after the match."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 2 min 55 s of real material, so this film is shorter than 8 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 174500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 6000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            },
+            {
+              "beatId": "b05",
+              "ms": 6000
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 480,
+        "beats": [
+          "arrival broll b-01",
+          "match-moment live k-01 near-baseline",
+          "highlight live k-02 near-baseline",
+          "match-moment live k-03 near-baseline",
+          "after broll b-02"
+        ],
+        "estimateMs": 174500,
+        "fallback": null,
+        "belowMinimum": false,
+        "unresolved": [
+          "About 2 min 55 s of real material, so this film is shorter than 8 min. Nothing is padded."
+        ],
+        "omitted": [],
+        "overlays": {},
+        "cleanAlternate": true
+      }
+    },
+    {
+      "id": "coach-cut-your-examples",
+      "why": "Story 125: with no reviewed cue (cue-03 only estimated) Coach's Cut opens with 'Your examples', shows the examples at 1x with no paused cue, no drill and no checkpoint card",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/cues/0/provenance",
+          "value": "estimated"
+        },
+        {
+          "op": "replace",
+          "path": "/references/14/provenance",
+          "value": "estimated"
+        }
+      ],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "context",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.examples",
+              "reasonForReview": "No reviewed cue: the film shows your examples and gives no instruction."
+            },
+            {
+              "beatId": "b02",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02 at original speed."
+            },
+            {
+              "beatId": "b03",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01 at original speed."
+            },
+            {
+              "beatId": "b04",
+              "role": "example",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03 at original speed."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Reviewed cue",
+              "missingEvidence": "No reviewed cue links to these keepers."
+            },
+            {
+              "idea": "Practice drill and next checkpoint",
+              "missingEvidence": "Without a reviewed cue the film gives no instruction."
+            }
+          ],
+          "unresolved": [
+            "About 2 min 47 s of real material; Coach’s Cut needs at least 3 min. Mark more moments for a longer film."
+          ]
+        },
+        "estimate": {
+          "totalMs": 166500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 7500
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            }
+          ]
+        },
+        "fallback": "your-examples",
+        "belowMinimum": true,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "fallback": "your-examples",
+        "beats": [
+          "context title-card card.examples",
+          "example live k-02 near-baseline",
+          "example live k-01 near-baseline",
+          "example live k-03 near-baseline"
+        ],
+        "estimateMs": 166500,
+        "belowMinimum": true,
+        "omitted": [
+          "Reviewed cue",
+          "Practice drill and next checkpoint"
+        ],
+        "unresolved": [
+          "About 2 min 47 s of real material; Coach’s Cut needs at least 3 min. Mark more moments for a longer film."
+        ],
+        "noTemplates": [
+          "card.drill",
+          "card.next-checkpoint"
+        ]
+      }
+    },
+    {
+      "id": "match-broadcast-one-angle",
+      "why": "Match Broadcast with one camera: the complete one-angle match, no replays",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/keepers/0/slots",
+          "value": [
+            "near-baseline"
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/keepers/1/slots",
+          "value": [
+            "near-baseline"
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/keepers/2/slots",
+          "value": [
+            "near-baseline"
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/keepers/3/slots",
+          "value": [
+            "near-baseline"
+          ]
+        }
+      ],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-match-broadcast-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "match-broadcast",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.relive-match",
+          "audience": "self",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "intro",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-players",
+              "templateId": "card.match-intro",
+              "reasonForReview": "Players as entered open the match."
+            },
+            {
+              "beatId": "b02",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01 in match order."
+            },
+            {
+              "beatId": "b03",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02 in match order."
+            },
+            {
+              "beatId": "b04",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03 in match order."
+            },
+            {
+              "beatId": "b05",
+              "role": "point",
+              "treatment": "live",
+              "keeperId": "k-04",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-090"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-04 in match order."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Replays from another angle",
+              "missingEvidence": "No second camera covers these points."
+            },
+            {
+              "idea": "Final score",
+              "missingEvidence": "The recorded points do not cover the whole match."
+            }
+          ],
+          "unresolved": [
+            "About 4 min 49 s of real material; Match Broadcast needs at least 5 min. Mark more moments for a longer film."
+          ]
+        },
+        "estimate": {
+          "totalMs": 288500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            },
+            {
+              "beatId": "b05",
+              "ms": 122000
+            }
+          ]
+        },
+        "fallback": "one-angle-match",
+        "belowMinimum": true,
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 300,
+        "fallback": "one-angle-match",
+        "beats": [
+          "intro title-card card.match-intro",
+          "point live k-01 near-baseline",
+          "point live k-02 near-baseline",
+          "point live k-03 near-baseline",
+          "point live k-04 near-baseline"
+        ],
+        "estimateMs": 288500,
+        "belowMinimum": true,
+        "omitted": [
+          "Replays from another angle",
+          "Final score"
+        ],
+        "unresolved": [
+          "About 4 min 49 s of real material; Match Broadcast needs at least 5 min. Mark more moments for a longer film."
+        ]
+      }
+    },
+    {
+      "id": "progress-story-method-change",
+      "why": "Story 137: the Oct 7 session was tagged with method version 2, so the comparison is dropped and the film is a lesson chronology with a method-change note and no metric",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/progress/later/methodVersion",
+          "value": "2"
+        }
+      ],
+      "input": {
+        "profileId": "progress-story",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-progress-story-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "progress-story",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.growing-game",
+          "audience": "self",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-goal",
+              "templateId": "card.goal",
+              "reasonForReview": "The dated starting goal."
+            },
+            {
+              "beatId": "b02",
+              "role": "early-evidence",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "Dated example (2026-09-09)."
+            },
+            {
+              "beatId": "b03",
+              "role": "lesson",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-lesson-2",
+              "templateId": "card.lesson",
+              "reasonForReview": "Lesson of 2026-09-23."
+            },
+            {
+              "beatId": "b04",
+              "role": "lesson",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "l3-note-1",
+              "templateId": "card.lesson",
+              "reasonForReview": "Lesson of 2026-10-07."
+            },
+            {
+              "beatId": "b05",
+              "role": "what-changed",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.method-change",
+              "reasonForReview": "The two sessions were counted differently, so they are not compared."
+            },
+            {
+              "beatId": "b06",
+              "role": "next-goal",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": "note-next",
+              "templateId": "card.next-goal",
+              "reasonForReview": "The next practice goal."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Before and after comparison",
+              "missingEvidence": "The two sessions were counted differently, so they are not compared."
+            }
+          ],
+          "unresolved": [
+            "About 1 min 28 s of real material; Progress Story needs at least 2 min. Mark more moments for a longer film."
+          ]
+        },
+        "estimate": {
+          "totalMs": 88000,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 4000
+            },
+            {
+              "beatId": "b04",
+              "ms": 4000
+            },
+            {
+              "beatId": "b05",
+              "ms": 4000
+            },
+            {
+              "beatId": "b06",
+              "ms": 4000
+            }
+          ]
+        },
+        "fallback": "lesson-chronology",
+        "belowMinimum": true,
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 300,
+        "fallback": "lesson-chronology",
+        "beats": [
+          "goal title-card card.goal",
+          "early-evidence live k-02 near-baseline",
+          "lesson title-card card.lesson",
+          "lesson title-card card.lesson",
+          "what-changed title-card card.method-change",
+          "next-goal title-card card.next-goal"
+        ],
+        "estimateMs": 88000,
+        "belowMinimum": true,
+        "omitted": [
+          "Before and after comparison"
+        ],
+        "comparisons": [],
+        "overlays": {},
+        "unresolved": [
+          "About 1 min 28 s of real material; Progress Story needs at least 2 min. Mark more moments for a longer film."
+        ]
+      }
+    },
+    {
+      "id": "court-memories-no-broll",
+      "why": "Court Memories with no B-roll: the Arrival chapter shrinks from a 6 s shot to a 4 s date card, there is no after chapter, and both are listed as missing",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/brolls",
+          "value": []
+        }
+      ],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "arrival",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.date",
+              "reasonForReview": "No arrival footage: a date card opens the day."
+            },
+            {
+              "beatId": "b02",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01, a real moment of the day."
+            },
+            {
+              "beatId": "b03",
+              "role": "highlight",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02, the top-ranked moment."
+            },
+            {
+              "beatId": "b04",
+              "role": "match-moment",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03, a real moment of the day."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Arrival footage",
+              "missingEvidence": "No B-roll is marked for the arrival."
+            },
+            {
+              "idea": "After the match",
+              "missingEvidence": "No B-roll is marked for after the match."
+            }
+          ],
+          "unresolved": [
+            "About 2 min 47 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 166500,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 4000
+            },
+            {
+              "beatId": "b02",
+              "ms": 7500
+            },
+            {
+              "beatId": "b03",
+              "ms": 68000
+            },
+            {
+              "beatId": "b04",
+              "ms": 87000
+            }
+          ]
+        },
+        "fallback": "one-camera-excerpts",
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "fallback": "one-camera-excerpts",
+        "beats": [
+          "arrival title-card card.date",
+          "match-moment live k-01 near-baseline",
+          "highlight live k-02 near-baseline",
+          "match-moment live k-03 near-baseline"
+        ],
+        "estimateMs": 166500,
+        "arrivalMs": 4000,
+        "belowMinimum": false,
+        "omitted": [
+          "Arrival footage",
+          "After the match"
+        ],
+        "unresolved": [
+          "About 2 min 47 s of real material, so this film is shorter than 3 min. Nothing is padded."
+        ]
+      }
+    },
+    {
+      "id": "rally-pulse-court-sound",
+      "why": "Rally Pulse with a track that has no rights record and Medium effects: court-sound highlights with static titles (effects back to low), the track listed as missing",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "length": "3min",
+          "music": {
+            "assetId": "track-02"
+          },
+          "effects": "medium"
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-rally-pulse-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "rally-pulse",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.worth-keeping",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "opening",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01: a whole rally."
+            },
+            {
+              "beatId": "b02",
+              "role": "key-exchange",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02: a whole rally."
+            },
+            {
+              "beatId": "b03",
+              "role": "payoff",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03: a whole rally."
+            },
+            {
+              "beatId": "b04",
+              "role": "close",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.accent",
+              "reasonForReview": "A quiet static close on court sound."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [
+            {
+              "idea": "Licensed music",
+              "missingEvidence": "No rights record for track-02."
+            }
+          ],
+          "unresolved": [
+            "About 2 min 44 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 164000,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 7500
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 87000
+            },
+            {
+              "beatId": "b04",
+              "ms": 1500
+            }
+          ]
+        },
+        "fallback": "court-sound-highlights",
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": "track-02"
+        }
+      },
+      "assert": {
+        "target": 180,
+        "fallback": "court-sound-highlights",
+        "beats": [
+          "opening live k-01 near-baseline",
+          "key-exchange live k-02 near-baseline",
+          "payoff live k-03 near-baseline",
+          "close title-card card.accent"
+        ],
+        "estimateMs": 164000,
+        "music": null,
+        "effectIntensity": "low",
+        "omitted": [
+          "Licensed music"
+        ]
+      }
+    },
+    {
+      "id": "rally-pulse-licensed-music",
+      "why": "Rally Pulse with track-01, which has a rights record: the music is bound to it",
+      "op": "plan",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "length": "3min",
+          "music": {
+            "assetId": "track-01"
+          }
+        }
+      },
+      "expect": {
+        "plan": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-rally-pulse-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "rally-pulse",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.worth-keeping",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": {
+            "assetId": "track-01",
+            "rightsRecordId": "rights-track-01"
+          },
+          "narration": null,
+          "beats": [
+            {
+              "beatId": "b01",
+              "role": "opening",
+              "treatment": "live",
+              "keeperId": "k-01",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-01: a whole rally."
+            },
+            {
+              "beatId": "b02",
+              "role": "key-exchange",
+              "treatment": "live",
+              "keeperId": "k-02",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [
+                {
+                  "kind": "score",
+                  "refId": "p-041"
+                }
+              ],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-02: a whole rally."
+            },
+            {
+              "beatId": "b03",
+              "role": "payoff",
+              "treatment": "live",
+              "keeperId": "k-03",
+              "brollId": null,
+              "angle": "near-baseline",
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": null,
+              "reasonForReview": "k-03: a whole rally."
+            },
+            {
+              "beatId": "b04",
+              "role": "close",
+              "treatment": "title-card",
+              "keeperId": null,
+              "brollId": null,
+              "angle": null,
+              "replaySpeedDen": null,
+              "overlays": [],
+              "noteId": null,
+              "templateId": "card.accent",
+              "reasonForReview": "A quiet static close on court sound."
+            }
+          ],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": [
+            "About 2 min 44 s of real material, so this film is shorter than 3 min. Nothing is padded."
+          ]
+        },
+        "estimate": {
+          "totalMs": 164000,
+          "beats": [
+            {
+              "beatId": "b01",
+              "ms": 7500
+            },
+            {
+              "beatId": "b02",
+              "ms": 68000
+            },
+            {
+              "beatId": "b03",
+              "ms": 87000
+            },
+            {
+              "beatId": "b04",
+              "ms": 1500
+            }
+          ]
+        },
+        "fallback": null,
+        "belowMinimum": false,
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "fallback": null,
+        "beats": [
+          "opening live k-01 near-baseline",
+          "key-exchange live k-02 near-baseline",
+          "payoff live k-03 near-baseline",
+          "close title-card card.accent"
+        ],
+        "omitted": [],
+        "music": {
+          "assetId": "track-01",
+          "rightsRecordId": "rights-track-01"
+        }
+      }
+    },
+    {
+      "id": "no-keepers",
+      "why": "Story 120: with no keepers the planner refuses and asks for marks",
+      "op": "plan",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/keepers",
+          "value": []
+        }
+      ],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "refusal": {
+          "code": "noKeepers",
+          "message": "Mark a few moments first"
+        },
+        "directions": null
+      },
+      "assert": {
+        "refusal": [
+          "noKeepers",
+          "Mark a few moments first"
+        ]
+      }
+    },
+    {
+      "id": "check-coach-cut-3min",
+      "why": "The RulesPlanner's own plan passes",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "beats": 8
+      },
+      "assert": {
+        "ok": true,
+        "beats": 8
+      }
+    },
+    {
+      "id": "unknown-keeper",
+      "why": "A planner output naming keeper k-99, which is not in the catalog",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/1/keeperId",
+          "value": "k-99"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "card-with-free-text",
+      "why": "Story 157: a card carrying its own text instead of a template slot",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "add",
+          "path": "/beats/0/text",
+          "value": "Sample: Best serve ever!"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "unknownField"
+      },
+      "assert": {
+        "rejectCode": "unknownField"
+      }
+    },
+    {
+      "id": "unknown-card-template",
+      "why": "A card template that is not in the catalog",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/0/templateId",
+          "value": "card.quote"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "card-note-of-the-wrong-use",
+      "why": "card.goal filled with the drill note",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/0/noteId",
+          "value": "note-drill"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "badTemplateSlot"
+      },
+      "assert": {
+        "rejectCode": "badTemplateSlot"
+      }
+    },
+    {
+      "id": "card-without-its-note",
+      "why": "card.drill with no note",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/6/noteId",
+          "value": null
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "badTemplateSlot"
+      },
+      "assert": {
+        "rejectCode": "badTemplateSlot"
+      }
+    },
+    {
+      "id": "angle-with-no-view",
+      "why": "k-02 has no far-baseline view",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/1/angle",
+          "value": "far-baseline"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "overlay-not-stored",
+      "why": "A score overlay for a point that is not in the reference catalog",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/1/overlays/0/refId",
+          "value": "p-999"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "card-showing-a-keeper",
+      "why": "A title card that also names a keeper",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/0/keeperId",
+          "value": "k-02"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "treatmentMismatch"
+      },
+      "assert": {
+        "rejectCode": "treatmentMismatch"
+      }
+    },
+    {
+      "id": "stale-event-revision",
+      "why": "A plan bound to event revision 2 after a correction made it 3",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/bindings/eventRevision",
+          "value": 2
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "staleRevision"
+      },
+      "assert": {
+        "rejectCode": "staleRevision"
+      }
+    },
+    {
+      "id": "other-project",
+      "why": "A plan for another project",
+      "op": "check",
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/projectId",
+          "value": "other-court-day"
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "projectMismatch"
+      },
+      "assert": {
+        "rejectCode": "projectMismatch"
+      }
+    },
+    {
+      "id": "music-without-rights",
+      "why": "Music naming a rights record the project does not hold",
+      "op": "check",
+      "fromCase": "rally-pulse-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/music",
+          "value": {
+            "assetId": "track-02",
+            "rightsRecordId": "rights-track-02"
+          }
+        }
+      ],
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "check-sample-court-memories-brief",
+      "why": "The Sample court-memories brief resolves in the context",
+      "op": "check",
+      "fromRecord": "records/story-brief.court-memories.json",
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "beats": 4
+      },
+      "assert": {
+        "ok": true,
+        "beats": 4
+      }
+    },
+    {
+      "id": "check-sample-progress-brief",
+      "why": "The Sample progress brief resolves in the context",
+      "op": "check",
+      "fromRecord": "records/story-brief.progress.json",
+      "contextPatch": [],
+      "input": {},
+      "expect": {
+        "beats": 5
+      },
+      "assert": {
+        "ok": true,
+        "beats": 5
+      }
+    }
+  ]
+}
