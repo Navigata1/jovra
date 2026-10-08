@@ -89,3 +89,29 @@ https://developers.cloudflare.com/r2/api/s3/temporary-credentials/ ;
 https://developers.cloudflare.com/r2/api/workers/workers-multipart-usage/ ;
 https://developers.cloudflare.com/r2/objects/multipart-objects/ ;
 https://developers.cloudflare.com/workers/platform/limits/ ; `docs/research/studio/backend-architecture.md` §§1, 4, 7.
+
+## Amendment note (2026-10-07): finding 30, items (1) and (4)
+
+Append-only; no decision above changes. This note records how the text above answers two items of finding 30 (ADR
+consistency, Studio review round 2). Both were corrected in the text during that review, before this ADR was first
+committed, so git holds no earlier wording.
+
+- **Item (1), camera guests.** The finding: this ADR said a camera guest receives its capability "after its invite
+  is redeemed", leaving out the approval step that `docs/backend/architecture.md` §6.1 and `security-model.md` §8.2
+  require, so an implementer could have issued the capability at redemption. The reading that holds: redemption
+  only reaches `awaiting_host` and grants nothing. The camera capability (`jvg_`) is issued only after both phones
+  show the same six-digit code derived from the guest key's thumbprint, the host compares them and taps Approve, and
+  the guest then proves possession of that key. The guest's device label is never the basis for approval.
+  Not settled by this note: ADR-0027 Amendment 1 (2026-10-07) replaced a comparison code derived only from the QR and
+  the guest key with a commit-then-reveal code for the LAN room, because such a code can be ground offline. Whether
+  the cloud guest path of `security-model.md` §8.2 needs the same change is left to the re-verification of findings
+  13–48 (Studio ticket S02, register entry SOF-R4-05); the cloud design is unchanged here.
+- **Item (4), downloads.** The finding: this ADR said "Downloads use capabilities that last minutes", while the
+  default design streams downloads through the gateway and no capability leaves it. The reading that holds is the
+  "Downloads" paragraph above: a download streams through the gateway with the grant re-checked on every request; a
+  presigned GET of at most 5 minutes exists only if it is adopted after the spike; a share link (at most 24 h) is
+  redeemed through the gateway each time. The **Media** bullet "issues short-lived, exact-object, single-operation
+  capabilities" therefore covers the capability tokens of `security-model.md` §8.1 (guest `jvg_`, upload session
+  `jvs_`, attempt lease `jvl_`, share link `jvh_`) and an adopted presigned GET; a default download by the owner or a
+  grantee is authorized per request and carries no bearer capability (`architecture.md`
+  `GET /v1/artifacts/{artifactId}/content`; revocation semantics in `security-model.md` §8.5).
