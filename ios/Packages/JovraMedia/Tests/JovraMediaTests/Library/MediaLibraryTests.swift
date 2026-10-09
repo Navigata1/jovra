@@ -22,9 +22,17 @@ import JovraMedia
     let counts = try await library.byteCounts(sessionID: document.id)
     #expect(counts.originals == 3 && counts.cache == 2 && counts.exports == 0)
     #expect(try folder.appendingPathComponent("originals").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
+    var nested = folder.appendingPathComponent("originals/nested", isDirectory: true)
+    try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: false)
+    var nestedFile = nested.appendingPathComponent("old.mp4")
+    try Data([6]).write(to: nestedFile)
+    var excluded = URLResourceValues(); excluded.isExcludedFromBackup = true
+    try nested.setResourceValues(excluded); try nestedFile.setResourceValues(excluded)
     try await library.includeOriginalsInDeviceBackup(true, sessionID: document.id)
     #expect(try folder.appendingPathComponent("originals").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
     #expect(try cache.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
+    #expect(try nested.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
+    #expect(try nestedFile.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
     #expect(try await store.load(document.id).storage.includeInDeviceBackup == true)
     for path in ["../outside", "/tmp/outside", "originals/../outside", "originals//bad", "cache/video.mp4"] {
         await #expect(throws: MediaLibraryError.self) { try await library.reserveOriginalURL(sessionID: document.id, relativePath: path) }

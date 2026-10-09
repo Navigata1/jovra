@@ -50,16 +50,41 @@ public actor MediaLibrary {
 
     public func includeOriginalsInDeviceBackup(_ enabled: Bool, sessionID: String) async throws {
         let folder = try await recordingFolder(sessionID: sessionID)
-        var originals = folder.appendingPathComponent("originals", isDirectory: true)
-        var values = URLResourceValues(); values.isExcludedFromBackup = !enabled
-        try originals.setResourceValues(values)
-        do { try await store.setDeviceBackup(enabled, for: sessionID) }
+        let oldPolicy = try await store.load(sessionID).storage.includeInDeviceBackup
+        // Inspect the entire tree before changing any flag. Never follow a link.
+        let originals = try originalTree(folder.appendingPathComponent("originals", isDirectory: true))
+        let previous = try originals.map { ($0, try $0.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup ?? !oldPolicy) }
+        do {
+            for url in originals { try backupFlag(!enabled, url: url) }
+            try await store.setDeviceBackup(enabled, for: sessionID)
+        }
         catch {
-            let old = try await store.load(sessionID).storage.includeInDeviceBackup
-            values.isExcludedFromBackup = !old
-            try? originals.setResourceValues(values)
+            // A post-rename durability refusal may already have committed metadata.
+            // Keep effective file policy consistent with the document that survived.
+            let persisted = try? await store.load(sessionID).storage.includeInDeviceBackup
+            for (url, excluded) in previous {
+                try? backupFlag(persisted == enabled ? !enabled : excluded, url: url)
+            }
             throw error
         }
+    }
+
+    private func backupFlag(_ excluded: Bool, url: URL) throws {
+        try refuseLink(url)
+        var url = url, values = URLResourceValues()
+        values.isExcludedFromBackup = excluded
+        try url.setResourceValues(values)
+    }
+
+    private func originalTree(_ url: URL) throws -> [URL] {
+        try refuseLink(url)
+        var result = [url]
+        if try FileManager.default.attributesOfItem(atPath: url.path)[.type] as? FileAttributeType == .typeDirectory {
+            for child in try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil) {
+                result += try originalTree(child)
+            }
+        }
+        return result
     }
 
     public func byteCounts(sessionID: String) async throws -> MediaByteCounts {
