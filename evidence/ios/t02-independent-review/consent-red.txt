@@ -1,0 +1,62 @@
+test_consent_is_not_withdrawn_before_it_was_attached (test_contracts.ConsentConsistencyTests.test_consent_is_not_withdrawn_before_it_was_attached) ... ok
+test_impossible_consent_dates_are_rejected_without_crashing (test_contracts.ConsentConsistencyTests.test_impossible_consent_dates_are_rejected_without_crashing) ... 
+  test_impossible_consent_dates_are_rejected_without_crashing (test_contracts.ConsentConsistencyTests.test_impossible_consent_dates_are_rejected_without_crashing) (field='withdrawnAt') ... ERROR
+  test_impossible_consent_dates_are_rejected_without_crashing (test_contracts.ConsentConsistencyTests.test_impossible_consent_dates_are_rejected_without_crashing) (field='attachedAt') ... ERROR
+test_juniors_mean_consent_is_required (test_contracts.ConsentConsistencyTests.test_juniors_mean_consent_is_required) ... ok
+test_valid_leap_day_consent_timestamps_remain_valid (test_contracts.ConsentConsistencyTests.test_valid_leap_day_consent_timestamps_remain_valid) ... ok
+test_written_consent_dates_are_checked_without_a_withdrawal (test_contracts.ConsentConsistencyTests.test_written_consent_dates_are_checked_without_a_withdrawal) ... FAIL
+
+======================================================================
+ERROR: test_impossible_consent_dates_are_rejected_without_crashing (test_contracts.ConsentConsistencyTests.test_impossible_consent_dates_are_rejected_without_crashing) (field='withdrawnAt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/scripts/spec/test_contracts.py", line 572, in test_impossible_consent_dates_are_rejected_without_crashing
+    for problem in session_problems(doc)))
+                   ~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/scripts/spec/test_contracts.py", line 307, in session_problems
+    return references.session_problems(doc, load(MEDIA_MANIFEST))
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/spec/reference/jovra_ref/references.py", line 298, in session_problems
+    problems += _parent_problems(log) + _consent_problems(consent) + _bounds_problems(doc, log)
+                                        ~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/spec/reference/jovra_ref/references.py", line 229, in _consent_problems
+    withdrawn = _instant(consent["withdrawnAt"])
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/spec/reference/jovra_ref/references.py", line 220, in _instant
+    return datetime.fromisoformat(text.replace("Z", "+00:00"))
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: day 30 must be in range 1..28 for month 2 in year 2026
+
+======================================================================
+ERROR: test_impossible_consent_dates_are_rejected_without_crashing (test_contracts.ConsentConsistencyTests.test_impossible_consent_dates_are_rejected_without_crashing) (field='attachedAt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/scripts/spec/test_contracts.py", line 572, in test_impossible_consent_dates_are_rejected_without_crashing
+    for problem in session_problems(doc)))
+                   ~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/scripts/spec/test_contracts.py", line 307, in session_problems
+    return references.session_problems(doc, load(MEDIA_MANIFEST))
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/spec/reference/jovra_ref/references.py", line 298, in session_problems
+    problems += _parent_problems(log) + _consent_problems(consent) + _bounds_problems(doc, log)
+                                        ~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/spec/reference/jovra_ref/references.py", line 231, in _consent_problems
+    if withdrawn < _instant(written["attachedAt"]):
+                   ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/spec/reference/jovra_ref/references.py", line 220, in _instant
+    return datetime.fromisoformat(text.replace("Z", "+00:00"))
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: day 30 must be in range 1..28 for month 2 in year 2026
+
+======================================================================
+FAIL: test_written_consent_dates_are_checked_without_a_withdrawal (test_contracts.ConsentConsistencyTests.test_written_consent_dates_are_checked_without_a_withdrawal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t02/scripts/spec/test_contracts.py", line 578, in test_written_consent_dates_are_checked_without_a_withdrawal
+    self.assertTrue(any("attachedAt" in problem for problem in session_problems(doc)))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.005s
+
+FAILED (failures=1, errors=2)

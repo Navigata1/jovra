@@ -1,0 +1,17 @@
+Restoring inclusive segment-end mutation returned 1
+test_frame_rate_uses_the_segment_starting_at_a_shared_boundary (test_contracts.SegmentBoundaryTests.test_frame_rate_uses_the_segment_starting_at_a_shared_boundary) ... FAIL
+
+======================================================================
+FAIL: test_frame_rate_uses_the_segment_starting_at_a_shared_boundary (test_contracts.SegmentBoundaryTests.test_frame_rate_uses_the_segment_starting_at_a_shared_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/jovra-t02-boundary-mutation-cbfwv0an/scripts/spec/test_contracts.py", line 538, in test_frame_rate_uses_the_segment_starting_at_a_shared_boundary
+    self.assertEqual(references.frame_rate_at(session, 1000), 30)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Fraction(60, 1) != 30
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)
+

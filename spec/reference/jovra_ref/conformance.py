@@ -3,12 +3,52 @@ reference engine and evaluate hand-written assertions."""
 
 from __future__ import annotations
 
+import importlib
+import pkgutil
 import re
 
 from . import scoring, stats, units
 from .log import LogError
 
 _TOKEN = re.compile(r"([A-Za-z0-9_+-]+)|\[(\d+)\]")
+_KIND = re.compile(r"^jovra(\.[a-z][A-Za-z0-9]*)+$")
+
+
+# ----- plumbing by convention (T02) -----------------------------------------------------------------
+# Adding a fixture kind means adding files, never editing a shared list:
+#   * a schema named after the kind: jovra.fixture.rally -> spec/schemas/fixture-rally.schema.json
+#     (drop "jovra.", dots become hyphens, camelCase becomes kebab-case);
+#   * optionally a module in spec/reference/cases/ that defines generate(ctx) -> int (and may define
+#     ORDER, default 100, and CHECKS = {kind: check(path, doc, docs) -> [problem, ...]}).
+
+def schema_file_for_kind(kind: str) -> str:
+    """The schema file a document kind maps to by name, e.g. jovra.archiveManifest -> archive-manifest.schema.json."""
+    if not isinstance(kind, str) or not _KIND.match(kind):
+        raise ValueError(f"malformed kind {kind!r}")
+    words = kind.split(".")[1:]
+    return "-".join(re.sub(r"(?<!^)([A-Z])", r"-\1", w).lower() for w in words) + ".schema.json"
+
+
+def case_modules() -> list:
+    """Every module in the cases package that defines generate(ctx), in (ORDER, name) order."""
+    package = importlib.import_module("cases")
+    found = []
+    for info in pkgutil.iter_modules(package.__path__):
+        module = importlib.import_module(f"cases.{info.name}")
+        if callable(getattr(module, "generate", None)):
+            found.append(module)
+    return sorted(found, key=lambda m: (getattr(m, "ORDER", 100), m.__name__))
+
+
+def discovered_checks() -> dict:
+    """Kind-specific checks contributed by cases modules (CHECKS = {kind: function})."""
+    checks: dict = {}
+    for module in case_modules():
+        for kind, check in getattr(module, "CHECKS", {}).items():
+            if kind in checks:
+                raise ValueError(f"two cases modules register a check for {kind}")
+            checks[kind] = check
+    return checks
 
 
 def get_path(obj, path: str):

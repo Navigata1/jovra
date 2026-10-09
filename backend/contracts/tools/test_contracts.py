@@ -87,6 +87,46 @@ class ValidatorTest(unittest.TestCase):
             mutate(copy)
             return run("validate.py", "--contracts", str(copy))
 
+    def test_explicit_ecma_whitespace_is_rejected_in_gateway_string_fields(self):
+        # ECMAScript WhiteSpace + LineTerminator codepoints, independently enumerated.
+        codepoints = [*range(0x09, 0x0E), 0x20, 0xA0, 0x1680, *range(0x2000, 0x200B),
+                      0x2028, 0x2029, 0x202F, 0x205F, 0x3000, 0xFEFF]
+        files = []
+        def mutate(copy: Path):
+            for codepoint in codepoints:
+                char = chr(codepoint)
+                email = copy / "fixtures/routes/grants.create/request.project-coach.json"
+                doc = json.loads(email.read_text(encoding="utf-8"))
+                doc["body"]["inviteeEmail"] = "coach" + char + "@example.test"
+                name = f"request.whitespace-{codepoint:04x}.json"
+                (email.parent / name).write_text(json.dumps(doc), encoding="utf-8")
+                files.append((name, "inviteeEmail"))
+                url = copy / "fixtures/routes/uploads.open/response.opened.json"
+                doc = json.loads(url.read_text(encoding="utf-8"))
+                doc["body"]["data"]["partTarget"]["urlTemplate"] = "https://gateway.example.test/" + char + "parts/{n}"
+                name = f"response.whitespace-{codepoint:04x}.json"
+                (url.parent / name).write_text(json.dumps(doc), encoding="utf-8")
+                files.append((name, "urlTemplate"))
+        result = self._validate_copy(mutate)
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        for name, field in files:
+            with self.subTest(file=name):
+                self.assertTrue(any(name in line and field in line for line in result.stdout.splitlines()),
+                                result.stdout + result.stderr)
+
+    def test_gateway_string_fields_accept_whitespace_free_and_percent_encoded_values(self):
+        def mutate(copy: Path):
+            email = copy / "fixtures/routes/grants.create/request.project-coach.json"
+            doc = json.loads(email.read_text(encoding="utf-8"))
+            doc["body"]["inviteeEmail"] = "coach.plus+tag@example.test"
+            email.write_text(json.dumps(doc), encoding="utf-8")
+            url = copy / "fixtures/routes/uploads.open/response.opened.json"
+            doc = json.loads(url.read_text(encoding="utf-8"))
+            doc["body"]["data"]["partTarget"]["urlTemplate"] = "https://gateway.example.test:443/parts/{n}?note=two%20words"
+            url.write_text(json.dumps(doc), encoding="utf-8")
+        result = self._validate_copy(mutate)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_a_queue_message_with_an_extra_field_is_invalid(self):
         def mutate(copy: Path):
             path = copy / "fixtures" / "queues" / "render-work" / "message.wake-up.json"

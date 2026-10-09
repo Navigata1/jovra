@@ -1,0 +1,15 @@
+# Negative test 2: a new fixture kind added by files only, then its schema mapping deleted (copy of the tree)
++ added spec/reference/cases/probe_cases.py and spec/schemas/fixture-probe.schema.json; no other file edited
+$ python3 spec/reference/generate_fixtures.py
+scoring_cases 74, stats_cases 4, units_cases 1, sample_cases 1, records 5, sample_media 1, contract_examples 4, probe_cases 1
+exit=0
+$ python3 scripts/spec/validate.py
+instances valid                    94
+kind-to-schema names               14
+RESULT: PASS
+exit=0
+- deleted spec/schemas/fixture-probe.schema.json (its schema mapping)
+$ python3 scripts/spec/validate.py
+FAIL spec/fixtures/probe/P01-probe.json: no schema fixture-probe.schema.json for kind 'jovra.fixture.probe'
+RESULT: FAIL (1 failure(s))
+exit=1

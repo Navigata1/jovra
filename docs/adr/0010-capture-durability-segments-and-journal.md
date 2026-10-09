@@ -25,3 +25,15 @@ a Watch or Live Activity, or an account.
 Replay, export and analysis work on a segment timeline in session time, never file time, and gaps are visible in replay.
 The pass bar (no more than 3 s lost per crash, no unrecoverable session, journal and video within one frame) can only be
 proven on hardware; simulator runs through the fixture camera (ADR-0012) prove the pipeline, not durability.
+
+## Amendment — 2026-10-09: one sample-buffer recording pipeline
+
+The finalized iOS v1 specification (D9) and T15 supersede the earlier mechanism above: use an `AVAssetWriter`
+segment pipeline for both `CameraSource` and `FixtureCamera`, with fragmented MP4 output at approximately two-second
+intervals behind the same atomic write-ahead journal. The camera supplies video/audio sample buffers; the simulator
+fixture supplies decoded sample buffers. A fixture recording must pass through the real writer and journal, never
+copy an already completed movie and label it a live capture. The source adapter changes; recording, persistence,
+recovery and gap semantics do not.
+
+The original durability goal and device-only loss-bound gate remain unchanged. Simulator decode/recovery results
+do not establish the hardware crash-loss bound, lens selection, focus locks, thermal endurance or power-loss safety.

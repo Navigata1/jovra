@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JOVRA core continuation — State of the Union</title>
+<style>
+:root{color-scheme:dark;--bg:#070f1c;--paper:#0d1b2f;--paper-2:#10243b;--ink:#eef6ff;--muted:#a9bdd3;--line:rgba(169,189,211,.18);--accent:#58d7b3;--blue:#77b7ff;--amber:#ffd166;--red:#ff8f8f;--good:#8ef2c0}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top left,rgba(88,215,179,.15),transparent 30rem),radial-gradient(circle at top right,rgba(119,183,255,.13),transparent 32rem),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,"Segoe UI",sans-serif;line-height:1.55}
+main{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:40px 0 60px}
+h1,h2,h3{margin:0;line-height:1.12}
+h1{font-size:clamp(2rem,5vw,3.8rem);letter-spacing:-.04em;max-width:900px;margin-top:10px}
+h2{margin-bottom:14px;font-size:clamp(1.4rem,2.6vw,2rem)}
+h3{font-size:1.02rem;color:#fff}
+p{margin:0}
+a{color:var(--blue)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;color:#dff7ef;overflow-wrap:anywhere}
+.eyebrow{color:var(--accent);font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+section{padding-top:34px}
+.hero{padding:20px 0 26px;border-bottom:1px solid var(--line)}
+.hero .tagline{max-width:760px;margin-top:14px;color:var(--muted);font-size:1.06rem}
+.chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin:2px 6px 2px 0;background:rgba(255,255,255,.05);color:var(--muted);font-size:.78rem;font-weight:800}
+.chip.green{color:var(--good);border-color:rgba(142,242,192,.4)}
+.chip.amber{color:var(--amber);border-color:rgba(255,209,102,.4)}
+.chip.red{color:var(--red);border-color:rgba(255,143,143,.4)}
+.chip.blue{color:var(--blue);border-color:rgba(119,183,255,.4)}
+.panel,.phase{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(16,36,59,.95),rgba(13,27,47,.95));box-shadow:0 18px 46px rgba(0,0,0,.25);padding:20px}
+.phase{margin-top:14px}
+.phase.active{border-color:rgba(88,215,179,.45)}
+.phase header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:8px}
+.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.07);margin-top:12px;overflow:hidden}
+.bar .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--blue))}
+.bar.big{height:16px}
+ul.tasks,ul.bare{list-style:none;margin:12px 0 0;padding:0}
+ul.tasks li,ul.bare li{padding:8px 0;border-top:1px solid var(--line);color:var(--muted)}
+ul.tasks li:first-child,ul.bare li:first-child{border-top:0}
+ul.tasks .mark{margin-right:6px;color:var(--accent)}
+li.task-done{opacity:.75}
+li.task-blocked .mark{color:var(--red)}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.9rem}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:rgba(255,255,255,.05);color:#fff;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase}
+td{color:var(--muted)}
+td b{color:#fff}
+.table-wrap{overflow-x:auto;border-radius:12px}
+.timeline{display:grid;gap:10px}
+.tl-item{display:grid;grid-template-columns:72px 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.035)}
+.tl-item time{color:var(--accent);font-size:.8rem;font-weight:900}
+.tl-item p{color:var(--muted)}
+details.resume{margin-top:14px;border:1px dashed rgba(88,215,179,.4);border-radius:12px;padding:10px 14px}
+details.resume summary{cursor:pointer;color:var(--accent);font-weight:800}
+.prompt-box{position:relative;margin-top:10px}
+.prompt-box pre{margin:0;border:1px solid var(--line);border-radius:10px;background:#081120;color:#dff7ef;padding:14px;font-size:.82rem;white-space:pre-wrap;overflow-wrap:anywhere;max-height:420px;overflow:auto}
+button.copy{position:absolute;top:8px;right:8px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.08);color:var(--ink);font-weight:700;padding:4px 12px;cursor:pointer}
+button.copy:hover{background:rgba(88,215,179,.2)}
+.footer{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:.9rem}
+@media(max-width:900px){main{width:min(100% - 24px,760px)}.tl-item{grid-template-columns:56px 1fr}}
+
+</style>
+</head>
+<body>
+
+<main>
+  <header class="hero">
+    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-10-09 13:35Z</p>
+    <h1>JOVRA core continuation</h1>
+    <p class="tagline">Record safely. Review honestly. Own the export.</p>
+    <div style="margin-top:14px">
+      <span class="chip blue">mission: active</span>
+      <span class="chip green">active phase: P2</span>
+      <span class="chip blue">2/13 tasks</span>
+      <span class="chip amber">1/8 gates passed</span>
+      <span class="chip ">2 PRs merged</span>
+      <span class="chip ">sessions: 1</span>
+      <span class="chip ">updated: 2026-10-09T13:35:59.947625+00:00</span>
+    </div>
+    <div class="bar big" role="img" aria-label="Overall progress 15%"><div class="fill" style="width:15%"></div></div>
+    <p class="small muted" style="margin-top:6px">Overall: 15% of tasks complete &middot; repo Navigata1/jovra &middot; plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md</p>
+  </header>
+
+  <section aria-labelledby="coldstart">
+    <h2 id="coldstart">Cold-Start Prompt (any new session, zero context)</h2>
+    <div class="panel">
+      <div class="prompt-box"><button class="copy" type="button">Copy</button><pre>You are cold-starting the &quot;JOVRA core continuation&quot; mission with zero prior context.
+
+Local repo: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv  (Navigata1/jovra, default branch main)
+Governing plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md
+Mission status: active — active phase: P2
+
+Mission conventions:
+  - Tier 2 subagents: independent implementation and verification, isolated worktrees.
+  - Stop after P4 passes; step 5 requires new founder authorization.
+  - Never clean artifacts or simulators belonging to other projects.
+
+Operating procedure:
+  Read ops/mission/state.json FIRST — it is the source of truth, not this prompt.
+  Verify reality matches state: git log --oneline -5, and re-run the active phase's gate commands.
+  Follow the loop: pick next unblocked task -&gt; branch codex/&lt;phase&gt;-&lt;slug&gt; -&gt; implement -&gt; run gates -&gt; PR -&gt; merge per policy 'auto' -&gt; update state.json -&gt; node ops/mission/render-sotu.mjs -&gt; commit state+journal+html.
+  Never hand-edit state-of-the-union.html. Never merge without fresh gate evidence in ops/mission/evidence/.
+  End of session: update resume.nextActions for a stranger, append journal entry, render, commit.</pre></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="metrics"><h2 id="metrics">Scoreboard: Baseline &rarr; Current &rarr; Target</h2>
+  <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Baseline</th><th>Current</th><th>Target</th></tr></thead><tbody><tr><td><b>Closed feature tickets at kickoff</b></td><td>13</td><td><span class="chip amber">13</span></td><td>Authorized flow, not entire backlog</td></tr></tbody></table></div>
+  <p class="small muted" style="margin-top:6px">green = at/past target &middot; blue = moving toward target &middot; amber = unchanged &middot; red = moving away</p></section>
+  <section aria-labelledby="risks"><h2 id="risks">Risks &amp; Blockers</h2><div class="panel"><ul class="bare"><li><span class="chip red">high</span> <b>Concurrent Claude work</b> &mdash; <span class="muted">Original checkout and all Claude worktrees preserved; only isolated Codex checkouts change.</span></li><li><span class="chip amber">medium</span> <b>Physical device validation</b> &mdash; <span class="muted">Simulator evidence does not prove physical capture, signing, endurance or store readiness.</span></li></ul></div></section>
+
+  <section aria-labelledby="phases">
+    <h2 id="phases">Phases</h2>
+    <article class="phase">
+      <header>
+        <span class="chip green">done</span>
+        <h3>P1 &middot; Preserve and reconcile</h3>
+        <span class="muted small">est. sessions: 1</span>
+      </header>
+      <p class="muted">Continue from verified remote main without overwriting Claude changes.</p>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <p class="small muted">1/1 tasks &middot; 100%</p>
+      <ul class="tasks"><li class="task-done"><span class="mark">&#9679;</span> <b>P1-T1</b> Preservation inventory, backup, latest main and scope record &mdash; <a href="https://github.com/Navigata1/jovra/pull/327">PR #327</a> merged 2026-10-09T13:29:33.448132+00:00</li></ul>
+      <div class="table-wrap"><table><thead><tr><th>Gate</th><th>Check</th><th>Command</th><th>Evidence</th><th>Last run</th></tr></thead><tbody><tr>
+      <td><span class="chip green">passed</span></td>
+      <td><b>Worktree base and preservation evidence</b><br><span class="small">Eight files backed up; original root and all Claude worktrees untouched. Isolated checkout reconciled to current main, including mission merge be3b15f.</span></td>
+      <td><code>git status --short --branch</code></td>
+      <td>ops/mission/evidence/preservation-2026-10-09.json</td>
+      <td>2026-10-09T13:29:33.448132+00:00</td></tr></tbody></table></div>
+      <details class="resume"><summary>Resume prompt for P1 (copy into a fresh session)</summary>
+        <div class="prompt-box"><button class="copy" type="button">Copy</button><pre>You are resuming the &quot;JOVRA core continuation&quot; mission at phase P1: Preserve and reconcile.
+
+Mission: Record safely. Review honestly. Own the export.
+North star: Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.
+Repo: Navigata1/jovra (local: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv), default branch: main.
+Governing plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md
+
+Phase goal: Continue from verified remote main without overwriting Claude changes.
+All tasks in this phase are done.
+All gates passed — close the phase and advance.
+Mission conventions:
+  - Tier 2 subagents: independent implementation and verification, isolated worktrees.
+  - Stop after P4 passes; step 5 requires new founder authorization.
+  - Never clean artifacts or simulators belonging to other projects.
+
+Operating procedure:
+  Read ops/mission/state.json FIRST — it is the source of truth, not this prompt.
+  Verify reality matches state: git log --oneline -5, and re-run the active phase's gate commands.
+  Follow the loop: pick next unblocked task -&gt; branch codex/&lt;phase&gt;-&lt;slug&gt; -&gt; implement -&gt; run gates -&gt; PR -&gt; merge per policy 'auto' -&gt; update state.json -&gt; node ops/mission/render-sotu.mjs -&gt; commit state+journal+html.
+  Never hand-edit state-of-the-union.html. Never merge without fresh gate evidence in ops/mission/evidence/.
+  End of session: update resume.nextActions for a stranger, append journal entry, render, commit.</pre></div>
+      </details>
+    </article><article class="phase active">
+      <header>
+        <span class="chip amber">in progress</span>
+        <h3>P2 &middot; Finish prerequisite reviews</h3>
+        <span class="muted small">est. sessions: 1</span>
+      </header>
+      <p class="muted">Review T02 and T07 independently, resolve findings, merge only when gates and CI pass.</p>
+      <div class="bar"><div class="fill" style="width:50%"></div></div>
+      <p class="small muted">1/2 tasks &middot; 50%</p>
+      <ul class="tasks"><li class="task-done"><span class="mark">&#9679;</span> <b>T02</b> Complete contract review and merge PR 66 &mdash; <a href="https://github.com/Navigata1/jovra/pull/66">PR #66</a> merged 2026-10-09T13:31:48Z<br><span class="muted small">Independent review fixes and backend regex compatibility correction merged d36e170 after fresh core/spec/l10n/media/backend-contract checks passed.</span></li><li class="task-in_progress"><span class="mark">&#9689;</span> <b>T07</b> Complete navigation/permissions review and merge PR 321<br><span class="muted small">Dedicated simulator: 15 core, 63 media and 70 hosted tests independently pass. Full UI/restoration tests still running.</span></li></ul>
+      <div class="table-wrap"><table><thead><tr><th>Gate</th><th>Check</th><th>Command</th><th>Evidence</th><th>Last run</th></tr></thead><tbody><tr>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Shared contracts and fixtures</b></td>
+      <td><code>python3 scripts/spec/validate.py</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td></tr><tr>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Native unit and UI verification on dedicated simulator</b><br><span class="small">Run with SIMULATOR_ID set to a dedicated JOVRA simulator; use scripts/ios/ui-test.sh for its separate full UI gate.</span></td>
+      <td><code>scripts/ios/test.sh</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td></tr><tr>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Navigation/permissions UI suite on dedicated simulator</b><br><span class="small">SIMULATOR_ID must identify a dedicated JOVRA simulator, not a shared default.</span></td>
+      <td><code>scripts/ios/ui-test.sh</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td></tr></tbody></table></div>
+      <details class="resume"><summary>Resume prompt for P2 (copy into a fresh session)</summary>
+        <div class="prompt-box"><button class="copy" type="button">Copy</button><pre>You are resuming the &quot;JOVRA core continuation&quot; mission at phase P2: Finish prerequisite reviews.
+
+Mission: Record safely. Review honestly. Own the export.
+North star: Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.
+Repo: Navigata1/jovra (local: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv), default branch: main.
+Governing plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md
+
+Phase goal: Review T02 and T07 independently, resolve findings, merge only when gates and CI pass.
+Remaining tasks:
+  - [in_progress] T07: Complete navigation/permissions review and merge PR 321 (Dedicated simulator: 15 core, 63 media and 70 hosted tests independently pass. Full UI/restoration tests still running.)
+Gates not yet passed:
+  - [pending] Shared contracts and fixtures  -&gt;  python3 scripts/spec/validate.py
+  - [pending] Native unit and UI verification on dedicated simulator  -&gt;  scripts/ios/test.sh
+  - [pending] Navigation/permissions UI suite on dedicated simulator  -&gt;  scripts/ios/ui-test.sh
+Next actions (from last session):
+  - Finish independent T07 full UI and process-relaunch restoration tests on dedicated simulator; merge only after fresh CI.
+  - T03 implementation now unblocked by merged T02; build typed Swift contracts and conformance runners including canonical fixture kind.
+  - Finish PR328 reference vocabulary/independent canonical bytes, then implement T08 and native capture/playback along ticket dependencies.
+Mission conventions:
+  - Tier 2 subagents: independent implementation and verification, isolated worktrees.
+  - Stop after P4 passes; step 5 requires new founder authorization.
+  - Never clean artifacts or simulators belonging to other projects.
+
+Operating procedure:
+  Read ops/mission/state.json FIRST — it is the source of truth, not this prompt.
+  Verify reality matches state: git log --oneline -5, and re-run the active phase's gate commands.
+  Follow the loop: pick next unblocked task -&gt; branch codex/&lt;phase&gt;-&lt;slug&gt; -&gt; implement -&gt; run gates -&gt; PR -&gt; merge per policy 'auto' -&gt; update state.json -&gt; node ops/mission/render-sotu.mjs -&gt; commit state+journal+html.
+  Never hand-edit state-of-the-union.html. Never merge without fresh gate evidence in ops/mission/evidence/.
+  End of session: update resume.nextActions for a stranger, append journal entry, render, commit.</pre></div>
+      </details>
+    </article><article class="phase">
+      <header>
+        <span class="chip ">pending</span>
+        <h3>P3 &middot; Close verification gaps</h3>
+        <span class="muted small">est. sessions: 1</span>
+      </header>
+      <p class="muted">Automate existing Studio reference checks and reconcile core contract vocabulary without expanding Studio.</p>
+      <div class="bar"><div class="fill" style="width:0%"></div></div>
+      <p class="small muted">0/2 tasks &middot; 0%</p>
+      <ul class="tasks"><li class="task-pending"><span class="mark">&#9675;</span> <b>P3-T1</b> Add CI coverage for existing Studio / Room reference contracts</li><li class="task-pending"><span class="mark">&#9675;</span> <b>P3-T2</b> Resolve court coordinate and key-moment vocabulary discrepancies</li></ul>
+      <div class="table-wrap"><table><thead><tr><th>Gate</th><th>Check</th><th>Command</th><th>Evidence</th><th>Last run</th></tr></thead><tbody><tr>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Studio validator</b></td>
+      <td><code>python3 scripts/spec/validate_studio.py</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td></tr><tr>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Validator negative tests</b></td>
+      <td><code>python3 -m unittest discover -s scripts/spec -p &quot;test_*.py&quot;</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td></tr></tbody></table></div>
+      <details class="resume"><summary>Resume prompt for P3 (copy into a fresh session)</summary>
+        <div class="prompt-box"><button class="copy" type="button">Copy</button><pre>You are resuming the &quot;JOVRA core continuation&quot; mission at phase P3: Close verification gaps.
+
+Mission: Record safely. Review honestly. Own the export.
+North star: Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.
+Repo: Navigata1/jovra (local: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv), default branch: main.
+Governing plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md
+
+Phase goal: Automate existing Studio reference checks and reconcile core contract vocabulary without expanding Studio.
+Remaining tasks:
+  - [pending] P3-T1: Add CI coverage for existing Studio / Room reference contracts
+  - [pending] P3-T2: Resolve court coordinate and key-moment vocabulary discrepancies
+Gates not yet passed:
+  - [pending] Studio validator  -&gt;  python3 scripts/spec/validate_studio.py
+  - [pending] Validator negative tests  -&gt;  python3 -m unittest discover -s scripts/spec -p &quot;test_*.py&quot;
+Mission conventions:
+  - Tier 2 subagents: independent implementation and verification, isolated worktrees.
+  - Stop after P4 passes; step 5 requires new founder authorization.
+  - Never clean artifacts or simulators belonging to other projects.
+
+Operating procedure:
+  Read ops/mission/state.json FIRST — it is the source of truth, not this prompt.
+  Verify reality matches state: git log --oneline -5, and re-run the active phase's gate commands.
+  Follow the loop: pick next unblocked task -&gt; branch codex/&lt;phase&gt;-&lt;slug&gt; -&gt; implement -&gt; run gates -&gt; PR -&gt; merge per policy 'auto' -&gt; update state.json -&gt; node ops/mission/render-sotu.mjs -&gt; commit state+journal+html.
+  Never hand-edit state-of-the-union.html. Never merge without fresh gate evidence in ops/mission/evidence/.
+  End of session: update resume.nextActions for a stranger, append journal entry, render, commit.</pre></div>
+      </details>
+    </article><article class="phase">
+      <header>
+        <span class="chip ">pending</span>
+        <h3>P4 &middot; Record to export</h3>
+        <span class="muted small">est. sessions: Several feature slices</span>
+      </header>
+      <p class="muted">A working native iOS flow with durable recording, local library, replay, corrected score and export.</p>
+      <div class="bar"><div class="fill" style="width:0%"></div></div>
+      <p class="small muted">0/8 tasks &middot; 0%</p>
+      <ul class="tasks"><li class="task-pending"><span class="mark">&#9675;</span> <b>T03</b> Swift contracts, canonical JSON, percentages, units and capability models</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T04</b> Scoring engine and correction propagation</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T05</b> Stats and data export</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T08</b> Durable session storage and media custody</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T15-T16</b> Recording pipeline and recovery</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T14</b> Frame-accurate playback</li><li class="task-pending"><span class="mark">&#9675;</span> <b>P4-UI</b> Native recording, library, replay and reviewed-score integration</li><li class="task-pending"><span class="mark">&#9675;</span> <b>P4-EXPORT</b> Clip/data export and end-to-end proof</li></ul>
+      <div class="table-wrap"><table><thead><tr><th>Gate</th><th>Check</th><th>Command</th><th>Evidence</th><th>Last run</th></tr></thead><tbody><tr>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Domain and conformance tests</b></td>
+      <td><code>swift test --package-path ios/Packages/JovraCore</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td></tr><tr>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Dedicated simulator core flow and export evidence</b><br><span class="small">Pending future integration harness; command will be implemented before this gate is run.</span></td>
+      <td><code>scripts/ios/core-flow-test.sh</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td></tr></tbody></table></div>
+      <details class="resume"><summary>Resume prompt for P4 (copy into a fresh session)</summary>
+        <div class="prompt-box"><button class="copy" type="button">Copy</button><pre>You are resuming the &quot;JOVRA core continuation&quot; mission at phase P4: Record to export.
+
+Mission: Record safely. Review honestly. Own the export.
+North star: Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.
+Repo: Navigata1/jovra (local: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv), default branch: main.
+Governing plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md
+
+Phase goal: A working native iOS flow with durable recording, local library, replay, corrected score and export.
+Remaining tasks:
+  - [pending] T03: Swift contracts, canonical JSON, percentages, units and capability models
+  - [pending] T04: Scoring engine and correction propagation
+  - [pending] T05: Stats and data export
+  - [pending] T08: Durable session storage and media custody
+  - [pending] T15-T16: Recording pipeline and recovery
+  - [pending] T14: Frame-accurate playback
+  - [pending] P4-UI: Native recording, library, replay and reviewed-score integration
+  - [pending] P4-EXPORT: Clip/data export and end-to-end proof
+Gates not yet passed:
+  - [pending] Domain and conformance tests  -&gt;  swift test --package-path ios/Packages/JovraCore
+  - [pending] Dedicated simulator core flow and export evidence  -&gt;  scripts/ios/core-flow-test.sh
+Mission conventions:
+  - Tier 2 subagents: independent implementation and verification, isolated worktrees.
+  - Stop after P4 passes; step 5 requires new founder authorization.
+  - Never clean artifacts or simulators belonging to other projects.
+
+Operating procedure:
+  Read ops/mission/state.json FIRST — it is the source of truth, not this prompt.
+  Verify reality matches state: git log --oneline -5, and re-run the active phase's gate commands.
+  Follow the loop: pick next unblocked task -&gt; branch codex/&lt;phase&gt;-&lt;slug&gt; -&gt; implement -&gt; run gates -&gt; PR -&gt; merge per policy 'auto' -&gt; update state.json -&gt; node ops/mission/render-sotu.mjs -&gt; commit state+journal+html.
+  Never hand-edit state-of-the-union.html. Never merge without fresh gate evidence in ops/mission/evidence/.
+  End of session: update resume.nextActions for a stranger, append journal entry, render, commit.</pre></div>
+      </details>
+    </article>
+  </section>
+
+  <section aria-labelledby="prs"><h2 id="prs">Merged Work (2 PRs)</h2><div class="timeline"><article class="tl-item"><time>#66</time><p><b>T02 shared contract completion and independent corrections</b> &mdash; P2, merged 2026-10-09T13:31:48Z &middot; <a href="https://github.com/Navigata1/jovra/pull/66">view</a></p></article><article class="tl-item"><time>#327</time><p><b>Record JOVRA core-flow continuation and explicit expansion hold</b> &mdash; P1, merged 2026-10-09T13:29:33.448132+00:00 &middot; <a href="https://github.com/Navigata1/jovra/pull/327">view</a></p></article></div></section>
+  <section aria-labelledby="journal"><h2 id="journal">Journal (latest first)</h2><div class="timeline"><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:35:59.947625+00:00 — T02 merged</b><br><br>- PR66 merged as d36e170 after all fresh automatic checks passed.<br>- Gateway regex portability fixed with explicit ECMA whitespace and black-box rejection tests; strict checker retained.<br>- T03 unblocked and underway; canonical-byte vectors registered through the existing discovery convention.<br>- T07 UI/restoration suite still running; no step-5 work started.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:29:33.448132+00:00 — prerequisite review</b><br><br>- PR327 merged after green CI and independent gate-command review; P1 complete.<br>- T02 independent review found and fixed invalid calendar-date crash and frame-rate boundary uncertainty; 75 Python tests and five mutation controls pass.<br>- Fresh T02 backend-contract CI exposed regex portability mismatch; no merge until fixed.<br>- T07 dedicated-simulator tests pass at unit seams; full UI and scene restoration verification pending.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:16:58.646541+00:00 — session 1</b><br><br>- Founder authorized steps 1–4; step 5 held.<br>- Tier 2 orchestration: isolated independent T02 and T07 verification.<br>- Backed up eight existing uncommitted files without changing original checkouts; reconciled to remote main 6de361a.<br>- Current free disk approximately 16 GiB; dedicate simulator and derived data.</p></article></div></section>
+
+  <p class="footer">GENERATED by ops/mission/render-sotu.mjs from state.json — do not hand-edit.
+  To update: edit state.json, run <code>node ops/mission/render-sotu.mjs</code>, commit both.</p>
+</main>
+<script>
+document.querySelectorAll("button.copy").forEach((b) => {
+  b.addEventListener("click", async () => {
+    const text = b.parentElement.querySelector("pre").innerText;
+    try { await navigator.clipboard.writeText(text); b.textContent = "Copied!"; }
+    catch { const r = document.createRange(); r.selectNodeContents(b.parentElement.querySelector("pre")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Select+Ctrl C"; }
+    setTimeout(() => (b.textContent = "Copy"), 1600);
+  });
+});
+</script>
+
+</body>
+</html>

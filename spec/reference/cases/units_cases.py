@@ -73,3 +73,10 @@ def write(out, write_json, version) -> int:
     }
     write_json(out / f"{doc['id']}.json", doc)
     return 1
+
+
+ORDER = 30
+
+
+def generate(ctx) -> int:
+    return write(ctx.fixtures / "units", ctx.write_json, ctx.version)

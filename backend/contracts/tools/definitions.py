@@ -12,6 +12,10 @@ from dataclasses import dataclass, field
 
 COMMON = "common.schema.json"
 
+# JSON Schema patterns use ECMAScript, not Python's Unicode `\s`. Spell out ECMA-262
+# WhiteSpace + LineTerminator so both the strict shared checker and gateway validators agree.
+ECMA_WHITESPACE = r"\u0009-\u000D\u0020\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF"
+
 
 def ref(name: str) -> dict:
     return {"$ref": f"{COMMON}#/$defs/{name}"}
@@ -117,7 +121,8 @@ upload_session = described(
         "partTarget": obj({
             "method": {"const": "PUT"},
             "urlTemplate": described("Absolute https URL with the literal placeholder {n} for the part number.",
-                                     {"type": "string", "pattern": "^https://[A-Za-z0-9.-]+(:[0-9]+)?/[^\\s]*\\{n\\}[^\\s]*$",
+                                     {"type": "string", "pattern": (r"^https://[A-Za-z0-9.-]+(:[0-9]+)?/[^" + ECMA_WHITESPACE
+                                                  + r"]*\{n\}[^" + ECMA_WHITESPACE + r"]*$"),
                                       "maxLength": 512}),
             "headers": described("Extra headers each part request must carry (names and fixed values only; never "
                                  "a secret other than the session capability placeholder).",
@@ -347,7 +352,8 @@ def grant_body() -> dict:
     return obj({
         "kind": {"enum": INVITATION_GRANT_KINDS},
         "inviteeEmail": described("Required; stored only as an HMAC, never logged (architecture §5.1).",
-                                  {"type": "string", "maxLength": 254, "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"}),
+                                  {"type": "string", "maxLength": 254, "pattern": ("^[^@" + ECMA_WHITESPACE + "]+@[^@"
+                                               + ECMA_WHITESPACE + r"]+\.[^@" + ECMA_WHITESPACE + "]+$")}),
         **ids("projectId", "lessonId", "artifactId", "lessonClipId"),
         "expiresInSec": described("End of access after redemption (INFERRED bound: up to 365 days).",
                                   {"type": "integer", "minimum": 60, "maximum": 31_536_000}),

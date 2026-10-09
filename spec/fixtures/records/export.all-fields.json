@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.1.0",
+  "kind": "jovra.export",
+  "exportedAt": "2026-10-07T18:00:00Z",
+  "app": {"name": "JOVRA", "version": "0.0.0", "build": "1", "platform": "reference"},
+  "scope": "sharePack",
+  "includesAudio": false,
+  "includesOriginals": false,
+  "sessions": [
+    {
+      "id": "ex-session-all-fields",
+      "title": "Contract example: every 1.1 field",
+      "path": "session.all-fields.json",
+      "sample": true,
+      "eventLogVersion": 6
+    }
+  ],
+  "files": [
+    {
+      "path": "session.all-fields.json",
+      "role": "sessionJson",
+      "mimeType": "application/json",
+      "bytes": 11453,
+      "sha256": "f97a1e60654417f40b4e97ef2ea2d753b76212fb2ed9986ff7c1348cb71cf5bd",
+      "sessionId": "ex-session-all-fields"
+    }
+  ],
+  "csvContracts": [{"name": "points", "version": 1}],
+  "contact": "hello@islanddevcrew.com",
+  "facesBlurred": true,
+  "sharePack": {"audience": "opponent", "selection": "selectedPoints", "source": "rallyOnly"}
+}

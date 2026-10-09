@@ -1,0 +1,324 @@
+{
+  "version": 1,
+  "mission": {
+    "name": "JOVRA core continuation",
+    "tagline": "Record safely. Review honestly. Own the export.",
+    "repo": "Navigata1/jovra",
+    "repoPath": "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv",
+    "defaultBranch": "main",
+    "planDoc": "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md",
+    "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
+    "status": "active",
+    "started": "2026-10-09",
+    "updated": "2026-10-09T13:35:59.947625+00:00",
+    "sessionCount": 1
+  },
+  "policies": {
+    "merge": "auto",
+    "branchPrefix": "codex/",
+    "maxPrLines": 400,
+    "notes": "One feature per PR. Merge only after independent review, fresh local gates and green CI; larger contract ports may require documented split."
+  },
+  "phases": [
+    {
+      "id": "P1",
+      "title": "Preserve and reconcile",
+      "goal": "Continue from verified remote main without overwriting Claude changes.",
+      "status": "done",
+      "sessionsEstimate": "1",
+      "gates": [
+        {
+          "id": "P1-G1",
+          "title": "Worktree base and preservation evidence",
+          "command": "git status --short --branch",
+          "status": "passed",
+          "evidence": "ops/mission/evidence/preservation-2026-10-09.json",
+          "lastRun": "2026-10-09T13:29:33.448132+00:00",
+          "notes": "Eight files backed up; original root and all Claude worktrees untouched. Isolated checkout reconciled to current main, including mission merge be3b15f."
+        }
+      ],
+      "tasks": [
+        {
+          "id": "P1-T1",
+          "title": "Preservation inventory, backup, latest main and scope record",
+          "status": "done",
+          "dependsOn": [],
+          "pr": {
+            "number": 327,
+            "url": "https://github.com/Navigata1/jovra/pull/327",
+            "mergedAt": "2026-10-09T13:29:33.448132+00:00"
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "P2",
+      "title": "Finish prerequisite reviews",
+      "goal": "Review T02 and T07 independently, resolve findings, merge only when gates and CI pass.",
+      "status": "in_progress",
+      "sessionsEstimate": "1",
+      "gates": [
+        {
+          "id": "P2-G1",
+          "title": "Shared contracts and fixtures",
+          "command": "python3 scripts/spec/validate.py",
+          "status": "pending",
+          "evidence": null,
+          "lastRun": null,
+          "notes": ""
+        },
+        {
+          "id": "P2-G2",
+          "title": "Native unit and UI verification on dedicated simulator",
+          "command": "scripts/ios/test.sh",
+          "status": "pending",
+          "evidence": null,
+          "lastRun": null,
+          "notes": "Run with SIMULATOR_ID set to a dedicated JOVRA simulator; use scripts/ios/ui-test.sh for its separate full UI gate."
+        },
+        {
+          "id": "P2-G3",
+          "title": "Navigation/permissions UI suite on dedicated simulator",
+          "command": "scripts/ios/ui-test.sh",
+          "status": "pending",
+          "evidence": null,
+          "lastRun": null,
+          "notes": "SIMULATOR_ID must identify a dedicated JOVRA simulator, not a shared default."
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T02",
+          "title": "Complete contract review and merge PR 66",
+          "status": "done",
+          "dependsOn": [],
+          "pr": {
+            "number": 66,
+            "url": "https://github.com/Navigata1/jovra/pull/66",
+            "mergedAt": "2026-10-09T13:31:48Z"
+          },
+          "notes": "Independent review fixes and backend regex compatibility correction merged d36e170 after fresh core/spec/l10n/media/backend-contract checks passed."
+        },
+        {
+          "id": "T07",
+          "title": "Complete navigation/permissions review and merge PR 321",
+          "status": "in_progress",
+          "dependsOn": [],
+          "pr": null,
+          "notes": "Dedicated simulator: 15 core, 63 media and 70 hosted tests independently pass. Full UI/restoration tests still running."
+        }
+      ]
+    },
+    {
+      "id": "P3",
+      "title": "Close verification gaps",
+      "goal": "Automate existing Studio reference checks and reconcile core contract vocabulary without expanding Studio.",
+      "status": "pending",
+      "sessionsEstimate": "1",
+      "gates": [
+        {
+          "id": "P3-G1",
+          "title": "Studio validator",
+          "command": "python3 scripts/spec/validate_studio.py",
+          "status": "pending",
+          "evidence": null,
+          "lastRun": null,
+          "notes": ""
+        },
+        {
+          "id": "P3-G2",
+          "title": "Validator negative tests",
+          "command": "python3 -m unittest discover -s scripts/spec -p \"test_*.py\"",
+          "status": "pending",
+          "evidence": null,
+          "lastRun": null,
+          "notes": ""
+        }
+      ],
+      "tasks": [
+        {
+          "id": "P3-T1",
+          "title": "Add CI coverage for existing Studio / Room reference contracts",
+          "status": "pending",
+          "dependsOn": [],
+          "pr": null,
+          "notes": ""
+        },
+        {
+          "id": "P3-T2",
+          "title": "Resolve court coordinate and key-moment vocabulary discrepancies",
+          "status": "pending",
+          "dependsOn": [],
+          "pr": null,
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "P4",
+      "title": "Record to export",
+      "goal": "A working native iOS flow with durable recording, local library, replay, corrected score and export.",
+      "status": "pending",
+      "sessionsEstimate": "Several feature slices",
+      "gates": [
+        {
+          "id": "P4-G1",
+          "title": "Domain and conformance tests",
+          "command": "swift test --package-path ios/Packages/JovraCore",
+          "status": "pending",
+          "evidence": null,
+          "lastRun": null,
+          "notes": ""
+        },
+        {
+          "id": "P4-G2",
+          "title": "Dedicated simulator core flow and export evidence",
+          "command": "scripts/ios/core-flow-test.sh",
+          "status": "pending",
+          "evidence": null,
+          "lastRun": null,
+          "notes": "Pending future integration harness; command will be implemented before this gate is run."
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T03",
+          "title": "Swift contracts, canonical JSON, percentages, units and capability models",
+          "status": "pending",
+          "dependsOn": [
+            "T02"
+          ],
+          "pr": null,
+          "notes": ""
+        },
+        {
+          "id": "T04",
+          "title": "Scoring engine and correction propagation",
+          "status": "pending",
+          "dependsOn": [
+            "T03"
+          ],
+          "pr": null,
+          "notes": ""
+        },
+        {
+          "id": "T05",
+          "title": "Stats and data export",
+          "status": "pending",
+          "dependsOn": [
+            "T04"
+          ],
+          "pr": null,
+          "notes": ""
+        },
+        {
+          "id": "T08",
+          "title": "Durable session storage and media custody",
+          "status": "pending",
+          "dependsOn": [
+            "T03"
+          ],
+          "pr": null,
+          "notes": ""
+        },
+        {
+          "id": "T15-T16",
+          "title": "Recording pipeline and recovery",
+          "status": "pending",
+          "dependsOn": [
+            "T03"
+          ],
+          "pr": null,
+          "notes": ""
+        },
+        {
+          "id": "T14",
+          "title": "Frame-accurate playback",
+          "status": "pending",
+          "dependsOn": [
+            "T03"
+          ],
+          "pr": null,
+          "notes": ""
+        },
+        {
+          "id": "P4-UI",
+          "title": "Native recording, library, replay and reviewed-score integration",
+          "status": "pending",
+          "dependsOn": [
+            "T07",
+            "T08",
+            "T15-T16",
+            "T14",
+            "T04"
+          ],
+          "pr": null,
+          "notes": ""
+        },
+        {
+          "id": "P4-EXPORT",
+          "title": "Clip/data export and end-to-end proof",
+          "status": "pending",
+          "dependsOn": [
+            "P4-UI",
+            "T05"
+          ],
+          "pr": null,
+          "notes": ""
+        }
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "label": "Closed feature tickets at kickoff",
+      "baseline": "13",
+      "current": "13",
+      "target": "Authorized flow, not entire backlog",
+      "direction": "up"
+    }
+  ],
+  "risks": [
+    {
+      "title": "Concurrent Claude work",
+      "severity": "high",
+      "note": "Original checkout and all Claude worktrees preserved; only isolated Codex checkouts change."
+    },
+    {
+      "title": "Physical device validation",
+      "severity": "medium",
+      "note": "Simulator evidence does not prove physical capture, signing, endurance or store readiness."
+    }
+  ],
+  "prLog": [
+    {
+      "number": 327,
+      "title": "Record JOVRA core-flow continuation and explicit expansion hold",
+      "url": "https://github.com/Navigata1/jovra/pull/327",
+      "phase": "P1",
+      "mergedAt": "2026-10-09T13:29:33.448132+00:00"
+    },
+    {
+      "number": 66,
+      "title": "T02 shared contract completion and independent corrections",
+      "url": "https://github.com/Navigata1/jovra/pull/66",
+      "phase": "P2",
+      "mergedAt": "2026-10-09T13:31:48Z"
+    }
+  ],
+  "resume": {
+    "activePhase": "P2",
+    "nextActions": [
+      "Finish independent T07 full UI and process-relaunch restoration tests on dedicated simulator; merge only after fresh CI.",
+      "T03 implementation now unblocked by merged T02; build typed Swift contracts and conformance runners including canonical fixture kind.",
+      "Finish PR328 reference vocabulary/independent canonical bytes, then implement T08 and native capture/playback along ticket dependencies."
+    ],
+    "blockers": [],
+    "conventions": [
+      "Tier 2 subagents: independent implementation and verification, isolated worktrees.",
+      "Stop after P4 passes; step 5 requires new founder authorization.",
+      "Never clean artifacts or simulators belonging to other projects."
+    ]
+  }
+}
