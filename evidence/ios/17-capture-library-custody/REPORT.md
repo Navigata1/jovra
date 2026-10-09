@@ -22,3 +22,7 @@ Capture UI, library/replay consumers, correction and all exports remain pending;
 ## Transport repair
 
 The first push was rejected by GitHub because the raw native archive reached111MB. No PR/remote branch was created. Old reviewed/tested source6fa5c863 and evidence-headddcf3db are retained locally on codex/t17-capture-custody-raw-proof; full raw receipts and archive remain local. The unpublished transport history is rebuilt from main3ae5caa with the same application/test/resource bytes, readable logs, both reviews and SHA256 manifest; raw tar is excluded from Git transport. New-source-head review/test rebinding is required before final publication acceptance. No claim transfers solely from byte identity.
+
+## Rebuilt-head publication acceptance
+
+Independent Standards and Spec explicitly rebound source to1882946822a7b5641e31411871b4fe8878c6a5f4 against main3ae5caa, with zero findings. 06 exact native rerun at that head passed5/0failed/0skipped, two genuine classes, with the same actual four-second/120-frame fully decoded recording control. The result was parsed failclosed. No iOS source/test/resource bytes changed between6fa5c863 and1882946. Readable proof and a SHA256 manifest travel in Git; both raw native archives remain local and were read back fully. Publication adds evidence only. No full ticket, UI, AX or physical-device acceptance is inferred.
