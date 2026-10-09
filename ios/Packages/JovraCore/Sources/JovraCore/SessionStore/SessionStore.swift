@@ -77,7 +77,7 @@ public actor SessionStore {
         self.root = root.standardizedFileURL.resolvingSymlinksInPath()
         self.sessions = self.root.appendingPathComponent("sessions", isDirectory: true)
         self.writeFault = writeFault
-        try FileManager.default.createDirectory(at: sessions, withIntermediateDirectories: true)
+        try DurableDirectory.create(at: sessions)
         try Self.refuseSymbolicLink(self.sessions)
     }
 
@@ -85,8 +85,19 @@ public actor SessionStore {
         let folder = try folder(document.id)
         guard !FileManager.default.fileExists(atPath: folder.path) else { throw SessionStoreError.alreadyExists }
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false)
-        do { try write(document, to: folder, upgradeVersion: false) }
-        catch { try? FileManager.default.removeItem(at: folder); throw error }
+        do {
+            try write(document, to: folder, upgradeVersion: false)
+            try DurableDirectory.synchronize(sessions)
+        }
+        catch {
+            // A renamed document may survive a refused directory flush. Retain it,
+            // and never clean up through a parent that was replaced with a link.
+            if (try? Self.refuseSymbolicLink(sessions)) != nil,
+               !FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path) {
+                try? FileManager.default.removeItem(at: folder)
+            }
+            throw error
+        }
     }
 
     public func load(_ id: String) throws -> SessionDocument {

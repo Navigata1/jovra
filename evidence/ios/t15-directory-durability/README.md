@@ -1,0 +1,11 @@
+# Capture and session directory durability follow-up
+
+This deliberately changes the accepted T15 source after its unchanged five-PR stack merged. The frozen `48a1372` candidate and its 57-file custody remain historical acceptance evidence; this follow-up does not claim byte equivalence to that source.
+
+A file handle flush does not confirm its name in the originals directory. The real fixture pipeline test moved originals after an actual first confirmed fragment; the previous writer continued acknowledging an orphaned file (2 seconds through 28 seconds). A second case replaced the declared name with a different file. `01-public-filesystem-red.txt` records both failures; `04-media-directory-green.txt` records both refusals after the fix. The replacement file's contents remain untouched.
+
+The writer now synchronizes data, verifies the declared regular-file identity against its open descriptor, then synchronizes the media directory before any fragment WAL acknowledgment and final close. Shared Core `DurableDirectory` creates missing ancestors individually, synchronizes newly created directories and their parent links, and refuses non-directory/symlink final components with O_DIRECTORY/O_NOFOLLOW. CaptureJournal uses it before writing segment intents. SessionStore initialization uses it for root/sessions; new-session creation synchronizes sessions after document/child-folder synchronization before acknowledging success.
+
+`03-store-parent-activated-red.txt` records the original create acknowledgment despite a replaced sessions parent. `05-store-retention-red.txt` exposed that create's cleanup erased an already renamed document through that substituted parent. Safe cleanup now retains a renamed document and refuses cleanup through a replaced parent; `06-store-directory-green.txt` covers its public refusal and retention, existing post-rename transaction behavior, and journal controls. `02-store-parent-red.txt` is an honestly retained initial filter attempt with no activated new test, not a red-before-green result; the test file's parent directory had not been created until the next attempt.
+
+No simulator, physical power-loss, device battery/endurance, actual storage-hardware flush, or full T15/T16 acceptance is claimed. Filesystem ordering and public refusal semantics are verified separately from those hardware gates.

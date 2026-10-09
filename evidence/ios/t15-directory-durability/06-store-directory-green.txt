@@ -1,0 +1,33 @@
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/6] Compiling JovraCore DurableDirectory.swift
+[5/6] Emitting module JovraCore
+[6/7] Compiling JovraCore SessionStore.swift
+[6/8] Write Objects.LinkFileList
+[7/8] Linking JovraCorePackageTests
+Build complete! (2.39s)
+Test Suite 'Selected tests' started at 2026-10-09 10:45:06.590.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 10:45:06.590.
+Test Suite 'SessionStoreTests' started at 2026-10-09 10:45:06.591.
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' passed (0.155 seconds).
+Test Suite 'SessionStoreTests' passed at 2026-10-09 10:45:06.746.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.155 (0.156) seconds
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 10:45:06.746.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.155 (0.156) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:45:06.746.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.155 (0.157) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test failedJournalReplacementPreservesPreviouslyDurableSnapshot() started.
+◇ Test durableJournalReopensWithOnlyConfirmedMediaAndSegmentIntent() started.
+◇ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory() started.
+◇ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() started.
+✔ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() passed after 0.006 seconds.
+✔ Test failedJournalReplacementPreservesPreviouslyDurableSnapshot() passed after 0.008 seconds.
+✔ Test durableJournalReopensWithOnlyConfirmedMediaAndSegmentIntent() passed after 0.010 seconds.
+✔ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory() passed after 0.088 seconds.
+✔ Test run with 4 tests in 0 suites passed after 0.088 seconds.
