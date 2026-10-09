@@ -19,6 +19,7 @@ final class ReplayPlaybackModel {
     @ObservationIgnored private var library: LocalCaptureLibrary?
     @ObservationIgnored private var session: SessionID?
     @ObservationIgnored private var playback: FramePlayback?
+    @ObservationIgnored private var frameRate: FrameRate?
     @ObservationIgnored private var generation = UUID()
 
     var segments: [SessionSegment] { document?.recording.segments.filter(\.finalized).sorted { $0.index < $1.index } ?? [] }
@@ -44,7 +45,7 @@ final class ReplayPlaybackModel {
 
     func selectSegment(_ id: String) async {
         guard !isWorking, let library, let session, let segment = segments.first(where: { $0.id == id }) else { return }
-        player?.pause(); player = nil; playback = nil; frame = nil; frameCount = 0; showStill = false
+        player?.pause(); player = nil; playback = nil; frameRate = nil; frame = nil; frameCount = 0; showStill = false
         selectedSegmentID = id; error = nil; frameStatus = "Reading frames…"; isWorking = true
         let token = generation
         defer { if generation == token { isWorking = false } }
@@ -64,7 +65,7 @@ final class ReplayPlaybackModel {
                 let adapter = try FramePlayback(url: url, rate: rate, frameCount: decoded.videoFrames)
                 let first = try await adapter.frame(at: 0)
                 guard generation == token else { return }
-                playback = adapter; frameCount = decoded.videoFrames; frame = first
+                playback = adapter; frameRate = rate; frameCount = decoded.videoFrames; frame = first
                 frameStatus = "\(rate.framesPerSecond.formatted()) fps · \(decoded.videoFrames) decoded frames"
             } catch {
                 guard generation == token else { return }
@@ -77,9 +78,16 @@ final class ReplayPlaybackModel {
     }
 
     func step(_ delta: Int) async {
-        guard !isWorking, delta == 1 || delta == -1, let playback, let frame else { return }
-        let next = min(frameCount - 1, max(0, frame.index + delta))
-        player?.pause(); isWorking = true
+        guard !isWorking, delta == 1 || delta == -1, let playback, let frame, let frameRate else { return }
+        player?.pause()
+        var origin = frame.index
+        if let current = player?.currentTime(), current.isNumeric, current.seconds.isFinite {
+            if current.seconds <= 0 { origin = 0 }
+            else if current.seconds >= Double(frameCount) / frameRate.framesPerSecond { origin = frameCount - 1 }
+            else { origin = min(frameCount - 1, max(0, current.frameIndex(at: frameRate))) }
+        }
+        let next = min(frameCount - 1, max(0, origin + delta))
+        isWorking = true
         let token = generation
         defer { if generation == token { isWorking = false } }
         do {
@@ -97,7 +105,7 @@ final class ReplayPlaybackModel {
     func play() { showStill = false; player?.play() }
     func pause() { player?.pause() }
     func close() {
-        generation = UUID(); player?.pause(); player = nil; playback = nil
+        generation = UUID(); player?.pause(); player = nil; playback = nil; frameRate = nil
         frame = nil; frameCount = 0; isWorking = false; showStill = false
         selectedSegmentID = nil; error = nil; document = nil
     }
