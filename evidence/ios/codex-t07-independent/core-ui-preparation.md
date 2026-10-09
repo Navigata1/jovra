@@ -1,0 +1,14 @@
+# Core UI bridge preparation (no production implementation yet)
+
+Scope remains native iOS core; Studio, Android, tablet/foldable and watches remain held. Read screens.md S03, S04 and S08 and the existing SessionLookupKey and route catalog. Root owns the store/core contracts. UI starts after T07 merge and root provides the storage/media interfaces.
+
+- Home S03: existing editorial card selects Record; use local-store projections for latest session and honest scoped counts. Empty library replaces invented tiles/trend with specified StateCard. Sample values and badges only in explicit demo mode. A recovered-session banner is driven by actual recovery output.
+- Setup S04: four actual mode selections; persist setup into the created session via the store interface. Formats come from scoring presets; camera/storage/thermal facts come from actual media/device adapters. No fixed “battery 78%” or storage budget in live mode. Request camera through PermissionsCenter at capture entry; microphone remains optional.
+- Library S08: real folder-backed sessions, independent location/archive/review facets, search/filter/sort; missing video must not destroy stats. Default is Only on this iPhone. Do not imply Google Drive backup without verified archive output. Deep links read the same index through owning Features/Sessions/Library/SessionLookupKey.swift; no app-entry service registration edit.
+- Launch-data seam: T07 uses sentinel strings such as launch-session and launch-point. Real T03 UUID-backed session routes must resolve a known sample fixture in demo mode or a meaningful missing-session state; tests must not pretend a sentinel is a stored real session.
+- Domain seam: adapt T03 IDs/session enums once in the UI boundary rather than recreate scoring/media/domain models. UI invokes store/capture commands and consumes snapshots; it does not own journaling, codec, persistence, or the scoring algorithm.
+- Router seam: introduce own-file static placeholder metadata, wire catalog once, then actual features change their own flag. Permanent route tests assert stable screen identity, Close/back/tab behavior and meaningful selected setup/session state. Placeholder-only label/card assertions remain only for still-placeholder routes.
+- Catalog gate: PR333 (7fd68a5) now narrowly supports both ticket/tNN- and codex/tNN- with owning-table positive tests and unrelated/cross-area negative tests. UI catalog branches can use codex/tNN- without broadening ownership.
+- Validation: real flow create -> stored library -> overview/replay -> correction -> recomputed score -> export, as root-provided dependencies become ready. Reference fidelity uses native screenshots plus side-by-side reference review. Empty/missing/denied/working states, Dynamic Type, accessibility contrast and meaningful tap results belong to each implemented feature's evidence.
+
+This is seam preparation, not completed product functionality or a test result.

@@ -6,7 +6,7 @@ Usage: scripts/ios/xcresult-summary.py <bundle.xcresult>
 A row is printed for every test class or Swift Testing suite that directly holds test cases, with
 passed, failed, skipped and expected-failure (XCTExpectFailure) counts, so every test case is counted.
 A parameterized Swift Testing test counts once (its argument runs are noted in the total line).
-Exit status: 0 when no counted test failed, 1 otherwise.
+Exit status: 0 only for a completed Passed receipt with executed cases and no failure, 1 otherwise.
 """
 import json
 import subprocess
@@ -83,7 +83,15 @@ def main():
         print(f"Device: {device.get('deviceName')} {device.get('deviceId')} ({device.get('modelName')}, "
               f"{device.get('platform')} {device.get('osVersion')})")
     print(f"Result bundle: {bundle}")
-    return 0 if failed == 0 and summary.get("result") != "Failed" else 1
+    # A disk failure can leave a readable bundle with result "unknown" and no summaries. That is
+    # not a passing test run. Count expected failures as executed (the harness has negative controls),
+    # but never accept an empty/all-skipped run or silently ignore a new/unknown case status.
+    complete = summary.get("result") == "Passed" and passed + expected > 0
+    known_results = {key for key, _ in COLUMNS}
+    unknown_cases = any(value > 0 for _, counts in rows for key, value in counts.items() if key not in known_results)
+    if not complete or unknown_cases:
+        print("INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.")
+    return 0 if complete and not unknown_cases and failed == 0 and summary.get("failedTests", 0) == 0 else 1
 
 
 if __name__ == "__main__":
