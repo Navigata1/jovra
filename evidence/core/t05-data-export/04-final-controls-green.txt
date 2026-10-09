@@ -1,0 +1,65 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/10] Write swift-version--58304C5D6DBC2206.txt
+[2/6] Discover conformance runners by kind
+[3/6] Write sources
+[5/10] Compiling JovraCoreTests FixtureManifest.swift
+[6/10] Compiling JovraCoreTests ManifestTests.swift
+[7/10] Compiling JovraCoreTests SampleRunner.swift
+[8/10] Emitting module JovraCoreTests
+[9/14] Compiling JovraCoreTests ContractSafetyTests.swift
+[10/14] Compiling JovraCoreTests ScoringContractTests.swift
+[11/14] Compiling JovraCoreTests DataExporterTests.swift
+[12/14] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[13/16] Compiling JovraCoreTests ScoringTests.swift
+[14/16] Compiling JovraCoreTests StatsTests.swift
+[14/16] Write Objects.LinkFileList
+[15/16] Linking JovraCorePackageTests
+Build complete! (3.30s)
+Test Suite 'Selected tests' started at 2026-10-09 11:50:58.229.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 11:50:58.230.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 11:50:58.230.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:50:58.230.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test unknownWinnerAndMissingTimesStayEmptyRatherThanInvented() started.
+◇ Test exportedSampleDataMatchesTheIndependentCSVContracts() started.
+◇ Test correctionRecomputesCSVFromTheCurrentLog() started.
+◇ Test fixturesAreDispatchedByKindAndUnknownKindsFail() started.
+◇ Test CSVQuotesNamesAndPreservesSampleAndUnicode() started.
+◇ Test allDiscoveredRunnerFixturesPass() started.
+✔ Test fixturesAreDispatchedByKindAndUnknownKindsFail() passed after 0.041 seconds.
+Consumed jovra.archiveManifest: 2 fixtures
+Consumed jovra.benchmarkBindings: 1 fixtures
+Consumed jovra.benchmarkRecord: 3 fixtures
+Consumed jovra.csvContract: 2 fixtures
+canonical independent vectors: 13
+Consumed jovra.fixture.canonical: 1 fixtures
+✔ Test unknownWinnerAndMissingTimesStayEmptyRatherThanInvented() passed after 0.081 seconds.
+Consumed jovra.capabilityRegistry: 1 fixtures
+Consumed jovra.equipment: 1 fixtures
+Consumed jovra.export: 2 fixtures
+✔ Test exportedSampleDataMatchesTheIndependentCSVContracts() passed after 0.157 seconds.
+✔ Test CSVQuotesNamesAndPreservesSampleAndUnicode() passed after 0.157 seconds.
+Consumed jovra.groundTruth: 19 fixtures
+pct vectors: 32
+Consumed jovra.fixture.pct: 1 fixtures
+Consumed jovra.practicePlan: 2 fixtures
+Consumed jovra.sampleMediaManifest: 1 fixtures
+✔ Test correctionRecomputesCSVFromTheCurrentLog() passed after 0.187 seconds.
+Consumed jovra.fixture.sample: 1 fixtures
+Consumed jovra.fixture.scoring: 106 fixtures
+Consumed jovra.session: 3 fixtures
+Consumed jovra.fixture.stats: 3 fixtures
+units vectors: 31
+Consumed jovra.fixture.units: 1 fixtures
+Pending fixture kinds: 
+✔ Test allDiscoveredRunnerFixturesPass() passed after 0.564 seconds.
+✔ Test run with 6 tests in 0 suites passed after 0.564 seconds.

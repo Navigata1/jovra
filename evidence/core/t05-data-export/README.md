@@ -1,0 +1,11 @@
+# Native session data export — bounded T05 slice
+
+DataExporter.exportSession returns canonical session JSON and contract-driven points/stats CSV from one fresh scoring fold. It does not mutate the source, stamp timestamps, or reuse cached stats. Typed CSV contracts ship as byte-identical SwiftPM resources; the installed package never needs a repository path.
+
+01 is the qualifying missing-public-API compiler red.02 passes the first sample CSV/JSON public test.03 records exact shared/bundled resource byte custody.04 passes six tests: four public export controls plus the complete discovery corpus and manifest negative controls. SampleRunner compares the sample's complete fold/stats and both independent CSV goldens; no fixture kind remains pending. Name quoting covers comma, quote, CRLF and Unicode, preserving the Sample marker. Unknown winner and absent times stay empty, with an undefined percentage rendered as an em dash. Correction control42B→A independently changes the reference match boundaries to68/116=59%, and a fresh export reflects that result.05 independently schema-validates the actual emitted session JSON and requires exact canonical bytes against the source document.
+
+CI compares bundled contract bytes before compiling, uploads the actual native JSON export, and downloads it in a separate Ubuntu job for Python --encoded-dir validation. A missing output artifact fails rather than passing an empty validation.
+
+Full T05 remains open for richer stat diffs/trends. Export bundle/Share Pack creation, disk/Share Sheet integration, archive routing and the final native record/replay/correction/export UI gate remain pending. No simulator, physical device, Studio/cloud, Android or watch completion is claimed by this package slice.
+
+Reproduce: swift test --package-path ios/Packages/JovraCore --scratch-path <owned-scratch> --jobs2. Set JOVRA_DATA_EXPORT_OUTPUT_DIR=<owned-output> to emit the sample session, then python3 scripts/spec/validate.py --encoded-dir <owned-output>. The final full Core gate will be recorded separately; the focused/corpus pass alone does not claim it.
