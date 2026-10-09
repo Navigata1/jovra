@@ -66,6 +66,26 @@ jobs:
       - name: Validate contracts (schemas, ground truth, benchmark records)
         run: python3 scripts/spec/validate.py
 
+  # Existing reference implementations are contracts, not deployed Studio/watch functionality.
+  # Run their adversarial and drift checks on every PR so later native ports cannot rely on stale local evidence.
+  reference-contracts:
+    name: reference-contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Core contracts
+        run: python3 scripts/spec/validate.py
+      - name: Studio contracts and deterministic fixtures
+        run: python3 scripts/spec/validate_studio.py
+      - name: Room protocol contracts and deterministic fixtures
+        run: python3 scripts/spec/validate_room.py
+      - name: Validator discovery and deliberate rejection tests
+        run: python3 -m unittest discover -s scripts/spec -p 'test_*.py' -v
+
   # Manual only: macOS minutes on a private repo are scarce (ADR-0006). Simulator UI suites run on
   # the build Mac and their evidence is attached to the PR instead.
   ios-app:

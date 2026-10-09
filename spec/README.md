@@ -221,3 +221,12 @@ corrections, checkpoint auto-fill, Canadian/Australian doubles, mixed-doubles No
 without a match end, the manual-assisted serve-speed formula and the court homography. The capability registry lists
 the analysis capabilities; none is `validated`, and the audio, rally and camera-moved detectors stay `disabled` until
 their benchmark gates pass.
+
+## Canonical conformance bytes (ADR-0029)
+
+Fixture files use the reference printer's human-readable, insertion-order layout. That source whitespace is cosmetic.
+For byte comparisons, parse the fixture and independently serialize canonical JSON: UTF-8, lexically sorted object
+keys at every depth, compact separators, no trailing newline, unescaped Unicode and forward slashes. Numbers retain
+their mathematical value; decimal strings remain strings and rational times remain integer pairs. A native encoder's
+output is compared to that independently canonicalized expectation, never to an expectation produced by that native
+encoder. Stored/exported records use these canonical bytes. See `docs/adr/0029-core-contract-vocabulary.md`.

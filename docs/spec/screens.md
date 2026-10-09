@@ -1174,7 +1174,7 @@ contact-strip view; "Open in compare" presents S14.
    drawn only above the confidence threshold, bones as thin ivory lines, the dominant wrist's path over the swing as a
    dashed chartreuse line; label chip "2D pose estimate" top leading whenever the overlay is on. Toggle button "Show 2D
    pose" (eye symbol) top trailing. Mirror toggle for left-handers in "•••".
-4. **KeyMomentStrip**: five thumbnails "Backswing", "Forward swing", "Contact", "Follow-through", "Finish"; the
+4. **KeyMomentStrip**: five thumbnails "Ready", "Unit turn", "Racket drop", "Contact", "Finish"; the
    selected moment has a chartreuse border and bold label; unset moments show a dashed placeholder with "Set".
    Long-press a thumbnail → "Set to current frame" / "Clear".
 5. Three **ReviewRow**s (symbol, title, detail, trailing **ReviewStatusButton**): "Contact timing" / "When you meet the

@@ -299,7 +299,9 @@ _Avoid_: Accuracy, probability, trust score
 
 **Court model**:
 The tennis court in metres from ITF dimensions (doubles and singles sidelines, baselines, service lines, centre service
-line and net), with its origin at the near-left doubles corner. Every placement and calibration refers to it.
+line and net), with its origin at the centre of the net: x runs across the court and y towards the far baseline.
+Image points instead use normalized 0..1 coordinates with a top-left origin. The `common.point2` contract defines
+these two spaces; every placement and calibration uses the appropriate space explicitly.
 _Avoid_: Court diagram (a drawing of the model), court template
 
 **Calibration**:
