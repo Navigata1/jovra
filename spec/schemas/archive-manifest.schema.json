@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA archive manifest (archive.json, per session folder)",
   "description": "The persisted upload journal for one session's optional Google Drive archive (D3, ADR-0002). Written atomically before any network I/O. The uploaded sidecar is the session document itself (session.jovra.json). 'backedUp' requires remote size AND md5 to match local (plus sha256 when Drive returns it). No tokens or resumable session URIs are stored here: the resumable URI lives in Keychain / EncryptedSharedPreferences under resumable.secretRef.",
+  "$comment": "Schema 1.1.0 (T02) added, all optional: the rallyOnlyCopy file role (with eventLogVersion), upload states waitingForNetwork and cancelled. A document stamped 1.0.x may carry none of them ($defs/v1_0).",
   "type": "object",
   "required": ["schemaVersion", "kind", "sessionId", "provider", "createdAt", "updatedAt", "remoteFolder", "files"],
   "additionalProperties": false,
@@ -28,7 +29,23 @@
     },
     "files": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/archivedFile"}}
   },
+  "allOf": [
+    {
+      "if": {"required": ["schemaVersion"], "properties": {"schemaVersion": {"pattern": "^1\\.0\\."}}},
+      "then": {"$ref": "#/$defs/v1_0"}
+    }
+  ],
   "$defs": {
+    "v1_0": {
+      "description": "What a document stamped 1.0.x may not hold: every field and enum value added in 1.1.0. A 1.0 reader decodes closed objects and rejects them, so a writer that uses any of them stamps 1.1.0 or later.",
+      "properties": {
+        "files": {"items": {"properties": {
+          "role": {"not": {"const": "rallyOnlyCopy"}},
+          "eventLogVersion": false,
+          "upload": {"properties": {"state": {"not": {"enum": ["waitingForNetwork", "cancelled"]}}}}
+        }}}
+      }
+    },
     "driveId": {"type": "string", "pattern": "^[A-Za-z0-9_-]{10,128}$"},
     "appProperties": {
       "description": "Drive private app properties (max 30 per file; key+value at most 124 bytes).",
@@ -42,7 +59,8 @@
       "required": ["role", "localPath", "mimeType", "bytes", "remote", "upload"],
       "additionalProperties": false,
       "properties": {
-        "role": {"enum": ["original", "spaceSaver", "sidecar", "clip", "voiceNote", "export"]},
+        "role": {"enum": ["original", "rallyOnlyCopy", "spaceSaver", "sidecar", "clip", "voiceNote", "export"], "description": "rallyOnlyCopy (since 1.1.0) is the Space Saver copy: the condensed rally-only cut archived in place of or beside the original. Writers use rallyOnlyCopy; spaceSaver is the 1.0 name for the same thing, still accepted so 1.0.0 manifests stay valid."},
+        "eventLogVersion": {"$ref": "common.schema.json#/$defs/eventLogVersion", "description": "Since 1.1.0. For a rallyOnlyCopy: the log version its rally ranges were cut from; a later correction makes the archived copy stale."},
         "localPath": {"$ref": "common.schema.json#/$defs/relativePath"},
         "mimeType": {"type": "string", "pattern": "^[a-z]+/[a-z0-9.+-]+$"},
         "bytes": {"type": "integer", "minimum": 0},
@@ -74,7 +92,7 @@
       },
       "allOf": [
         {
-          "if": {"properties": {"upload": {"properties": {"state": {"enum": ["queued", "hashing"]}}}}},
+          "if": {"properties": {"upload": {"properties": {"state": {"enum": ["queued", "hashing", "cancelled"]}}}}},
           "else": {"required": ["md5", "sha256"]}
         },
         {
@@ -89,7 +107,7 @@
       "required": ["state", "lastConfirmedOffset", "attempts", "updatedAt"],
       "additionalProperties": false,
       "properties": {
-        "state": {"enum": ["queued", "hashing", "sessionCreated", "uploading", "verifying", "backedUp", "failed", "needsReconnect", "quotaBlocked"]},
+        "state": {"enum": ["queued", "hashing", "sessionCreated", "uploading", "verifying", "backedUp", "failed", "needsReconnect", "quotaBlocked", "waitingForNetwork", "cancelled"], "description": "waitingForNetwork and cancelled since 1.1.0 (ArchiveService state machine)."},
         "lastConfirmedOffset": {"type": "integer", "minimum": 0, "description": "Bytes the server has confirmed; the next byte to send."},
         "attempts": {"type": "integer", "minimum": 0},
         "wifiOnly": {"type": "boolean"},

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA sample media manifest (spec/fixtures/sample/media-manifest.json)",
+  "description": "The single list of synthetic sample media (D8, ADR-0012). The sample library (T09) references media by mediaId and the renderer (T11) writes files with exactly these names, durations and frame rates, so neither edits the other. Files are rendered, never committed. Every entry is Sample and synthetic: no real person, likeness or logo.",
+  "$comment": "Schema 1.0.0, added by T02.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "updatedAt", "sample", "media"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.sampleMediaManifest"},
+    "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+    "sample": {
+      "type": "object",
+      "required": ["label", "synthetic"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"const": "Sample"},
+        "synthetic": {"const": true}
+      }
+    },
+    "media": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/media"}}
+  },
+  "$defs": {
+    "media": {
+      "type": "object",
+      "required": ["mediaId", "role", "sessionId", "sessionDate", "sessionKind", "fileName", "durationMs", "frameRate", "width", "height", "hasAudio", "angle", "coversSessionMs", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "mediaId": {"$ref": "common.schema.json#/$defs/id", "description": "Stable id the sample sessions reference."},
+        "role": {"enum": ["sessionVideo", "practiceClip"], "description": "sessionVideo: the session's own video (the full match, or a short clip whose frames are the library thumbnail). practiceClip: a clip analysed by a lab (Serve Lab, Stroke Lab, Compare)."},
+        "sessionId": {"$ref": "common.schema.json#/$defs/id", "description": "The sample session this media belongs to (exactly one sessionVideo per session)."},
+        "sessionDate": {"$ref": "common.schema.json#/$defs/date"},
+        "sessionKind": {"enum": ["match", "servePractice", "strokePractice"]},
+        "fileName": {"type": "string", "pattern": "^sample-[a-z0-9-]+\\.mp4$"},
+        "durationMs": {"type": "integer", "minimum": 1},
+        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate"},
+        "width": {"type": "integer", "minimum": 16},
+        "height": {"type": "integer", "minimum": 16},
+        "hasAudio": {"type": "boolean", "description": "Synthetic hit clicks only."},
+        "angle": {"enum": ["behindBaseline", "sideOn"]},
+        "coversSessionMs": {"$ref": "common.schema.json#/$defs/timeRange", "description": "Where the media sits on its session's timeline; points outside it read 'Not in the sample video'."},
+        "label": {"const": "Sample video (synthetic)", "description": "Burned into every frame and shown as the SampleBadge."},
+        "purpose": {"type": "string", "maxLength": 200}
+      }
+    }
+  }
+}

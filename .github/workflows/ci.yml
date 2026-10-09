@@ -26,6 +26,30 @@ jobs:
         working-directory: ios/Packages/JovraCore
         run: swift test
 
+  # Shared contracts (spec/README.md): fixtures regenerate byte-for-byte, every document validates and the
+  # engine re-run agrees, and the contract tooling's own tests pass. Python standard library only.
+  spec:
+    name: spec
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate fixtures (must not change a byte)
+        run: |
+          python3 spec/reference/generate_fixtures.py
+          git status --porcelain spec
+          test -z "$(git status --porcelain spec)"
+      - name: Validate contracts and fixtures
+        run: python3 scripts/spec/validate.py
+      - name: Contract tooling tests
+        run: python3 -m unittest discover -s scripts/spec -p 'test_*.py' -v
+      # Studio and Room reuse scripts/spec/jsonschema_subset.py, so a checker change must keep them green too.
+      - name: Validate Studio contracts
+        run: python3 scripts/spec/validate_studio.py
+      - name: Validate Room contracts
+        run: python3 scripts/spec/validate_room.py
   # Localization and copy checks (T06): the tools' own negative tests, the literal-string lint, the
   # copy lint over every String Catalog and, on pull requests, the String Catalog ownership check.
   l10n:

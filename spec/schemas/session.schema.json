@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA session document (session.json / session.jovra.json)",
   "description": "One session folder's document (ADR-0002). The same JSON is the Drive sidecar and the export format. Scores are never stored: the match log is folded by the scoring engine (ADR-0003).",
+  "$comment": "Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, sample.mediaIds (sample media manifest ids), analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt, derivedValues[].range (an estimate's range), original (the original facet). Bookmark notes reuse marks[].note. A document stamped 1.0.x may carry none of them ($defs/v1_0). Ids these fields hold must resolve inside the document, and their times fall inside the recording (jovra_ref/references.py).",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "sport", "createdAt", "updatedAt", "title", "sessionKind", "players", "recording", "storage", "archive"],
   "additionalProperties": false,
@@ -33,12 +34,21 @@
     "storage": {"$ref": "#/$defs/storagePolicy"},
     "equipmentUse": {"type": "array", "items": {"$ref": "#/$defs/equipmentUse"}},
     "consent": {"$ref": "#/$defs/consent"},
-    "notes": {"type": "string", "maxLength": 4000}
+    "notes": {"type": "string", "maxLength": 4000},
+    "rallyPlayback": {"$ref": "#/$defs/rallyPlayback"},
+    "serveMarks": {"type": "array", "items": {"$ref": "#/$defs/serveMark"}},
+    "swings": {"type": "array", "items": {"$ref": "#/$defs/swing"}},
+    "exports": {"type": "array", "items": {"$ref": "#/$defs/exportRecord"}},
+    "original": {"$ref": "#/$defs/originalState"}
   },
   "allOf": [
     {
       "if": {"properties": {"sessionKind": {"enum": ["match", "tiebreakOnly", "practiceSet"]}}},
       "then": {"required": ["sides", "match"]}
+    },
+    {
+      "if": {"required": ["schemaVersion"], "properties": {"schemaVersion": {"pattern": "^1\\.0\\."}}},
+      "then": {"$ref": "#/$defs/v1_0"}
     }
   ],
   "$defs": {
@@ -50,7 +60,15 @@
       "properties": {
         "label": {"const": "Sample"},
         "synthetic": {"type": "boolean"},
-        "generator": {"type": "string", "minLength": 1, "maxLength": 120}
+        "generator": {"type": "string", "minLength": 1, "maxLength": 120},
+        "mediaIds": {
+          "description": "Since 1.1.0. The sample media this session plays, by the stable mediaId of spec/fixtures/sample/media-manifest.json (its session video and any lab clips). Every id must exist in the manifest, and a session the manifest lists may only name its own media (scripts/spec/validate.py, jovra_ref/references.py). The sample library (T09) installs sessions with these ids; the renderer (T11) writes the files they name.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "common.schema.json#/$defs/id"}
+        }
       }
     },
     "player": {
@@ -199,7 +217,12 @@
         "detected": {"$ref": "#/$defs/outcome"},
         "reviewed": {"$ref": "#/$defs/outcome"},
         "reviewState": {"enum": ["unreviewed", "needsReview", "reviewed"]},
-        "note": {"type": "string", "maxLength": 500}
+        "note": {"type": "string", "maxLength": 500},
+        "parentIds": {
+          "description": "Since 1.1.0. Provenance only, ignored by the fold: the point(s) this one was split from or merged out of (the parents themselves are voided). One parent for a split half, two or more for a merge.",
+          "type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true,
+          "items": {"$ref": "common.schema.json#/$defs/id"}
+        }
       },
       "anyOf": [{"required": ["detected"]}, {"required": ["reviewed"]}],
       "not": {"required": ["supersedes", "insertBefore"]}
@@ -366,7 +389,13 @@
             "osVersion": {"type": "string", "maxLength": 30},
             "cameraPreset": {"type": "string", "maxLength": 40}
           }
-        }
+        },
+        "captureEvents": {
+          "description": "Since 1.1.0. Device-budget changes during capture (heat ladder rungs, frame-rate drops, court mode), journalled and folded in at stop so later analysis knows the frame rate changed (story 99, N9).",
+          "type": "array",
+          "items": {"$ref": "#/$defs/captureEvent"}
+        },
+        "recovery": {"$ref": "#/$defs/recoveryReport"}
       }
     },
     "segment": {
@@ -421,7 +450,8 @@
         "pointId": {"$ref": "common.schema.json#/$defs/id"},
         "tMs": {"$ref": "common.schema.json#/$defs/timeMs"},
         "hitter": {"$ref": "common.schema.json#/$defs/id"},
-        "stroke": {"enum": ["serve", "forehand", "backhand", "volley", "overhead", "dropShot", "lob", "other", "unknown"]},
+        "shotIndex": {"type": "integer", "minimum": 1, "maximum": 400, "description": "Since 1.1.0. Which shot of the point this is (1 = the serve that started the rally), so a stroke tag lands on one shot ('Stroke tags per shot', S10). The tag itself is stroke, with this record's provenance (manual in v1)."},
+        "stroke": {"enum": ["serve", "forehand", "backhand", "volley", "overhead", "dropShot", "lob", "other", "unknown"], "description": "The stroke type (per-shot stroke tag). Automatic stroke classification is unsupported in v1, so this is user-set."},
         "placement": {
           "type": "object",
           "required": ["court", "inOut"],
@@ -450,6 +480,20 @@
         "homography": {"type": "array", "minItems": 9, "maxItems": 9, "items": {"type": "number"}},
         "residualPx": {"type": "number", "minimum": 0},
         "status": {"enum": ["valid", "needsReview", "invalid", "cameraMoved"]},
+        "staleFromMs": {"$ref": "common.schema.json#/$defs/timeMs", "description": "Since 1.1.0. Session time from which this calibration is stale because the camera moved ('stale from mm:ss'); calibration-dependent features (frame taps, serve speed) are unavailable from here on."},
+        "camera": {
+          "description": "Since 1.1.0. What the calibration is bound to: lens, format and zoom (technical-feasibility §8). A different lens, format or zoom invalidates it.",
+          "type": "object",
+          "required": ["lens", "width", "height", "zoomFactor"],
+          "additionalProperties": false,
+          "properties": {
+            "lens": {"enum": ["ultraWide", "wide", "telephoto", "front", "external", "unknown"]},
+            "width": {"type": "integer", "minimum": 1},
+            "height": {"type": "integer", "minimum": 1},
+            "frameRate": {"$ref": "common.schema.json#/$defs/frameRate"},
+            "zoomFactor": {"$ref": "common.schema.json#/$defs/decimalString"}
+          }
+        },
         "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
       }
     },
@@ -502,7 +546,8 @@
         "left": {"$ref": "#/$defs/comparisonSide"},
         "right": {"$ref": "#/$defs/comparisonSide"},
         "syncedAt": {"enum": ["contact", "custom", "unsynced"]},
-        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "note": {"type": "string", "maxLength": 1000, "description": "Since 1.1.0. The comparison's written note (S14 NoteRow, T46 text notes)."}
       }
     },
     "comparisonSide": {
@@ -516,7 +561,7 @@
       }
     },
     "derivedValue": {
-      "description": "Any stored analysis output (estimated serve speed, detected hit times, camera-moved flags). Provenance is mandatory and names its capability.",
+      "description": "Any stored analysis output (estimated serve speed, detected hit times, camera-moved flags). Provenance is mandatory and names its capability. A serve speed (key serveSpeed.estimate) is computed, never typed: it names its serve mark and calibration, is a whole mph or km/h, and carries its range (jovra_ref/references.py recomputes all three).",
       "type": "object",
       "required": ["id", "key", "value", "provenance"],
       "additionalProperties": false,
@@ -532,6 +577,7 @@
           "properties": {
             "pointId": {"$ref": "common.schema.json#/$defs/id"},
             "shotId": {"$ref": "common.schema.json#/$defs/id"},
+            "serveMarkId": {"$ref": "common.schema.json#/$defs/id", "description": "Since 1.1.0: a serve speed estimate names the serve mark it came from."},
             "fromMs": {"$ref": "common.schema.json#/$defs/timeMs"},
             "toMs": {"$ref": "common.schema.json#/$defs/timeMs"}
           }
@@ -541,8 +587,34 @@
             {"$ref": "common.schema.json#/$defs/provenance"},
             {"required": ["capabilityId"]}
           ]
+        },
+        "range": {
+          "description": "Since 1.1.0. The estimate's range, in the value's unit: low and high are the displayed bounds ('104 mph (94–114)'), pct the half-width as a percentage of the value when the range is a ± percentage ('±10%', screens.md S12).",
+          "type": "object",
+          "required": ["low", "high"],
+          "additionalProperties": false,
+          "properties": {
+            "low": {"type": "number"},
+            "high": {"type": "number"},
+            "pct": {"type": "integer", "minimum": 0, "maximum": 100}
+          }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {"required": ["key"], "properties": {"key": {"const": "serveSpeed.estimate"}}},
+          "then": {
+            "required": ["unit", "scope", "range"],
+            "properties": {
+              "value": {"type": "integer", "minimum": 0},
+              "unit": {"enum": ["mph", "km/h"]},
+              "scope": {"required": ["serveMarkId"]},
+              "provenance": {"required": ["calibrationId"]},
+              "range": {"required": ["pct"]}
+            }
+          }
+        }
+      ]
     },
     "analysis": {
       "description": "Analysis state is independent of the video, review and archive states (P0-07).",
@@ -550,7 +622,9 @@
       "required": ["state", "runs"],
       "additionalProperties": false,
       "properties": {
-        "state": {"enum": ["notRequested", "queued", "running", "done", "partial", "failed"]},
+        "state": {"enum": ["notRequested", "queued", "running", "paused", "done", "partial", "failed", "unavailable"], "description": "paused and unavailable since 1.1.0 (T27: pause and resume; no analyzer registered or capability disabled)."},
+        "reason": {"type": "string", "maxLength": 300, "description": "Since 1.1.0. Why the state is paused, failed or unavailable, in the words the UI shows."},
+        "excludedSide": {"enum": ["left", "right"], "description": "Since 1.1.0. The half of the frame (as the camera sees it) whose neighbouring court is noisy: hits attributed to it are dropped by audio hit detection and rally segmentation (story 200). A frame half, not a competing side."},
         "runs": {
           "type": "array",
           "items": {
@@ -584,7 +658,9 @@
       "required": ["state"],
       "additionalProperties": false,
       "properties": {
-        "state": {"enum": ["localOnly", "awaitingSetup", "queued", "hashing", "uploading", "verifying", "backedUp", "failed", "needsReconnect", "quotaBlocked"]},
+        "state": {"enum": ["localOnly", "awaitingSetup", "queued", "waitingForWiFi", "hashing", "uploading", "verifying", "backedUp", "failed", "needsReconnect", "quotaBlocked"], "description": "waitingForWiFi since 1.1.0 ('Backup waits for Wi-Fi')."},
+        "copy": {"enum": ["original", "rallyOnlyCopy"], "description": "Since 1.1.0. What the archive holds: the full original, or only the rally-only (Space Saver) copy ('Rallies backed up')."},
+        "restoredAt": {"$ref": "common.schema.json#/$defs/dateTime", "description": "Since 1.1.0. Set when the session was restored from the archive ('Restored from Google Drive')."},
         "provider": {"enum": ["googleDrive"]},
         "manifest": {"$ref": "common.schema.json#/$defs/relativePath"},
         "backedUpAt": {"$ref": "common.schema.json#/$defs/dateTime"},
@@ -625,7 +701,209 @@
       "properties": {
         "status": {"enum": ["informed", "writtenFormAttached", "notRequired", "notRecorded"]},
         "competitionMode": {"type": "boolean"},
-        "note": {"type": "string", "maxLength": 500}
+        "note": {"type": "string", "maxLength": 500},
+        "juniorPlayerIds": {
+          "description": "Since 1.1.0. Players in this session who are juniors (junior mode). Non-empty is the session's junior flag: consent is required and exports default to no audio and no posting copy. Each id is a players[].id; the child's profile is that player's profileId, kept on this iPhone only.",
+          "type": "array", "uniqueItems": true, "maxItems": 4,
+          "items": {"$ref": "common.schema.json#/$defs/id"}
+        },
+        "writtenConsents": {
+          "description": "Since 1.1.0. Written consents held for this session, each with its attached form (a photo or PDF stored in the session folder; uploaded only if the session is archived).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "attachment", "attachedAt"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "common.schema.json#/$defs/id"},
+              "attachment": {"$ref": "common.schema.json#/$defs/fileRef"},
+              "coversPlayerIds": {"type": "array", "uniqueItems": true, "maxItems": 4, "items": {"$ref": "common.schema.json#/$defs/id"}},
+              "attachedAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+            }
+          }
+        },
+        "withdrawnAt": {"$ref": "common.schema.json#/$defs/dateTime", "description": "Since 1.1.0. When consent was withdrawn; recording stops then and the recording can be deleted in one tap (N4)."}
+      }
+    },
+    "rollMs": {"type": "integer", "minimum": 0, "maximum": 10000, "description": "A pre-roll or post-roll in milliseconds."},
+    "rallyPlayback": {
+      "description": "Since 1.1.0. Rally-only playback and condensed export settings (P0-12, N7). Ranges are point (or mark) times widened by the rolls; defaults 1.5 s / 2.5 s apply when absent.",
+      "type": "object",
+      "required": ["preRollMs", "postRollMs"],
+      "additionalProperties": false,
+      "properties": {
+        "preRollMs": {"type": "integer", "minimum": 0, "maximum": 5000, "multipleOf": 500, "description": "Per session: 0-5 s in 0.5 s steps (N7)."},
+        "postRollMs": {"type": "integer", "minimum": 0, "maximum": 5000, "multipleOf": 500},
+        "clips": {
+          "description": "Per-clip overrides, keyed by the point (or mark) the clip is cut around. Absent fields fall back to the session rolls.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["targetId"],
+            "additionalProperties": false,
+            "properties": {
+              "targetId": {"$ref": "common.schema.json#/$defs/id", "description": "A point event id or a mark id."},
+              "preRollMs": {"$ref": "#/$defs/rollMs"},
+              "postRollMs": {"$ref": "#/$defs/rollMs"},
+              "excluded": {"type": "boolean", "description": "Deselected in the Rallies list: left out of rally-only playback and exports, never removed from the session."}
+            }
+          }
+        }
+      }
+    },
+    "serveMark": {
+      "description": "Since 1.1.0. The user's marks for one serve's manual-assisted speed estimate (D10, S12): contact and bounce frames, the bounce on the calibrated court and the server's position. A mark is complete when contactFrame, bounceFrame, bounceCourt and serverPosition are all present; the estimate itself is a derivedValue scoped to the mark.",
+      "type": "object",
+      "required": ["id", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "pointId": {"$ref": "common.schema.json#/$defs/id"},
+        "shotId": {"$ref": "common.schema.json#/$defs/id"},
+        "contactFrame": {"$ref": "common.schema.json#/$defs/mediaTime", "description": "Time of the frame where racket meets ball."},
+        "bounceFrame": {"$ref": "common.schema.json#/$defs/mediaTime", "description": "Time of the first bounce frame."},
+        "bounceCourt": {"$ref": "common.schema.json#/$defs/point2", "description": "Bounce position in court metres (tapped on the frame through the calibration, or on the service-box diagram)."},
+        "bounceImage": {"$ref": "common.schema.json#/$defs/point2", "description": "The tap on the frame, normalized image space, when the bounce was tapped on video."},
+        "serverPosition": {"$ref": "common.schema.json#/$defs/point2", "description": "The server's front foot at contact in court metres."},
+        "contactDefaulted": {"type": "boolean", "description": "True when serverPosition is the default (centre mark of the server's baseline), shown as an assumption; the estimate's range is wider."},
+        "servedTo": {"enum": ["deuce", "ad"], "description": "The receiver's court half the serve was aimed at (Serve Lab deuce/ad split)."},
+        "calibrationId": {"$ref": "common.schema.json#/$defs/id"},
+        "outlierConfirmed": {"type": "boolean", "description": "The user confirmed a serve the estimator flagged 'Check marks'; only then may it count as fastest."},
+        "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
+      },
+      "dependentRequired": {"serverPosition": ["contactDefaulted"], "bounceCourt": ["calibrationId"]}
+    },
+    "keyMoment": {
+      "description": "Since 1.1.0. A named instant in a swing, set or confirmed by the user (GLOSSARY: key moment). Serve: tossRelease, tossPeak, trophy, racketDrop, contact, landing. Stroke: ready, unitTurn, racketDrop, contact, finish (GLOSSARY, story 243); backswing, forwardSwing and followThrough are the S13 screen-spec labels, kept valid until T42 settles one set.",
+      "type": "object",
+      "required": ["name", "time", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"enum": ["tossRelease", "tossPeak", "trophy", "racketDrop", "contact", "landing", "ready", "unitTurn", "backswing", "forwardSwing", "followThrough", "finish"]},
+        "time": {"$ref": "common.schema.json#/$defs/mediaTime"},
+        "imagePoint": {"$ref": "common.schema.json#/$defs/point2", "description": "Where the moment is in the frame (normalized), e.g. the toss peak drawn by the toss-consistency overlay."},
+        "provenance": {"$ref": "common.schema.json#/$defs/provenance"}
+      }
+    },
+    "swing": {
+      "description": "Since 1.1.0. One studied swing (Stroke Lab, Serve Lab): its padded, nudgeable clip, its key moments and the player's review statuses. Anchored to a shot, a serve mark or a mark.",
+      "type": "object",
+      "required": ["id", "kind", "keyMoments"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "kind": {"enum": ["serve", "stroke"]},
+        "stroke": {"enum": ["serve", "forehand", "backhand", "volley", "overhead", "dropShot", "lob", "other", "unknown"]},
+        "shotId": {"$ref": "common.schema.json#/$defs/id"},
+        "serveMarkId": {"$ref": "common.schema.json#/$defs/id"},
+        "markId": {"$ref": "common.schema.json#/$defs/id"},
+        "clip": {"$ref": "common.schema.json#/$defs/timeRange", "description": "The padded clip (default -1.0 / +1.0 s around contact), after any nudge."},
+        "keyMoments": {"type": "array", "maxItems": 12, "items": {"$ref": "#/$defs/keyMoment"}},
+        "reviewChecks": {
+          "description": "S13 review rows: a status the player sets, never a score.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["check", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "check": {"enum": ["contactTiming", "followThrough", "balance"]},
+              "status": {"enum": ["notReviewed", "looksGood", "workOnIt"]}
+            }
+          }
+        }
+      }
+    },
+    "exportRecord": {
+      "description": "Since 1.1.0. One export made from this session (clip, condensed match, highlight reel, Share Pack, data, original). eventLogVersion is the log version it was rendered from: when the log has a later correction the export reads 'Exported before a correction'.",
+      "type": "object",
+      "required": ["id", "kind", "createdAt", "eventLogVersion", "includesAudio"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "kind": {"enum": ["clip", "condensedMatch", "highlightReel", "sharePack", "sessionData", "original"]},
+        "createdAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "eventLogVersion": {"$ref": "common.schema.json#/$defs/eventLogVersion"},
+        "includesAudio": {"type": "boolean", "description": "False by default for shared exports (D5) and always by default for junior sessions."},
+        "facesBlurred": {"type": "boolean", "description": "On-device face blur applied (faceBlur capability; estimated, may miss faces)."},
+        "rallyOnly": {"type": "boolean"},
+        "range": {"$ref": "common.schema.json#/$defs/timeRange"},
+        "pointIds": {"type": "array", "maxItems": 500, "items": {"$ref": "common.schema.json#/$defs/id"}},
+        "destination": {"enum": ["photos", "files", "share", "app"]},
+        "file": {"$ref": "common.schema.json#/$defs/fileRef", "description": "Only for a file kept inside the session folder."},
+        "status": {"enum": ["inProgress", "done", "failed", "cancelled"]},
+        "failureReason": {"type": "string", "maxLength": 300}
+      }
+    },
+    "captureEvent": {
+      "description": "Since 1.1.0. A logged device-budget change during capture (N9 heat ladder).",
+      "type": "object",
+      "required": ["tMs", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "tMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "kind": {"enum": ["thermalState", "frameRateChange", "courtModeOn", "courtModeOff", "lowStorageStop", "lowBatteryStop"]},
+        "thermalState": {"enum": ["nominal", "fair", "serious", "critical", "shutdown"], "description": "Required when kind is thermalState: the state it changed to."},
+        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate", "description": "Required when kind is frameRateChange: the rate capture continued at."}
+      },
+      "allOf": [
+        {"if": {"required": ["kind"], "properties": {"kind": {"const": "frameRateChange"}}}, "then": {"required": ["frameRate"]}},
+        {"if": {"required": ["kind"], "properties": {"kind": {"const": "thermalState"}}}, "then": {"required": ["thermalState"]}}
+      ]
+    },
+    "recoveryReport": {
+      "description": "Since 1.1.0. What crash recovery kept and what it could not (story 100): every playable segment is kept; anything unrecoverable is named with its reason.",
+      "type": "object",
+      "required": ["recoveredAt", "outcome"],
+      "additionalProperties": false,
+      "properties": {
+        "recoveredAt": {"$ref": "common.schema.json#/$defs/dateTime"},
+        "outcome": {"enum": ["complete", "partial"]},
+        "savedThroughMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "truncatedSegmentIds": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+        "unrecoverable": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "path": {"$ref": "common.schema.json#/$defs/relativePath"},
+              "reason": {"type": "string", "minLength": 1, "maxLength": 300}
+            }
+          }
+        }
+      }
+    },
+    "originalState": {
+      "description": "Since 1.1.0. The original facet (ios-v1-spec SessionStore), independent of the analysis, review and archive facets: where the original recording is in its life. storage.originals says where the file is kept; this says whether it is whole. T16 sets savedWithGaps when recovery kept every playable segment and partial when something was unrecoverable (recording.recovery names it).",
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["recording", "recovering", "saved", "savedWithGaps", "partial", "importing", "archiveOnly", "missing", "trashed"]},
+        "reason": {"type": "string", "maxLength": 300, "description": "Why the original is partial or missing, in the words the UI shows."},
+        "updatedAt": {"$ref": "common.schema.json#/$defs/dateTime"}
+      }
+    },
+    "v1_0": {
+      "description": "What a document stamped 1.0.x may not hold: every field and enum value added in 1.1.0. A 1.0 reader decodes closed objects and rejects them, so a writer that uses any of them stamps 1.1.0 or later.",
+      "properties": {
+        "sample": {"properties": {"mediaIds": false}},
+        "match": {"properties": {"log": {"items": {"properties": {"parentIds": false}}}}},
+        "recording": {"properties": {"captureEvents": false, "recovery": false}},
+        "shots": {"items": {"properties": {"shotIndex": false}}},
+        "calibrations": {"items": {"properties": {"staleFromMs": false, "camera": false}}},
+        "comparisons": {"items": {"properties": {"note": false}}},
+        "derivedValues": {"items": {"properties": {"scope": {"properties": {"serveMarkId": false}}, "range": false}}},
+        "analysis": {"properties": {"state": {"not": {"enum": ["paused", "unavailable"]}}, "reason": false, "excludedSide": false}},
+        "archive": {"properties": {"state": {"not": {"const": "waitingForWiFi"}}, "copy": false, "restoredAt": false}},
+        "consent": {"properties": {"juniorPlayerIds": false, "writtenConsents": false, "withdrawnAt": false}},
+        "rallyPlayback": false,
+        "serveMarks": false,
+        "swings": false,
+        "exports": false,
+        "original": false
       }
     }
   }

@@ -208,3 +208,10 @@ def write(out, write_json, version) -> int:
     for d in docs:
         write_json(out / f"{d['id']}.json", d)
     return len(docs)
+
+
+ORDER = 20
+
+
+def generate(ctx) -> int:
+    return write(ctx.fixtures / "stats", ctx.write_json, ctx.version)

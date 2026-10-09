@@ -1,0 +1,29 @@
+$ python3 -m unittest discover -s scripts/spec -p 'test_*.py' -v
+test_faceBlur_is_ungated_so_it_can_become_estimated_without_a_record_and_lineSnap_is_gated (test_contracts.CapabilityRegistryTests.test_faceBlur_is_ungated_so_it_can_become_estimated_without_a_record_and_lineSnap_is_gated) ... ok
+test_registry_preseeds_lineSnap_and_faceBlur_disabled_and_changes_no_other_status (test_contracts.CapabilityRegistryTests.test_registry_preseeds_lineSnap_and_faceBlur_disabled_and_changes_no_other_status) ... ok
+test_a_schema_whose_kind_const_disagrees_with_its_file_name_is_rejected (test_contracts.PlumbingByConventionTests.test_a_schema_whose_kind_const_disagrees_with_its_file_name_is_rejected) ... ok
+test_generator_rewrites_every_committed_fixture_byte_for_byte (test_contracts.PlumbingByConventionTests.test_generator_rewrites_every_committed_fixture_byte_for_byte) ... ok
+test_new_kind_generates_and_validates_with_no_shared_edit_and_fails_without_its_schema (test_contracts.PlumbingByConventionTests.test_new_kind_generates_and_validates_with_no_shared_edit_and_fails_without_its_schema) ... ok
+test_jon_vs_alex_entry_names_the_sample_session_and_its_54_minute_60_fps_video (test_contracts.SampleMediaManifestTests.test_jon_vs_alex_entry_names_the_sample_session_and_its_54_minute_60_fps_video) ... ok
+test_manifest_validates_and_lists_eight_sessions_plus_three_practice_clips (test_contracts.SampleMediaManifestTests.test_manifest_validates_and_lists_eight_sessions_plus_three_practice_clips) ... ok
+test_media_ids_and_file_names_are_unique (test_contracts.SampleMediaManifestTests.test_media_ids_and_file_names_are_unique) ... ok
+test_a_schemaVersion_1_0_0_document_still_validates_after_the_minor_bump (test_contracts.SessionSchemaTests.test_a_schemaVersion_1_0_0_document_still_validates_after_the_minor_bump) ... ok
+test_an_unknown_property_inside_any_closed_object_fails (test_contracts.SessionSchemaTests.test_an_unknown_property_inside_any_closed_object_fails) ... ok
+test_archive_manifest_accepts_the_rally_only_copy_role (test_contracts.SessionSchemaTests.test_archive_manifest_accepts_the_rally_only_copy_role) ... ok
+test_export_manifest_records_the_event_log_version_per_session (test_contracts.SessionSchemaTests.test_export_manifest_records_the_event_log_version_per_session) ... ok
+test_practice_plan_gains_drill_session_logs_and_dated_goals (test_contracts.SessionSchemaTests.test_practice_plan_gains_drill_session_logs_and_dated_goals) ... ok
+test_the_all_fields_document_carries_every_field_the_ticket_lists (test_contracts.SessionSchemaTests.test_the_all_fields_document_carries_every_field_the_ticket_lists) ... ok
+test_the_document_with_every_new_optional_field_validates_at_1_1_0 (test_contracts.SessionSchemaTests.test_the_document_with_every_new_optional_field_validates_at_1_1_0) ... ok
+test_validator_passes_on_the_repository (test_contracts.ValidatorTests.test_validator_passes_on_the_repository) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 5.231s
+
+OK
+exit=0
+
+$ python3 scripts/spec/validate_studio.py   (Studio gate from main, unaffected)
+hint self-tests                     4
+generated files current             64
+RESULT: PASS
+exit=0

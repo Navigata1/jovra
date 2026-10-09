@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
-"""Regenerate every golden fixture under spec/fixtures from the reference engine.
+"""Regenerate every golden fixture under spec/fixtures (and the shipped contracts) from the reference engine.
 
-A case is written only if the engine output satisfies the case's hand-written assertions, so a
-fixture is never just "whatever the engine said". Run:  python3 spec/reference/generate_fixtures.py
+Fixture sources are found by convention: every module in spec/reference/cases/ that defines
+generate(ctx) is run, in (ORDER, name) order. Adding a fixture kind means adding a cases module and a
+schema; this file never changes. A case is written only if the engine output satisfies the case's
+hand-written assertions, so a fixture is never just "whatever the engine said".
+
+Run:  python3 spec/reference/generate_fixtures.py
 """
 
 from __future__ import annotations
 
 import sys
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
 HERE = Path(__file__).resolve().parent
 SPEC = HERE.parent
 sys.path.insert(0, str(HERE))
 
-from cases import records, stats_cases, units_cases  # noqa: E402
-from cases.scoring_cases import CASES  # noqa: E402
-from jovra_ref import canonical, conformance, sample_match  # noqa: E402
+from jovra_ref import canonical, conformance  # noqa: E402
 
+# Version stamped on fixtures whose bytes predate T02. Records that use 1.1 fields set their own version.
 SCHEMA_VERSION = "1.0.0"
 
 
@@ -26,50 +31,24 @@ def write_json(path: Path, obj) -> None:
     path.write_text(canonical.dumps(obj) + "\n", encoding="utf-8")
 
 
-def scoring_fixtures(out: Path) -> int:
-    failures = []
-    for build in CASES:
-        c = build()
-        fixture_input = dict(c["setup"])
-        fixture_input["log"] = c["log"]
-        assertions = [{"checkpoint": cp, "path": path, "equals": value} for cp, path, value in c["assertions"]]
-        doc = {
-            "schemaVersion": SCHEMA_VERSION,
-            "kind": "jovra.fixture.scoring",
-            "id": c["id"],
-            "title": c["title"],
-            "covers": c["covers"],
-            "input": fixture_input,
-        }
-        if c["expectError"] is not None:
-            code = conformance.run_scoring_error(fixture_input)
-            if code != c["expectError"]["code"]:
-                failures.append(f"{c['id']}: expected error {c['expectError']['code']}, engine {code}")
-                continue
-            doc["expectError"] = c["expectError"]
-        else:
-            checkpoints = conformance.run_scoring(fixture_input, c["checkpoints"])
-            problems = conformance.check_assertions(checkpoints, assertions)
-            if problems:
-                failures += [f"{c['id']}: {p}" for p in problems]
-                continue
-            doc["assertions"] = assertions
-            doc["checkpoints"] = checkpoints
-        write_json(out / f"{c['id']}.json", doc)
-    if failures:
-        print("\n".join(failures), file=sys.stderr)
-        raise SystemExit(f"{len(failures)} hand assertion(s) disagree with the engine; nothing trusted")
-    return len(CASES)
+@dataclass(frozen=True)
+class Context:
+    """What every cases module's generate(ctx) receives."""
+    spec: Path
+    fixtures: Path
+    contracts: Path
+    write_json: Callable[[Path, object], None]
+    version: str
 
 
 def main() -> None:
-    fixtures = SPEC / "fixtures"
-    n_scoring = scoring_fixtures(fixtures / "scoring")
-    n_stats = stats_cases.write(fixtures / "stats", write_json, SCHEMA_VERSION)
-    n_units = units_cases.write(fixtures / "units", write_json, SCHEMA_VERSION)
-    n_sample = sample_match.write(fixtures / "sample", write_json, SCHEMA_VERSION)
-    n_records = records.write(fixtures / "records", SPEC / "contracts", write_json, SCHEMA_VERSION)
-    print(f"scoring {n_scoring}, stats {n_stats}, units {n_units}, sample {n_sample}, records {n_records}")
+    ctx = Context(spec=SPEC, fixtures=SPEC / "fixtures", contracts=SPEC / "contracts", write_json=write_json,
+                  version=SCHEMA_VERSION)
+    counts = []
+    for module in conformance.case_modules():
+        n = module.generate(ctx)
+        counts.append(f"{module.__name__.removeprefix('cases.')} {n}")
+    print(", ".join(counts))
 
 
 if __name__ == "__main__":

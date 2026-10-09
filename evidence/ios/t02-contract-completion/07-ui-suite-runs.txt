@@ -1,0 +1,43 @@
+# JovraUITests (scripts/ios/ui-test.sh) on JOVRA-T02 (18D4F325-4E94-456C-9A10-5C24F7019BF3, iPhone 17 Pro, iOS 26.5), 2026-10-08
+# No other simulator was used. git diff origin/main...HEAD -- ios scripts/ios is empty (0 lines).
+# origin/main = 6ef7c3d: one docs-only commit ahead of this branch's base, no ios/, scripts/ or spec/ change.
+
+scripts/ios/test.sh on JOVRA-T02: JovraCore 15 tests passed, JovraMedia 5 tests passed, JovraTests 10/10 passed.
+
+Run 1: branch, simulator just erased
+  ui-tests (main suite: 6 tests; system passes: 1 test each)
+     Failed 2/6 passed testEveryTabAtLargestAccessibilityTextSize(): Contrast failed; testEveryTabInDarkAppearance(): Contrast failed; testEveryTabInLightAppearance(): Contrast failed; testSystemAppearanceIsFollowed(): Contrast failed
+  ui-system-light (main suite: 6 tests; system passes: 1 test each)
+     Failed 0/1 passed testSystemAppearanceIsFollowed(): Contrast failed
+  ui-system-dark (main suite: 6 tests; system passes: 1 test each)
+     Failed 0/1 passed testSystemAppearanceIsFollowed(): Contrast failed
+
+Run 2: origin/main (detached worktree), simulator erased again
+  ui-tests (main suite: 6 tests; system passes: 1 test each)
+     Passed 6/6 passed 
+  ui-system-light (main suite: 6 tests; system passes: 1 test each)
+     Passed 1/1 passed 
+  ui-system-dark (main suite: 6 tests; system passes: 1 test each)
+     Passed 1/1 passed 
+
+Run 3: branch, warm simulator
+  ui-tests (main suite: 6 tests; system passes: 1 test each)
+     Passed 6/6 passed 
+  ui-system-light (main suite: 6 tests; system passes: 1 test each)
+     Passed 1/1 passed 
+  ui-system-dark (main suite: 6 tests; system passes: 1 test each)
+     Passed 1/1 passed 
+
+Run 4: branch, warm simulator
+  ui-tests (main suite: 6 tests; system passes: 1 test each)
+     Failed 5/6 passed testEveryTabAtLargestAccessibilityTextSize(): Contrast failed
+  ui-system-light (main suite: 6 tests; system passes: 1 test each)
+     Passed 1/1 passed 
+  ui-system-dark (main suite: 6 tests; system passes: 1 test each)
+     Passed 1/1 passed 
+
+Every failure reads 'Contrast failed for SwiftUI.AccessibilityNode' (its Complete Issue Description attachment): the
+audit reports an element-less node, and the T01 handler fails any issue that has no element. The element screenshots
+show the Home 'This week' heading (run 1) and the 'Coming in a later ticket' card heading at AX5 (run 4), both dark ink
+on ivory. The same app inputs pass and fail across runs; main passed once and this branch passed once. The failure is
+intermittent in the audit and is not caused by T02, which changes no app input. Reported on T06 (issue #8, UI-test harness).

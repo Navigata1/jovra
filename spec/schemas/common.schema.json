@@ -4,7 +4,7 @@
   "description": "Definitions shared by every JOVRA record. Not a document type on its own. No $id: references resolve relative to this file.",
   "$defs": {
     "schemaVersion": {
-      "description": "Semantic version of the record's schema. Major 1 for every v1 record; minor bumps are additive.",
+      "description": "Semantic version of the record's schema. Major 1 for every v1 record; minor bumps are additive, so a 1.0.0 document stays valid under 1.1. Current versions are listed in spec/README.md (session, practice plan, archive manifest and export are 1.1.0 since T02).",
       "type": "string",
       "pattern": "^1\\.[0-9]+\\.[0-9]+$"
     },
@@ -152,6 +152,31 @@
     },
     "timeMs": {
       "description": "Milliseconds on the session timeline (0 = start of the first recording segment).",
+      "type": "integer",
+      "minimum": 0
+    },
+    "mediaTime": {
+      "description": "Since 1.1.0. A frame-accurate time on the session timeline as a rational, seconds = value / timescale (CMTime-style; 60 fps frame 46,000 = {value 46000, timescale 60}). Used where a single frame matters (serve marks, key moments) so 240 fps and 30000/1001 fps frames stay exact. It is a time, never a frame index.",
+      "type": "object",
+      "required": ["value", "timescale"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"type": "integer", "minimum": 0},
+        "timescale": {"type": "integer", "minimum": 1}
+      }
+    },
+    "timeRange": {
+      "description": "Since 1.1.0. A half-open range [fromMs, toMs) on the session timeline.",
+      "type": "object",
+      "required": ["fromMs", "toMs"],
+      "additionalProperties": false,
+      "properties": {
+        "fromMs": {"$ref": "#/$defs/timeMs"},
+        "toMs": {"$ref": "#/$defs/timeMs"}
+      }
+    },
+    "eventLogVersion": {
+      "description": "Since 1.1.0. The event-log version a derived artifact was built from: the highest seq in the session's match log at that moment (0 when the session has no log). The log is append-only (ADR-0003), so any later supersede, void or insert has a larger seq and marks the artifact 'Exported before a correction'.",
       "type": "integer",
       "minimum": 0
     },
