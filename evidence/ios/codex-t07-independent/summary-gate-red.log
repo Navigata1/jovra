@@ -1,0 +1,50 @@
+.FF.FFF
+======================================================================
+FAIL: test_empty_passed_receipt_and_all_skipped_run_are_rejected (scripts.ios.tests.test_xcresult_summary.XcresultSummaryTests.test_empty_passed_receipt_and_all_skipped_run_are_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/scripts/ios/tests/test_xcresult_summary.py", line 46, in test_empty_passed_receipt_and_all_skipped_run_are_rejected
+    self.assertEqual(self.run_receipt([], {"result": "Passed"})[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_empty_unknown_receipt_from_disk_failure_is_not_success (scripts.ios.tests.test_xcresult_summary.XcresultSummaryTests.test_empty_unknown_receipt_from_disk_failure_is_not_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/scripts/ios/tests/test_xcresult_summary.py", line 39, in test_empty_unknown_receipt_from_disk_failure_is_not_success
+    self.assertEqual(status, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_reported_failure_is_not_masked_by_a_passed_summary (scripts.ios.tests.test_xcresult_summary.XcresultSummaryTests.test_reported_failure_is_not_masked_by_a_passed_summary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/scripts/ios/tests/test_xcresult_summary.py", line 58, in test_reported_failure_is_not_masked_by_a_passed_summary
+    self.assertEqual(self.run_receipt(TREE, {"result": "Passed", "failedTests": 1})[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unknown_case_status_is_not_silently_dropped (scripts.ios.tests.test_xcresult_summary.XcresultSummaryTests.test_unknown_case_status_is_not_silently_dropped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/scripts/ios/tests/test_xcresult_summary.py", line 63, in test_unknown_case_status_is_not_silently_dropped
+    self.assertEqual(self.run_receipt(unknown, {"result": "Passed"})[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unknown_completion_is_rejected_even_when_cases_look_passed (scripts.ios.tests.test_xcresult_summary.XcresultSummaryTests.test_unknown_completion_is_rejected_even_when_cases_look_passed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/scripts/ios/tests/test_xcresult_summary.py", line 43, in test_unknown_completion_is_rejected_even_when_cases_look_passed
+    self.assertEqual(self.run_receipt(TREE, {"result": "unknown"})[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+FAILED (failures=5)

@@ -33,7 +33,7 @@ final class JovraSmokeUITests: XCTestCase {
         app.buttons["tab.record"].tap()
         app.buttons["record.previewCapture"].tap()
 
-        XCTAssertTrue(app.staticTexts["capture.title"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["tab.home"].waitForNonExistence(timeout: 5), "tab bar should be hidden by a full-screen route")
         attachScreenshot(app, name: "light-6-capture-route")
         try auditScreen(app)

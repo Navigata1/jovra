@@ -12,27 +12,23 @@ extension LaunchConfiguration {
         return configuration
     }()
 
-    /// The tab named by the start route, if it names one.
-    var startTab: AppTab? {
-        startRoute.flatMap(AppTab.init(rawValue:))
-    }
-
-    /// The full-screen route named by the start route, if it names one.
-    var startFullScreenRoute: FullScreenRoute? {
-        startRoute.flatMap(FullScreenRoute.init(rawValue:))
+    /// The destination named by the start route: a tab, a pre-shell route, a push, a full-screen
+    /// route or a sheet, by its launch name (`AppDestination.catalog`, e.g. `replay`,
+    /// `sessions.matchOverview`, `sheet.pointEditor`).
+    var startDestination: AppDestination? {
+        startRoute.flatMap(AppDestination.init(launchName:))
     }
 
     /// Every problem logged at launch: the parser's `problems` and, since only the app knows its
-    /// routes, a start route that names neither a tab nor a full-screen route.
+    /// routes, a start route that names no destination.
     var reportedProblems: [String] {
         guard let unresolvedStartRoute else { return problems }
-        let routes = AppTab.allCases.map(\.rawValue) + FullScreenRoute.allCases.map(\.rawValue)
-        return problems + ["\(Key.startRoute): unknown route “\(unresolvedStartRoute)” (expected \(routes.joined(separator: ", ")))"]
+        return problems + ["\(Key.startRoute): unknown route “\(unresolvedStartRoute)” (expected a launch name from AppDestination.catalog, such as home, replay, sessions.matchOverview or sheet.pointEditor)"]
     }
 
-    /// A start route that names neither a tab nor a full-screen route.
+    /// A start route that names no destination.
     var unresolvedStartRoute: String? {
-        guard let startRoute, startTab == nil, startFullScreenRoute == nil else { return nil }
+        guard let startRoute, startDestination == nil else { return nil }
         return startRoute
     }
 }

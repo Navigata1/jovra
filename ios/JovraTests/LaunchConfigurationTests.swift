@@ -69,7 +69,7 @@ struct LaunchConfigurationTests {
         configuration.archiveState = .awaitingSetup
         configuration.reduceMotion = true
         configuration.pseudoLocale = .doubleLength
-        configuration.startRoute = "capturePreview"
+        configuration.startRoute = "capture"
 
         let parsed = LaunchConfiguration(arguments: ["Jovra"] + configuration.arguments)
         #expect(parsed == configuration)
@@ -87,13 +87,13 @@ struct LaunchConfigurationTests {
         ])
     }
 
-    @Test("the start route selects a tab or a full-screen route; anything else is reported")
+    @Test("the start route selects any destination by its launch name; anything else is reported")
     func startRoute() {
-        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "profile"]).startTab == .profile)
-        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "capturePreview"]).startFullScreenRoute == .capturePreview)
+        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "profile"]).startDestination == .tab(.profile))
+        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "capture"]).startDestination == .fullScreen(.capture(nil)))
+        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "sheet.trash"]).startDestination == .sheet(.trash))
         let unknown = LaunchConfiguration(arguments: ["Jovra", "-startRoute", "nowhere"])
-        #expect(unknown.startTab == nil)
-        #expect(unknown.startFullScreenRoute == nil)
+        #expect(unknown.startDestination == nil)
         #expect(unknown.unresolvedStartRoute == "nowhere")
     }
 
@@ -102,10 +102,10 @@ struct LaunchConfigurationTests {
         let unknown = LaunchConfiguration(arguments: ["Jovra", "-startRoute", "nowhere", "-reduceMotion", "sometimes"])
         #expect(unknown.reportedProblems == [
             "-reduceMotion: unknown value “sometimes” (expected YES or NO)",
-            "-startRoute: unknown route “nowhere” (expected home, sessions, record, insights, profile, capturePreview)",
+            "-startRoute: unknown route “nowhere” (expected a launch name from AppDestination.catalog, such as home, replay, sessions.matchOverview or sheet.pointEditor)",
         ])
         #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "insights"]).reportedProblems.isEmpty)
-        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "capturePreview"]).reportedProblems.isEmpty)
+        #expect(LaunchConfiguration(arguments: ["Jovra", "-startRoute", "capture"]).reportedProblems.isEmpty)
         #expect(LaunchConfiguration(arguments: ["Jovra"]).reportedProblems.isEmpty)
     }
 }

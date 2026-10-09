@@ -16,7 +16,7 @@ struct RecordView: View {
                     .foregroundStyle(.jovra(.textSecondary))
                     .fixedSize(horizontal: false, vertical: true)
             }
-            Button(String(localized: "Preview the capture screen", table: "Record")) { router.present(.capturePreview) }
+            Button(String(localized: "Preview the capture screen", table: "Record")) { router.present(.capture(nil)) }
                 .buttonStyle(.jovraPrimary)
                 .accessibilityIdentifier("record.previewCapture")
         }

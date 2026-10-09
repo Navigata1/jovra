@@ -1,0 +1,26 @@
+==> render media fixtures (check against committed ground truth)
+==> ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers
+==> set fixtureCamera (renderer hash 8710c28d160f8765)
+==> set frameCounter (renderer hash 68a198241bee4053)
+==> set harness (renderer hash 4d9c18d5b3e4de4c)
+==> set import (renderer hash c057f208a9012761)
+==> 19 clips, total rendered size 1,068,590 bytes (1.02 MiB)
+==> swift test (JovraCore)
+✔ Test run with 15 tests in 4 suites passed after 0.001 seconds.
+==> swift test (JovraMedia)
+✔ Test run with 63 tests in 13 suites passed after 1.551 seconds.
+==> xcodebuild test (JovraTests) on 7EC6403B-C56E-4563-987E-FA4F8E7E1BED
+==> JovraTests summary
+Test class                                                             passed  failed  skipped  expected
+JovraTests/AppPreferencesTests (App preferences and the data eraser)       10       0        0         0
+JovraTests/AppRouterTests (App router)                                     21       0        0         0
+JovraTests/ColorRoleContrastTests (Semantic colour contrast)                7       0        0         0
+JovraTests/DriveClientConfigurationTests (Drive client configuration)       7       0        0         0
+JovraTests/JovraFormatTests (Locale formatting)                             8       0        0         0
+JovraTests/LaunchConfigurationTests (Launch configuration)                  7       0        0         0
+JovraTests/PermissionsCenterTests (Permissions center)                      7       0        0         0
+JovraTests/ServiceRegistrationTests (Service registration seam)             3       0        0         0
+Total: 70 passed, 0 failed, 0 skipped, 0 expected failure(s) in 8 classes (xcresult summary: 70 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T07 7EC6403B-C56E-4563-987E-FA4F8E7E1BED (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: /Users/IDC2.5/jv/.claude/worktrees/t07-navigation-routes-permissions/.derivedData/unit-tests-20261008-110245.xcresult
+test.sh exit 0
