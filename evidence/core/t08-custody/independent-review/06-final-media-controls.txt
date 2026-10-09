@@ -1,0 +1,50 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t08-custody/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/9] Write sources
+[3/9] Write swift-version--58304C5D6DBC2206.txt
+[5/11] Emitting module JovraCore
+[6/11] Compiling JovraCore SessionStore.swift
+[7/14] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t08-custody/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[8/14] Emitting module JovraMedia
+[9/14] Compiling JovraMedia FixtureCamera.swift
+[9/14] Write Objects.LinkFileList
+[10/22] Linking jovra-benchmark
+[11/22] Applying jovra-benchmark
+[13/22] Compiling JovraMediaTests MediaLibraryTests.swift
+[14/22] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[15/22] Compiling JovraMediaTests FrameTimeTests.swift
+[16/22] Emitting module JovraMediaTests
+[17/22] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[18/22] Compiling JovraMediaTests RealFootageProbeTests.swift
+[19/22] Compiling JovraMediaTests FrameTimingTests.swift
+[20/22] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[20/22] Write Objects.LinkFileList
+[21/22] Linking JovraMediaPackageTests
+Build complete! (4.56s)
+Test Suite 'Selected tests' started at 2026-10-09 10:29:19.514.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 10:29:19.515.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 10:29:19.515.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:29:19.516.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test independentBackupOptInClearsEveryExistingOriginalExclusionFlag() started.
+◇ Test independentBackupFailureRestoresFlagsAndRefusesExternalLinks() started.
+◇ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() started.
+✔ Test independentBackupOptInClearsEveryExistingOriginalExclusionFlag() passed after 0.502 seconds.
+✔ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() passed after 1.134 seconds.
+✔ Test independentBackupFailureRestoresFlagsAndRefusesExternalLinks() passed after 1.568 seconds.
+✔ Test run with 3 tests in 0 suites passed after 1.568 seconds.

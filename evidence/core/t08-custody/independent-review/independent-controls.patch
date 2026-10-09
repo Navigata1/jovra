@@ -1,0 +1,62 @@
+diff --git a/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift b/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift
+index 6c0f646..190e42f 100644
+--- a/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift
++++ b/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift
+@@ -29,3 +29,28 @@ import JovraCore
+     #expect(actual.match == document.match)
+     #expect(actual.schemaVersion == .current)
+ }
++
++@Test func independentCaptureFaultKeepsRecordingMarksFacetsAndEditedNoteTogether() async throws {
++    var repo = URL(fileURLWithPath: #filePath)
++    for _ in 0..<7 { repo.deleteLastPathComponent() }
++    var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: repo.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
++    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++    defer { try? FileManager.default.removeItem(at: folder) }
++    let edited = SessionMark(id: "existing", tMs: 500, kind: .point, note: "User edited", provenance: .init(status: .manual, source: "user"))
++    document.marks = [edited]; document.sample = nil
++    let store = try SessionStore(root: folder); try await store.create(document)
++    let metadata = folder.appendingPathComponent("sessions/\(document.id)/session.json")
++    let before = try Data(contentsOf: metadata)
++    var recording = document.recording; recording.mode = .simulatorFixture
++    var stale = edited; stale.note = "Stale journal note"
++    let incoming = SessionMark(id: "incoming", tMs: 1000, kind: .point, provenance: .init(status: .manual, source: "captureMark", sample: true))
++    let failing = try SessionStore(root: folder, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
++    await #expect(throws: (any Error).self) { try await failing.saveCapture(recording, marks: [stale,incoming], for: document.id) }
++    #expect(try Data(contentsOf: metadata) == before)
++    try await store.saveCapture(recording, marks: [stale,incoming], for: document.id)
++    let actual = try await store.load(document.id)
++    #expect(actual.marks == [edited,incoming])
++    #expect(actual.recording == recording)
++    #expect(actual.analysis == document.analysis && actual.review == document.review && actual.archive == document.archive)
++    #expect(actual.sample?.synthetic == true)
++}
+diff --git a/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift b/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift
+index 433cd5c..10e12f3 100644
+--- a/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift
++++ b/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift
+@@ -37,3 +37,24 @@ import JovraMedia
+     }
+     #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+ }
++
++@Test func independentBackupOptInClearsEveryExistingOriginalExclusionFlag() async throws {
++    var repo = URL(fileURLWithPath: #filePath)
++    for _ in 0..<7 { repo.deleteLastPathComponent() }
++    let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: repo.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
++    let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++    defer { try? FileManager.default.removeItem(at: root) }
++    let store = try SessionStore(root: root); try await store.create(document)
++    let library = MediaLibrary(store: store)
++    let folder = try await library.recordingFolder(sessionID: document.id)
++    var nested = folder.appendingPathComponent("originals/nested", isDirectory: true)
++    try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
++    var file = nested.appendingPathComponent("previously-excluded.mp4")
++    try Data([1,2,3]).write(to: file)
++    var excluded = URLResourceValues(); excluded.isExcludedFromBackup = true
++    try nested.setResourceValues(excluded); try file.setResourceValues(excluded)
++    try await library.includeOriginalsInDeviceBackup(true, sessionID: document.id)
++    #expect(try nested.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
++    #expect(try file.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
++    #expect(try folder.appendingPathComponent("session.json").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup != true)
++}

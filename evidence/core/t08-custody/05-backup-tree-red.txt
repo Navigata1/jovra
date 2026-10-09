@@ -1,0 +1,25 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module JovraMediaTests
+[4/5] Compiling JovraMediaTests MediaLibraryTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking JovraMediaPackageTests
+Build complete! (1.13s)
+Test Suite 'Selected tests' started at 2026-10-09 10:19:22.304.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 10:19:22.306.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 10:19:22.306.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:19:22.306.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() started.
+✘ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() recorded an issue at MediaLibraryTests.swift:34:5: Expectation failed: try nested.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false
+✘ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() recorded an issue at MediaLibraryTests.swift:35:5: Expectation failed: try nestedFile.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false
+✘ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() failed after 0.652 seconds with 2 issues.
+✘ Test run with 1 test in 0 suites failed after 0.652 seconds with 2 issues.
