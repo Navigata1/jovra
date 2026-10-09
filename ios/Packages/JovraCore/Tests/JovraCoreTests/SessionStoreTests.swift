@@ -14,6 +14,136 @@ final class SessionStoreTests: XCTestCase {
         return try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: url.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
     }
 
+    func testIndexRebuildAndCorruptSessionQuarantinePreserveHealthySessions() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        let first = try sample()
+        var second = first
+        second.id = "second-session"
+        second.sample = nil
+        second.notes = "Clay court. Work on return."
+        try await store.create(first)
+        try await store.create(second)
+        let before = try await store.list()
+        XCTAssertEqual(before.count, 2)
+        try FileManager.default.removeItem(at: root.appendingPathComponent("index.json"))
+        let rebuilt = try await store.list()
+        XCTAssertEqual(before, rebuilt)
+        let searched = try await store.list(.init(search: "clay", sample: false))
+        XCTAssertEqual(searched.map(\.id), ["second-session"])
+        try Data("{broken".utf8).write(to: root.appendingPathComponent("sessions/second-session/session.json"))
+        let healthy = try await store.list()
+        XCTAssertEqual(healthy.map(\.id), [first.id])
+        let quarantine = try await store.quarantinedSessions()
+        XCTAssertEqual(quarantine.map(\.sessionID), ["second-session"])
+        let record = try XCTUnwrap(quarantine.first)
+        XCTAssertFalse(record.reason.isEmpty)
+    }
+
+    func testOlderDocumentMigratesAndOpponentQueriesExcludeSamples() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        var document = try sample()
+        try await store.create(document)
+        document.id = "real-legacy"
+        document.sample = nil
+        document.schemaVersion = .v1
+        try await store.create(document)
+        _ = try await store.rebuildIndex()
+        let migrated = try await store.load(document.id)
+        XCTAssertEqual(migrated.schemaVersion, .current)
+        XCTAssertEqual(migrated.match, document.match)
+        if let directory = ProcessInfo.processInfo.environment["JOVRA_QUERY_EVIDENCE_DIR"] {
+            let url = URL(fileURLWithPath: directory, isDirectory: true)
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+            try CanonicalJSON.encode(migrated).write(to: url.appendingPathComponent("session.json"))
+        }
+        let migratedAgain = try await store.migrate(migrated)
+        XCTAssertEqual(migratedAgain, migrated)
+        let selfID = try XCTUnwrap(document.players.first(where: \.isSelf)?.id)
+        let opponent = try XCTUnwrap(document.players.first(where: { !$0.isSelf })?.id)
+        let history = try await store.opponentHistory(playerID: selfID, opponentID: opponent)
+        XCTAssertEqual(history.map(\.id), ["real-legacy"])
+        let headToHead = try await store.headToHead(playerID: selfID, opponentID: opponent)
+        XCTAssertEqual(headToHead.map(\.id), ["real-legacy"])
+        let reopened = try SessionStore(root: root)
+        let retained = try await reopened.load(document.id)
+        XCTAssertEqual(retained, migrated)
+    }
+
+    func testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        let healthy = try sample()
+        try await store.create(healthy)
+        var future = healthy
+        future.id = "future"
+        future.schemaVersion = try SchemaVersion("1.3.0")
+        try await store.create(future)
+        let weird = root.appendingPathComponent("sessions/invalid name")
+        try FileManager.default.createDirectory(at: weird, withIntermediateDirectories: true)
+        try Data("preserve-me".utf8).write(to: weird.appendingPathComponent("original.mp4"))
+        let listed = try await store.list()
+        XCTAssertEqual(listed.map(\.id), [healthy.id])
+        let records = try await store.quarantinedSessions()
+        XCTAssertEqual(Set(records.map(\.sessionID)), ["future", "invalid name"])
+        let record = try XCTUnwrap(records.first(where: { $0.sessionID == "invalid name" }))
+        let kept = root.appendingPathComponent("quarantine/\(record.folderName)/session/original.mp4")
+        XCTAssertEqual(try Data(contentsOf: kept), Data("preserve-me".utf8))
+    }
+
+    func testFiltersAndOpponentQueriesDistinguishTeamsAndExcludeSamples() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        var document = try sample()
+        try await store.create(document)
+        document.id = "real-doubles"
+        document.sample = nil
+        document.schemaVersion = .current
+        var teammate = document.players[0]
+        teammate.id = "teammate"; teammate.displayName = "Team mate"; teammate.isSelf = false
+        var opponentPartner = document.players[1]
+        opponentPartner.id = "opponent-partner"; opponentPartner.isSelf = false
+        document.players += [teammate, opponentPartner]
+        document.sides = .init(A: [document.players[0].id, teammate.id], B: [document.players[1].id, opponentPartner.id])
+        document.match?.log = [.doublesOrder(.init(id: "order", seq: 1, setIndex: 0,
+            firstServer: document.players[0].id, secondServer: document.players[1].id,
+            deuceReceivers: .init(A: document.players[0].id, B: document.players[1].id)))]
+        document.marks = nil; document.shots = nil
+        document.original = .init(state: .saved)
+        document.analysis = .init(state: .notRequested, runs: [])
+        document.review = .init(state: .inProgress)
+        try await store.create(document)
+        let filtered = try await store.list(.init(search: "team MATE", kind: .match, sample: false,
+            original: .saved, analysis: .notRequested, review: .inProgress, archive: .localOnly))
+        XCTAssertEqual(filtered.map(\.id), [document.id])
+        let selfID = document.players[0].id
+        let teammateHistory = try await store.opponentHistory(playerID: selfID, opponentID: teammate.id)
+        XCTAssertTrue(teammateHistory.isEmpty)
+        let history = try await store.headToHead(playerID: selfID, opponentID: document.players[1].id)
+        XCTAssertEqual(history.map(\.id), [document.id])
+        let samePerson = try await store.headToHead(playerID: selfID, opponentID: selfID)
+        XCTAssertTrue(samePerson.isEmpty)
+    }
+
+    func testFutureMutationRefusalLeavesDocumentBytesUnchanged() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        var document = try sample()
+        document.schemaVersion = try SchemaVersion("1.3.0")
+        try await store.create(document)
+        let url = root.appendingPathComponent("sessions/\(document.id)/session.json")
+        let before = try Data(contentsOf: url)
+        do { try await store.update(document.id, facet: .review(.init(state: .complete))); XCTFail("future version must not be rewritten") }
+        catch SessionStoreError.unsupportedMigration { }
+        XCTAssertEqual(try Data(contentsOf: url), before)
+    }
+
     func testAppendBatchSurvivesInterruptionAsNoneOrAllAndConcurrentFacetsDoNotLoseEvents() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }
@@ -110,6 +240,25 @@ final class SessionStoreTests: XCTestCase {
         XCTAssertEqual(actual.schemaVersion, .current)
         XCTAssertEqual(actual.match, document.match)
         XCTAssertEqual(actual.original?.state, .saved)
+    }
+
+    func testSymlinkEscapeIsRefusedWithoutHidingHealthySessionOrTouchingExternalMedia() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let outside = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root); try? FileManager.default.removeItem(at: outside) }
+        let store = try SessionStore(root: root)
+        let document = try sample()
+        try await store.create(document)
+        try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+        try Data("keep-original".utf8).write(to: outside.appendingPathComponent("video.mp4"))
+        try FileManager.default.createSymbolicLink(at: root.appendingPathComponent("sessions/escape"), withDestinationURL: outside)
+        do { _ = try await store.load("escape"); XCTFail("symlink must be refused") }
+        catch SessionStoreError.unsafePath { }
+        let listed = try await store.list()
+        XCTAssertEqual(listed.map(\.id), [document.id])
+        XCTAssertEqual(try Data(contentsOf: outside.appendingPathComponent("video.mp4")), Data("keep-original".utf8))
+        let refused = try await store.quarantinedSessions()
+        XCTAssertEqual(refused.map(\.sessionID), ["escape"])
     }
 
     func testCreateSurvivesStoreRelaunchAndInterruptedWriteKeepsPreviousDocument() async throws {
