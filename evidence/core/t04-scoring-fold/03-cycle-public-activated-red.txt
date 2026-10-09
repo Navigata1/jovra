@@ -1,0 +1,19 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/10] Write sources
+[2/10] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Discover conformance runners by kind
+[4/6] Write sources
+[6/8] Emitting module JovraCore
+[7/8] Compiling JovraCore LogResolver.swift
+[8/12] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[9/12] Emitting module JovraCoreTests
+[10/12] Compiling JovraCoreTests ScoringTests.swift
+[10/12] Write Objects.LinkFileList
+[11/12] Linking JovraCorePackageTests
+Build complete! (2.95s)
+REPRODUCED: filesystem marker before public fold reached=True; explicit Swift testing helper PIDs stopped=[11598]; native fold failed to terminate within15 seconds
