@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT / "spec/reference"))
 sys.path.insert(0, str(ROOT / "scripts/spec"))
 from jsonschema_subset import SchemaSet
 from cases.common import CLUB_BO3, TB_ONLY_10, singles, doubles
-from jovra_ref import scoring
+from jovra_ref import scoring, references
 from jovra_ref.log import LogError
 
 
@@ -191,6 +191,17 @@ class ReviewedOrderPairs(unittest.TestCase):
         rules = scoring.fold(setup, log, mode="rules")
         self.assertEqual(rules["points"][0]["server"], "jon")
         self.assertEqual(setup["resolutionMode"], "asPlayed")
+
+
+    def test_ordinary_record_integrity_rejects_dangling_override_targets_and_players(self):
+        doc = json.loads((ROOT / "spec/fixtures/records/session.order-overrides.json").read_text())
+        self.assertEqual(references.session_problems(doc), [])
+        event = doc["match"]["log"][-1]
+        event["targetPointId"] = "unknown-point"
+        event["server"] = "unknown-player"
+        problems = references.session_problems(doc)
+        self.assertTrue(any("targetPointId" in p for p in problems))
+        self.assertTrue(any("server" in p for p in problems))
 
     def test_version_guards_and_closed_objects(self):
         schemas = SchemaSet(ROOT / "spec/schemas")

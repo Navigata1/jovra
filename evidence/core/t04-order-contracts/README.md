@@ -25,3 +25,8 @@ intact and rotation is not guessed. Persistent doubles order always contains the
 The native scoring/stat runners remain pending until T04/T05; this amendment does not suppress their pending
 status or claim a native complete fold. Fresh required Linux/spec CI and independent exact-head review remain
 necessary before merge. No push, PR or merge is included in this local review candidate.
+
+Reference-integrity follow-up: ordinary session records also reject dangling override target, discovery endpoint,
+server, receiver and rotation player references. 22 records the failing public integrity test; 23 passes all15
+focused controls after this change; 24 repeats the full schema/reference gate and25 reports97 Python tests.
+This adds ordinary record cross-reference checks; it does not broaden the codec into runtime schema validation.
