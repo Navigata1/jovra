@@ -10,7 +10,7 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T13:16:58.646541+00:00",
+    "updated": "2026-10-09T13:35:59.947625+00:00",
     "sessionCount": 1
   },
   "policies": {
@@ -24,26 +24,30 @@
       "id": "P1",
       "title": "Preserve and reconcile",
       "goal": "Continue from verified remote main without overwriting Claude changes.",
-      "status": "in_progress",
+      "status": "done",
       "sessionsEstimate": "1",
       "gates": [
         {
           "id": "P1-G1",
           "title": "Worktree base and preservation evidence",
           "command": "git status --short --branch",
-          "status": "pending",
-          "evidence": null,
-          "lastRun": null,
-          "notes": ""
+          "status": "passed",
+          "evidence": "ops/mission/evidence/preservation-2026-10-09.json",
+          "lastRun": "2026-10-09T13:29:33.448132+00:00",
+          "notes": "Eight files backed up; original root and all Claude worktrees untouched. Isolated checkout reconciled to current main, including mission merge be3b15f."
         }
       ],
       "tasks": [
         {
           "id": "P1-T1",
           "title": "Preservation inventory, backup, latest main and scope record",
-          "status": "pending",
+          "status": "done",
           "dependsOn": [],
-          "pr": null,
+          "pr": {
+            "number": 327,
+            "url": "https://github.com/Navigata1/jovra/pull/327",
+            "mergedAt": "2026-10-09T13:29:33.448132+00:00"
+          },
           "notes": ""
         }
       ]
@@ -52,7 +56,7 @@
       "id": "P2",
       "title": "Finish prerequisite reviews",
       "goal": "Review T02 and T07 independently, resolve findings, merge only when gates and CI pass.",
-      "status": "pending",
+      "status": "in_progress",
       "sessionsEstimate": "1",
       "gates": [
         {
@@ -87,18 +91,22 @@
         {
           "id": "T02",
           "title": "Complete contract review and merge PR 66",
-          "status": "pending",
+          "status": "done",
           "dependsOn": [],
-          "pr": null,
-          "notes": ""
+          "pr": {
+            "number": 66,
+            "url": "https://github.com/Navigata1/jovra/pull/66",
+            "mergedAt": "2026-10-09T13:31:48Z"
+          },
+          "notes": "Independent review fixes and backend regex compatibility correction merged d36e170 after fresh core/spec/l10n/media/backend-contract checks passed."
         },
         {
           "id": "T07",
           "title": "Complete navigation/permissions review and merge PR 321",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [],
           "pr": null,
-          "notes": ""
+          "notes": "Dedicated simulator: 15 core, 63 media and 70 hosted tests independently pass. Full UI/restoration tests still running."
         }
       ]
     },
@@ -283,12 +291,28 @@
       "note": "Simulator evidence does not prove physical capture, signing, endurance or store readiness."
     }
   ],
-  "prLog": [],
+  "prLog": [
+    {
+      "number": 327,
+      "title": "Record JOVRA core-flow continuation and explicit expansion hold",
+      "url": "https://github.com/Navigata1/jovra/pull/327",
+      "phase": "P1",
+      "mergedAt": "2026-10-09T13:29:33.448132+00:00"
+    },
+    {
+      "number": 66,
+      "title": "T02 shared contract completion and independent corrections",
+      "url": "https://github.com/Navigata1/jovra/pull/66",
+      "phase": "P2",
+      "mergedAt": "2026-10-09T13:31:48Z"
+    }
+  ],
   "resume": {
-    "activePhase": "P1",
+    "activePhase": "P2",
     "nextActions": [
-      "Verify T02 and T07 in isolated reviewer worktrees; do not overwrite unpublished T02 work or S07 compiler changes.",
-      "Add automated existing reference validator coverage, then implement the native core flow along ticket dependencies."
+      "Finish independent T07 full UI and process-relaunch restoration tests on dedicated simulator; merge only after fresh CI.",
+      "T03 implementation now unblocked by merged T02; build typed Swift contracts and conformance runners including canonical fixture kind.",
+      "Finish PR328 reference vocabulary/independent canonical bytes, then implement T08 and native capture/playback along ticket dependencies."
     ],
     "blockers": [],
     "conventions": [
