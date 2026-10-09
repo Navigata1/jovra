@@ -12,7 +12,9 @@ Native tests use only dedicated JOVRA-Codex-T07, iPhone17Pro/iOS26.5, UDID4265AD
 - 03 explicit-setup compiler RED: seed initializer lacked caller format/toss.
 - 04 explicit-setup GREEN:2 passed/0 failed; choices preserved and camera origin is not Sample.
 - 05 sink compiler RED: LocalCaptureLibrary did not conform to RecordingSink.
-- 06 final sink GREEN:3 passed/0 failed/0 skipped, result Passed. Reopening preserves recording, marks, Sample, blank match log and honest partial original state. The test intentionally has no video file and does not claim playable media.
+- 06 sink GREEN:3 passed/0 failed/0 skipped, result Passed. Reopening preserves recording, marks, Sample, blank match log and honest partial original state. The test intentionally has no video file and does not claim playable media.
+
+- 07 exact integrated head1cb1648 native GREEN:3 passed/0 failed/0 skipped, result Passed. Current-main ScoringEngine and TimelineDiff compiled with the app service. This closes the earlier integration qualifier. The following publication commit only preserves this evidence.
 
 Final tested source SHA256:
 - Platform/Capture/LocalCaptureLibrary.swift:6564196b7ebab9e0d8c17d7b199627e4b315d09ff39dd5927c1ea68e164a96cc
