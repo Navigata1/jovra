@@ -9,3 +9,7 @@ SPEC ACCEPT:0 bounded findings. Closed numeric model/denominators match shared g
 Docs04bc3a7 ACCEPT: nine additions/six removals align the stale 'total points only' wording with pre-existing spec/README decision4: eligible point-penalty break-point slots count, serve/return points and serve stats do not; game penalties never count as breaks. No engine/schema/fixture output changes. This resolves the documentation ambiguity identified during review.
 
 No scope creep or wrong bounded behavior found. Full exports/CSV bundle/sample-kind consumption, pooled trends, StatsEngine.diff and evidence selectors for remaining metrics are explicitly pending, not silently certified. Native UI/device/analysis validation remains separate. Standards axis is independent and not supplied by this report.
+
+## Nomenclature rebind
+
+SPEC ACCEPT exactc427bffcd076a792c86314a907560ea7c61a8203. Compared106293d againstc427bff: numeric StatsEngine/StatsModels/StatsMomentumPair unchanged; headline API renamed StatsMetric→StatSelector and metric→stat, with selector/stat local variables and public test names updated consistently. This aligns GLOSSARY terminology without altering selector cases, contributors, provenance ranking, unknown handling, fractions, sample behavior or golden outputs. The original Standards naming acceptance was separately withdrawn and repaired; this SPEC rebind accepts semantics only and retains full T05 pending scope. Fresh focused6/full110 canonical producer proof is reported separately, not rerun by this reviewer.
