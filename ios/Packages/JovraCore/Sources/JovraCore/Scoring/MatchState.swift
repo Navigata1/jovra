@@ -27,25 +27,25 @@ struct MatchState {
         rule = input.format.set
         try startSet()
     }
-    func partner(_ id: String) -> String { let team = input.sides[sideOf[id]!]; return team[0] == id ? team[1] : team[0] }
+    func partner(_ id: String) -> String { let playersOnSide = input.sides[sideOf[id]!]; return playersOnSide[0] == id ? playersOnSide[1] : playersOnSide[0] }
     mutating func startSet() throws {
         let deciding = setsWon.A == input.format.setsToWin.rawValue - 1 && setsWon.B == input.format.setsToWin.rawValue - 1
         rule = deciding ? input.format.finalSet ?? input.format.set : input.format.set
         games = .zero; gameInSet = 0; tb = nil; tbKind = nil
         if case .matchTiebreak(let r) = rule { tb = r.tiebreak; tbKind = .match }
         if doubles {
-            let team = matchGame % 2 == 0 ? firstSide : firstSide.other
+            let servingSide = matchGame % 2 == 0 ? firstSide : firstSide.other
             var first: String, second: String
             if let order = orders[setIndex] {
                 first = order.firstServer; second = order.secondServer
                 deuceReceivers = [.a: order.deuceReceivers.A, .b: order.deuceReceivers.B]
-                if sideOf[first] != team {
+                if sideOf[first] != servingSide {
                     swap(&first, &second)
                     pendingConflicts.append(.init(type: .doublesOrderConflict, eventId: order.id, recorded: second, derived: first))
                 }
             } else {
                 guard setIndex > 0 else { throw ScoringError(.doublesOrderMissing, "set 0") }
-                first = rotation.first { sideOf[$0] == team }!; second = rotation.first { sideOf[$0] == team.other }!
+                first = rotation.first { sideOf[$0] == servingSide }!; second = rotation.first { sideOf[$0] == servingSide.other }!
             }
             rotation = [first, second, partner(first), partner(second)]
         }
@@ -63,10 +63,10 @@ struct MatchState {
         sideChosen ? chosen.flatMap(TimelinePointStateCourtSide.init(rawValue:)) : (pointInGame % 2 == 0 ? .deuce : .ad)
     }
     func receiver(_ server: String, _ side: TimelinePointStateCourtSide?) -> String? {
-        let team = sideOf[server]!.other
-        if !doubles { return input.sides[team][0] }
+        let receivingSide = sideOf[server]!.other
+        if !doubles { return input.sides[receivingSide][0] }
         guard let side else { return nil }
-        let deuce = deuceReceivers[team]!
+        let deuce = deuceReceivers[receivingSide]!
         return side == .deuce ? deuce : partner(deuce)
     }
     func call(_ server: Side) -> TimelineCall {
@@ -90,10 +90,10 @@ struct MatchState {
         return .init(gamePointFor: game, breakPoint: tb == nil && game.contains(server.other), setPointFor: set, matchPointFor: match)
     }
     func state(server: String? = nil, chosen: String? = nil, receiverOverride: String? = nil) throws -> TimelinePointState {
-        let server = server ?? self.server(), side = courtSide(chosen), team = sideOf[server]!
+        let server = server ?? self.server(), side = courtSide(chosen), serverSide = sideOf[server]!
         return .init(set: setIndex, game: matchGame, gameInSet: gameInSet, tiebreak: .init(tbKind), pointInGame: pointInGame + 1, server: server,
-            receiver: .init(receiverOverride ?? receiver(server, side)), serverSide: team, courtSide: .init(side), ends: ends,
-            before: .init(sets: setsWon, games: games, points: points), call: call(team), pressure: try pressure(team))
+            receiver: .init(receiverOverride ?? receiver(server, side)), serverSide: serverSide, courtSide: .init(side), ends: ends,
+            before: .init(sets: setsWon, games: games, points: points), call: call(serverSide), pressure: try pressure(serverSide))
     }
     mutating func flipEnds() { let a = ends.A.rawValue; ends.A = .init(rawValue: ends.B.rawValue)!; ends.B = .init(rawValue: a)! }
     func gameWon(_ side: Side) -> Bool {
