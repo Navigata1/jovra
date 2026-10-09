@@ -1,0 +1,7 @@
+# SPEC review — bounded native Capture foundation
+
+SOURCE ACCEPT exact17e96fcc27572586cb636e74307d0a6d4b3c9cde againstb6111ec9. Independently compared choices, scalar guards, phase presentation, disabled palette and setup field bindings to accepted composed0885 source. Same tested semantics; setup field now uses promoted JovraTextInput. Wrapper preserves actual64-point/scaled-font target, delegate/current-binding/Done behavior; new keyboardType defaults to prior default and is assigned during update. Optional route payload remains Codable nil-compatible, with legacy unsupported kind refusal preserved. Removed unused append seam does not introduce new session writes.
+
+Typed seed retains chosen title, names, scoring format, first server and near side; form validity counts emitted trimmed Unicode scalars, authoritative capture boundary counts actual retained strings120/60 before persistence. Public negative/round-trip controls retained. Phase titles remain exhaustive, stopped says Not recording, without inferring Saved. Disabled palette retains native disabled behavior and known semantic contrast pair. Test mark provenance corrected to allowed user source. No CaptureScreen/Record route UI ships here.
+
+Historical full composed Capture38 proof remains exactly0885 and is not transferred to this rebuilt foundation SHA. Fresh hosted foundation14 plus semantic7 runtime remains pending. No fullT17/calibration/camera/microphone/endurance/CoreFlow/step5 acceptance. No SPEC source findings; reviewer read-only, no compiler/simulator.
