@@ -1,0 +1,63 @@
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/10] Write sources
+[2/10] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Discover conformance runners by kind
+[4/6] Write sources
+[6/10] Compiling JovraCore ContractPrimitives.swift
+[7/10] Compiling JovraCore DocumentModels.swift
+[8/10] Emitting module JovraCore
+[9/10] Compiling JovraCore SessionStore.swift
+[10/12] Compiling JovraCore CapabilityRegistryLoader.swift
+[11/12] Compiling JovraCore Percent.swift
+[12/41] Compiling JovraCoreTests FrameRateTests.swift
+[13/42] Compiling JovraCoreTests ProvenanceTests.swift
+[14/42] Compiling JovraCoreTests ArchiveRunner.swift
+[15/42] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[16/42] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[17/42] Compiling JovraCoreTests UnitsTests.swift
+[18/42] Compiling JovraCoreTests DurationLabelTests.swift
+[19/42] Compiling JovraCoreTests EquipmentRunner.swift
+[20/42] Compiling JovraCoreTests ExportRunner.swift
+[21/42] Compiling JovraCoreTests BenchmarkRunner.swift
+[22/42] Compiling JovraCoreTests CSVContractRunner.swift
+[23/42] Compiling JovraCoreTests SessionContractTests.swift
+[24/42] Compiling JovraCoreTests CanonicalRunner.swift
+[25/42] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[26/42] Compiling JovraCoreTests FixtureManifest.swift
+[27/42] Compiling JovraCoreTests MediaRecordContractTests.swift
+[28/42] Compiling JovraCoreTests SessionRunner.swift
+[29/42] Compiling JovraCoreTests UnitsRunner.swift
+[30/42] Compiling JovraCoreTests GroundTruthRunner.swift
+[31/42] Compiling JovraCoreTests PctRunner.swift
+[32/42] Compiling JovraCoreTests PercentTests.swift
+[33/42] Compiling JovraCoreTests RegistryContractTests.swift
+[34/42] Emitting module JovraCoreTests
+[35/42] Compiling JovraCoreTests ContrastTests.swift
+[36/42] Compiling JovraCoreTests CanonicalJSONTests.swift
+[37/42] Compiling JovraCoreTests ContractSafetyTests.swift
+[38/42] Compiling JovraCoreTests PracticePlanRunner.swift
+[39/42] Compiling JovraCoreTests SampleMediaRunner.swift
+[40/42] Compiling JovraCoreTests SessionStoreTests.swift
+[40/42] Write Objects.LinkFileList
+[41/42] Linking JovraCorePackageTests
+Build complete! (9.78s)
+Test Suite 'Selected tests' started at 2026-10-09 09:37:31.586.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 09:37:31.588.
+Test Suite 'SessionStoreTests' started at 2026-10-09 09:37:31.588.
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession]' started.
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraCore/Sources/JovraCore/SessionStore/SessionStore.swift:201: error: -[JovraCoreTests.SessionStoreTests testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession] : failed: caught error: "unsupportedMigration"
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession]' failed (0.880 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testOlderDocumentMigratesAndOpponentQueriesExcludeSamples]' started.
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStoreTests.swift:56: error: -[JovraCoreTests.SessionStoreTests testOlderDocumentMigratesAndOpponentQueriesExcludeSamples] : XCTAssertEqual failed: ("SchemaVersion(major: 1, minor: 1, patch: 0, rawValue: "1.1.0")") is not equal to ("SchemaVersion(major: 1, minor: 2, patch: 0, rawValue: "1.2.0")")
+Test Case '-[JovraCoreTests.SessionStoreTests testOlderDocumentMigratesAndOpponentQueriesExcludeSamples]' failed (0.417 seconds).
+Test Suite 'SessionStoreTests' failed at 2026-10-09 09:37:32.886.
+	 Executed 2 tests, with 2 failures (1 unexpected) in 1.297 (1.298) seconds
+Test Suite 'JovraCorePackageTests.xctest' failed at 2026-10-09 09:37:32.886.
+	 Executed 2 tests, with 2 failures (1 unexpected) in 1.297 (1.298) seconds
+Test Suite 'Selected tests' failed at 2026-10-09 09:37:32.886.
+	 Executed 2 tests, with 2 failures (1 unexpected) in 1.297 (1.300) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
