@@ -20,3 +20,5 @@
 - T07 UI/restoration suite still running; no step-5 work started.
 
 - 2026-10-09T13:52:02.077331+00:00: PR328 merged15bc44a; current-main core/Studio validation passes. Native restoration verification and T03/T08 implementation continue. Step5 remains held.
+
+- 2026-10-09T14:10:40.308897+00:00: T03 PR330 merged1b4b481 after independent review and corrected Linux newline refusal passed fresh CI. T08 split into small atomic/query-and-lifecycle/custody slices; T15 capture underway. Step5 held.

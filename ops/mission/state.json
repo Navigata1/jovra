@@ -10,14 +10,14 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T13:52:02.077331+00:00",
+    "updated": "2026-10-09T14:10:40.308897+00:00",
     "sessionCount": 1
   },
   "policies": {
     "merge": "auto",
     "branchPrefix": "codex/",
     "maxPrLines": 400,
-    "notes": "One feature per PR. Merge only after independent review, fresh local gates and green CI; larger contract ports may require documented split."
+    "notes": "One feature per PR. Merge only after independent review, fresh local gates and green CI. Manual implementation slices target400lines; generated schemas/models, evidence and mission HTML are recorded separately. T03 coherent347typed-model mapping was independently reviewed as one contract port."
   },
   "phases": [
     {
@@ -192,12 +192,16 @@
         {
           "id": "T03",
           "title": "Swift contracts, canonical JSON, percentages, units and capability models",
-          "status": "in_progress",
+          "status": "done",
           "dependsOn": [
             "T02"
           ],
-          "pr": null,
-          "notes": ""
+          "pr": {
+            "number": 330,
+            "url": "https://github.com/Navigata1/jovra/pull/330",
+            "mergedAt": "2026-10-09T14:08:38Z"
+          },
+          "notes": "Typed models and14runner kinds merged1b4b481;31Swift tests,36independent reencoded outputs,82Python tests. Fresh Linux CI found newline parsing defect; full-token correction now verified green."
         },
         {
           "id": "T04",
@@ -227,7 +231,7 @@
             "T03"
           ],
           "pr": null,
-          "notes": "Implementation underway in isolated store checkout using committed T03 models; publication and merge remain gated by T03 acceptance."
+          "notes": "T08 split into atomic transactions, folder-derived queries/quarantine/migration/trash, and media custody PRs. Atomic slice independently reviewed; repeated1000interleavings pass. Remaining slices pending; ticket stays open."
         },
         {
           "id": "T15-T16",
@@ -281,7 +285,7 @@
     {
       "label": "Closed feature tickets at kickoff",
       "baseline": "13",
-      "current": "13",
+      "current": "15",
       "target": "Authorized flow, not entire backlog",
       "direction": "up"
     }
@@ -319,6 +323,13 @@
       "url": "https://github.com/Navigata1/jovra/pull/328",
       "phase": "P3",
       "mergedAt": "2026-10-09T13:49:44Z"
+    },
+    {
+      "number": 330,
+      "title": "Typed Swift contracts and independent conformance",
+      "url": "https://github.com/Navigata1/jovra/pull/330",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T14:08:38Z"
     }
   ],
   "resume": {

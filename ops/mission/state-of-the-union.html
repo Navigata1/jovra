@@ -65,20 +65,20 @@ button.copy:hover{background:rgba(88,215,179,.2)}
 
 <main>
   <header class="hero">
-    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-10-09 13:56Z</p>
+    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-10-09 14:10Z</p>
     <h1>JOVRA core continuation</h1>
     <p class="tagline">Record safely. Review honestly. Own the export.</p>
     <div style="margin-top:14px">
       <span class="chip blue">mission: active</span>
       <span class="chip green">active phase: P2</span>
-      <span class="chip blue">4/13 tasks</span>
+      <span class="chip blue">5/13 tasks</span>
       <span class="chip amber">3/8 gates passed</span>
-      <span class="chip ">3 PRs merged</span>
+      <span class="chip ">4 PRs merged</span>
       <span class="chip ">sessions: 1</span>
-      <span class="chip ">updated: 2026-10-09T13:52:02.077331+00:00</span>
+      <span class="chip ">updated: 2026-10-09T14:10:40.308897+00:00</span>
     </div>
-    <div class="bar big" role="img" aria-label="Overall progress 31%"><div class="fill" style="width:31%"></div></div>
-    <p class="small muted" style="margin-top:6px">Overall: 31% of tasks complete &middot; repo Navigata1/jovra &middot; plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md</p>
+    <div class="bar big" role="img" aria-label="Overall progress 38%"><div class="fill" style="width:38%"></div></div>
+    <p class="small muted" style="margin-top:6px">Overall: 38% of tasks complete &middot; repo Navigata1/jovra &middot; plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md</p>
   </header>
 
   <section aria-labelledby="coldstart">
@@ -105,7 +105,7 @@ Operating procedure:
   </section>
 
   <section aria-labelledby="metrics"><h2 id="metrics">Scoreboard: Baseline &rarr; Current &rarr; Target</h2>
-  <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Baseline</th><th>Current</th><th>Target</th></tr></thead><tbody><tr><td><b>Closed feature tickets at kickoff</b></td><td>13</td><td><span class="chip amber">13</span></td><td>Authorized flow, not entire backlog</td></tr></tbody></table></div>
+  <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Baseline</th><th>Current</th><th>Target</th></tr></thead><tbody><tr><td><b>Closed feature tickets at kickoff</b></td><td>13</td><td><span class="chip amber">15</span></td><td>Authorized flow, not entire backlog</td></tr></tbody></table></div>
   <p class="small muted" style="margin-top:6px">green = at/past target &middot; blue = moving toward target &middot; amber = unchanged &middot; red = moving away</p></section>
   <section aria-labelledby="risks"><h2 id="risks">Risks &amp; Blockers</h2><div class="panel"><ul class="bare"><li><span class="chip red">high</span> <b>Concurrent Claude work</b> &mdash; <span class="muted">Original checkout and all Claude worktrees preserved; only isolated Codex checkouts change.</span></li><li><span class="chip amber">medium</span> <b>Physical device validation</b> &mdash; <span class="muted">Simulator evidence does not prove physical capture, signing, endurance or store readiness.</span></li></ul></div></section>
 
@@ -258,9 +258,9 @@ Operating procedure:
         <span class="muted small">est. sessions: Several feature slices</span>
       </header>
       <p class="muted">A working native iOS flow with durable recording, local library, replay, corrected score and export.</p>
-      <div class="bar"><div class="fill" style="width:0%"></div></div>
-      <p class="small muted">0/8 tasks &middot; 0%</p>
-      <ul class="tasks"><li class="task-in_progress"><span class="mark">&#9689;</span> <b>T03</b> Swift contracts, canonical JSON, percentages, units and capability models</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T04</b> Scoring engine and correction propagation</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T05</b> Stats and data export</li><li class="task-in_progress"><span class="mark">&#9689;</span> <b>T08</b> Durable session storage and media custody<br><span class="muted small">Implementation underway in isolated store checkout using committed T03 models; publication and merge remain gated by T03 acceptance.</span></li><li class="task-pending"><span class="mark">&#9675;</span> <b>T15-T16</b> Recording pipeline and recovery</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T14</b> Frame-accurate playback</li><li class="task-pending"><span class="mark">&#9675;</span> <b>P4-UI</b> Native recording, library, replay and reviewed-score integration</li><li class="task-pending"><span class="mark">&#9675;</span> <b>P4-EXPORT</b> Clip/data export and end-to-end proof</li></ul>
+      <div class="bar"><div class="fill" style="width:13%"></div></div>
+      <p class="small muted">1/8 tasks &middot; 13%</p>
+      <ul class="tasks"><li class="task-done"><span class="mark">&#9679;</span> <b>T03</b> Swift contracts, canonical JSON, percentages, units and capability models &mdash; <a href="https://github.com/Navigata1/jovra/pull/330">PR #330</a> merged 2026-10-09T14:08:38Z<br><span class="muted small">Typed models and14runner kinds merged1b4b481;31Swift tests,36independent reencoded outputs,82Python tests. Fresh Linux CI found newline parsing defect; full-token correction now verified green.</span></li><li class="task-pending"><span class="mark">&#9675;</span> <b>T04</b> Scoring engine and correction propagation</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T05</b> Stats and data export</li><li class="task-in_progress"><span class="mark">&#9689;</span> <b>T08</b> Durable session storage and media custody<br><span class="muted small">T08 split into atomic transactions, folder-derived queries/quarantine/migration/trash, and media custody PRs. Atomic slice independently reviewed; repeated1000interleavings pass. Remaining slices pending; ticket stays open.</span></li><li class="task-pending"><span class="mark">&#9675;</span> <b>T15-T16</b> Recording pipeline and recovery</li><li class="task-pending"><span class="mark">&#9675;</span> <b>T14</b> Frame-accurate playback</li><li class="task-pending"><span class="mark">&#9675;</span> <b>P4-UI</b> Native recording, library, replay and reviewed-score integration</li><li class="task-pending"><span class="mark">&#9675;</span> <b>P4-EXPORT</b> Clip/data export and end-to-end proof</li></ul>
       <div class="table-wrap"><table><thead><tr><th>Gate</th><th>Check</th><th>Command</th><th>Evidence</th><th>Last run</th></tr></thead><tbody><tr>
       <td><span class="chip ">pending</span></td>
       <td><b>Domain and conformance tests</b></td>
@@ -282,10 +282,9 @@ Governing plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mi
 
 Phase goal: A working native iOS flow with durable recording, local library, replay, corrected score and export.
 Remaining tasks:
-  - [in_progress] T03: Swift contracts, canonical JSON, percentages, units and capability models
   - [pending] T04: Scoring engine and correction propagation
   - [pending] T05: Stats and data export
-  - [in_progress] T08: Durable session storage and media custody (Implementation underway in isolated store checkout using committed T03 models; publication and merge remain gated by T03 acceptance.)
+  - [in_progress] T08: Durable session storage and media custody (T08 split into atomic transactions, folder-derived queries/quarantine/migration/trash, and media custody PRs. Atomic slice independently reviewed; repeated1000interleavings pass. Remaining slices pending; ticket stays open.)
   - [pending] T15-T16: Recording pipeline and recovery
   - [pending] T14: Frame-accurate playback
   - [pending] P4-UI: Native recording, library, replay and reviewed-score integration
@@ -308,8 +307,8 @@ Operating procedure:
     </article>
   </section>
 
-  <section aria-labelledby="prs"><h2 id="prs">Merged Work (3 PRs)</h2><div class="timeline"><article class="tl-item"><time>#328</time><p><b>Canonical reference bytes and core contract vocabulary</b> &mdash; P3, merged 2026-10-09T13:49:44Z &middot; <a href="https://github.com/Navigata1/jovra/pull/328">view</a></p></article><article class="tl-item"><time>#66</time><p><b>T02 shared contract completion and independent corrections</b> &mdash; P2, merged 2026-10-09T13:31:48Z &middot; <a href="https://github.com/Navigata1/jovra/pull/66">view</a></p></article><article class="tl-item"><time>#327</time><p><b>Record JOVRA core-flow continuation and explicit expansion hold</b> &mdash; P1, merged 2026-10-09T13:29:33.448132+00:00 &middot; <a href="https://github.com/Navigata1/jovra/pull/327">view</a></p></article></div></section>
-  <section aria-labelledby="journal"><h2 id="journal">Journal (latest first)</h2><div class="timeline"><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:35:59.947625+00:00 — T02 merged</b><br><br>- PR66 merged as d36e170 after all fresh automatic checks passed.<br>- Gateway regex portability fixed with explicit ECMA whitespace and black-box rejection tests; strict checker retained.<br>- T03 unblocked and underway; canonical-byte vectors registered through the existing discovery convention.<br>- T07 UI/restoration suite still running; no step-5 work started.<br><br>- 2026-10-09T13:52:02.077331+00:00: PR328 merged15bc44a; current-main core/Studio validation passes. Native restoration verification and T03/T08 implementation continue. Step5 remains held.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:29:33.448132+00:00 — prerequisite review</b><br><br>- PR327 merged after green CI and independent gate-command review; P1 complete.<br>- T02 independent review found and fixed invalid calendar-date crash and frame-rate boundary uncertainty; 75 Python tests and five mutation controls pass.<br>- Fresh T02 backend-contract CI exposed regex portability mismatch; no merge until fixed.<br>- T07 dedicated-simulator tests pass at unit seams; full UI and scene restoration verification pending.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:16:58.646541+00:00 — session 1</b><br><br>- Founder authorized steps 1–4; step 5 held.<br>- Tier 2 orchestration: isolated independent T02 and T07 verification.<br>- Backed up eight existing uncommitted files without changing original checkouts; reconciled to remote main 6de361a.<br>- Current free disk approximately 16 GiB; dedicate simulator and derived data.</p></article></div></section>
+  <section aria-labelledby="prs"><h2 id="prs">Merged Work (4 PRs)</h2><div class="timeline"><article class="tl-item"><time>#330</time><p><b>Typed Swift contracts and independent conformance</b> &mdash; P4, merged 2026-10-09T14:08:38Z &middot; <a href="https://github.com/Navigata1/jovra/pull/330">view</a></p></article><article class="tl-item"><time>#328</time><p><b>Canonical reference bytes and core contract vocabulary</b> &mdash; P3, merged 2026-10-09T13:49:44Z &middot; <a href="https://github.com/Navigata1/jovra/pull/328">view</a></p></article><article class="tl-item"><time>#66</time><p><b>T02 shared contract completion and independent corrections</b> &mdash; P2, merged 2026-10-09T13:31:48Z &middot; <a href="https://github.com/Navigata1/jovra/pull/66">view</a></p></article><article class="tl-item"><time>#327</time><p><b>Record JOVRA core-flow continuation and explicit expansion hold</b> &mdash; P1, merged 2026-10-09T13:29:33.448132+00:00 &middot; <a href="https://github.com/Navigata1/jovra/pull/327">view</a></p></article></div></section>
+  <section aria-labelledby="journal"><h2 id="journal">Journal (latest first)</h2><div class="timeline"><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:35:59.947625+00:00 — T02 merged</b><br><br>- PR66 merged as d36e170 after all fresh automatic checks passed.<br>- Gateway regex portability fixed with explicit ECMA whitespace and black-box rejection tests; strict checker retained.<br>- T03 unblocked and underway; canonical-byte vectors registered through the existing discovery convention.<br>- T07 UI/restoration suite still running; no step-5 work started.<br><br>- 2026-10-09T13:52:02.077331+00:00: PR328 merged15bc44a; current-main core/Studio validation passes. Native restoration verification and T03/T08 implementation continue. Step5 remains held.<br><br>- 2026-10-09T14:10:40.308897+00:00: T03 PR330 merged1b4b481 after independent review and corrected Linux newline refusal passed fresh CI. T08 split into small atomic/query-and-lifecycle/custody slices; T15 capture underway. Step5 held.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:29:33.448132+00:00 — prerequisite review</b><br><br>- PR327 merged after green CI and independent gate-command review; P1 complete.<br>- T02 independent review found and fixed invalid calendar-date crash and frame-rate boundary uncertainty; 75 Python tests and five mutation controls pass.<br>- Fresh T02 backend-contract CI exposed regex portability mismatch; no merge until fixed.<br>- T07 dedicated-simulator tests pass at unit seams; full UI and scene restoration verification pending.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:16:58.646541+00:00 — session 1</b><br><br>- Founder authorized steps 1–4; step 5 held.<br>- Tier 2 orchestration: isolated independent T02 and T07 verification.<br>- Backed up eight existing uncommitted files without changing original checkouts; reconciled to remote main 6de361a.<br>- Current free disk approximately 16 GiB; dedicate simulator and derived data.</p></article></div></section>
 
   <p class="footer">GENERATED by ops/mission/render-sotu.mjs from state.json — do not hand-edit.
   To update: edit state.json, run <code>node ops/mission/render-sotu.mjs</code>, commit both.</p>
