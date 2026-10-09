@@ -1,0 +1,7 @@
+# Exact replay frame lookup — independent Standards axis
+
+Pinned `1ba070e7916cd1ad56164247646ed802f6039506` vs `3ae5caa2bb2cff78e9d9b76b9a28a092faf54cf6`. Read both Playback source/public tests against CLAUDE.md, GLOSSARY.md, docs/DEVELOPING.md and code-review Fowler baseline. Static Standards only; Spec and runtime are independent owner gates.
+
+**Zero documented-standard violations; zero actionable Fowler findings.** The adapter keeps a narrow decoded-frame boundary with a typed FrameRate, actor-owned AVFoundation state and constant-rate/verified-frame-count preconditions stated explicitly. Requested tolerances are zero and the actual decoded timestamp must map to the requested index before a frame is returned. Domain naming uses replay/frame vocabulary rather than inventing stats. Cancellation and range refusals remain explicit, and clock integer representability is checked before constructing CMTime. The preconcurrency AVFoundation import stays at the Apple media adapter, with no mutable configuration exposed to callers. Public tests read actual encoded frame-counter pixels for 200 seeded forward/backward targets, check boundary refusal and malformed clock values; expected counters come from committed truth instead of echoing a player readout.
+
+This receipt does not establish complete T14, variable-rate import indexing, proxy performance, playback timing SLA, UI integration, iOS18 runtime or device evidence. Full package74-test/200-counter runtime proof belongs to root; no compilation performed by this reviewer.
