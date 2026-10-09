@@ -13,7 +13,7 @@ Rules (docs/DEVELOPING.md, "Localization"):
     prefix of the table's folder. A ticket may add, edit or delete only its own tables.
   - The owner of ios/Jovra/Resources/Localization (the localization foundation, T06) may edit any table;
     tables with no owning area (InfoPlist, ...) are edited only by that owner.
-  - The ticket comes from the branch name ticket/tNN-slug. Other branches own no table.
+  - The ticket comes from the branch name ticket/tNN-slug or codex/tNN-slug. Other branches own no table.
 Exit status 1 when any changed catalog is not the ticket's.
 """
 from __future__ import annotations
@@ -26,7 +26,7 @@ import subprocess
 import sys
 
 LOCALIZATION = "ios/Jovra/Resources/Localization"
-BRANCH = re.compile(r"^ticket/t(?P<number>\d+)-")
+BRANCH = re.compile(r"^(?:ticket|codex)/t(?P<number>\d+)-")
 
 
 def load_tickets(path: pathlib.Path) -> dict[str, list[str]]:
@@ -83,7 +83,7 @@ def check(branch: str, changed: list[str], tickets: dict[str, list[str]]) -> lis
             problems.append(f"{path}: String Catalogs live in {LOCALIZATION}")
             continue
         if ticket is None or ticket not in tickets:
-            problems.append(f"{path}: branch {branch} is not a ticket branch (ticket/tNN-slug), so it owns no table")
+            problems.append(f"{path}: branch {branch} is not a ticket branch (ticket/tNN-slug or codex/tNN-slug), so it owns no table")
             continue
         if LOCALIZATION in tickets[ticket]:
             continue

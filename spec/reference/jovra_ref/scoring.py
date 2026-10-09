@@ -229,12 +229,12 @@ class Match:
     def _flip_ends(self) -> None:
         self.ends = {"A": self.ends["B"], "B": self.ends["A"]}
 
-    def apply_point(self, w: str, penalty: bool = False) -> dict:
+    def apply_point(self, w: str, penalty: bool = False, observed_server: str | None = None) -> dict:
         """Apply one point slot won by side ``w``. Returns what closed and the rest that follows."""
         if self.status == "notStarted":
             self.status = "inProgress"
         if self.point_in_game == 0:
-            self.game_start_server = self.server()
+            self.game_start_server = observed_server or self.server()
             self.game_has_penalty = False
         self.game_has_penalty = self.game_has_penalty or penalty
         self.pts[w] += 1
@@ -484,9 +484,12 @@ def validate_log(setup: dict, log: list[dict], doubles_orders: dict) -> None:
             raise LogError("doublesOrderInvalid", "set 0 firstServer must equal toss.firstServer")
 
 
-def fold(setup: dict, log: list[dict]) -> dict:
+def fold(setup: dict, log: list[dict], mode: str | None = None) -> dict:
+    if mode is not None: setup = {**setup, "resolutionMode": mode}
     placed, doubles_orders, history = resolve(log)
     validate_log(setup, log, doubles_orders)
+    from .order_overrides import OrderOverrides
+    overrides = OrderOverrides(setup, log, placed)
     m = Match(setup, doubles_orders)
     points: list[dict] = []
     conflicts: list[dict] = []
@@ -497,6 +500,7 @@ def fold(setup: dict, log: list[dict]) -> dict:
 
     for event in placed:
         etype = event["type"]
+        if etype in ("serverOverride", "receiverOverride"): continue
         if etype == "rallyLet":
             rally_lets.append(event["id"])
             continue
@@ -548,7 +552,7 @@ def fold(setup: dict, log: list[dict]) -> dict:
             points.append(record)
             continue
 
-        server = m.server()
+        server = overrides.before_point(m, event, winner, conflicts)
         server_side = m.side_of[server]
         side = m.court_side(event.get("decidingPointSide"))
         record.update(
@@ -561,7 +565,7 @@ def fold(setup: dict, log: list[dict]) -> dict:
                 "tiebreak": m.tiebreak_kind(),
                 "pointInGame": m.point_in_game + 1,
                 "server": server,
-                "receiver": m.receiver(server, side),
+                "receiver": overrides.receiver(m, server, side),
                 "serverSide": server_side,
                 "courtSide": side,
                 "ends": dict(m.ends),
@@ -579,7 +583,7 @@ def fold(setup: dict, log: list[dict]) -> dict:
                     "derived": side,
                 }
             )
-        if "recordedServer" in event and event["recordedServer"] != server:
+        if event["id"] not in overrides.servers and "recordedServer" in event and event["recordedServer"] != server:
             conflicts.append(
                 {
                     "type": "serverMismatch",
@@ -598,7 +602,7 @@ def fold(setup: dict, log: list[dict]) -> dict:
             _, ok = serve_number(outcome)
             if not ok or not outcome_consistent(outcome, winner, server_side):
                 conflicts.append({"type": "outcomeInconsistent", "pointId": event["id"]})
-        result = m.apply_point(winner, penalty=is_penalty)
+        result = m.apply_point(winner, penalty=is_penalty, observed_server=server)
         conflicts.extend(m.pending_conflicts)
         m.pending_conflicts = []
         record["after"] = {
@@ -643,7 +647,7 @@ def fold(setup: dict, log: list[dict]) -> dict:
             "tiebreak": m.tiebreak_kind(),
             "pointInGame": m.point_in_game + 1,
             "server": server,
-            "receiver": m.receiver(server, side),
+            "receiver": overrides.receiver(m, server, side),
             "serverSide": server_side,
             "courtSide": side,
             "ends": dict(m.ends),

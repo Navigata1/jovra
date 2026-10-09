@@ -292,6 +292,15 @@ def session_problems(doc: dict, manifest: dict | None = None) -> list[str]:
     segments = _ids(doc.get("recording", {}).get("segments"))
     version = event_log_version(doc)
     problems = time_range_problems(doc) + _sample_media_problems(doc, manifest)
+    for i, event in enumerate(log):
+        if event["type"] not in ("serverOverride", "receiverOverride"): continue
+        where = f"$.match.log[{i}]"
+        problems += _missing(f"{where}.targetPointId", event["targetPointId"], points, "point event")
+        if "discoveryAfterPointId" in event:
+            problems += _missing(f"{where}.discoveryAfterPointId", event["discoveryAfterPointId"], points, "point event")
+        for field in ("server", "deuceReceiver"):
+            if field in event: problems += _missing(f"{where}.{field}", event[field], players, "player")
+        problems += _all_missing(f"{where}.rotation", event.get("rotation"), players, "player")
 
     consent = doc.get("consent", {})
     problems += _all_missing("$.consent.juniorPlayerIds", consent.get("juniorPlayerIds"), players, "player")

@@ -23,6 +23,9 @@ public struct SchemaVersion: Codable, Equatable, Hashable, Sendable {
     public let rawValue: String
     public static let v1 = SchemaVersion(major: 1, minor: 0, patch: 0)
     public static let v1_1 = SchemaVersion(major: 1, minor: 1, patch: 0)
+    public static let v1_2 = SchemaVersion(major: 1, minor: 2, patch: 0)
+    /// Current session document schema; other document kinds retain their own versions.
+    public static let current = v1_2
     private init(major: Int, minor: Int, patch: Int) {
         self.major = major; self.minor = minor; self.patch = patch
         self.rawValue = "\(major).\(minor).\(patch)"

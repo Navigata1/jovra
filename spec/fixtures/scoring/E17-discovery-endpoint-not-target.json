@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.2.0",
+  "kind": "jovra.fixture.scoring",
+  "id": "E17-discovery-endpoint-not-target",
+  "title": "Reviewed order structural refusal: discovery-endpoint-not-target",
+  "covers": ["ADR0030", "overrideMetadataInvalid"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "jon", "displayName": "Jon", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "alex", "displayName": "Alex", "handedness": "left", "backhand": "oneHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["jon"], "B": ["alex"]},
+    "toss": {"firstServer": "jon", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "p01", "seq": 1, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "p02", "seq": 2, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "p03", "seq": 3, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "p04", "seq": 4, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "o05", "seq": 5, "type": "serverOverride", "targetPointId": "p04", "server": "alex", "continuation": "completedStandardGame", "provenance": "reviewed", "source": "user", "discoveryAfterPointId": "p03"}
+    ],
+    "resolutionMode": "asPlayed"
+  },
+  "expectError": {"code": "overrideMetadataInvalid"}
+}

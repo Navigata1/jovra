@@ -1,0 +1,170 @@
+{
+  "schemaVersion": "1.2.0",
+  "kind": "jovra.fixture.scoring",
+  "id": "O08-doubles-opposite-team-as-played",
+  "title": "Reviewed order: doubles-opposite-team; asPlayed",
+  "covers": ["ADR0030", "Rule27c-e", "asPlayed"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "ann", "displayName": "Ann", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "amy", "displayName": "Amy", "handedness": "left", "backhand": "twoHanded", "isSelf": false},
+      {"id": "ben", "displayName": "Ben", "handedness": "right", "backhand": "oneHanded", "isSelf": false},
+      {"id": "bob", "displayName": "Bob", "handedness": "right", "backhand": "twoHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["ann", "amy"], "B": ["ben", "bob"]},
+    "toss": {"firstServer": "ann", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "order", "seq": 1, "type": "doublesOrder", "setIndex": 0, "firstServer": "ann", "secondServer": "ben", "deuceReceivers": {"A": "ann", "B": "ben"}},
+      {"id": "p01", "seq": 2, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "p02", "seq": 3, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "p03", "seq": 4, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "p04", "seq": 5, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "o06", "seq": 6, "type": "serverOverride", "targetPointId": "p01", "server": "ben", "continuation": "pointOnly", "provenance": "reviewed", "source": "user"},
+      {"id": "o07", "seq": 7, "type": "serverOverride", "targetPointId": "p02", "server": "ben", "continuation": "pointOnly", "provenance": "reviewed", "source": "user"},
+      {"id": "o08", "seq": 8, "type": "serverOverride", "targetPointId": "p03", "server": "ben", "continuation": "pointOnly", "provenance": "reviewed", "source": "user"},
+      {"id": "o09", "seq": 9, "type": "serverOverride", "targetPointId": "p04", "server": "ben", "continuation": "completedStandardGame", "provenance": "reviewed", "source": "user", "rotation": ["ben", "ann", "bob", "amy"], "discoveryAfterPointId": "p04"}
+    ],
+    "resolutionMode": "asPlayed"
+  },
+  "assertions": [
+    {"checkpoint": 0, "path": "fold.next.server", "equals": "ann"},
+    {"checkpoint": 0, "path": "fold.points[0].server", "equals": "ben"}
+  ],
+  "checkpoints": [
+    {
+      "afterSeq": 9,
+      "expected": {
+        "fold": {
+          "match": {
+            "status": "inProgress",
+            "doubles": true,
+            "winner": null,
+            "provisional": false,
+            "setsWon": {"A": 0, "B": 0},
+            "scoreline": "1-0",
+            "pointsPlayed": 4,
+            "rallyLets": 0
+          },
+          "sets": [
+            {"index": 0, "rule": "tiebreakSet", "games": {"A": 1, "B": 0}, "tiebreak": null, "winner": null, "complete": false, "byPenalty": false}
+          ],
+          "games": [
+            {"index": 0, "set": 0, "gameInSet": 0, "kind": "standard", "server": "ben", "serverSide": "B", "winner": "A", "points": {"A": 4, "B": 0}, "byPenalty": false, "complete": true, "break": true}
+          ],
+          "points": [
+            {"id": "p01", "index": 0, "kind": "point", "determined": true, "afterMatchEnd": false, "set": 0, "game": 0, "gameInSet": 0, "tiebreak": null, "pointInGame": 1, "server": "ben", "receiver": "ann", "serverSide": "B", "courtSide": "deuce", "ends": {"A": "near", "B": "far"}, "before": {"sets": {"A": 0, "B": 0}, "games": {"A": 0, "B": 0}, "points": {"A": 0, "B": 0}}, "call": {"kind": "points", "server": "0", "receiver": "0"}, "pressure": {"gamePointFor": [], "breakPoint": false, "setPointFor": [], "matchPointFor": []}, "winner": "A", "endType": "unknown", "serveNumber": null, "strokeCount": null, "rallyLength": null, "provenance": "manual", "reviewState": "unreviewed", "after": {"gameWon": false, "setWon": false, "matchWon": false, "endChange": false, "rest": "point"}},
+            {"id": "p02", "index": 1, "kind": "point", "determined": true, "afterMatchEnd": false, "set": 0, "game": 0, "gameInSet": 0, "tiebreak": null, "pointInGame": 2, "server": "ben", "receiver": "amy", "serverSide": "B", "courtSide": "ad", "ends": {"A": "near", "B": "far"}, "before": {"sets": {"A": 0, "B": 0}, "games": {"A": 0, "B": 0}, "points": {"A": 1, "B": 0}}, "call": {"kind": "points", "server": "0", "receiver": "15"}, "pressure": {"gamePointFor": [], "breakPoint": false, "setPointFor": [], "matchPointFor": []}, "winner": "A", "endType": "unknown", "serveNumber": null, "strokeCount": null, "rallyLength": null, "provenance": "manual", "reviewState": "unreviewed", "after": {"gameWon": false, "setWon": false, "matchWon": false, "endChange": false, "rest": "point"}},
+            {"id": "p03", "index": 2, "kind": "point", "determined": true, "afterMatchEnd": false, "set": 0, "game": 0, "gameInSet": 0, "tiebreak": null, "pointInGame": 3, "server": "ben", "receiver": "ann", "serverSide": "B", "courtSide": "deuce", "ends": {"A": "near", "B": "far"}, "before": {"sets": {"A": 0, "B": 0}, "games": {"A": 0, "B": 0}, "points": {"A": 2, "B": 0}}, "call": {"kind": "points", "server": "0", "receiver": "30"}, "pressure": {"gamePointFor": [], "breakPoint": false, "setPointFor": [], "matchPointFor": []}, "winner": "A", "endType": "unknown", "serveNumber": null, "strokeCount": null, "rallyLength": null, "provenance": "manual", "reviewState": "unreviewed", "after": {"gameWon": false, "setWon": false, "matchWon": false, "endChange": false, "rest": "point"}},
+            {"id": "p04", "index": 3, "kind": "point", "determined": true, "afterMatchEnd": false, "set": 0, "game": 0, "gameInSet": 0, "tiebreak": null, "pointInGame": 4, "server": "ben", "receiver": "amy", "serverSide": "B", "courtSide": "ad", "ends": {"A": "near", "B": "far"}, "before": {"sets": {"A": 0, "B": 0}, "games": {"A": 0, "B": 0}, "points": {"A": 3, "B": 0}}, "call": {"kind": "points", "server": "0", "receiver": "40"}, "pressure": {"gamePointFor": ["A"], "breakPoint": true, "setPointFor": [], "matchPointFor": []}, "winner": "A", "endType": "unknown", "serveNumber": null, "strokeCount": null, "rallyLength": null, "provenance": "manual", "reviewState": "unreviewed", "after": {"gameWon": true, "setWon": false, "matchWon": false, "endChange": true, "rest": "changeoverNoRest"}}
+          ],
+          "next": {
+            "set": 0,
+            "game": 1,
+            "gameInSet": 1,
+            "tiebreak": null,
+            "pointInGame": 1,
+            "server": "ann",
+            "receiver": "ben",
+            "serverSide": "A",
+            "courtSide": "deuce",
+            "ends": {"A": "far", "B": "near"},
+            "before": {"sets": {"A": 0, "B": 0}, "games": {"A": 1, "B": 0}, "points": {"A": 0, "B": 0}},
+            "call": {"kind": "points", "server": "0", "receiver": "0"},
+            "pressure": {"gamePointFor": [], "breakPoint": false, "setPointFor": [], "matchPointFor": []}
+          },
+          "checkpoints": [],
+          "conflicts": [],
+          "history": {"voided": [], "superseded": []},
+          "changes": null
+        },
+        "stats": {
+          "provisional": false,
+          "countedPoints": 4,
+          "excludedPoints": 0,
+          "sides": {
+            "A": {
+              "totalPointsWon": {"n": 4, "d": 4, "pct": 100, "display": "100%"},
+              "penaltyPointsAwarded": 0,
+              "servicePoints": 0,
+              "firstServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "firstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "aces": 0,
+              "doubleFaults": 0,
+              "serviceWinners": 0,
+              "servicePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "serviceGamesWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnPointsWon": {"n": 4, "d": 4, "pct": 100, "display": "100%"},
+              "returnFirstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnSecondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnGamesWon": {"n": 1, "d": 1, "pct": 100, "display": "100%"},
+              "breakPointsSaved": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "breakPointsConverted": {"n": 1, "d": 1, "pct": 100, "display": "100%"},
+              "winners": 0,
+              "forcedErrors": 0,
+              "unforcedErrors": 0,
+              "longestPointStreak": 4,
+              "longestGameStreak": 1
+            },
+            "B": {
+              "totalPointsWon": {"n": 0, "d": 4, "pct": 0, "display": "0%"},
+              "penaltyPointsAwarded": 0,
+              "servicePoints": 4,
+              "firstServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "firstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "aces": 0,
+              "doubleFaults": 0,
+              "serviceWinners": 0,
+              "servicePointsWon": {"n": 0, "d": 4, "pct": 0, "display": "0%"},
+              "serviceGamesWon": {"n": 0, "d": 1, "pct": 0, "display": "0%"},
+              "returnPointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnFirstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnSecondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "returnGamesWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "breakPointsSaved": {"n": 0, "d": 1, "pct": 0, "display": "0%"},
+              "breakPointsConverted": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "winners": 0,
+              "forcedErrors": 0,
+              "unforcedErrors": 0,
+              "longestPointStreak": 0,
+              "longestGameStreak": 0
+            }
+          },
+          "servers": {
+            "ben": {
+              "servicePoints": 4,
+              "firstServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "firstServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServePointsWon": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "secondServeIn": {"n": 0, "d": 0, "pct": null, "display": "—"},
+              "aces": 0,
+              "doubleFaults": 0,
+              "serviceWinners": 0,
+              "servicePointsWon": {"n": 0, "d": 4, "pct": 0, "display": "0%"}
+            }
+          },
+          "shots": {"total": 0, "pointsWithStrokeCount": 0},
+          "rallyLength": {"0-4": 0, "5-8": 0, "9+": 0, "unknown": 4},
+          "review": {
+            "reviewed": 0,
+            "needsReview": 0,
+            "unreviewed": 4,
+            "completion": {"n": 0, "d": 4, "pct": 0, "display": "0%"}
+          },
+          "durationMs": null,
+          "momentum": {"window": 10, "side": "A", "series": [[1, 1], [2, 2], [3, 3], [4, 4]]}
+        }
+      }
+    }
+  ]
+}

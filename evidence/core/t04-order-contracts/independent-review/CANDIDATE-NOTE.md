@@ -1,0 +1,1 @@
+Independent review binds cb2cfffc4a4f992dd8b83b6ebae8a6eedd0a009c. The publication commit only packages this report/evidence; no implementation changes follow it. Fresh required CI must bind the publication head. Native T04/T05 completion is separate.

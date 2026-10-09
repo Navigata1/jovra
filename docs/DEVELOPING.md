@@ -173,7 +173,7 @@ English ships; Spanish is the first translation and ships after native review (s
 - **Do not commit auto-extracted changes to other tables.** Building in Xcode can add or mark keys in
   any catalog; commit only your own table's changes. The `l10n` CI job fails a PR that changes, deletes
   or renames a table outside the ticket's owned areas (a rename counts as deleting the old table) (`scripts/l10n/catalog_ownership.py`: the most specific owned area
-  in `docs/spec/tickets.json` owns a table; the branch `ticket/tNN-slug` names the ticket; the
+  in `docs/spec/tickets.json` owns a table; the branch `ticket/tNN-slug` or `codex/tNN-slug` names the ticket; the
   localization owner, T06, may edit any table).
 - **Literal-string lint** (`scripts/l10n/literal_lint.py`): flags string literals passed to SwiftUI text
   views and controls (`NavigationLink` included), `.accessibilityLabel`/`Hint`/`Value`, `.navigationTitle`,
