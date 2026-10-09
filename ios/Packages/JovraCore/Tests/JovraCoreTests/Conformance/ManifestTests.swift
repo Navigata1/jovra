@@ -7,7 +7,8 @@ import Testing
     let kinds = generatedFixtureRunners.map(\.kind)
     let grouped = try FixtureManifest.discover(root: root, runnerKinds: kinds)
     #expect(grouped["jovra.fixture.pct"]?.count == 1) // Its folder is stats, not pct.
-    #expect(FixtureManifest.pending == ["jovra.fixture.sample"])
+    #expect(FixtureManifest.pending.isEmpty)
+    #expect(grouped["jovra.fixture.sample"]?.count == 1)
     let temporary = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     defer { try? FileManager.default.removeItem(at: temporary) }
     try FileManager.default.createDirectory(at: temporary.appendingPathComponent("spec/fixtures"), withIntermediateDirectories: true)
