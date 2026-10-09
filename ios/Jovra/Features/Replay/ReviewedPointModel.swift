@@ -21,14 +21,14 @@ final class ReviewedPointModel {
     var selected: TimelinePointRecord? { points.first { $0.id == selectedID } }
     var pointsWonAFraction: String {
         guard case .ratio(let value)? = pointsWonA?.value else { return "—" }
-        return "\(value.n)/\(value.d)"
+        return JovraFormat.count(value.n) + "/" + JovraFormat.count(value.d)
     }
     var scoreBefore: String {
         guard let point = selected, let call = point.call.value else { return "—" }
         switch call {
         case .points(let value): return value.server.rawValue + "–" + value.receiver.rawValue
-        case .tiebreak(let value): return "\(value.server)–\(value.receiver)"
-        case .deuce(let value): return value.kind == .deuce ? "Deuce · 40–40" : "Deciding point · 40–40"
+        case .tiebreak(let value): return JovraFormat.count(value.server) + "–" + JovraFormat.count(value.receiver)
+        case .deuce(let value): return value.kind == .deuce ? String(localized: "Deuce · 40–40", table: "Replay") : String(localized: "Deciding point · 40–40", table: "Replay")
         case .advantage(let value):
             guard let server = point.serverSide.value else { return "—" }
             return value.side.rawValue == server.rawValue ? "AD–40" : "40–AD"
@@ -45,7 +45,7 @@ final class ReviewedPointModel {
         error = nil; isWorking = true
         defer { if generation == token { isWorking = false } }
         do { try await refresh(library: library, session: session, selected: nil, token: token) }
-        catch { if generation == token { self.error = "Couldn't load the session's score. Reopen it to try again." } }
+        catch { if generation == token { self.error = String(localized: "Couldn't load the session's score. Reopen it to try again.", table: "Replay") } }
     }
 
     func append(winner: Side, startMs: Int, endMs: Int) async {
@@ -71,7 +71,7 @@ final class ReviewedPointModel {
             try await refresh(library: library, session: session, selected: point.id, token: token)
         } catch {
             if generation == token {
-                self.error = "Couldn't confirm this point was saved. Check the time range and reopen the session before trying again."
+                self.error = String(localized: "Couldn't confirm this point was saved. Check the time range and reopen the session before trying again.", table: "Replay")
             }
         }
     }
