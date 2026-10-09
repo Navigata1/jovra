@@ -1,0 +1,137 @@
+{
+  "description": "Deliberately invalid instances. validate.py requires each to fail its schema with an error containing errorContains (both validators), so a schema that stops rejecting it turns CI red.",
+  "cases": [
+    {
+      "file": "render-work/message.lease-token-leaked.json",
+      "schema": "queue.render-work.message.schema.json",
+      "why": "a queue message carries only attemptId; a lease token is minted at claim and never queued",
+      "errorContains": "$.leaseToken"
+    },
+    {
+      "file": "render-work/message.input-list.json",
+      "schema": "queue.render-work.message.schema.json",
+      "why": "inputs come from render_attempts.input_refs, never from the message",
+      "errorContains": "$.inputRefs"
+    },
+    {
+      "file": "render-work/message.project-id.json",
+      "schema": "queue.render-work.message.schema.json",
+      "why": "no project, user or media id rides the queue",
+      "errorContains": "$.projectId"
+    },
+    {
+      "file": "render-work/message.empty.json",
+      "schema": "queue.render-work.message.schema.json",
+      "why": "attemptId is required",
+      "errorContains": "missing required property 'attemptId'"
+    },
+    {
+      "file": "render-work/message.not-a-uuid.json",
+      "schema": "queue.render-work.message.schema.json",
+      "why": "attemptId is a server UUID",
+      "errorContains": "$.attemptId"
+    },
+    {
+      "file": "quotes.accept/request.missing-inputs-hash.json",
+      "schema": "route.quotes.accept.request.schema.json",
+      "why": "acceptance must present the quote's inputs hash",
+      "errorContains": "missing required property 'inputsSha256'"
+    },
+    {
+      "file": "quotes.create/response.leaks-internal-cost.json",
+      "schema": "route.quotes.create.response.schema.json",
+      "why": "a quote response never carries the internal cost (architecture §5.1)",
+      "errorContains": "$.body.data.estimatedMaxCostMicroUsd"
+    },
+    {
+      "file": "cameraInvites.redeem/response.project-text-before-approval.json",
+      "schema": "route.cameraInvites.redeem.response.schema.json",
+      "why": "no project text reaches a guest before the host approves",
+      "errorContains": "$.body.data.displayLabel"
+    },
+    {
+      "file": "cameraInvites.redeem/request.private-key-sent.json",
+      "schema": "route.cameraInvites.redeem.request.schema.json",
+      "why": "the device's private key never leaves the Secure Enclave",
+      "errorContains": "$.body.devicePublicKey.d"
+    },
+    {
+      "file": "sources.declare/request.probe-with-location.json",
+      "schema": "route.sources.declare.request.schema.json",
+      "why": "probeSummary is allowlisted; QuickTime tags such as a location are refused",
+      "errorContains": "$.body.probeSummary.location"
+    },
+    {
+      "file": "shareLinks.open/response.sets-cookie.json",
+      "schema": "route.shareLinks.open.response.schema.json",
+      "why": "opening a share link sets no cookie (security-model §8.3)",
+      "errorContains": "$.headers.Set-Cookie"
+    },
+    {
+      "file": "shareLinks.create/request.longer-than-24h.json",
+      "schema": "route.shareLinks.create.request.schema.json",
+      "why": "share links live at most 24 hours",
+      "errorContains": "$.body.expiresInSec"
+    },
+    {
+      "file": "me/response.wrong-code-for-status.json",
+      "schema": "route.me.response.schema.json",
+      "why": "an error code must be one of the route's codes at its own status",
+      "errorContains": "'not_found' not in ['unauthorized', 'demo_not_accepted']"
+    },
+    {
+      "file": "deletionRequests.create/response.dependents-without-list.json",
+      "schema": "route.deletionRequests.create.response.schema.json",
+      "why": "409 dependents lists the films that use the source",
+      "errorContains": "missing required property 'details'"
+    },
+    {
+      "file": "jobs.review/request.revise-without-version.json",
+      "schema": "route.jobs.review.request.schema.json",
+      "why": "a revision names the plan version to render",
+      "errorContains": "missing required property 'storyPlanVersionId'"
+    },
+    {
+      "file": "internal.result/request.failed-without-code.json",
+      "schema": "route.internal.result.request.schema.json",
+      "why": "a failed result carries errorCode and retryable",
+      "errorContains": "missing required property 'errorCode'"
+    },
+    {
+      "file": "internal.heartbeat/request.without-lease.json",
+      "schema": "route.internal.heartbeat.request.schema.json",
+      "why": "every internal route after claim needs the current lease",
+      "errorContains": "missing required property 'JOVRA-Lease'"
+    },
+    {
+      "file": "grants.create/request.film-view-with-lesson.json",
+      "schema": "route.grants.create.request.schema.json",
+      "why": "exactly the target the grant kind needs",
+      "errorContains": "$.body.lessonId"
+    },
+    {
+      "file": "uploads.putPart/request.without-part-digest.json",
+      "schema": "route.uploads.putPart.request.schema.json",
+      "why": "every part carries its SHA-256",
+      "errorContains": "missing required property 'X-Jovra-Part-Sha256'"
+    },
+    {
+      "file": "jobs.get/response.progress-over-1000.json",
+      "schema": "route.jobs.get.response.schema.json",
+      "why": "stage progress is per mille of the current stage",
+      "errorContains": "$.body.data.stageProgressMilli"
+    },
+    {
+      "file": "me/request.guest-capability-on-user-route.json",
+      "schema": "route.me.request.schema.json",
+      "why": "no read route accepts a guest capability",
+      "errorContains": "$.headers.Authorization"
+    },
+    {
+      "file": "health/request.with-body.json",
+      "schema": "route.health.request.schema.json",
+      "why": "a GET has no body",
+      "errorContains": "$.body"
+    }
+  ]
+}

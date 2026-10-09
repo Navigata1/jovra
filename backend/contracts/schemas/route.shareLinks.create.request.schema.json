@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /v1/artifacts/{artifactId}/share-links request",
+  "description": "shareLinks.create (jovra-gateway; caller: owner). A request descriptor: pathParams, query, headers and body. JSON body: #/$defs/body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers",
+    "body"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "artifactId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "artifactId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    },
+    "body": {
+      "$ref": "#/$defs/body"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "Authorization",
+        "Idempotency-Key",
+        "Content-Type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Authorization": {
+          "$ref": "common.schema.json#/$defs/bearerAuthorization"
+        },
+        "Idempotency-Key": {
+          "$ref": "common.schema.json#/$defs/idempotencyKeyHeader"
+        },
+        "Content-Type": {
+          "$ref": "common.schema.json#/$defs/jsonContentType"
+        },
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        }
+      }
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "expiresInSec"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "expiresInSec": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 86400
+        },
+        "includeAudio": {
+          "description": "Required for a film (checked by the gateway); false forced in junior mode.",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

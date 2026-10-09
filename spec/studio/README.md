@@ -86,7 +86,7 @@ here. Moving them only takes a one-line skip in `scripts/spec/validate.py` (for 
 The shared conventions (versions, strictness, ids, time, rounding, hashes and provenance) are on the module page of
 the helpers that implement them; see the index.
 
-## Decisions taken where the brief left room (change only through a fixture change)
+## Decisions taken where the brief left a choice (change only through a fixture change)
 
 1. Studio fixtures live in `spec/studio/fixtures/`, not `spec/fixtures/studio/` (see above).
 2. Versions follow `jovra.<name>/<major>` rather than the app contracts' `kind` + semver.
@@ -102,7 +102,7 @@ Each module page ends with what its module does not cover yet. A planned module 
 `coverage: not-covered` and no kinds (`--list` shows it). Outside the module pages:
 
 - **Backend:** RLS and gateway authorization (`docs/backend/security-model.md`), the queue, claim, lease and fencing
-  protocol (`docs/backend/architecture.md` §7), and real model planner output. These are designed, not code.
+  protocol (`docs/backend/architecture.md` §7), and story plans written by a real model. These are designed, not code.
 
 None of it is validated on field footage.
 

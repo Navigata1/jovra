@@ -1,0 +1,20 @@
+# JOVRA isolated-test tester allow-list, format v1.
+#
+# This file is an example of the format. The real list is `testers.allowlist` in this folder; it is gitignored and
+# never committed, because it holds real testers' addresses. The operator (Jon) keeps it, and at gate G1 the
+# operator script reads it to create each tester through the admin API and to fill app_ops.tester_allowlist with
+# the HMAC of each address. The addresses themselves are never stored in the database or logged.
+#
+# Rules:
+# - One email address per line. Blank lines and lines starting with # are ignored.
+# - Each address is trimmed and lower-cased before hashing, so case and surrounding spaces do not matter.
+# - No passwords, names or other fields: testers sign in with an email one-time code (ADR-0022).
+# - A tester removed from the list can no longer be created, but an existing account must also be deleted.
+#
+# The local stack does not read this file; seed/00_testers.sql creates the same fictional testers directly.
+owner.tester@example.test
+coach.tester@example.test
+viewer.tester@example.test
+camera.tester@example.test
+unrelated.tester@example.test
+pending.tester@example.test

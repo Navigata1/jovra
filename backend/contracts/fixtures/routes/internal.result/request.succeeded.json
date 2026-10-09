@@ -1,0 +1,27 @@
+{
+  "pathParams": {
+    "attemptId": "00000000-0000-4000-8000-000000000b01"
+  },
+  "headers": {
+    "Authorization": "JOVRA-Host sample-host-credential",
+    "JOVRA-Lease": "jvl_SampleSampleSampleSampleSampleSampleSampleS",
+    "Idempotency-Key": "00000000-0000-4000-8000-000000000d36",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "outcome": "succeeded",
+    "outputs": [
+      {
+        "outputRef": "proxy-1",
+        "bytes": 812000000,
+        "sha256": "c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+      }
+    ],
+    "measurements": {
+      "wallMs": 412000,
+      "cpuMs": 1590000,
+      "bytesIn": 7200000000,
+      "bytesOut": 812000000
+    }
+  }
+}

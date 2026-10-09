@@ -1,0 +1,25 @@
+{
+  "status": 200,
+  "headers": {
+    "X-Request-Id": "00000000-0000-4000-8000-000000000c10",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "data": {
+      "sessionId": "00000000-0000-4000-8000-000000000302",
+      "partSize": 33554432,
+      "partCount": 108,
+      "sessionCapability": "jvs_SampleSampleSampleSampleSampleSampleSampleS",
+      "expiresAt": "2026-10-09T12:00:00.000Z",
+      "hardExpiresAt": "2026-10-10T12:00:00.000Z",
+      "partTarget": {
+        "method": "PUT",
+        "urlTemplate": "https://gateway.example.test/v1/uploads/00000000-0000-4000-8000-000000000302/parts/{n}",
+        "headers": {
+          "Content-Type": "application/octet-stream"
+        }
+      }
+    },
+    "requestId": "00000000-0000-4000-8000-000000000c10"
+  }
+}

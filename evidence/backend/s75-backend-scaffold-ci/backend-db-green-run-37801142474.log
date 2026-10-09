@@ -1,0 +1,258 @@
+Set up job	﻿2026-10-08T15:29:14.3428231Z Current runner version: '2.337.0'
+Set up job	##[group]Runner Image Provisioner
+Set up job	Hosted Compute Agent
+Set up job	Version: 20261002.596
+Set up job	Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+Set up job	Build Date: 2026-10-02T22:28:27Z
+Set up job	Worker ID: {c661994d-8be6-49a8-9b8b-23eae73719cf}
+Set up job	Region: westus3
+Set up job	Cloud: Azure
+Set up job	##[endgroup]
+Set up job	##[group]Operating System
+Set up job	Ubuntu
+Set up job	24.04.5
+Set up job	LTS
+Set up job	##[endgroup]
+Set up job	##[group]Runner Image
+Set up job	Image: ubuntu-24.04
+Set up job	Version: 20261004.327.1
+Set up job	Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+Set up job	Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+Set up job	##[endgroup]
+Set up job	##[group]GITHUB_TOKEN Permissions
+Set up job	Contents: read
+Set up job	Metadata: read
+Set up job	##[endgroup]
+Set up job	Secret source: Actions
+Set up job	Cache mode: write
+Set up job	Prepare workflow directory
+Set up job	Prepare all required actions
+Set up job	Getting action download info
+Set up job	Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+Set up job	Download action repository 'supabase/setup-cli@v1' (SHA:1dedf2c611547ede7232d26866dd3c56ab903bbb)
+Set up job	Complete job name: backend-db
+Run actions/checkout@v4	﻿2026-10-08T15:29:15.8344046Z ##[group]Run actions/checkout@v4
+Run actions/checkout@v4	with:
+Run actions/checkout@v4	  repository: Navigata1/jovra
+Run actions/checkout@v4	  token: ***
+Run actions/checkout@v4	  ssh-strict: true
+Run actions/checkout@v4	  ssh-user: git
+Run actions/checkout@v4	  persist-credentials: true
+Run actions/checkout@v4	  clean: true
+Run actions/checkout@v4	  sparse-checkout-cone-mode: true
+Run actions/checkout@v4	  fetch-depth: 1
+Run actions/checkout@v4	  fetch-tags: false
+Run actions/checkout@v4	  show-progress: true
+Run actions/checkout@v4	  lfs: false
+Run actions/checkout@v4	  submodules: false
+Run actions/checkout@v4	  set-safe-directory: true
+Run actions/checkout@v4	  allow-unsafe-pr-checkout: false
+Run actions/checkout@v4	##[endgroup]
+Run actions/checkout@v4	Syncing repository: Navigata1/jovra
+Run actions/checkout@v4	##[group]Getting Git version info
+Run actions/checkout@v4	Working directory is '/home/runner/work/jovra/jovra'
+Run actions/checkout@v4	[command]/usr/bin/git version
+Run actions/checkout@v4	git version 2.55.0
+Run actions/checkout@v4	##[endgroup]
+Run actions/checkout@v4	Temporarily overriding HOME='/home/runner/work/_temp/9bfee4b5-1303-4947-af99-9e24aa231bf7' before making global git config changes
+Run actions/checkout@v4	Adding repository directory to the temporary git global config as a safe directory
+Run actions/checkout@v4	[command]/usr/bin/git config --global --add safe.directory /home/runner/work/jovra/jovra
+Run actions/checkout@v4	Deleting the contents of '/home/runner/work/jovra/jovra'
+Run actions/checkout@v4	##[group]Initializing the repository
+Run actions/checkout@v4	[command]/usr/bin/git init /home/runner/work/jovra/jovra
+Run actions/checkout@v4	hint: Using 'master' as the name for the initial branch. This default branch name
+Run actions/checkout@v4	hint: will change to "main" in Git 3.0. To configure the initial branch name
+Run actions/checkout@v4	hint: to use in all of your new repositories, which will suppress this warning,
+Run actions/checkout@v4	hint: call:
+Run actions/checkout@v4	hint:
+Run actions/checkout@v4	hint: 	git config --global init.defaultBranch <name>
+Run actions/checkout@v4	hint:
+Run actions/checkout@v4	hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Run actions/checkout@v4	hint: 'development'. The just-created branch can be renamed via this command:
+Run actions/checkout@v4	hint:
+Run actions/checkout@v4	hint: 	git branch -m <name>
+Run actions/checkout@v4	hint:
+Run actions/checkout@v4	hint: Disable this message with "git config set advice.defaultBranchName false"
+Run actions/checkout@v4	Initialized empty Git repository in /home/runner/work/jovra/jovra/.git/
+Run actions/checkout@v4	[command]/usr/bin/git remote add origin https://github.com/Navigata1/jovra
+Run actions/checkout@v4	##[endgroup]
+Run actions/checkout@v4	##[group]Disabling automatic garbage collection
+Run actions/checkout@v4	[command]/usr/bin/git config --local gc.auto 0
+Run actions/checkout@v4	##[endgroup]
+Run actions/checkout@v4	##[group]Setting up auth
+Run actions/checkout@v4	[command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Run actions/checkout@v4	[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Run actions/checkout@v4	[command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Run actions/checkout@v4	[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Run actions/checkout@v4	[command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Run actions/checkout@v4	[command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Run actions/checkout@v4	[command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Run actions/checkout@v4	##[endgroup]
+Run actions/checkout@v4	##[group]Fetching the repository
+Run actions/checkout@v4	[command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fa0b2d3550dfc2ebf8532af527a428e7d091e84f:refs/remotes/pull/316/merge
+Run actions/checkout@v4	From https://github.com/Navigata1/jovra
+Run actions/checkout@v4	 * [new ref]         fa0b2d3550dfc2ebf8532af527a428e7d091e84f -> pull/316/merge
+Run actions/checkout@v4	##[endgroup]
+Run actions/checkout@v4	##[group]Determining the checkout info
+Run actions/checkout@v4	##[endgroup]
+Run actions/checkout@v4	[command]/usr/bin/git sparse-checkout disable
+Run actions/checkout@v4	[command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Run actions/checkout@v4	##[group]Checking out the ref
+Run actions/checkout@v4	[command]/usr/bin/git checkout --progress --force refs/remotes/pull/316/merge
+Run actions/checkout@v4	Note: switching to 'refs/remotes/pull/316/merge'.
+Run actions/checkout@v4	
+Run actions/checkout@v4	You are in 'detached HEAD' state. You can look around, make experimental
+Run actions/checkout@v4	changes and commit them, and you can discard any commits you make in this
+Run actions/checkout@v4	state without impacting any branches by switching back to a branch.
+Run actions/checkout@v4	
+Run actions/checkout@v4	If you want to create a new branch to retain commits you create, you may
+Run actions/checkout@v4	do so (now or later) by using -c with the switch command. Example:
+Run actions/checkout@v4	
+Run actions/checkout@v4	  git switch -c <new-branch-name>
+Run actions/checkout@v4	
+Run actions/checkout@v4	Or undo this operation with:
+Run actions/checkout@v4	
+Run actions/checkout@v4	  git switch -
+Run actions/checkout@v4	
+Run actions/checkout@v4	Turn off this advice by setting config variable advice.detachedHead to false
+Run actions/checkout@v4	
+Run actions/checkout@v4	HEAD is now at fa0b2d3 Merge c477111c2bc6876bb77d5d5dd67bac8b52f77f3e into eb54e2a753978733f5790569d25e5328632fce9f
+Run actions/checkout@v4	##[endgroup]
+Run actions/checkout@v4	[command]/usr/bin/git log -1 --format=%H
+Run actions/checkout@v4	fa0b2d3550dfc2ebf8532af527a428e7d091e84f
+No hosted identifiers or real email addresses in the tree	﻿2026-10-08T15:29:22.5322732Z ##[group]Run supabase/scripts/check-hosted-identifiers.sh
+No hosted identifiers or real email addresses in the tree	^[[36;1msupabase/scripts/check-hosted-identifiers.sh^[[0m
+No hosted identifiers or real email addresses in the tree	##[endgroup]
+No hosted identifiers or real email addresses in the tree	OK  13 files: no supabase.co host, API key, JWT or email outside example.test
+Run supabase/setup-cli@v1	﻿2026-10-08T15:29:22.6169717Z ##[group]Run supabase/setup-cli@v1
+Run supabase/setup-cli@v1	with:
+Run supabase/setup-cli@v1	  version: 2.100.1
+Run supabase/setup-cli@v1	##[endgroup]
+Run supabase/setup-cli@v1	[command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/a49ae268-1dfe-419e-bce0-16fa4849cd46 -f /home/runner/work/_temp/49f3feac-bf5a-49a1-8d5f-26e06ebd56c7
+Generate a throwaway ES256 signing key	﻿2026-10-08T15:29:25.0876733Z ##[group]Run supabase/scripts/gen-signing-key.sh
+Generate a throwaway ES256 signing key	^[[36;1msupabase/scripts/gen-signing-key.sh^[[0m
+Generate a throwaway ES256 signing key	  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+Generate a throwaway ES256 signing key	##[endgroup]
+Generate a throwaway ES256 signing key	Do you want to overwrite the existing supabase/signing_keys.json file? [Y/n] y
+Generate a throwaway ES256 signing key	JWT signing key appended to: supabase/signing_keys.json (now contains 1 keys)
+Generate a throwaway ES256 signing key	IMPORTANT: Add your signing key path to .gitignore to prevent committing to version control.
+Generate a throwaway ES256 signing key	generated ES256 signing key: backend/supabase/signing_keys.json
+supabase start	﻿2026-10-08T15:29:25.9764222Z ##[group]Run supabase start
+supabase start	^[[36;1msupabase start^[[0m
+supabase start	  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+supabase start	##[endgroup]
+supabase start	Starting database...
+supabase start	Initialising schema...
+supabase start	Seeding globals from roles.sql...
+supabase start	Applying migration 20261008000000_tester_signup_lock.sql...
+supabase start	Seeding data from supabase/seed/00_testers.sql...
+supabase start	Starting containers...
+supabase start	Started supabase local development setup.
+supabase start	
+supabase start	╭──────────────────────────────────╮
+supabase start	│ 🔧 Development Tools             │
+supabase start	├─────────┬────────────────────────┤
+supabase start	│ Mailpit │ http://127.0.0.1:54324 │
+supabase start	╰─────────┴────────────────────────╯
+supabase start	
+supabase start	╭─────────────────────────────────────────────────╮
+supabase start	│ 🌐 APIs                                         │
+supabase start	├─────────────┬───────────────────────────────────┤
+supabase start	│ Project URL │ http://127.0.0.1:54321            │
+supabase start	│ REST        │ http://127.0.0.1:54321/rest/v1    │
+supabase start	│ GraphQL     │ http://127.0.0.1:54321/graphql/v1 │
+supabase start	╰─────────────┴───────────────────────────────────╯
+supabase start	
+supabase start	╭───────────────────────────────────────────────────────────────╮
+supabase start	│ ⛁ Database                                                    │
+supabase start	├─────┬─────────────────────────────────────────────────────────┤
+supabase start	Local dev security notice
+supabase start	│ URL │ ***127.0.0.1:54322/postgres │
+supabase start	╰─────┴─────────────────────────────────────────────────────────╯
+supabase start	
+supabase start	╭──────────────────────────────────────────────────────────────╮
+supabase start	│ 🔑 Authentication Keys                                       │
+supabase start	├─────────────┬────────────────────────────────────────────────┤
+supabase start	│ Publishable │ sb_publishable_<REDACTED-local-default> │
+supabase start	│ Secret      │ sb_secret_<REDACTED-local-default>      │
+supabase start	╰─────────────┴────────────────────────────────────────────────╯
+supabase start	
+supabase start	
+supabase start	All services bind to 0.0.0.0 (network-accessible, not just localhost)
+supabase start	API keys and JWT secrets are shared defaults. Do not use in production
+supabase start	Studio, pgMeta (/pg/*), and analytics have no authentication
+supabase start	
+supabase db reset (migrations and seed from scratch)	﻿2026-10-08T15:30:21.9584712Z ##[group]Run supabase db reset
+supabase db reset (migrations and seed from scratch)	^[[36;1msupabase db reset^[[0m
+supabase db reset (migrations and seed from scratch)	  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+supabase db reset (migrations and seed from scratch)	##[endgroup]
+supabase db reset (migrations and seed from scratch)	Resetting local database...
+supabase db reset (migrations and seed from scratch)	Recreating database...
+supabase db reset (migrations and seed from scratch)	Initialising schema...
+supabase db reset (migrations and seed from scratch)	Seeding globals from roles.sql...
+supabase db reset (migrations and seed from scratch)	Applying migration 20261008000000_tester_signup_lock.sql...
+supabase db reset (migrations and seed from scratch)	Seeding data from supabase/seed/00_testers.sql...
+supabase db reset (migrations and seed from scratch)	Restarting containers...
+supabase db reset (migrations and seed from scratch)	Finished supabase db reset on branch ticket/s75-backend-scaffold-ci.
+supabase db advisors (security, fail on warn)	﻿2026-10-08T15:30:34.9318657Z ##[group]Run supabase db advisors --local --type security --fail-on warn
+supabase db advisors (security, fail on warn)	^[[36;1msupabase db advisors --local --type security --fail-on warn^[[0m
+supabase db advisors (security, fail on warn)	  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+supabase db advisors (security, fail on warn)	##[endgroup]
+supabase db advisors (security, fail on warn)	Connecting to local database...
+supabase db advisors (security, fail on warn)	No issues found
+supabase test db	﻿2026-10-08T15:30:35.3549202Z ##[group]Run supabase test db
+supabase test db	^[[36;1msupabase test db^[[0m
+supabase test db	  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+supabase test db	##[endgroup]
+supabase test db	Connecting to local database...
+supabase test db	psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+supabase test db	/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql ............. ok
+supabase test db	/home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql .... ok
+supabase test db	/home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql .. ok
+supabase test db	All tests successful.
+supabase test db	Files=3, Tests=43,  0 wallclock secs ( 0.02 usr  0.01 sys +  0.02 cusr  0.01 csys =  0.06 CPU)
+supabase test db	Result: PASS
+OTP sign-in through Auth and Mailpit; unknown emails refused	﻿2026-10-08T15:30:39.4540867Z ##[group]Run supabase status -o env > "$RUNNER_TEMP/supabase-status.env"
+OTP sign-in through Auth and Mailpit; unknown emails refused	^[[36;1msupabase status -o env > "$RUNNER_TEMP/supabase-status.env"^[[0m
+OTP sign-in through Auth and Mailpit; unknown emails refused	^[[36;1mpython3 supabase/scripts/otp_smoke.py "$RUNNER_TEMP/supabase-status.env"^[[0m
+OTP sign-in through Auth and Mailpit; unknown emails refused	  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+OTP sign-in through Auth and Mailpit; unknown emails refused	##[endgroup]
+OTP sign-in through Auth and Mailpit; unknown emails refused	Stopped services: [supabase_realtime_jovra-local supabase_storage_jovra-local supabase_imgproxy_jovra-local supabase_pg_meta_jovra-local supabase_studio_jovra-local supabase_edge_runtime_jovra-local supabase_analytics_jovra-local supabase_vector_jovra-local supabase_pooler_jovra-local]
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  seed tester can request an email code (create_user false)  (HTTP 200)
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the code arrives in Mailpit  (six digits found)
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the tester signs in with the code  (HTTP 200)
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the access token is ES256  (alg ES256)
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the token belongs to the seeded tester
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the token is a real, non-anonymous user
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the same code cannot be used twice  (HTTP 403)
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  OTP with create_user true for an unknown email is refused  (HTTP 422 {"code": 422, "error_code": "signup_disabled", "msg": "Signups not allowed for this instance"})
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  no user row was created for the unknown email
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  anonymous sign-in is refused  (HTTP 422 {"code": 422, "error_code": "anonymous_provider_disabled", "msg": "Anonymous sign-ins are disabled"})
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the hook alone refuses an unknown email (invite path, sign-up switch not involved)  (HTTP 403 {"code": 403, "error_code": "unknown", "msg": "signup_not_allowed"})
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  no user row was created on the invite path
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the hook lets an allow-listed email through on the same path  (HTTP 200)
+OTP sign-in through Auth and Mailpit; unknown emails refused	PASS  the operator can create an allow-listed tester with sign-ups off  (HTTP 200)
+OTP sign-in through Auth and Mailpit; unknown emails refused	
+OTP sign-in through Auth and Mailpit; unknown emails refused	OK: 0 failing check(s)
+supabase stop	﻿2026-10-08T15:30:40.4724086Z ##[group]Run supabase stop --no-backup
+supabase stop	^[[36;1msupabase stop --no-backup^[[0m
+supabase stop	  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+supabase stop	##[endgroup]
+supabase stop	Stopping containers...
+supabase stop	Stopped supabase local development setup.
+Post Run actions/checkout@v4	﻿2026-10-08T15:30:52.7978243Z Post job cleanup.
+Post Run actions/checkout@v4	[command]/usr/bin/git version
+Post Run actions/checkout@v4	git version 2.55.0
+Post Run actions/checkout@v4	Temporarily overriding HOME='/home/runner/work/_temp/9ab0b759-4943-44b6-b708-ed3558b3df26' before making global git config changes
+Post Run actions/checkout@v4	Adding repository directory to the temporary git global config as a safe directory
+Post Run actions/checkout@v4	[command]/usr/bin/git config --global --add safe.directory /home/runner/work/jovra/jovra
+Post Run actions/checkout@v4	[command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Post Run actions/checkout@v4	[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Post Run actions/checkout@v4	[command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Post Run actions/checkout@v4	http.https://github.com/.extraheader
+Post Run actions/checkout@v4	[command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Post Run actions/checkout@v4	[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Post Run actions/checkout@v4	[command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Post Run actions/checkout@v4	[command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Complete job	﻿2026-10-08T15:30:53.0466156Z Cleaning up orphan processes
+Complete job	##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, supabase/setup-cli@v1. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

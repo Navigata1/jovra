@@ -1,0 +1,65 @@
+name: backend-contracts
+
+# Gateway request/response and queue contracts (S81 / issue #150; docs/backend/architecture.md §5.1). Pure files:
+# no service, account, URL or key is touched. The fixtures are shared by the gateway (S82) and the iOS client (S97).
+
+on:
+  pull_request:
+    paths:
+      - backend/contracts/**
+      - .github/workflows/backend-contracts.yml
+      - docs/backend/architecture.md
+      - spec/schemas/studio/quote.schema.json
+      - spec/schemas/studio/edit-plan.schema.json
+      - spec/schemas/studio/studio-common.schema.json
+      - spec/studio/contracts/render-job-transitions.v1.json
+      - scripts/spec/jsonschema_subset.py
+  push:
+    branches: [main]
+    paths:
+      - backend/contracts/**
+      - .github/workflows/backend-contracts.yml
+      - docs/backend/architecture.md
+      - spec/schemas/studio/quote.schema.json
+      - spec/schemas/studio/edit-plan.schema.json
+      - spec/schemas/studio/studio-common.schema.json
+      - spec/studio/contracts/render-job-transitions.v1.json
+      - scripts/spec/jsonschema_subset.py
+  workflow_dispatch:
+
+concurrency:
+  group: backend-contracts-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend-contracts:
+    name: backend-contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the independent validator
+        run: python -m pip install --disable-pip-version-check jsonschema==4.26.0
+
+      - name: Schemas and manifest match their definitions
+        run: python backend/contracts/tools/generate.py --check
+
+      - name: Route coverage (architecture §5.1)
+        run: python backend/contracts/tools/route_coverage.py
+
+      - name: Fixtures validate; invalid cases are rejected
+        run: python backend/contracts/tools/validate.py --require-jsonschema -v
+
+      - name: No hosted URL, project ref, JWT, real email, real UUID or token in fixtures
+        run: python backend/contracts/tools/check_fixture_hygiene.py
+
+      - name: Tool tests
+        run: python -m unittest discover -s backend/contracts/tools -p 'test_*.py' -v

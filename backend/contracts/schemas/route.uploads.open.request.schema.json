@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /v1/sources/{sourceId}/uploads request",
+  "description": "uploads.open (jovra-gateway; caller: owner or guest). Bytes and hash must equal the server-held declaration; an open session of the source is aborted in the same transaction. A request descriptor: pathParams, query, headers and body. JSON body: #/$defs/body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers",
+    "body"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "sourceId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    },
+    "body": {
+      "$ref": "#/$defs/body"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "description": "One of: user; guest-signed.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "Authorization",
+            "Idempotency-Key",
+            "Content-Type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "Authorization": {
+              "$ref": "common.schema.json#/$defs/bearerAuthorization"
+            },
+            "Idempotency-Key": {
+              "$ref": "common.schema.json#/$defs/idempotencyKeyHeader"
+            },
+            "Content-Type": {
+              "$ref": "common.schema.json#/$defs/jsonContentType"
+            },
+            "X-Request-Id": {
+              "$ref": "common.schema.json#/$defs/requestIdHeader"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "Authorization",
+            "JOVRA-Timestamp",
+            "JOVRA-Nonce",
+            "JOVRA-Signature",
+            "Idempotency-Key",
+            "Content-Type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "Authorization": {
+              "$ref": "common.schema.json#/$defs/guestAuthorization"
+            },
+            "JOVRA-Timestamp": {
+              "$ref": "common.schema.json#/$defs/signatureTimestampHeader"
+            },
+            "JOVRA-Nonce": {
+              "$ref": "common.schema.json#/$defs/signatureNonceHeader"
+            },
+            "JOVRA-Signature": {
+              "$ref": "common.schema.json#/$defs/guestSignatureHeader"
+            },
+            "Idempotency-Key": {
+              "$ref": "common.schema.json#/$defs/idempotencyKeyHeader"
+            },
+            "Content-Type": {
+              "$ref": "common.schema.json#/$defs/jsonContentType"
+            },
+            "X-Request-Id": {
+              "$ref": "common.schema.json#/$defs/requestIdHeader"
+            }
+          }
+        }
+      ]
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "declaredBytes",
+        "declaredSha256",
+        "contentType"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "declaredBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000000
+        },
+        "declaredSha256": {
+          "$ref": "common.schema.json#/$defs/sha256"
+        },
+        "contentType": {
+          "enum": [
+            "video/mp4",
+            "video/quicktime"
+          ]
+        }
+      }
+    }
+  }
+}

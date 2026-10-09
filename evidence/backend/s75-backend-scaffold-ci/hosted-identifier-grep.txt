@@ -1,0 +1,88 @@
+# S75 hosted-identifier grep, commit 91bec86, 2026-10-08T15:34Z
+
+$ backend/supabase/scripts/check-hosted-identifiers.sh   # backend/ + backend-db.yml; self-test runs first
+OK  13 files: no supabase.co host, API key, JWT or email outside example.test
+
+$ git grep -nIE "supabase\.co([^m]|$)|sb_secret|sb_publishable" -- .   # whole tree
+backend/README.md:39:  `check-hosted-identifiers.sh` (no `*.supabase.co`, API key, JWT or non-`example.test` email in the tree).
+backend/supabase/scripts/check-hosted-identifiers.sh:7:# Looks for: a *.supabase.co host, secret or publishable API keys (sb_secret_, sb_publishable_), JWT-shaped
+backend/supabase/scripts/check-hosted-identifiers.sh:55:echo "OK  ${#files[@]} files: no supabase.co host, API key, JWT or email outside example.test"
+docs/backend/architecture.md:140:   `https://<project-ref>.supabase.co/auth/v1` and whose `alg` is ES256, verified against that project's JWKS
+docs/backend/security-model.md:57:   `https://<project-ref>.supabase.co/auth/v1/.well-known/jwks.json` with `createRemoteJWKSet` + `jwtVerify`
+docs/backend/security-model.md:957:| E2 | Secret key or model key shipped in an app | Keys only as Worker/host secrets; build-time scan for `sb_secret_`, `sk-ant-`, `jv*_
+docs/backend/security-model.md:977:5. Secret scan over the repo and built app bundles for `sb_secret_`, `service_role`, `sk-ant-`, `-----BEGIN`,
+docs/research/studio/backend-architecture.md:33:| F8 | Supabase is deprecating the legacy `anon` and `service_role` keys by the end of 2026; new keys are `sb_publishable_
+docs/research/studio/backend-architecture.md:92:environment ([S6]: issuer is `https://<project>.supabase.co/auth/v1`), so a test token is rejected by live and no
+docs/research/studio/backend-architecture.md:157:- **OBSERVED [S5][S6]:** verify against `https://<project>.supabase.co/auth/v1/.well-known/jwks.json` with a JOSE
+docs/spec/studio-tickets.json:3599:        "No hosted URL, project ref, key or real email appears in the tree (grep for supabase.co, sb_secret, @ outside example.test)."
+docs/spec/studio-tickets.md:2658:- [ ] No hosted URL, project ref, key or real email appears in the tree (grep for supabase.co, sb_secret, @ outside example.test).
+evidence/backend/s75-backend-scaffold-ci/backend-db-green-run-37801142474.log:126:No hosted identifiers or real email addresses in the tree	OK  13 files: no supabase.co h
+evidence/backend/s75-backend-scaffold-ci/backend-db-green-run-37801142474.log:176:supabase start	│ Publishable │ sb_publishable_<REDACTED-local-default> │
+evidence/backend/s75-backend-scaffold-ci/backend-db-green-run-37801142474.log:177:supabase start	│ Secret      │ sb_secret_<REDACTED-local-default>      │
+
+$ git grep -nIoE "<email regex>" -- . | grep -viE "@example\.test"   # whole tree: emails outside example.test
+CLAUDE.md:31:hello@islanddevcrew.com
+README.md:39:hello@islanddevcrew.com
+docs/adr/0022-identity-siwa-demo-profile-tester-config.md:46:hello@islanddevcrew.com
+docs/backend/security-model.md:996:hello@islanddevcrew.com
+docs/research/feature-backlog.md:309:hello@islanddevcrew.com
+docs/research/raw/drive-android-tech.md:61:hello@islanddevcrew.com
+docs/research/raw/swingvision.md:471:support@swing.tennis
+docs/research/raw/swingvision.md:478:support@swing.tennis
+docs/research/raw/swingvision.md:478:support@swing.vision
+docs/research/studio/backend-architecture.md:131:hello@islanddevcrew.com
+docs/research/technical-feasibility.md:475:hello@islanddevcrew.com
+docs/spec/adaptive-screens.md:744:analysis.serveRhythm@0.1.0
+docs/spec/adaptive-screens.md:1538:hello@islanddevcrew.com
+docs/spec/android-v1-spec.md:363:hello@islanddevcrew.com
+docs/spec/ios-v1-spec.md:475:hello@islanddevcrew.com
+docs/spec/ios-v1-spec.md:1017:hello@islanddevcrew.com
+docs/spec/screens.md:72:hello@islanddevcrew.com
+docs/spec/screens.md:1644:hello@islanddevcrew.com
+docs/spec/screens.md:1842:hello@islanddevcrew.com
+docs/spec/studio-screens.md:79:hello@islanddevcrew.com
+docs/spec/studio-screens.md:1485:hello@islanddevcrew.com
+docs/spec/studio-tickets.json:1366:hello@islanddevcrew.com
+docs/spec/studio-tickets.json:1372:hello@islanddevcrew.com
+docs/spec/studio-tickets.json:4953:hello@islanddevcrew.com
+docs/spec/studio-tickets.md:1122:hello@islanddevcrew.com
+docs/spec/studio-tickets.md:1130:hello@islanddevcrew.com
+docs/spec/studio-tickets.md:3634:hello@islanddevcrew.com
+docs/spec/studio-v1-spec.md:1019:hello@islanddevcrew.com
+docs/spec/tickets.json:2622:hello@islanddevcrew.com
+ios/Jovra/Features/Profile/ProfileView.swift:25:hello@islanddevcrew.com
+spec/fixtures/records/practice-plan.sample.json:29:practice.firstServePointsWon@1.0.0
+spec/fixtures/sample/export.json:44:hello@islanddevcrew.com
+spec/fixtures/sample/jon-vs-alex.session.json:9:jonVsAlex@1.0.0
+spec/fixtures/scoring/S44-unknown-outcome-provisional.json:24:rallySegmentation@0.1.0
+spec/fixtures/scoring/S44-unknown-outcome-provisional.json:27:rallySegmentation@0.1.0
+spec/fixtures/scoring/S48-detected-vs-reviewed.json:22:pointOutcome@0.0.1
+spec/fixtures/scoring/S48-detected-vs-reviewed.json:23:pointOutcome@0.0.1
+spec/reference/cases/records.py:180:practice.firstServePointsWon@1.0.0
+spec/reference/cases/records.py:211:hello@islanddevcrew.com
+spec/reference/cases/scoring_cases.py:1081:rallySegmentation@0.1.0
+spec/reference/cases/scoring_cases.py:1167:pointOutcome@0.0.1
+spec/reference/jovra_ref/sample_match.py:18:jonVsAlex@1.0.0
+spec/reference/studio/cases/ledger_cases.py:238:studio-cloud-consent@1.0.0
+spec/reference/studio/generate_studio_fixtures.py:159:jovra-normalize@0.1.0
+spec/reference/studio/generate_studio_fixtures.py:187:jovra-normalize@0.1.0
+spec/reference/studio/generate_studio_records.py:54:jovra-planner@0.1.0
+spec/reference/studio/generate_studio_records.py:103:serve-rhythm@0.1.0
+spec/reference/studio/generate_studio_records.py:119:homography-bounce@0.1.0
+spec/reference/studio/generate_studio_records.py:268:studio-cloud-consent@1.0.0
+spec/reference/studio/generate_studio_records.py:369:jovra-render-ffmpeg@0.1.0
+spec/schemas/export.schema.json:58:hello@islanddevcrew.com
+spec/schemas/studio/quote.schema.json:77:studio-cloud-consent@1.0.0
+spec/studio/fixtures/invalid/quote.sample-illustrative.invalid.json:30:studio-cloud-consent@1.0.0
+spec/studio/fixtures/records/delivered-artifact.film.json:13:jovra-render-ffmpeg@0.1.0
+spec/studio/fixtures/records/observation.calibrated-bounce.json:20:homography-bounce@0.1.0
+spec/studio/fixtures/records/observation.estimated-cue.json:20:serve-rhythm@0.1.0
+spec/studio/fixtures/records/quote.accepted-storyboard.json:40:studio-cloud-consent@1.0.0
+spec/studio/fixtures/records/quote.accepted.json:40:studio-cloud-consent@1.0.0
+spec/studio/fixtures/records/source-manifest.json:90:jovra-normalize@0.1.0
+spec/studio/fixtures/records/source-manifest.json:183:jovra-normalize@0.1.0
+spec/studio/fixtures/records/source-manifest.json:276:jovra-normalize@0.1.0
+spec/studio/fixtures/records/source-manifest.json:369:jovra-normalize@0.1.0
+spec/studio/fixtures/records/source-manifest.json:462:jovra-normalize@0.1.0
+spec/studio/fixtures/records/story-brief.court-memories.json:20:jovra-planner@0.1.0
+spec/studio/fixtures/records/story-brief.progress.json:20:jovra-planner@0.1.0

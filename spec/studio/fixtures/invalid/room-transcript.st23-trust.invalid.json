@@ -1,0 +1,211 @@
+{
+  "schemaVersion": "jovra.studio-fixture.invalid-cases/1",
+  "base": "records/room-transcript.st23-trust.json",
+  "cases": [
+    {
+      "id": "reused-code",
+      "why": "A used code is refused for every later phone",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/12/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteUsed"
+      }
+    },
+    {
+      "id": "typed-code-without-binding",
+      "why": "A typed code without a channel-bound comparison code is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/15/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "typedCodeNeedsChannelBinding"
+      }
+    },
+    {
+      "id": "mitm-allowed",
+      "why": "Allow on codes that differ is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/18/decision",
+          "value": "allow"
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "comparisonCodeMismatch"
+      }
+    },
+    {
+      "id": "expired-code-accepted",
+      "why": "An expired code is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/27/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteExpired"
+      }
+    },
+    {
+      "id": "slot-full-accepted",
+      "why": "A code for a slot that has a phone is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/30/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "slotFull"
+      }
+    },
+    {
+      "id": "revoked-phone-heard",
+      "why": "Revoke closes the connection",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/32/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "revokedPeer"
+      }
+    },
+    {
+      "id": "revoked-code-accepted",
+      "why": "Revoke voids the code the phone used",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/33/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteRevoked"
+      }
+    },
+    {
+      "id": "old-epoch-accepted",
+      "why": "An older host epoch is refused",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/36/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "staleEpoch"
+      }
+    },
+    {
+      "id": "no-reauth-after-restart",
+      "why": "After a new epoch a member re-authenticates first",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/37/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "reauthRequired"
+      }
+    },
+    {
+      "id": "restart-keeps-code",
+      "why": "A host restart voids open codes",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/41/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteRevoked"
+      }
+    },
+    {
+      "id": "transfer-keeps-code",
+      "why": "A host transfer voids every open code",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/45/verdict",
+          "value": {
+            "accepted": true
+          }
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "inviteRevoked"
+      }
+    },
+    {
+      "id": "decline-reason-hidden",
+      "why": "A decline after codes differ says so",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/steps/19/message/body/reason",
+          "value": "hostDeclined"
+        },
+        {
+          "op": "replace",
+          "path": "/steps/19/length",
+          "value": 200
+        }
+      ],
+      "expect": {
+        "layer": "reference",
+        "code": "declineReasonMismatch"
+      }
+    }
+  ]
+}
