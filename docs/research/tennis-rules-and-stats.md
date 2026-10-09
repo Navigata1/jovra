@@ -204,7 +204,7 @@ Rows OBSERVED from the cited rule; the "engine" column is INFERRED.
 | Fault (foot fault, wrong position, miss, hits fixture/singles stick/post, hits server or partner) | 16–19 | 1st → 2nd serve same half; 2nd → **double fault**, point to receiver | Each fault is an attempt with stored `type`; foot fault = ordinary fault |
 | Serve hits receiver before bounce | 24 Case 7 | Server wins (unless a let) | Classify as **service winner, not ace** (LTA: ace is untouched) |
 | Time violation | ITF Masters III.D | 1st warning; then server → fault, receiver → point penalty | Server's = fault `cause=timeViolation` (counts as an attempt; can make a DF) |
-| Point penalty | USTA IV.D.13–14 | As if the penalised player lost the next point; between games → first point of next game | Occupies a point slot (advances side and TB rotation); counts in **total points**, **not** in service or return points |
+| Point penalty | USTA IV.D.13–14 | As if the penalised player lost the next point; between games → first point of next game | Occupies a point slot (advances side and TB rotation); counts in **total points** and eligible **break-point slots**, **not** in service or return points or serve stats |
 | Game penalty | USTA Table 14 | Opponent awarded the game; in a set TB the penalised player loses the set; in a match TB, the match | Excluded from service-game counts |
 | Penalty schedule | ITF Masters III.Q; USTA PPS | ITF: warning → point → game (referee decides default after 3rd). USTA PPS: point, game, default for listed delays | Per-format setting; club play = logging, not automation |
 | Retirement / default | USTA Table 10 | Match ends, opponent wins | Interrupted point excluded from stats |
@@ -328,6 +328,8 @@ computed from events; every displayed rate keeps its fraction one tap away.
   OBSERVED): receiver has ≥3 points and leads, or the No-Ad deciding point (simultaneously a server game point,
   INFERRED). Tie-break points are never break points.
 - BP faced / saved / saved% (server); BP opportunities / converted / converted% (returner). OBSERVED (LTA, TA).
+- JOVRA policy (shared-contract decision 4 in `spec/README.md`): an eligible point-penalty slot counts as a break point
+  faced and saved or converted; game penalties are excluded from service/return-game counts and never count as breaks.
 - **Invariants (test oracles, INFERRED):** `BPconverted(p) = breaks(p) = returnGamesWon(p)`;
   `BPfaced(p) − BPsaved(p) = timesBroken(p)`.
 
@@ -462,7 +464,7 @@ cases are within one standard error; Case A fits the story (stronger player has 
 | C4 | `firstServer` declared; every recorded server equals the derived server (no overrides) |
 | C5 | Jon serves exactly 60 points, Alex 64 |
 | C6 | Every game's final split ∈ {4–0, 4–1, 4–2, (k+2)–k, k≥3}; no 7-point games |
-| C7 | Jon wins 72, Alex 52; no penalty points (or counted in TPW only) |
+| C7 | Jon wins 72, Alex 52; no penalty points (if present, included in TPW and eligible BP slots, excluded from serve/return points) |
 | C8 | Jon's serve: 60 attempts, 40 in, 28 won on 1st; 20 second-serve points with y won (incl. all DFs in the losses). Jon SPW = 28 + y; Jon RPW = 44 − y of 64 |
 | C9 | Case A: (Jon breaks − Alex breaks) = +1 per set. Case B: +1, +2. Breaks = BP converted |
 | C10 | Σ chosen "Shots" metric = 386; DF = 0, ace = 1, other points ≥ 2 (`strokeCount`) or ≥ 1 (rally length) |
@@ -525,8 +527,8 @@ is how changeover time is spread).
 3. **Point 42 timestamp**: keep 12:46 with a front-loaded generated pace, move to ≈17:50, or treat the replay as a
    separate illustrative clip.
 4. **Setup labels**: "Ad / No-Ad" + "Tie-break at 6–6 / Advantage set" instead of bare "Advantage".
-5. **Policies**: penalty points count in total points only; tie-break games excluded from service games; winners
-   exclude aces.
+5. **Policies**: penalty points count in total points and eligible break-point slots, but not service or return points
+   or serve stats (shared-contract decision 4); tie-break games excluded from service games; winners exclude aces.
 6. **Fast4 and tour-doubles presets**: ship only after confirming primary rule text (both UNVERIFIED).
 7. **Licensing**: Match Charting Project data is CC BY-NC-SA 4.0 (non-commercial). JOVRA must not ship MCP data or
    benchmarks derived from it; using common definitions and notation ideas needs counsel confirmation (UNVERIFIED legal
