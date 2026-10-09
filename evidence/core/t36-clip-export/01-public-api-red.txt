@@ -1,0 +1,354 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+Building for debugging...
+[0/15] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/.build/arm64-apple-macosx/debug/JovraMediaPackageTests.derived/runner.swift
+[1/15] Write sources
+[2/15] Write jovra-benchmark-entitlement.plist
+[3/15] Write sources
+[9/15] Write swift-version--58304C5D6DBC2206.txt
+[11/27] Compiling JovraCore CapabilityRegistryLoader.swift
+[12/27] Compiling JovraCore CaptureJournal.swift
+[13/27] Compiling JovraCore CanonicalJSON.swift
+[14/27] Compiling JovraCore ContractPrimitives.swift
+[15/27] Compiling JovraCore DocumentModels.swift
+[16/27] Compiling JovraCore ContrastRequirement.swift
+[17/27] Compiling JovraCore DurationLabel.swift
+[18/27] Compiling JovraCore FrameRate.swift
+[19/27] Compiling JovraCore Percent.swift
+[20/27] Compiling JovraCore Provenance.swift
+[21/27] Compiling JovraCore SRGBColor.swift
+[22/27] Emitting module JovraCore
+[23/37] Compiling JovraCore LogResolver.swift
+[24/37] Compiling JovraCore MatchState.swift
+[25/37] Compiling JovraCore OrderOverrides.swift
+[26/37] Compiling JovraCore OutcomeInterpreter.swift
+[27/37] Compiling JovraCore ScoringEngine.swift
+[28/37] Compiling JovraCore ScoringInput.swift
+[29/37] Compiling JovraCore TimelineDiff.swift
+[30/37] Compiling JovraCore TimelineModels.swift
+[31/37] Compiling JovraCore SessionStore.swift
+[32/37] Compiling JovraCore Units.swift
+[33/43] Emitting module JovraMedia
+[34/48] Compiling JovraMedia FixtureCamera.swift
+[35/48] Compiling JovraMedia DeviceBudget.swift
+[36/48] Compiling JovraMedia FrameTime.swift
+[37/48] Compiling JovraMedia MediaLibrary.swift
+[38/48] Compiling JovraMedia MediaProbe.swift
+[39/48] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[40/48] Compiling JovraMedia CaptureEngine.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[41/48] Compiling JovraMedia CaptureSegmentWriter.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[42/48] Compiling JovraMedia CaptureTypes.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[43/48] Compiling JovraMedia DecodedCapture.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[44/57] Compiling JovraBenchmark DecodedFrameReader.swift
+[45/57] Compiling JovraBenchmark FrameSignature.swift
+[46/57] Compiling JovraBenchmark GroundTruth.swift
+[47/57] Compiling JovraBenchmark LumaPlane.swift
+[48/57] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[49/57] Compiling JovraBenchmark BenchmarkHarness.swift
+[50/57] Compiling JovraBenchmark BenchmarkRecord.swift
+[51/57] Compiling JovraBenchmark CapabilityGate.swift
+[52/57] Emitting module JovraBenchmark
+[53/64] Compiling JovraBenchmark Estimator.swift
+[54/64] Compiling JovraBenchmark EstimatorRegistry.swift
+[55/64] Compiling JovraBenchmark EventTimesTask.swift
+[56/64] Compiling JovraBenchmark Floor.swift
+[57/64] Compiling JovraBenchmark JSONValue.swift
+[58/64] Compiling JovraBenchmark Rational.swift
+[59/64] Compiling JovraBenchmark JovraBenchmark.swift
+[60/72] Compiling jovra_benchmark main.swift
+[61/72] Emitting module jovra_benchmark
+[62/77] Emitting module JovraBenchmarkTests
+[63/80] Emitting module JovraMediaTests
+[64/80] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:20:32: error: cannot find 'ClipExporter' in scope
+18 |         let target = directory.appendingPathComponent("clip.mp4")
+19 |         let start = CMTime(frame: 17, at: rate), end = CMTime(frame: 47, at: rate)
+20 |         let result = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                                `- error: cannot find 'ClipExporter' in scope
+21 |             range: CMTimeRange(start: start, end: end), destination: target)
+22 |         let frames = try await DecodedFrameReader.frames(of: target, truth: truth)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:38:23: error: cannot find 'ClipExporter' in scope
+36 |         defer { try? FileManager.default.removeItem(at: directory) }
+37 |         let target = directory.appendingPathComponent("clip.mp4")
+38 |         _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                       `- error: cannot find 'ClipExporter' in scope
+39 |             range: CMTimeRange(start: CMTime(value: 1, timescale: 1), duration: CMTime(value: 1, timescale: 1)),
+40 |             destination: target, includeAudio: include)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:54:27: error: cannot find 'ClipExporter' in scope
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+56 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:60:27: error: cannot find 'ClipExporter' in scope
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+62 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:53:9: warning: no 'async' operations occur within 'await' expression
+51 |         let original = Data("existing export stays intact".utf8)
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:59:9: warning: no 'async' operations occur within 'await' expression
+57 |         #expect(try Data(contentsOf: target) == original)
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+[65/80] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:20:32: error: cannot find 'ClipExporter' in scope
+18 |         let target = directory.appendingPathComponent("clip.mp4")
+19 |         let start = CMTime(frame: 17, at: rate), end = CMTime(frame: 47, at: rate)
+20 |         let result = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                                `- error: cannot find 'ClipExporter' in scope
+21 |             range: CMTimeRange(start: start, end: end), destination: target)
+22 |         let frames = try await DecodedFrameReader.frames(of: target, truth: truth)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:38:23: error: cannot find 'ClipExporter' in scope
+36 |         defer { try? FileManager.default.removeItem(at: directory) }
+37 |         let target = directory.appendingPathComponent("clip.mp4")
+38 |         _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                       `- error: cannot find 'ClipExporter' in scope
+39 |             range: CMTimeRange(start: CMTime(value: 1, timescale: 1), duration: CMTime(value: 1, timescale: 1)),
+40 |             destination: target, includeAudio: include)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:54:27: error: cannot find 'ClipExporter' in scope
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+56 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:60:27: error: cannot find 'ClipExporter' in scope
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+62 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:53:9: warning: no 'async' operations occur within 'await' expression
+51 |         let original = Data("existing export stays intact".utf8)
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:59:9: warning: no 'async' operations occur within 'await' expression
+57 |         #expect(try Data(contentsOf: target) == original)
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+[66/80] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:20:32: error: cannot find 'ClipExporter' in scope
+18 |         let target = directory.appendingPathComponent("clip.mp4")
+19 |         let start = CMTime(frame: 17, at: rate), end = CMTime(frame: 47, at: rate)
+20 |         let result = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                                `- error: cannot find 'ClipExporter' in scope
+21 |             range: CMTimeRange(start: start, end: end), destination: target)
+22 |         let frames = try await DecodedFrameReader.frames(of: target, truth: truth)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:38:23: error: cannot find 'ClipExporter' in scope
+36 |         defer { try? FileManager.default.removeItem(at: directory) }
+37 |         let target = directory.appendingPathComponent("clip.mp4")
+38 |         _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                       `- error: cannot find 'ClipExporter' in scope
+39 |             range: CMTimeRange(start: CMTime(value: 1, timescale: 1), duration: CMTime(value: 1, timescale: 1)),
+40 |             destination: target, includeAudio: include)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:54:27: error: cannot find 'ClipExporter' in scope
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+56 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:60:27: error: cannot find 'ClipExporter' in scope
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+62 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:53:9: warning: no 'async' operations occur within 'await' expression
+51 |         let original = Data("existing export stays intact".utf8)
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:59:9: warning: no 'async' operations occur within 'await' expression
+57 |         #expect(try Data(contentsOf: target) == original)
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+[67/80] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:20:32: error: cannot find 'ClipExporter' in scope
+18 |         let target = directory.appendingPathComponent("clip.mp4")
+19 |         let start = CMTime(frame: 17, at: rate), end = CMTime(frame: 47, at: rate)
+20 |         let result = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                                `- error: cannot find 'ClipExporter' in scope
+21 |             range: CMTimeRange(start: start, end: end), destination: target)
+22 |         let frames = try await DecodedFrameReader.frames(of: target, truth: truth)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:38:23: error: cannot find 'ClipExporter' in scope
+36 |         defer { try? FileManager.default.removeItem(at: directory) }
+37 |         let target = directory.appendingPathComponent("clip.mp4")
+38 |         _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                       `- error: cannot find 'ClipExporter' in scope
+39 |             range: CMTimeRange(start: CMTime(value: 1, timescale: 1), duration: CMTime(value: 1, timescale: 1)),
+40 |             destination: target, includeAudio: include)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:54:27: error: cannot find 'ClipExporter' in scope
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+56 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:60:27: error: cannot find 'ClipExporter' in scope
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+62 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:53:9: warning: no 'async' operations occur within 'await' expression
+51 |         let original = Data("existing export stays intact".utf8)
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:59:9: warning: no 'async' operations occur within 'await' expression
+57 |         #expect(try Data(contentsOf: target) == original)
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+[68/80] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:20:32: error: cannot find 'ClipExporter' in scope
+18 |         let target = directory.appendingPathComponent("clip.mp4")
+19 |         let start = CMTime(frame: 17, at: rate), end = CMTime(frame: 47, at: rate)
+20 |         let result = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                                `- error: cannot find 'ClipExporter' in scope
+21 |             range: CMTimeRange(start: start, end: end), destination: target)
+22 |         let frames = try await DecodedFrameReader.frames(of: target, truth: truth)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:38:23: error: cannot find 'ClipExporter' in scope
+36 |         defer { try? FileManager.default.removeItem(at: directory) }
+37 |         let target = directory.appendingPathComponent("clip.mp4")
+38 |         _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                       `- error: cannot find 'ClipExporter' in scope
+39 |             range: CMTimeRange(start: CMTime(value: 1, timescale: 1), duration: CMTime(value: 1, timescale: 1)),
+40 |             destination: target, includeAudio: include)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:54:27: error: cannot find 'ClipExporter' in scope
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+56 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:60:27: error: cannot find 'ClipExporter' in scope
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+   |                           `- error: cannot find 'ClipExporter' in scope
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+62 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:53:9: warning: no 'async' operations occur within 'await' expression
+51 |         let original = Data("existing export stays intact".utf8)
+52 |         try original.write(to: target)
+53 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+54 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+55 |                 range: CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)), destination: target)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/ClipExporterTests.swift:59:9: warning: no 'async' operations occur within 'await' expression
+57 |         #expect(try Data(contentsOf: target) == original)
+58 |         let missing = directory.appendingPathComponent("invalid.mp4")
+59 |         await #expect(throws: (any Error).self) {
+   |         `- warning: no 'async' operations occur within 'await' expression
+60 |             _ = try await ClipExporter.exportClip(source: Self.catalog.mediaURL(for: truth),
+61 |                 range: CMTimeRange(start: .zero, duration: .zero), destination: missing)
+[74/84] Compiling JovraMediaTests RealFootageProbeTests.swift
+[75/84] Compiling JovraMediaTests FrameTimeTests.swift
+[75/84] Write Objects.LinkFileList
+[76/84] Linking jovra-benchmark
+[77/84] Applying jovra-benchmark
+[81/84] Compiling JovraMediaTests FrameTimingTests.swift
+[82/84] Compiling JovraMediaTests MediaLibraryTests.swift
+error: fatalError

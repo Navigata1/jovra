@@ -1,0 +1,45 @@
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/9] Emitting module JovraMedia
+[4/9] Compiling JovraMedia ClipExporter.swift
+[4/15] Write Objects.LinkFileList
+[5/15] Linking jovra-benchmark
+[6/15] Applying jovra-benchmark
+[8/15] Compiling JovraMediaTests CapturePipelineTests.swift
+[9/15] Compiling JovraMediaTests ClipExporterTests.swift
+[10/15] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[11/15] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[12/15] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[13/15] Emitting module JovraMediaTests
+[14/19] Compiling JovraMediaTests RealFootageProbeTests.swift
+[15/19] Compiling JovraMediaTests FrameTimeTests.swift
+[16/19] Compiling JovraMediaTests FrameTimingTests.swift
+[17/19] Compiling JovraMediaTests MediaLibraryTests.swift
+[18/21] Emitting module JovraMediaPackageTests
+[19/21] Compiling JovraMediaPackageTests runner.swift
+[19/21] Write Objects.LinkFileList
+[20/21] Linking JovraMediaPackageTests
+Build complete! (7.36s)
+Test Suite 'Selected tests' started at 2026-10-09 11:09:01.190.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 11:09:01.191.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 11:09:01.191.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:09:01.191.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Local clip export" started.
+◇ Test decodedRangeMatchesChosenFrames(id:) started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to decodedRangeMatchesChosenFrames(id:) started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to decodedRangeMatchesChosenFrames(id:) started.
+✔ Test decodedRangeMatchesChosenFrames(id:) with 2 test cases passed after 2.048 seconds.
+◇ Test audioIsOmittedUnlessExplicitlyIncluded(include:) started.
+◇ Test case passing 1 argument include → false to audioIsOmittedUnlessExplicitlyIncluded(include:) started.
+◇ Test case passing 1 argument include → true to audioIsOmittedUnlessExplicitlyIncluded(include:) started.
+✔ Test audioIsOmittedUnlessExplicitlyIncluded(include:) with 2 test cases passed after 0.766 seconds.
+◇ Test invalidRangeAndExistingDestinationPreserveBytes() started.
+✔ Test invalidRangeAndExistingDestinationPreserveBytes() passed after 0.002 seconds.
+✔ Suite "Local clip export" passed after 2.819 seconds.
+✔ Test run with 3 tests in 1 suite passed after 2.819 seconds.

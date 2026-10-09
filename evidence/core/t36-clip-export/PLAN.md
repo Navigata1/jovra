@@ -1,0 +1,9 @@
+Bounded T36 core-flow clip slice
+
+Public exportClip(source:range:destination:includeAudio:) exports one local source segment. Range is normalized to the first video presentation timestamp so captured fMP4 container offsets do not become session-clock errors. Re-encode the selected half-open interval; preserve video orientation, omit audio unless explicitly requested. Never overwrite an existing destination. Write an owned temporary MP4, fully decode it, flush file bytes and its directory entry, and then publish.
+
+Acceptance uses renderer-controlled frame-counter videos at 60 and 240 fps. The requested interval starts at frame17 and ends before frame47. Decode the exported video, read its burned-in counters, and require 30 frames17...46. Independent audio-track checks use the fixtureCamera source; preservation checks refuse a zero-length range and an existing destination. The intended compiler-red was activated: ClipExporter is absent at all four public calls. A minimal implementation now exists; green execution and independent review are pending.
+
+Full T36 remains open: multi-segment selection, durable export progress/restart, Photos add-only authorization, junior copy policy, per-session event-log-version export records, and the full clip sheet accessibility/visual criteria are separate integration or later slices. No Studio worker, hosted render, upload, Android or watch work is included.
+
+The first full-media run exposed a test assumption: AVFoundation applies edit lists and reports this captured track start as zero, while independent ffprobe reports its raw mux start as0.043333. That failed assertion is retained. The corrected public test validates the actual captured2second source and1second/30frame exported output; the exporter source is unchanged. Raw mux timestamp normalization is independently inspected on retained media.
