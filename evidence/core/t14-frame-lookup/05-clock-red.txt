@@ -1,0 +1,24 @@
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module JovraMediaTests
+[4/5] Compiling JovraMediaTests FramePlaybackTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking JovraMediaPackageTests
+Build complete! (1.32s)
+Test Suite 'Selected tests' started at 2026-10-09 11:42:24.676.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 11:42:24.676.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 11:42:24.676.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:42:24.676.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Exact replay frame lookup" started.
+◇ Test refusesClockValuesThatCannotBeRepresentedWithoutOverflow() started.
+✘ Test refusesClockValuesThatCannotBeRepresentedWithoutOverflow() recorded an issue at FramePlaybackTests.swift:14:9: Expectation failed: an error was expected but none was thrown
+✘ Test refusesClockValuesThatCannotBeRepresentedWithoutOverflow() recorded an issue at FramePlaybackTests.swift:17:9: Expectation failed: an error was expected but none was thrown
+✘ Test refusesClockValuesThatCannotBeRepresentedWithoutOverflow() failed after 0.005 seconds with 2 issues.
+✘ Suite "Exact replay frame lookup" failed after 0.005 seconds with 2 issues.
+✘ Test run with 1 test in 1 suite failed after 0.005 seconds with 2 issues.

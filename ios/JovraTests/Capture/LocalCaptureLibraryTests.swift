@@ -79,4 +79,30 @@ final class LocalCaptureLibraryTests: XCTestCase {
         XCTAssertEqual(saved.match?.log.count, 0)
         XCTAssertEqual(saved.analysis?.state, .notRequested)
     }
+
+    func testCapturedOriginalRemainsRetrievableThroughTheFilteredLibraryAfterReopening() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let library = try LocalCaptureLibrary(root: root)
+        let seed = CaptureSessionSeed(title: "Custody test", players: [
+            .init(id: "a", displayName: "Player A", handedness: .unknown, backhand: .unknown, isSelf: true),
+            .init(id: "b", displayName: "Player B", handedness: .unknown, backhand: .unknown, isSelf: false),
+        ], format: .init(presetId: .bestOf1, setsToWin: .value1, gameScoring: .ad,
+                         set: .tiebreakSet(.init(games: 6, tiebreakAt: 6, tiebreak: .init(points: 7))), lets: .let),
+            toss: .init(firstServer: "a", startingEnds: .init(A: .near, B: .far)))
+        let id = try await library.createCapture(seed, mode: .simulatorFixture)
+        let folder = try await library.recordingFolder(id)
+        // Deliberately plain bytes: this custody test does not claim encoded or playable video.
+        let bytes = Data("retained original bytes".utf8)
+        try bytes.write(to: folder.appendingPathComponent("originals/custody.bin"))
+        let reopened = try LocalCaptureLibrary(root: root)
+        let original = try await reopened.fileURL(id, relativePath: "originals/custody.bin")
+        XCTAssertEqual(try Data(contentsOf: original), bytes)
+        let matches = try await reopened.sessions(.init(search: "Custody", sample: true))
+        XCTAssertEqual(matches.map(\.id), [id.rawValue])
+        XCTAssertTrue(matches[0].sample)
+        let noMatches = try await reopened.sessions(.init(search: "unmatched title"))
+        XCTAssertTrue(noMatches.isEmpty)
+        XCTAssertEqual(try Data(contentsOf: original), bytes, "Library reads must preserve originals")
+    }
 }
