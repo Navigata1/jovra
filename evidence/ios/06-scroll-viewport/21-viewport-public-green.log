@@ -1,0 +1,26 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/ios/Jovra.xcodeproj
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/.derivedData/t06-scroll-viewport-green.xcresult
+
+2026-10-09 12:49:13.733 xcodebuild[90710:132554755] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 12:49:13.733 xcodebuild[90710:132554755] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 12:49:40.960 xcodebuild[90710:132554755] [MT] IDETestOperationsObserverDebug: 28.904 elapsed -- Testing started completed.
+2026-10-09 12:49:40.960 xcodebuild[90710:132554755] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 12:49:40.960 xcodebuild[90710:132554755] [MT] IDETestOperationsObserverDebug: 28.904 sec, +28.904 sec -- end
+Failing tests:
+	CaptureFlowUITests.testSetupIsAccessibleInLightPresentationAtDefaultSize()
+
+** TEST FAILED **
+
+Testing started
+Test class                             passed  failed  skipped  expected
+JovraUITests/CaptureFlowUITests             0       1        0         0
+JovraUITests/ScrollViewportAuditTests       3       0        0         0
+Total: 3 passed, 1 failed, 0 skipped, 0 expected failure(s) in 2 classes (xcresult summary: 3 passed, 1 failed, 0 skipped; result Failed)
+FAILED CaptureFlowUITests/testSetupIsAccessibleInLightPresentationAtDefaultSize(): Contrast failed
+Device: JOVRA-Codex-T07 4265ADFD-39A3-4E71-8482-1945DDB5F899 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/t06-scroll-viewport-green.xcresult
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.
