@@ -528,6 +528,17 @@ class CaptureEventTests(SchemasFixture):
                 self.assertNotEqual(self.errors(doc, "session.schema.json"), [])
 
 
+class SegmentBoundaryTests(unittest.TestCase):
+    def test_frame_rate_uses_the_segment_starting_at_a_shared_boundary(self):
+        session = {"recording": {"segments": [
+            {"startMs": 0, "durationMs": 1000, "frameRate": {"num": 60, "den": 1}},
+            {"startMs": 1000, "durationMs": 1000, "frameRate": {"num": 30, "den": 1}},
+        ]}}
+        self.assertEqual(references.frame_rate_at(session, 999), 60)
+        self.assertEqual(references.frame_rate_at(session, 1000), 30)
+        self.assertIsNone(references.frame_rate_at(session, 2000))
+
+
 class ParentIdTests(unittest.TestCase):
     """Point parentIds (1.1.0) resolve: an earlier, voided point other than itself (verifier round 2, finding 2)."""
 

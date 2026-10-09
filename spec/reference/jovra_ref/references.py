@@ -102,7 +102,7 @@ def frame_rate_at(session: dict, ms) -> Fraction | None:
     capture event inside that segment at or before the time. None when no segment covers it."""
     recording = session.get("recording", {})
     segment = next((s for s in recording.get("segments", [])
-                    if s["startMs"] <= ms <= s["startMs"] + s["durationMs"]), None)
+                    if s["startMs"] <= ms < s["startMs"] + s["durationMs"]), None)
     if segment is None:
         return None
     rate = Fraction(segment["frameRate"]["num"], segment["frameRate"]["den"])
