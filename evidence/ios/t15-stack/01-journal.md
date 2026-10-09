@@ -1,0 +1,3 @@
+# T15 prerequisite 1: durable journal
+
+Source and three public tests are byte-identical to independently accepted capture candidate 48a1372550e895ea984a787da79b4b8ab7906a6e. Base is approved main1233ff0. 216 manual Swift lines; no media/app/project changes. Focused three journal tests pass (01-journal.txt): segment intent/reopen/confirmed time, pre-rename write fault preserving prior state, and timeline/overlap refusal. Checkpoints require explicit durable-byte confirmation; this is not a crash-recovery scanner or physical loss-budget proof. The remaining capture slices supply encoder, sources, engine and operational tests. T15 stays open.
