@@ -1,14 +1,14 @@
 import XCTest
 
-/// Independently exercises scene storage across a backgrounded process restart. The test never
-/// discards the scene through the app switcher: iOS intentionally removes that scene's saved state.
-final class StateRestorationUITests: XCTestCase {
+/// Checks scene continuity through background/foreground. Process-death restoration is checked
+/// outside XCTest: launches by this harness do not preserve SceneStorage on the tested simulator.
+final class SceneContinuityUITests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
     }
 
     @MainActor
-    func testBackgroundedSceneRestoresCapturePayloadAndPresentingTab() throws {
+    func testBackgroundedSceneRetainsCapturePayloadAndPresentingTab() throws {
         let app = XCUIApplication()
         app.launchArguments = [] // A real launch, because harness launches intentionally skip restore.
         app.launch()
@@ -22,17 +22,16 @@ final class StateRestorationUITests: XCTestCase {
         XCUIDevice.shared.press(.home)
         let backgrounded = app.wait(for: .runningBackground, timeout: 3) || app.state == .runningBackgroundSuspended
         XCTAssertTrue(backgrounded)
-        // Allow the scene's asynchronous preservation to finish before ending the process.
+        // Let the scene background fully before activating the same running app.
         Thread.sleep(forTimeInterval: 3)
-        app.terminate()
-        app.launch()
+        app.activate()
 
-        XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 8), "the full-screen route restores")
-        XCTAssertTrue(payload.label.contains("Session kind: Doubles match"), "the typed payload restores")
+        XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 8), "the full-screen route survives backgrounding")
+        XCTAssertTrue(payload.label.contains("Session kind: Doubles match"), "the typed payload survives backgrounding")
         XCTAssertFalse(app.otherElements["tabBar"].exists)
         attachScreenshot(app, name: "t07-restoration-after-relaunch")
         app.buttons["capture.close"].tap()
         XCTAssertTrue(app.buttons["tab.record"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["tab.record"].isSelected, "closing returns to the restored presenting tab")
+        XCTAssertTrue(app.buttons["tab.record"].isSelected, "closing returns to the presenting tab")
     }
 }
