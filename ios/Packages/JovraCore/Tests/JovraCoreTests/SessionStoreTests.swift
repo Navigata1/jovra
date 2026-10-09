@@ -3,6 +3,11 @@ import XCTest
 @testable import JovraCore
 
 final class SessionStoreTests: XCTestCase {
+    private static func point(id: String, seq: Int) -> SessionLogEvent {
+        .point(.init(id: id, seq: seq, reviewed: .init(winner: .a, endType: .winner,
+             provenance: .manual, source: "user"), reviewState: .reviewed))
+    }
+
     private func sample() throws -> SessionDocument {
         var url = URL(fileURLWithPath: #filePath)
         for _ in 0..<6 { url.deleteLastPathComponent() }
@@ -16,7 +21,7 @@ final class SessionStoreTests: XCTestCase {
         document.match?.log = []
         let store = try SessionStore(root: root)
         try await store.create(document)
-        let batch = (0..<5).map { SessionLogEvent.point(.init(id: "batch-\($0)", seq: $0 + 1)) }
+        let batch = (0..<5).map { Self.point(id: "batch-\($0)", seq: $0 + 1) }
         let crashing = try SessionStore(root: root, writeFault: { _ in throw InjectedCrash.beforeRename })
         do { try await crashing.append(batch, to: document.id); XCTFail("interrupted batch must fail") }
         catch InjectedCrash.beforeRename { }
@@ -27,7 +32,7 @@ final class SessionStoreTests: XCTestCase {
         XCTAssertEqual(complete.match?.log.count, 5)
         let id = document.id
         for index in 0..<1000 {
-            async let append: Void = store.append([.point(.init(id: "point-\(index)", seq: index + 6))], to: id)
+            async let append: Void = store.append([Self.point(id: "point-\(index)", seq: index + 6)], to: id)
             async let update: Void = store.update(id, facet: .review(.init(state: index == 999 ? .complete : .inProgress)))
             _ = try await (append, update)
         }
@@ -36,6 +41,11 @@ final class SessionStoreTests: XCTestCase {
         XCTAssertEqual(final.review?.state, .complete)
         XCTAssertEqual(final.analysis, document.analysis)
         XCTAssertEqual(final.archive, document.archive)
+        if let directory = ProcessInfo.processInfo.environment["JOVRA_STORE_EVIDENCE_DIR"] {
+            let output = URL(fileURLWithPath: directory, isDirectory: true)
+            try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
+            try CanonicalJSON.encode(final).write(to: output.appendingPathComponent("session.json"))
+        }
     }
 
     func testZeroNegativeAndDuplicateSequenceRefusalLeavesLogUnchanged() async throws {
@@ -45,13 +55,13 @@ final class SessionStoreTests: XCTestCase {
         let store = try SessionStore(root: root)
         try await store.create(document)
         for sequence in [0, -1] {
-            do { try await store.append([.point(.init(id: "invalid", seq: sequence))], to: document.id); XCTFail("invalid sequence accepted") }
+            do { try await store.append([Self.point(id: "invalid", seq: sequence)], to: document.id); XCTFail("invalid sequence accepted") }
             catch SessionStoreError.invalidEvents { }
         }
         let loaded = try await store.load(document.id)
         XCTAssertEqual(loaded.match?.log.count, 0)
-        try await store.append([.point(.init(id: "first", seq: 1))], to: document.id)
-        for event in [SessionLogEvent.point(.init(id: "duplicate-sequence", seq: 1)), .point(.init(id: "first", seq: 2))] {
+        try await store.append([Self.point(id: "first", seq: 1)], to: document.id)
+        for event in [Self.point(id: "duplicate-sequence", seq: 1), Self.point(id: "first", seq: 2)] {
             do { try await store.append([event], to: document.id); XCTFail("duplicate log identity accepted") }
             catch SessionStoreError.invalidEvents { }
         }
@@ -74,6 +84,18 @@ final class SessionStoreTests: XCTestCase {
         let actual = try await relaunched.load(document.id)
         XCTAssertEqual(actual.review?.state, .complete)
         XCTAssertEqual(actual.match, document.match)
+    }
+
+    func testPointWithoutDetectedOrReviewedOutcomeIsRefused() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        var document = try sample(); document.match?.log = []
+        let store = try SessionStore(root: root)
+        try await store.create(document)
+        do { try await store.append([.point(.init(id: "missing-outcome", seq: 1))], to: document.id); XCTFail("schema-invalid point accepted") }
+        catch SessionStoreError.invalidEvents { }
+        let actual = try await store.load(document.id)
+        XCTAssertEqual(actual.match?.log.count, 0)
     }
 
     func testNewOriginalFacetUpgradesLegacyDocumentWithoutChangingMatch() async throws {

@@ -76,6 +76,9 @@ public actor SessionStore {
         for event in events {
             guard !event.id.isEmpty, ids.insert(event.id).inserted,
                   sequences.insert(event.seq).inserted, event.seq > previous else { throw SessionStoreError.invalidEvents }
+            if case .point(let point) = event, point.detected == nil, point.reviewed == nil {
+                throw SessionStoreError.invalidEvents
+            }
             previous = event.seq
         }
         match.log.append(contentsOf: events)
