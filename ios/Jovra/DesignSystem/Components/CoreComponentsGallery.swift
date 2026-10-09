@@ -5,7 +5,8 @@ import SwiftUI
 /// An opt-in native gallery for component acceptance checks; absent from release builds.
 struct CoreComponentsGalleryHarness: ViewModifier {
     func body(content: Content) -> some View {
-        if let state = ProcessInfo.processInfo.environment["JOVRA_CORE_COMPONENT_GALLERY"] {
+        if let rawState = ProcessInfo.processInfo.environment["JOVRA_CORE_COMPONENT_GALLERY"],
+           let state = CoreComponentsGallery.Scenario(rawValue: rawState) {
             CoreComponentsGallery(state: state)
         } else {
             content
@@ -14,7 +15,8 @@ struct CoreComponentsGalleryHarness: ViewModifier {
 }
 
 struct CoreComponentsGallery: View {
-    var state: String
+    enum Scenario: String { case empty, denied, error, unsupported, badges }
+    var state: Scenario
     @State private var actionResult: String?
 
     var body: some View {
@@ -24,7 +26,7 @@ struct CoreComponentsGallery: View {
                     .font(.jovraHeadline)
                     .foregroundStyle(.jovra(.textPrimary))
                     .accessibilityIdentifier("screen.title")
-                if state == "badges" {
+                if state == .badges {
                     badges
                 } else {
                     stateCard
@@ -38,22 +40,22 @@ struct CoreComponentsGallery: View {
 
     @ViewBuilder private var stateCard: some View {
         switch state {
-        case "denied":
+        case .denied:
             StateCard(symbol: "camera", title: String(localized: "Camera access is off", table: "DesignSystem.Components"),
                       message: String(localized: "Turn on Camera for JOVRA in iOS Settings to record. You can still import videos you already have.", table: "DesignSystem.Components"),
                       primaryAction: .init(title: String(localized: "Open iOS Settings", table: "DesignSystem.Components")) {
                           actionResult = String(localized: "Settings requested", table: "DesignSystem.Components")
                       })
-        case "error":
+        case .error:
             StateCard(symbol: "exclamationmark.triangle", title: String(localized: "Export didn't finish", table: "DesignSystem.Components"),
                       message: String(localized: "Your video is safe. Try exporting again.", table: "DesignSystem.Components"),
                       primaryAction: .init(title: String(localized: "Retry", table: "DesignSystem.Components")) {
                           actionResult = String(localized: "Retry requested", table: "DesignSystem.Components")
                       })
-        case "unsupported":
+        case .unsupported:
             StateCard(symbol: "info.circle", title: String(localized: "Speed is not available", table: "DesignSystem.Components"),
                       message: String(localized: "This capability has not passed its checks.", table: "DesignSystem.Components"))
-        default:
+        case .empty:
             StateCard(
                     symbol: "tray",
                     title: String(localized: "No sessions yet", table: "DesignSystem.Components"),
@@ -65,6 +67,8 @@ struct CoreComponentsGallery: View {
                         actionResult = String(localized: "Import requested", table: "DesignSystem.Components")
                     }
                 )
+        case .badges:
+            badges
         }
     }
 
@@ -84,4 +88,7 @@ struct CoreComponentsGallery: View {
         }
     }
 }
+
+#Preview("Core empty") { CoreComponentsGallery(state: .empty) }
+#Preview("Core badges dark") { CoreComponentsGallery(state: .badges).preferredColorScheme(.dark) }
 #endif

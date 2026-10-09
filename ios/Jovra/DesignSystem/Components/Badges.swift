@@ -23,9 +23,9 @@ struct ProvenanceBadge: View {
                 .accessibilityHidden(true)
             Text(title)
         }
-        .font((size == .small ? Font.caption2 : .caption).weight(.semibold))
+        .font(.caption.weight(.semibold))
         .foregroundStyle(.jovra(ink))
-        .padding(.horizontal, Space.x1 + 2)
+        .padding(.horizontal, size == .small ? Space.x1 : Space.x1 + 2)
         .padding(.vertical, Space.half)
         .background(Color.jovra(onForest ? .editorial : .surfaceSunken), in: Capsule())
         .overlay {
@@ -38,6 +38,7 @@ struct ProvenanceBadge: View {
         .layoutPriority(1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityText)
+        .accessibilityAddTraits(.isStaticText)
     }
 
     var title: String {
