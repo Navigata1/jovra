@@ -108,10 +108,10 @@ public actor SessionStore {
         try Self.refuseSymbolicLink(destination)
         let temporary = folder.appendingPathComponent(".session-\(UUID().uuidString).tmp")
         var persisted = document
-        // New facets/capture metadata may use1.1 fields. Preserve legacy documents
-        // at creation, but never stamp a mutation containing new fields as1.0.
-        if upgradeVersion, persisted.schemaVersion.major == 1, persisted.schemaVersion.minor == 0 {
-            persisted.schemaVersion = .v1_1
+        // New facets/capture metadata may use current-version fields. Preserve legacy documents
+        // at creation, but stamp mutations with the current supported contract.
+        if upgradeVersion, persisted.schemaVersion.major == 1, persisted.schemaVersion.minor < SchemaVersion.current.minor {
+            persisted.schemaVersion = .current
         }
         let bytes = try CanonicalJSON.encode(persisted)
         guard FileManager.default.createFile(atPath: temporary.path, contents: nil) else { throw CocoaError(.fileWriteUnknown) }

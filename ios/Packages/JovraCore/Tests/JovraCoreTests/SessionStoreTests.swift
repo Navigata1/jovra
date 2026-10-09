@@ -107,7 +107,7 @@ final class SessionStoreTests: XCTestCase {
         try await store.create(document)
         try await store.update(document.id, facet: .original(.init(state: .saved)))
         let actual = try await store.load(document.id)
-        XCTAssertEqual(actual.schemaVersion, .v1_1)
+        XCTAssertEqual(actual.schemaVersion, .current)
         XCTAssertEqual(actual.match, document.match)
         XCTAssertEqual(actual.original?.state, .saved)
     }
