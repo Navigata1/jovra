@@ -9,3 +9,7 @@ No bounded-scope SPEC finding. Caller-provided frame rate/count must be verified
 ## Integrated source rebind
 
 SPEC ACCEPT `6b5515d` source rebind: exact FramePlayback production/test directory diff from accepted 1ba070e is empty. Root reports the integrated 78-Media gate includes merged Stats351/Clip352; this reviewer does not rerun it. Historical first frame receipt remains separately head-bound.
+
+## Final exact publication head
+
+SPEC ACCEPT `2c17fe11440249171e1105af0ce7223f3a07971b`. Production/tests remain byte-identical to accepted1ba070e; independently checked both retained SHA256 entries against the current source files. Read integrated07 receipt: 78 tests/15 suites passed after7.147s. No new execution by this reviewer; exact evidence provenance and bounded pending scope remain explicit.
