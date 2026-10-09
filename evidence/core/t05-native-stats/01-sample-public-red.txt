@@ -1,0 +1,204 @@
+[0/6] Write sources
+[1/6] Write FixtureRunnerGenerator-tool-entitlement.plist
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Emitting module FixtureRunnerGenerator
+[5/8] Compiling FixtureRunnerGenerator main.swift
+[5/8] Write Objects.LinkFileList
+[6/8] Linking FixtureRunnerGenerator-tool
+[7/8] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/19] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/scratch/t05-core/arm64-apple-macosx/debug/JovraCorePackageTests.derived/runner.swift
+[2/19] Write sources
+[6/19] Write FixtureRunnerGenerator-tool-entitlement.plist
+[7/19] Write FixtureRunnerGenerator-entitlement.plist
+[8/19] Write swift-version--58304C5D6DBC2206.txt
+[10/33] Compiling FixtureRunnerGenerator main.swift
+[11/33] Emitting module FixtureRunnerGenerator
+[11/33] Write Objects.LinkFileList
+[13/33] Linking FixtureRunnerGenerator
+[14/33] Linking FixtureRunnerGenerator-tool
+[15/33] Applying FixtureRunnerGenerator
+[16/33] Discover conformance runners by kind
+[17/33] Applying FixtureRunnerGenerator-tool
+[18/33] Write sources
+[20/33] Compiling JovraCore CapabilityRegistryLoader.swift
+[21/33] Compiling JovraCore CaptureJournal.swift
+[22/33] Compiling JovraCore CanonicalJSON.swift
+[23/33] Compiling JovraCore ContractPrimitives.swift
+[24/33] Compiling JovraCore DocumentModels.swift
+[25/33] Compiling JovraCore ContrastRequirement.swift
+[26/33] Compiling JovraCore DurationLabel.swift
+[27/33] Compiling JovraCore FrameRate.swift
+[28/33] Compiling JovraCore Percent.swift
+[29/33] Compiling JovraCore Provenance.swift
+[30/33] Compiling JovraCore SRGBColor.swift
+[31/33] Emitting module JovraCore
+[32/43] Compiling JovraCore LogResolver.swift
+[33/43] Compiling JovraCore MatchState.swift
+[34/43] Compiling JovraCore OrderOverrides.swift
+[35/43] Compiling JovraCore OutcomeInterpreter.swift
+[36/43] Compiling JovraCore ScoringEngine.swift
+[37/43] Compiling JovraCore ScoringInput.swift
+[38/43] Compiling JovraCore TimelineDiff.swift
+[39/43] Compiling JovraCore TimelineModels.swift
+[40/43] Compiling JovraCore SessionStore.swift
+[41/43] Compiling JovraCore Units.swift
+[42/62] Emitting module JovraCoreTests
+[43/62] Compiling JovraCoreTests CaptureJournalTests.swift
+[44/62] Compiling JovraCoreTests CanonicalJSONTests.swift
+[45/62] Compiling JovraCoreTests ContractSafetyTests.swift
+[46/62] Compiling JovraCoreTests FixtureManifest.swift
+[47/62] Compiling JovraCoreTests ManifestTests.swift
+[48/62] Compiling JovraCoreTests MediaRecordContractTests.swift
+[49/62] Compiling JovraCoreTests PercentTests.swift
+[50/62] Compiling JovraCoreTests RegistryContractTests.swift
+[51/62] Compiling JovraCoreTests ArchiveRunner.swift
+[52/62] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[53/62] Compiling JovraCoreTests BenchmarkRunner.swift
+[54/62] Compiling JovraCoreTests CSVContractRunner.swift
+[55/62] Compiling JovraCoreTests CanonicalRunner.swift
+[56/62] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[57/62] Compiling JovraCoreTests EquipmentRunner.swift
+[58/62] Compiling JovraCoreTests ExportRunner.swift
+[59/62] Compiling JovraCoreTests GroundTruthRunner.swift
+[60/62] Compiling JovraCoreTests PctRunner.swift
+[61/79] Compiling JovraCoreTests PracticePlanRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[62/79] Compiling JovraCoreTests SampleMediaRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[63/79] Compiling JovraCoreTests ScoringRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[64/79] Compiling JovraCoreTests SessionRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[65/79] Compiling JovraCoreTests UnitsRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[66/79] Compiling JovraCoreTests SessionContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[67/79] Compiling JovraCoreTests UnitsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[68/79] Compiling JovraCoreTests ContrastTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[69/79] Compiling JovraCoreTests DurationLabelTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[70/79] Compiling JovraCoreTests FrameRateTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[71/79] Compiling JovraCoreTests ProvenanceTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[72/79] Compiling JovraCoreTests ScoringContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[73/79] Compiling JovraCoreTests ScoringTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[74/79] Compiling JovraCoreTests CaptureHandoffTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[75/79] Compiling JovraCoreTests SessionStoreTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[76/79] Compiling JovraCoreTests StatsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+[77/79] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:9:21: error: cannot find 'StatsEngine' in scope
+ 7 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+ 8 |     let timeline = try ScoringEngine.fold(ScoringInput(session: document))
+ 9 |     let stats = try StatsEngine.compute(timeline)
+   |                     `- error: cannot find 'StatsEngine' in scope
+10 |     #expect(stats.countedPoints == 124)
+11 |     #expect(stats.sides.A.totalPointsWon == RateRatio(n: 72, d: 124, pct: .init(58), display: "58%"))
+error: fatalError

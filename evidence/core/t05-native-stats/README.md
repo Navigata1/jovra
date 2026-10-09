@@ -1,0 +1,20 @@
+# T05 bounded native stats — work in progress
+
+Authorized seams: StatsEngine.compute over the public MatchTimeline; typed metric evidence for honest UI values; canonical session data and exact points/stats CSV export in a subsequent bounded slice. Tests use independent shared fixtures and the hand-derived sample overview (124 points, 72/124=58%, 40/60=67%, 28/40=70%, 386 shots).
+
+The first public sample-overview test failed at the absent StatsEngine API (01), then passed with the typed port (02): one Swift Testing test, 124 points, 58% total points won, 67% first serves in, 70% first-serve points won and 386 shots. Full independent corpus and evidence projection verification follow; no full-ticket completion is claimed.
+
+The closed shared StatsResult shape stays intact, with concrete model fields and exact two-integer momentum pairs. A separate typed evidence projection will preserve contributing point IDs, weakest provenance and unreviewed counts; no observations means no claimed measurement in the UI. The existing independent fixtures remain the numeric authority. Full T05 stays open for pooled trends, complete Export-my-data/Share Pack layouts and any unused full-ticket criteria.
+
+The headline evidence API failed at the absent `metric` seam (03), then passed the weakest-input test (04): Estimated, 124 contributing points, nine unreviewed points, and Sample. The convention-discovered runner (05) compares every scoring checkpoint's full stats result plus the three stats-kind fixtures. `T01-integer-percentages` is correctly consumed by the existing pct-kind runner. The independent Python comparator (06) confirms all **110** native results match closed schemas and exact golden canonical bytes, including unknown-field refusal controls. Only the sample fixture kind remains pending until the subsequent CSV export slice.
+
+Reproduce the complete numeric corpus:
+
+```sh
+JOVRA_STATS_OUTPUT_DIR=/tmp/jovra-stats-out swift test --package-path ios/Packages/JovraCore --jobs 2 --filter allDiscoveredRunnerFixturesPass
+python3 scripts/spec/verify_native_stats.py /tmp/jovra-stats-out
+python3 scripts/spec/generate_stats_models.py
+git diff --exit-code -- ios/Packages/JovraCore/Sources/JovraCore/Stats/StatsModels.swift
+```
+
+The bounded display projection supports points, points won by side, first serves in by side, first-serve points won by side and shots. It uses every denominator contributor, ranks Estimated below Manual below Reviewed below Validated, and records Sample independently. An observed zero remains a number; absence of observations returns no value or provenance. No pooled trend, backend, analysis capability, native UI or device validation is claimed by this slice.
