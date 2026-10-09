@@ -22,8 +22,8 @@ final class HarnessUITests: XCTestCase {
 
     @MainActor
     func testStartRouteOpensAFullScreenRouteWithoutTheTabBar() {
-        let app = XCUIApplication.launchJovra { $0.startRoute = "capturePreview" }
-        XCTAssertTrue(app.staticTexts["capture.title"].waitForExistence(timeout: 5), "launched on the capture route")
+        let app = XCUIApplication.launchJovra { $0.startRoute = "capture" }
+        XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 5), "launched on the capture route")
         XCTAssertFalse(app.buttons["tab.home"].exists, "the tab bar is hidden")
     }
 

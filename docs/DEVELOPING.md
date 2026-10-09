@@ -22,13 +22,17 @@ an iOS 18 simulator or device.
 ios/
   project.yml                 XcodeGen spec (Jovra.xcodeproj is generated, never committed)
   Jovra/
-    App/                      entry point, AppShell (tabs), AppRouter (tab + full-screen routes), tab bar
+    App/                      entry point, AppRoot (pre-shell / shell), AppShell (tabs), AppRouter, typed routes,
+                              deep links, route catalog, placeholders, the ServiceKey seam, tab bar
     DesignSystem/
       Tokens/                 ColorRole (semantic light/dark/Increase Contrast colours), spacing, type
       Components/             buttons, cards, stat tile, filter pills, provenance badge, status pill, rows
       Brand/                  BrandGeometry (Court Arc mark + JOVRA wordmark vectors), SwiftUI shapes, lockup
     Features/<Tab>/           one folder per feature (Home, Sessions, Record, Insights, Profile, Capture)
     Platform/LaunchConfiguration/  launch arguments (shared with the UI tests), Drive client configuration
+    Platform/Permissions/     PermissionsCenter (live, fake, injected), guidance copy, the explanation sheet
+    Platform/Preferences/     AppPreferences: every v1 preference key
+    Platform/DataEraser/      the registry behind "Delete all JOVRA data"
     Resources/                Info.plist and Jovra.entitlements (both generated from project.yml),
                               Assets.xcassets, Localization/ (String Catalogs, JovraFormat)
   Config/                     Jovra.xcconfig (+ optional, git-ignored Drive.xcconfig)
@@ -115,8 +119,8 @@ is not its reversed form reads as `.misconfigured`, never as configured.
 `ios/Jovra/Platform/LaunchConfiguration/LaunchConfiguration.swift` is compiled into the app and into
 `JovraUITests`: the tests build arguments from a `LaunchConfiguration` value and the app parses the same
 type, so the two cannot drift. A value the app cannot parse is logged as a problem, never silently
-ignored (`LaunchConfiguration.reportedProblems`, including a `-startRoute` that names no tab or
-full-screen route; the app then opens on Home). With no arguments, everything is live.
+ignored (`LaunchConfiguration.reportedProblems`, including a `-startRoute` that names no
+destination; the app then opens on Home). With no arguments, everything is live.
 
 | Argument | Values | Meaning |
 |---|---|---|
@@ -127,10 +131,29 @@ full-screen route; the app then opens on Home). With no arguments, everything is
 | `-archiveState` | `awaitingSetup`, `notConnected`, `connecting`, `connected`, `needsReconnect` | injected archive account state |
 | `-reduceMotion` | `YES`, `NO` | forces Reduce Motion on (read it from `\.launchConfiguration` together with the system setting) |
 | `-pseudoLocale` | `accented`, `doubleLength`, `rightToLeft` | also adds the matching Foundation pseudolanguage arguments |
-| `-startRoute` | a tab (`home` … `profile`) or full-screen route (`capturePreview`) | where the app opens |
+| `-startRoute` | any destination's launch name (`AppDestination.catalog`): a tab (`home` … `profile`), `welcome`, `onboarding`, a push (`sessions.matchOverview`, `profile.settings`, …), a full-screen route (`capture`, `replay`, …) or a sheet (`sheet.pointEditor`, `sheet.permission.camera`, …) | where the app opens (example payloads) |
 
 In UI tests: `XCUIApplication.launchJovra(contentSize: .accessibility5) { $0.appearance = .dark; $0.permissions = [.camera: .denied] }`.
-Services read `@Environment(\.launchConfiguration)` (T07 builds the fake/live switch on it).
+Services read `@Environment(\.launchConfiguration)`; the fake/live switch is the `ServiceKey` seam below.
+
+## Navigation and services (T07)
+
+- **Routes.** `App/Routes/Routes.swift` types every destination of screen spec §0.1: `PreShellRoute`, per-tab pushes
+  (`SessionsRoute`, `InsightsRoute`, `ProfileRoute`), `FullScreenRoute` and `SheetRoute`, all `Codable` for state
+  restoration (`RouterState`, kept in scene storage; a launch with harness arguments never restores). Feature code
+  calls `AppRouter.show(_:)`, `present(_:)`, `present(sheet:)` or pushes a route value.
+- **Placeholders.** `App/Destinations.swift` maps each route to a type in its owning feature folder; `RouteCatalog`
+  names the ticket and file. A feature ticket replaces that one file, keeping the type name and initializer, and never
+  edits the router. Placeholder copy lives in the `App` table.
+- **Deep links.** `jovra://record/singles` (Start singles recording), `jovra://sessions/last-match` (Show last match:
+  the newest real match, else the library) and `jovra://share-pack/<session>` (`App/Routes/DeepLink.swift`).
+- **Services.** Each service declares a `ServiceKey` in its own file (`App/Services/ServiceKey.swift`): a `live()` and a
+  `fake(for:)`, chosen from `LaunchConfiguration.current` (the demo flag by default). No ticket edits `JovraApp.swift`.
+- **Permissions.** Read `@Environment(\.permissionsCenter)`; present `.permission(<p>)` (the in-app explanation, then
+  Apple's prompt) at the moment of need, never at launch or in onboarding. `PermissionGuidance` holds the status and
+  consequence copy for every state; `-permissions camera=denied` injects states.
+- **Preferences and erasers.** `AppPreferences` declares every v1 preference key; each store registers a `DataEraser`
+  in `DataEraserRegistry.shared` when its live instance is created.
 
 ## Localization
 
