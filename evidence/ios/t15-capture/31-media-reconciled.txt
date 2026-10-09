@@ -1,0 +1,305 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/8] Compiling JovraCore ContractPrimitives.swift
+[4/9] Compiling JovraCore CapabilityRegistryLoader.swift
+[5/9] Emitting module JovraCore
+[6/9] Compiling JovraCore DocumentModels.swift
+[7/11] Compiling JovraCore Percent.swift
+[8/11] Compiling JovraCore CaptureJournal.swift
+[9/21] Compiling JovraMedia FrameTime.swift
+[10/21] Compiling JovraMedia DeviceBudget.swift
+[11/21] Compiling JovraMedia CaptureEngine.swift
+[12/21] Compiling JovraMedia CaptureSegmentWriter.swift
+[13/21] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[14/21] Compiling JovraMedia CaptureTypes.swift
+[15/21] Compiling JovraMedia FixtureCamera.swift
+[16/21] Emitting module JovraMedia
+[17/21] Compiling JovraMedia MediaProbe.swift
+[18/27] Compiling JovraBenchmark EstimatorRegistry.swift
+[19/27] Compiling JovraBenchmark CapabilityGate.swift
+[20/27] Compiling JovraBenchmark BenchmarkRecord.swift
+[21/27] Compiling JovraBenchmark BenchmarkHarness.swift
+[22/27] Compiling JovraBenchmark GroundTruth.swift
+[23/27] Emitting module JovraBenchmark
+[23/27] Write Objects.LinkFileList
+[24/41] Linking jovra-benchmark
+[26/41] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[27/41] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[27/41] Applying jovra-benchmark
+[29/41] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+[30/41] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+[31/41] Emitting module JovraBenchmarkTests
+[32/41] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+[33/42] Compiling JovraMediaTests FrameTimeTests.swift
+[34/42] Compiling JovraMediaTests FrameTimingTests.swift
+[35/42] Emitting module JovraMediaTests
+[36/42] Compiling JovraMediaTests RealFootageProbeTests.swift
+[37/42] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[38/42] Compiling JovraMediaTests CapturePipelineTests.swift
+[39/42] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[40/42] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[40/42] Write Objects.LinkFileList
+[41/42] Linking JovraMediaPackageTests
+Build complete! (12.71s)
+Test Suite 'All tests' started at 2026-10-09 09:42:08.584.
+Test Suite 'All tests' passed at 2026-10-09 09:42:08.585.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Benchmark harness" started.
+◇ Suite "Committed benchmark records are reproducible" started.
+◇ Suite "Frame-counter fixtures decode to their own frame index" started.
+◇ Suite "Frame rate from presentation timestamps" started.
+◇ Suite "Benchmark media provenance" started.
+◇ Suite "eventTimes scoring" started.
+◇ Suite "Frame-accurate CMTime" started.
+◇ Suite "Malformed benchmark JSON throws instead of trapping" started.
+◇ Suite "MediaProbe reports every import fixture's ground truth" started.
+◇ Suite "MediaProbe on private real footage (skipped when absent)" started.
+◇ Suite "Benchmark harness provenance" started.
+◇ Test injectedSourceInterruptionClosesSegmentAndCanResume() started.
+◇ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() started.
+◇ Suite "AVFoundation decodes every supported fixture to its committed signature hash" started.
+◇ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() started.
+◇ Test liveMarkNoteSurvivesReopeningTheJournal() started.
+◇ Test "a gating run needs a floor" started.
+◇ Suite "Capability bindings" started.
+◇ Test "the record carries the truth-events digest the reference validator recomputes" started.
+◇ Test "the oracle passes the floor on the held-out seed" started.
+◇ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" started.
+◇ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" started.
+◇ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() started.
+◇ Test "one-tick rounding (29.97 fps at timescale 600: 20 ticks and every 50th 21) is 30000/1001, constant" started.
+◇ Test "re-running the estimator reproduces the record" started.
+◇ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" started.
+◇ Test "oracle gate, null gate and a tuning run are committed" started.
+◇ Test "tuning runs use tuning seeds only and carry no verdict" started.
+◇ Test "a constant rate that is no standard rate is reported exactly" started.
+◇ Test "the committed gate records pass and fail as the self-test requires" started.
+◇ Test "decode order with B-frames: timestamps are sorted before differencing" started.
+◇ Test "one prediction serves only one truth event" started.
+◇ Test thermalBudgetRungsAreJournalledAndShutdownClosesPlayableMedia() started.
+◇ Test "no predictions: precision and MAE are undefined (null), recall is 0" started.
+◇ Test "constant 30 fps at timescale 30000" started.
+◇ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test "a metric fraction with a zero denominator is a decoding error" started.
+◇ Test "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" started.
+◇ Test "invalid and negative times map to frame 0" started.
+◇ Test "every frame start round-trips to its frame index" started.
+◇ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" started.
+◇ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" started.
+◇ Test "the committed record decodes (the cases below change one field each)" started.
+◇ Test "frame 120 at 240 fps is half a second" started.
+◇ Test "an overflowing tolerance names itself in the error" started.
+◇ Test "a candidate run on a clip that is not rendered is refused before the estimator runs" started.
+◇ Test "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test "fewer than two frames or a bad timescale states no rate" started.
+◇ Test "the duplicate pair is byte-identical under two names" started.
+◇ Test "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+◇ Test "a tie in distance goes to the earlier prediction, which is then consumed" started.
+◇ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" started.
+◇ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec" started.
+◇ Test "clips pool: matches, predictions and truth events add up across clips" started.
+◇ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" started.
+◇ Test "an exact tolerance boundary matches; one tick past it does not" started.
+◇ Test "constant-frame-rate excerpt: 30 fps, constant" started.
+◇ Test "Oct 4 phone original: 30 fps, variable frame rate" started.
+◇ Test "Sep 29 phone original: 30 fps, variable frame rate" started.
+◇ Test "a candidate run on a rendered clip that is not the committed media is refused before the estimator runs" started.
+◇ Test "a clip with no benchmark split cannot be gated on" started.
+◇ Test "an unknown capability or one without a gate is refused" started.
+◇ Test "a run that names a capability must use that capability's registry gate" started.
+◇ Test "an oracle or null run cannot name a capability" started.
+◇ Test "a clip listed twice is refused before the estimator runs" started.
+◇ Test "a candidate run on the registry gate is accepted and carries the capability" started.
+◇ Test "a zero or negative timescale is a decoding error" started.
+◇ Test "a time between frames maps to the frame on screen" started.
+◇ Test "gating on a tuning seed is refused before the estimator runs" started.
+◇ Test case passing 1 argument file → "null.gate.json" to "re-running the estimator reproduces the record" started.
+◇ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument file → "oracle.gate.json" to "re-running the estimator reproduces the record" started.
+◇ Test "a candidate reads the verified media file" started.
+◇ Test "a ground-truth frame rate of zero is a decoding error" started.
+◇ Test case passing 1 argument file → "oracle.tuning.json" to "re-running the estimator reproduces the record" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument frame → 0 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument frame → 1 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 59 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 60 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 3599 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 216000 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument threshold → "1e-3" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test "the fixture set covers capture, playback, import and the harness" started.
+◇ Test case passing 1 argument threshold → "" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument threshold → "0.9.1" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "-1" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "abc" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument role → .candidate to "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+◇ Test case passing 1 argument role → .oracle to "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+◇ Test "every clip burns in its own frame index" started.
+◇ Test "a gated capability without a binding is refused before the estimator runs" started.
+◇ Test "a capability run with any other tolerance is refused before the estimator runs" started.
+◇ Test "audio.hitDetection is bound to eventTimes 1.0.0 at 50 ms, with the gate's metric names" started.
+◇ Test "a perfect candidate passes the real audio.hitDetection registry gate" started.
+◇ Test "every binding maps each gate metric of its capability exactly once" started.
+◇ Test case passing 1 argument role → .oracle to "an oracle or null run cannot name a capability" started.
+◇ Test case passing 1 argument role → .null to "an oracle or null run cannot name a capability" started.
+◇ Test "a run request takes the binding's tolerance unless one is given" started.
+◇ Test case passing 1 argument timescale → 0 to "a zero or negative timescale is a decoding error" started.
+◇ Test case passing 1 argument timescale → -1000 to "a zero or negative timescale is a decoding error" started.
+✔ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" passed after 0.008 seconds.
+◇ Test case passing 1 argument id → "import/duplicate-a" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/duplicate-b" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/ffv1-unsupported" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✔ Test "oracle gate, null gate and a tuning run are committed" passed after 0.009 seconds.
+✔ Test "one-tick rounding (29.97 fps at timescale 600: 20 ticks and every 50th 21) is 30000/1001, constant" passed after 0.009 seconds.
+✔ Test "decode order with B-frames: timestamps are sorted before differencing" passed after 0.009 seconds.
+✔ Test "a constant rate that is no standard rate is reported exactly" passed after 0.009 seconds.
+✔ Test "a gating run needs a floor" passed after 0.009 seconds.
+✔ Test "one prediction serves only one truth event" passed after 0.009 seconds.
+✔ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" passed after 0.009 seconds.
+✔ Test "no predictions: precision and MAE are undefined (null), recall is 0" passed after 0.009 seconds.
+✔ Test "constant 30 fps at timescale 30000" passed after 0.009 seconds.
+✔ Test "the committed gate records pass and fail as the self-test requires" passed after 0.009 seconds.
+✔ Test "invalid and negative times map to frame 0" passed after 0.009 seconds.
+✔ Test "a metric fraction with a zero denominator is a decoding error" passed after 0.009 seconds.
+✔ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" passed after 0.009 seconds.
+✔ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" passed after 0.009 seconds.
+✔ Test "the oracle passes the floor on the held-out seed" passed after 0.009 seconds.
+✔ Test "tuning runs use tuning seeds only and carry no verdict" passed after 0.009 seconds.
+✔ Test "the record carries the truth-events digest the reference validator recomputes" passed after 0.009 seconds.
+✔ Test "re-running the estimator reproduces the record" with 3 test cases passed after 0.009 seconds.
+✔ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" passed after 0.009 seconds.
+✔ Test "the committed record decodes (the cases below change one field each)" passed after 0.009 seconds.
+✔ Test "frame 120 at 240 fps is half a second" passed after 0.009 seconds.
+✔ Test "every frame start round-trips to its frame index" with 6 test cases passed after 0.009 seconds.
+✔ Test "an overflowing tolerance names itself in the error" passed after 0.009 seconds.
+◇ Test case passing 1 argument id → "fixtureCamera/fixture-camera" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "harness/events-s11" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/duplicate-a" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/duplicate-b" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "harness/events-s23" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "decoded-frame signature hash equals the ground truth" started.
+✔ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" passed after 0.012 seconds.
+✔ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" passed after 0.012 seconds.
+✔ Test "fewer than two frames or a bad timescale states no rate" passed after 0.011 seconds.
+◇ Test case passing 1 argument id → "fixtureCamera/fixture-camera" to "every clip burns in its own frame index" started.
+✔ Test "a tie in distance goes to the earlier prediction, which is then consumed" passed after 0.012 seconds.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "every clip burns in its own frame index" started.
+✔ Test "clips pool: matches, predictions and truth events add up across clips" passed after 0.012 seconds.
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "harness/events-s11" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "harness/events-s23" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/duplicate-a" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/duplicate-b" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "every clip burns in its own frame index" started.
+✔ Test "an exact tolerance boundary matches; one tick past it does not" passed after 0.012 seconds.
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "every clip burns in its own frame index" started.
+✔ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" passed after 0.015 seconds.
+✔ Test "a floor threshold that is not a plain decimal is a decoding error" with 5 test cases passed after 0.015 seconds.
+✔ Test "a clip with no benchmark split cannot be gated on" passed after 0.015 seconds.
+✔ Test "a clip listed twice is refused before the estimator runs" passed after 0.015 seconds.
+✔ Test "a time between frames maps to the frame on screen" passed after 0.016 seconds.
+✔ Test "a zero or negative timescale is a decoding error" with 2 test cases passed after 0.015 seconds.
+✔ Test "a run that names a capability must use that capability's registry gate" passed after 0.015 seconds.
+✔ Test "an unknown capability or one without a gate is refused" passed after 0.015 seconds.
+✔ Test "an oracle or null run cannot name a capability" with 2 test cases passed after 0.015 seconds.
+✔ Test "gating on a tuning seed is refused before the estimator runs" passed after 0.015 seconds.
+✔ Test "the duplicate pair is byte-identical under two names" passed after 0.016 seconds.
+✔ Test "a candidate run on a clip that is not rendered is refused before the estimator runs" passed after 0.016 seconds.
+✔ Test "a ground-truth frame rate of zero is a decoding error" passed after 0.016 seconds.
+✔ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec" passed after 0.016 seconds.
+✔ Test "the fixture set covers capture, playback, import and the harness" passed after 0.010 seconds.
+✔ Test "audio.hitDetection is bound to eventTimes 1.0.0 at 50 ms, with the gate's metric names" passed after 0.010 seconds.
+✔ Test "a run request takes the binding's tolerance unless one is given" passed after 0.010 seconds.
+✔ Suite "Frame rate from presentation timestamps" passed after 0.018 seconds.
+✔ Test "every binding maps each gate metric of its capability exactly once" passed after 0.010 seconds.
+✔ Suite "Committed benchmark records are reproducible" passed after 0.018 seconds.
+✔ Suite "Benchmark harness" passed after 0.018 seconds.
+✔ Suite "eventTimes scoring" passed after 0.018 seconds.
+✔ Suite "Frame-accurate CMTime" passed after 0.018 seconds.
+✔ Test "a gated capability without a binding is refused before the estimator runs" passed after 0.010 seconds.
+✔ Test "a capability run with any other tolerance is refused before the estimator runs" passed after 0.011 seconds.
+✔ Suite "Malformed benchmark JSON throws instead of trapping" passed after 0.019 seconds.
+✔ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() passed after 0.031 seconds.
+✔ Test "constant-frame-rate excerpt: 30 fps, constant" passed after 0.031 seconds.
+✔ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" with 11 test cases passed after 0.042 seconds.
+✔ Suite "MediaProbe reports every import fixture's ground truth" passed after 0.042 seconds.
+✔ Test "Oct 4 phone original: 30 fps, variable frame rate" passed after 0.049 seconds.
+✔ Test "Sep 29 phone original: 30 fps, variable frame rate" passed after 0.074 seconds.
+✔ Suite "MediaProbe on private real footage (skipped when absent)" passed after 0.075 seconds.
+✔ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" with 5 test cases passed after 0.657 seconds.
+✔ Test "a candidate reads the verified media file" passed after 1.945 seconds.
+✔ Test "a perfect candidate passes the real audio.hitDetection registry gate" passed after 1.950 seconds.
+✔ Suite "Capability bindings" passed after 1.958 seconds.
+✔ Test "a candidate run on the registry gate is accepted and carries the capability" passed after 1.958 seconds.
+✔ Suite "Benchmark harness provenance" passed after 1.959 seconds.
+✔ Test "every record clip carries its truth's renderer source hash and decoded-frame hash" with 2 test cases passed after 1.976 seconds.
+✔ Test "every clip burns in its own frame index" with 18 test cases passed after 2.154 seconds.
+✔ Test "decoded-frame signature hash equals the ground truth" with 18 test cases passed after 2.170 seconds.
+✔ Suite "AVFoundation decodes every supported fixture to its committed signature hash" passed after 2.177 seconds.
+✔ Test "every decoded frame N shows counter N at presentation time N / fps" with 5 test cases passed after 2.185 seconds.
+✔ Suite "Frame-counter fixtures decode to their own frame index" passed after 2.185 seconds.
+✔ Test liveMarkNoteSurvivesReopeningTheJournal() passed after 2.217 seconds.
+✔ Test thermalBudgetRungsAreJournalledAndShutdownClosesPlayableMedia() passed after 2.278 seconds.
+✔ Test injectedSourceInterruptionClosesSegmentAndCanResume() passed after 2.281 seconds.
+✔ Test "a candidate run on a rendered clip that is not the committed media is refused before the estimator runs" passed after 2.286 seconds.
+✔ Suite "Benchmark media provenance" passed after 2.287 seconds.
+✔ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() passed after 2.909 seconds.
+Captured duration=CMTime(value: 2880448, timescale: 48000, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), decoded=CMTime(value: 36000, timescale: 600, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), confirmed=MediaTime(value: 36000, timescale: 600), bytes=Optional(1359621), actual=1359621
+✔ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() passed after 7.184 seconds.
+✔ Test run with 69 tests in 13 suites passed after 7.184 seconds.

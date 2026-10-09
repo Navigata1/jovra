@@ -1,0 +1,28 @@
+Building for debugging...
+[0/6] Write sources
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling JovraMedia DecodedCapture.swift
+[5/8] Emitting module JovraMedia
+[5/9] Write Objects.LinkFileList
+[6/11] Linking jovra-benchmark
+[7/11] Applying jovra-benchmark
+[9/11] Emitting module JovraMediaTests
+[10/11] Compiling JovraMediaTests CapturePipelineTests.swift
+[10/12] Write Objects.LinkFileList
+[11/12] Linking JovraMediaPackageTests
+Build complete! (1.90s)
+Test Suite 'Selected tests' started at 2026-10-09 09:15:59.885.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 09:15:59.886.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 09:15:59.886.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:15:59.886.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() started.
+Captured duration=CMTime(value: 2880448, timescale: 48000, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), decoded=CMTime(value: 36000, timescale: 600, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), confirmed=MediaTime(value: 36026, timescale: 600), bytes=Optional(1358911), actual=1359601
+✘ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() recorded an issue at CapturePipelineTests.swift:41:5: Expectation failed: (abs(Double(confirmed.value) / Double(confirmed.timescale) - decoded.duration.seconds) → 0.043333333333336554) <= (1.0 / 30 → 0.03333333333333333)
+✘ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() recorded an issue at CapturePipelineTests.swift:43:5: Expectation failed: snapshot.segments[0].file.bytes == (try Data(contentsOf: media).count)
+✘ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() failed after 6.672 seconds with 2 issues.
+✘ Test run with 1 test in 0 suites failed after 6.672 seconds with 2 issues.

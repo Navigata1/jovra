@@ -1,0 +1,87 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/21] Compiling JovraCore SRGBColor.swift
+[5/21] Compiling JovraCore Percent.swift
+[6/21] Compiling JovraCore Provenance.swift
+[7/21] Compiling JovraCore Units.swift
+[8/21] Compiling JovraCore DurationLabel.swift
+[9/21] Compiling JovraCore CaptureJournal.swift
+[10/21] Compiling JovraCore FrameRate.swift
+[11/21] Compiling JovraCore ContrastRequirement.swift
+[12/21] Compiling JovraCore ContractPrimitives.swift
+[13/21] Emitting module JovraCore
+[14/21] Compiling JovraCore CapabilityRegistryLoader.swift
+[15/21] Compiling JovraCore DocumentModels.swift
+[16/21] Compiling JovraCore CanonicalJSON.swift
+[17/28] Compiling JovraMedia FixtureCamera.swift
+[18/28] Compiling JovraMedia DecodedCapture.swift
+[19/28] Compiling JovraMedia FrameTime.swift
+[20/28] Compiling JovraMedia CaptureTypes.swift
+[21/28] Emitting module JovraMedia
+[22/28] Compiling JovraMedia CaptureSegmentWriter.swift
+[23/28] Compiling JovraMedia MediaProbe.swift
+[24/44] Compiling JovraBenchmark JovraBenchmark.swift
+[25/44] Compiling JovraBenchmark Rational.swift
+[26/44] Compiling JovraBenchmark BenchmarkRecord.swift
+[27/44] Compiling JovraBenchmark EstimatorRegistry.swift
+[28/44] Compiling JovraBenchmark Floor.swift
+[29/44] Compiling JovraBenchmark CapabilityGate.swift
+[30/44] Compiling JovraBenchmark Estimator.swift
+[31/44] Compiling JovraBenchmark JSONValue.swift
+[32/44] Compiling JovraBenchmark BenchmarkHarness.swift
+[33/44] Compiling JovraBenchmark FrameSignature.swift
+[34/44] Compiling JovraBenchmark DecodedFrameReader.swift
+[35/44] Compiling JovraBenchmark LumaPlane.swift
+[36/44] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[37/44] Compiling JovraBenchmark EventTimesTask.swift
+[38/44] Emitting module JovraBenchmark
+[39/44] Compiling JovraBenchmark GroundTruth.swift
+[40/62] Emitting module jovra_benchmark
+[41/62] Compiling jovra_benchmark main.swift
+[41/62] Write Objects.LinkFileList
+[42/62] Linking jovra-benchmark
+[43/62] Applying jovra-benchmark
+[45/62] Compiling JovraMediaTests RealFootageProbeTests.swift
+[46/62] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[47/62] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[48/62] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+[49/62] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+[50/62] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+[51/62] Compiling JovraMediaTests FrameTimeTests.swift
+[52/62] Compiling JovraMediaTests FrameTimingTests.swift
+[53/62] Emitting module JovraBenchmarkTests
+[54/62] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+[55/62] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+[56/62] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[57/62] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[58/62] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[59/62] Emitting module JovraMediaTests
+[60/62] Compiling JovraMediaTests CapturePipelineTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:20:18: error: cannot find 'CaptureEngine' in scope
+18 |     let camera = FixtureCamera(url: source, duration: CMTime(value: 60, timescale: 1), clock: clock)
+19 |     let sink = CapturedRecordSink()
+20 |     let engine = CaptureEngine(source: camera, clock: clock, sink: sink)
+   |                  `- error: cannot find 'CaptureEngine' in scope
+21 |     _ = try await engine.prepare(CapturePreset(width: 1280, height: 720, frameRate: RecordedFrameRate(num: 30, den: 1)), microphone: .granted)
+22 |     try await engine.start(sessionID: "capture-test", folder: folder)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:21:135: error: cannot infer contextual base in reference to member 'granted'
+19 |     let sink = CapturedRecordSink()
+20 |     let engine = CaptureEngine(source: camera, clock: clock, sink: sink)
+21 |     _ = try await engine.prepare(CapturePreset(width: 1280, height: 720, frameRate: RecordedFrameRate(num: 30, den: 1)), microphone: .granted)
+   |                                                                                                                                       `- error: cannot infer contextual base in reference to member 'granted'
+22 |     try await engine.start(sessionID: "capture-test", folder: folder)
+23 |     #expect(engine.activity.isActive)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:27:29: error: cannot infer contextual base in reference to member 'simulatorFixture'
+25 |     let record = try await engine.stop()
+26 |     #expect(!engine.activity.isActive)
+27 |     #expect(record.mode == .simulatorFixture)
+   |                             `- error: cannot infer contextual base in reference to member 'simulatorFixture'
+28 |     #expect(record.segments.count == 1)
+29 |     #expect(record.segments[0].hasAudio)
+error: fatalError

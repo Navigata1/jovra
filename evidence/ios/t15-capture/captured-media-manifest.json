@@ -1,0 +1,14 @@
+{
+  "sample": true,
+  "synthetic": true,
+  "file": ".cache/capture-evidence/sample-fixture-60s.mp4",
+  "bytes": 1359601,
+  "sha256": "be2c8095dc35b6c87edb7e494724e74a8676e53a976f04c0d29f63cb7a072751",
+  "decodedVideoFrames": 1800,
+  "decodedVideoDurationSeconds": 60,
+  "journalConfirmedTime": {
+    "timescale": 600,
+    "value": 36000
+  },
+  "pipeline": "decoded CMSampleBuffer input -> AVAssetWriter H.264/AAC -> durable fragment bytes -> journal"
+}

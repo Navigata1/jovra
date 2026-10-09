@@ -1,0 +1,24 @@
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/7] Emitting module JovraMedia
+[4/7] Compiling JovraMedia CaptureSegmentWriter.swift
+[4/9] Write Objects.LinkFileList
+[6/9] Linking jovra-benchmark
+[7/9] Applying jovra-benchmark
+[8/9] Linking JovraMediaPackageTests
+Build complete! (1.69s)
+Test Suite 'Selected tests' started at 2026-10-09 09:15:11.503.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 09:15:11.504.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 09:15:11.504.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:15:11.504.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() started.
+✘ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() recorded an issue at CapturePipelineTests.swift:40:5: Expectation failed: (abs(Double(confirmed.value) / Double(confirmed.timescale) - decoded.duration.seconds) → nan) <= (1.0 / 30 → 0.03333333333333333)
+✘ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() recorded an issue at CapturePipelineTests.swift:42:5: Expectation failed: snapshot.segments[0].file.bytes == (try Data(contentsOf: media).count)
+✘ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() failed after 5.715 seconds with 2 issues.
+✘ Test run with 1 test in 0 suites failed after 5.716 seconds with 2 issues.

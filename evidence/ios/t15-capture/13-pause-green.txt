@@ -1,0 +1,38 @@
+Building for debugging...
+[0/6] Write sources
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling JovraCore CaptureJournal.swift
+[5/8] Emitting module JovraCore
+[6/11] Compiling JovraMedia CaptureEngine.swift
+[7/11] Compiling JovraMedia CaptureSegmentWriter.swift
+[8/11] Emitting module JovraMedia
+[9/12] Compiling JovraMedia FixtureCamera.swift
+[9/13] Write Objects.LinkFileList
+[11/22] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[12/22] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[13/22] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[14/22] Emitting module JovraMediaTests
+[15/22] Compiling JovraMediaTests CapturePipelineTests.swift
+[15/22] Linking jovra-benchmark
+[17/22] Compiling JovraMediaTests RealFootageProbeTests.swift
+[18/22] Compiling JovraMediaTests FrameTimeTests.swift
+[19/22] Compiling JovraMediaTests FrameTimingTests.swift
+[19/22] Write Objects.LinkFileList
+[20/22] Applying jovra-benchmark
+[21/22] Linking JovraMediaPackageTests
+Build complete! (3.92s)
+Test Suite 'Selected tests' started at 2026-10-09 09:20:34.714.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 09:20:34.715.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 09:20:34.715.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:20:34.715.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() started.
+◇ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() started.
+✔ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() passed after 1.482 seconds.
+Captured duration=CMTime(value: 2880448, timescale: 48000, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), decoded=CMTime(value: 36000, timescale: 600, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), confirmed=MediaTime(value: 36000, timescale: 600), bytes=Optional(1359601), actual=1359601
+✔ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() passed after 6.633 seconds.
+✔ Test run with 2 tests in 0 suites passed after 6.633 seconds.

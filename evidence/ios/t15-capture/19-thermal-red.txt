@@ -1,0 +1,64 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module JovraMediaTests
+[4/5] Compiling JovraMediaTests CapturePipelineTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:131:34: error: value of type 'CaptureEngine' has no member 'refreshBudget'
+129 |     for rung in [SessionCaptureEventThermalState.fair, .serious, .critical] {
+130 |         budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: rung))
+131 |         #expect(try await engine.refreshBudget() == nil)
+    |                                  `- error: value of type 'CaptureEngine' has no member 'refreshBudget'
+132 |     }
+133 |     #expect(engine.status.helpersMayRun == false)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:133:27: error: value of type 'CaptureStatus' has no member 'helpersMayRun'
+131 |         #expect(try await engine.refreshBudget() == nil)
+132 |     }
+133 |     #expect(engine.status.helpersMayRun == false)
+    |                           `- error: value of type 'CaptureStatus' has no member 'helpersMayRun'
+134 |     #expect(engine.status.previewMode == .courtMode)
+135 |     budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: .shutdown))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:134:27: error: value of type 'CaptureStatus' has no member 'previewMode'
+132 |     }
+133 |     #expect(engine.status.helpersMayRun == false)
+134 |     #expect(engine.status.previewMode == .courtMode)
+    |                           `- error: value of type 'CaptureStatus' has no member 'previewMode'
+135 |     budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: .shutdown))
+136 |     let record = try #require(await engine.refreshBudget())
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:134:43: error: cannot infer contextual base in reference to member 'courtMode'
+132 |     }
+133 |     #expect(engine.status.helpersMayRun == false)
+134 |     #expect(engine.status.previewMode == .courtMode)
+    |                                           `- error: cannot infer contextual base in reference to member 'courtMode'
+135 |     budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: .shutdown))
+136 |     let record = try #require(await engine.refreshBudget())
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:136:44: error: value of type 'CaptureEngine' has no member 'refreshBudget'
+134 |     #expect(engine.status.previewMode == .courtMode)
+135 |     budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: .shutdown))
+136 |     let record = try #require(await engine.refreshBudget())
+    |                                            `- error: value of type 'CaptureEngine' has no member 'refreshBudget'
+137 |     #expect(record.captureEvents?.filter { $0.kind == .thermalState }.map(\.thermalState) == [.fair, .serious, .critical, .shutdown])
+138 |     #expect(record.segments[0].finalized)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:137:5: error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+135 |     budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: .shutdown))
+136 |     let record = try #require(await engine.refreshBudget())
+137 |     #expect(record.captureEvents?.filter { $0.kind == .thermalState }.map(\.thermalState) == [.fair, .serious, .critical, .shutdown])
+    |     `- error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+138 |     #expect(record.segments[0].finalized)
+139 |     #expect(!engine.activity.isActive)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:136:18: warning: no calls to throwing functions occur within 'try' expression
+134 |     #expect(engine.status.previewMode == .courtMode)
+135 |     budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: .shutdown))
+136 |     let record = try #require(await engine.refreshBudget())
+    |                  `- warning: no calls to throwing functions occur within 'try' expression
+137 |     #expect(record.captureEvents?.filter { $0.kind == .thermalState }.map(\.thermalState) == [.fair, .serious, .critical, .shutdown])
+138 |     #expect(record.segments[0].finalized)
+error: fatalError

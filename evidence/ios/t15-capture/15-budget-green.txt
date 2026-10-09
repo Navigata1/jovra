@@ -1,0 +1,37 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/10] Compiling JovraMedia CaptureEngine.swift
+[4/10] Compiling JovraMedia DeviceBudget.swift
+[5/10] Emitting module JovraMedia
+[5/10] Write Objects.LinkFileList
+[7/18] Compiling JovraMediaTests RealFootageProbeTests.swift
+[8/18] Compiling JovraMediaTests FrameTimingTests.swift
+[8/18] Linking jovra-benchmark
+[9/18] Applying jovra-benchmark
+[11/18] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[12/18] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[13/18] Compiling JovraMediaTests FrameTimeTests.swift
+[14/18] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[15/18] Emitting module JovraMediaTests
+[16/18] Compiling JovraMediaTests CapturePipelineTests.swift
+[16/18] Write Objects.LinkFileList
+[17/18] Linking JovraMediaPackageTests
+Build complete! (2.92s)
+Test Suite 'Selected tests' started at 2026-10-09 09:22:15.185.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 09:22:15.185.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 09:22:15.185.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:22:15.186.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() started.
+◇ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() started.
+✔ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() passed after 0.030 seconds.
+✔ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() passed after 1.296 seconds.
+✔ Test run with 2 tests in 0 suites passed after 1.297 seconds.

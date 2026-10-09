@@ -1,0 +1,49 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/10] Emitting module JovraMedia
+[5/10] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[6/11] Compiling JovraMedia CaptureEngine.swift
+[6/11] Write Objects.LinkFileList
+[7/19] Linking jovra-benchmark
+[9/19] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[10/19] Compiling JovraMediaTests FrameTimingTests.swift
+[11/19] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[12/19] Compiling JovraMediaTests FrameTimeTests.swift
+[13/19] Compiling JovraMediaTests RealFootageProbeTests.swift
+[14/19] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[14/19] Applying jovra-benchmark
+[16/19] Emitting module JovraMediaTests
+[17/19] Compiling JovraMediaTests CapturePipelineTests.swift
+[17/19] Write Objects.LinkFileList
+[18/19] Linking JovraMediaPackageTests
+Build complete! (3.38s)
+Test Suite 'Selected tests' started at 2026-10-09 09:26:01.861.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 09:26:01.862.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 09:26:01.862.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:26:01.862.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() started.
+◇ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() started.
+◇ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() started.
+✔ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() passed after 0.031 seconds.
+✔ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() passed after 1.510 seconds.
+Captured duration=CMTime(value: 2880448, timescale: 48000, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), decoded=CMTime(value: 36000, timescale: 600, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), confirmed=MediaTime(value: 36000, timescale: 600), bytes=Optional(1359601), actual=1359601
+✔ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() passed after 7.115 seconds.
+✔ Test run with 3 tests in 0 suites passed after 7.115 seconds.
