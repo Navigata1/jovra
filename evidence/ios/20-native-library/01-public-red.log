@@ -1,0 +1,25 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/ios/Jovra.xcodeproj
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/.derivedData/t20-native-library-public-red.xcresult
+
+2026-10-09 13:30:48.768 xcodebuild[32634:132789638] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 13:30:48.770 xcodebuild[32634:132789638] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 13:31:22.944 xcodebuild[32634:132789638] [MT] IDETestOperationsObserverDebug: 35.713 elapsed -- Testing started completed.
+2026-10-09 13:31:22.944 xcodebuild[32634:132789638] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 13:31:22.944 xcodebuild[32634:132789638] [MT] IDETestOperationsObserverDebug: 35.713 sec, +35.713 sec -- end
+Failing tests:
+	NativeLibraryUITests.testSavedFixtureRemainsInLibraryAfterRelaunchAndOpensReplay()
+
+** TEST FAILED **
+
+Testing started
+Test class                         passed  failed  skipped  expected
+JovraUITests/NativeLibraryUITests       0       1        0         0
+Total: 0 passed, 1 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED NativeLibraryUITests/testSavedFixtureRemainsInLibraryAfterRelaunchAndOpensReplay(): XCTAssertTrue failed
+Device: JOVRA-Codex-T07 4265ADFD-39A3-4E71-8482-1945DDB5F899 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/t20-native-library-public-red.xcresult
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.
