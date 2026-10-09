@@ -1,0 +1,1 @@
+The independent review binds candidate 192f53f6094ce150dd523981910fb6c5398c4dc3. The subsequent publication commit only packages this evidence and adds a permanent public regression test for trailing decimal LF/CRLF/CR controls. It does not change the implementation. Fresh CI must bind the publication head.

@@ -1,0 +1,54 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module JovraCoreTests
+[4/6] Compiling JovraCoreTests SessionContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/SessionContractTests.swift:17:44: error: cannot find 'SessionDocument' in scope
+15 | @Test func sessionOptionalFieldsRoundTripThroughRealTypes() throws {
+16 |     let input = try Data(contentsOf: repository.appendingPathComponent("spec/fixtures/records/session.all-fields.json"))
+17 |     let session = try ContractCodec.decode(SessionDocument.self, from: input)
+   |                                            `- error: cannot find 'SessionDocument' in scope
+18 |     #expect(session.serveMarks?.first?.contactFrame != nil)
+19 |     #expect(session.recording.captureEvents != nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/SessionContractTests.swift:17:37: error: generic parameter 'T' could not be inferred
+15 | @Test func sessionOptionalFieldsRoundTripThroughRealTypes() throws {
+16 |     let input = try Data(contentsOf: repository.appendingPathComponent("spec/fixtures/records/session.all-fields.json"))
+17 |     let session = try ContractCodec.decode(SessionDocument.self, from: input)
+   |                                     `- error: generic parameter 'T' could not be inferred
+18 |     #expect(session.serveMarks?.first?.contactFrame != nil)
+19 |     #expect(session.recording.captureEvents != nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/CanonicalJSON.swift:31:24: note: in call to function 'decode(_:from:)'
+ 29 | 
+ 30 | public enum ContractCodec {
+ 31 |     public static func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T {
+    |                        `- note: in call to function 'decode(_:from:)'
+ 32 |         // Also refuses duplicate keys; JSONDecoder alone silently keeps one of them.
+ 33 |         let canonical = try CanonicalJSON.canonicalize(data)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/SessionContractTests.swift:22:44: error: cannot find 'SessionDocument' in scope
+20 |     #expect(try CanonicalJSON.encode(session) == CanonicalJSON.canonicalize(input))
+21 |     let sample = try Data(contentsOf: repository.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json"))
+22 |     let decoded = try ContractCodec.decode(SessionDocument.self, from: sample)
+   |                                            `- error: cannot find 'SessionDocument' in scope
+23 |     #expect(decoded.serveMarks == nil)
+24 |     #expect(decoded.match?.log.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/SessionContractTests.swift:22:37: error: generic parameter 'T' could not be inferred
+20 |     #expect(try CanonicalJSON.encode(session) == CanonicalJSON.canonicalize(input))
+21 |     let sample = try Data(contentsOf: repository.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json"))
+22 |     let decoded = try ContractCodec.decode(SessionDocument.self, from: sample)
+   |                                     `- error: generic parameter 'T' could not be inferred
+23 |     #expect(decoded.serveMarks == nil)
+24 |     #expect(decoded.match?.log.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/CanonicalJSON.swift:31:24: note: in call to function 'decode(_:from:)'
+ 29 | 
+ 30 | public enum ContractCodec {
+ 31 |     public static func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T {
+    |                        `- note: in call to function 'decode(_:from:)'
+ 32 |         // Also refuses duplicate keys; JSONDecoder alone silently keeps one of them.
+ 33 |         let canonical = try CanonicalJSON.canonicalize(data)
+error: fatalError

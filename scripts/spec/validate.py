@@ -21,7 +21,7 @@
    against the registry gates and the reference scorers). Malformed numbers are reported as failures, never
    crashes.
 
-Exit status is non-zero on any failure.  Usage:  python3 scripts/spec/validate.py [-v]
+Exit status is non-zero on any failure.  Usage:  python3 scripts/spec/validate.py [-v] [--encoded-dir native-output-directory]
 """
 
 from __future__ import annotations
@@ -797,7 +797,55 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
             rep.ok("media self-tests")
 
 
+def validate_encoded_documents(directory: Path) -> int:
+    """Validate native round trips and compare independent exact canonical bytes with source fixtures."""
+    from canonical_json import canonicalize
+    rep = Report("-v" in sys.argv)
+    schemas = SchemaSet(SPEC / "schemas")
+    paths = sorted(directory.rglob("*.json"))
+    if not paths:
+        rep.fail(str(directory), "no encoded documents found")
+    for path in paths:
+        try:
+            text = path.read_text(encoding="utf-8")
+            canonical = canonicalize(text)
+            document = json.loads(text)
+            schema = conformance.schema_file_for_kind(document.get("kind"))
+            if schema not in schemas.files:
+                rep.fail(str(path), f"no schema {schema}")
+                continue
+            errors = schemas.validate(document, schema)
+            if errors:
+                rep.fail(str(path), f"schema {schema}: " + "; ".join(errors[:5]))
+                continue
+            rep.ok("Swift encoded schema-valid")
+            original = ROOT / path.relative_to(directory)
+            if not original.is_file():
+                rep.fail(str(path), "no source fixture for independent canonical comparison")
+                continue
+            if text != canonical:
+                rep.fail(str(path), "native bytes are not canonical")
+            elif canonical != canonicalize(original.read_text(encoding="utf-8")):
+                rep.fail(str(path), "native record loses or changes source values")
+            else:
+                rep.ok("independent canonical bytes")
+        except (ValueError, TypeError, OSError) as exc:
+            rep.fail(str(path), str(exc))
+    for failure in rep.failures:
+        print(failure)
+    for key, count in sorted(rep.counts.items()):
+        print(f"{key:34} {count}")
+    print(f"RESULT: {'FAIL' if rep.failures else 'PASS'}")
+    return int(bool(rep.failures))
+
+
 def main() -> int:
+    if "--encoded-dir" in sys.argv:
+        index = sys.argv.index("--encoded-dir")
+        if index + 1 >= len(sys.argv):
+            print("FAIL --encoded-dir requires a directory")
+            return 1
+        return validate_encoded_documents(Path(sys.argv[index + 1]).resolve())
     rep = Report("-v" in sys.argv)
     schemas = SchemaSet(SPEC / "schemas")
     for problem in schemas.check_all():

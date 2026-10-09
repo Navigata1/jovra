@@ -1,0 +1,14 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Compiling JovraCoreTests RegistryContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/RegistryContractTests.swift:9:24: error: cannot find 'CapabilityRegistry' in scope
+ 7 |     while !FileManager.default.fileExists(atPath: url.appendingPathComponent("spec").path) { url.deleteLastPathComponent() }
+ 8 |     let input = try Data(contentsOf: url.appendingPathComponent("spec/contracts/capability-registry.v1.json"))
+ 9 |     let registry = try CapabilityRegistry.load(from: input)
+   |                        `- error: cannot find 'CapabilityRegistry' in scope
+10 |     #expect(registry.capability(id: "lineSnap")?.status.rawValue == "disabled")
+11 |     #expect(registry.capabilities.contains { $0.gate.value == nil })
+[4/6] Emitting module JovraCoreTests
+error: fatalError
