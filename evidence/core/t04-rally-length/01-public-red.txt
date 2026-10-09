@@ -1,0 +1,26 @@
+test_zero_stroke_errors_preserve_observation_and_unknown_derived_length (test_rally_length.RallyLengthSafety.test_zero_stroke_errors_preserve_observation_and_unknown_derived_length) ...
+  test_zero_stroke_errors_preserve_observation_and_unknown_derived_length (test_rally_length.RallyLengthSafety.test_zero_stroke_errors_preserve_observation_and_unknown_derived_length) (end='forcedError') ... FAIL
+  test_zero_stroke_errors_preserve_observation_and_unknown_derived_length (test_rally_length.RallyLengthSafety.test_zero_stroke_errors_preserve_observation_and_unknown_derived_length) (end='unforcedError') ... FAIL
+
+======================================================================
+FAIL: test_zero_stroke_errors_preserve_observation_and_unknown_derived_length (test_rally_length.RallyLengthSafety.test_zero_stroke_errors_preserve_observation_and_unknown_derived_length) (end='forcedError')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/rally/scripts/spec/test_rally_length.py", line 26, in test_zero_stroke_errors_preserve_observation_and_unknown_derived_length
+    self.assertIsNone(result['points'][0]['rallyLength'])
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -1 is not None
+
+======================================================================
+FAIL: test_zero_stroke_errors_preserve_observation_and_unknown_derived_length (test_rally_length.RallyLengthSafety.test_zero_stroke_errors_preserve_observation_and_unknown_derived_length) (end='unforcedError')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/rally/scripts/spec/test_rally_length.py", line 26, in test_zero_stroke_errors_preserve_observation_and_unknown_derived_length
+    self.assertIsNone(result['points'][0]['rallyLength'])
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -1 is not None
+
+----------------------------------------------------------------------
+Ran 1 test in 0.013s
+
+FAILED (failures=2)
