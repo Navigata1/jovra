@@ -1,0 +1,144 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+[0/1] Planning build
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:6:47: warning: 'path' is deprecated: renamed to 'url' [#DeprecatedDeclaration]
+ 4 |     func createBuildCommands(context: PluginContext, target: Target) throws -> [Command] {
+ 5 |         guard let target = target as? SourceModuleTarget else { return [] }
+ 6 |         let inputs = target.sourceFiles.map(\.path).filter { $0.extension == "swift" }.sorted { $0.string < $1.string }
+   |                                               |- warning: 'path' is deprecated: renamed to 'url' [#DeprecatedDeclaration]
+   |                                               `- note: use 'url' instead
+ 7 |         let output = context.pluginWorkDirectory.appending("GeneratedFixtureRunners.swift")
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:6:65: warning: 'extension' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 4 |     func createBuildCommands(context: PluginContext, target: Target) throws -> [Command] {
+ 5 |         guard let target = target as? SourceModuleTarget else { return [] }
+ 6 |         let inputs = target.sourceFiles.map(\.path).filter { $0.extension == "swift" }.sorted { $0.string < $1.string }
+   |                                                                 `- warning: 'extension' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 7 |         let output = context.pluginWorkDirectory.appending("GeneratedFixtureRunners.swift")
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:6:100: warning: 'string' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 4 |     func createBuildCommands(context: PluginContext, target: Target) throws -> [Command] {
+ 5 |         guard let target = target as? SourceModuleTarget else { return [] }
+ 6 |         let inputs = target.sourceFiles.map(\.path).filter { $0.extension == "swift" }.sorted { $0.string < $1.string }
+   |                                                                                                    `- warning: 'string' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 7 |         let output = context.pluginWorkDirectory.appending("GeneratedFixtureRunners.swift")
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:6:112: warning: 'string' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 4 |     func createBuildCommands(context: PluginContext, target: Target) throws -> [Command] {
+ 5 |         guard let target = target as? SourceModuleTarget else { return [] }
+ 6 |         let inputs = target.sourceFiles.map(\.path).filter { $0.extension == "swift" }.sorted { $0.string < $1.string }
+   |                                                                                                                `- warning: 'string' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 7 |         let output = context.pluginWorkDirectory.appending("GeneratedFixtureRunners.swift")
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:7:30: warning: 'pluginWorkDirectory' is deprecated: renamed to 'pluginWorkDirectoryURL' [#DeprecatedDeclaration]
+ 5 |         guard let target = target as? SourceModuleTarget else { return [] }
+ 6 |         let inputs = target.sourceFiles.map(\.path).filter { $0.extension == "swift" }.sorted { $0.string < $1.string }
+ 7 |         let output = context.pluginWorkDirectory.appending("GeneratedFixtureRunners.swift")
+   |                              |- warning: 'pluginWorkDirectory' is deprecated: renamed to 'pluginWorkDirectoryURL' [#DeprecatedDeclaration]
+   |                              `- note: use 'pluginWorkDirectoryURL' instead
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+ 9 |             executable: try context.tool(named: "FixtureRunnerGenerator").path,
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:7:50: warning: 'appending' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 5 |         guard let target = target as? SourceModuleTarget else { return [] }
+ 6 |         let inputs = target.sourceFiles.map(\.path).filter { $0.extension == "swift" }.sorted { $0.string < $1.string }
+ 7 |         let output = context.pluginWorkDirectory.appending("GeneratedFixtureRunners.swift")
+   |                                                  `- warning: 'appending' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+ 9 |             executable: try context.tool(named: "FixtureRunnerGenerator").path,
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:8:18: warning: 'buildCommand(displayName:executable:arguments:environment:inputFiles:outputFiles:)' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 6 |         let inputs = target.sourceFiles.map(\.path).filter { $0.extension == "swift" }.sorted { $0.string < $1.string }
+ 7 |         let output = context.pluginWorkDirectory.appending("GeneratedFixtureRunners.swift")
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+   |                  `- warning: 'buildCommand(displayName:executable:arguments:environment:inputFiles:outputFiles:)' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 9 |             executable: try context.tool(named: "FixtureRunnerGenerator").path,
+10 |             arguments: [output.string] + inputs.map(\.string),
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:9:75: warning: 'path' is deprecated: renamed to 'url' [#DeprecatedDeclaration]
+ 7 |         let output = context.pluginWorkDirectory.appending("GeneratedFixtureRunners.swift")
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+ 9 |             executable: try context.tool(named: "FixtureRunnerGenerator").path,
+   |                                                                           |- warning: 'path' is deprecated: renamed to 'url' [#DeprecatedDeclaration]
+   |                                                                           `- note: use 'url' instead
+10 |             arguments: [output.string] + inputs.map(\.string),
+11 |             inputFiles: inputs, outputFiles: [output])]
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:10:32: warning: 'string' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+ 9 |             executable: try context.tool(named: "FixtureRunnerGenerator").path,
+10 |             arguments: [output.string] + inputs.map(\.string),
+   |                                `- warning: 'string' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+11 |             inputFiles: inputs, outputFiles: [output])]
+12 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Plugins/FixtureDiscoveryPlugin/FixtureDiscoveryPlugin.swift:10:55: warning: 'string' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+ 8 |         return [.buildCommand(displayName: "Discover conformance runners by kind",
+ 9 |             executable: try context.tool(named: "FixtureRunnerGenerator").path,
+10 |             arguments: [output.string] + inputs.map(\.string),
+   |                                                       `- warning: 'string' is deprecated: Use `URL` type instead of `Path`. [#DeprecatedDeclaration]
+11 |             inputFiles: inputs, outputFiles: [output])]
+12 |     }
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/10] Write swift-version--58304C5D6DBC2206.txt
+[2/6] Discover conformance runners by kind
+[3/6] Write sources
+[5/10] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[6/10] Emitting module JovraCoreTests
+[7/10] Compiling JovraCoreTests FixtureManifest.swift
+[8/10] Compiling JovraCoreTests CanonicalJSONTests.swift
+[9/24] Compiling JovraCoreTests SessionRunner.swift
+[10/24] Compiling JovraCoreTests SampleMediaRunner.swift
+[11/24] Compiling JovraCoreTests ExportRunner.swift
+[12/24] Compiling JovraCoreTests PctRunner.swift
+[13/24] Compiling JovraCoreTests EquipmentRunner.swift
+[14/24] Compiling JovraCoreTests ArchiveRunner.swift
+[15/24] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[16/24] Compiling JovraCoreTests CSVContractRunner.swift
+[17/24] Compiling JovraCoreTests GroundTruthRunner.swift
+[18/24] Compiling JovraCoreTests PracticePlanRunner.swift
+[19/24] Compiling JovraCoreTests BenchmarkRunner.swift
+[20/24] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[21/24] Compiling JovraCoreTests ManifestTests.swift
+[22/24] Compiling JovraCoreTests UnitsRunner.swift
+[22/24] Write Objects.LinkFileList
+[23/24] Linking JovraCorePackageTests
+Build complete! (2.13s)
+Test Suite 'Selected tests' started at 2026-10-09 08:45:06.808.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 08:45:06.809.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 08:45:06.809.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 08:45:06.809.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() started.
+◇ Test fixturesAreDispatchedByKindAndUnknownKindsFail() started.
+◇ Test allDiscoveredRunnerFixturesPass() started.
+✔ Test fixturesAreDispatchedByKindAndUnknownKindsFail() passed after 0.026 seconds.
+Consumed jovra.archiveManifest: 2 fixtures
+Consumed jovra.benchmarkBindings: 1 fixtures
+Consumed jovra.benchmarkRecord: 3 fixtures
+Consumed jovra.csvContract: 2 fixtures
+Consumed jovra.capabilityRegistry: 1 fixtures
+Consumed jovra.equipment: 1 fixtures
+Consumed jovra.export: 2 fixtures
+✔ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() passed after 0.090 seconds.
+Consumed jovra.groundTruth: 19 fixtures
+pct vectors: 32
+Consumed jovra.fixture.pct: 1 fixtures
+Consumed jovra.practicePlan: 2 fixtures
+Consumed jovra.sampleMediaManifest: 1 fixtures
+Consumed jovra.session: 2 fixtures
+units vectors: 31
+Consumed jovra.fixture.units: 1 fixtures
+Pending fixture kinds: jovra.fixture.sample, jovra.fixture.scoring, jovra.fixture.stats
+✔ Test allDiscoveredRunnerFixturesPass() passed after 0.218 seconds.
+✔ Test run with 3 tests in 0 suites passed after 0.218 seconds.

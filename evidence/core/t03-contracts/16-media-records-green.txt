@@ -1,0 +1,31 @@
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+error: emit-module command failed with exit code 1 (use -v to see invocation)
+[3/7] Emitting module JovraCore
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:1694:17: error: raw value for enum case must be a literal
+1692 |     case tuning = "tuning"
+1693 |     case heldOut = "heldOut"
+1694 |     case none = null
+     |                 `- error: raw value for enum case must be a literal
+1695 | }
+1696 | 
+[4/7] Compiling JovraCore ContractPrimitives.swift
+[5/9] Compiling JovraCore DocumentModels.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:1694:17: error: raw value for enum case must be a literal
+1692 |     case tuning = "tuning"
+1693 |     case heldOut = "heldOut"
+1694 |     case none = null
+     |                 `- error: raw value for enum case must be a literal
+1695 | }
+1696 | 
+[6/9] Compiling JovraCore CapabilityRegistryLoader.swift
+[7/9] Compiling JovraCore Percent.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:1694:17: error: raw value for enum case must be a literal
+1692 |     case tuning = "tuning"
+1693 |     case heldOut = "heldOut"
+1694 |     case none = null
+     |                 `- error: raw value for enum case must be a literal
+1695 | }
+1696 | 
+error: fatalError

@@ -1,0 +1,25 @@
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/9] Write swift-version--58304C5D6DBC2206.txt
+[2/5] Discover conformance runners by kind
+[3/5] Write sources
+[5/8] Compiling JovraCoreTests ContractSafetyTests.swift
+[6/8] Emitting module JovraCoreTests
+[7/8] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[7/9] Write Objects.LinkFileList
+[8/9] Linking JovraCorePackageTests
+Build complete! (1.88s)
+Test Suite 'Selected tests' started at 2026-10-09 08:48:50.576.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 08:48:50.577.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 08:48:50.577.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 08:48:50.577.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() started.
+✘ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() recorded an issue at ContractSafetyTests.swift:30:5: Expectation failed: an error was expected but none was thrown and "CourtPoint2D(x: 0, y: 0)" was returned
+✘ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() recorded an issue at ContractSafetyTests.swift:35:5: Expectation failed: try CanonicalJSON.encode(version) == input
+✘ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() failed after 0.001 seconds with 2 issues.
+✘ Test run with 1 test in 0 suites failed after 0.001 seconds with 2 issues.

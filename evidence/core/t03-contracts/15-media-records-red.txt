@@ -1,0 +1,66 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module JovraCoreTests
+[4/6] Compiling JovraCoreTests MediaRecordContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/MediaRecordContractTests.swift:14:45: error: cannot find 'GroundTruthRecord' in scope
+12 |         func check<T: Codable>(_ type: T.Type) throws { #expect(try CanonicalJSON.encode(ContractCodec.decode(type, from: data)) == CanonicalJSON.canonicalize(data)) }
+13 |         switch header.kind {
+14 |         case "jovra.groundTruth": try check(GroundTruthRecord.self)
+   |                                             `- error: cannot find 'GroundTruthRecord' in scope
+15 |         case "jovra.benchmarkRecord": try check(BenchmarkRecord.self)
+16 |         case "jovra.benchmarkBindings": try check(BenchmarkBindings.self)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/MediaRecordContractTests.swift:14:39: error: generic parameter 'T' could not be inferred
+10 |         let data = try Data(contentsOf: url)
+11 |         let header = try JSONDecoder().decode(RecordHeader.self, from: data)
+12 |         func check<T: Codable>(_ type: T.Type) throws { #expect(try CanonicalJSON.encode(ContractCodec.decode(type, from: data)) == CanonicalJSON.canonicalize(data)) }
+   |              `- note: in call to function 'check'
+13 |         switch header.kind {
+14 |         case "jovra.groundTruth": try check(GroundTruthRecord.self)
+   |                                       `- error: generic parameter 'T' could not be inferred
+15 |         case "jovra.benchmarkRecord": try check(BenchmarkRecord.self)
+16 |         case "jovra.benchmarkBindings": try check(BenchmarkBindings.self)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/MediaRecordContractTests.swift:15:49: error: cannot find 'BenchmarkRecord' in scope
+13 |         switch header.kind {
+14 |         case "jovra.groundTruth": try check(GroundTruthRecord.self)
+15 |         case "jovra.benchmarkRecord": try check(BenchmarkRecord.self)
+   |                                                 `- error: cannot find 'BenchmarkRecord' in scope
+16 |         case "jovra.benchmarkBindings": try check(BenchmarkBindings.self)
+17 |         default: break
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/MediaRecordContractTests.swift:15:43: error: generic parameter 'T' could not be inferred
+10 |         let data = try Data(contentsOf: url)
+11 |         let header = try JSONDecoder().decode(RecordHeader.self, from: data)
+12 |         func check<T: Codable>(_ type: T.Type) throws { #expect(try CanonicalJSON.encode(ContractCodec.decode(type, from: data)) == CanonicalJSON.canonicalize(data)) }
+   |              `- note: in call to function 'check'
+13 |         switch header.kind {
+14 |         case "jovra.groundTruth": try check(GroundTruthRecord.self)
+15 |         case "jovra.benchmarkRecord": try check(BenchmarkRecord.self)
+   |                                           `- error: generic parameter 'T' could not be inferred
+16 |         case "jovra.benchmarkBindings": try check(BenchmarkBindings.self)
+17 |         default: break
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/MediaRecordContractTests.swift:16:51: error: cannot find 'BenchmarkBindings' in scope
+14 |         case "jovra.groundTruth": try check(GroundTruthRecord.self)
+15 |         case "jovra.benchmarkRecord": try check(BenchmarkRecord.self)
+16 |         case "jovra.benchmarkBindings": try check(BenchmarkBindings.self)
+   |                                                   `- error: cannot find 'BenchmarkBindings' in scope
+17 |         default: break
+18 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/MediaRecordContractTests.swift:16:45: error: generic parameter 'T' could not be inferred
+10 |         let data = try Data(contentsOf: url)
+11 |         let header = try JSONDecoder().decode(RecordHeader.self, from: data)
+12 |         func check<T: Codable>(_ type: T.Type) throws { #expect(try CanonicalJSON.encode(ContractCodec.decode(type, from: data)) == CanonicalJSON.canonicalize(data)) }
+   |              `- note: in call to function 'check'
+13 |         switch header.kind {
+14 |         case "jovra.groundTruth": try check(GroundTruthRecord.self)
+15 |         case "jovra.benchmarkRecord": try check(BenchmarkRecord.self)
+16 |         case "jovra.benchmarkBindings": try check(BenchmarkBindings.self)
+   |                                             `- error: generic parameter 'T' could not be inferred
+17 |         default: break
+18 |         }
+error: fatalError

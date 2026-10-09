@@ -1,0 +1,46 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module JovraCoreTests
+[4/6] Compiling JovraCoreTests UnitsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/UnitsTests.swift:5:17: error: cannot find 'Units' in scope
+ 3 | 
+ 4 | @Test func unitsConvertOnceAndPreserveEnteredText() throws {
+ 5 |     #expect(try Units.convert("52", from: "lb", to: "kg", places: 8) == "23.58680324")
+   |                 `- error: cannot find 'Units' in scope
+ 6 |     #expect(try Units.convert("23", from: "kg", to: "lb", places: 6) == "50.706320")
+ 7 |     #expect(try Units.display("52.0", unit: "lb", preferredUnit: "lb").value == "52.0")
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/UnitsTests.swift:6:17: error: cannot find 'Units' in scope
+ 4 | @Test func unitsConvertOnceAndPreserveEnteredText() throws {
+ 5 |     #expect(try Units.convert("52", from: "lb", to: "kg", places: 8) == "23.58680324")
+ 6 |     #expect(try Units.convert("23", from: "kg", to: "lb", places: 6) == "50.706320")
+   |                 `- error: cannot find 'Units' in scope
+ 7 |     #expect(try Units.display("52.0", unit: "lb", preferredUnit: "lb").value == "52.0")
+ 8 |     #expect(try Units.display("1.25", unit: "m/s", preferredUnit: "km/h").value == "5")
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/UnitsTests.swift:7:17: error: cannot find 'Units' in scope
+ 5 |     #expect(try Units.convert("52", from: "lb", to: "kg", places: 8) == "23.58680324")
+ 6 |     #expect(try Units.convert("23", from: "kg", to: "lb", places: 6) == "50.706320")
+ 7 |     #expect(try Units.display("52.0", unit: "lb", preferredUnit: "lb").value == "52.0")
+   |                 `- error: cannot find 'Units' in scope
+ 8 |     #expect(try Units.display("1.25", unit: "m/s", preferredUnit: "km/h").value == "5")
+ 9 |     #expect(Units.gaugeHint("17").ranges.count == 2)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/UnitsTests.swift:8:17: error: cannot find 'Units' in scope
+ 6 |     #expect(try Units.convert("23", from: "kg", to: "lb", places: 6) == "50.706320")
+ 7 |     #expect(try Units.display("52.0", unit: "lb", preferredUnit: "lb").value == "52.0")
+ 8 |     #expect(try Units.display("1.25", unit: "m/s", preferredUnit: "km/h").value == "5")
+   |                 `- error: cannot find 'Units' in scope
+ 9 |     #expect(Units.gaugeHint("17").ranges.count == 2)
+10 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/UnitsTests.swift:9:13: error: cannot find 'Units' in scope
+ 7 |     #expect(try Units.display("52.0", unit: "lb", preferredUnit: "lb").value == "52.0")
+ 8 |     #expect(try Units.display("1.25", unit: "m/s", preferredUnit: "km/h").value == "5")
+ 9 |     #expect(Units.gaugeHint("17").ranges.count == 2)
+   |             `- error: cannot find 'Units' in scope
+10 | }
+11 | 
+error: fatalError

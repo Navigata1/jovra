@@ -1,0 +1,107 @@
+FFF
+======================================================================
+FAIL: test_empty_output_directory_is_refused (__main__.EncodedDocuments.test_empty_output_directory_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_encoded_documents.py", line 26, in test_empty_output_directory_is_refused
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : ---- spec validation summary ----
+benchmark bindings                 1
+benchmark records                  3
+closed-object rejections           154
+cross-references                   1
+csv byte-for-byte                  2
+file hashes                        6
+hand assertions                    527
+instances valid                    116
+jovra.sampleMediaManifest checks   1
+kind-to-schema names               16
+media ground truth                 19
+media self-tests                   37
+pct fixtures                       1
+pct vectors                        32
+reference-integrity documents      116
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  26
+schemas                            18
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: PASS
+
+
+======================================================================
+FAIL: test_invalid_typed_document_is_refused (__main__.EncodedDocuments.test_invalid_typed_document_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_encoded_documents.py", line 21, in test_invalid_typed_document_is_refused
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : ---- spec validation summary ----
+benchmark bindings                 1
+benchmark records                  3
+closed-object rejections           154
+cross-references                   1
+csv byte-for-byte                  2
+file hashes                        6
+hand assertions                    527
+instances valid                    116
+jovra.sampleMediaManifest checks   1
+kind-to-schema names               16
+media ground truth                 19
+media self-tests                   37
+pct fixtures                       1
+pct vectors                        32
+reference-integrity documents      116
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  26
+schemas                            18
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: PASS
+
+
+======================================================================
+FAIL: test_unknown_kind_is_refused (__main__.EncodedDocuments.test_unknown_kind_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_encoded_documents.py", line 15, in test_unknown_kind_is_refused
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : ---- spec validation summary ----
+benchmark bindings                 1
+benchmark records                  3
+closed-object rejections           154
+cross-references                   1
+csv byte-for-byte                  2
+file hashes                        6
+hand assertions                    527
+instances valid                    116
+jovra.sampleMediaManifest checks   1
+kind-to-schema names               16
+media ground truth                 19
+media self-tests                   37
+pct fixtures                       1
+pct vectors                        32
+reference-integrity documents      116
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  26
+schemas                            18
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: PASS
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.873s
+
+FAILED (failures=3)
