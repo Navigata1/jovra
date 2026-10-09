@@ -1,0 +1,22 @@
+{
+  "reviewedSourceHead": "dd1cebe10298765a47dc80713fdae3e1b5c3c1d2",
+  "base": "3ae5caa2bb2cff78e9d9b76b9a28a092faf54cf6",
+  "scope": "195 manual changed lines; layout and atomic adoption prerequisites only",
+  "files": {
+    "ios/Packages/JovraCore/Sources/JovraCore/SessionStore/SessionStore.swift": "fc81a3e9acb23a3378c3a9e895666f447d51e28244c47ffd3e977fd0c3c640a1",
+    "ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift": "361449540aa8bfe5ac1c9d434c126f26a6808c3c50189ac461a9bd588df8b671",
+    "ios/Packages/JovraMedia/Sources/JovraMedia/Capture/Recovery/FragmentedMovieLayout.swift": "31e1a700a5240240c6af03bb65d266c93770842ed966963933950d1b9771d3ca",
+    "ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift": "c0ea5bf6bec2f9b9965adb5c89823c12c504fda3a6c497d29f1ed642789d10f8"
+  },
+  "runtimeEvidence": {
+    "layoutFifo": "13-fifo-and-layout-green.txt: 3 Swift Testing tests",
+    "adoptionRegression": "05-capture-handoff-regression.txt: 2 Swift Testing tests"
+  },
+  "unverified": [
+    "scanner",
+    "playable recovery",
+    "crash loss bound",
+    "reset auto-resume",
+    "physical power loss"
+  ]
+}

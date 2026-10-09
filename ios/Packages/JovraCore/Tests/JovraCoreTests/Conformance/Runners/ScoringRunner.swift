@@ -12,7 +12,7 @@ struct ScoringFixture: Decodable {
         let afterSeq: Int
         let expected: Expected
     }
-    struct Expected: Decodable { let fold: MatchTimeline }
+    struct Expected: Decodable { let fold: MatchTimeline; let stats: StatsResult }
     struct Refusal: Decodable { let code: String }
 }
 
@@ -29,12 +29,14 @@ struct ScoringRunner: FixtureRunner {
         let results = try ScoringEngine.checkpoints(fixture.input, afterSeqs: checkpoints.map(\.afterSeq))
         for (index, result) in results.enumerated() {
             #expect(result == checkpoints[index].expected.fold, "\(fixture.id) checkpoint \(index)")
+            let stats = try StatsEngine.compute(result)
+            #expect(stats == checkpoints[index].expected.stats, "\(fixture.id) stats checkpoint \(index)")
+            try emitStats(stats, name: "\(fixture.id)-\(index).json")
             if let directory = ProcessInfo.processInfo.environment["JOVRA_SCORING_OUTPUT_DIR"] {
                 let folder = URL(fileURLWithPath: directory)
                 try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
                 try CanonicalJSON.encode(result).write(to: folder.appendingPathComponent("\(fixture.id)-\(index).json"), options: .atomic)
             }
         }
-        // T05 adds the independent stats comparison; consuming the scoring kind means fold coverage.
     }
 }
