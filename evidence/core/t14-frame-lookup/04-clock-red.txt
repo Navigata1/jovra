@@ -1,0 +1,21 @@
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module JovraMediaTests
+[4/5] Compiling JovraMediaTests FramePlaybackTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:14:51: error: cannot find 'FrameRate' in scope
+12 |         let url = try catalog.mediaURL(for: catalog.truth(id: "frameCounter/fc-060"))
+13 |         #expect(throws: FramePlaybackError.invalidSource) {
+14 |             _ = try FramePlayback(url: url, rate: FrameRate(frames: Int.max), frameCount: 3)
+   |                                                   `- error: cannot find 'FrameRate' in scope
+15 |         }
+16 |         #expect(throws: FramePlaybackError.invalidSource) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:17:51: error: cannot find 'FrameRate' in scope
+15 |         }
+16 |         #expect(throws: FramePlaybackError.invalidSource) {
+17 |             _ = try FramePlayback(url: url, rate: FrameRate(frames: 60, perSeconds: Int.max), frameCount: 3)
+   |                                                   `- error: cannot find 'FrameRate' in scope
+18 |         }
+19 |     }
+error: fatalError

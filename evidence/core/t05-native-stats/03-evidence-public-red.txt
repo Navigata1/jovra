@@ -1,0 +1,188 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/11] Write sources
+[2/11] Write swift-version--58304C5D6DBC2206.txt
+[3/9] Discover conformance runners by kind
+[4/9] Write sources
+[6/9] Emitting module JovraCore
+[7/9] Compiling JovraCore StatsModels.swift
+[8/13] Compiling JovraCoreTests FixtureManifest.swift
+[9/13] Compiling JovraCoreTests ManifestTests.swift
+[10/13] Compiling JovraCoreTests ScoringRunner.swift
+[11/13] Emitting module JovraCoreTests
+[12/18] Compiling JovraCoreTests StatsRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:34: error: type 'StatsEngine' has no member 'metric'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                  `- error: type 'StatsEngine' has no member 'metric'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:42: error: cannot infer contextual base in reference to member 'pointsWon'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                          `- error: cannot infer contextual base in reference to member 'pointsWon'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:53: error: cannot infer contextual base in reference to member 'a'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                                     `- error: cannot infer contextual base in reference to member 'a'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:30: error: cannot infer contextual base in reference to member 'ratio'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                              `- error: cannot infer contextual base in reference to member 'ratio'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:37: error: cannot infer contextual base in reference to member 'init'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                                     `- error: cannot infer contextual base in reference to member 'init'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:63: error: cannot infer contextual base in reference to member 'init'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                                                               `- error: cannot infer contextual base in reference to member 'init'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:25:44: error: cannot infer contextual base in reference to member 'estimated'
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+   |                                            `- error: cannot infer contextual base in reference to member 'estimated'
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+27 |     #expect(metric.evidence.contributingPointIDs.first == timeline.points[0].id)
+[13/18] Compiling JovraCoreTests StatsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:34: error: type 'StatsEngine' has no member 'metric'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                  `- error: type 'StatsEngine' has no member 'metric'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:42: error: cannot infer contextual base in reference to member 'pointsWon'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                          `- error: cannot infer contextual base in reference to member 'pointsWon'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:53: error: cannot infer contextual base in reference to member 'a'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                                     `- error: cannot infer contextual base in reference to member 'a'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:30: error: cannot infer contextual base in reference to member 'ratio'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                              `- error: cannot infer contextual base in reference to member 'ratio'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:37: error: cannot infer contextual base in reference to member 'init'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                                     `- error: cannot infer contextual base in reference to member 'init'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:63: error: cannot infer contextual base in reference to member 'init'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                                                               `- error: cannot infer contextual base in reference to member 'init'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:25:44: error: cannot infer contextual base in reference to member 'estimated'
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+   |                                            `- error: cannot infer contextual base in reference to member 'estimated'
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+27 |     #expect(metric.evidence.contributingPointIDs.first == timeline.points[0].id)
+[14/18] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:34: error: type 'StatsEngine' has no member 'metric'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                  `- error: type 'StatsEngine' has no member 'metric'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:42: error: cannot infer contextual base in reference to member 'pointsWon'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                          `- error: cannot infer contextual base in reference to member 'pointsWon'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:23:53: error: cannot infer contextual base in reference to member 'a'
+21 |     timeline.points[0].provenance = .estimated
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+   |                                                     `- error: cannot infer contextual base in reference to member 'a'
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:30: error: cannot infer contextual base in reference to member 'ratio'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                              `- error: cannot infer contextual base in reference to member 'ratio'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:37: error: cannot infer contextual base in reference to member 'init'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                                     `- error: cannot infer contextual base in reference to member 'init'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:24:63: error: cannot infer contextual base in reference to member 'init'
+22 |     timeline.points[0].reviewState = .unreviewed
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+   |                                                               `- error: cannot infer contextual base in reference to member 'init'
+25 |     #expect(metric.evidence.provenance == .estimated)
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Tests/JovraCoreTests/Stats/StatsTests.swift:25:44: error: cannot infer contextual base in reference to member 'estimated'
+23 |     let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
+24 |     #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+25 |     #expect(metric.evidence.provenance == .estimated)
+   |                                            `- error: cannot infer contextual base in reference to member 'estimated'
+26 |     #expect(metric.evidence.contributingPointIDs.count == 124)
+27 |     #expect(metric.evidence.contributingPointIDs.first == timeline.points[0].id)
+[15/19] Compiling JovraCoreTests ContractSafetyTests.swift
+[16/19] Compiling JovraCoreTests ScoringContractTests.swift
+[17/19] Compiling JovraCoreTests ScoringTests.swift
+error: fatalError

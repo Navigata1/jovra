@@ -17,8 +17,13 @@ enum LocalCaptureLibraryError: Error { case invalidSinglesSetup, unsupportedSour
 /// injection for tests; production consumers will share the environment key's single instance.
 actor LocalCaptureLibrary: RecordingSink {
     private let store: SessionStore
+    private let media: MediaLibrary
 
-    init(root: URL) throws { store = try SessionStore(root: root) }
+    init(root: URL) throws {
+        let store = try SessionStore(root: root)
+        self.store = store
+        media = MediaLibrary(store: store)
+    }
 
     func createCapture(_ seed: CaptureSessionSeed, mode: SessionRecordingMode) async throws -> SessionID {
         guard mode == .camera || mode == .simulatorFixture else { throw LocalCaptureLibraryError.unsupportedSource }
@@ -47,6 +52,18 @@ actor LocalCaptureLibrary: RecordingSink {
     }
 
     func load(_ id: SessionID) async throws -> SessionDocument { try await store.load(id.rawValue) }
+
+    func recordingFolder(_ id: SessionID) async throws -> URL {
+        try await media.recordingFolder(sessionID: id.rawValue)
+    }
+
+    func fileURL(_ id: SessionID, relativePath: String) async throws -> URL {
+        try await media.fileURL(sessionID: id.rawValue, relativePath: relativePath)
+    }
+
+    func sessions(_ query: SessionQuery = .init()) async throws -> [JovraCore.SessionSummary] {
+        try await store.list(query)
+    }
 
     func saveRecording(sessionID: String, recording: SessionRecording, marks: [SessionMark]) async throws {
         try await store.saveCapture(recording, marks: marks, for: sessionID)

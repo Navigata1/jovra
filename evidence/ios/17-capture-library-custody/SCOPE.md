@@ -1,0 +1,7 @@
+# Native capture library custody seam
+
+Dependent on bounded T17 service PR349. The next authorized core-flow seam is a captured session's on-device originals folder plus read-only library/file queries, using one MediaLibrary initialized with the service's existing SessionStore actor. The public test writes known plain bytes through the recording folder, reopens the service, locates the same original, and checks a filtered library read preserves its bytes. It does not claim video decodability. This filesystem/query seam derives from root's explicit shared-store/MediaLibrary assignment and T17/T20 storage acceptance; root already authorized it.
+
+No implementation before this public API test's compiler-red. One serial native compile turn must be reserved before running it. Future Capture UI and CoreFlow proof remain pending. Step5 remains held.
+
+Root approved the same bounded slice to add a native screen coordinator over the existing CaptureEngine, using explicit seed/preset/microphone and the same sink/library actor. The next public test records four seconds through the real bundled FixtureCamera at the external virtual-clock seam, stops, reopens the app library and decodes all120 saved frames; denied microphone must leave video playable and silent. Bundle MP4/truth/render metadata are copied from the existing synthetic corpus and hash-bound. This is simulator media evidence; native view, physical camera and full interruption/recovery acceptance remain pending.
