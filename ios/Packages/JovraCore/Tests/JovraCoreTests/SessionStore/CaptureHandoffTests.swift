@@ -22,6 +22,8 @@ import JovraCore
     #expect(actual.marks == [existing, incoming])
     #expect(actual.recording == record)
     #expect(actual.original?.state == .saved)
+    #expect(actual.storage.originals == .onDevice)
+    #expect(actual.storage.includeInDeviceBackup == document.storage.includeInDeviceBackup)
     #expect(actual.sample?.synthetic == true)
     #expect(actual.analysis == document.analysis)
     #expect(actual.review == document.review)

@@ -148,6 +148,7 @@ public actor SessionStore {
         for mark in marks where ids.insert(mark.id).inserted { merged.append(mark) }
         document.marks = merged
         document.recording = recording
+        if recording.mediaAvailable && !recording.segments.isEmpty { document.storage.originals = .onDevice }
         let complete = recording.mediaAvailable && !recording.segments.isEmpty && recording.segments.allSatisfy(\.finalized)
         document.original = .init(state: complete ? (recording.gaps.isEmpty ? .saved : .savedWithGaps) : .partial,
                                   reason: complete ? nil : "Recording contains unconfirmed media")
