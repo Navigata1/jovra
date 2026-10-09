@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 import Testing
 import JovraMedia
 
@@ -43,4 +44,16 @@ private func layoutFile(_ bytes: [UInt8], body: (URL) throws -> Void) throws {
         try bytes.write(to: source)
         #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(source) }
     }
+}
+
+@Test func fragmentLayoutRefusesNamedPipesWithoutWaitingForWriter() throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let fifo = directory.appendingPathComponent("not-a-movie.mp4")
+    #expect(mkfifo(fifo.path, 0o600) == 0)
+    if let marker = ProcessInfo.processInfo.environment["JOVRA_FIFO_CONTROL_MARKER"] {
+        try Data("Inspecting owned FIFO without a writer: \(fifo.path)".utf8).write(to: URL(fileURLWithPath: marker))
+    }
+    #expect(throws: FragmentedMovieLayoutError.unsafePath) { try FragmentedMovieLayout.inspect(fifo) }
 }

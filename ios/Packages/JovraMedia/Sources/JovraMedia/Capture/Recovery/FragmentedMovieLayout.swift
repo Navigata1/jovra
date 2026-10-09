@@ -14,7 +14,7 @@ public struct FragmentedMovieLayout: Equatable, Sendable {
 
     /// Streams fixed-size box headers, never loading the movie or its payloads into memory.
     public static func inspect(_ url: URL) throws -> FragmentedMovieLayout {
-        let descriptor = Darwin.open(url.path, O_RDONLY | O_NOFOLLOW)
+        let descriptor = Darwin.open(url.path, O_RDONLY | O_NOFOLLOW | O_NONBLOCK)
         guard descriptor >= 0 else { throw FragmentedMovieLayoutError.filesystem(errno) }
         let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
         defer { try? handle.close() }

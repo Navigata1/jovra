@@ -14,3 +14,14 @@ Scanner, raw fingerprints/unchanged-byte custody, separate stable recovery recei
 - `03-atomic-adoption-red.txt`: missing public method, activated compiler failure.
 - `04-atomic-adoption-green.txt`: one public fault/retry/adoption/idempotence control passes.
 - `05-capture-handoff-regression.txt`: both new adoption and existing normal capture handoff pass (2 Swift Testing cases). Out-of-space preserves previous metadata bytes; retry carries the report and explicit unknown-suffix reason with edited and durable marks.
+
+## Independent FIFO finding and correction
+
+Root identified that opening a named pipe read-only can block before the regular-file fstat refusal. The public named-pipe control confirmed the hang, and `O_NONBLOCK` now lets the existing regular-file guard refuse it immediately.
+
+- `06`/`10`: warm build-only gates for the public control.
+- `07`/`08`: CLI timeout setup attempts lacked an activation marker; they are **not behavioral red evidence**. SwiftPM detached helpers were later stopped only after checking their owned cache/filter command identity.
+- `09`: direct Mach-O bundle execution is unsupported (setup failure, not red).
+- `11`: direct helper lacked the Testing framework runtime path (setup failure, not red).
+- **`12-fifo-activated-public-red.txt`**: direct owned SwiftPM helper, with the verified SDK framework path, wrote its pre-inspection marker and entered the public FIFO call; no writer existed and inspection remained blocked for five seconds. Only its owned process group was killed. The marker's uniquely owned FIFO/temp folder was cleaned afterward.
+- **`13-fifo-and-layout-green.txt`**: public FIFO refusal and previous container/link controls pass, 3 Swift Testing cases; the FIFO refused in 2 ms. No hardware or real recovery claim follows from this filesystem boundary gate.
