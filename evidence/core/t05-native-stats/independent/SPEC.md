@@ -1,0 +1,15 @@
+# Independent Stats SPEC review
+
+Original candidate106293da2e760973fdc9c2eebb1cca8076a10c7e, fixed point6705119d950618a4aa2e8bb45292bab203d65192. Rebound to6ba0b3aa8fce39cc8c3fedbe0342265d042f7d86: Stats production/test files byte-identical; publication adds accepted current-main integration, completed evidence and the narrow doc reconciliation04bc3a73dcb8e143107c856c791ea11e5a548faf.
+
+Bounded scope: StatsEngine numeric compute over the effective timeline and five headline evidence selectors, per root's single-core-flow assignment. Full issue7/T05 remains open. Read full issue, ios-v1-spec StatsEngine section, research stats definitions, shared reference decision4 and Python stats engine, complete source/test diff and declared scope. No package compilation was rerun by this SPEC-only reviewer.
+
+SPEC ACCEPT:0 bounded findings. Closed numeric model/denominators match shared golden semantics; penalty point slots retain existing break-point policy, tie-break games are excluded from service games, serve/return points exclude penalties, winners exclude aces, shots use known stroke observations. Headline evidence retains denominator contributor IDs, weakest provenance and unreviewed contributor count; Sample is explicit caller context. No observations yields no displayed measurement; observed zero remains zero. Public tests independently assert sample124/58%/67%/70%/386 and exact one-estimated/one-unreviewed behavior. Reported110 canonical fixture/checkpoint comparisons are evidence from the producer/independent Python verifier, not my runtime rerun.
+
+Docs04bc3a7 ACCEPT: nine additions/six removals align the stale 'total points only' wording with pre-existing spec/README decision4: eligible point-penalty break-point slots count, serve/return points and serve stats do not; game penalties never count as breaks. No engine/schema/fixture output changes. This resolves the documentation ambiguity identified during review.
+
+No scope creep or wrong bounded behavior found. Full exports/CSV bundle/sample-kind consumption, pooled trends, StatsEngine.diff and evidence selectors for remaining metrics are explicitly pending, not silently certified. Native UI/device/analysis validation remains separate. Standards axis is independent and not supplied by this report.
+
+## Nomenclature rebind
+
+SPEC ACCEPT exactc427bffcd076a792c86314a907560ea7c61a8203. Compared106293d againstc427bff: numeric StatsEngine/StatsModels/StatsMomentumPair unchanged; headline API renamed StatsMetric→StatSelector and metric→stat, with selector/stat local variables and public test names updated consistently. This aligns GLOSSARY terminology without altering selector cases, contributors, provenance ranking, unknown handling, fractions, sample behavior or golden outputs. The original Standards naming acceptance was separately withdrawn and repaired; this SPEC rebind accepts semantics only and retains full T05 pending scope. Fresh focused6/full110 canonical producer proof is reported separately, not rerun by this reviewer.
