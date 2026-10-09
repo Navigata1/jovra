@@ -410,7 +410,8 @@ def derived_rally_length(outcome: dict) -> int | None:
     if n is None:
         return None
     if end_type in ERROR_END_TYPES or (end_type == "serviceWinner" and n == 2):
-        return n - 1
+        # A zero-stroke error is an inconsistent observation, not a negative rally.
+        return n - 1 if n > 0 else None
     if end_type in ("winner", "ace", "serviceWinner"):
         return n
     return None

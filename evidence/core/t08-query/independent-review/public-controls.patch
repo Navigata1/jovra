@@ -1,0 +1,52 @@
+diff --git a/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStoreTests.swift b/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStoreTests.swift
+index 273bd25..6ad981e 100644
+--- a/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStoreTests.swift
++++ b/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStoreTests.swift
+@@ -282,3 +282,47 @@ final class SessionStoreTests: XCTestCase {
+ }
+ 
+ private enum InjectedCrash: Error { case beforeRename }
++
++extension SessionStoreTests {
++    func testIndependentMigrationIOFailureNeverQuarantinesHealthyOriginal() async throws {
++        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++        defer { try? FileManager.default.removeItem(at: root) }
++        let store = try SessionStore(root: root)
++        let document = try sample(); try await store.create(document)
++        let url = root.appendingPathComponent("sessions/\(document.id)/session.json")
++        let before = try Data(contentsOf: url)
++        let fault = try SessionStore(root: root, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
++        do { _ = try await fault.rebuildIndex(); XCTFail("write failure must propagate") }
++        catch let error as CocoaError { XCTAssertEqual(error.code, .fileWriteOutOfSpace) }
++        XCTAssertEqual(try Data(contentsOf: url), before)
++        let quarantined = try await store.quarantinedSessions()
++        XCTAssertTrue(quarantined.isEmpty)
++    }
++    func testIndependentFutureUnknownFieldsRemainByteExactInQuarantine() async throws {
++        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++        defer { try? FileManager.default.removeItem(at: root) }
++        let store = try SessionStore(root: root)
++        let healthy = try sample(); try await store.create(healthy)
++        var future = healthy; future.id = "independent-future"; try await store.create(future)
++        let path = root.appendingPathComponent("sessions/\(future.id)/session.json")
++        var raw = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: path)) as? [String:Any])
++        raw["schemaVersion"] = "1.99.0"; raw["futureOwnedPayload"] = ["keep": "exact\u{2028}bytes", "number": 777]
++        let original = try JSONSerialization.data(withJSONObject: raw, options: [.prettyPrinted, .sortedKeys])
++        try original.write(to: path)
++        let all = try await store.list(); XCTAssertEqual(all.map(\.id), [healthy.id])
++        let quarantined = try await store.quarantinedSessions()
++        let entry = try XCTUnwrap(quarantined.first(where: { $0.sessionID == future.id }))
++        let preserved = root.appendingPathComponent("quarantine/\(entry.folderName)/session/session.json")
++        XCTAssertEqual(try Data(contentsOf: preserved), original)
++    }
++    func testIndependentMaliciousIndexSymlinkDoesNotChangeExternalFile() async throws {
++        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++        let outside = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++        defer { try? FileManager.default.removeItem(at: root); try? FileManager.default.removeItem(at: outside) }
++        let store = try SessionStore(root: root); let document = try sample(); try await store.create(document)
++        let original = Data("external-original".utf8); try original.write(to: outside)
++        try FileManager.default.createSymbolicLink(at: root.appendingPathComponent("index.json"), withDestinationURL: outside)
++        let all = try await store.list(); XCTAssertEqual(all.map(\.id), [document.id])
++        XCTAssertEqual(try Data(contentsOf: outside), original)
++    }
++}
