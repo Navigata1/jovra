@@ -22,3 +22,7 @@
 - 2026-10-09T13:52:02.077331+00:00: PR328 merged15bc44a; current-main core/Studio validation passes. Native restoration verification and T03/T08 implementation continue. Step5 remains held.
 
 - 2026-10-09T14:10:40.308897+00:00: T03 PR330 merged1b4b481 after independent review and corrected Linux newline refusal passed fresh CI. T08 split into small atomic/query-and-lifecycle/custody slices; T15 capture underway. Step5 held.
+
+## 2026-10-09 native core continuation
+
+Steps1–3 complete; step4 remains in progress. T03/330, order amendment332, localization333, atomic store331 and T07/321 merged after independent evidence/freshCI; capture journal334 merged. Query336 and capture/scoring publication slices remain gated. Full feature tickets are not closed on partial flow work. Step5held. Disk exhaustion prompted cleanup only of completed agent-owned build intermediates; incomplete Xcode receipt is retained and its false-success parser corrected. Dedicated simulator4265ADFD remains sole nativeUI owner.
