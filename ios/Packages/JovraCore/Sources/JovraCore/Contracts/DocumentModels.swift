@@ -2752,7 +2752,7 @@ public struct SessionDocument: Codable, Equatable, Sendable {
     public var exports: [SessionExportRecord]?
     public var original: SessionOriginalState?
 
-    public init(schemaVersion: SchemaVersion = .v1_1, kind: SessionDocumentKind = .value, id: String, sport: SessionDocumentSport, createdAt: String, updatedAt: String, title: String, sample: SessionSampleInfo? = nil, sessionKind: SessionDocumentSessionKind, capturePurpose: SessionDocumentCapturePurpose? = nil, players: [SessionPlayer], sides: SessionSides? = nil, match: SessionMatch? = nil, recording: SessionRecording, marks: [SessionMark]? = nil, shots: [SessionShot]? = nil, calibrations: [SessionCalibration]? = nil, annotations: [SessionAnnotation]? = nil, voiceNotes: [SessionVoiceNote]? = nil, comparisons: [SessionComparison]? = nil, derivedValues: [SessionDerivedValue]? = nil, analysis: SessionAnalysis? = nil, review: SessionReview? = nil, archive: SessionArchiveState, storage: SessionStoragePolicy, equipmentUse: [SessionEquipmentUse]? = nil, consent: SessionConsent? = nil, notes: String? = nil, rallyPlayback: SessionRallyPlayback? = nil, serveMarks: [SessionServeMark]? = nil, swings: [SessionSwing]? = nil, exports: [SessionExportRecord]? = nil, original: SessionOriginalState? = nil) {
+    public init(schemaVersion: SchemaVersion = .current, kind: SessionDocumentKind = .value, id: String, sport: SessionDocumentSport, createdAt: String, updatedAt: String, title: String, sample: SessionSampleInfo? = nil, sessionKind: SessionDocumentSessionKind, capturePurpose: SessionDocumentCapturePurpose? = nil, players: [SessionPlayer], sides: SessionSides? = nil, match: SessionMatch? = nil, recording: SessionRecording, marks: [SessionMark]? = nil, shots: [SessionShot]? = nil, calibrations: [SessionCalibration]? = nil, annotations: [SessionAnnotation]? = nil, voiceNotes: [SessionVoiceNote]? = nil, comparisons: [SessionComparison]? = nil, derivedValues: [SessionDerivedValue]? = nil, analysis: SessionAnalysis? = nil, review: SessionReview? = nil, archive: SessionArchiveState, storage: SessionStoragePolicy, equipmentUse: [SessionEquipmentUse]? = nil, consent: SessionConsent? = nil, notes: String? = nil, rallyPlayback: SessionRallyPlayback? = nil, serveMarks: [SessionServeMark]? = nil, swings: [SessionSwing]? = nil, exports: [SessionExportRecord]? = nil, original: SessionOriginalState? = nil) {
         self.schemaVersion = schemaVersion
         self.kind = kind
         self.id = id
@@ -3035,6 +3035,8 @@ public enum SessionLogEvent: Codable, Equatable, Sendable {
     case penalty(SessionPenaltyEvent)
     case retirement(SessionEndEvent)
     case rallyLet(SessionRallyLetEvent)
+    case serverOverride(SessionServerOverrideEvent)
+    case receiverOverride(SessionReceiverOverrideEvent)
 
     private enum CodingKeys: String, CodingKey { case type }
     public init(from decoder: Decoder) throws {
@@ -3048,6 +3050,8 @@ public enum SessionLogEvent: Codable, Equatable, Sendable {
         case "penalty": self = .penalty(try SessionPenaltyEvent(from: decoder))
         case "retirement", "default", "walkover": self = .retirement(try SessionEndEvent(from: decoder))
         case "rallyLet": self = .rallyLet(try SessionRallyLetEvent(from: decoder))
+        case "serverOverride": self = .serverOverride(try SessionServerOverrideEvent(from: decoder))
+        case "receiverOverride": self = .receiverOverride(try SessionReceiverOverrideEvent(from: decoder))
         default: throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown SessionLogEvent discriminator")
         }
     }
@@ -3060,6 +3064,8 @@ public enum SessionLogEvent: Codable, Equatable, Sendable {
         case .penalty(let value): try value.encode(to: encoder)
         case .retirement(let value): try value.encode(to: encoder)
         case .rallyLet(let value): try value.encode(to: encoder)
+        case .serverOverride(let value): try value.encode(to: encoder)
+        case .receiverOverride(let value): try value.encode(to: encoder)
         }
     }
     public var id: String {
@@ -3071,6 +3077,8 @@ public enum SessionLogEvent: Codable, Equatable, Sendable {
         case .penalty(let value): value.id
         case .retirement(let value): value.id
         case .rallyLet(let value): value.id
+        case .serverOverride(let value): value.id
+        case .receiverOverride(let value): value.id
         }
     }
     public var seq: Int {
@@ -3082,6 +3090,8 @@ public enum SessionLogEvent: Codable, Equatable, Sendable {
         case .penalty(let value): value.seq
         case .retirement(let value): value.seq
         case .rallyLet(let value): value.seq
+        case .serverOverride(let value): value.seq
+        case .receiverOverride(let value): value.seq
         }
     }
     public var typeString: String {
@@ -3093,6 +3103,8 @@ public enum SessionLogEvent: Codable, Equatable, Sendable {
         case .penalty(let value): value.type.rawValue
         case .retirement(let value): value.type.rawValue
         case .rallyLet(let value): value.type.rawValue
+        case .serverOverride(let value): value.type.rawValue
+        case .receiverOverride(let value): value.type.rawValue
         }
     }
 }
@@ -3125,11 +3137,13 @@ public struct SessionMatch: Codable, Equatable, Sendable {
     public var format: SessionMatchFormat
     public var toss: SessionToss
     public var log: [SessionLogEvent]
+    public var resolutionMode: SessionMatchResolutionMode?
 
-    public init(format: SessionMatchFormat, toss: SessionToss, log: [SessionLogEvent]) {
+    public init(format: SessionMatchFormat, toss: SessionToss, log: [SessionLogEvent], resolutionMode: SessionMatchResolutionMode? = nil) {
         self.format = format
         self.toss = toss
         self.log = log
+        self.resolutionMode = resolutionMode
     }
 }
 
@@ -3187,6 +3201,11 @@ public enum SessionMatchFormatSetsToWin: Int, Codable, CaseIterable, Hashable, S
     case value1 = 1
     case value2 = 2
     case value3 = 3
+}
+
+public enum SessionMatchResolutionMode: String, Codable, CaseIterable, Hashable, Sendable {
+    case rules = "rules"
+    case asPlayed = "asPlayed"
 }
 
 public struct SessionOriginalState: Codable, Equatable, Sendable {
@@ -3443,6 +3462,43 @@ public struct SessionRallyPlaybackClipsItem: Codable, Equatable, Sendable {
     }
 }
 
+public struct SessionReceiverOverrideEvent: Codable, Equatable, Sendable {
+    public var id: String
+    public var seq: Int
+    public var at: String?
+    public var targetPointId: String
+    public var supersedes: String?
+    public var provenance: SessionReceiverOverrideEventProvenance
+    public var source: String
+    public var note: String?
+    public var type: SessionReceiverOverrideEventType
+    public var receivingSide: Side
+    public var deuceReceiver: String
+
+    public init(id: String, seq: Int, at: String? = nil, targetPointId: String, supersedes: String? = nil, provenance: SessionReceiverOverrideEventProvenance, source: String, note: String? = nil, type: SessionReceiverOverrideEventType = .value, receivingSide: Side, deuceReceiver: String) {
+        self.id = id
+        self.seq = seq
+        self.at = at
+        self.targetPointId = targetPointId
+        self.supersedes = supersedes
+        self.provenance = provenance
+        self.source = source
+        self.note = note
+        self.type = type
+        self.receivingSide = receivingSide
+        self.deuceReceiver = deuceReceiver
+    }
+}
+
+public enum SessionReceiverOverrideEventProvenance: String, Codable, CaseIterable, Hashable, Sendable {
+    case manual = "manual"
+    case reviewed = "reviewed"
+}
+
+public enum SessionReceiverOverrideEventType: String, Codable, CaseIterable, Hashable, Sendable {
+    case value = "receiverOverride"
+}
+
 public struct SessionRecording: Codable, Equatable, Sendable {
     public var mode: SessionRecordingMode
     public var importSource: SessionRecordingImportSource?
@@ -3684,6 +3740,53 @@ public struct SessionServeMark: Codable, Equatable, Sendable {
 public enum SessionServeMarkServedTo: String, Codable, CaseIterable, Hashable, Sendable {
     case deuce = "deuce"
     case ad = "ad"
+}
+
+public struct SessionServerOverrideEvent: Codable, Equatable, Sendable {
+    public var id: String
+    public var seq: Int
+    public var at: String?
+    public var targetPointId: String
+    public var supersedes: String?
+    public var provenance: SessionServerOverrideEventProvenance
+    public var source: String
+    public var note: String?
+    public var type: SessionServerOverrideEventType
+    public var server: String
+    public var continuation: SessionServerOverrideEventContinuation
+    public var discoveryAfterPointId: String?
+    public var rotation: [String]?
+
+    public init(id: String, seq: Int, at: String? = nil, targetPointId: String, supersedes: String? = nil, provenance: SessionServerOverrideEventProvenance, source: String, note: String? = nil, type: SessionServerOverrideEventType = .value, server: String, continuation: SessionServerOverrideEventContinuation, discoveryAfterPointId: String? = nil, rotation: [String]? = nil) {
+        self.id = id
+        self.seq = seq
+        self.at = at
+        self.targetPointId = targetPointId
+        self.supersedes = supersedes
+        self.provenance = provenance
+        self.source = source
+        self.note = note
+        self.type = type
+        self.server = server
+        self.continuation = continuation
+        self.discoveryAfterPointId = discoveryAfterPointId
+        self.rotation = rotation
+    }
+}
+
+public enum SessionServerOverrideEventContinuation: String, Codable, CaseIterable, Hashable, Sendable {
+    case pointOnly = "pointOnly"
+    case completedStandardGame = "completedStandardGame"
+    case oddTiebreak = "oddTiebreak"
+}
+
+public enum SessionServerOverrideEventProvenance: String, Codable, CaseIterable, Hashable, Sendable {
+    case manual = "manual"
+    case reviewed = "reviewed"
+}
+
+public enum SessionServerOverrideEventType: String, Codable, CaseIterable, Hashable, Sendable {
+    case value = "serverOverride"
 }
 
 public enum SessionSetRule: Codable, Equatable, Sendable {

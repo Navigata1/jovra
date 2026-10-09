@@ -142,7 +142,7 @@ class Generator:
             required=key in s.get('required',[])
             default=None
             if not required:t+='?';default='nil'
-            elif key=='schemaVersion':default='.v1_1' if file in ['session','practice-plan','archive-manifest','export'] else '.v1'
+            elif key=='schemaVersion':default='.current' if file == 'session' else ('.v1_1' if file in ['practice-plan','archive-manifest','export'] else '.v1')
             elif 'const'in v:
                 default=str(v['const']).lower() if isinstance(v['const'],bool) else '.value'
             fields.append((key,t,required,default))
