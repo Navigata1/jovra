@@ -134,7 +134,7 @@ jobs:
       - name: swift test (JovraCore, JovraMedia)
         run: |
           swift test --package-path ios/Packages/JovraCore
-          swift test --package-path ios/Packages/JovraMedia
+          swift test --package-path ios/Packages/JovraMedia --no-parallel
       - name: Generate project
         run: xcodegen generate --spec ios/project.yml --project ios
       - name: Build app and run JovraTests

@@ -1,0 +1,40 @@
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module JovraMediaTests
+[4/5] Compiling JovraMediaTests RecoveryScannerTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking JovraMediaPackageTests
+Build complete! (2.19s)
+Test Suite 'Selected tests' started at 2026-10-09 11:51:51.150.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 11:51:51.152.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 11:51:51.152.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:51:51.152.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test brokenMediaPeersAreExplicitlyRefusedWithoutHidingHealthyCapture() started.
+◇ Test case passing 1 argument fault → "negative-mark" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "future-mark" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "negative-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "backwards-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "overlapping-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "overlapping-gaps" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "future-mark" at RecoveryScannerTests.swift:122:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "future-mark" at RecoveryScannerTests.swift:123:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "future-mark" at RecoveryScannerTests.swift:125:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x102b3d8e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/C23FED41-1505-4258-AC6D-90683E429789/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "overlapping-gaps" at RecoveryScannerTests.swift:122:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "overlapping-gaps" at RecoveryScannerTests.swift:123:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "overlapping-gaps" at RecoveryScannerTests.swift:125:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x102b3d8e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/BAAE268B-403D-4675-AE6D-300F1378B635/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "overlapping-gap" at RecoveryScannerTests.swift:122:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "overlapping-gap" at RecoveryScannerTests.swift:123:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "overlapping-gap" at RecoveryScannerTests.swift:125:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x102b3d8e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/62E3241E-0D28-44DA-BAC1-633E9A42B99B/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-mark" at RecoveryScannerTests.swift:122:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-mark" at RecoveryScannerTests.swift:123:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-mark" at RecoveryScannerTests.swift:125:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x102b3d8e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/CA7003F7-1754-4770-9DCF-20EC94D996A5/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) with 6 test cases failed after 7.425 seconds with 12 issues.
+✔ Test brokenMediaPeersAreExplicitlyRefusedWithoutHidingHealthyCapture() passed after 7.476 seconds.
+✘ Test run with 2 tests in 0 suites failed after 7.476 seconds with 12 issues.

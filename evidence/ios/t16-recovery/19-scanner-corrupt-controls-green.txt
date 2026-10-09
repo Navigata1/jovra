@@ -1,0 +1,35 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/7] Emitting module JovraMedia
+[4/7] Compiling JovraMedia RecoveryScanner.swift
+[4/9] Write Objects.LinkFileList
+[6/9] Linking jovra-benchmark
+[7/9] Applying jovra-benchmark
+[8/9] Linking JovraMediaPackageTests
+Build complete! (2.17s)
+Test Suite 'Selected tests' started at 2026-10-09 11:52:17.294.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 11:52:17.295.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 11:52:17.295.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:52:17.295.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() started.
+◇ Test brokenMediaPeersAreExplicitlyRefusedWithoutHidingHealthyCapture() started.
+◇ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "negative-mark" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "future-mark" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "overlapping-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "negative-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "backwards-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "overlapping-gaps" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✔ Test brokenMediaPeersAreExplicitlyRefusedWithoutHidingHealthyCapture() passed after 7.480 seconds.
+✔ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) with 6 test cases passed after 7.605 seconds.
+✔ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() passed after 8.078 seconds.
+✔ Test run with 3 tests in 0 suites passed after 8.078 seconds.

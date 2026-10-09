@@ -1,0 +1,42 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/9] Compiling JovraMedia RecoveryFiles.swift
+[4/9] Emitting module JovraMedia
+[5/10] Compiling JovraMedia RecoveryScanner.swift
+[6/11] Emitting module JovraBenchmark
+[7/19] Emitting module JovraBenchmarkTests
+[7/19] Write Objects.LinkFileList
+[9/19] Emitting module JovraMediaTests
+[9/24] Linking jovra-benchmark
+[10/24] Applying jovra-benchmark
+[12/24] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[13/24] Compiling JovraMediaTests RealFootageProbeTests.swift
+[14/24] Compiling JovraMediaTests FrameTimeTests.swift
+[15/24] Compiling JovraMediaTests FrameTimingTests.swift
+[16/24] Compiling JovraMediaTests MediaLibraryTests.swift
+[17/24] Compiling JovraMediaTests CapturePipelineTests.swift
+[18/24] Compiling JovraMediaTests MediaDirectoryDurabilityTests.swift
+[19/24] Compiling JovraMediaTests FragmentedMovieLayoutTests.swift
+[20/24] Compiling JovraMediaTests RecoveryScannerTests.swift
+[21/24] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[22/24] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[22/24] Write Objects.LinkFileList
+[23/24] Linking JovraMediaPackageTests
+Build complete! (5.13s)
+Test Suite 'Selected tests' started at 2026-10-09 11:40:38.133.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 11:40:38.135.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 11:40:38.135.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:40:38.135.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() started.
+✘ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() recorded an issue at RecoveryScannerTests.swift:14:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() failed after 0.003 seconds with 1 issue.
+✘ Test run with 1 test in 0 suites failed after 0.003 seconds with 1 issue.

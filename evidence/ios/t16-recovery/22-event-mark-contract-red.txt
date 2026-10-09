@@ -1,0 +1,52 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module JovraMediaTests
+[4/5] Compiling JovraMediaTests RecoveryScannerTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking JovraMediaPackageTests
+Build complete! (2.22s)
+Test Suite 'Selected tests' started at 2026-10-09 12:00:36.982.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 12:00:36.983.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 12:00:36.983.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 12:00:36.983.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test capturedPointMarkPreservesSchemaProducerAndSampleLabelThroughRecovery() started.
+◇ Test case passing 1 argument fault → "negative-mark" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "overlapping-gaps" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "backwards-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "negative-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "overlapping-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "future-mark" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "negative-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "future-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "missing-rate-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "missing-thermal-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "bad-rate-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "missing-rate-event" at RecoveryScannerTests.swift:128:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "missing-rate-event" at RecoveryScannerTests.swift:129:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "missing-rate-event" at RecoveryScannerTests.swift:131:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x1005ea7e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/A6433ED7-7B6E-4A77-8AD3-14CE0AB982D9/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "bad-rate-event" at RecoveryScannerTests.swift:128:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "bad-rate-event" at RecoveryScannerTests.swift:129:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "bad-rate-event" at RecoveryScannerTests.swift:131:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x1005ea7e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/307829A5-BD8E-4368-A54D-B3AC8F2BA4E7/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-event" at RecoveryScannerTests.swift:128:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-event" at RecoveryScannerTests.swift:129:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-event" at RecoveryScannerTests.swift:131:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x1005ea7e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/39CB9A1B-6100-4FC3-ABDA-B9B7FDBFA002/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "future-event" at RecoveryScannerTests.swift:128:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "missing-thermal-event" at RecoveryScannerTests.swift:128:5: Expectation failed: try await scanner.scan().isEmpty
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "future-event" at RecoveryScannerTests.swift:129:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "missing-thermal-event" at RecoveryScannerTests.swift:129:5: Expectation failed: await scanner.refusals.map(\.sessionID) == [id]
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "missing-thermal-event" at RecoveryScannerTests.swift:131:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x1005ea7e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/40A431FA-0AAD-4DD4-958C-F82A82757914/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "future-event" at RecoveryScannerTests.swift:131:5: Expectation failed: !((FileManager.default → <NSFileManager: 0x1005ea7e0>).fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path → "/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/9B014B72-264A-44FB-996D-1744E2E73529/sessions/finished-stale/capture-recovery.json") → true)
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) with 11 test cases failed after 2.385 seconds with 15 issues.
+✘ Test capturedPointMarkPreservesSchemaProducerAndSampleLabelThroughRecovery() recorded an issue at RecoveryScannerTests.swift:148:5: Expectation failed: (mark.provenance.status == .manual → true) && (mark.provenance.source == "user" → false)
+✘ Test capturedPointMarkPreservesSchemaProducerAndSampleLabelThroughRecovery() failed after 2.389 seconds with 1 issue.
+✘ Test run with 2 tests in 0 suites failed after 2.389 seconds with 16 issues.

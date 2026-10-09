@@ -68,6 +68,10 @@ All scripts live in `scripts/ios/` and keep derived data in `.derivedData/` at t
 | `scripts/ios/render-app-icon.sh [proof.png]` | Re-renders `AppIcon-1024.png` from `BrandGeometry.swift` (and optionally a brand proof sheet). Run after changing the mark. |
 
 Single package directly: `swift test --package-path ios/Packages/JovraCore`.
+For the macOS media suite, use `swift test --package-path ios/Packages/JovraMedia --no-parallel`.
+Its real capture/decoder tests otherwise start many AVFoundation sessions together; the T16 integrated
+parallel run stalled, while the unchanged suite passed with explicit sequential scheduling
+(see [T16 integrated evidence](../evidence/ios/t16-recovery/SCANNER.md)). This schedules tests and does not establish concurrent decoder safety.
 
 Every script takes `SIMULATOR_ID=<udid>` (use your own simulator; see "Simulator hygiene") and
 `DERIVED_DATA=<path inside your worktree>`.
