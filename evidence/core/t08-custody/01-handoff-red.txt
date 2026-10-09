@@ -1,0 +1,32 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/11] Write sources
+[2/11] Write swift-version--58304C5D6DBC2206.txt
+[3/7] Discover conformance runners by kind
+[4/7] Write sources
+[6/9] Compiling JovraCore SessionStore.swift
+[7/9] Emitting module JovraCore
+[8/13] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[9/13] Compiling JovraCoreTests CaptureHandoffTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift:18:21: error: value of type 'SessionStore' has no member 'saveCapture'
+16 |     let segment = SessionSegment(id: "video", index: 0, file: .init(path: "originals/video.mp4"), startMs: 0, durationMs: 2000, frameRate: .init(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: true)
+17 |     let record = SessionRecording(mode: .simulatorFixture, durationMs: 2000, segments: [segment], gaps: [], microphone: .denied, mediaAvailable: true)
+18 |     try await store.saveCapture(record, marks: [existing, incoming], for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'saveCapture'
+19 |     try await store.saveCapture(record, marks: [incoming], for: document.id)
+20 |     let reopened = try SessionStore(root: directory)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift:19:21: error: value of type 'SessionStore' has no member 'saveCapture'
+17 |     let record = SessionRecording(mode: .simulatorFixture, durationMs: 2000, segments: [segment], gaps: [], microphone: .denied, mediaAvailable: true)
+18 |     try await store.saveCapture(record, marks: [existing, incoming], for: document.id)
+19 |     try await store.saveCapture(record, marks: [incoming], for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'saveCapture'
+20 |     let reopened = try SessionStore(root: directory)
+21 |     let actual = try await reopened.load(document.id)
+[10/13] Emitting module JovraCoreTests
+[11/13] Compiling JovraCoreTests SessionStoreTests.swift
+error: fatalError
