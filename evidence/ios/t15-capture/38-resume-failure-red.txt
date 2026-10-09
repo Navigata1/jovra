@@ -1,0 +1,24 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling JovraMediaTests CapturePipelineTests.swift
+[4/5] Emitting module JovraMediaTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking JovraMediaPackageTests
+Build complete! (2.02s)
+Test Suite 'Selected tests' started at 2026-10-09 09:44:55.884.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 09:44:55.885.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 09:44:55.885.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:44:55.885.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test resumedSourceFailureReturnsToPausedAndKeepsPreviouslyConfirmedMedia() started.
+✘ Test resumedSourceFailureReturnsToPausedAndKeepsPreviouslyConfirmedMedia() recorded an issue at CapturePipelineTests.swift:240:5: Expectation failed: (engine.status.phase → .recording) == .paused
+✘ Test resumedSourceFailureReturnsToPausedAndKeepsPreviouslyConfirmedMedia() failed after 0.650 seconds with 1 issue.
+✘ Test run with 1 test in 0 suites failed after 0.650 seconds with 1 issue.

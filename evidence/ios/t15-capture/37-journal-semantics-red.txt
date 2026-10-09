@@ -1,0 +1,26 @@
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/9] Write swift-version--58304C5D6DBC2206.txt
+[2/5] Discover conformance runners by kind
+[3/5] Write sources
+[5/8] Emitting module JovraCoreTests
+[6/8] Compiling JovraCoreTests CaptureJournalTests.swift
+[7/8] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[7/9] Write Objects.LinkFileList
+[8/9] Linking JovraCorePackageTests
+Build complete! (1.08s)
+Test Suite 'Selected tests' started at 2026-10-09 09:44:53.345.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 09:44:53.346.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 09:44:53.346.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:44:53.346.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() started.
+✘ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() recorded an issue at CaptureJournalTests.swift:56:5: Expectation failed: an error was expected but none was thrown
+✘ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() recorded an issue at CaptureJournalTests.swift:59:5: Expectation failed: (journal.snapshot() → CaptureJournalSnapshot(formatVersion: 1, sessionID: "guard-test", mode: JovraCore.SessionRecordingMode.camera, microphone: JovraCore.SessionRecordingMicrophone.denied, segments: [JovraCore.SessionSegment(id: "first", index: 0, file: JovraCore.RecordFileReference(path: "originals/first.mp4", mimeType: nil, bytes: Optional(4096), sha256: nil, md5: nil), startMs: 0, durationMs: 2000, frameRate: JovraCore.RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: JovraCore.SessionSegmentCodec.h264, hasAudio: false, rotationDegrees: nil, finalized: false, recoveredAfterInterruption: nil)], gaps: [], captureEvents: [], marks: nil, lastConfirmedMediaTime: Optional(JovraCore.MediaTime(value: 10, timescale: 1)), finished: false, revision: 2)) == (prior → CaptureJournalSnapshot(formatVersion: 1, sessionID: "guard-test", mode: JovraCore.SessionRecordingMode.camera, microphone: JovraCore.SessionRecordingMicrophone.denied, segments: [JovraCore.SessionSegment(id: "first", index: 0, file: JovraCore.RecordFileReference(path: "originals/first.mp4", mimeType: nil, bytes: nil, sha256: nil, md5: nil), startMs: 0, durationMs: 0, frameRate: JovraCore.RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: JovraCore.SessionSegmentCodec.h264, hasAudio: false, rotationDegrees: nil, finalized: false, recoveredAfterInterruption: nil)], gaps: [], captureEvents: [], marks: nil, lastConfirmedMediaTime: nil, finished: false, revision: 1))
+✘ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() recorded an issue at CaptureJournalTests.swift:49:2: Caught error: .regressingCheckpoint
+✘ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() failed after 0.007 seconds with 3 issues.
+✘ Test run with 1 test in 0 suites failed after 0.007 seconds with 3 issues.

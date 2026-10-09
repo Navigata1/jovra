@@ -1,0 +1,24 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling JovraMediaTests CapturePipelineTests.swift
+[4/5] Emitting module JovraMediaTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking JovraMediaPackageTests
+Build complete! (3.26s)
+Test Suite 'Selected tests' started at 2026-10-09 09:35:43.867.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 09:35:43.868.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 09:35:43.868.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:35:43.868.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() started.
+Captured duration=CMTime(value: 2880448, timescale: 48000, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), decoded=CMTime(value: 36000, timescale: 600, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0), confirmed=MediaTime(value: 36000, timescale: 600), bytes=Optional(1359601), actual=1359601
+✔ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() passed after 6.242 seconds.
+✔ Test run with 1 test in 0 suites passed after 6.242 seconds.

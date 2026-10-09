@@ -1,0 +1,42 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+error: emit-module command failed with exit code 1 (use -v to see invocation)
+[3/5] Emitting module JovraMediaTests
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:8:15: error: type 'CapturedRecordSink' does not conform to protocol 'RecordingSink'
+  6 | import JovraBenchmark
+  7 | 
+  8 | private actor CapturedRecordSink: RecordingSink {
+    |               |- error: type 'CapturedRecordSink' does not conform to protocol 'RecordingSink'
+    |               `- note: add stubs for conformance
+  9 |     var received: SessionRecording?
+ 10 |     var receivedMarks: [SessionMark]?
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CaptureTypes.swift:43:10: note: protocol requires function 'saveRecording(sessionID:recording:)' with type '(String, SessionRecording) async throws -> ()'
+41 | }
+42 | public protocol RecordingSink: Sendable {
+43 |     func saveRecording(sessionID: String, recording: SessionRecording) async throws
+   |          `- note: protocol requires function 'saveRecording(sessionID:recording:)' with type '(String, SessionRecording) async throws -> ()'
+44 | }
+45 | public enum CaptureError: Error, Equatable, Sendable {
+[4/5] Compiling JovraMediaTests CapturePipelineTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:8:15: error: type 'CapturedRecordSink' does not conform to protocol 'RecordingSink'
+  6 | import JovraBenchmark
+  7 | 
+  8 | private actor CapturedRecordSink: RecordingSink {
+    |               |- error: type 'CapturedRecordSink' does not conform to protocol 'RecordingSink'
+    |               `- note: add stubs for conformance
+  9 |     var received: SessionRecording?
+ 10 |     var receivedMarks: [SessionMark]?
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CaptureTypes.swift:43:10: note: protocol requires function 'saveRecording(sessionID:recording:)' with type '(String, SessionRecording) async throws -> ()'
+41 | }
+42 | public protocol RecordingSink: Sendable {
+43 |     func saveRecording(sessionID: String, recording: SessionRecording) async throws
+   |          `- note: protocol requires function 'saveRecording(sessionID:recording:)' with type '(String, SessionRecording) async throws -> ()'
+44 | }
+45 | public enum CaptureError: Error, Equatable, Sendable {
+error: fatalError
