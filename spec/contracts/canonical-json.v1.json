@@ -26,6 +26,16 @@
       "id": "controls",
       "input": "{\"text\":\"line\\nnext\\tcell\"}",
       "canonical": "{\"text\":\"line\\nnext\\tcell\"}"
+    },
+    {
+      "id": "all-controls-and-quote-backslash",
+      "input": "{\"text\":\"\\b\\f\\n\\r\\t\\u0000\\u001f\\\"\\\\\\/\"}",
+      "canonical": "{\"text\":\"\\b\\f\\n\\r\\t\\u0000\\u001f\\\"\\\\/\"}"
+    },
+    {
+      "id": "escaped-surrogate-pair",
+      "input": "{\"text\":\"\\ud83c\\udfbe\"}",
+      "canonical": "{\"text\":\"🎾\"}"
     }
   ]
 }

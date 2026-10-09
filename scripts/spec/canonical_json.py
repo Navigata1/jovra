@@ -40,6 +40,12 @@ def dumps(value) -> str:
         result = format(value, "f")
         return result.rstrip("0").rstrip(".") if "." in result else result
     if isinstance(value, str):
+        # Canonical output is UTF-8. A decoded lone UTF-16 surrogate is not a Unicode scalar.
+        # Valid escaped surrogate pairs are already combined by json.loads and remain unescaped.
+        try:
+            value.encode("utf-8")
+        except UnicodeEncodeError as exc:
+            raise ValueError("unpaired Unicode surrogate in JSON string") from exc
         return json.dumps(value, ensure_ascii=False)
     if isinstance(value, list):
         return "[" + ",".join(dumps(item) for item in value) + "]"

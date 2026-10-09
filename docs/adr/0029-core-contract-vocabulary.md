@@ -17,7 +17,8 @@ need one interpretation before persisted records and score exports are built.
    relabel stored moments: an older name can have a different meaning. Serve names remain unchanged.
 3. Canonical conformance compares sorted, compact UTF-8 JSON of the parsed fixture values, without a trailing newline;
    source fixture indentation and insertion order are not canonical bytes. Unicode and `/` remain unescaped; standard
-   JSON control escaping applies. Numeric tokens use plain decimal notation without exponents, fractional trailing zeroes or a trailing decimal
+   JSON control escaping applies. Unpaired Unicode surrogates are refused; valid escaped pairs decode to their
+   Unicode scalar and emit UTF-8. Numeric tokens use plain decimal notation without exponents, fractional trailing zeroes or a trailing decimal
    point; negative zero is `0`. Exact parsing must not round via binary floating point. Decimal strings and integer
    rational times keep their stored values. Expected bytes are produced independently of Swift, using the reference tooling or `scripts/spec/canonical_json.py` (exact Decimal parsing and the independent hand-derived vectors in
    `spec/contracts/canonical-json.v1.json`). The cosmetic fixture printer and the original fixture files remain
