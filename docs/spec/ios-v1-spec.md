@@ -608,8 +608,9 @@ numbering is continuous.
   (half-up integer), `d = 0` displays "—", never a platform percent formatter.
 - Definitions fixed for v1 (D4 and research §9): **"Shots" = `strokeCount`** (racket contacts in live play; DF 0, ace 1,
   missed return 2); rally length (serve counts, final error does not) drives buckets 0–4 / 5–8 / 9+; second-serve
-  points include double faults; penalty points count in total points only; tie-break games are excluded from service
-  games; winners exclude aces; automatic error labels read "Error (unclassified)".
+  points include double faults; penalty points count in total points and eligible break-point slots, but not service
+  or return points or serve stats (shared-contract decision 4 in `spec/README.md`); tie-break games are excluded from
+  service games; winners exclude aces; automatic error labels read "Error (unclassified)".
 - **Provenance of a derived stat is the weakest of its inputs**: any `estimated` contributing point makes the stat
   `estimated` and the UI reports how many contributing points are unreviewed.
 - Deltas are in percentage points computed from the two displayed integers.

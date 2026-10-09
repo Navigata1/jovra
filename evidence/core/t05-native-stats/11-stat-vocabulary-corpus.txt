@@ -1,0 +1,98 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/stats/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/11] Write sources
+[2/11] Write swift-version--58304C5D6DBC2206.txt
+[3/7] Discover conformance runners by kind
+[4/7] Write sources
+[6/10] Compiling JovraCore CaptureJournal.swift
+[7/10] Compiling JovraCore DurableDirectory.swift
+[8/10] Emitting module JovraCore
+[9/12] Compiling JovraCore SessionStore.swift
+[10/12] Compiling JovraCore DerivedStat.swift
+[11/13] Compiling JovraCore StatsEngine.swift
+[12/32] Emitting module JovraCoreTests
+[13/32] Compiling JovraCoreTests CaptureJournalTests.swift
+[14/32] Compiling JovraCoreTests CanonicalJSONTests.swift
+[15/32] Compiling JovraCoreTests ContractSafetyTests.swift
+[16/32] Compiling JovraCoreTests FixtureManifest.swift
+[17/32] Compiling JovraCoreTests MediaRecordContractTests.swift
+[18/32] Compiling JovraCoreTests PercentTests.swift
+[19/32] Compiling JovraCoreTests RegistryContractTests.swift
+[20/32] Compiling JovraCoreTests ArchiveRunner.swift
+[21/32] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[22/32] Compiling JovraCoreTests BenchmarkRunner.swift
+[23/32] Compiling JovraCoreTests CSVContractRunner.swift
+[24/32] Compiling JovraCoreTests CanonicalRunner.swift
+[25/32] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[26/32] Compiling JovraCoreTests EquipmentRunner.swift
+[27/32] Compiling JovraCoreTests ExportRunner.swift
+[28/32] Compiling JovraCoreTests GroundTruthRunner.swift
+[29/32] Compiling JovraCoreTests PctRunner.swift
+[30/32] Compiling JovraCoreTests PracticePlanRunner.swift
+[31/50] Compiling JovraCoreTests SampleMediaRunner.swift
+[32/50] Compiling JovraCoreTests ScoringRunner.swift
+[33/50] Compiling JovraCoreTests SessionRunner.swift
+[34/50] Compiling JovraCoreTests StatsRunner.swift
+[35/50] Compiling JovraCoreTests UnitsRunner.swift
+[36/50] Compiling JovraCoreTests SessionContractTests.swift
+[37/50] Compiling JovraCoreTests UnitsTests.swift
+[38/50] Compiling JovraCoreTests ContrastTests.swift
+[39/50] Compiling JovraCoreTests DurationLabelTests.swift
+[40/50] Compiling JovraCoreTests FrameRateTests.swift
+[41/50] Compiling JovraCoreTests ProvenanceTests.swift
+[42/50] Compiling JovraCoreTests ScoringContractTests.swift
+[43/50] Compiling JovraCoreTests ScoringTests.swift
+[44/50] Compiling JovraCoreTests CaptureHandoffTests.swift
+[45/50] Compiling JovraCoreTests DirectoryCreationDurabilityTests.swift
+[46/50] Compiling JovraCoreTests SessionStoreTests.swift
+[47/50] Compiling JovraCoreTests StatsTests.swift
+[48/50] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[48/50] Write Objects.LinkFileList
+[49/50] Linking JovraCorePackageTests
+Build complete! (6.90s)
+Test Suite 'Selected tests' started at 2026-10-09 11:30:15.387.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 11:30:15.388.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 11:30:15.388.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:30:15.388.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test sampleOverviewStatsMatchIndependentValues() started.
+◇ Test momentumAndRequiredNullableDurationKeepTheirClosedContract() started.
+◇ Test estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() started.
+◇ Test allDiscoveredRunnerFixturesPass() started.
+◇ Test missingShotObservationsAreUnknownRatherThanMeasuredZero() started.
+◇ Test serveRateUsesDenominatorContributorsFromOnlyTheChosenSide() started.
+✔ Test momentumAndRequiredNullableDurationKeepTheirClosedContract() passed after 0.022 seconds.
+Consumed jovra.archiveManifest: 2 fixtures
+Consumed jovra.benchmarkBindings: 1 fixtures
+Consumed jovra.benchmarkRecord: 3 fixtures
+Consumed jovra.csvContract: 2 fixtures
+canonical independent vectors: 13
+Consumed jovra.fixture.canonical: 1 fixtures
+✔ Test sampleOverviewStatsMatchIndependentValues() passed after 0.073 seconds.
+✔ Test serveRateUsesDenominatorContributorsFromOnlyTheChosenSide() passed after 0.073 seconds.
+✔ Test estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() passed after 0.075 seconds.
+✔ Test missingShotObservationsAreUnknownRatherThanMeasuredZero() passed after 0.077 seconds.
+Consumed jovra.capabilityRegistry: 1 fixtures
+Consumed jovra.equipment: 1 fixtures
+Consumed jovra.export: 2 fixtures
+Consumed jovra.groundTruth: 19 fixtures
+pct vectors: 32
+Consumed jovra.fixture.pct: 1 fixtures
+Consumed jovra.practicePlan: 2 fixtures
+Consumed jovra.sampleMediaManifest: 1 fixtures
+Consumed jovra.fixture.scoring: 106 fixtures
+Consumed jovra.session: 3 fixtures
+Consumed jovra.fixture.stats: 3 fixtures
+units vectors: 31
+Consumed jovra.fixture.units: 1 fixtures
+Pending fixture kinds: jovra.fixture.sample
+✔ Test allDiscoveredRunnerFixturesPass() passed after 0.750 seconds.
+✔ Test run with 6 tests in 0 suites passed after 0.750 seconds.

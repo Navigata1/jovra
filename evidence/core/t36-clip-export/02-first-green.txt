@@ -1,0 +1,16 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/9] Compiling JovraMedia ClipExporter.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/clip-export/ios/Packages/JovraMedia/Sources/JovraMedia/Export/ClipExporter.swift:41:53: error: missing argument label 'otherRange:' in call
+ 39 |         outputVideo.preferredTransform = try await video.load(.preferredTransform)
+ 40 |         if includeAudio, let audio = try await asset.loadTracks(withMediaType: .audio).first {
+ 41 |             let overlap = CMTimeRangeGetIntersection(chosen, try await audio.load(.timeRange))
+    |                                                     `- error: missing argument label 'otherRange:' in call
+ 42 |             if overlap.isValid, CMTimeCompare(overlap.duration, .zero) > 0 {
+ 43 |                 guard let outputAudio = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid) else {
+[4/9] Emitting module JovraMedia
+error: fatalError
