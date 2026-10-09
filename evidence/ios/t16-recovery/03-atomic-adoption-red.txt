@@ -1,0 +1,643 @@
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Compiling FixtureRunnerGenerator main.swift
+[4/6] Emitting module FixtureRunnerGenerator
+[4/7] Write Objects.LinkFileList
+[5/7] Linking FixtureRunnerGenerator-tool
+[6/7] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/13] Write sources
+[4/13] Write swift-version--58304C5D6DBC2206.txt
+[6/27] Emitting module FixtureRunnerGenerator
+[7/27] Compiling FixtureRunnerGenerator main.swift
+[8/29] Emitting module FixtureRunnerGenerator
+[8/30] Write Objects.LinkFileList
+[10/30] Linking FixtureRunnerGenerator
+[11/30] Linking FixtureRunnerGenerator-tool
+[12/30] Applying FixtureRunnerGenerator
+[13/30] Discover conformance runners by kind
+[14/30] Applying FixtureRunnerGenerator-tool
+[15/30] Write sources
+[17/30] Emitting module JovraCore
+[18/41] Compiling JovraCore SRGBColor.swift
+[19/41] Compiling JovraCore LogResolver.swift
+[20/41] Compiling JovraCore MatchState.swift
+[21/41] Compiling JovraCore OrderOverrides.swift
+[22/41] Compiling JovraCore OutcomeInterpreter.swift
+[23/41] Compiling JovraCore ScoringEngine.swift
+[24/41] Compiling JovraCore ScoringInput.swift
+[25/41] Compiling JovraCore TimelineDiff.swift
+[26/41] Compiling JovraCore TimelineModels.swift
+[27/41] Compiling JovraCore SessionStore.swift
+[28/41] Compiling JovraCore Units.swift
+[29/41] Compiling JovraCore CapabilityRegistryLoader.swift
+[30/41] Compiling JovraCore CaptureJournal.swift
+[31/41] Compiling JovraCore CanonicalJSON.swift
+[32/41] Compiling JovraCore ContractPrimitives.swift
+[33/41] Compiling JovraCore DocumentModels.swift
+[34/41] Compiling JovraCore ContrastRequirement.swift
+[35/41] Compiling JovraCore DurationLabel.swift
+[36/41] Compiling JovraCore DurableDirectory.swift
+[37/41] Compiling JovraCore FrameRate.swift
+[38/41] Compiling JovraCore Percent.swift
+[39/41] Compiling JovraCore Provenance.swift
+[40/60] Compiling JovraCoreTests CaptureJournalTests.swift
+[41/60] Compiling JovraCoreTests CanonicalJSONTests.swift
+[42/60] Compiling JovraCoreTests ContractSafetyTests.swift
+[43/60] Compiling JovraCoreTests FixtureManifest.swift
+[44/60] Compiling JovraCoreTests ManifestTests.swift
+[45/60] Compiling JovraCoreTests MediaRecordContractTests.swift
+[46/60] Compiling JovraCoreTests PercentTests.swift
+[47/60] Compiling JovraCoreTests RegistryContractTests.swift
+[48/60] Compiling JovraCoreTests ArchiveRunner.swift
+[49/60] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[50/60] Compiling JovraCoreTests BenchmarkRunner.swift
+[51/60] Compiling JovraCoreTests CSVContractRunner.swift
+[52/60] Compiling JovraCoreTests CanonicalRunner.swift
+[53/60] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[54/60] Compiling JovraCoreTests EquipmentRunner.swift
+[55/60] Compiling JovraCoreTests ExportRunner.swift
+[56/60] Compiling JovraCoreTests GroundTruthRunner.swift
+[57/60] Compiling JovraCoreTests PctRunner.swift
+[58/60] Emitting module JovraCoreTests
+[59/78] Compiling JovraCoreTests PracticePlanRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[60/78] Compiling JovraCoreTests SampleMediaRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[61/78] Compiling JovraCoreTests ScoringRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[62/78] Compiling JovraCoreTests SessionRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[63/78] Compiling JovraCoreTests UnitsRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[64/78] Compiling JovraCoreTests SessionContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[65/78] Compiling JovraCoreTests UnitsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[66/78] Compiling JovraCoreTests ContrastTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[67/78] Compiling JovraCoreTests DurationLabelTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[68/78] Compiling JovraCoreTests FrameRateTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[69/78] Compiling JovraCoreTests ProvenanceTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[70/78] Compiling JovraCoreTests ScoringContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[71/78] Compiling JovraCoreTests ScoringTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[72/78] Compiling JovraCoreTests CaptureHandoffTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[73/78] Compiling JovraCoreTests DirectoryCreationDurabilityTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[74/78] Compiling JovraCoreTests RecoveredCaptureTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[75/78] Compiling JovraCoreTests SessionStoreTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+[76/78] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:25:27: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                           `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:28:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+26 |     }
+27 |     #expect(try Data(contentsOf: metadata) == before)
+28 |     try await store.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+29 |     let actual = try await store.load(document.id)
+30 |     #expect(actual.recording == recording && actual.recording.recovery == report)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:37:21: error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+35 |     #expect(actual.sample?.synthetic == true)
+36 |     let firstCommit = try Data(contentsOf: metadata)
+37 |     try await store.applyRecoveredCapture(recording, marks: [incoming], original: original, for: document.id)
+   |                     `- error: value of type 'SessionStore' has no member 'applyRecoveredCapture'
+38 |     #expect(try Data(contentsOf: metadata) == firstCommit)
+39 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/RecoveredCaptureTests.swift:24:5: warning: no 'async' operations occur within 'await' expression
+22 |     let before = try Data(contentsOf: metadata)
+23 |     let failing = try SessionStore(root: directory, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
+24 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+25 |         try await failing.applyRecoveredCapture(recording, marks: [stale, incoming], original: original, for: document.id)
+26 |     }
+error: fatalError

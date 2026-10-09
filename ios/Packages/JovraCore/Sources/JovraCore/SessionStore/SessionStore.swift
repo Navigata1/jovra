@@ -153,6 +153,22 @@ public actor SessionStore {
     /// Recording and manual marks commit together; retrying a journal handoff never
     /// overwrites marks that the player has already edited in the saved document.
     public func saveCapture(_ recording: SessionRecording, marks: [SessionMark], for id: String) throws {
+        let complete = recording.mediaAvailable && !recording.segments.isEmpty && recording.segments.allSatisfy(\.finalized)
+        let original = SessionOriginalState(state: complete ? (recording.gaps.isEmpty ? .saved : .savedWithGaps) : .partial,
+                                           reason: complete ? nil : "Recording contains unconfirmed media")
+        try persistCapture(recording, marks: marks, original: original, for: id)
+    }
+
+    /// A scanner supplies only verified media and an explicit report. The raw WAL remains
+    /// separate; its available marks, recording and original facet commit in one transaction.
+    public func applyRecoveredCapture(_ recording: SessionRecording, marks: [SessionMark],
+                                      original: SessionOriginalState, for id: String) throws {
+        guard recording.recovery != nil else { throw SessionStoreError.invalidCapture }
+        try persistCapture(recording, marks: marks, original: original, for: id)
+    }
+
+    private func persistCapture(_ recording: SessionRecording, marks: [SessionMark],
+                                original: SessionOriginalState, for id: String) throws {
         guard recording.mode == .camera || recording.mode == .simulatorFixture else {
             throw SessionStoreError.invalidCapture
         }
@@ -163,9 +179,7 @@ public actor SessionStore {
         document.marks = merged
         document.recording = recording
         if recording.mediaAvailable && !recording.segments.isEmpty { document.storage.originals = .onDevice }
-        let complete = recording.mediaAvailable && !recording.segments.isEmpty && recording.segments.allSatisfy(\.finalized)
-        document.original = .init(state: complete ? (recording.gaps.isEmpty ? .saved : .savedWithGaps) : .partial,
-                                  reason: complete ? nil : "Recording contains unconfirmed media")
+        document.original = original
         if recording.mode == .simulatorFixture {
             document.sample = .init(synthetic: true, generator: "JOVRAFixtureCamera")
         }
