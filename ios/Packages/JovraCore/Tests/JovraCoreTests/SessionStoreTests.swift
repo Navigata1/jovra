@@ -50,6 +50,13 @@ final class SessionStoreTests: XCTestCase {
         }
         let loaded = try await store.load(document.id)
         XCTAssertEqual(loaded.match?.log.count, 0)
+        try await store.append([.point(.init(id: "first", seq: 1))], to: document.id)
+        for event in [SessionLogEvent.point(.init(id: "duplicate-sequence", seq: 1)), .point(.init(id: "first", seq: 2))] {
+            do { try await store.append([event], to: document.id); XCTFail("duplicate log identity accepted") }
+            catch SessionStoreError.invalidEvents { }
+        }
+        let afterDuplicates = try await store.load(document.id)
+        XCTAssertEqual(afterDuplicates.match?.log.count, 1)
     }
 
     func testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable() async throws {
