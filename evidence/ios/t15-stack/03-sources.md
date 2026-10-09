@@ -1,0 +1,3 @@
+# T15 prerequisite 3: shared real and synthetic sample sources
+
+231 manual Swift lines copied byte-identically from accepted candidate48a1372. CameraSource and clearly labeled FixtureCamera conform to the same CaptureSource; both use retimed CMSampleBuffer input, with FixtureCamera decoding the source rather than copying its MP4 as output. The native source exposes a preview session and keeps denied/missing microphone independent of video. Package compilation and 63 baseline media tests pass on macOS. Direct capture behavior becomes callable in prerequisite4 and is already verified on the accepted full candidate. iOS native compilation, hardware locks/orientation/reset, physical interruption and microphone authorization remain unverified.
