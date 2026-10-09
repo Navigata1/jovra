@@ -8,7 +8,8 @@
 - `python3 -m unittest discover -s scripts/spec -p 'test_*.py' -v`: 19 discovery, drift and deliberate-rejection tests pass.
 
 These are reference-contract checks. They do not establish native Studio, watch apps, device connectivity, hosted
-backend readiness, film rendering or real-tennis metric accuracy. CI now repeats these checks on every PR.
+backend readiness, film rendering or real-tennis metric accuracy. The reviewed T02 PR adds its `spec` CI job to repeat these checks on every PR; this follow-up does not add a
+redundant second job.
 
 ADR-0029 resolves the court origin and new key-moment naming without changing source fixtures or schema versions,
 and distinguishes sorted canonical conformance bytes from the cosmetic fixture printer.
