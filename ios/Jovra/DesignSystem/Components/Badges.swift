@@ -4,12 +4,17 @@ import SwiftUI
 /// Labels where a number came from (ADR-0004). Meaning is carried by text and a distinct
 /// symbol/outline, never by colour alone; sample data always says "Sample".
 struct ProvenanceBadge: View {
+    enum Size { case regular, small }
     enum Kind: Hashable {
         case sample
         case provenance(Provenance)
     }
 
     var kind: Kind
+    var size: Size = .regular
+    var onForest = false
+
+    private var ink: ColorRole { onForest ? .textOnEditorial : .textPrimary }
 
     var body: some View {
         HStack(spacing: Space.half) {
@@ -19,17 +24,21 @@ struct ProvenanceBadge: View {
             Text(title)
         }
         .font(.caption.weight(.semibold))
-        .foregroundStyle(.jovra(.textPrimary))
-        .padding(.horizontal, Space.x1 + 2)
+        .foregroundStyle(.jovra(ink))
+        .padding(.horizontal, size == .small ? Space.x1 : Space.x1 + 2)
         .padding(.vertical, Space.half)
-        .background(Color.jovra(.surfaceSunken), in: Capsule())
+        .background(Color.jovra(onForest ? .editorial : .surfaceSunken), in: Capsule())
         .overlay {
             if kind == .sample {
-                Capsule().strokeBorder(Color.jovra(.textPrimary), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
+                Capsule().strokeBorder(Color.jovra(ink), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
             }
         }
+        // Reserve the label's natural width, so a compact section header never splits “Sam-ple”.
+        .fixedSize(horizontal: true, vertical: true)
+        .layoutPriority(1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityText)
+        .accessibilityAddTraits(.isStaticText)
     }
 
     var title: String {
@@ -57,6 +66,29 @@ struct ProvenanceBadge: View {
         case .sample: String(localized: "Sample data", table: "DesignSystem.Components")
         default: String(localized: "\(title) value", table: "DesignSystem.Components", comment: "VoiceOver: a provenance badge, e.g. “Estimated value”")
         }
+    }
+}
+
+/// Demo origin is distinct from measurement provenance; it always spells out Sample.
+struct SampleBadge: View {
+    var size: ProvenanceBadge.Size = .regular
+    var onForest = false
+    var body: some View { ProvenanceBadge(kind: .sample, size: size, onForest: onForest) }
+}
+
+/// Only the camera adapter chooses when this badge is shown (ADR-0012).
+struct FixtureBadge: View {
+    var body: some View {
+        Text(String(localized: "Simulator fixture camera", table: "DesignSystem.Components"))
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.jovra(.textPrimary))
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(Space.x1)
+            .background(Color.jovra(.surfaceSunken), in: RoundedRectangle(cornerRadius: Radius.control))
+            .overlay {
+                RoundedRectangle(cornerRadius: Radius.control)
+                    .strokeBorder(Color.jovra(.textPrimary), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
+            }
     }
 }
 

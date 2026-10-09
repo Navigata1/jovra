@@ -10,7 +10,7 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T15:14:55.173661+00:00",
+    "updated": "2026-10-09T15:56:06.334017+00:00",
     "sessionCount": 1
   },
   "policies": {
@@ -189,7 +189,7 @@
           "status": "pending",
           "evidence": null,
           "lastRun": null,
-          "notes": "Pending future integration harness; command will be implemented before this gate is run."
+          "notes": "Safe harness requires explicit owned simulator and derived data; refuses to run until genuine CoreFlowUITests exists. Integration gate not yet run."
         }
       ],
       "tasks": [
@@ -215,17 +215,17 @@
             "T03"
           ],
           "pr": null,
-          "notes": "ADR0030 PR332merged5456fbf. Native105fixture candidate passes; independent review discovered negative-checkpoint trap and cyclic correction anchor. Minimal shared/native refusal guards underway before fold publication. Models/state slices reviewed. Shared zero-stroke correction PR339merged017d9da. FullT04 remains open."
+          "notes": "Models342, state345 and fold346 merged after independent review and fresh green CI. Native assembly38tests/106fixtures/107schema-canonical foldsPASS; reviewed corrections use public fold/diff. FullT04 remains open for additional ticket criteria."
         },
         {
           "id": "T05",
           "title": "Stats and data export",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [
             "T04"
           ],
           "pr": null,
-          "notes": ""
+          "notes": "Native stats and exact export contracts in public acceptance red/green cycles; no stats/export completion claimed yet."
         },
         {
           "id": "T08",
@@ -239,7 +239,7 @@
             "url": "https://github.com/Navigata1/jovra/pull/331",
             "mergedAt": "2026-10-09T14:48:50Z"
           },
-          "notes": "Atomic store331merged1233ff0; query336merged46a2c59 after independent12+31tests/3preservationcontrols andfreshCI. Media custody/atomic capture handoff under test. Trash outside immediate flow pending; fullticket remains open."
+          "notes": "Atomic331/query336/custody344 merged. Separate Standards/Spec review and5independent runtime controls accepted. Recursive backup flags and confirmed storage.onDevice findings fixed red-to-green; full12XCTest+35Swift+64MediaPASS. FullT08Trash/importpending."
         },
         {
           "id": "T15-T16",
@@ -249,7 +249,7 @@
             "T03"
           ],
           "pr": null,
-          "notes": "Bounded capture candidate independently34Core/70Media/all19hashes/schemaPASS. Five source-preserving slices334/335/337/338/340; journal334merged54c37fc andwriter335mergedd2f921f. Source337awaits freshCI; remaining slices sequential. T16startup recovery next. PhysicalCamera/AVsync/lossbudget unverified."
+          "notes": "Capture334/335/337/338/340 merged; independent34Core/70Media/all19hashes/schema accepted frozen source. Directory entry flush follow-up and verified-prefix startup recovery T16 in progress. PhysicalCamera/AVsync/power-loss budget unverified."
         },
         {
           "id": "T14",
@@ -273,7 +273,7 @@
             "T04"
           ],
           "pr": null,
-          "notes": "T12corestate/samplecomponents started with sole owned simulator4265ADFD-39A3-4E71-8482-1945DDB5F899. Native record/library/replay/score/export wiring awaits prerequisite publication. Remaining fullfeature AC stay open."
+          "notes": "T12boundedcomponents347merged35117e1 after separate reviews and fresh CI. Baselinec867:167nativeunits and15scenarioauditsPASS. Corrected820CTA/badge2testsPASS plusfive-tabAX5testPASS; earlier NoSpace receipt retained as UNVERIFIED. Native fresh-session/capture service public API red-to-green underway. Actual full record/library/replay/score/export integration pending; full feature AC remains open."
         },
         {
           "id": "P4-EXPORT",
@@ -394,14 +394,84 @@
       "url": "https://github.com/Navigata1/jovra/pull/339",
       "phase": "P4",
       "mergedAt": "2026-10-09T15:11:00Z"
+    },
+    {
+      "number": 337,
+      "title": "Camera and fixture sample sources",
+      "url": "https://github.com/Navigata1/jovra/pull/337",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:20:57Z"
+    },
+    {
+      "number": 343,
+      "title": "Bound cyclic correction anchors",
+      "url": "https://github.com/Navigata1/jovra/pull/343",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:26:28Z"
+    },
+    {
+      "number": 341,
+      "title": "Core prerequisite heartbeat",
+      "url": "https://github.com/Navigata1/jovra/pull/341",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:29:41Z"
+    },
+    {
+      "number": 342,
+      "title": "Concrete native scoring contracts",
+      "url": "https://github.com/Navigata1/jovra/pull/342",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:29:47Z"
+    },
+    {
+      "number": 338,
+      "title": "Capture engine and first fixture controls",
+      "url": "https://github.com/Navigata1/jovra/pull/338",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:29:52Z"
+    },
+    {
+      "number": 340,
+      "title": "Capture operational proof",
+      "url": "https://github.com/Navigata1/jovra/pull/340",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:38:10Z"
+    },
+    {
+      "number": 345,
+      "title": "Native scoring value-state policy",
+      "url": "https://github.com/Navigata1/jovra/pull/345",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:38:26Z"
+    },
+    {
+      "number": 344,
+      "title": "Atomic capture handoff and media custody",
+      "url": "https://github.com/Navigata1/jovra/pull/344",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:43:11Z"
+    },
+    {
+      "number": 346,
+      "title": "Native score fold and correction diff",
+      "url": "https://github.com/Navigata1/jovra/pull/346",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:45:03Z"
+    },
+    {
+      "number": 347,
+      "title": "Accessible core state components",
+      "url": "https://github.com/Navigata1/jovra/pull/347",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:54:45Z"
     }
   ],
   "resume": {
     "activePhase": "P4",
     "nextActions": [
-      "Finish sequential accepted capture/scoring publication slices with freshCI.",
-      "Publish independently reviewed media custody/atomic capture handoff; add verified-prefix startup recovery.",
-      "Finish one native iOS record\u2192library\u2192replay\u2192corrected score\u2192clip/data export flow and test it. Hold before step5."
+      "Finish native stats/export, directory durability and verified-prefix recovery with independent review and fresh CI.",
+      "Connect native capture/library/replay/reviewed scoring/clip and data export.",
+      "Run genuine dedicated-simulator core flow and export evidence. Stop before step5."
     ],
     "blockers": [],
     "conventions": [
