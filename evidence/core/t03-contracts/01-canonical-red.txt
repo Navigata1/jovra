@@ -1,0 +1,24 @@
+Building for debugging...
+[0/7] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/scratch/t03-core/arm64-apple-macosx/debug/JovraCorePackageTests.derived/runner.swift
+[1/7] Write sources
+[4/7] Write swift-version--58304C5D6DBC2206.txt
+[6/13] Compiling JovraCore Provenance.swift
+[7/13] Compiling JovraCore SRGBColor.swift
+[8/13] Compiling JovraCore ContrastRequirement.swift
+[9/13] Emitting module JovraCore
+[10/13] Compiling JovraCore DurationLabel.swift
+[11/13] Compiling JovraCore FrameRate.swift
+[12/19] Compiling JovraCoreTests FrameRateTests.swift
+[13/19] Emitting module JovraCoreTests
+[14/19] Compiling JovraCoreTests DurationLabelTests.swift
+[15/19] Compiling JovraCoreTests ProvenanceTests.swift
+[16/19] Compiling JovraCoreTests ContrastTests.swift
+[17/19] Compiling JovraCoreTests CanonicalJSONTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/CanonicalJSONTests.swift:15:21: error: cannot find 'CanonicalJSON' in scope
+13 |     ]
+14 |     for (input, expected) in vectors {
+15 |         #expect(try CanonicalJSON.canonicalize(Data(input.utf8)) == Data(expected.utf8))
+   |                     `- error: cannot find 'CanonicalJSON' in scope
+16 |     }
+17 | }
+error: fatalError

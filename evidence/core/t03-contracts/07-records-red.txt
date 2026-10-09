@@ -1,0 +1,53 @@
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+error: emit-module command failed with exit code 1 (use -v to see invocation)
+[3/7] Emitting module JovraCore
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:62:5: error: expected identifier in enum 'case' declaration
+  60 | 
+  61 | public enum CapabilityCapabilityGateMetricsItemComparator: String, Codable, CaseIterable, Hashable, Sendable {
+  62 |     case  = ">="
+     |     `- error: expected identifier in enum 'case' declaration
+  63 |     case  = "<="
+  64 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:63:5: error: expected identifier in enum 'case' declaration
+  61 | public enum CapabilityCapabilityGateMetricsItemComparator: String, Codable, CaseIterable, Hashable, Sendable {
+  62 |     case  = ">="
+  63 |     case  = "<="
+     |     `- error: expected identifier in enum 'case' declaration
+  64 | }
+  65 | 
+[4/7] Compiling JovraCore DocumentModels.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:62:5: error: expected identifier in enum 'case' declaration
+  60 | 
+  61 | public enum CapabilityCapabilityGateMetricsItemComparator: String, Codable, CaseIterable, Hashable, Sendable {
+  62 |     case  = ">="
+     |     `- error: expected identifier in enum 'case' declaration
+  63 |     case  = "<="
+  64 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:63:5: error: expected identifier in enum 'case' declaration
+  61 | public enum CapabilityCapabilityGateMetricsItemComparator: String, Codable, CaseIterable, Hashable, Sendable {
+  62 |     case  = ">="
+  63 |     case  = "<="
+     |     `- error: expected identifier in enum 'case' declaration
+  64 | }
+  65 | 
+[5/7] Compiling JovraCore CapabilityRegistryLoader.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:62:5: error: expected identifier in enum 'case' declaration
+  60 | 
+  61 | public enum CapabilityCapabilityGateMetricsItemComparator: String, Codable, CaseIterable, Hashable, Sendable {
+  62 |     case  = ">="
+     |     `- error: expected identifier in enum 'case' declaration
+  63 |     case  = "<="
+  64 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/DocumentModels.swift:63:5: error: expected identifier in enum 'case' declaration
+  61 | public enum CapabilityCapabilityGateMetricsItemComparator: String, Codable, CaseIterable, Hashable, Sendable {
+  62 |     case  = ">="
+  63 |     case  = "<="
+     |     `- error: expected identifier in enum 'case' declaration
+  64 | }
+  65 | 
+error: fatalError

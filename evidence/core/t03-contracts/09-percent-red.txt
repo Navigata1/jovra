@@ -1,0 +1,62 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module JovraCoreTests
+[4/6] Compiling JovraCoreTests PercentTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/PercentTests.swift:5:17: error: cannot find 'Percent' in scope
+ 3 | 
+ 4 | @Test func percentagesUseHalfUpAndPoolCounts() throws {
+ 5 |     #expect(try Percent.pct(n: 1, d: 8) == 13)
+   |                 `- error: cannot find 'Percent' in scope
+ 6 |     #expect(try Percent.pct(n: 5, d: 8) == 63)
+ 7 |     #expect(try Percent.ratio(n: 0, d: 0).display == "—")
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/PercentTests.swift:6:17: error: cannot find 'Percent' in scope
+ 4 | @Test func percentagesUseHalfUpAndPoolCounts() throws {
+ 5 |     #expect(try Percent.pct(n: 1, d: 8) == 13)
+ 6 |     #expect(try Percent.pct(n: 5, d: 8) == 63)
+   |                 `- error: cannot find 'Percent' in scope
+ 7 |     #expect(try Percent.ratio(n: 0, d: 0).display == "—")
+ 8 |     let pooled = try Percent.pool([(n: 1, d: 2), (n: 30, d: 40)])
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/PercentTests.swift:7:17: error: cannot find 'Percent' in scope
+ 5 |     #expect(try Percent.pct(n: 1, d: 8) == 13)
+ 6 |     #expect(try Percent.pct(n: 5, d: 8) == 63)
+ 7 |     #expect(try Percent.ratio(n: 0, d: 0).display == "—")
+   |                 `- error: cannot find 'Percent' in scope
+ 8 |     let pooled = try Percent.pool([(n: 1, d: 2), (n: 30, d: 40)])
+ 9 |     #expect(pooled.n == 31 && pooled.d == 42 && pooled.pct.value == 74)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/PercentTests.swift:8:22: error: cannot find 'Percent' in scope
+ 6 |     #expect(try Percent.pct(n: 5, d: 8) == 63)
+ 7 |     #expect(try Percent.ratio(n: 0, d: 0).display == "—")
+ 8 |     let pooled = try Percent.pool([(n: 1, d: 2), (n: 30, d: 40)])
+   |                      `- error: cannot find 'Percent' in scope
+ 9 |     #expect(pooled.n == 31 && pooled.d == 42 && pooled.pct.value == 74)
+10 |     #expect(try Percent.delta(current: Percent.ratio(n: 7, d: 10), prior: Percent.ratio(n: 2, d: 3)) == "+3 percentage points")
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/PercentTests.swift:10:17: error: cannot find 'Percent' in scope
+ 8 |     let pooled = try Percent.pool([(n: 1, d: 2), (n: 30, d: 40)])
+ 9 |     #expect(pooled.n == 31 && pooled.d == 42 && pooled.pct.value == 74)
+10 |     #expect(try Percent.delta(current: Percent.ratio(n: 7, d: 10), prior: Percent.ratio(n: 2, d: 3)) == "+3 percentage points")
+   |                 `- error: cannot find 'Percent' in scope
+11 | }
+12 | 
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/PercentTests.swift:10:40: error: cannot find 'Percent' in scope
+ 8 |     let pooled = try Percent.pool([(n: 1, d: 2), (n: 30, d: 40)])
+ 9 |     #expect(pooled.n == 31 && pooled.d == 42 && pooled.pct.value == 74)
+10 |     #expect(try Percent.delta(current: Percent.ratio(n: 7, d: 10), prior: Percent.ratio(n: 2, d: 3)) == "+3 percentage points")
+   |                                        `- error: cannot find 'Percent' in scope
+11 | }
+12 | 
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/PercentTests.swift:10:75: error: cannot find 'Percent' in scope
+ 8 |     let pooled = try Percent.pool([(n: 1, d: 2), (n: 30, d: 40)])
+ 9 |     #expect(pooled.n == 31 && pooled.d == 42 && pooled.pct.value == 74)
+10 |     #expect(try Percent.delta(current: Percent.ratio(n: 7, d: 10), prior: Percent.ratio(n: 2, d: 3)) == "+3 percentage points")
+   |                                                                           `- error: cannot find 'Percent' in scope
+11 | }
+12 | 
+error: fatalError

@@ -1,0 +1,135 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/10] Write sources
+[2/10] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Discover conformance runners by kind
+[4/6] Write sources
+[6/8] Emitting module JovraCore
+[7/8] Compiling JovraCore DocumentModels.swift
+[8/11] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[9/11] Compiling JovraCoreTests UnitsTests.swift
+[10/11] Emitting module JovraCoreTests
+[10/12] Write Objects.LinkFileList
+[11/12] Linking JovraCorePackageTests
+Build complete! (5.78s)
+Test Suite 'All tests' started at 2026-10-09 09:02:07.076.
+Test Suite 'All tests' passed at 2026-10-09 09:02:07.077.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Frame rate" started.
+◇ Test allDiscoveredRunnerFixturesPass() started.
+◇ Test storedDecimalsRejectTrailingLineBreaksOnEveryHost() started.
+◇ Suite "WCAG contrast" started.
+◇ Test malformedAndAmbiguousJSONIsRefused() started.
+◇ Test roundingDoesNotOverflowOrUsePlatformPercentFormatter() started.
+◇ Suite "Provenance" started.
+◇ Test sessionOptionalFieldsRoundTripThroughRealTypes() started.
+◇ Test unitsConvertOnceAndPreserveEnteredText() started.
+◇ Suite "Duration labels" started.
+◇ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() started.
+◇ Test exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() started.
+◇ Test canonicalNumbersAndUnicodeHaveIndependentBytes() started.
+◇ Test otherPersistedRecordsRoundTripThroughRealTypes() started.
+◇ Test percentagesUseHalfUpAndPoolCounts() started.
+◇ Test unknownMajorAndInvalidMediaTimeThrowTypedErrors() started.
+◇ Test capabilityRegistryKeepsRequiredNullAndStatus() started.
+◇ Test fixturesAreDispatchedByKindAndUnknownKindsFail() started.
+◇ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" started.
+◇ Test "integer rates: frame 60 at 60 fps starts at exactly one second" started.
+◇ Test "black on white is the maximum 21:1" started.
+◇ Test "encodes to the same lowercase strings" started.
+◇ Test "contrast ratio is symmetric" started.
+◇ Test "normal text needs 4.5:1, large text and UI parts need 3:1" started.
+◇ Test "malformed hex strings are rejected" started.
+◇ Test persistedDecimalCannotSilentlyLosePrecision() started.
+◇ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() started.
+◇ Test "negative and non-finite durations are treated as zero" started.
+◇ Test "decodes the four persisted provenance values" started.
+◇ Test "rejects values outside the contract" started.
+◇ Test "negative times clamp to frame 0" started.
+◇ Test "an hour or more shows hours and minutes" started.
+◇ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" started.
+◇ Test "under an hour shows whole minutes" started.
+◇ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" started.
+◇ Test case passing 1 argument input → "" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#FFF" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#GGGGGG" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#1234567" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "+12345" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "##12345" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "12 456" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "0x1234" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#+FFFFF" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "１２３４５６" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "-00000" to "malformed hex strings are rejected" started.
+✔ Test percentagesUseHalfUpAndPoolCounts() passed after 0.001 seconds.
+✔ Test "integer rates: frame 60 at 60 fps starts at exactly one second" passed after 0.001 seconds.
+✔ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" passed after 0.001 seconds.
+✔ Test exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() passed after 0.001 seconds.
+✔ Test "black on white is the maximum 21:1" passed after 0.001 seconds.
+✔ Test "encodes to the same lowercase strings" passed after 0.001 seconds.
+✔ Test "normal text needs 4.5:1, large text and UI parts need 3:1" passed after 0.001 seconds.
+✔ Test storedDecimalsRejectTrailingLineBreaksOnEveryHost() passed after 0.001 seconds.
+✔ Test canonicalNumbersAndUnicodeHaveIndependentBytes() passed after 0.001 seconds.
+✔ Test "contrast ratio is symmetric" passed after 0.001 seconds.
+✔ Test "malformed hex strings are rejected" with 11 test cases passed after 0.001 seconds.
+◇ Test case passing 2 arguments seconds → 59.0, expected → "0 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 60.0, expected → "1 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 90359.0, expected → "25h 5m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 1 argument seconds → -5.0 to "negative and non-finite durations are treated as zero" started.
+◇ Test case passing 2 arguments seconds → 24120.0, expected → "6h 42m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 2 arguments seconds → 0.0, expected → "0 min" to "under an hour shows whole minutes" started.
+✔ Test unitsConvertOnceAndPreserveEnteredText() passed after 0.002 seconds.
+✔ Test persistedDecimalCannotSilentlyLosePrecision() passed after 0.002 seconds.
+✔ Test malformedAndAmbiguousJSONIsRefused() passed after 0.002 seconds.
+✔ Test "decodes the four persisted provenance values" passed after 0.001 seconds.
+✔ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() passed after 0.002 seconds.
+✔ Test unknownMajorAndInvalidMediaTimeThrowTypedErrors() passed after 0.002 seconds.
+◇ Test case passing 1 argument seconds → nan to "negative and non-finite durations are treated as zero" started.
+✔ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" passed after 0.001 seconds.
+◇ Test case passing 2 arguments seconds → 3270.0, expected → "54 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 1 argument seconds → inf to "negative and non-finite durations are treated as zero" started.
+◇ Test case passing 2 arguments seconds → 3600.0, expected → "1h 0m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 2 arguments seconds → 3599.0, expected → "59 min" to "under an hour shows whole minutes" started.
+✔ Test "negative and non-finite durations are treated as zero" with 3 test cases passed after 0.002 seconds.
+✔ Suite "WCAG contrast" passed after 0.002 seconds.
+✔ Test "negative times clamp to frame 0" passed after 0.001 seconds.
+✔ Test "an hour or more shows hours and minutes" with 3 test cases passed after 0.001 seconds.
+✔ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" passed after 0.002 seconds.
+✔ Test "under an hour shows whole minutes" with 5 test cases passed after 0.001 seconds.
+✔ Suite "Frame rate" passed after 0.002 seconds.
+✔ Suite "Duration labels" passed after 0.002 seconds.
+✔ Test "rejects values outside the contract" passed after 0.003 seconds.
+✔ Suite "Provenance" passed after 0.003 seconds.
+✔ Test capabilityRegistryKeepsRequiredNullAndStatus() passed after 0.021 seconds.
+✔ Test roundingDoesNotOverflowOrUsePlatformPercentFormatter() passed after 0.026 seconds.
+✔ Test fixturesAreDispatchedByKindAndUnknownKindsFail() passed after 0.026 seconds.
+Consumed jovra.archiveManifest: 2 fixtures
+Consumed jovra.benchmarkBindings: 1 fixtures
+✔ Test otherPersistedRecordsRoundTripThroughRealTypes() passed after 0.034 seconds.
+Consumed jovra.benchmarkRecord: 3 fixtures
+Consumed jovra.csvContract: 2 fixtures
+canonical independent vectors: 13
+Consumed jovra.fixture.canonical: 1 fixtures
+Consumed jovra.capabilityRegistry: 1 fixtures
+Consumed jovra.equipment: 1 fixtures
+Consumed jovra.export: 2 fixtures
+✔ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() passed after 0.105 seconds.
+✔ Test sessionOptionalFieldsRoundTripThroughRealTypes() passed after 0.134 seconds.
+Consumed jovra.groundTruth: 19 fixtures
+pct vectors: 32
+Consumed jovra.fixture.pct: 1 fixtures
+Consumed jovra.practicePlan: 2 fixtures
+Consumed jovra.sampleMediaManifest: 1 fixtures
+Consumed jovra.session: 2 fixtures
+units vectors: 31
+Consumed jovra.fixture.units: 1 fixtures
+Pending fixture kinds: jovra.fixture.sample, jovra.fixture.scoring, jovra.fixture.stats
+✔ Test allDiscoveredRunnerFixturesPass() passed after 0.266 seconds.
+✔ Test run with 31 tests in 4 suites passed after 0.267 seconds.
