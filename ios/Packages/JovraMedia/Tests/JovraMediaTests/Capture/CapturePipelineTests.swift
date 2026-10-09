@@ -113,3 +113,133 @@ private final class ActivityObservations: @unchecked Sendable {
     }
 }
 
+@Test func injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() async throws {
+    let catalog = MediaFixtureCatalog.repository(filePath: #filePath)
+    let url = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
+    let clock = VirtualCaptureClock()
+    let budget = FakeDeviceBudget(DeviceBudgetSnapshot(freeBytes: 1024, batteryFraction: 0.12, lowPowerMode: true, thermalState: .serious))
+    let engine = CaptureEngine(source: FixtureCamera(url: url, clock: clock), clock: clock, sink: CapturedRecordSink(), budget: budget)
+    let report = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+    #expect(report.budget.freeBytes == 1024)
+    #expect(report.budget.batteryFraction == 0.12)
+    #expect(report.budget.lowPowerMode)
+    #expect(report.budget.thermalState == .serious)
+    #expect(report.warnings.contains(.lowStorage))
+    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: folder) }
+    await #expect(throws: CaptureError.storageUnavailable) { try await engine.start(sessionID: "no-space", folder: folder) }
+    #expect(!engine.activity.isActive)
+    #expect(!FileManager.default.fileExists(atPath: folder.path))
+}
+
+@Test func thermalBudgetRungsAreJournalledAndShutdownClosesPlayableMedia() async throws {
+    let catalog = MediaFixtureCatalog.repository(filePath: #filePath)
+    let url = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
+    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let clock = VirtualCaptureClock()
+    let camera = FixtureCamera(url: url, duration: CMTime(value: 2, timescale: 1), clock: clock)
+    let budget = FakeDeviceBudget(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: .nominal))
+    let engine = CaptureEngine(source: camera, clock: clock, sink: CapturedRecordSink(), budget: budget)
+    _ = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+    try await engine.start(sessionID: "thermal-test", folder: folder)
+    try await camera.waitUntilFinished()
+    for rung in [SessionCaptureEventThermalState.fair, .serious, .critical] {
+        budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: rung))
+        #expect(try await engine.refreshBudget() == nil)
+    }
+    #expect(engine.status.helpersMayRun == false)
+    #expect(engine.status.previewMode == .courtMode)
+    budget.set(DeviceBudgetSnapshot(freeBytes: 1_000_000_000, batteryFraction: 0.5, lowPowerMode: false, thermalState: .shutdown))
+    let record = try #require(await engine.refreshBudget())
+    #expect(record.captureEvents?.filter { $0.kind == .thermalState }.map(\.thermalState) == [.fair, .serious, .critical, .shutdown])
+    #expect(record.segments[0].finalized)
+    #expect(!engine.activity.isActive)
+    #expect(try await decodeCaptureToEnd(folder.appendingPathComponent(record.segments[0].file.path)).videoFrames == 60)
+}
+
+@Test func injectedSourceInterruptionClosesSegmentAndCanResume() async throws {
+    let catalog = MediaFixtureCatalog.repository(filePath: #filePath)
+    let url = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
+    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let clock = VirtualCaptureClock()
+    let camera = FixtureCamera(url: url, duration: CMTime(value: 2, timescale: 1), clock: clock)
+    let engine = CaptureEngine(source: camera, clock: clock, sink: CapturedRecordSink())
+    _ = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+    camera.injectFailure(at: CMTime(value: 1, timescale: 1), failure: .interrupted)
+    try await engine.start(sessionID: "fault-test", folder: folder)
+    await #expect(throws: CaptureSourceFailure.interrupted) { try await camera.waitUntilFinished() }
+    for _ in 0..<1000 where engine.status.phase != .paused { try await Task.sleep(nanoseconds: 1_000_000) }
+    #expect(engine.status.phase == .paused)
+    clock.advance(by: CMTimeSubtract(CMTime(value: 3, timescale: 1), clock.now()))
+    try await engine.resume()
+    try await camera.waitUntilFinished()
+    let record = try await engine.stop()
+    #expect(record.segments.count == 2)
+    #expect(record.gaps == [SessionGap(startMs: 1000, endMs: 3000, reason: .interruption)])
+    #expect(try await decodeCaptureToEnd(folder.appendingPathComponent(record.segments[0].file.path)).videoFrames == 30)
+}
+
+@Test func liveMarkNoteSurvivesReopeningTheJournal() async throws {
+    let catalog = MediaFixtureCatalog.repository(filePath: #filePath)
+    let url = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
+    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let clock = VirtualCaptureClock()
+    let camera = FixtureCamera(url: url, duration: CMTime(value: 2, timescale: 1), clock: clock)
+    let sink = CapturedRecordSink()
+    let engine = CaptureEngine(source: camera, clock: clock, sink: sink)
+    _ = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+    try await engine.start(sessionID: "marked-test", folder: folder)
+    try await camera.waitUntilFinished()
+    let markTime = try engine.markPoint(note: "Review the contact")
+    #expect(markTime.value == 2 * Int64(markTime.timescale))
+    let marks = try #require(CaptureJournal.open(url: folder.appendingPathComponent("capture-journal.json")).snapshot().marks)
+    #expect(marks.count == 1)
+    #expect(marks[0].note == "Review the contact")
+    #expect(marks[0].tMs == 2000)
+    #expect(marks[0].provenance.status == .manual)
+    let record = try await engine.stop()
+    #expect(await sink.calls == 1)
+    #expect(await sink.received == record)
+    #expect(await sink.receivedMarks == marks)
+}
+
+private final class ResumeRefusingSource: CaptureSource, @unchecked Sendable {
+    let mode = SessionRecordingMode.simulatorFixture
+    let label = "Simulator fixture with resume refusal"
+    let camera: FixtureCamera
+    private let lock = NSLock()
+    private var starts = 0
+    init(_ camera: FixtureCamera) { self.camera = camera }
+    func prepare(preset: CapturePreset, microphone: SessionRecordingMicrophone) async throws -> CaptureSourceFormat {
+        try await camera.prepare(preset: preset, microphone: microphone)
+    }
+    func start(at time: CMTime, onSample: @escaping @Sendable (CaptureSample) throws -> Void,
+               onFailure: @escaping @Sendable (any Error) -> Void) async throws {
+        let number = lock.withLock { starts += 1; return starts }
+        if number > 1 { throw CaptureError.sourceFailed("resume refused") }
+        try await camera.start(at: time, onSample: onSample, onFailure: onFailure)
+    }
+    func stop() async { await camera.stop() }
+}
+@Test func resumedSourceFailureReturnsToPausedAndKeepsPreviouslyConfirmedMedia() async throws {
+    let catalog = MediaFixtureCatalog.repository(filePath: #filePath)
+    let url = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
+    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let clock = VirtualCaptureClock()
+    let camera = FixtureCamera(url: url, duration: CMTime(value: 2, timescale: 1), clock: clock)
+    let engine = CaptureEngine(source: ResumeRefusingSource(camera), clock: clock, sink: CapturedRecordSink())
+    _ = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+    try await engine.start(sessionID: "resume-refused", folder: folder)
+    try await camera.waitUntilFinished(); try await engine.pause()
+    clock.advance(by: CMTimeSubtract(CMTime(value: 3, timescale: 1), clock.now()))
+    await #expect(throws: CaptureError.sourceFailed("resume refused")) { try await engine.resume() }
+    #expect(engine.status.phase == .paused)
+    let saved = try CaptureJournal.open(url: folder.appendingPathComponent("capture-journal.json")).snapshot()
+    #expect(saved.segments[0].finalized)
+    #expect(saved.lastConfirmedMediaTime == (try MediaTime(value: 1200, timescale: 600)))
+    #expect(try await decodeCaptureToEnd(folder.appendingPathComponent(saved.segments[0].file.path)).videoFrames == 60)
+}

@@ -1,0 +1,69 @@
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module JovraMediaTests
+[4/5] Compiling JovraMediaTests CapturePipelineTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:93:18: error: cannot find 'FakeDeviceBudget' in scope
+ 91 |     let url = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
+ 92 |     let clock = VirtualCaptureClock()
+ 93 |     let budget = FakeDeviceBudget(DeviceBudgetSnapshot(freeBytes: 1024, batteryFraction: 0.12, lowPowerMode: true, thermalState: .serious))
+    |                  `- error: cannot find 'FakeDeviceBudget' in scope
+ 94 |     let engine = CaptureEngine(source: FixtureCamera(url: url, clock: clock), clock: clock, sink: CapturedRecordSink(), budget: budget)
+ 95 |     let report = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:93:35: error: cannot find 'DeviceBudgetSnapshot' in scope
+ 91 |     let url = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
+ 92 |     let clock = VirtualCaptureClock()
+ 93 |     let budget = FakeDeviceBudget(DeviceBudgetSnapshot(freeBytes: 1024, batteryFraction: 0.12, lowPowerMode: true, thermalState: .serious))
+    |                                   `- error: cannot find 'DeviceBudgetSnapshot' in scope
+ 94 |     let engine = CaptureEngine(source: FixtureCamera(url: url, clock: clock), clock: clock, sink: CapturedRecordSink(), budget: budget)
+ 95 |     let report = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:93:131: error: cannot infer contextual base in reference to member 'serious'
+ 91 |     let url = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
+ 92 |     let clock = VirtualCaptureClock()
+ 93 |     let budget = FakeDeviceBudget(DeviceBudgetSnapshot(freeBytes: 1024, batteryFraction: 0.12, lowPowerMode: true, thermalState: .serious))
+    |                                                                                                                                   `- error: cannot infer contextual base in reference to member 'serious'
+ 94 |     let engine = CaptureEngine(source: FixtureCamera(url: url, clock: clock), clock: clock, sink: CapturedRecordSink(), budget: budget)
+ 95 |     let report = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:94:129: error: extra argument 'budget' in call
+ 92 |     let clock = VirtualCaptureClock()
+ 93 |     let budget = FakeDeviceBudget(DeviceBudgetSnapshot(freeBytes: 1024, batteryFraction: 0.12, lowPowerMode: true, thermalState: .serious))
+ 94 |     let engine = CaptureEngine(source: FixtureCamera(url: url, clock: clock), clock: clock, sink: CapturedRecordSink(), budget: budget)
+    |                                                                                                                                 `- error: extra argument 'budget' in call
+ 95 |     let report = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+ 96 |     #expect(report.budget.freeBytes == 1024)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:95:97: error: cannot infer contextual base in reference to member 'denied'
+ 93 |     let budget = FakeDeviceBudget(DeviceBudgetSnapshot(freeBytes: 1024, batteryFraction: 0.12, lowPowerMode: true, thermalState: .serious))
+ 94 |     let engine = CaptureEngine(source: FixtureCamera(url: url, clock: clock), clock: clock, sink: CapturedRecordSink(), budget: budget)
+ 95 |     let report = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
+    |                                                                                                 `- error: cannot infer contextual base in reference to member 'denied'
+ 96 |     #expect(report.budget.freeBytes == 1024)
+ 97 |     #expect(report.budget.batteryFraction == 0.12)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:99:44: error: cannot infer contextual base in reference to member 'serious'
+ 97 |     #expect(report.budget.batteryFraction == 0.12)
+ 98 |     #expect(report.budget.lowPowerMode)
+ 99 |     #expect(report.budget.thermalState == .serious)
+    |                                            `- error: cannot infer contextual base in reference to member 'serious'
+100 |     #expect(report.warnings.contains(.lowStorage))
+101 |     let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:100:39: error: cannot infer contextual base in reference to member 'lowStorage'
+ 98 |     #expect(report.budget.lowPowerMode)
+ 99 |     #expect(report.budget.thermalState == .serious)
+100 |     #expect(report.warnings.contains(.lowStorage))
+    |                                       `- error: cannot infer contextual base in reference to member 'lowStorage'
+101 |     let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+102 |     defer { try? FileManager.default.removeItem(at: folder) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:103:5: warning: no 'async' operations occur within 'await' expression
+101 |     let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+102 |     defer { try? FileManager.default.removeItem(at: folder) }
+103 |     await #expect(throws: CaptureError.storageUnavailable) { try await engine.start(sessionID: "no-space", folder: folder) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+104 |     #expect(!engine.activity.isActive)
+105 |     #expect(!FileManager.default.fileExists(atPath: folder.path))
+error: fatalError

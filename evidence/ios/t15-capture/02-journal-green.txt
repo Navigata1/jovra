@@ -1,0 +1,24 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/11] Write sources
+[2/11] Write swift-version--58304C5D6DBC2206.txt
+[4/7] Emitting module JovraCore
+[5/7] Compiling JovraCore CaptureJournal.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/CaptureJournal/CaptureJournal.swift:126:26: error: use of 'open' refers to instance method rather than global function 'open' in module 'Darwin'
+124 |         try beforeReplace?()
+125 |         guard rename(temporary.path, url.path) == 0 else { throw CaptureJournalError.filesystem(errno) }
+126 |         let descriptor = open(directory.path, O_RDONLY)
+    |                          |- error: use of 'open' refers to instance method rather than global function 'open' in module 'Darwin'
+    |                          `- note: use 'Darwin.' to reference the global function in module 'Darwin'
+127 |         guard descriptor >= 0 else { throw CaptureJournalError.filesystem(errno) }
+128 |         defer { close(descriptor) }
+
+Darwin.open:2:13: note: 'open' declared here
+1 | @available(macOS 10.9, iOS 7.0, watchOS 2.0, tvOS 9.0, visionOS 1.0, *)
+2 | public func open(_ path: UnsafePointer<CChar>, _ oflag: Int32) -> Int32
+  |             `- note: 'open' declared here
+error: fatalError

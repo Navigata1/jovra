@@ -1,0 +1,23 @@
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling JovraMediaTests CapturePipelineTests.swift
+[4/5] Emitting module JovraMediaTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking JovraMediaPackageTests
+Build complete! (2.18s)
+Test Suite 'Selected tests' started at 2026-10-09 09:19:41.050.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 09:19:41.051.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 09:19:41.051.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 09:19:41.051.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() started.
+✘ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() recorded an issue at CapturePipelineTests.swift:77:5: Expectation failed: (record.gaps → [JovraCore.SessionGap(startMs: 0, endMs: 5000, reason: JovraCore.SessionGapReason.userPaused), JovraCore.SessionGap(startMs: 0, endMs: 8000, reason: JovraCore.SessionGapReason.interruption)]) == ([SessionGap(startMs: 2000, endMs: 5000, reason: .userPaused), SessionGap(startMs: 7000, endMs: 8000, reason: .interruption)] → [JovraCore.SessionGap(startMs: 2000, endMs: 5000, reason: JovraCore.SessionGapReason.userPaused), JovraCore.SessionGap(startMs: 7000, endMs: 8000, reason: JovraCore.SessionGapReason.interruption)])
+± inserted [JovraCore.SessionGap(startMs: 0, endMs: 5000, reason: JovraCore.SessionGapReason.userPaused), JovraCore.SessionGap(startMs: 0, endMs: 8000, reason: JovraCore.SessionGapReason.interruption)], removed [JovraCore.SessionGap(startMs: 2000, endMs: 5000, reason: JovraCore.SessionGapReason.userPaused), JovraCore.SessionGap(startMs: 7000, endMs: 8000, reason: JovraCore.SessionGapReason.interruption)]
+✘ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() recorded an issue at CapturePipelineTests.swift:78:5: Expectation failed: (record.durationMs → 7000) == 8000
+✘ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() failed after 1.222 seconds with 2 issues.
+✘ Test run with 1 test in 0 suites failed after 1.222 seconds with 2 issues.

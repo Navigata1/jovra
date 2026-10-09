@@ -1,0 +1,17 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/10] Emitting module JovraMedia
+[4/10] Compiling JovraMedia CaptureEngine.swift
+[5/10] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:86:32: error: type 'AVError.Code?' has no member 'mediaServicesWereReset'
+ 84 |             guard let self else { return }
+ 85 |             let error = notification.userInfo?[AVCaptureSessionErrorKey] as? AVError
+ 86 |             if error?.code == .mediaServicesWereReset {
+    |                                `- error: type 'AVError.Code?' has no member 'mediaServicesWereReset'
+ 87 |                 self.control.async { self.resetRequired = true }
+ 88 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+error: fatalError

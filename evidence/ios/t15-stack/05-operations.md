@@ -1,0 +1,5 @@
+# T15 prerequisite 5: operational controls and accepted evidence custody
+
+Adds the remaining130 manual test lines from accepted candidate48a1372. Fresh full Media suite70tests PASS; original journal/session/media manifest evidence is preserved, full Python recording schema/reference probe PASS. Byte-custody control verifies all capture-owned source/test/evidence bytes match the independently accepted candidate, and the retained local synthetic MP4 matches its manifest hash/size. Extra stack-only logs remain outside the original evidence directory.
+
+The behavioral controls include low-space refusal, thermal rungs/court preview/helper flags, clean shutdown, injected source interruption and resumed-source refusal, and one typed sink call carrying recording plus reopened durable manual marks. These are package controls, not hardware acceptance. No full T15 closure: native preview/permissions/device locks/orientation, physical<=3second crash loss, actual crash recovery scanner, AV synchronization and endurance remain UNVERIFIED. Future T16 must preserve originals and reconcile stale metadata even when a finished journal's sink failed.
