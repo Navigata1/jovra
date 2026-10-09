@@ -1,0 +1,9 @@
+# Bounded native reviewed-point model
+
+Public compiler RED01 establishes the absent ReviewedPointModel before implementation; inference errors depend on that missing type. Initial implementation compile02 failed on catch bindings shadowing the error state; corrected build03 passes. Actual native04 passes three tests in two recognized classes, zero failed/skipped, on dedicated4265ADFD-39A3-4E71-8482-1945DDB5F899 (iPhone17Pro/iOS26.5 simulator). Two existing replay transport cases also pass with the shared library change.
+
+The new test encodes and durably saves a fresh two-second original through the existing coordinator. Four reviewed decisions A,A,A,B produce3/4 points won. Correcting the first decision toB preserves the original log entry, selects the active correction and refolds all later points: the second point's pre-score becomes0–15 and points won becomes2/4. Reviewed provenance and Sample evidence come from the derived stat. No serve or shot observations means nil values, not fabricated zeros. Reopening a separate local actor at the same owned root retains these values; an invalid negative time range is refused without changing four active points/five historical entries.
+
+The app actor delegates exactly one call to each accepted SessionStore transaction. The model reads a fresh full fold and stats after writes, never caches or patches scores. The displayed call is explicitly before the selected point, not a live playhead overlay. Generation guards prevent an old load/mutation completion from replacing another session's view state. Errors avoid claiming that an unconfirmed write was definitely absent.
+
+No new review screen, split/merge/delete point editing, advanced conflicts, automatic analysis, wholeT29/T28 closure, physical device or finalCoreFlow acceptance. Step5 remains held. Actual receipts bind the source hashes; raw xcresults remain in the owned derived-data folder.
