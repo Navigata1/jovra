@@ -1,0 +1,51 @@
+OK  85 generated files match
+41 routes in architecture §5.1 (docs/backend/architecture.md)
+ok       GET    /v1/health  -> health
+ok       GET    /v1/me  -> me
+ok       POST   /v1/projects/{projectId}/sources  -> sources.declare
+ok       POST   /v1/projects/{projectId}/camera-invites  -> cameraInvites.create
+ok       DELETE /v1/projects/{projectId}/camera-invites/{inviteId}  -> cameraInvites.revoke
+ok       POST   /v1/camera-invites/redeem  -> cameraInvites.redeem
+ok       POST   /v1/projects/{projectId}/camera-invites/{inviteId}/approve  -> cameraInvites.approve
+ok       POST   /v1/camera-invites/redemptions/{redemptionId}/capability  -> cameraInvites.capability
+ok       POST   /v1/guest/sources  -> guestSources.declare
+ok       POST   /v1/sources/{sourceId}/uploads  -> uploads.open
+ok       GET    /v1/uploads/{sessionId}  -> uploads.status
+ok       PUT    /v1/uploads/{sessionId}/parts/{n}  -> uploads.putPart
+ok       POST   /v1/uploads/{sessionId}/complete  -> uploads.complete
+ok       DELETE /v1/uploads/{sessionId}  -> uploads.abort
+ok       POST   /v1/projects/{projectId}/quotes  -> quotes.create
+ok       POST   /v1/quotes/{quoteId}/accept  -> quotes.accept
+ok       GET    /v1/jobs/{jobId}  -> jobs.get
+ok       POST   /v1/jobs/{jobId}/cancel  -> jobs.cancel
+ok       POST   /v1/jobs/{jobId}/pause  -> jobs.pause
+ok       POST   /v1/jobs/{jobId}/resume  -> jobs.resume
+ok       POST   /v1/jobs/{jobId}/review  -> jobs.review
+ok       POST   /v1/jobs/{jobId}/retry  -> jobs.retry
+ok       GET    /v1/artifacts/{artifactId}/content  -> artifacts.content
+ok       POST   /v1/artifacts/{artifactId}/share-links  -> shareLinks.create
+ok       DELETE /v1/share-links/{shareLinkId}  -> shareLinks.revoke
+ok       GET    /s/{token}  -> shareLinks.open
+ok       GET    /s/{token}/thumbnail  -> shareLinks.thumbnail
+ok       POST   /v1/grants  -> grants.create
+ok       POST   /v1/grants/redeem  -> grants.redeem
+ok       POST   /v1/projects/{projectId}/members/{userId}/approve  -> members.approve
+ok       POST   /v1/lesson-clips/{clipId}/share-approval  -> lessonClips.approveShare
+ok       DELETE /v1/lesson-clips/{clipId}/share-approval  -> lessonClips.revokeShare
+ok       DELETE /v1/grants/{grantId}  -> grants.revoke
+ok       POST   /v1/account/apple-link  -> account.appleLink
+ok       POST   /v1/deletion-requests  -> deletionRequests.create
+ok       GET    /v1/deletion-requests/{id}  -> deletionRequests.get
+ok       POST   /internal/v1/attempts/{attemptId}/claim  -> internal.claim
+ok       POST   /internal/v1/attempts/{attemptId}/heartbeat  -> internal.heartbeat
+ok       GET    /internal/v1/attempts/{attemptId}/inputs/{inputRef}  -> internal.input
+ok       POST   /internal/v1/attempts/{attemptId}/outputs  -> internal.outputs
+ok       POST   /internal/v1/attempts/{attemptId}/result  -> internal.result
+OK  every documented route has a request and response schema and at least one fixture of each
+OK  84 schemas, 122 fixtures, 22 invalid cases, 41 routes, 2 queues (bundled checker + jsonschema): every fixture valid, every invalid case rejected for its stated reason
+OK  230 files: no hosted URL, project ref, JWT, real email, non-sample UUID or token
+................
+----------------------------------------------------------------------
+Ran 16 tests in 3.946s
+
+OK

@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "kind": "jovra.capabilityRegistry",
-  "registryVersion": 1,
-  "updatedAt": "2026-10-07T01:30:00Z",
+  "registryVersion": 2,
+  "updatedAt": "2026-10-07T18:00:00Z",
   "capabilities": [
     {
       "id": "scoring.manual",
@@ -120,6 +120,24 @@
       "lastBenchmark": null
     },
     {
+      "id": "lineSnap",
+      "title": "Line-snap corner suggestion",
+      "status": "disabled",
+      "inV1": true,
+      "method": "Contour and line detection around a corner tap at full resolution suggests a snapped corner; the user accepts or ignores it, and manual taps stay the source of truth.",
+      "version": "1.0.0",
+      "uiLabel": "Estimated",
+      "outputsNeedReview": true,
+      "requires": {"calibration": false, "microphone": false, "video": true, "capabilities": ["court.calibration"]},
+      "gate": {
+        "promotesTo": "estimated",
+        "metrics": [{"name": "snapped corners within 2 px of hand labels", "comparator": ">=", "threshold": "0.95"}],
+        "minimumData": "200 frames over >= 3 court surfaces (technical-feasibility §8)"
+      },
+      "lastBenchmark": null,
+      "notes": "Pre-seeded by T02. Stays disabled, with no UI, unless its benchmark record passes (T35)."
+    },
+    {
       "id": "pose.overlay2d",
       "title": "2D pose overlay (Stroke Lab)",
       "status": "estimated",
@@ -168,6 +186,20 @@
       "requires": {"calibration": false, "microphone": false, "video": true},
       "gate": null,
       "lastBenchmark": null
+    },
+    {
+      "id": "faceBlur",
+      "title": "Face blur in exports",
+      "status": "disabled",
+      "inV1": true,
+      "method": "On-device face rectangles (Apple Vision / ML Kit) on exported frames; every detected face is blurred. Faces the camera can't see clearly may not be blurred.",
+      "version": "1.0.0",
+      "uiLabel": "Estimated · may miss faces",
+      "outputsNeedReview": false,
+      "requires": {"calibration": false, "microphone": false, "video": true},
+      "gate": null,
+      "lastBenchmark": null,
+      "notes": "Pre-seeded by T02 at disabled; T39 moves it to estimated and its page says 'Not benchmarked'. Ungated: no benchmark record is required for estimated."
     },
     {
       "id": "strokeClassification",

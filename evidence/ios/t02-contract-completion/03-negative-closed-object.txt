@@ -1,0 +1,9 @@
+# Negative test 1: an unknown property inside a closed object fails (copy of the tree)
++ added "unexpectedProperty": true to $.drillLogs[0].tally in spec/fixtures/records/practice-plan.all-fields.json
+$ python3 scripts/spec/validate.py
+FAIL spec/fixtures/records/practice-plan.all-fields.json: schema practice-plan.schema.json: $.drillLogs[0].tally.unexpectedProperty: no value is allowed here
+RESULT: FAIL (1 failure(s))
+exit=1
+
+# And the validator self-test (on the unmodified tree) adds an unknown property to every object of the four 1.1 contract examples:
+closed-object rejections           152

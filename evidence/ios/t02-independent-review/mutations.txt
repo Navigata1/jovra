@@ -1,0 +1,41 @@
+unknown-property acceptance exit 1
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  26
+schemas                            18
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: FAIL (1 failure(s))
+trailing-newline anchor exit 1
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  23
+schemas                            18
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: FAIL (3 failure(s))
+shared anchor propagation to Studio exit 1
+contracts valid (reference)                                      1
+room messages schema-valid                                       113
+secret hygiene                                                   1
+hint self-tests                                                  4
+module pages checked                                             12
+registered kinds with a module page                              38
+README without per-module lines                                  1
+generated files current                                          82
+RESULT: FAIL
+invalid-consent-date crash exit 1
+  File "/private/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/jovra-t02-mutations-nmnpif15/scripts/spec/test_contracts.py", line 578, in test_written_consent_dates_are_checked_without_a_withdrawal
+    self.assertTrue(any("attachedAt" in problem for problem in session_problems(doc)))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.004s
+
+FAILED (failures=2, errors=2)
+All 4 mutated regressions rejected.

@@ -1,0 +1,16 @@
+$ git diff --stat origin/main -- spec/fixtures   (existing fixture bytes changed: none)
+(no output above: no existing byte under spec/fixtures changed)
+
+$ git diff --stat origin/main -- spec/fixtures   (all changes: added files only)
+ spec/fixtures/records/archive.all-fields.json      |  51 ++++
+ spec/fixtures/records/export.all-fields.json       |  32 +++
+ .../fixtures/records/practice-plan.all-fields.json |  64 +++++
+ spec/fixtures/records/session.all-fields.json      | 272 +++++++++++++++++++++
+ spec/fixtures/sample/media-manifest.json           | 195 +++++++++++++++
+ 5 files changed, 614 insertions(+)
+
+A	spec/fixtures/records/archive.all-fields.json
+A	spec/fixtures/records/export.all-fields.json
+A	spec/fixtures/records/practice-plan.all-fields.json
+A	spec/fixtures/records/session.all-fields.json
+A	spec/fixtures/sample/media-manifest.json

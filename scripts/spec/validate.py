@@ -3,11 +3,17 @@
 
 1. Every schema uses only keywords the bundled checker implements, and every $ref resolves.
 2. Self-tests: known-bad instances must fail and known-good ones pass (the checker is not vacuous).
-3. Every JSON file under spec/fixtures and spec/contracts validates against the schema its "kind" names.
+3. Every JSON file under spec/fixtures and spec/contracts validates against the schema its "kind" names by
+   convention (jovra.archiveManifest -> archive-manifest.schema.json; no lookup table), and every schema that
+   declares a kind const declares the kind its file name stands for.
 4. The reference engine (spec/reference) is re-run on every fixture: expected outputs must match exactly,
    hand-written assertions must hold, the sample match must satisfy C1-C16, CSV exports must match
    byte-for-byte, and file sizes/hashes quoted in export/archive examples must match the files.
-5. Media ground truth is internally consistent, and every benchmark record is re-scored from its outputs and
+5. Reference integrity (jovra_ref/references.py): every id a record holds names a record that exists, ranges run
+   forwards, 1.1 times fall inside the recording, event-log versions are not later than the log, a stored serve speed
+   and its range are recomputed from its mark, consent fields agree, and sample media ids exist in the sample media
+   manifest.
+6. Media ground truth is internally consistent, and every benchmark record is re-scored from its outputs and
    the committed ground truth (spec/reference/jovra_ref/benchmark.py); gating runs use held-out seeds only,
    each clip counts once, each clip carries its ground truth's renderer and decoded-frame hashes, and a record
    naming a capability is a candidate run on that capability's registry gate (ADR-0004) with the task,
@@ -33,25 +39,8 @@ sys.path.insert(0, str(SPEC / "reference"))
 
 from jsonschema_subset import SchemaSet  # noqa: E402
 
-from jovra_ref import benchmark, conformance, csv_export, sample_match, scoring, stats  # noqa: E402
+from jovra_ref import benchmark, conformance, csv_export, references, sample_match, scoring, stats  # noqa: E402
 
-KIND_TO_SCHEMA = {
-    "jovra.session": "session.schema.json",
-    "jovra.equipment": "equipment.schema.json",
-    "jovra.archiveManifest": "archive-manifest.schema.json",
-    "jovra.capabilityRegistry": "capability-registry.schema.json",
-    "jovra.practicePlan": "practice-plan.schema.json",
-    "jovra.export": "export.schema.json",
-    "jovra.csvContract": "csv-contract.schema.json",
-    "jovra.fixture.scoring": "fixture-scoring.schema.json",
-    "jovra.fixture.stats": "fixture-stats.schema.json",
-    "jovra.fixture.pct": "fixture-pct.schema.json",
-    "jovra.fixture.units": "fixture-units.schema.json",
-    "jovra.fixture.sample": "fixture-sample.schema.json",
-    "jovra.groundTruth": "ground-truth.schema.json",
-    "jovra.benchmarkRecord": "benchmark-record.schema.json",
-    "jovra.benchmarkBindings": "benchmark-bindings.schema.json",
-}
 
 
 class Report:
@@ -144,6 +133,33 @@ def schema_self_tests(schemas: SchemaSet, rep: Report) -> None:
     bad = json.loads(canon(expected))
     next(c for c in bad["constraints"] if c["id"] == "C15")["status"] = "pass"
     cases.append(("fixture-sample.schema.json", bad, False, "waiver hidden under status pass"))
+    cases.append(("session.schema.json", session, True, "a schemaVersion 1.0.0 document after the 1.1 bump"))
+    # JSON Schema patterns are ECMA-262: '$' is the end of the input, so a trailing newline must not pass '^...$'
+    cases.append(("session.schema.json", dict(session, id=session["id"] + "\n"), False, "id ending in a newline"))
+    cases.append(("session.schema.json", dict(session, createdAt=session["createdAt"] + "\n"), False,
+                  "createdAt ending in a newline"))
+    cases.append(("common.schema.json#sha256", "a" * 64 + "\n", False, "sha256 ending in a newline"))
+    # a document stamped 1.0.x carries nothing added in 1.1.0 (each schema's $defs/v1_0)
+    for name, schema in (("session", "session.schema.json"), ("practice-plan", "practice-plan.schema.json"),
+                         ("export", "export.schema.json"), ("archive", "archive-manifest.schema.json")):
+        example = json.loads((SPEC / f"fixtures/records/{name}.all-fields.json").read_text(encoding="utf-8"))
+        cases.append((schema, dict(example, schemaVersion="1.0.0"), False, f"{name} 1.1 fields stamped 1.0.0"))
+    example = json.loads((SPEC / "fixtures/records/session.all-fields.json").read_text(encoding="utf-8"))
+    bad = json.loads(canon(example))
+    bad["derivedValues"][0]["scope"].pop("serveMarkId", None)
+    cases.append(("session.schema.json", bad, False, "serve speed naming no serve mark"))
+    bad = json.loads(canon(example))
+    bad["derivedValues"][0]["unit"] = "m/s"
+    cases.append(("session.schema.json", bad, False, "serve speed in a unit other than mph or km/h"))
+    bad = json.loads(canon(example))
+    bad["derivedValues"][0].pop("range", None)
+    cases.append(("session.schema.json", bad, False, "serve speed without its range"))
+    bad = json.loads(canon(example))
+    next(e for e in bad["recording"]["captureEvents"] if e["kind"] == "frameRateChange").pop("frameRate", None)
+    cases.append(("session.schema.json", bad, False, "frameRateChange without its frame rate"))
+    bad = json.loads(canon(example))
+    next(e for e in bad["recording"]["captureEvents"] if e["kind"] == "thermalState").pop("thermalState", None)
+    cases.append(("session.schema.json", bad, False, "thermalState event without its state"))
     for schema, instance, must_pass, label in cases:
         file, _, definition = schema.partition("#")
         target = {"$ref": f"{file}#/$defs/{definition}"} if definition else schemas.files[file]
@@ -152,6 +168,45 @@ def schema_self_tests(schemas: SchemaSet, rep: Report) -> None:
             rep.fail("schema self-test", f"{label}: expected {'pass' if must_pass else 'fail'}")
         else:
             rep.ok("schema self-tests")
+
+
+def object_paths(node, path="$"):
+    """JSON paths of every object in a document, outermost first."""
+    if isinstance(node, dict):
+        yield path, node
+        for key, value in node.items():
+            yield from object_paths(value, f"{path}.{key}")
+    elif isinstance(node, list):
+        for i, value in enumerate(node):
+            yield from object_paths(value, f"{path}[{i}]")
+
+
+def closed_object_self_tests(schemas: SchemaSet, rep: Report) -> None:
+    """Every object in a contract example (records/*.all-fields.json) is closed: an unknown property must fail."""
+    for path in sorted((SPEC / "fixtures").rglob("*.all-fields.json")):
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        schema = conformance.schema_file_for_kind(doc["kind"])
+        for where, _ in list(object_paths(doc)):
+            probe = json.loads(canon(doc))
+            target = dict(object_paths(probe))[where]
+            target["unexpectedProperty"] = True
+            if not schemas.validate(probe, schema):
+                rep.fail(str(path.relative_to(ROOT)), f"{where} accepts an unknown property")
+            else:
+                rep.ok("closed-object rejections")
+
+
+def kind_schema_checks(schemas: SchemaSet, rep: Report) -> None:
+    """A schema that pins its kind must sit in the file its kind maps to, so the convention cannot drift."""
+    for name, schema in schemas.files.items():
+        const = schema.get("properties", {}).get("kind", {}).get("const")
+        if const is None:
+            continue
+        expected = conformance.schema_file_for_kind(const)
+        if expected != name:
+            rep.fail("schema", f"{name} declares kind {const!r}, which maps to {expected}")
+        else:
+            rep.ok("kind-to-schema names")
 
 
 # ----- 3: instances ------------------------------------------------------------------------------
@@ -163,9 +218,13 @@ def validate_instances(schemas: SchemaSet, rep: Report) -> dict[Path, dict]:
         rel = path.relative_to(ROOT)
         doc = json.loads(path.read_text(encoding="utf-8"))
         kind = doc.get("kind")
-        schema = KIND_TO_SCHEMA.get(kind)
-        if schema is None:
-            rep.fail(str(rel), f"unknown kind {kind!r}")
+        try:
+            schema = conformance.schema_file_for_kind(kind)
+        except ValueError:
+            rep.fail(str(rel), f"malformed kind {kind!r}")
+            continue
+        if schema not in schemas.files:
+            rep.fail(str(rel), f"no schema {schema} for kind {kind!r}")
             continue
         errors = schemas.validate(doc, schema)
         if errors:
@@ -279,6 +338,8 @@ def check_file_facts(path: Path, doc: dict, rep: Report) -> None:
     where = str(path.relative_to(ROOT))
     entries = doc["files"]
     for entry in entries:
+        if "md5" not in entry and "sha256" not in entry:
+            continue  # not hashed yet (a queued archive job): nothing to verify against the file
         rel = entry.get("path") or entry.get("localPath")
         target = path.parent / rel
         if not target.exists():
@@ -337,6 +398,23 @@ def check_references(docs: dict, rep: Report) -> None:
         for use in s.get("equipmentUse", []):
             if use["racketId"] not in rackets or ("stringJobId" in use and use["stringJobId"] not in jobs):
                 rep.fail("session", f"{s['id']} equipmentUse references unknown equipment")
+    manifests = [d for _, d in by_kind.get("jovra.sampleMediaManifest", [])]
+    manifest = manifests[0] if len(manifests) == 1 else None
+    if len(manifests) != 1:
+        rep.fail("sample media manifest", f"expected exactly one, found {len(manifests)}")
+    per_kind = {
+        "jovra.session": lambda d: references.session_problems(d, manifest),
+        "jovra.practicePlan": references.practice_plan_problems,
+        "jovra.export": lambda d: references.export_problems(d, sessions),
+        "jovra.archiveManifest": lambda d: references.archive_problems(d, sessions),
+    }
+    for path, d in sorted(docs.items()):
+        rule = per_kind.get(d["kind"], references.time_range_problems)
+        problems = rule(d)
+        for problem in problems:
+            rep.fail(str(path.relative_to(ROOT)), problem)
+        if not problems:
+            rep.ok("reference-integrity documents")
     for path, plan in by_kind.get("jovra.practicePlan", []):
         for item in plan["items"]:
             for ev in item["evidence"]:
@@ -725,11 +803,18 @@ def main() -> int:
     for problem in schemas.check_all():
         rep.fail("schema", problem)
     rep.counts["schemas"] = len(schemas.files)
+    kind_schema_checks(schemas, rep)
     schema_self_tests(schemas, rep)
+    closed_object_self_tests(schemas, rep)
     docs = validate_instances(schemas, rep)
+    extra_checks = conformance.discovered_checks()
     media_self_tests(schemas, docs, rep)
     for path, doc in docs.items():
         kind = doc["kind"]
+        if kind in extra_checks:
+            for problem in extra_checks[kind](path, doc, docs):
+                rep.fail(str(path.relative_to(ROOT)), problem)
+            rep.ok(f"{kind} checks")
         if kind == "jovra.fixture.scoring":
             check_scoring(path, doc, rep)
         elif kind == "jovra.fixture.stats":
@@ -756,7 +841,7 @@ def main() -> int:
         print(line)
     print("---- spec validation summary ----")
     for key in sorted(rep.counts):
-        print(f"{key:28} {rep.counts[key]}")
+        print(f"{key:34} {rep.counts[key]}")
     if rep.failures:
         print(f"RESULT: FAIL ({len(rep.failures)} failure(s))")
         return 1

@@ -115,6 +115,13 @@ def capability_registry() -> dict:
              "Homographic registration of frames against the calibration frame.", "Estimated", True, cal=True,
              gate=_gate("estimated", [("1-degree nudge detected", ">=", "0.99", None),
                                       ("false alarms per hour", "<=", "1", None)], "Bench and court footage")),
+        _cap("lineSnap", "Line-snap corner suggestion", "disabled", True,
+             "Contour and line detection around a corner tap at full resolution suggests a snapped corner; the user "
+             "accepts or ignores it, and manual taps stay the source of truth.", "Estimated", True,
+             deps=["court.calibration"],
+             gate=_gate("estimated", [("snapped corners within 2 px of hand labels", ">=", "0.95", None)],
+                        "200 frames over >= 3 court surfaces (technical-feasibility §8)"),
+             notes="Pre-seeded by T02. Stays disabled, with no UI, unless its benchmark record passes (T35)."),
         _cap("pose.overlay2d", "2D pose overlay (Stroke Lab)", "estimated", True,
              "Apple Vision / ML Kit 2D body pose on demand on selected frames; never scored.", "2D pose estimate",
              True, gate=_gate("validated", [("keypoint agreement on labelled frames", ">=", "0.90", None)],
@@ -127,6 +134,11 @@ def capability_registry() -> dict:
                         "Radar-paired serves on >= 3 courts")),
         _cap("shotPlacement.manual", "Shot placement (manual taps)", "manual", True,
              "Player taps bounces on the court diagram or the calibrated frame.", "Manual", False),
+        _cap("faceBlur", "Face blur in exports", "disabled", True,
+             "On-device face rectangles (Apple Vision / ML Kit) on exported frames; every detected face is blurred. "
+             "Faces the camera can't see clearly may not be blurred.", "Estimated · may miss faces", False,
+             notes="Pre-seeded by T02 at disabled; T39 moves it to estimated and its page says 'Not benchmarked'. "
+                   "Ungated: no benchmark record is required for estimated."),
         _cap("strokeClassification", "Automatic stroke classification", "unsupported", False,
              "Out of v1 (backlog Later).", "Not available", True),
         _cap("ballTrajectory", "Ball tracking", "unsupported", False, "Out of v1 (backlog Later).", "Not available",
@@ -145,8 +157,9 @@ def capability_registry() -> dict:
              "Relative acoustic estimate; P2 candidate pending bench gate and patent review.", "Not available", True,
              mic=True, video=False),
     ]
-    return {"schemaVersion": "1.0.0", "kind": "jovra.capabilityRegistry", "registryVersion": 1, "updatedAt": T0,
-            "capabilities": caps}
+    # registryVersion 2 (T02): lineSnap and faceBlur pre-seeded at disabled; no other status changed.
+    return {"schemaVersion": "1.0.0", "kind": "jovra.capabilityRegistry", "registryVersion": 2,
+            "updatedAt": "2026-10-07T18:00:00Z", "capabilities": caps}
 
 
 def practice_plan(session: dict) -> dict:
@@ -241,3 +254,10 @@ def write(records_dir: Path, contracts_dir: Path, write_json, version) -> int:
     write_json(sample_dir / "export.json", export_manifest(sample_dir, session))
     write_json(sample_dir / "archive.json", archive_manifest(sample_dir, session))
     return 5
+
+
+ORDER = 50
+
+
+def generate(ctx) -> int:
+    return write(ctx.fixtures / "records", ctx.contracts, ctx.write_json, ctx.version)

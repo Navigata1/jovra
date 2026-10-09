@@ -1,0 +1,28 @@
+$ python3 spec/reference/generate_fixtures.py
+scoring_cases 74, stats_cases 4, units_cases 1, sample_cases 1, records 5, sample_media 1, contract_examples 4
+exit=0
+
+$ git status --porcelain spec   (after regenerating: empty = byte-stable)
+
+$ python3 scripts/spec/validate.py
+---- spec validation summary ----
+closed-object rejections           152
+cross-references                   1
+csv byte-for-byte                  2
+file hashes                        6
+hand assertions                    527
+instances valid                    93
+jovra.sampleMediaManifest checks   1
+kind-to-schema names               13
+pct fixtures                       1
+pct vectors                        32
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  14
+schemas                            15
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: PASS
+exit=0
