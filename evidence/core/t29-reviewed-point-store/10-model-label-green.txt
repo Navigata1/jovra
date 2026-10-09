@@ -1,0 +1,31 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/6] Compiling JovraCore ReviewedPointStore.swift
+[5/6] Emitting module JovraCore
+[5/7] Write Objects.LinkFileList
+[6/7] Linking JovraCorePackageTests
+Build complete! (2.88s)
+Test Suite 'Selected tests' started at 2026-10-09 12:09:14.440.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 12:09:14.441.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 12:09:14.441.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 12:09:14.441.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test winnerOnlyCorrectionDoesNotPromoteAnUnreviewedEstimate() started.
+◇ Test durableReviewedPointsAndCorrectionsRecomputeLaterScoresAndStats() started.
+◇ Test userWinnerCorrectionMustNotInheritModelValidation(status:) started.
+◇ Test case passing 1 argument status → .estimated to userWinnerCorrectionMustNotInheritModelValidation(status:) started.
+◇ Test case passing 1 argument status → .validated to userWinnerCorrectionMustNotInheritModelValidation(status:) started.
+✔ Test winnerOnlyCorrectionDoesNotPromoteAnUnreviewedEstimate() passed after 0.081 seconds.
+✔ Test userWinnerCorrectionMustNotInheritModelValidation(status:) with 2 test cases passed after 0.087 seconds.
+✔ Test durableReviewedPointsAndCorrectionsRecomputeLaterScoresAndStats() passed after 0.143 seconds.
+✔ Test run with 3 tests in 0 suites passed after 0.144 seconds.

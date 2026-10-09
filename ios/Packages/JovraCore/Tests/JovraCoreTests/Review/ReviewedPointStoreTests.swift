@@ -65,3 +65,33 @@ import Testing
     }
     #expect(try await store.load(document.id) == document)
 }
+
+@Test(arguments: [Provenance.validated, .estimated])
+func userWinnerCorrectionMustNotInheritModelValidation(status: Provenance) async throws {
+    let root = try FixtureManifest.repository()
+    var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
+    guard case .point(var point) = try #require(document.match?.log.first) else {
+        Issue.record("Expected sample point"); return
+    }
+    var outcome = try #require(point.reviewed)
+    outcome.provenance = status; outcome.source = "model:points@1.0"
+    outcome.capabilityId = "points"; outcome.capabilityVersion = "1.0"; outcome.confidence = 0.9
+    point.reviewed = outcome; point.reviewState = .reviewed
+    document.match?.log = [.point(point)]
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let store = try SessionStore(root: directory); try await store.create(document)
+    if status == .estimated {
+        await #expect(throws: PointReviewError.reviewedOutcomeRequired) {
+            _ = try await store.correctReviewedWinner(pointID: point.id, winner: .b, for: document.id)
+        }
+        #expect(try await store.load(document.id) == document)
+    } else {
+        let changed = try await store.correctReviewedWinner(pointID: point.id, winner: .b, for: document.id)
+        let edited = try await store.load(document.id)
+        #expect(edited.match?.log.first == .point(point))
+        #expect(changed.detected == point.detected && changed.reviewed?.serves == outcome.serves)
+        #expect(changed.reviewed?.provenance == .reviewed && changed.reviewed?.source == "user")
+        #expect(changed.reviewed?.capabilityId == nil && changed.reviewed?.capabilityVersion == nil && changed.reviewed?.confidence == nil)
+    }
+}

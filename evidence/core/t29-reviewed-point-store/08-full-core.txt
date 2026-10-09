@@ -1,0 +1,195 @@
+[0/1] Planning build
+Test Suite 'All tests' started at 2026-10-09 12:02:40.534.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 12:02:40.535.
+Test Suite 'SessionStoreTests' started at 2026-10-09 12:02:40.535.
+Test Case '-[JovraCoreTests.SessionStoreTests testAppendBatchSurvivesInterruptionAsNoneOrAllAndConcurrentFacetsDoNotLoseEvents]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testAppendBatchSurvivesInterruptionAsNoneOrAllAndConcurrentFacetsDoNotLoseEvents]' passed (189.394 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testCreateSurvivesStoreRelaunchAndInterruptedWriteKeepsPreviousDocument]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testCreateSurvivesStoreRelaunchAndInterruptedWriteKeepsPreviousDocument]' passed (0.212 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' passed (0.174 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFiltersAndOpponentQueriesDistinguishTeamsAndExcludeSamples]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFiltersAndOpponentQueriesDistinguishTeamsAndExcludeSamples]' passed (0.222 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession]' passed (0.180 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureMutationRefusalLeavesDocumentBytesUnchanged]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureMutationRefusalLeavesDocumentBytesUnchanged]' passed (0.095 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testIndexRebuildAndCorruptSessionQuarantinePreserveHealthySessions]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testIndexRebuildAndCorruptSessionQuarantinePreserveHealthySessions]' passed (0.429 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testNewOriginalFacetUpgradesLegacyDocumentWithoutChangingMatch]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testNewOriginalFacetUpgradesLegacyDocumentWithoutChangingMatch]' passed (0.168 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testOlderDocumentMigratesAndOpponentQueriesExcludeSamples]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testOlderDocumentMigratesAndOpponentQueriesExcludeSamples]' passed (0.422 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testPointWithoutDetectedOrReviewedOutcomeIsRefused]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testPointWithoutDetectedOrReviewedOutcomeIsRefused]' passed (0.044 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testSymlinkEscapeIsRefusedWithoutHidingHealthySessionOrTouchingExternalMedia]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testSymlinkEscapeIsRefusedWithoutHidingHealthySessionOrTouchingExternalMedia]' passed (0.117 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testZeroNegativeAndDuplicateSequenceRefusalLeavesLogUnchanged]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testZeroNegativeAndDuplicateSequenceRefusalLeavesLogUnchanged]' passed (0.056 seconds).
+Test Suite 'SessionStoreTests' passed at 2026-10-09 12:05:52.049.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 191.512 (191.514) seconds
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 12:05:52.049.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 191.512 (191.514) seconds
+Test Suite 'All tests' passed at 2026-10-09 12:05:52.049.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 191.512 (191.515) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Duration labels" started.
+◇ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() started.
+◇ Suite "Provenance" started.
+◇ Test durableJournalReopensWithOnlyConfirmedMediaAndSegmentIntent() started.
+◇ Test sampleSessionUsesSamePublicFold() started.
+◇ Test percentagesUseHalfUpAndPoolCounts() started.
+◇ Suite "WCAG contrast" started.
+◇ Suite ScoringTests started.
+◇ Test fixturesAreDispatchedByKindAndUnknownKindsFail() started.
+◇ Test failedJournalReplacementPreservesPreviouslyDurableSnapshot() started.
+◇ Suite "Frame rate" started.
+◇ Test nativeScoringInputsAndOutputsKeepEveryGoldenField() started.
+◇ Test sessionOptionalFieldsRoundTripThroughRealTypes() started.
+◇ Test exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() started.
+◇ Test publicScoringBoundaryRefusesInvalidContexts() started.
+◇ Test canonicalNumbersAndUnicodeHaveIndependentBytes() started.
+◇ Test matchSessionBridgeKeepsStoredAuthoritativeValues() started.
+◇ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() started.
+◇ Test timelineKeepsAbsentAndExplicitNullChangesDistinct() started.
+◇ Test serveRateUsesDenominatorContributorsFromOnlyTheChosenSide() started.
+◇ Test sampleOverviewStatsMatchIndependentValues() started.
+◇ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() started.
+◇ Test storedDecimalsRejectTrailingLineBreaksOnEveryHost() started.
+◇ Test cyclicFutureCorrectionAnchorRefuses() started.
+◇ Test unknownMajorAndInvalidMediaTimeThrowTypedErrors() started.
+◇ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+◇ Test malformedAndAmbiguousJSONIsRefused() started.
+◇ Test estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() started.
+◇ Test captureHandoffAtomicallyKeepsExistingMarksAndStateFacetsAcrossRelaunch() started.
+◇ Test winnerOnlyCorrectionDoesNotPromoteAnUnreviewedEstimate() started.
+◇ Test persistedDecimalCannotSilentlyLosePrecision() started.
+◇ Test missingShotObservationsAreUnknownRatherThanMeasuredZero() started.
+◇ Test durableReviewedPointsAndCorrectionsRecomputeLaterScoresAndStats() started.
+◇ Test allDiscoveredRunnerFixturesPass() started.
+◇ Test momentumAndRequiredNullableDurationKeepTheirClosedContract() started.
+◇ Test "under an hour shows whole minutes" started.
+◇ Test unitsConvertOnceAndPreserveEnteredText() started.
+◇ Test otherPersistedRecordsRoundTripThroughRealTypes() started.
+◇ Test capabilityRegistryKeepsRequiredNullAndStatus() started.
+◇ Test "an hour or more shows hours and minutes" started.
+◇ Test roundingDoesNotOverflowOrUsePlatformPercentFormatter() started.
+◇ Test "encodes to the same lowercase strings" started.
+◇ Test "decodes the four persisted provenance values" started.
+◇ Test "negative and non-finite durations are treated as zero" started.
+◇ Test negativeCheckpointIndexRefusesBeforeLookup() started.
+◇ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" started.
+◇ Test "rejects values outside the contract" started.
+◇ Test "contrast ratio is symmetric" started.
+◇ Test "normal text needs 4.5:1, large text and UI parts need 3:1" started.
+◇ Test "black on white is the maximum 21:1" started.
+◇ Test loveHoldMatchesIndependentFold() started.
+◇ Test "malformed hex strings are rejected" started.
+◇ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" started.
+◇ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" started.
+◇ Test case passing 1 argument symbolicLink → true to sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+◇ Test "integer rates: frame 60 at 60 fps starts at exactly one second" started.
+✔ Test percentagesUseHalfUpAndPoolCounts() passed after 0.002 seconds.
+◇ Test case passing 1 argument symbolicLink → false to sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+◇ Test "negative times clamp to frame 0" started.
+◇ Test case passing 2 arguments seconds → 0.0, expected → "0 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 59.0, expected → "0 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 60.0, expected → "1 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 3270.0, expected → "54 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 3599.0, expected → "59 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 3600.0, expected → "1h 0m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 2 arguments seconds → 24120.0, expected → "6h 42m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 2 arguments seconds → 90359.0, expected → "25h 5m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 1 argument seconds → -5.0 to "negative and non-finite durations are treated as zero" started.
+◇ Test case passing 1 argument seconds → nan to "negative and non-finite durations are treated as zero" started.
+◇ Test case passing 1 argument seconds → inf to "negative and non-finite durations are treated as zero" started.
+◇ Test case passing 1 argument input → "" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#FFF" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#GGGGGG" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#1234567" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "12 456" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "+12345" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#+FFFFF" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "-00000" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "##12345" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "0x1234" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "１２３４５６" to "malformed hex strings are rejected" started.
+✔ Test canonicalNumbersAndUnicodeHaveIndependentBytes() passed after 0.096 seconds.
+✔ Test storedDecimalsRejectTrailingLineBreaksOnEveryHost() passed after 0.096 seconds.
+✔ Test exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() passed after 0.096 seconds.
+✔ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() passed after 0.096 seconds.
+✔ Test malformedAndAmbiguousJSONIsRefused() passed after 0.096 seconds.
+✔ Test unknownMajorAndInvalidMediaTimeThrowTypedErrors() passed after 0.096 seconds.
+✔ Test cyclicFutureCorrectionAnchorRefuses() passed after 0.096 seconds.
+✔ Test persistedDecimalCannotSilentlyLosePrecision() passed after 0.096 seconds.
+✔ Test publicScoringBoundaryRefusesInvalidContexts() passed after 0.096 seconds.
+✔ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() passed after 0.097 seconds.
+✔ Test durableJournalReopensWithOnlyConfirmedMediaAndSegmentIntent() passed after 0.097 seconds.
+✔ Test timelineKeepsAbsentAndExplicitNullChangesDistinct() passed after 0.096 seconds.
+✔ Test failedJournalReplacementPreservesPreviouslyDurableSnapshot() passed after 0.097 seconds.
+✔ Test "under an hour shows whole minutes" with 5 test cases passed after 0.096 seconds.
+✔ Test unitsConvertOnceAndPreserveEnteredText() passed after 0.096 seconds.
+✔ Test momentumAndRequiredNullableDurationKeepTheirClosedContract() passed after 0.096 seconds.
+✔ Test otherPersistedRecordsRoundTripThroughRealTypes() passed after 0.096 seconds.
+✔ Test "an hour or more shows hours and minutes" with 3 test cases passed after 0.096 seconds.
+✔ Test fixturesAreDispatchedByKindAndUnknownKindsFail() passed after 0.097 seconds.
+✔ Test "encodes to the same lowercase strings" passed after 0.096 seconds.
+✔ Test "decodes the four persisted provenance values" passed after 0.096 seconds.
+✔ Test "negative and non-finite durations are treated as zero" with 3 test cases passed after 0.096 seconds.
+✔ Test negativeCheckpointIndexRefusesBeforeLookup() passed after 0.096 seconds.
+✔ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" passed after 0.096 seconds.
+✔ Test "rejects values outside the contract" passed after 0.096 seconds.
+✔ Test "contrast ratio is symmetric" passed after 0.096 seconds.
+✔ Test "normal text needs 4.5:1, large text and UI parts need 3:1" passed after 0.096 seconds.
+✔ Test "black on white is the maximum 21:1" passed after 0.096 seconds.
+✔ Test capabilityRegistryKeepsRequiredNullAndStatus() passed after 0.097 seconds.
+✔ Test "malformed hex strings are rejected" with 11 test cases passed after 0.096 seconds.
+✔ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" passed after 0.095 seconds.
+✔ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" passed after 0.095 seconds.
+✔ Test "integer rates: frame 60 at 60 fps starts at exactly one second" passed after 0.095 seconds.
+✔ Test "negative times clamp to frame 0" passed after 0.094 seconds.
+✔ Suite "Duration labels" passed after 0.097 seconds.
+✔ Suite "Provenance" passed after 0.097 seconds.
+✔ Suite "WCAG contrast" passed after 0.097 seconds.
+✔ Suite "Frame rate" passed after 0.097 seconds.
+Consumed jovra.archiveManifest: 2 fixtures
+Consumed jovra.benchmarkBindings: 1 fixtures
+✔ Test serveRateUsesDenominatorContributorsFromOnlyTheChosenSide() passed after 0.104 seconds.
+✔ Test matchSessionBridgeKeepsStoredAuthoritativeValues() passed after 0.105 seconds.
+✔ Test loveHoldMatchesIndependentFold() passed after 0.105 seconds.
+✔ Suite ScoringTests passed after 0.106 seconds.
+✔ Test winnerOnlyCorrectionDoesNotPromoteAnUnreviewedEstimate() passed after 0.117 seconds.
+✔ Test estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() passed after 0.119 seconds.
+✔ Test sampleOverviewStatsMatchIndependentValues() passed after 0.119 seconds.
+Consumed jovra.benchmarkRecord: 3 fixtures
+✔ Test missingShotObservationsAreUnknownRatherThanMeasuredZero() passed after 0.133 seconds.
+Consumed jovra.csvContract: 2 fixtures
+canonical independent vectors: 13
+Consumed jovra.fixture.canonical: 1 fixtures
+✔ Test roundingDoesNotOverflowOrUsePlatformPercentFormatter() passed after 0.151 seconds.
+Consumed jovra.capabilityRegistry: 1 fixtures
+Consumed jovra.equipment: 1 fixtures
+✔ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) with 2 test cases passed after 0.175 seconds.
+Consumed jovra.export: 2 fixtures
+✔ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() passed after 0.201 seconds.
+✔ Test sessionOptionalFieldsRoundTripThroughRealTypes() passed after 0.207 seconds.
+✔ Test durableReviewedPointsAndCorrectionsRecomputeLaterScoresAndStats() passed after 0.208 seconds.
+Consumed jovra.groundTruth: 19 fixtures
+pct vectors: 32
+Consumed jovra.fixture.pct: 1 fixtures
+Consumed jovra.practicePlan: 2 fixtures
+Consumed jovra.sampleMediaManifest: 1 fixtures
+✔ Test sampleSessionUsesSamePublicFold() passed after 0.282 seconds.
+✔ Test captureHandoffAtomicallyKeepsExistingMarksAndStateFacetsAcrossRelaunch() passed after 0.370 seconds.
+Consumed jovra.fixture.scoring: 106 fixtures
+Consumed jovra.session: 3 fixtures
+Consumed jovra.fixture.stats: 3 fixtures
+units vectors: 31
+Consumed jovra.fixture.units: 1 fixtures
+Pending fixture kinds: jovra.fixture.sample
+✔ Test allDiscoveredRunnerFixturesPass() passed after 0.718 seconds.
+Concrete native scoring contracts: 106 inputs, 107 complete outputs
+✔ Test nativeScoringInputsAndOutputsKeepEveryGoldenField() passed after 4.926 seconds.
+✔ Test run with 51 tests in 5 suites passed after 4.926 seconds.

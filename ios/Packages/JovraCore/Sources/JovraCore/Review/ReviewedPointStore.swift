@@ -36,10 +36,13 @@ public extension SessionStore {
         }
         // Winner-only edits preserve facts already reviewed. Confirming a detected block is a
         // separate, fuller review operation; this path never upgrades unexamined estimates.
-        guard var outcome = point.reviewed, point.reviewState == .reviewed else {
+        guard var outcome = point.reviewed, point.reviewState == .reviewed,
+              outcome.provenance != .estimated else {
             throw PointReviewError.reviewedOutcomeRequired
         }
         outcome.winner = winner == .a ? .a : .b
+        outcome.provenance = .reviewed; outcome.source = "user"
+        outcome.capabilityId = nil; outcome.capabilityVersion = nil; outcome.confidence = nil
         point.id = UUID().uuidString; point.seq = try nextReviewSequence(input.log)
         point.supersedes = pointID; point.insertBefore = nil
         point.at = Date.now.ISO8601Format(); point.reviewed = outcome
