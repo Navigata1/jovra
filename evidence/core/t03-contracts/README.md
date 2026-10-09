@@ -30,3 +30,10 @@ boundary. This is a regression guard for an independently tested passing behavio
 `32-swift-publication.txt` reports **31 Swift tests passing**, `33-encoded-publication.txt` repeats 36/36 independent
 schema/canonical checks, and `34-python-publication.txt` reports **82 Python tests passing**. No implementation changed
 after the independently accepted head; fresh required CI must bind the publication head.
+
+Fresh Linux CI at publication head `51850d8` exposed a platform difference: all six trailing newline controls
+unexpectedly succeeded on Linux, although they refused on macOS. The red job output is retained in
+`35-linux-decimal-newline-red.txt` (run 37941325437). The correction checks that the lexical regex match spans
+the entire input token, since `$` may match before a terminal newline and Foundation Decimal parsing differs
+by host. The test remains intact. `36-swift-linux-fix-macos.txt`, `37-encoded-linux-fix.txt` and
+`38-python-linux-fix.txt` bind the local correction; a fresh Linux CI result is still required to verify it there.
