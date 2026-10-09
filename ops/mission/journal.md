@@ -46,3 +46,5 @@ Steps1–3 complete; step4 remains in progress. T03/330, order amendment332, loc
 - Published369helper6d96dd1 and370UI64ac4f2. UI complete iOS tree9a925bbc equals tested73; source publication acceptance is separate from native runtime attribution. Explicit dependency stack365–370 remains unmerged.
 - Fresh370run37982136949 required jobs failed before any steps; retained annotation cites account payment/spending limit. No CI waiver or merge. P4 remains blocked pending owner billing restoration, fresh exact-head CI/dependency merges and current-main native rerun.
 - Step5 remains held. No Studio engine, Android/adaptive/watch/cloud activation, hardware/store readiness or full feature ticket closure is claimed. Resources released.
+
+- Independent mission truth check ACCEPT; gate timestamps corrected to execution evidence (Core XCTest19:11:04.598Z; native final19:35:43Z; hosted jobs19:43:18Z), distinct from later receipt/publication observation time.

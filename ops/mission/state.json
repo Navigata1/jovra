@@ -179,8 +179,8 @@
           "command": "swift test --package-path ios/Packages/JovraCore",
           "status": "passed",
           "evidence": "ops/mission/evidence/final-core-flow/12-current-core.txt",
-          "lastRun": "2026-10-09T19:36:31.697915+00:00",
-          "notes": "Fresh12XCTest+57Swift tests PASS on5d0ca0f; current main444 and final flow have byte-identical JovraCore package source. All fixture kinds consumed. This does not transfer whole-app or hosted CI acceptance."
+          "lastRun": "2026-10-09T19:11:04.598Z",
+          "notes": "Fresh12XCTest+57Swift tests PASS on5d0ca0f; current main444 and final flow have byte-identical JovraCore package source. All fixture kinds consumed. This does not transfer whole-app or hosted CI acceptance. Timestamp records XCTest completion from the retained log; the Swift Testing suite then passed after4.293seconds."
         },
         {
           "id": "P4-G2",
@@ -188,7 +188,7 @@
           "command": "scripts/ios/core-flow-test.sh",
           "status": "pending",
           "evidence": "ops/mission/evidence/final-core-flow/",
-          "lastRun": "2026-10-09T19:43:57.793803+00:00",
+          "lastRun": "2026-10-09T19:35:43Z",
           "notes": "Local composition tested73ce5c2f: actual CoreFlow1 plus viewport controls3 PASS, zero failed/skipped/expected; corrected score persists after relaunch. Independent actual schema/canonical/history/CSV checks, original hash preservation and full decoded clip30frames/1sec/noaudio PASS. Publication370 has complete iOS tree identical to tested73 and both independent source axes accept. Native receipt stays bound to tested73. Default-branch integration and rerun remain pending; hosted CI blocks merges. Actual run used direct xcodebuild test-without-building with owned simulator and exact CoreFlow/viewport filters, not the wrapper shown for future default-branch gate."
         },
         {
@@ -197,7 +197,7 @@
           "command": "gh pr checks 370",
           "status": "failed",
           "evidence": "ops/mission/evidence/github-actions-payment-gate.json",
-          "lastRun": "2026-10-09T19:43:57.793803+00:00",
+          "lastRun": "2026-10-09T19:43:18Z",
           "notes": "Fresh required jobs fail before any steps: GitHub reports failed account payments or spending limit. Dependent native-data-export SKIPPED and manual iOS SKIPPED are not passes. No waiver or merge. Account owner must restore Actions availability."
         }
       ],
