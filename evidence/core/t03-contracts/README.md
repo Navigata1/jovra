@@ -22,3 +22,11 @@ source fixtures. `31-reference-final.txt`: existing reference validator passes. 
 subprocess negative tests refuse unknown kinds, malformed documents and empty encoded folders. The actual
 SwiftPM generator subprocess rejects duplicate runner ownership with exit 1 (25). Fresh Linux CI remains
 required before merge; local macOS success does not substitute for it.
+
+Publication follow-up: the independent reviewer accepted implementation head `192f53f` and its 30 Swift tests;
+the complete review and small control logs are in `evidence/ios/t03-independent-review`. The publication commit
+adds a permanent public test for trailing LF/CRLF/CR decimal-string rejection to check the Linux Foundation
+boundary. This is a regression guard for an independently tested passing behavior, not a claimed new defect/fix.
+`32-swift-publication.txt` reports **31 Swift tests passing**, `33-encoded-publication.txt` repeats 36/36 independent
+schema/canonical checks, and `34-python-publication.txt` reports **82 Python tests passing**. No implementation changed
+after the independently accepted head; fresh required CI must bind the publication head.
