@@ -10,7 +10,7 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T13:35:59.947625+00:00",
+    "updated": "2026-10-09T13:52:02.077331+00:00",
     "sessionCount": 1
   },
   "policies": {
@@ -114,44 +114,51 @@
       "id": "P3",
       "title": "Close verification gaps",
       "goal": "Automate existing Studio reference checks and reconcile core contract vocabulary without expanding Studio.",
-      "status": "pending",
+      "status": "done",
       "sessionsEstimate": "1",
       "gates": [
         {
           "id": "P3-G1",
           "title": "Studio validator",
           "command": "python3 scripts/spec/validate_studio.py",
-          "status": "pending",
-          "evidence": null,
-          "lastRun": null,
-          "notes": ""
+          "status": "passed",
+          "evidence": "evidence/spec/core-continuation/",
+          "lastRun": "2026-10-09T13:52:02.077331+00:00",
+          "notes": "Fresh current main 15bc44a: Studio validator PASS and 79 Python tests PASS."
         },
         {
           "id": "P3-G2",
           "title": "Validator negative tests",
           "command": "python3 -m unittest discover -s scripts/spec -p \"test_*.py\"",
-          "status": "pending",
-          "evidence": null,
-          "lastRun": null,
-          "notes": ""
+          "status": "passed",
+          "evidence": "evidence/spec/core-continuation/",
+          "lastRun": "2026-10-09T13:52:02.077331+00:00",
+          "notes": "Fresh current main 15bc44a: Studio validator PASS and 79 Python tests PASS."
         }
       ],
       "tasks": [
         {
           "id": "P3-T1",
           "title": "Add CI coverage for existing Studio / Room reference contracts",
-          "status": "pending",
+          "status": "done",
           "dependsOn": [],
-          "pr": null,
-          "notes": ""
+          "pr": {
+            "number": 66,
+            "url": "https://github.com/Navigata1/jovra/pull/66",
+            "mergedAt": "2026-10-09T13:31:48Z"
+          },
+          "notes": "Vocabulary and canonical reference merged15bc44a. T02 supplies existing CI spec validation for core, Studio and Room."
         },
         {
           "id": "P3-T2",
           "title": "Resolve court coordinate and key-moment vocabulary discrepancies",
-          "status": "pending",
+          "status": "done",
           "dependsOn": [],
-          "pr": null,
-          "notes": ""
+          "pr": {
+            "number": 328,
+            "url": "https://github.com/Navigata1/jovra/pull/328"
+          },
+          "notes": "Vocabulary and canonical reference merged15bc44a. T02 supplies existing CI spec validation for core, Studio and Room."
         }
       ]
     },
@@ -159,7 +166,7 @@
       "id": "P4",
       "title": "Record to export",
       "goal": "A working native iOS flow with durable recording, local library, replay, corrected score and export.",
-      "status": "pending",
+      "status": "in_progress",
       "sessionsEstimate": "Several feature slices",
       "gates": [
         {
@@ -185,7 +192,7 @@
         {
           "id": "T03",
           "title": "Swift contracts, canonical JSON, percentages, units and capability models",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [
             "T02"
           ],
@@ -215,12 +222,12 @@
         {
           "id": "T08",
           "title": "Durable session storage and media custody",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [
             "T03"
           ],
           "pr": null,
-          "notes": ""
+          "notes": "Implementation underway in isolated store checkout using committed T03 models; publication and merge remain gated by T03 acceptance."
         },
         {
           "id": "T15-T16",
@@ -305,14 +312,21 @@
       "url": "https://github.com/Navigata1/jovra/pull/66",
       "phase": "P2",
       "mergedAt": "2026-10-09T13:31:48Z"
+    },
+    {
+      "number": 328,
+      "title": "Canonical reference bytes and core contract vocabulary",
+      "url": "https://github.com/Navigata1/jovra/pull/328",
+      "phase": "P3",
+      "mergedAt": "2026-10-09T13:49:44Z"
     }
   ],
   "resume": {
     "activePhase": "P2",
     "nextActions": [
-      "Finish independent T07 full UI and process-relaunch restoration tests on dedicated simulator; merge only after fresh CI.",
-      "T03 implementation now unblocked by merged T02; build typed Swift contracts and conformance runners including canonical fixture kind.",
-      "Finish PR328 reference vocabulary/independent canonical bytes, then implement T08 and native capture/playback along ticket dependencies."
+      "Finish T07 independent process-death restoration test and merge after fresh CI.",
+      "Independently review and merge typed Swift contracts T03, then T04 scoring and T05 stats.",
+      "Continue durable T08 store and T15 capture; integrate native replay, scoring corrections and exports. Stop before step5."
     ],
     "blockers": [],
     "conventions": [

@@ -18,3 +18,5 @@
 - Gateway regex portability fixed with explicit ECMA whitespace and black-box rejection tests; strict checker retained.
 - T03 unblocked and underway; canonical-byte vectors registered through the existing discovery convention.
 - T07 UI/restoration suite still running; no step-5 work started.
+
+- 2026-10-09T13:52:02.077331+00:00: PR328 merged15bc44a; current-main core/Studio validation passes. Native restoration verification and T03/T08 implementation continue. Step5 remains held.
