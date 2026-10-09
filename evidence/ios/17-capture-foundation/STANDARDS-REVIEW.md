@@ -1,0 +1,5 @@
+# Standards review: capture setup foundation
+
+Static source ACCEPT17e96fcc27572586cb636e74307d0a6d4b3c9cde against accepted standalone harnessb6111ec976add6b829b7760f57296b585266aa2e. Root independently inspected the scoped source diff. Typed caller choices, authoritative scalar-length guards, optional restorable route payload, exhaustive truthful phase presentation and semantic disabled-button palette retain the accepted composed source behavior. The UIKit field promotion preserves the actual64-point minimum target, scaled font and native Done binding; default keyboard type adds reuse without changing capture semantics. Wrapping labels/menu choices and native no-ad Toggle behavior remain intact.
+
+No remaining concrete source finding for this bounded foundation. Historical composed0885 proof remains historical; fresh hosted/semantic foundation gate is pending. No capture route replacement ships in this slice, and there is no whole recording-to-export acceptance. FullT17, physical devices and step5 remain pending/held. Final runtime and evidence-only publication head must be rebound before merge.

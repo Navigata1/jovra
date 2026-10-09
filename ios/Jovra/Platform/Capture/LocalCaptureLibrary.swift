@@ -28,10 +28,10 @@ actor LocalCaptureLibrary: RecordingSink {
     func createCapture(_ seed: CaptureSessionSeed, mode: SessionRecordingMode) async throws -> SessionID {
         guard mode == .camera || mode == .simulatorFixture else { throw LocalCaptureLibraryError.unsupportedSource }
         guard seed.players.count == 2, Set(seed.players.map(\.id)).count == 2,
-              seed.players.allSatisfy({ !$0.id.isEmpty && !$0.displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }),
+              seed.players.allSatisfy({ !$0.id.isEmpty && !$0.displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && $0.displayName.unicodeScalars.count <= 60 }),
               seed.players.contains(where: { $0.id == seed.toss.firstServer }),
               seed.toss.startingEnds.A.rawValue != seed.toss.startingEnds.B.rawValue,
-              !seed.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+              !seed.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, seed.title.unicodeScalars.count <= 120 else {
             throw LocalCaptureLibraryError.invalidSinglesSetup
         }
         let id = SessionID(rawValue: UUID().uuidString)

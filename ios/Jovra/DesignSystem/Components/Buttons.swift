@@ -35,7 +35,7 @@ struct JovraButtonStyle: ButtonStyle {
                 }
             }
             .contentShape(shape)
-            .opacity(isEnabled ? (configuration.isPressed ? 0.82 : 1) : 0.45)
+            .opacity(isEnabled && configuration.isPressed ? 0.82 : 1)
             .scaleEffect(configuration.isPressed && !reduceMotion ? 0.98 : 1)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.15), value: configuration.isPressed)
     }
@@ -45,7 +45,8 @@ struct JovraButtonStyle: ButtonStyle {
     }
 
     private var foreground: Color {
-        switch kind {
+        if !isEnabled { return .jovra(.textSecondary) }
+        return switch kind {
         case .accent: .jovra(.onAccent)
         case .primary: .jovra(.onPrimaryFill)
         case .secondary: .jovra(.textPrimary)
@@ -53,7 +54,8 @@ struct JovraButtonStyle: ButtonStyle {
     }
 
     private var background: Color {
-        switch kind {
+        if !isEnabled { return .jovra(.surfaceSunken) }
+        return switch kind {
         case .accent: .jovra(.accent)
         case .primary: .jovra(.primaryFill)
         case .secondary: .clear

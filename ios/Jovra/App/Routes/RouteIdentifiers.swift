@@ -65,6 +65,7 @@ enum SessionKind: String, Codable, CaseIterable, Sendable {
 /// Nil on the capture route means "the setup screen's current choices".
 struct SessionSetupDraft: Hashable, Codable, Sendable {
     var kind: SessionKind
+    var captureChoices: CaptureSetupChoices? = nil
 }
 
 /// Which points a review or replay route shows (screen spec N1: Needs review · Unscored · All points).

@@ -1,0 +1,28 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/ios/Jovra.xcodeproj
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/.derivedData/t17-capture-length-public-red.xcresult
+
+2026-10-09 12:30:22.914 xcodebuild[63487:132432166] [MT] IDETestOperationsObserverDebug: 11.001 elapsed -- Testing started completed.
+2026-10-09 12:30:22.914 xcodebuild[63487:132432166] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 12:30:22.914 xcodebuild[63487:132432166] [MT] IDETestOperationsObserverDebug: 11.001 sec, +11.001 sec -- end
+Failing tests:
+	CaptureTextBoundaryTests.testAuthoritativeSeedRefusesOverlongRetainedTextBeforeCreatingAnySession()
+	CaptureTextBoundaryTests.testChoicesValidateTrimmedUnicodeScalarLimits()
+	CaptureTextBoundaryTests.testChoicesValidateTrimmedUnicodeScalarLimits()
+	CaptureTextBoundaryTests.testChoicesValidateTrimmedUnicodeScalarLimits()
+	CaptureTextBoundaryTests.testChoicesValidateTrimmedUnicodeScalarLimits()
+
+** TEST FAILED **
+
+Testing started
+Test class                           passed  failed  skipped  expected
+JovraTests/CaptureTextBoundaryTests       1       2        0         0
+Total: 1 passed, 2 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 1 passed, 2 failed, 0 skipped; result Failed)
+FAILED CaptureTextBoundaryTests/testAuthoritativeSeedRefusesOverlongRetainedTextBeforeCreatingAnySession(): failed - schema-invalid retained text was accepted
+FAILED CaptureTextBoundaryTests/testChoicesValidateTrimmedUnicodeScalarLimits(): XCTAssertFalse failed - session title maxLength120
+Device: JOVRA-Codex-T07 4265ADFD-39A3-4E71-8482-1945DDB5F899 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/t17-capture-length-public-red.xcresult
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.
