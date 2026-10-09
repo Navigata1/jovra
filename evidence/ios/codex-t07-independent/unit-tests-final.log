@@ -1,0 +1,515 @@
+==> render media fixtures (check against committed ground truth)
+==> ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers
+==> set fixtureCamera (renderer hash 8710c28d160f8765)
+  cached   fixtureCamera/fixture-camera                      241,992 B    1.2 s  frames 360  sig 7e4d79d35183
+==> set frameCounter (renderer hash 68a198241bee4053)
+  cached   frameCounter/fc-024                                9,065 B    0.1 s  frames 48  sig 76fc0af4f175
+  cached   frameCounter/fc-030                               10,846 B    0.1 s  frames 60  sig d10eed800180
+  cached   frameCounter/fc-060                               20,356 B    0.1 s  frames 120  sig 67fc241469a7
+  cached   frameCounter/fc-120                               37,817 B    0.1 s  frames 240  sig 1ff5249b380b
+  cached   frameCounter/fc-240                               73,857 B    0.3 s  frames 480  sig 458109604fba
+==> set harness (renderer hash 4d9c18d5b3e4de4c)
+  cached   harness/events-s11                          170,904 B    0.2 s  frames 300  sig 407390c2d4a0
+  cached   harness/events-s23                          169,865 B    0.2 s  frames 300  sig d7e18ccf01a4
+==> set import (renderer hash c057f208a9012761)
+  cached   import/h264-1080p30-landscape               54,696 B    0.3 s  frames 90  sig e0b281007c86
+  cached   import/hevc-720p60-landscape                36,826 B    0.2 s  frames 120  sig 534d24a1e2c3
+  cached   import/hevc-1080p30-portrait-rotated        35,451 B    0.2 s  frames 60  sig 0d0e9f4ce56d
+  cached   import/h264-720x1280-24-portrait             5,804 B    0.1 s  frames 48  sig 0cdcd1d4dca0
+  cached   import/hevc-hlg-720p30                      35,376 B    0.2 s  frames 60  sig f4dfe80052a2
+  cached   import/hevc-720p240-slowmo                  30,021 B    0.4 s  frames 240  sig 812c36a79021
+  cached   import/h264-360p2997-landscape               5,167 B    0.1 s  frames 60  sig 4f614267b1c0
+  cached   import/hevc-720p30-vfr                      33,812 B    0.2 s  frames 60  sig 82e7925839f0
+  cached   import/ffv1-unsupported                     33,285 B    0.0 s  frames 30  sig 1efbd44bb787
+  cached   import/duplicate-a                          31,725 B    0.1 s  frames 60  sig 299d5cbc6926
+  copied   import/duplicate-b                          31,725 B    0.1 s  frames 60  sig 299d5cbc6926
+==> 19 clips, total rendered size 1,068,590 bytes (1.02 MiB)
+decoded-frame hash check: PASS (19 clips match the committed ground truth)
+==> swift test (JovraCore)
+[0/6] Write FixtureRunnerGenerator-tool-entitlement.plist
+[0/6] Write sources
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Emitting module FixtureRunnerGenerator
+[5/8] Compiling FixtureRunnerGenerator main.swift
+[5/8] Write Objects.LinkFileList
+[6/8] Linking FixtureRunnerGenerator-tool
+[7/8] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/17] Write FixtureRunnerGenerator-entitlement.plist
+[1/17] Write sources
+[1/17] Write FixtureRunnerGenerator-tool-entitlement.plist
+[1/17] Write sources
+[6/17] Write swift-version--58304C5D6DBC2206.txt
+[7/19] Write Objects.LinkFileList
+[9/26] Emitting module FixtureRunnerGenerator
+[10/26] Compiling FixtureRunnerGenerator main.swift
+[10/26] Write Objects.LinkFileList
+[11/26] Linking FixtureRunnerGenerator-tool
+[12/26] Applying FixtureRunnerGenerator-tool
+[13/26] Discover conformance runners by kind
+[14/26] Write sources
+[15/26] Linking FixtureRunnerGenerator
+[16/26] Applying FixtureRunnerGenerator
+[18/26] Compiling JovraCore DocumentModels.swift
+[19/26] Compiling JovraCore Percent.swift
+[20/26] Compiling JovraCore Units.swift
+[21/26] Compiling JovraCore CanonicalJSON.swift
+[22/26] Compiling JovraCore ContractPrimitives.swift
+[23/26] Compiling JovraCore CapabilityRegistryLoader.swift
+[24/26] Emitting module JovraCore
+[25/54] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[26/54] Compiling JovraCoreTests BenchmarkRunner.swift
+[27/55] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[28/55] Compiling JovraCoreTests UnitsTests.swift
+[29/55] Compiling JovraCoreTests DurationLabelTests.swift
+[30/55] Compiling JovraCoreTests SessionContractTests.swift
+[31/55] Compiling JovraCoreTests UnitsRunner.swift
+[32/55] Compiling JovraCoreTests ProvenanceTests.swift
+[33/55] Compiling JovraCoreTests SampleMediaRunner.swift
+[34/55] Compiling JovraCoreTests SessionRunner.swift
+[35/55] Compiling JovraCoreTests CSVContractRunner.swift
+[36/55] Compiling JovraCoreTests CanonicalRunner.swift
+[37/55] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[38/55] Compiling JovraCoreTests EquipmentRunner.swift
+[39/55] Compiling JovraCoreTests FrameRateTests.swift
+[40/55] Compiling JovraCoreTests ExportRunner.swift
+[41/55] Compiling JovraCoreTests GroundTruthRunner.swift
+[42/55] Compiling JovraCoreTests ContrastTests.swift
+[43/55] Compiling JovraCoreTests PctRunner.swift
+[44/55] Compiling JovraCoreTests PracticePlanRunner.swift
+[45/55] Compiling JovraCoreTests RegistryContractTests.swift
+[46/55] Compiling JovraCoreTests ArchiveRunner.swift
+[47/55] Compiling JovraCoreTests MediaRecordContractTests.swift
+[48/55] Compiling JovraCoreTests PercentTests.swift
+[49/55] Emitting module JovraCoreTests
+[50/55] Compiling JovraCoreTests CanonicalJSONTests.swift
+[51/55] Compiling JovraCoreTests ContractSafetyTests.swift
+[52/55] Compiling JovraCoreTests FixtureManifest.swift
+[53/55] Compiling JovraCoreTests ManifestTests.swift
+[53/55] Write Objects.LinkFileList
+[54/55] Linking JovraCorePackageTests
+Build complete! (10.23s)
+Test Suite 'All tests' started at 2026-10-09 09:13:51.230.
+Test Suite 'All tests' passed at 2026-10-09 09:13:51.231.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "WCAG contrast" started.
+◇ Test fixturesAreDispatchedByKindAndUnknownKindsFail() started.
+◇ Test capabilityRegistryKeepsRequiredNullAndStatus() started.
+◇ Suite "Frame rate" started.
+◇ Suite "Provenance" started.
+◇ Suite "Duration labels" started.
+◇ Test unknownMajorAndInvalidMediaTimeThrowTypedErrors() started.
+◇ Test otherPersistedRecordsRoundTripThroughRealTypes() started.
+◇ Test canonicalNumbersAndUnicodeHaveIndependentBytes() started.
+◇ Test malformedAndAmbiguousJSONIsRefused() started.
+◇ Test roundingDoesNotOverflowOrUsePlatformPercentFormatter() started.
+◇ Test exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() started.
+◇ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() started.
+◇ Test storedDecimalsRejectTrailingLineBreaksOnEveryHost() started.
+◇ Test unitsConvertOnceAndPreserveEnteredText() started.
+◇ Test percentagesUseHalfUpAndPoolCounts() started.
+◇ Test allDiscoveredRunnerFixturesPass() started.
+◇ Test "negative times clamp to frame 0" started.
+◇ Test "contrast ratio is symmetric" started.
+◇ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" started.
+◇ Test "normal text needs 4.5:1, large text and UI parts need 3:1" started.
+◇ Test "black on white is the maximum 21:1" started.
+◇ Test "malformed hex strings are rejected" started.
+◇ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" started.
+◇ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" started.
+◇ Test "under an hour shows whole minutes" started.
+◇ Test "integer rates: frame 60 at 60 fps starts at exactly one second" started.
+◇ Test "an hour or more shows hours and minutes" started.
+◇ Test "encodes to the same lowercase strings" started.
+◇ Test "negative and non-finite durations are treated as zero" started.
+◇ Test "rejects values outside the contract" started.
+◇ Test sessionOptionalFieldsRoundTripThroughRealTypes() started.
+◇ Test "decodes the four persisted provenance values" started.
+◇ Test case passing 1 argument input → "#FFF" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "" to "malformed hex strings are rejected" started.
+◇ Test persistedDecimalCannotSilentlyLosePrecision() started.
+◇ Test case passing 1 argument input → "#GGGGGG" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#1234567" to "malformed hex strings are rejected" started.
+◇ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() started.
+◇ Test case passing 1 argument input → "12 456" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "#+FFFFF" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "+12345" to "malformed hex strings are rejected" started.
+◇ Test case passing 2 arguments seconds → 0.0, expected → "0 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 1 argument input → "-00000" to "malformed hex strings are rejected" started.
+◇ Test case passing 1 argument input → "##12345" to "malformed hex strings are rejected" started.
+◇ Test case passing 2 arguments seconds → 59.0, expected → "0 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 60.0, expected → "1 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 2 arguments seconds → 3600.0, expected → "1h 0m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 1 argument seconds → -5.0 to "negative and non-finite durations are treated as zero" started.
+◇ Test case passing 2 arguments seconds → 3270.0, expected → "54 min" to "under an hour shows whole minutes" started.
+◇ Test case passing 1 argument input → "0x1234" to "malformed hex strings are rejected" started.
+◇ Test case passing 2 arguments seconds → 90359.0, expected → "25h 5m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 1 argument input → "１２３４５６" to "malformed hex strings are rejected" started.
+◇ Test case passing 2 arguments seconds → 24120.0, expected → "6h 42m" to "an hour or more shows hours and minutes" started.
+◇ Test case passing 1 argument seconds → nan to "negative and non-finite durations are treated as zero" started.
+◇ Test case passing 1 argument seconds → inf to "negative and non-finite durations are treated as zero" started.
+✔ Test "negative times clamp to frame 0" passed after 0.001 seconds.
+✔ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" passed after 0.001 seconds.
+✔ Test "contrast ratio is symmetric" passed after 0.001 seconds.
+◇ Test case passing 2 arguments seconds → 3599.0, expected → "59 min" to "under an hour shows whole minutes" started.
+✔ Test percentagesUseHalfUpAndPoolCounts() passed after 0.001 seconds.
+✔ Test "black on white is the maximum 21:1" passed after 0.001 seconds.
+✔ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" passed after 0.001 seconds.
+✔ Test "malformed hex strings are rejected" with 11 test cases passed after 0.001 seconds.
+✔ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" passed after 0.001 seconds.
+✔ Test "integer rates: frame 60 at 60 fps starts at exactly one second" passed after 0.001 seconds.
+✔ Test "an hour or more shows hours and minutes" with 3 test cases passed after 0.001 seconds.
+✔ Test "encodes to the same lowercase strings" passed after 0.001 seconds.
+✔ Test exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() passed after 0.001 seconds.
+✔ Test "negative and non-finite durations are treated as zero" with 3 test cases passed after 0.001 seconds.
+✔ Test unitsConvertOnceAndPreserveEnteredText() passed after 0.001 seconds.
+✔ Test malformedAndAmbiguousJSONIsRefused() passed after 0.001 seconds.
+✔ Test storedDecimalsRejectTrailingLineBreaksOnEveryHost() passed after 0.001 seconds.
+✔ Suite "Frame rate" passed after 0.001 seconds.
+✔ Test persistedDecimalCannotSilentlyLosePrecision() passed after 0.001 seconds.
+✔ Test "decodes the four persisted provenance values" passed after 0.001 seconds.
+✔ Test "rejects values outside the contract" passed after 0.001 seconds.
+✔ Test "normal text needs 4.5:1, large text and UI parts need 3:1" passed after 0.001 seconds.
+✔ Test unknownMajorAndInvalidMediaTimeThrowTypedErrors() passed after 0.001 seconds.
+✔ Suite "Provenance" passed after 0.001 seconds.
+✔ Test "under an hour shows whole minutes" with 5 test cases passed after 0.001 seconds.
+✔ Suite "WCAG contrast" passed after 0.001 seconds.
+✔ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() passed after 0.001 seconds.
+✔ Test canonicalNumbersAndUnicodeHaveIndependentBytes() passed after 0.001 seconds.
+✔ Suite "Duration labels" passed after 0.001 seconds.
+✔ Test capabilityRegistryKeepsRequiredNullAndStatus() passed after 0.022 seconds.
+✔ Test roundingDoesNotOverflowOrUsePlatformPercentFormatter() passed after 0.028 seconds.
+✔ Test fixturesAreDispatchedByKindAndUnknownKindsFail() passed after 0.029 seconds.
+Consumed jovra.archiveManifest: 2 fixtures
+Consumed jovra.benchmarkBindings: 1 fixtures
+✔ Test otherPersistedRecordsRoundTripThroughRealTypes() passed after 0.037 seconds.
+Consumed jovra.benchmarkRecord: 3 fixtures
+Consumed jovra.csvContract: 2 fixtures
+canonical independent vectors: 13
+Consumed jovra.fixture.canonical: 1 fixtures
+Consumed jovra.capabilityRegistry: 1 fixtures
+Consumed jovra.equipment: 1 fixtures
+Consumed jovra.export: 2 fixtures
+✔ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() passed after 0.108 seconds.
+✔ Test sessionOptionalFieldsRoundTripThroughRealTypes() passed after 0.136 seconds.
+Consumed jovra.groundTruth: 19 fixtures
+pct vectors: 32
+Consumed jovra.fixture.pct: 1 fixtures
+Consumed jovra.practicePlan: 2 fixtures
+Consumed jovra.sampleMediaManifest: 1 fixtures
+Consumed jovra.session: 2 fixtures
+units vectors: 31
+Consumed jovra.fixture.units: 1 fixtures
+Pending fixture kinds: jovra.fixture.sample, jovra.fixture.scoring, jovra.fixture.stats
+✔ Test allDiscoveredRunnerFixturesPass() passed after 0.266 seconds.
+✔ Test run with 31 tests in 4 suites passed after 0.266 seconds.
+==> swift test (JovraMedia)
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/14] Compiling JovraCore Units.swift
+[4/14] Compiling JovraCore CanonicalJSON.swift
+[5/14] Compiling JovraCore ContractPrimitives.swift
+[6/14] Emitting module JovraCore
+[7/14] Compiling JovraCore DocumentModels.swift
+[8/14] Compiling JovraCore CapabilityRegistryLoader.swift
+[9/14] Compiling JovraCore Percent.swift
+[10/17] Compiling JovraMedia MediaProbe.swift
+[11/17] Compiling JovraMedia FrameTime.swift
+[12/17] Emitting module JovraMedia
+[13/23] Compiling JovraBenchmark EstimatorRegistry.swift
+[14/23] Compiling JovraBenchmark BenchmarkHarness.swift
+[15/23] Compiling JovraBenchmark GroundTruth.swift
+[16/23] Compiling JovraBenchmark BenchmarkRecord.swift
+[17/23] Compiling JovraBenchmark CapabilityGate.swift
+[18/23] Emitting module JovraBenchmark
+[18/23] Write Objects.LinkFileList
+[19/36] Linking jovra-benchmark
+[21/36] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[22/36] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+[23/36] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+[24/36] Emitting module JovraBenchmarkTests
+[25/36] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+[26/36] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[26/36] Applying jovra-benchmark
+[28/36] Compiling JovraMediaTests FrameTimingTests.swift
+[29/36] Emitting module JovraMediaTests
+[30/36] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[31/36] Compiling JovraMediaTests FrameTimeTests.swift
+[32/36] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[33/36] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[34/36] Compiling JovraMediaTests RealFootageProbeTests.swift
+[34/36] Write Objects.LinkFileList
+[35/36] Linking JovraMediaPackageTests
+Build complete! (10.39s)
+Test Suite 'All tests' started at 2026-10-09 09:14:02.402.
+Test Suite 'All tests' passed at 2026-10-09 09:14:02.403.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Benchmark harness" started.
+◇ Suite "Committed benchmark records are reproducible" started.
+◇ Suite "Benchmark media provenance" started.
+◇ Suite "Frame-accurate CMTime" started.
+◇ Suite "eventTimes scoring" started.
+◇ Suite "Capability bindings" started.
+◇ Suite "Benchmark harness provenance" started.
+◇ Suite "MediaProbe reports every import fixture's ground truth" started.
+◇ Suite "MediaProbe on private real footage (skipped when absent)" started.
+◇ Test "tuning runs use tuning seeds only and carry no verdict" started.
+◇ Suite "AVFoundation decodes every supported fixture to its committed signature hash" started.
+◇ Test "the record carries the truth-events digest the reference validator recomputes" started.
+◇ Suite "Malformed benchmark JSON throws instead of trapping" started.
+◇ Test "a clip with no benchmark split cannot be gated on" started.
+◇ Test "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+◇ Test "re-running the estimator reproduces the record" started.
+◇ Test "a candidate run on a clip that is not rendered is refused before the estimator runs" started.
+◇ Test "invalid and negative times map to frame 0" started.
+◇ Test "every frame start round-trips to its frame index" started.
+◇ Test "the committed gate records pass and fail as the self-test requires" started.
+◇ Test "oracle gate, null gate and a tuning run are committed" started.
+◇ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" started.
+◇ Test "a tie in distance goes to the earlier prediction, which is then consumed" started.
+◇ Suite "Frame rate from presentation timestamps" started.
+◇ Suite "Frame-counter fixtures decode to their own frame index" started.
+◇ Test "clips pool: matches, predictions and truth events add up across clips" started.
+◇ Test "an unknown capability or one without a gate is refused" started.
+◇ Test "a gating run needs a floor" started.
+◇ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "a clip listed twice is refused before the estimator runs" started.
+◇ Test "a candidate reads the verified media file" started.
+◇ Test "the oracle passes the floor on the held-out seed" started.
+◇ Test "a candidate run on a rendered clip that is not the committed media is refused before the estimator runs" started.
+◇ Test "one prediction serves only one truth event" started.
+◇ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" started.
+◇ Test "an overflowing tolerance names itself in the error" started.
+◇ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec" started.
+◇ Test "gating on a tuning seed is refused before the estimator runs" started.
+◇ Test "the duplicate pair is byte-identical under two names" started.
+◇ Test "no predictions: precision and MAE are undefined (null), recall is 0" started.
+◇ Test "a candidate run on the registry gate is accepted and carries the capability" started.
+◇ Test "an oracle or null run cannot name a capability" started.
+◇ Test case passing 1 argument file → "null.gate.json" to "re-running the estimator reproduces the record" started.
+◇ Test case passing 1 argument frame → 1 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument role → .candidate to "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+◇ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" started.
+◇ Test case passing 1 argument frame → 59 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument role → .oracle to "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+◇ Test case passing 1 argument frame → 60 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument file → "oracle.tuning.json" to "re-running the estimator reproduces the record" started.
+◇ Test case passing 1 argument frame → 3599 to "every frame start round-trips to its frame index" started.
+◇ Test "frame 120 at 240 fps is half a second" started.
+◇ Test case passing 1 argument frame → 216000 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 0 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument id → "import/duplicate-a" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument file → "oracle.gate.json" to "re-running the estimator reproduces the record" started.
+◇ Test "a run that names a capability must use that capability's registry gate" started.
+◇ Test case passing 1 argument id → "import/duplicate-b" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "a time between frames maps to the frame on screen" started.
+◇ Test case passing 1 argument id → "import/ffv1-unsupported" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "an exact tolerance boundary matches; one tick past it does not" started.
+◇ Test "Oct 4 phone original: 30 fps, variable frame rate" started.
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "constant-frame-rate excerpt: 30 fps, constant" started.
+◇ Test "Sep 29 phone original: 30 fps, variable frame rate" started.
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "a capability run with any other tolerance is refused before the estimator runs" started.
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "every binding maps each gate metric of its capability exactly once" started.
+◇ Test "a run request takes the binding's tolerance unless one is given" started.
+◇ Test "a perfect candidate passes the real audio.hitDetection registry gate" started.
+◇ Test "a gated capability without a binding is refused before the estimator runs" started.
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "audio.hitDetection is bound to eventTimes 1.0.0 at 50 ms, with the gate's metric names" started.
+◇ Test "the fixture set covers capture, playback, import and the harness" started.
+◇ Test "decoded-frame signature hash equals the ground truth" started.
+◇ Test "a zero or negative timescale is a decoding error" started.
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "a metric fraction with a zero denominator is a decoding error" started.
+◇ Test "every clip burns in its own frame index" started.
+◇ Test "a ground-truth frame rate of zero is a decoding error" started.
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test "the committed record decodes (the cases below change one field each)" started.
+◇ Test case passing 1 argument role → .oracle to "an oracle or null run cannot name a capability" started.
+◇ Test case passing 1 argument role → .null to "an oracle or null run cannot name a capability" started.
+✔ Test "every frame start round-trips to its frame index" with 6 test cases passed after 0.005 seconds.
+✔ Test "invalid and negative times map to frame 0" passed after 0.006 seconds.
+◇ Test "one-tick rounding (29.97 fps at timescale 600: 20 ticks and every 50th 21) is 30000/1001, constant" started.
+◇ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test "decode order with B-frames: timestamps are sorted before differencing" started.
+◇ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" started.
+◇ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" started.
+◇ Test "constant 30 fps at timescale 30000" started.
+◇ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" started.
+◇ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" started.
+◇ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" started.
+◇ Test "fewer than two frames or a bad timescale states no rate" started.
+✔ Test "a tie in distance goes to the earlier prediction, which is then consumed" passed after 0.006 seconds.
+◇ Test "a constant rate that is no standard rate is reported exactly" started.
+✔ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" passed after 0.006 seconds.
+✔ Test "oracle gate, null gate and a tuning run are committed" passed after 0.006 seconds.
+✔ Test "clips pool: matches, predictions and truth events add up across clips" passed after 0.006 seconds.
+✔ Test "a gating run needs a floor" passed after 0.006 seconds.
+✔ Test "a clip listed twice is refused before the estimator runs" passed after 0.006 seconds.
+✔ Test "a clip with no benchmark split cannot be gated on" passed after 0.006 seconds.
+✔ Test "one prediction serves only one truth event" passed after 0.006 seconds.
+✔ Test "an unknown capability or one without a gate is refused" passed after 0.006 seconds.
+✔ Test "the committed gate records pass and fail as the self-test requires" passed after 0.006 seconds.
+✔ Test "re-running the estimator reproduces the record" with 3 test cases passed after 0.007 seconds.
+✔ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" passed after 0.006 seconds.
+✔ Test "the oracle passes the floor on the held-out seed" passed after 0.006 seconds.
+✔ Test "tuning runs use tuning seeds only and carry no verdict" passed after 0.007 seconds.
+✔ Test "the record carries the truth-events digest the reference validator recomputes" passed after 0.007 seconds.
+✔ Test "an overflowing tolerance names itself in the error" passed after 0.006 seconds.
+◇ Test case passing 1 argument id → "fixtureCamera/fixture-camera" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument timescale → 0 to "a zero or negative timescale is a decoding error" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument timescale → -1000 to "a zero or negative timescale is a decoding error" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "harness/events-s11" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "harness/events-s23" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/duplicate-a" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "fixtureCamera/fixture-camera" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/duplicate-b" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "harness/events-s11" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "harness/events-s23" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/duplicate-a" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "import/duplicate-b" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument threshold → "" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "0.9.1" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "1e-3" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "-1" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "abc" to "a floor threshold that is not a plain decimal is a decoding error" started.
+✔ Test "gating on a tuning seed is refused before the estimator runs" passed after 0.014 seconds.
+✔ Test "no predictions: precision and MAE are undefined (null), recall is 0" passed after 0.014 seconds.
+✔ Test "a candidate run on a clip that is not rendered is refused before the estimator runs" passed after 0.014 seconds.
+✔ Test "an oracle or null run cannot name a capability" with 2 test cases passed after 0.014 seconds.
+✔ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec" passed after 0.014 seconds.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+✔ Test "frame 120 at 240 fps is half a second" passed after 0.014 seconds.
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "every decoded frame N shows counter N at presentation time N / fps" started.
+✔ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" passed after 0.015 seconds.
+✔ Test "a time between frames maps to the frame on screen" passed after 0.015 seconds.
+✔ Test "an exact tolerance boundary matches; one tick past it does not" passed after 0.016 seconds.
+✔ Test "a run that names a capability must use that capability's registry gate" passed after 0.016 seconds.
+✔ Test "audio.hitDetection is bound to eventTimes 1.0.0 at 50 ms, with the gate's metric names" passed after 0.012 seconds.
+✔ Test "the duplicate pair is byte-identical under two names" passed after 0.015 seconds.
+✔ Test "a run request takes the binding's tolerance unless one is given" passed after 0.012 seconds.
+✔ Test "every binding maps each gate metric of its capability exactly once" passed after 0.012 seconds.
+✔ Test "a ground-truth frame rate of zero is a decoding error" passed after 0.012 seconds.
+✔ Test "a gated capability without a binding is refused before the estimator runs" passed after 0.012 seconds.
+✔ Test "a capability run with any other tolerance is refused before the estimator runs" passed after 0.012 seconds.
+✔ Test "a metric fraction with a zero denominator is a decoding error" passed after 0.012 seconds.
+✔ Test "the fixture set covers capture, playback, import and the harness" passed after 0.012 seconds.
+✔ Test "a zero or negative timescale is a decoding error" with 2 test cases passed after 0.012 seconds.
+✔ Test "a floor threshold that is not a plain decimal is a decoding error" with 5 test cases passed after 0.015 seconds.
+✔ Test "the committed record decodes (the cases below change one field each)" passed after 0.015 seconds.
+✔ Test "decode order with B-frames: timestamps are sorted before differencing" passed after 0.013 seconds.
+✔ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" passed after 0.013 seconds.
+✔ Test "one-tick rounding (29.97 fps at timescale 600: 20 ticks and every 50th 21) is 30000/1001, constant" passed after 0.013 seconds.
+✔ Test "constant 30 fps at timescale 30000" passed after 0.013 seconds.
+✔ Test "fewer than two frames or a bad timescale states no rate" passed after 0.013 seconds.
+✔ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" passed after 0.013 seconds.
+✔ Suite "Committed benchmark records are reproducible" passed after 0.020 seconds.
+✔ Suite "Benchmark harness" passed after 0.020 seconds.
+✔ Test "a constant rate that is no standard rate is reported exactly" passed after 0.013 seconds.
+✔ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" passed after 0.014 seconds.
+✔ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" passed after 0.015 seconds.
+✔ Suite "Frame-accurate CMTime" passed after 0.023 seconds.
+✔ Suite "Malformed benchmark JSON throws instead of trapping" passed after 0.023 seconds.
+✔ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" passed after 0.016 seconds.
+✔ Suite "eventTimes scoring" passed after 0.023 seconds.
+✔ Suite "Frame rate from presentation timestamps" passed after 0.023 seconds.
+✔ Test "constant-frame-rate excerpt: 30 fps, constant" passed after 0.036 seconds.
+✔ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" with 11 test cases passed after 0.048 seconds.
+✔ Suite "MediaProbe reports every import fixture's ground truth" passed after 0.049 seconds.
+✔ Test "Oct 4 phone original: 30 fps, variable frame rate" passed after 0.054 seconds.
+✔ Test "Sep 29 phone original: 30 fps, variable frame rate" passed after 0.078 seconds.
+✔ Suite "MediaProbe on private real footage (skipped when absent)" passed after 0.081 seconds.
+✔ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" with 5 test cases passed after 0.553 seconds.
+✔ Test "a candidate reads the verified media file" passed after 1.690 seconds.
+✔ Test "a perfect candidate passes the real audio.hitDetection registry gate" passed after 1.690 seconds.
+✔ Suite "Capability bindings" passed after 1.694 seconds.
+✔ Test "a candidate run on the registry gate is accepted and carries the capability" passed after 1.708 seconds.
+✔ Suite "Benchmark harness provenance" passed after 1.709 seconds.
+✔ Test "every record clip carries its truth's renderer source hash and decoded-frame hash" with 2 test cases passed after 1.712 seconds.
+✔ Test "every clip burns in its own frame index" with 18 test cases passed after 1.841 seconds.
+✔ Test "every decoded frame N shows counter N at presentation time N / fps" with 5 test cases passed after 1.840 seconds.
+✔ Suite "Frame-counter fixtures decode to their own frame index" passed after 1.846 seconds.
+✔ Test "decoded-frame signature hash equals the ground truth" with 18 test cases passed after 1.843 seconds.
+✔ Suite "AVFoundation decodes every supported fixture to its committed signature hash" passed after 1.848 seconds.
+✔ Test "a candidate run on a rendered clip that is not the committed media is refused before the estimator runs" passed after 1.932 seconds.
+✔ Suite "Benchmark media provenance" passed after 1.933 seconds.
+✔ Test run with 63 tests in 13 suites passed after 1.933 seconds.
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/ios/Jovra.xcodeproj
+==> xcodebuild test (JovraTests) on 4265ADFD-39A3-4E71-8482-1945DDB5F899
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/.derivedData/unit-tests-20261009-091405.xcresult
+
+2026-10-09 09:14:24.390 xcodebuild[20361:130746954] [MT] IDETestOperationsObserverDebug: 4.387 elapsed -- Testing started completed.
+2026-10-09 09:14:24.390 xcodebuild[20361:130746954] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 09:14:24.390 xcodebuild[20361:130746954] [MT] IDETestOperationsObserverDebug: 4.387 sec, +4.387 sec -- end
+Testing started
+==> JovraTests summary
+Test class                                                             passed  failed  skipped  expected
+JovraTests/AppPreferencesTests (App preferences and the data eraser)       10       0        0         0
+JovraTests/AppRouterTests (App router)                                     21       0        0         0
+JovraTests/ColorRoleContrastTests (Semantic colour contrast)                7       0        0         0
+JovraTests/DriveClientConfigurationTests (Drive client configuration)       7       0        0         0
+JovraTests/JovraFormatTests (Locale formatting)                             8       0        0         0
+JovraTests/LaunchConfigurationTests (Launch configuration)                  7       0        0         0
+JovraTests/PermissionsCenterTests (Permissions center)                      7       0        0         0
+JovraTests/ServiceRegistrationTests (Service registration seam)             3       0        0         0
+Total: 70 passed, 0 failed, 0 skipped, 0 expected failure(s) in 8 classes (xcresult summary: 70 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-Codex-T07 4265ADFD-39A3-4E71-8482-1945DDB5F899 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t07/.derivedData/unit-tests-20261009-091405.xcresult
