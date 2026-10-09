@@ -191,7 +191,7 @@ public final class CaptureEngine: @unchecked Sendable {
             let time = try MediaTime(value: latestVideoTime.value, timescale: latestVideoTime.timescale)
             try journal?.appendMark(SessionMark(id: UUID().uuidString.lowercased(),
                 tMs: Int(latestVideoTime.convertScale(1000, method: .roundHalfAwayFromZero).value), kind: .point, note: note,
-                provenance: RecordProvenance(status: .manual, source: "captureMark", sample: source.mode == .simulatorFixture)))
+                provenance: RecordProvenance(status: .manual, source: "user", sample: source.mode == .simulatorFixture)))
             return time
         }
     }

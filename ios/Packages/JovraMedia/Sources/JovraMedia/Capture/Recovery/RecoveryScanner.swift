@@ -90,6 +90,14 @@ public actor RecoveryScanner {
             previousGapEnd = gap.endMs
         }
         let duration = max(savedThrough, previousGapEnd)
+        for event in snapshot.captureEvents {
+            guard event.tMs >= 0, event.tMs <= duration,
+                  event.kind != .thermalState || event.thermalState != nil,
+                  event.kind != .frameRateChange || event.frameRate != nil,
+                  event.frameRate.map({ $0.num > 0 && $0.den > 0 }) ?? true else {
+                throw RecoveryError.invalidJournal
+            }
+        }
         guard (snapshot.marks ?? []).allSatisfy({ $0.tMs >= 0 && $0.tMs <= duration }),
               try files.read("capture-journal.json").0 == journalHash else { throw RecoveryError.invalidJournal }
         let previous: RecoveryReceipt?

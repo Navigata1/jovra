@@ -11,7 +11,7 @@ private actor FailedFinalHandoff: RecordingSink {
     }
 }
 
-private func finishedStaleRecording(in root: URL) async throws -> (SessionStore, String, URL) {
+private func finishedStaleRecording(in root: URL, includePointMark: Bool = false) async throws -> (SessionStore, String, URL) {
     let catalog = MediaFixtureCatalog.repository(filePath: #filePath)
     let source = try catalog.mediaURL(for: catalog.truth(id: "fixtureCamera/fixture-camera"))
     let store = try SessionStore(root: root)
@@ -28,6 +28,7 @@ private func finishedStaleRecording(in root: URL) async throws -> (SessionStore,
     _ = try await engine.prepare(.init(width: 1280, height: 720), microphone: .denied)
     try await engine.start(sessionID: document.id, folder: folder)
     try await camera.waitUntilFinished()
+    if includePointMark { _ = try engine.markPoint(note: "Captured point") }
     await #expect(throws: (any Error).self) { _ = try await engine.stop() }
     return (store, document.id, folder)
 }
@@ -101,7 +102,7 @@ private func finishedStaleRecording(in root: URL) async throws -> (SessionStore,
     #expect(try Data(contentsOf: root.appendingPathComponent("sessions/corrupt-peer/originals/segment-0.mp4")) == Data("not a movie".utf8))
 }
 
-@Test(arguments: ["negative-mark", "future-mark", "overlapping-gap", "negative-gap", "backwards-gap", "overlapping-gaps"])
+@Test(arguments: ["negative-mark", "future-mark", "overlapping-gap", "negative-gap", "backwards-gap", "overlapping-gaps", "negative-event", "future-event", "missing-rate-event", "missing-thermal-event", "bad-rate-event"])
 func corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault: String) async throws {
     let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     defer { try? FileManager.default.removeItem(at: root) }
@@ -113,8 +114,13 @@ func corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault: String) async thr
     case "negative-gap": snapshot.gaps = [.init(startMs: -1, endMs: 0, reason: .cameraError)]
     case "backwards-gap": snapshot.gaps = [.init(startMs: 3000, endMs: 2000, reason: .cameraError)]
     case "overlapping-gaps": snapshot.gaps = [.init(startMs: 2000, endMs: 3000, reason: .cameraError), .init(startMs: 2500, endMs: 4000, reason: .cameraError)]
+    case "negative-event": snapshot.captureEvents = [.init(tMs: -1, kind: .lowStorageStop)]
+    case "future-event": snapshot.captureEvents = [.init(tMs: 2001, kind: .lowStorageStop)]
+    case "missing-rate-event": snapshot.captureEvents = [.init(tMs: 1000, kind: .frameRateChange)]
+    case "bad-rate-event": snapshot.captureEvents = [.init(tMs: 1000, kind: .frameRateChange, frameRate: .init(num: 0, den: 1))]
+    case "missing-thermal-event": snapshot.captureEvents = [.init(tMs: 1000, kind: .thermalState)]
     default: snapshot.marks = [.init(id: "bad-time", tMs: fault == "negative-mark" ? -1 : 2001, kind: .point,
-                                   provenance: .init(status: .manual, source: "captureMark", sample: true))]
+                                   provenance: .init(status: .manual, source: "user", sample: true))]
     }
     let corrupted = try CanonicalJSON.encode(snapshot)
     try corrupted.write(to: journalURL)
@@ -123,4 +129,22 @@ func corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault: String) async thr
     #expect(await scanner.refusals.map(\.sessionID) == [id])
     #expect(try Data(contentsOf: journalURL) == corrupted)
     #expect(!FileManager.default.fileExists(atPath: folder.appendingPathComponent("capture-recovery.json").path))
+}
+
+@Test func capturedPointMarkPreservesSchemaProducerAndSampleLabelThroughRecovery() async throws {
+    let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: root) }
+    let (store, id, folder) = try await finishedStaleRecording(in: root, includePointMark: true)
+    let scanner = RecoveryScanner(root: root)
+    let result = try #require(try await scanner.scan().first)
+    try await store.applyRecoveredCapture(result.recording, marks: result.marks, original: result.original, for: id)
+    if let path = ProcessInfo.processInfo.environment["JOVRA_RECOVERY_EVIDENCE_DIR"] {
+        let destination = URL(fileURLWithPath: path).appendingPathComponent("marked-finished-stale")
+        try FileManager.default.createDirectory(at: destination.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try FileManager.default.copyItem(at: folder, to: destination)
+    }
+    let mark = try #require(try await store.load(id).marks?.first)
+    #expect(mark.tMs == 2000 && mark.note == "Captured point")
+    #expect(mark.provenance.status == .manual && mark.provenance.source == "user")
+    #expect(mark.provenance.sample == true)
 }
