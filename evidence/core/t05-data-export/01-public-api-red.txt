@@ -1,0 +1,226 @@
+[0/6] Write sources
+[1/6] Write FixtureRunnerGenerator-tool-entitlement.plist
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling FixtureRunnerGenerator main.swift
+[5/8] Emitting module FixtureRunnerGenerator
+[5/8] Write Objects.LinkFileList
+[6/8] Linking FixtureRunnerGenerator-tool
+[7/8] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/19] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/scratch/t05-export/arm64-apple-macosx/debug/JovraCorePackageTests.derived/runner.swift
+[2/19] Write sources
+[6/19] Write FixtureRunnerGenerator-tool-entitlement.plist
+[7/19] Write FixtureRunnerGenerator-entitlement.plist
+[8/19] Write swift-version--58304C5D6DBC2206.txt
+[10/35] Compiling FixtureRunnerGenerator main.swift
+[11/35] Emitting module FixtureRunnerGenerator
+[11/35] Write Objects.LinkFileList
+[13/35] Linking FixtureRunnerGenerator
+[14/35] Linking FixtureRunnerGenerator-tool
+[15/35] Applying FixtureRunnerGenerator
+[16/35] Discover conformance runners by kind
+[17/35] Applying FixtureRunnerGenerator-tool
+[18/35] Write sources
+[20/35] Emitting module JovraCore
+[21/35] Compiling JovraCore CapabilityRegistryLoader.swift
+[22/35] Compiling JovraCore CaptureJournal.swift
+[23/35] Compiling JovraCore CanonicalJSON.swift
+[24/35] Compiling JovraCore ContractPrimitives.swift
+[25/35] Compiling JovraCore DocumentModels.swift
+[26/35] Compiling JovraCore ContrastRequirement.swift
+[27/35] Compiling JovraCore DurationLabel.swift
+[28/35] Compiling JovraCore DurableDirectory.swift
+[29/35] Compiling JovraCore FrameRate.swift
+[30/35] Compiling JovraCore Percent.swift
+[31/35] Compiling JovraCore Provenance.swift
+[32/35] Compiling JovraCore SRGBColor.swift
+[33/35] Compiling JovraCore LogResolver.swift
+[34/48] Compiling JovraCore MatchState.swift
+[35/48] Compiling JovraCore OrderOverrides.swift
+[36/48] Compiling JovraCore OutcomeInterpreter.swift
+[37/48] Compiling JovraCore ScoringEngine.swift
+[38/48] Compiling JovraCore ScoringInput.swift
+[39/48] Compiling JovraCore TimelineDiff.swift
+[40/48] Compiling JovraCore TimelineModels.swift
+[41/48] Compiling JovraCore SessionStore.swift
+[42/48] Compiling JovraCore DerivedStat.swift
+[43/48] Compiling JovraCore StatsEngine.swift
+[44/48] Compiling JovraCore StatsModels.swift
+[45/48] Compiling JovraCore StatsMomentumPair.swift
+[46/48] Compiling JovraCore Units.swift
+[47/68] Emitting module JovraCoreTests
+[48/68] Compiling JovraCoreTests CaptureJournalTests.swift
+[49/68] Compiling JovraCoreTests CanonicalJSONTests.swift
+[50/68] Compiling JovraCoreTests ContractSafetyTests.swift
+[51/68] Compiling JovraCoreTests FixtureManifest.swift
+[52/68] Compiling JovraCoreTests ManifestTests.swift
+[53/68] Compiling JovraCoreTests MediaRecordContractTests.swift
+[54/68] Compiling JovraCoreTests PercentTests.swift
+[55/68] Compiling JovraCoreTests RegistryContractTests.swift
+[56/68] Compiling JovraCoreTests ArchiveRunner.swift
+[57/68] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[58/68] Compiling JovraCoreTests BenchmarkRunner.swift
+[59/68] Compiling JovraCoreTests CSVContractRunner.swift
+[60/68] Compiling JovraCoreTests CanonicalRunner.swift
+[61/68] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[62/68] Compiling JovraCoreTests EquipmentRunner.swift
+[63/68] Compiling JovraCoreTests ExportRunner.swift
+[64/68] Compiling JovraCoreTests GroundTruthRunner.swift
+[65/68] Compiling JovraCoreTests PctRunner.swift
+[66/68] Compiling JovraCoreTests PracticePlanRunner.swift
+[67/87] Compiling JovraCoreTests SampleMediaRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[68/87] Compiling JovraCoreTests ScoringRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[69/87] Compiling JovraCoreTests SessionRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[70/87] Compiling JovraCoreTests StatsRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[71/87] Compiling JovraCoreTests UnitsRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[72/87] Compiling JovraCoreTests SessionContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[73/87] Compiling JovraCoreTests UnitsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[74/87] Compiling JovraCoreTests ContrastTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[75/87] Compiling JovraCoreTests DurationLabelTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[76/87] Compiling JovraCoreTests DataExporterTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[77/87] Compiling JovraCoreTests FrameRateTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[78/87] Compiling JovraCoreTests ProvenanceTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[79/87] Compiling JovraCoreTests ScoringContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[80/87] Compiling JovraCoreTests ScoringTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[81/87] Compiling JovraCoreTests CaptureHandoffTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[82/87] Compiling JovraCoreTests DirectoryCreationDurabilityTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[83/87] Compiling JovraCoreTests SessionStoreTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[84/87] Compiling JovraCoreTests StatsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+[85/87] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/export/ios/Packages/JovraCore/Tests/JovraCoreTests/Export/DataExporterTests.swift:10:24: error: cannot find 'DataExporter' in scope
+ 8 |     let source = try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.session.json"))
+ 9 |     let document = try ContractCodec.decode(SessionDocument.self, from: source)
+10 |     let exported = try DataExporter.exportSession(document)
+   |                        `- error: cannot find 'DataExporter' in scope
+11 |     #expect(exported.pointsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.points.csv"))))
+12 |     #expect(exported.statsCSV == (try Data(contentsOf: folder.appendingPathComponent("jon-vs-alex.stats.csv"))))
+error: fatalError
