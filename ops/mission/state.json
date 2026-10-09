@@ -10,7 +10,7 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T17:36:54.009263+00:00",
+    "updated": "2026-10-09T19:43:57.793803+00:00",
     "sessionCount": 1
   },
   "policies": {
@@ -170,26 +170,35 @@
       "id": "P4",
       "title": "Record to export",
       "goal": "A working native iOS flow with durable recording, local library, replay, corrected score and export.",
-      "status": "in_progress",
+      "status": "blocked",
       "sessionsEstimate": "Several feature slices",
       "gates": [
         {
           "id": "P4-G1",
           "title": "Domain and conformance tests",
           "command": "swift test --package-path ios/Packages/JovraCore",
-          "status": "pending",
-          "evidence": "evidence/core/t29-reviewed-point-store/13-integrated-full-core.txt",
-          "lastRun": null,
-          "notes": "Latest exact corrected PointStore/current-Core composition:12XCTest and57Swift tests PASS; every fixture kind consumed. Final flow assembly will require updated domain/media gates as source changes."
+          "status": "passed",
+          "evidence": "ops/mission/evidence/final-core-flow/12-current-core.txt",
+          "lastRun": "2026-10-09T19:36:31.697915+00:00",
+          "notes": "Fresh12XCTest+57Swift tests PASS on5d0ca0f; current main444 and final flow have byte-identical JovraCore package source. All fixture kinds consumed. This does not transfer whole-app or hosted CI acceptance."
         },
         {
           "id": "P4-G2",
           "title": "Dedicated simulator core flow and export evidence",
           "command": "scripts/ios/core-flow-test.sh",
           "status": "pending",
-          "evidence": null,
-          "lastRun": null,
-          "notes": "Safe harness requires explicit owned simulator and derived data; refuses to run until genuine CoreFlowUITests exists. Integration gate not yet run."
+          "evidence": "ops/mission/evidence/final-core-flow/",
+          "lastRun": "2026-10-09T19:43:57.793803+00:00",
+          "notes": "Local composition tested73ce5c2f: actual CoreFlow1 plus viewport controls3 PASS, zero failed/skipped/expected; corrected score persists after relaunch. Independent actual schema/canonical/history/CSV checks, original hash preservation and full decoded clip30frames/1sec/noaudio PASS. Publication370 has complete iOS tree identical to tested73 and both independent source axes accept. Native receipt stays bound to tested73. Default-branch integration and rerun remain pending; hosted CI blocks merges. Actual run used direct xcodebuild test-without-building with owned simulator and exact CoreFlow/viewport filters, not the wrapper shown for future default-branch gate."
+        },
+        {
+          "id": "P4-G3",
+          "title": "Required fresh hosted checks and dependency merges",
+          "command": "gh pr checks 370",
+          "status": "failed",
+          "evidence": "ops/mission/evidence/github-actions-payment-gate.json",
+          "lastRun": "2026-10-09T19:43:57.793803+00:00",
+          "notes": "Fresh required jobs fail before any steps: GitHub reports failed account payments or spending limit. Dependent native-data-export SKIPPED and manual iOS SKIPPED are not passes. No waiver or merge. Account owner must restore Actions availability."
         }
       ],
       "tasks": [
@@ -264,7 +273,7 @@
         {
           "id": "P4-UI",
           "title": "Native recording, library, replay and reviewed-score integration",
-          "status": "in_progress",
+          "status": "blocked",
           "dependsOn": [
             "T07",
             "T08",
@@ -272,23 +281,25 @@
             "T14",
             "T04"
           ],
-          "pr": null,
-          "notes": "Bounded components347 and shared capture/coordinator349/353 merged. Actual chosen fixture capture/save plus unsupported-mode controls passed; AX5 form audit passed after genuine clipping/target failures. Review found false stopped-state label, schema length limits and normal native-input22pt target; corrective public red/green retained, final capture gate still pending. Capture setup/input and UI publish as separate slices. Durable reviewed-point/correction359 merged29eba0f after provenance fix and full69Core tests; actual corrected JSON schema/reference/canonical PASS. Library/replay integration and final CoreFlow still pending."
+          "pr": {
+            "number": 370,
+            "url": "https://github.com/Navigata1/jovra/pull/370"
+          },
+          "notes": "Capture foundation364 merged. ReviewedPointModel365, Capture controls366, Library367, Export368, modal audit369 and bounded Replay/CoreFlow370 are independently accepted but unmerged because hosted jobs cannot start. Final native CoreFlow+viewport controls4PASS and relaunch correction persistence PASS on tested73; complete publication iOS identity explicitly checked. Full feature tickets remain open."
         },
         {
           "id": "P4-EXPORT",
           "title": "Clip/data export and end-to-end proof",
-          "status": "in_progress",
+          "status": "blocked",
           "dependsOn": [
             "P4-UI",
             "T05"
           ],
           "pr": {
-            "number": 352,
-            "url": "https://github.com/Navigata1/jovra/pull/352",
-            "mergedAt": "2026-10-09T16:38:00Z"
+            "number": 368,
+            "url": "https://github.com/Navigata1/jovra/pull/368"
           },
-          "notes": "Clip primitive352 and DataExporter357 merged after separate independent axes/fresh CI; actual clip decode/counter/audio and CSV/schema proofs retained. Durable four-file local export package/version records now has genuine public control draft, implementation/runtime pending. Native export UI/relaunch/whole-flow proof pending; fullT36 stays open."
+          "notes": "LocalExportService362 merged; NativeExport368 and integration370 remain stacked/unmerged. Native model1 and missing-session UI1 PASS; serialMedia90PASS, earlier missing-fixture failure retained. Final actual73 flow4PASS includes export/relaunch; four-file package independently schema/canonical/CSV/history validated, original hash unchanged, full decoded clip30frames/1sec/noaudio. Earlier failed whole-flow/package receipts remain distinct. FullT36, default-branch integration and hosted gates remain pending."
         }
       ]
     }
@@ -312,6 +323,11 @@
       "title": "Physical device validation",
       "severity": "medium",
       "note": "Simulator evidence does not prove physical capture, signing, endurance or store readiness."
+    },
+    {
+      "title": "Hosted CI availability",
+      "severity": "high",
+      "note": "Required jobs fail before steps due to GitHub account billing/spending limit. Local tests do not replace hosted gates or authorize an unmerged release."
     }
   ],
   "prLog": [
@@ -552,16 +568,83 @@
       "url": "https://github.com/Navigata1/jovra/pull/359",
       "phase": "P4",
       "mergedAt": "2026-10-09T17:30:40Z"
+    },
+    {
+      "number": 361,
+      "title": "fix(ios): audit cropped scroll content against its actual viewport",
+      "url": "https://github.com/Navigata1/jovra/pull/361",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T18:17:32Z"
+    },
+    {
+      "number": 362,
+      "title": "Durably register local clip and session data exports",
+      "url": "https://github.com/Navigata1/jovra/pull/362",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T18:17:44Z"
+    },
+    {
+      "number": 363,
+      "title": "Read saved originals through native replay transport",
+      "url": "https://github.com/Navigata1/jovra/pull/363",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T18:18:44Z"
+    },
+    {
+      "number": 364,
+      "title": "feat(ios): add validated capture setup and accessible input foundation",
+      "url": "https://github.com/Navigata1/jovra/pull/364",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T18:30:39Z"
+    },
+    {
+      "number": 365,
+      "title": "feat(ios): persist reviewed decisions and refold native scores",
+      "url": "https://github.com/Navigata1/jovra/pull/365",
+      "phase": "P4"
+    },
+    {
+      "number": 366,
+      "title": "T17: native capture controls and verified local save",
+      "url": "https://github.com/Navigata1/jovra/pull/366",
+      "phase": "P4"
+    },
+    {
+      "number": 367,
+      "title": "T20: persist and reopen real sessions in native library",
+      "url": "https://github.com/Navigata1/jovra/pull/367",
+      "phase": "P4"
+    },
+    {
+      "number": 368,
+      "title": "feat(T36): native foreground clip and data export controls",
+      "url": "https://github.com/Navigata1/jovra/pull/368",
+      "phase": "P4"
+    },
+    {
+      "number": 369,
+      "title": "Scope foreground modal audits and retain negative controls",
+      "url": "https://github.com/Navigata1/jovra/pull/369",
+      "phase": "P4"
+    },
+    {
+      "number": 370,
+      "title": "Complete bounded native recording-to-export review flow",
+      "url": "https://github.com/Navigata1/jovra/pull/370",
+      "phase": "P4"
     }
   ],
   "resume": {
     "activePhase": "P4",
     "nextActions": [
-      "Finish native stats/export, directory durability and verified-prefix recovery with independent review and fresh CI.",
-      "Connect native capture/library/replay/reviewed scoring/clip and data export.",
-      "Run genuine dedicated-simulator core flow and export evidence. Stop before step5."
+      "Owner restores GitHub Actions Billing & plans availability. Do not rerun unchanged blocked jobs or waive checks.",
+      "Run all five fresh required checks on exact accepted heads365\u2013370. Merge only green reviewed heads, retarget dependency PRs and rerun fresh checks on each new head.",
+      "Run genuine native CoreFlow on current main after integration using the dedicated owned simulator; independently verify actual artifacts, close P4 only from that default-branch evidence, then hold before step5 until founder green light."
     ],
-    "blockers": [],
+    "blockers": [
+      "GitHub Actions cannot start required checks because account payments/spending limit. Restore Billing & plans, then fresh all five required jobs and two independent acceptance axes must pass on each exact head before merging. No CI waiver.",
+      "Step5 remains explicitly held by founder: no Studio film engine, Android/foldables/tablets, watches, hosted activation or paid processing."
+    ],
     "conventions": [
       "Tier 2 subagents: independent implementation and verification, isolated worktrees.",
       "Stop after P4 passes; step 5 requires new founder authorization.",
