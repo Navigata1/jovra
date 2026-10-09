@@ -1,0 +1,13 @@
+# Independent native capture coordinator Spec review
+
+SPEC ACCEPT bounded source candidate `6fa5c86330836d3c2b7420b2134a893d1407fd36` against `3ae5caa`. Inspected LocalCaptureLibrary's media-folder/file/query adapters, NativeCaptureCoordinator, public native tests and declared resource/scope evidence. No native compiler or simulator run by this Spec-only reviewer.
+
+The route-facing coordinator calls the accepted CaptureEngine and shared actor RecordingSink rather than the writer/journal directly. Caller seed, source and clock are explicit. Preparation gates duplicate/concurrent work, obtains the media-owned recording folder and subscribes to confirmed engine status. Start/pause/resume/stop transitions serialize through isWorking; savedRecording is assigned only after engine.stop returns from the sink handoff. Leaving framing releases the source and subscription; active recording is paused first. Preview is supplied only for CameraSource; fixture mode remains explicit.
+
+Media retrieval and filtered listing delegate to the same SessionStore/MediaLibrary actors. The public custody test distinguishes plain retained bytes from playable media. The coordinator test checks a fresh zero-point synthetic session, denied microphone with playable silent video, saved/reopened metadata, finalized recording, four-second duration and all 120 decoded frames; it also proves capture output differs from the bundled source. Fixture truth is synthetic and no real-player data is introduced.
+
+No bounded Spec findings. Existing five-test hosted evidence is producer evidence, with final exact-head/directory-integration native rerun required before publication. Full T17 route/UI state, environment singleton wiring, permission/consent, accessibility/visual integration and CoreFlow acceptance remain separate; no hardware, signing, store, Studio or analysis acceptance is inferred.
+
+## Transport rebuild source rebind
+
+SPEC ACCEPT bounded source at unpublished `1882946822a7b5641e31411871b4fe8878c6a5f4` against `3ae5caa`. Independently verified `git diff 6fa5c86..1882946 -- ios` is empty: every source, native test and bundled synthetic resource is byte-identical. The changed tree contains evidence/report/manifest transport changes and removes the oversized native archive from tracked Git after GitHub rejected transport. This is an explicit new-SHA source rebind, not a claim that historical native runtime approval transfers. Raw proof remains local with a manifest; the final exact-head five-test native rerun and independent Standards rebind remain publication gates.
