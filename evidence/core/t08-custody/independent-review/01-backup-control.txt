@@ -1,0 +1,88 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t08-custody/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+Building for debugging...
+[0/15] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t08-custody/.build/custody-review/arm64-apple-macosx/debug/JovraMediaPackageTests.derived/runner.swift
+[1/15] Write sources
+[5/15] Write jovra-benchmark-entitlement.plist
+[5/15] Write sources
+[9/15] Write swift-version--58304C5D6DBC2206.txt
+[11/29] Compiling JovraCore Units.swift
+[12/29] Compiling JovraCore Provenance.swift
+[13/29] Compiling JovraCore SRGBColor.swift
+[14/29] Compiling JovraCore Percent.swift
+[15/29] Compiling JovraCore FrameRate.swift
+[16/29] Compiling JovraCore ContrastRequirement.swift
+[17/29] Compiling JovraCore DurationLabel.swift
+[18/29] Compiling JovraCore SessionStore.swift
+[19/29] Compiling JovraCore CanonicalJSON.swift
+[20/29] Compiling JovraCore ContractPrimitives.swift
+[21/29] Compiling JovraCore CaptureJournal.swift
+[22/29] Emitting module JovraCore
+[23/29] Compiling JovraCore CapabilityRegistryLoader.swift
+[24/29] Compiling JovraCore DocumentModels.swift
+[25/37] Compiling JovraMedia FrameTime.swift
+[26/37] Compiling JovraMedia DecodedCapture.swift
+[27/37] Compiling JovraMedia CaptureSegmentWriter.swift
+[28/37] Emitting module JovraMedia
+[29/37] Compiling JovraMedia CaptureTypes.swift
+[30/37] Compiling JovraMedia MediaProbe.swift
+[31/37] Compiling JovraMedia DeviceBudget.swift
+[32/37] Compiling JovraMedia MediaLibrary.swift
+[33/53] Compiling JovraBenchmark JovraBenchmark.swift
+[34/53] Compiling JovraBenchmark Rational.swift
+[35/53] Compiling JovraBenchmark Floor.swift
+[36/53] Compiling JovraBenchmark JSONValue.swift
+[37/53] Compiling JovraBenchmark EstimatorRegistry.swift
+[38/53] Compiling JovraBenchmark Estimator.swift
+[39/53] Compiling JovraBenchmark CapabilityGate.swift
+[40/53] Compiling JovraBenchmark EventTimesTask.swift
+[41/53] Compiling JovraBenchmark BenchmarkRecord.swift
+[42/53] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[43/53] Compiling JovraBenchmark BenchmarkHarness.swift
+[44/53] Compiling JovraBenchmark GroundTruth.swift
+[45/53] Emitting module JovraBenchmark
+[46/53] Compiling JovraBenchmark FrameSignature.swift
+[47/53] Compiling JovraBenchmark LumaPlane.swift
+[48/53] Compiling JovraBenchmark DecodedFrameReader.swift
+[49/71] Emitting module jovra_benchmark
+[50/71] Compiling jovra_benchmark main.swift
+[50/71] Write Objects.LinkFileList
+[51/71] Linking jovra-benchmark
+[52/71] Applying jovra-benchmark
+[54/71] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[55/71] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[56/71] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+[57/71] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+[58/71] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+[59/71] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+[60/71] Compiling JovraMediaTests RealFootageProbeTests.swift
+[61/71] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[62/71] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[63/71] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[64/71] Emitting module JovraMediaTests
+[65/71] Compiling JovraMediaTests MediaLibraryTests.swift
+[66/71] Compiling JovraMediaTests FrameTimingTests.swift
+[67/71] Compiling JovraMediaTests FrameTimeTests.swift
+[68/71] Emitting module JovraBenchmarkTests
+[69/71] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+[70/73] Emitting module JovraMediaPackageTests
+[71/73] Compiling JovraMediaPackageTests runner.swift
+[71/73] Write Objects.LinkFileList
+[72/73] Linking JovraMediaPackageTests
+Build complete! (17.38s)
+Test Suite 'Selected tests' started at 2026-10-09 10:17:54.884.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 10:17:54.885.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 10:17:54.885.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:17:54.885.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() started.
+◇ Test independentBackupOptInClearsEveryExistingOriginalExclusionFlag() started.
+✘ Test independentBackupOptInClearsEveryExistingOriginalExclusionFlag() recorded an issue at MediaLibraryTests.swift:57:5: Expectation failed: try nested.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false
+✘ Test independentBackupOptInClearsEveryExistingOriginalExclusionFlag() recorded an issue at MediaLibraryTests.swift:58:5: Expectation failed: try file.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false
+✘ Test independentBackupOptInClearsEveryExistingOriginalExclusionFlag() failed after 0.410 seconds with 2 issues.
+✔ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() passed after 0.848 seconds.
+✘ Test run with 2 tests in 0 suites failed after 0.848 seconds with 2 issues.

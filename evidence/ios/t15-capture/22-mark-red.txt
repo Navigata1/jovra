@@ -1,0 +1,29 @@
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module JovraMediaTests
+[4/5] Compiling JovraMediaTests CapturePipelineTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:178:121: error: value of type 'CaptureJournalSnapshot' has no member 'marks'
+176 |     try await camera.waitUntilFinished()
+177 |     #expect(try engine.markPoint(note: "Review the contact") == MediaTime(value: 2, timescale: 1))
+178 |     let marks = try #require(CaptureJournal.open(url: folder.appendingPathComponent("capture-journal.json")).snapshot().marks)
+    |                                                                                                                         `- error: value of type 'CaptureJournalSnapshot' has no member 'marks'
+179 |     #expect(marks.count == 1)
+180 |     #expect(marks[0].note == "Review the contact")
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:182:44: error: cannot infer contextual base in reference to member 'manual'
+180 |     #expect(marks[0].note == "Review the contact")
+181 |     #expect(marks[0].tMs == 2000)
+182 |     #expect(marks[0].provenance.status == .manual)
+    |                                            `- error: cannot infer contextual base in reference to member 'manual'
+183 |     _ = try await engine.stop()
+184 | }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/CapturePipelineTests.swift:178:17: warning: no calls to throwing functions occur within 'try' expression
+176 |     try await camera.waitUntilFinished()
+177 |     #expect(try engine.markPoint(note: "Review the contact") == MediaTime(value: 2, timescale: 1))
+178 |     let marks = try #require(CaptureJournal.open(url: folder.appendingPathComponent("capture-journal.json")).snapshot().marks)
+    |                 `- warning: no calls to throwing functions occur within 'try' expression
+179 |     #expect(marks.count == 1)
+180 |     #expect(marks[0].note == "Review the contact")
+error: fatalError

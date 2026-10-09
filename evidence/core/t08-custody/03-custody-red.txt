@@ -1,0 +1,125 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+Building for debugging...
+[0/15] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/.build/arm64-apple-macosx/debug/JovraMediaPackageTests.derived/runner.swift
+[1/15] Write sources
+[4/15] Write jovra-benchmark-entitlement.plist
+[5/15] Write sources
+[9/15] Write swift-version--58304C5D6DBC2206.txt
+[11/28] Compiling JovraCore Provenance.swift
+[12/28] Compiling JovraCore SessionStore.swift
+[13/28] Compiling JovraCore ContrastRequirement.swift
+[14/28] Compiling JovraCore DurationLabel.swift
+[15/28] Compiling JovraCore SRGBColor.swift
+[16/28] Compiling JovraCore Units.swift
+[17/28] Compiling JovraCore Percent.swift
+[18/28] Compiling JovraCore FrameRate.swift
+[19/28] Compiling JovraCore ContractPrimitives.swift
+[20/28] Compiling JovraCore DocumentModels.swift
+[21/28] Compiling JovraCore CanonicalJSON.swift
+[22/28] Compiling JovraCore CapabilityRegistryLoader.swift
+[23/28] Emitting module JovraCore
+[24/31] Emitting module JovraMedia
+[25/31] Compiling JovraMedia FrameTime.swift
+[26/31] Compiling JovraMedia MediaProbe.swift
+[27/47] Compiling JovraBenchmark JovraBenchmark.swift
+[28/47] Compiling JovraBenchmark JSONValue.swift
+[29/47] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[30/47] Compiling JovraBenchmark BenchmarkRecord.swift
+[31/47] Compiling JovraBenchmark Rational.swift
+[32/47] Compiling JovraBenchmark Floor.swift
+[33/47] Compiling JovraBenchmark EstimatorRegistry.swift
+[34/47] Compiling JovraBenchmark Estimator.swift
+[35/47] Compiling JovraBenchmark EventTimesTask.swift
+[36/47] Compiling JovraBenchmark FrameSignature.swift
+[37/47] Compiling JovraBenchmark CapabilityGate.swift
+[38/47] Compiling JovraBenchmark BenchmarkHarness.swift
+[39/47] Compiling JovraBenchmark GroundTruth.swift
+[40/47] Emitting module JovraBenchmark
+[41/47] Compiling JovraBenchmark DecodedFrameReader.swift
+[42/47] Compiling JovraBenchmark LumaPlane.swift
+[43/65] Compiling jovra_benchmark main.swift
+[44/65] Emitting module jovra_benchmark
+[44/65] Write Objects.LinkFileList
+[45/65] Linking jovra-benchmark
+[46/65] Applying jovra-benchmark
+[48/65] Compiling JovraMediaTests MediaLibraryTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift:14:19: error: cannot find 'MediaLibrary' in scope
+12 |     let store = try SessionStore(root: root)
+13 |     try await store.create(document)
+14 |     let library = MediaLibrary(store: store)
+   |                   `- error: cannot find 'MediaLibrary' in scope
+15 |     let folder = try await library.recordingFolder(sessionID: document.id)
+16 |     let file = try await library.reserveOriginalURL(sessionID: document.id, relativePath: "originals/video.mp4")
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift:25:86: error: reference to member 'isExcludedFromBackupKey' cannot be resolved without a contextual type
+23 |     let counts = try await library.byteCounts(sessionID: document.id)
+24 |     #expect(counts.originals == 3 && counts.cache == 2 && counts.exports == 0)
+25 |     #expect(try folder.appendingPathComponent("originals").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
+   |                                                                                      `- error: reference to member 'isExcludedFromBackupKey' cannot be resolved without a contextual type
+26 |     try await library.includeOriginalsInDeviceBackup(true, sessionID: document.id)
+27 |     #expect(try folder.appendingPathComponent("originals").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift:27:86: error: reference to member 'isExcludedFromBackupKey' cannot be resolved without a contextual type
+25 |     #expect(try folder.appendingPathComponent("originals").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
+26 |     try await library.includeOriginalsInDeviceBackup(true, sessionID: document.id)
+27 |     #expect(try folder.appendingPathComponent("originals").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
+   |                                                                                      `- error: reference to member 'isExcludedFromBackupKey' cannot be resolved without a contextual type
+28 |     #expect(try cache.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
+29 |     #expect(try await store.load(document.id).storage.includeInDeviceBackup == true)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift:28:49: error: reference to member 'isExcludedFromBackupKey' cannot be resolved without a contextual type
+26 |     try await library.includeOriginalsInDeviceBackup(true, sessionID: document.id)
+27 |     #expect(try folder.appendingPathComponent("originals").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
+28 |     #expect(try cache.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
+   |                                                 `- error: reference to member 'isExcludedFromBackupKey' cannot be resolved without a contextual type
+29 |     #expect(try await store.load(document.id).storage.includeInDeviceBackup == true)
+30 |     for path in ["../outside", "/tmp/outside", "originals/../outside", "originals//bad", "cache/video.mp4"] {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift:31:31: error: cannot find 'MediaLibraryError' in scope
+29 |     #expect(try await store.load(document.id).storage.includeInDeviceBackup == true)
+30 |     for path in ["../outside", "/tmp/outside", "originals/../outside", "originals//bad", "cache/video.mp4"] {
+31 |         await #expect(throws: MediaLibraryError.self) { try await library.reserveOriginalURL(sessionID: document.id, relativePath: path) }
+   |                               `- error: cannot find 'MediaLibraryError' in scope
+32 |     }
+33 |     let outside = root.appendingPathComponent("outside")
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift:36:27: error: cannot find 'MediaLibraryError' in scope
+34 |     try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: false)
+35 |     try FileManager.default.createSymbolicLink(at: folder.appendingPathComponent("originals/link"), withDestinationURL: outside)
+36 |     await #expect(throws: MediaLibraryError.self) {
+   |                           `- error: cannot find 'MediaLibraryError' in scope
+37 |         try await library.reserveOriginalURL(sessionID: document.id, relativePath: "originals/link/leak.mp4")
+38 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift:31:9: warning: no 'async' operations occur within 'await' expression
+29 |     #expect(try await store.load(document.id).storage.includeInDeviceBackup == true)
+30 |     for path in ["../outside", "/tmp/outside", "originals/../outside", "originals//bad", "cache/video.mp4"] {
+31 |         await #expect(throws: MediaLibraryError.self) { try await library.reserveOriginalURL(sessionID: document.id, relativePath: path) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+32 |     }
+33 |     let outside = root.appendingPathComponent("outside")
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/store/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift:36:5: warning: no 'async' operations occur within 'await' expression
+34 |     try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: false)
+35 |     try FileManager.default.createSymbolicLink(at: folder.appendingPathComponent("originals/link"), withDestinationURL: outside)
+36 |     await #expect(throws: MediaLibraryError.self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+37 |         try await library.reserveOriginalURL(sessionID: document.id, relativePath: "originals/link/leak.mp4")
+38 |     }
+[49/65] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[50/65] Emitting module JovraMediaTests
+[51/65] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[52/65] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[53/65] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[54/65] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[55/65] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+[56/65] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+[57/65] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+[58/65] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+[59/65] Emitting module JovraBenchmarkTests
+[60/65] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+[61/65] Compiling JovraMediaTests FrameTimeTests.swift
+[62/65] Compiling JovraMediaTests RealFootageProbeTests.swift
+[63/65] Compiling JovraMediaTests FrameTimingTests.swift
+error: fatalError
