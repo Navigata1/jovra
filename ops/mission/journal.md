@@ -26,3 +26,5 @@
 ## 2026-10-09 native core continuation
 
 Steps1–3 complete; step4 remains in progress. T03/330, order amendment332, localization333, atomic store331 and T07/321 merged after independent evidence/freshCI; capture journal334 merged. Query336 and capture/scoring publication slices remain gated. Full feature tickets are not closed on partial flow work. Step5held. Disk exhaustion prompted cleanup only of completed agent-owned build intermediates; incomplete Xcode receipt is retained and its false-success parser corrected. Dedicated simulator4265ADFD remains sole nativeUI owner.
+
+- 2026-10-09T15:11:00Z: Query336, writer335 and zero-stroke contract339 merged after independent review and fresh green CI. Native scoring review reproduced a cyclic correction hang and negative-checkpoint crash; fixes underway. T12 badge accessibility audit failed honestly and is being repaired. Capture handoff restart test passes; media custody controls in progress. Step4active/step5held.

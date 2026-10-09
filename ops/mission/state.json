@@ -10,7 +10,7 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T15:02:55.288434+00:00",
+    "updated": "2026-10-09T15:14:55.173661+00:00",
     "sessionCount": 1
   },
   "policies": {
@@ -66,7 +66,7 @@
           "status": "passed",
           "evidence": "evidence/spec/core-continuation/",
           "lastRun": "2026-10-09T15:02:55.288434+00:00",
-          "notes": "T02 merged and current103scoring reference fixtures validate."
+          "notes": "T02 merged; current105scoring reference fixtures validate."
         },
         {
           "id": "P2-G2",
@@ -215,7 +215,7 @@
             "T03"
           ],
           "pr": null,
-          "notes": "ADR0030 PR332merged5456fbf. Native105fixtures match in reviewed candidate; three buildable publication slices pending. Shared zero-stroke error correction preserves raw observations and unknown rally length; PR339 pending. FullT04 remains open."
+          "notes": "ADR0030 PR332merged5456fbf. Native105fixture candidate passes; independent review discovered negative-checkpoint trap and cyclic correction anchor. Minimal shared/native refusal guards underway before fold publication. Models/state slices reviewed. Shared zero-stroke correction PR339merged017d9da. FullT04 remains open."
         },
         {
           "id": "T05",
@@ -239,7 +239,7 @@
             "url": "https://github.com/Navigata1/jovra/pull/331",
             "mergedAt": "2026-10-09T14:48:50Z"
           },
-          "notes": "Atomic store merged1233ff0; independent6+31tests/schema1005events andfreshCIpass. Query/migration PR336 independently12+31tests/3preservationcontrolsPASS, pendingCI. Media custody/atomic capture handoff next. Trash outside the immediate flow remains pending; ticket stays open."
+          "notes": "Atomic store331merged1233ff0; query336merged46a2c59 after independent12+31tests/3preservationcontrols andfreshCI. Media custody/atomic capture handoff under test. Trash outside immediate flow pending; fullticket remains open."
         },
         {
           "id": "T15-T16",
@@ -249,7 +249,7 @@
             "T03"
           ],
           "pr": null,
-          "notes": "Fullboundedcapturecandidate independently34Core/70Media/all19hashes/capturedrecord/schemaPASS. Five source-preserving slices334/335/337/338/340; journal334merged54c37fc. Others await sequentialfreshCI. T16startup recovery next. PhysicalCamera/AVsync/lossbudget unverified."
+          "notes": "Bounded capture candidate independently34Core/70Media/all19hashes/schemaPASS. Five source-preserving slices334/335/337/338/340; journal334merged54c37fc andwriter335mergedd2f921f. Source337awaits freshCI; remaining slices sequential. T16startup recovery next. PhysicalCamera/AVsync/lossbudget unverified."
         },
         {
           "id": "T14",
@@ -373,13 +373,34 @@
       "url": "https://github.com/Navigata1/jovra/pull/334",
       "phase": "P4",
       "mergedAt": "2026-10-09T15:01:08Z"
+    },
+    {
+      "number": 336,
+      "title": "Folder-derived local library and preservation",
+      "url": "https://github.com/Navigata1/jovra/pull/336",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:10:53Z"
+    },
+    {
+      "number": 335,
+      "title": "Capture writer and policy seams",
+      "url": "https://github.com/Navigata1/jovra/pull/335",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:10:57Z"
+    },
+    {
+      "number": 339,
+      "title": "Preserve unknown zero-stroke rally length",
+      "url": "https://github.com/Navigata1/jovra/pull/339",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:11:00Z"
     }
   ],
   "resume": {
     "activePhase": "P4",
     "nextActions": [
       "Finish sequential accepted capture/scoring publication slices with freshCI.",
-      "Merge independently reviewed library query PR336; add media custody and atomic capture/recovery handoff.",
+      "Publish independently reviewed media custody/atomic capture handoff; add verified-prefix startup recovery.",
       "Finish one native iOS record\u2192library\u2192replay\u2192corrected score\u2192clip/data export flow and test it. Hold before step5."
     ],
     "blockers": [],
