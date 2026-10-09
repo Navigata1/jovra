@@ -1,0 +1,7 @@
+# Capture handoff and local media custody
+
+The capture sink can commit finalized recording metadata and manual marks in one SessionStore transaction, preserving independently edited marks and analysis/review/archive/match fields across restart and retry. Simulator capture forces a visible synthetic Sample identity. Incomplete media stays partial. Session folders are validated before any media destination is returned.
+
+MediaLibrary confines paths to originals/cache/exports without following symbolic links, reserves nonexisting original destinations, and reports actual bytes by directory. Originals are excluded from device backup by default. Explicit opt-in changes every original file/directory while caches/exports remain excluded; old flags are restored on a failed metadata save, except when post-rename metadata already survived, in which case effective flags match that surviving preference.
+
+Public red tests preceded implementation. Independent review found explicitly excluded nested originals remained excluded after opt-in; the reproduced two-assertion red is retained and the recursive fix passes. Full local core:12 XCTest cases plus35 Swift Testing cases pass; full media:64 Swift Testing cases pass. Those runs do not prove physical-device capture or device-backup service execution. Trash, import and the remaining full T08 acceptance criteria stay pending outside this authorized single flow.

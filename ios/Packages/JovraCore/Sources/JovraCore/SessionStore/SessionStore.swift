@@ -6,7 +6,7 @@ import Glibc
 #endif
 
 public enum SessionStoreError: Error, Equatable, Sendable {
-    case invalidID, unsafePath, alreadyExists, notFound, invalidEvents, noMatch
+    case invalidID, unsafePath, alreadyExists, notFound, invalidEvents, noMatch, invalidCapture
     case confirmationRequired, unsupportedMigration, renameFailed(Int32), durabilityUnconfirmed(Int32)
 }
 
@@ -133,6 +133,40 @@ public actor SessionStore {
     public func updateRecording(_ recording: SessionRecording, for id: String) throws {
         var document = try load(id)
         document.recording = recording
+        try write(document, to: folder(id))
+    }
+
+    /// Recording and manual marks commit together; retrying a journal handoff never
+    /// overwrites marks that the player has already edited in the saved document.
+    public func saveCapture(_ recording: SessionRecording, marks: [SessionMark], for id: String) throws {
+        guard recording.mode == .camera || recording.mode == .simulatorFixture else {
+            throw SessionStoreError.invalidCapture
+        }
+        var document = try load(id)
+        var merged = document.marks ?? []
+        var ids = Set(merged.map(\.id))
+        for mark in marks where ids.insert(mark.id).inserted { merged.append(mark) }
+        document.marks = merged
+        document.recording = recording
+        if recording.mediaAvailable && !recording.segments.isEmpty { document.storage.originals = .onDevice }
+        let complete = recording.mediaAvailable && !recording.segments.isEmpty && recording.segments.allSatisfy(\.finalized)
+        document.original = .init(state: complete ? (recording.gaps.isEmpty ? .saved : .savedWithGaps) : .partial,
+                                  reason: complete ? nil : "Recording contains unconfirmed media")
+        if recording.mode == .simulatorFixture {
+            document.sample = .init(synthetic: true, generator: "JOVRAFixtureCamera")
+        }
+        try write(document, to: folder(id))
+    }
+
+    /// Only a validated, existing session can receive media files.
+    public func sessionDirectory(_ id: String) throws -> URL {
+        _ = try load(id)
+        return try folder(id)
+    }
+
+    public func setDeviceBackup(_ enabled: Bool, for id: String) throws {
+        var document = try load(id)
+        document.storage.includeInDeviceBackup = enabled
         try write(document, to: folder(id))
     }
 
