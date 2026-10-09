@@ -7,3 +7,5 @@ Four source files total 361 manual lines and are byte-identical to final assembl
 The isolated prerequisite is buildable: 33 core Swift Testing tests pass, including the existing typed model corpus. Existing store tests were already green in the assembled candidate and are left to fresh full CI. No native UI, simulator, device or ML validation is claimed here.
 
 Independent review found an unplaced supersede anchor cycle: the native resolver now tracks visited anchor IDs, matching the shared E18 refusal. The final assembled public corpus passes 106 fixtures and 107 independently checked outputs with 38 Swift tests. This is integration evidence for exact source custody; the isolated state slice remains buildable without the public fold.
+
+Fresh-main reconciliation includes shared E18 and capture/query prerequisites. All 36 Swift Testing tests pass, including round-trips of 106 typed scoring inputs and 107 complete outputs. A first invocation could not start because the disk was full (no test output); after removing this agent's completed model scratch cache, the same package run passed. No source workaround was applied for that resource failure.
