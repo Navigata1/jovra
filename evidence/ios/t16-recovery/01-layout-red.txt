@@ -1,0 +1,313 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/11] Write sources
+[6/11] Write swift-version--58304C5D6DBC2206.txt
+[8/23] Compiling JovraCore CapabilityRegistryLoader.swift
+[9/23] Compiling JovraCore CaptureJournal.swift
+[10/23] Compiling JovraCore CanonicalJSON.swift
+[11/23] Compiling JovraCore ContractPrimitives.swift
+[12/23] Compiling JovraCore DocumentModels.swift
+[13/23] Compiling JovraCore ContrastRequirement.swift
+[14/23] Compiling JovraCore DurationLabel.swift
+[15/23] Compiling JovraCore DurableDirectory.swift
+[16/23] Compiling JovraCore FrameRate.swift
+[17/23] Compiling JovraCore Percent.swift
+[18/23] Compiling JovraCore Provenance.swift
+[19/23] Emitting module JovraCore
+[20/34] Compiling JovraCore SRGBColor.swift
+[21/34] Compiling JovraCore LogResolver.swift
+[22/34] Compiling JovraCore MatchState.swift
+[23/34] Compiling JovraCore OrderOverrides.swift
+[24/34] Compiling JovraCore OutcomeInterpreter.swift
+[25/34] Compiling JovraCore ScoringEngine.swift
+[26/34] Compiling JovraCore ScoringInput.swift
+[27/34] Compiling JovraCore TimelineDiff.swift
+[28/34] Compiling JovraCore TimelineModels.swift
+[29/34] Compiling JovraCore SessionStore.swift
+[30/34] Compiling JovraCore Units.swift
+[31/41] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[32/41] Compiling JovraMedia CaptureEngine.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[33/41] Compiling JovraMedia CaptureSegmentWriter.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[34/41] Compiling JovraMedia CaptureTypes.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[35/41] Compiling JovraMedia DecodedCapture.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[36/41] Emitting module JovraMedia
+[37/46] Compiling JovraMedia FixtureCamera.swift
+[38/46] Compiling JovraMedia DeviceBudget.swift
+[39/46] Compiling JovraMedia FrameTime.swift
+[40/46] Compiling JovraMedia MediaLibrary.swift
+[41/46] Compiling JovraMedia MediaProbe.swift
+[42/55] Emitting module JovraBenchmark
+[43/55] Compiling JovraBenchmark DecodedFrameReader.swift
+[44/55] Compiling JovraBenchmark FrameSignature.swift
+[45/55] Compiling JovraBenchmark GroundTruth.swift
+[46/55] Compiling JovraBenchmark LumaPlane.swift
+[47/55] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[48/55] Compiling JovraBenchmark BenchmarkHarness.swift
+[49/55] Compiling JovraBenchmark BenchmarkRecord.swift
+[50/55] Compiling JovraBenchmark CapabilityGate.swift
+[51/62] Compiling JovraBenchmark Estimator.swift
+[52/62] Compiling JovraBenchmark EstimatorRegistry.swift
+[53/62] Compiling JovraBenchmark EventTimesTask.swift
+[54/62] Compiling JovraBenchmark Floor.swift
+[55/62] Compiling JovraBenchmark JSONValue.swift
+[56/62] Compiling JovraBenchmark Rational.swift
+[57/62] Compiling JovraBenchmark JovraBenchmark.swift
+[58/70] Emitting module jovra_benchmark
+[59/70] Compiling jovra_benchmark main.swift
+[60/70] Emitting module JovraMediaTests
+[61/80] Emitting module JovraBenchmarkTests
+[62/83] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:17:26: error: cannot find 'FragmentedMovieLayout' in scope
+15 |                             0,0,0,8,109,111,111,102, 0,0,0,8,109,100,97,116]
+16 |     try layoutFile(complete) { url in
+17 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+18 |         #expect(layout.completeFragmentEnds == [32])
+19 |         #expect(!layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:22:26: error: cannot find 'FragmentedMovieLayout' in scope
+20 |     }
+21 |     try layoutFile(complete + [0,0,0,8,109,111,111,102, 0,0,0,20,109,100,97,116, 42]) { url in
+22 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+23 |         #expect(layout.completeFragmentEnds == [32])
+24 |         #expect(layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:29:53: error: cannot find 'FragmentedMovieLayout' in scope
+27 |                       [0,0,0,0,102,116,121,112], [0,0,0,8,109,100,97,116]] as [[UInt8]] {
+28 |         try layoutFile(malformed) { url in
+29 |             #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(url) }
+   |                                                     `- error: cannot find 'FragmentedMovieLayout' in scope
+30 |         }
+31 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:41:45: error: cannot find 'FragmentedMovieLayout' in scope
+39 |     try Data([0,0,0,8,102,116,121,112, 0,0,0,8,109,111,111,118]).write(to: source)
+40 |     try FileManager.default.createSymbolicLink(at: link, withDestinationURL: source)
+41 |     #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(link) }
+   |                                             `- error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:44:49: error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+44 |         #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(source) }
+   |                                                 `- error: cannot find 'FragmentedMovieLayout' in scope
+45 |     }
+46 | }
+[63/83] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:17:26: error: cannot find 'FragmentedMovieLayout' in scope
+15 |                             0,0,0,8,109,111,111,102, 0,0,0,8,109,100,97,116]
+16 |     try layoutFile(complete) { url in
+17 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+18 |         #expect(layout.completeFragmentEnds == [32])
+19 |         #expect(!layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:22:26: error: cannot find 'FragmentedMovieLayout' in scope
+20 |     }
+21 |     try layoutFile(complete + [0,0,0,8,109,111,111,102, 0,0,0,20,109,100,97,116, 42]) { url in
+22 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+23 |         #expect(layout.completeFragmentEnds == [32])
+24 |         #expect(layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:29:53: error: cannot find 'FragmentedMovieLayout' in scope
+27 |                       [0,0,0,0,102,116,121,112], [0,0,0,8,109,100,97,116]] as [[UInt8]] {
+28 |         try layoutFile(malformed) { url in
+29 |             #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(url) }
+   |                                                     `- error: cannot find 'FragmentedMovieLayout' in scope
+30 |         }
+31 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:41:45: error: cannot find 'FragmentedMovieLayout' in scope
+39 |     try Data([0,0,0,8,102,116,121,112, 0,0,0,8,109,111,111,118]).write(to: source)
+40 |     try FileManager.default.createSymbolicLink(at: link, withDestinationURL: source)
+41 |     #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(link) }
+   |                                             `- error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:44:49: error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+44 |         #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(source) }
+   |                                                 `- error: cannot find 'FragmentedMovieLayout' in scope
+45 |     }
+46 | }
+[64/83] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:17:26: error: cannot find 'FragmentedMovieLayout' in scope
+15 |                             0,0,0,8,109,111,111,102, 0,0,0,8,109,100,97,116]
+16 |     try layoutFile(complete) { url in
+17 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+18 |         #expect(layout.completeFragmentEnds == [32])
+19 |         #expect(!layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:22:26: error: cannot find 'FragmentedMovieLayout' in scope
+20 |     }
+21 |     try layoutFile(complete + [0,0,0,8,109,111,111,102, 0,0,0,20,109,100,97,116, 42]) { url in
+22 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+23 |         #expect(layout.completeFragmentEnds == [32])
+24 |         #expect(layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:29:53: error: cannot find 'FragmentedMovieLayout' in scope
+27 |                       [0,0,0,0,102,116,121,112], [0,0,0,8,109,100,97,116]] as [[UInt8]] {
+28 |         try layoutFile(malformed) { url in
+29 |             #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(url) }
+   |                                                     `- error: cannot find 'FragmentedMovieLayout' in scope
+30 |         }
+31 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:41:45: error: cannot find 'FragmentedMovieLayout' in scope
+39 |     try Data([0,0,0,8,102,116,121,112, 0,0,0,8,109,111,111,118]).write(to: source)
+40 |     try FileManager.default.createSymbolicLink(at: link, withDestinationURL: source)
+41 |     #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(link) }
+   |                                             `- error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:44:49: error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+44 |         #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(source) }
+   |                                                 `- error: cannot find 'FragmentedMovieLayout' in scope
+45 |     }
+46 | }
+[65/83] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:17:26: error: cannot find 'FragmentedMovieLayout' in scope
+15 |                             0,0,0,8,109,111,111,102, 0,0,0,8,109,100,97,116]
+16 |     try layoutFile(complete) { url in
+17 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+18 |         #expect(layout.completeFragmentEnds == [32])
+19 |         #expect(!layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:22:26: error: cannot find 'FragmentedMovieLayout' in scope
+20 |     }
+21 |     try layoutFile(complete + [0,0,0,8,109,111,111,102, 0,0,0,20,109,100,97,116, 42]) { url in
+22 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+23 |         #expect(layout.completeFragmentEnds == [32])
+24 |         #expect(layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:29:53: error: cannot find 'FragmentedMovieLayout' in scope
+27 |                       [0,0,0,0,102,116,121,112], [0,0,0,8,109,100,97,116]] as [[UInt8]] {
+28 |         try layoutFile(malformed) { url in
+29 |             #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(url) }
+   |                                                     `- error: cannot find 'FragmentedMovieLayout' in scope
+30 |         }
+31 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:41:45: error: cannot find 'FragmentedMovieLayout' in scope
+39 |     try Data([0,0,0,8,102,116,121,112, 0,0,0,8,109,111,111,118]).write(to: source)
+40 |     try FileManager.default.createSymbolicLink(at: link, withDestinationURL: source)
+41 |     #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(link) }
+   |                                             `- error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:44:49: error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+44 |         #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(source) }
+   |                                                 `- error: cannot find 'FragmentedMovieLayout' in scope
+45 |     }
+46 | }
+[66/83] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:17:26: error: cannot find 'FragmentedMovieLayout' in scope
+15 |                             0,0,0,8,109,111,111,102, 0,0,0,8,109,100,97,116]
+16 |     try layoutFile(complete) { url in
+17 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+18 |         #expect(layout.completeFragmentEnds == [32])
+19 |         #expect(!layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:22:26: error: cannot find 'FragmentedMovieLayout' in scope
+20 |     }
+21 |     try layoutFile(complete + [0,0,0,8,109,111,111,102, 0,0,0,20,109,100,97,116, 42]) { url in
+22 |         let layout = try FragmentedMovieLayout.inspect(url)
+   |                          `- error: cannot find 'FragmentedMovieLayout' in scope
+23 |         #expect(layout.completeFragmentEnds == [32])
+24 |         #expect(layout.hasIncompleteTail)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:29:53: error: cannot find 'FragmentedMovieLayout' in scope
+27 |                       [0,0,0,0,102,116,121,112], [0,0,0,8,109,100,97,116]] as [[UInt8]] {
+28 |         try layoutFile(malformed) { url in
+29 |             #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(url) }
+   |                                                     `- error: cannot find 'FragmentedMovieLayout' in scope
+30 |         }
+31 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:41:45: error: cannot find 'FragmentedMovieLayout' in scope
+39 |     try Data([0,0,0,8,102,116,121,112, 0,0,0,8,109,111,111,118]).write(to: source)
+40 |     try FileManager.default.createSymbolicLink(at: link, withDestinationURL: source)
+41 |     #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(link) }
+   |                                             `- error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/FragmentedMovieLayoutTests.swift:44:49: error: cannot find 'FragmentedMovieLayout' in scope
+42 |     for bytes in [Data(), Data([0,0,0]), Data([0,0,0,1,102,116,121,112])] {
+43 |         try bytes.write(to: source)
+44 |         #expect(throws: (any Error).self) { try FragmentedMovieLayout.inspect(source) }
+   |                                                 `- error: cannot find 'FragmentedMovieLayout' in scope
+45 |     }
+46 | }
+[68/83] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[69/83] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[73/83] Write Objects.LinkFileList
+[77/83] Compiling JovraMediaTests FrameTimeTests.swift
+[78/83] Compiling JovraMediaTests FrameTimingTests.swift
+[79/83] Compiling JovraMediaTests MediaLibraryTests.swift
+[79/83] Linking jovra-benchmark
+error: fatalError

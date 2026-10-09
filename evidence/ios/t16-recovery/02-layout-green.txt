@@ -1,0 +1,41 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/10] Emitting module JovraMedia
+[5/10] Compiling JovraMedia FragmentedMovieLayout.swift
+[6/11] Emitting module JovraBenchmark
+[7/18] Emitting module JovraBenchmarkTests
+[8/18] Emitting module JovraMediaTests
+[8/23] Write Objects.LinkFileList
+[9/23] Linking jovra-benchmark
+[10/23] Applying jovra-benchmark
+[12/23] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[13/23] Compiling JovraMediaTests RealFootageProbeTests.swift
+[14/23] Compiling JovraMediaTests FrameTimeTests.swift
+[15/23] Compiling JovraMediaTests FrameTimingTests.swift
+[16/23] Compiling JovraMediaTests MediaLibraryTests.swift
+[17/23] Compiling JovraMediaTests CapturePipelineTests.swift
+[18/23] Compiling JovraMediaTests MediaDirectoryDurabilityTests.swift
+[19/23] Compiling JovraMediaTests FragmentedMovieLayoutTests.swift
+[20/23] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[21/23] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[21/23] Write Objects.LinkFileList
+[22/23] Linking JovraMediaPackageTests
+Build complete! (3.40s)
+Test Suite 'Selected tests' started at 2026-10-09 11:19:44.250.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 11:19:44.250.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 11:19:44.250.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:19:44.250.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test fragmentLayoutKeepsOnlyCompletePairsAndRejectsUnboundedSizes() started.
+◇ Test fragmentLayoutRefusesLinksAndIncompleteHeaders() started.
+✔ Test fragmentLayoutRefusesLinksAndIncompleteHeaders() passed after 0.002 seconds.
+✔ Test fragmentLayoutKeepsOnlyCompletePairsAndRejectsUnboundedSizes() passed after 0.004 seconds.
+✔ Test run with 2 tests in 0 suites passed after 0.004 seconds.
