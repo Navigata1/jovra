@@ -209,6 +209,11 @@ final class NavigationRoutesUITests: XCTestCase {
             XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
             return
         }
+        if expected.launchName == "sheet.clipExport" {
+            XCTAssertTrue(app.textFields["export.from"].waitForExistence(timeout: 5), "Export renders actual range controls", file: file, line: line)
+            XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
+            return
+        }
         let ticket = app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch
         XCTAssertTrue(ticket.exists, "\(expected.launchName) shows the ticket that builds it", file: file, line: line)
         XCTAssertEqual(ticket.label, "Built in ticket \(expected.ticket)", file: file, line: line)
