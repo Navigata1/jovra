@@ -1,0 +1,109 @@
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Compiling FixtureRunnerGenerator main.swift
+[4/6] Emitting module FixtureRunnerGenerator
+[4/7] Write Objects.LinkFileList
+[5/7] Linking FixtureRunnerGenerator-tool
+[6/7] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/scoring-models/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/13] Write sources
+[4/13] Write swift-version--58304C5D6DBC2206.txt
+[6/29] Emitting module FixtureRunnerGenerator
+[6/30] Write Objects.LinkFileList
+[8/30] Emitting module FixtureRunnerGenerator
+[9/30] Compiling FixtureRunnerGenerator main.swift
+[9/31] Write Objects.LinkFileList
+[11/31] Compiling JovraCore FrameRate.swift
+[12/31] Compiling JovraCore DurationLabel.swift
+[13/31] Compiling JovraCore Percent.swift
+[14/31] Compiling JovraCore ContrastRequirement.swift
+[15/31] Compiling JovraCore SessionStore.swift
+[16/31] Compiling JovraCore Units.swift
+[17/31] Compiling JovraCore SRGBColor.swift
+[18/31] Compiling JovraCore Provenance.swift
+[18/31] Linking FixtureRunnerGenerator-tool
+[19/31] Applying FixtureRunnerGenerator-tool
+[20/31] Linking FixtureRunnerGenerator
+[21/31] Applying FixtureRunnerGenerator
+[22/31] Discover conformance runners by kind
+[23/31] Write sources
+[25/31] Compiling JovraCore ContractPrimitives.swift
+[26/31] Compiling JovraCore CanonicalJSON.swift
+[27/31] Compiling JovraCore DocumentModels.swift
+[28/31] Emitting module JovraCore
+[29/31] Compiling JovraCore CapabilityRegistryLoader.swift
+[30/61] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[31/61] Compiling JovraCoreTests BenchmarkRunner.swift
+[32/61] Compiling JovraCoreTests UnitsTests.swift
+[33/61] Compiling JovraCoreTests ContrastTests.swift
+[34/61] Compiling JovraCoreTests SessionStoreTests.swift
+[35/61] Compiling JovraCoreTests ProvenanceTests.swift
+[36/61] Compiling JovraCoreTests RegistryContractTests.swift
+[37/61] Compiling JovraCoreTests ArchiveRunner.swift
+[38/62] Compiling JovraCoreTests FixtureManifest.swift
+[39/62] Compiling JovraCoreTests ManifestTests.swift
+[40/62] Compiling JovraCoreTests ExportRunner.swift
+[41/62] Compiling JovraCoreTests GroundTruthRunner.swift
+[42/62] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[43/62] Compiling JovraCoreTests EquipmentRunner.swift
+[44/62] Compiling JovraCoreTests DurationLabelTests.swift
+[45/62] Compiling JovraCoreTests CSVContractRunner.swift
+[46/62] Compiling JovraCoreTests CanonicalRunner.swift
+[47/62] Compiling JovraCoreTests FrameRateTests.swift
+[48/62] Compiling JovraCoreTests SampleMediaRunner.swift
+[49/62] Compiling JovraCoreTests SessionRunner.swift
+[50/62] Compiling JovraCoreTests CanonicalJSONTests.swift
+[51/62] Compiling JovraCoreTests ContractSafetyTests.swift
+[52/62] Compiling JovraCoreTests PctRunner.swift
+[53/62] Compiling JovraCoreTests PracticePlanRunner.swift
+[54/62] Compiling JovraCoreTests MediaRecordContractTests.swift
+[55/62] Compiling JovraCoreTests PercentTests.swift
+[56/62] Emitting module JovraCoreTests
+[57/62] Compiling JovraCoreTests UnitsRunner.swift
+[58/62] Compiling JovraCoreTests SessionContractTests.swift
+[59/62] Compiling JovraCoreTests ScoringContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/scoring-models/ios/Packages/JovraCore/Tests/JovraCoreTests/Scoring/ScoringContractTests.swift:12:42: error: cannot find 'ScoringInput' in scope
+10 |         let fixture = try JSONSerialization.jsonObject(with: Data(contentsOf: path)) as! [String: Any]
+11 |         let input = try JSONSerialization.data(withJSONObject: fixture["input"]!)
+12 |         #expect(try CanonicalJSON.encode(ScoringInput.decode(input)) == CanonicalJSON.canonicalize(input))
+   |                                          `- error: cannot find 'ScoringInput' in scope
+13 |         for checkpoint in fixture["checkpoints"] as? [[String: Any]] ?? [] {
+14 |             let fold = (checkpoint["expected"] as! [String: Any])["fold"]!
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/scoring-models/ios/Packages/JovraCore/Tests/JovraCoreTests/Scoring/ScoringContractTests.swift:16:50: error: cannot find 'MatchTimeline' in scope
+14 |             let fold = (checkpoint["expected"] as! [String: Any])["fold"]!
+15 |             let bytes = try JSONSerialization.data(withJSONObject: fold)
+16 |             let value = try ContractCodec.decode(MatchTimeline.self, from: bytes)
+   |                                                  `- error: cannot find 'MatchTimeline' in scope
+17 |             #expect(try CanonicalJSON.encode(value) == CanonicalJSON.canonicalize(bytes), "\(path.lastPathComponent)")
+18 |             outputs += 1
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/scoring-models/ios/Packages/JovraCore/Tests/JovraCoreTests/Scoring/ScoringContractTests.swift:16:43: error: generic parameter 'T' could not be inferred
+14 |             let fold = (checkpoint["expected"] as! [String: Any])["fold"]!
+15 |             let bytes = try JSONSerialization.data(withJSONObject: fold)
+16 |             let value = try ContractCodec.decode(MatchTimeline.self, from: bytes)
+   |                                           `- error: generic parameter 'T' could not be inferred
+17 |             #expect(try CanonicalJSON.encode(value) == CanonicalJSON.canonicalize(bytes), "\(path.lastPathComponent)")
+18 |             outputs += 1
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/scoring-models/ios/Packages/JovraCore/Sources/JovraCore/Contracts/CanonicalJSON.swift:32:24: note: in call to function 'decode(_:from:)'
+ 30 |
+ 31 | public enum ContractCodec {
+ 32 |     public static func decode<T: Codable>(_ type: T.Type, from data: Data) throws -> T {
+    |                        `- note: in call to function 'decode(_:from:)'
+ 33 |         // Also refuses duplicate keys; JSONDecoder alone silently keeps one of them.
+ 34 |         var parser = CanonicalParser(bytes: Array(data), requireRepresentableDecimal: true)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/scoring-models/ios/Packages/JovraCore/Tests/JovraCoreTests/Scoring/ScoringContractTests.swift:28:21: error: cannot find 'ScoringInput' in scope
+26 |     let path = try FixtureManifest.repository().appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
+27 |     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))
+28 |     let input = try ScoringInput(session: document)
+   |                     `- error: cannot find 'ScoringInput' in scope
+29 |     #expect(input.players == document.players)
+30 |     #expect(input.log == document.match?.log)
+[60/62] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+error: fatalError
