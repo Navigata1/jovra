@@ -1,0 +1,1746 @@
+[0/6] Write sources
+[1/6] Write FixtureRunnerGenerator-tool-entitlement.plist
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling FixtureRunnerGenerator main.swift
+[5/8] Emitting module FixtureRunnerGenerator
+[5/8] Write Objects.LinkFileList
+[6/8] Linking FixtureRunnerGenerator-tool
+[7/8] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/19] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/.build/arm64-apple-macosx/debug/JovraCorePackageTests.derived/runner.swift
+[2/19] Write sources
+[6/19] Write FixtureRunnerGenerator-tool-entitlement.plist
+[7/19] Write FixtureRunnerGenerator-entitlement.plist
+[8/19] Write swift-version--58304C5D6DBC2206.txt
+[10/35] Compiling FixtureRunnerGenerator main.swift
+[11/35] Emitting module FixtureRunnerGenerator
+[11/35] Write Objects.LinkFileList
+[13/35] Linking FixtureRunnerGenerator
+[14/35] Linking FixtureRunnerGenerator-tool
+[15/35] Applying FixtureRunnerGenerator
+[16/35] Discover conformance runners by kind
+[17/35] Applying FixtureRunnerGenerator-tool
+[18/35] Write sources
+[20/35] Emitting module JovraCore
+[21/48] Compiling JovraCore MatchState.swift
+[22/48] Compiling JovraCore OrderOverrides.swift
+[23/48] Compiling JovraCore OutcomeInterpreter.swift
+[24/48] Compiling JovraCore ScoringEngine.swift
+[25/48] Compiling JovraCore ScoringInput.swift
+[26/48] Compiling JovraCore TimelineDiff.swift
+[27/48] Compiling JovraCore TimelineModels.swift
+[28/48] Compiling JovraCore SessionStore.swift
+[29/48] Compiling JovraCore DerivedStat.swift
+[30/48] Compiling JovraCore StatsEngine.swift
+[31/48] Compiling JovraCore StatsModels.swift
+[32/48] Compiling JovraCore StatsMomentumPair.swift
+[33/48] Compiling JovraCore Units.swift
+[34/48] Compiling JovraCore CapabilityRegistryLoader.swift
+[35/48] Compiling JovraCore CaptureJournal.swift
+[36/48] Compiling JovraCore CanonicalJSON.swift
+[37/48] Compiling JovraCore ContractPrimitives.swift
+[38/48] Compiling JovraCore DocumentModels.swift
+[39/48] Compiling JovraCore ContrastRequirement.swift
+[40/48] Compiling JovraCore DurationLabel.swift
+[41/48] Compiling JovraCore DurableDirectory.swift
+[42/48] Compiling JovraCore FrameRate.swift
+[43/48] Compiling JovraCore Percent.swift
+[44/48] Compiling JovraCore Provenance.swift
+[45/48] Compiling JovraCore SRGBColor.swift
+[46/48] Compiling JovraCore LogResolver.swift
+[47/68] Emitting module JovraCoreTests
+[48/68] Compiling JovraCoreTests CaptureJournalTests.swift
+[49/68] Compiling JovraCoreTests CanonicalJSONTests.swift
+[50/68] Compiling JovraCoreTests ContractSafetyTests.swift
+[51/68] Compiling JovraCoreTests FixtureManifest.swift
+[52/68] Compiling JovraCoreTests ManifestTests.swift
+[53/68] Compiling JovraCoreTests MediaRecordContractTests.swift
+[54/68] Compiling JovraCoreTests PercentTests.swift
+[55/68] Compiling JovraCoreTests RegistryContractTests.swift
+[56/68] Compiling JovraCoreTests ArchiveRunner.swift
+[57/68] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[58/68] Compiling JovraCoreTests BenchmarkRunner.swift
+[59/68] Compiling JovraCoreTests CSVContractRunner.swift
+[60/68] Compiling JovraCoreTests CanonicalRunner.swift
+[61/68] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[62/68] Compiling JovraCoreTests EquipmentRunner.swift
+[63/68] Compiling JovraCoreTests ExportRunner.swift
+[64/68] Compiling JovraCoreTests GroundTruthRunner.swift
+[65/68] Compiling JovraCoreTests PctRunner.swift
+[66/68] Compiling JovraCoreTests PracticePlanRunner.swift
+[67/87] Compiling JovraCoreTests SampleMediaRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[68/87] Compiling JovraCoreTests ScoringRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[69/87] Compiling JovraCoreTests SessionRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[70/87] Compiling JovraCoreTests StatsRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[71/87] Compiling JovraCoreTests UnitsRunner.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[72/87] Compiling JovraCoreTests SessionContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[73/87] Compiling JovraCoreTests UnitsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[74/87] Compiling JovraCoreTests ContrastTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[75/87] Compiling JovraCoreTests DurationLabelTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[76/87] Compiling JovraCoreTests FrameRateTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[77/87] Compiling JovraCoreTests ProvenanceTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[78/87] Compiling JovraCoreTests ReviewedPointStoreTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[79/87] Compiling JovraCoreTests ScoringContractTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[80/87] Compiling JovraCoreTests ScoringTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[81/87] Compiling JovraCoreTests CaptureHandoffTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[82/87] Compiling JovraCoreTests DirectoryCreationDurabilityTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[83/87] Compiling JovraCoreTests SessionStoreTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[84/87] Compiling JovraCoreTests StatsTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+[85/87] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:15:39: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+13 |     var events: [SessionPointEvent] = []
+14 |     for (index, winner) in [Side.a, .a, .a, .b].enumerated() {
+15 |         events.append(try await store.appendReviewedPoint(winner: winner, startMs: index * 1000,
+   |                                       `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+16 |                                                          endMs: (index + 1) * 1000, for: document.id))
+17 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:38: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                      `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:20:92: error: cannot infer contextual base in reference to member 'b'
+18 |     let before = try await store.load(document.id)
+19 |     let originalLog = try #require(before.match?.log)
+20 |     let correction = try await store.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                            `- error: cannot infer contextual base in reference to member 'b'
+21 |     let reopened = try SessionStore(root: directory)
+22 |     let edited = try await reopened.load(document.id)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:28: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                            `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:31:83: error: cannot infer contextual base in reference to member 'a'
+29 |     #expect(stats.sides.A.totalPointsWon.n == 2 && stats.sides.A.totalPointsWon.d == 4)
+30 |     #expect(timeline.points.allSatisfy { $0.reviewState == .reviewed && $0.provenance == .reviewed })
+31 |     _ = try await reopened.correctReviewedWinner(pointID: correction.id, winner: .a, for: document.id)
+   |                                                                                   `- error: cannot infer contextual base in reference to member 'a'
+32 |     let restored = try await reopened.load(document.id)
+33 |     let restoredStats = try StatsEngine.compute(ScoringEngine.fold(ScoringInput(session: restored)))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:32: error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'appendReviewedPoint'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:38:61: error: cannot infer contextual base in reference to member 'a'
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+   |                                                             `- error: cannot infer contextual base in reference to member 'a'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:32: error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                `- error: value of type 'SessionStore' has no member 'correctReviewedWinner'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:41:86: error: cannot infer contextual base in reference to member 'b'
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+   |                                                                                      `- error: cannot infer contextual base in reference to member 'b'
+42 |     }
+43 |     #expect(try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json")) == bytes)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:37:5: warning: no 'async' operations occur within 'await' expression
+35 |     #expect(restored.recording == document.recording && restored.archive == document.archive)
+36 |     let bytes = try Data(contentsOf: directory.appendingPathComponent("sessions/\(document.id)/session.json"))
+37 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Tests/JovraCoreTests/Review/ReviewedPointStoreTests.swift:40:5: warning: no 'async' operations occur within 'await' expression
+38 |         _ = try await reopened.appendReviewedPoint(winner: .a, startMs: -1, endMs: 500, for: document.id)
+39 |     }
+40 |     await #expect(throws: (any Error).self) {
+   |     `- warning: no 'async' operations occur within 'await' expression
+41 |         _ = try await reopened.correctReviewedWinner(pointID: events[0].id, winner: .b, for: document.id)
+42 |     }
+error: fatalError

@@ -1,0 +1,33 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/reviewed-replay/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/9] Write swift-version--58304C5D6DBC2206.txt
+[2/5] Discover conformance runners by kind
+[3/5] Write sources
+[5/7] Compiling JovraCoreTests ReviewedPointStoreTests.swift
+[6/7] Emitting module JovraCoreTests
+[7/8] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[7/9] Write Objects.LinkFileList
+[8/9] Linking JovraCorePackageTests
+Build complete! (2.35s)
+Test Suite 'Selected tests' started at 2026-10-09 12:08:08.196.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 12:08:08.197.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 12:08:08.197.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 12:08:08.197.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test userWinnerCorrectionMustNotInheritModelValidation(status:) started.
+◇ Test case passing 1 argument status → .estimated to userWinnerCorrectionMustNotInheritModelValidation(status:) started.
+◇ Test case passing 1 argument status → .validated to userWinnerCorrectionMustNotInheritModelValidation(status:) started.
+✘ Test userWinnerCorrectionMustNotInheritModelValidation(status:) recorded an issue with 1 argument status → .estimated at ReviewedPointStoreTests.swift:85:15: Expectation failed: an error was expected but none was thrown
+✘ Test userWinnerCorrectionMustNotInheritModelValidation(status:) recorded an issue with 1 argument status → .estimated at ReviewedPointStoreTests.swift:88:9: Expectation failed: try await store.load(document.id) == document
+✘ Test userWinnerCorrectionMustNotInheritModelValidation(status:) recorded an issue with 1 argument status → .validated at ReviewedPointStoreTests.swift:94:9: Expectation failed: (changed.reviewed?.provenance == .reviewed → false) && (changed.reviewed?.source == "user" → <not evaluated>)
+✘ Test userWinnerCorrectionMustNotInheritModelValidation(status:) recorded an issue with 1 argument status → .validated at ReviewedPointStoreTests.swift:95:9: Expectation failed: (changed.reviewed?.capabilityId == nil && changed.reviewed?.capabilityVersion == nil → false) && (changed.reviewed?.confidence == nil → <not evaluated>)
+✘ Test userWinnerCorrectionMustNotInheritModelValidation(status:) with 2 test cases failed after 0.087 seconds with 4 issues.
+✘ Test run with 1 test in 0 suites failed after 0.087 seconds with 4 issues.
