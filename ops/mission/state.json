@@ -10,7 +10,7 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T13:29:33.448132+00:00",
+    "updated": "2026-10-09T13:35:59.947625+00:00",
     "sessionCount": 1
   },
   "policies": {
@@ -91,10 +91,14 @@
         {
           "id": "T02",
           "title": "Complete contract review and merge PR 66",
-          "status": "in_progress",
+          "status": "done",
           "dependsOn": [],
-          "pr": null,
-          "notes": "Independent corrections pass locally; fresh backend-contract CI found portable regex integration failure. Fix in progress; merge prohibited until green."
+          "pr": {
+            "number": 66,
+            "url": "https://github.com/Navigata1/jovra/pull/66",
+            "mergedAt": "2026-10-09T13:31:48Z"
+          },
+          "notes": "Independent review fixes and backend regex compatibility correction merged d36e170 after fresh core/spec/l10n/media/backend-contract checks passed."
         },
         {
           "id": "T07",
@@ -294,17 +298,23 @@
       "url": "https://github.com/Navigata1/jovra/pull/327",
       "phase": "P1",
       "mergedAt": "2026-10-09T13:29:33.448132+00:00"
+    },
+    {
+      "number": 66,
+      "title": "T02 shared contract completion and independent corrections",
+      "url": "https://github.com/Navigata1/jovra/pull/66",
+      "phase": "P2",
+      "mergedAt": "2026-10-09T13:31:48Z"
     }
   ],
   "resume": {
     "activePhase": "P2",
     "nextActions": [
-      "Verify T02 and T07 in isolated reviewer worktrees; do not overwrite unpublished T02 work or S07 compiler changes.",
-      "Add automated existing reference validator coverage, then implement the native core flow along ticket dependencies."
+      "Finish independent T07 full UI and process-relaunch restoration tests on dedicated simulator; merge only after fresh CI.",
+      "T03 implementation now unblocked by merged T02; build typed Swift contracts and conformance runners including canonical fixture kind.",
+      "Finish PR328 reference vocabulary/independent canonical bytes, then implement T08 and native capture/playback along ticket dependencies."
     ],
-    "blockers": [
-      "PR66 fresh backend-contracts CI rejects existing ambiguous \\s patterns after shared checker hardening; update generated patterns and re-run."
-    ],
+    "blockers": [],
     "conventions": [
       "Tier 2 subagents: independent implementation and verification, isolated worktrees.",
       "Stop after P4 passes; step 5 requires new founder authorization.",

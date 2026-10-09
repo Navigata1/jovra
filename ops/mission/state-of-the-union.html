@@ -65,20 +65,20 @@ button.copy:hover{background:rgba(88,215,179,.2)}
 
 <main>
   <header class="hero">
-    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-10-09 13:29Z</p>
+    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-10-09 13:35Z</p>
     <h1>JOVRA core continuation</h1>
     <p class="tagline">Record safely. Review honestly. Own the export.</p>
     <div style="margin-top:14px">
       <span class="chip blue">mission: active</span>
       <span class="chip green">active phase: P2</span>
-      <span class="chip blue">1/13 tasks</span>
+      <span class="chip blue">2/13 tasks</span>
       <span class="chip amber">1/8 gates passed</span>
-      <span class="chip ">1 PRs merged</span>
+      <span class="chip ">2 PRs merged</span>
       <span class="chip ">sessions: 1</span>
-      <span class="chip ">updated: 2026-10-09T13:29:33.448132+00:00</span>
+      <span class="chip ">updated: 2026-10-09T13:35:59.947625+00:00</span>
     </div>
-    <div class="bar big" role="img" aria-label="Overall progress 8%"><div class="fill" style="width:8%"></div></div>
-    <p class="small muted" style="margin-top:6px">Overall: 8% of tasks complete &middot; repo Navigata1/jovra &middot; plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md</p>
+    <div class="bar big" role="img" aria-label="Overall progress 15%"><div class="fill" style="width:15%"></div></div>
+    <p class="small muted" style="margin-top:6px">Overall: 15% of tasks complete &middot; repo Navigata1/jovra &middot; plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mission/PLAN.md</p>
   </header>
 
   <section aria-labelledby="coldstart">
@@ -107,7 +107,7 @@ Operating procedure:
   <section aria-labelledby="metrics"><h2 id="metrics">Scoreboard: Baseline &rarr; Current &rarr; Target</h2>
   <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Baseline</th><th>Current</th><th>Target</th></tr></thead><tbody><tr><td><b>Closed feature tickets at kickoff</b></td><td>13</td><td><span class="chip amber">13</span></td><td>Authorized flow, not entire backlog</td></tr></tbody></table></div>
   <p class="small muted" style="margin-top:6px">green = at/past target &middot; blue = moving toward target &middot; amber = unchanged &middot; red = moving away</p></section>
-  <section aria-labelledby="risks"><h2 id="risks">Risks &amp; Blockers</h2><div class="panel"><ul class="bare"><li><span class="chip red">blocker</span> PR66 fresh backend-contracts CI rejects existing ambiguous \s patterns after shared checker hardening; update generated patterns and re-run.</li><li><span class="chip red">high</span> <b>Concurrent Claude work</b> &mdash; <span class="muted">Original checkout and all Claude worktrees preserved; only isolated Codex checkouts change.</span></li><li><span class="chip amber">medium</span> <b>Physical device validation</b> &mdash; <span class="muted">Simulator evidence does not prove physical capture, signing, endurance or store readiness.</span></li></ul></div></section>
+  <section aria-labelledby="risks"><h2 id="risks">Risks &amp; Blockers</h2><div class="panel"><ul class="bare"><li><span class="chip red">high</span> <b>Concurrent Claude work</b> &mdash; <span class="muted">Original checkout and all Claude worktrees preserved; only isolated Codex checkouts change.</span></li><li><span class="chip amber">medium</span> <b>Physical device validation</b> &mdash; <span class="muted">Simulator evidence does not prove physical capture, signing, endurance or store readiness.</span></li></ul></div></section>
 
   <section aria-labelledby="phases">
     <h2 id="phases">Phases</h2>
@@ -157,9 +157,9 @@ Operating procedure:
         <span class="muted small">est. sessions: 1</span>
       </header>
       <p class="muted">Review T02 and T07 independently, resolve findings, merge only when gates and CI pass.</p>
-      <div class="bar"><div class="fill" style="width:0%"></div></div>
-      <p class="small muted">0/2 tasks &middot; 0%</p>
-      <ul class="tasks"><li class="task-in_progress"><span class="mark">&#9689;</span> <b>T02</b> Complete contract review and merge PR 66<br><span class="muted small">Independent corrections pass locally; fresh backend-contract CI found portable regex integration failure. Fix in progress; merge prohibited until green.</span></li><li class="task-in_progress"><span class="mark">&#9689;</span> <b>T07</b> Complete navigation/permissions review and merge PR 321<br><span class="muted small">Dedicated simulator: 15 core, 63 media and 70 hosted tests independently pass. Full UI/restoration tests still running.</span></li></ul>
+      <div class="bar"><div class="fill" style="width:50%"></div></div>
+      <p class="small muted">1/2 tasks &middot; 50%</p>
+      <ul class="tasks"><li class="task-done"><span class="mark">&#9679;</span> <b>T02</b> Complete contract review and merge PR 66 &mdash; <a href="https://github.com/Navigata1/jovra/pull/66">PR #66</a> merged 2026-10-09T13:31:48Z<br><span class="muted small">Independent review fixes and backend regex compatibility correction merged d36e170 after fresh core/spec/l10n/media/backend-contract checks passed.</span></li><li class="task-in_progress"><span class="mark">&#9689;</span> <b>T07</b> Complete navigation/permissions review and merge PR 321<br><span class="muted small">Dedicated simulator: 15 core, 63 media and 70 hosted tests independently pass. Full UI/restoration tests still running.</span></li></ul>
       <div class="table-wrap"><table><thead><tr><th>Gate</th><th>Check</th><th>Command</th><th>Evidence</th><th>Last run</th></tr></thead><tbody><tr>
       <td><span class="chip ">pending</span></td>
       <td><b>Shared contracts and fixtures</b></td>
@@ -186,17 +186,15 @@ Governing plan: /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/jv/ops/mi
 
 Phase goal: Review T02 and T07 independently, resolve findings, merge only when gates and CI pass.
 Remaining tasks:
-  - [in_progress] T02: Complete contract review and merge PR 66 (Independent corrections pass locally; fresh backend-contract CI found portable regex integration failure. Fix in progress; merge prohibited until green.)
   - [in_progress] T07: Complete navigation/permissions review and merge PR 321 (Dedicated simulator: 15 core, 63 media and 70 hosted tests independently pass. Full UI/restoration tests still running.)
 Gates not yet passed:
   - [pending] Shared contracts and fixtures  -&gt;  python3 scripts/spec/validate.py
   - [pending] Native unit and UI verification on dedicated simulator  -&gt;  scripts/ios/test.sh
   - [pending] Navigation/permissions UI suite on dedicated simulator  -&gt;  scripts/ios/ui-test.sh
 Next actions (from last session):
-  - Verify T02 and T07 in isolated reviewer worktrees; do not overwrite unpublished T02 work or S07 compiler changes.
-  - Add automated existing reference validator coverage, then implement the native core flow along ticket dependencies.
-Known blockers:
-  - PR66 fresh backend-contracts CI rejects existing ambiguous \s patterns after shared checker hardening; update generated patterns and re-run.
+  - Finish independent T07 full UI and process-relaunch restoration tests on dedicated simulator; merge only after fresh CI.
+  - T03 implementation now unblocked by merged T02; build typed Swift contracts and conformance runners including canonical fixture kind.
+  - Finish PR328 reference vocabulary/independent canonical bytes, then implement T08 and native capture/playback along ticket dependencies.
 Mission conventions:
   - Tier 2 subagents: independent implementation and verification, isolated worktrees.
   - Stop after P4 passes; step 5 requires new founder authorization.
@@ -314,8 +312,8 @@ Operating procedure:
     </article>
   </section>
 
-  <section aria-labelledby="prs"><h2 id="prs">Merged Work (1 PRs)</h2><div class="timeline"><article class="tl-item"><time>#327</time><p><b>Record JOVRA core-flow continuation and explicit expansion hold</b> &mdash; P1, merged 2026-10-09T13:29:33.448132+00:00 &middot; <a href="https://github.com/Navigata1/jovra/pull/327">view</a></p></article></div></section>
-  <section aria-labelledby="journal"><h2 id="journal">Journal (latest first)</h2><div class="timeline"><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:29:33.448132+00:00 — prerequisite review</b><br><br>- PR327 merged after green CI and independent gate-command review; P1 complete.<br>- T02 independent review found and fixed invalid calendar-date crash and frame-rate boundary uncertainty; 75 Python tests and five mutation controls pass.<br>- Fresh T02 backend-contract CI exposed regex portability mismatch; no merge until fixed.<br>- T07 dedicated-simulator tests pass at unit seams; full UI and scene restoration verification pending.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:16:58.646541+00:00 — session 1</b><br><br>- Founder authorized steps 1–4; step 5 held.<br>- Tier 2 orchestration: isolated independent T02 and T07 verification.<br>- Backed up eight existing uncommitted files without changing original checkouts; reconciled to remote main 6de361a.<br>- Current free disk approximately 16 GiB; dedicate simulator and derived data.</p></article></div></section>
+  <section aria-labelledby="prs"><h2 id="prs">Merged Work (2 PRs)</h2><div class="timeline"><article class="tl-item"><time>#66</time><p><b>T02 shared contract completion and independent corrections</b> &mdash; P2, merged 2026-10-09T13:31:48Z &middot; <a href="https://github.com/Navigata1/jovra/pull/66">view</a></p></article><article class="tl-item"><time>#327</time><p><b>Record JOVRA core-flow continuation and explicit expansion hold</b> &mdash; P1, merged 2026-10-09T13:29:33.448132+00:00 &middot; <a href="https://github.com/Navigata1/jovra/pull/327">view</a></p></article></div></section>
+  <section aria-labelledby="journal"><h2 id="journal">Journal (latest first)</h2><div class="timeline"><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:35:59.947625+00:00 — T02 merged</b><br><br>- PR66 merged as d36e170 after all fresh automatic checks passed.<br>- Gateway regex portability fixed with explicit ECMA whitespace and black-box rejection tests; strict checker retained.<br>- T03 unblocked and underway; canonical-byte vectors registered through the existing discovery convention.<br>- T07 UI/restoration suite still running; no step-5 work started.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:29:33.448132+00:00 — prerequisite review</b><br><br>- PR327 merged after green CI and independent gate-command review; P1 complete.<br>- T02 independent review found and fixed invalid calendar-date crash and frame-rate boundary uncertainty; 75 Python tests and five mutation controls pass.<br>- Fresh T02 backend-contract CI exposed regex portability mismatch; no merge until fixed.<br>- T07 dedicated-simulator tests pass at unit seams; full UI and scene restoration verification pending.</p></article><article class="tl-item"><time>&#9998;</time><p><b>2026-10-09T13:16:58.646541+00:00 — session 1</b><br><br>- Founder authorized steps 1–4; step 5 held.<br>- Tier 2 orchestration: isolated independent T02 and T07 verification.<br>- Backed up eight existing uncommitted files without changing original checkouts; reconciled to remote main 6de361a.<br>- Current free disk approximately 16 GiB; dedicate simulator and derived data.</p></article></div></section>
 
   <p class="footer">GENERATED by ops/mission/render-sotu.mjs from state.json — do not hand-edit.
   To update: edit state.json, run <code>node ops/mission/render-sotu.mjs</code>, commit both.</p>

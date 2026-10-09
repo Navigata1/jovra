@@ -11,3 +11,10 @@
 - T02 independent review found and fixed invalid calendar-date crash and frame-rate boundary uncertainty; 75 Python tests and five mutation controls pass.
 - Fresh T02 backend-contract CI exposed regex portability mismatch; no merge until fixed.
 - T07 dedicated-simulator tests pass at unit seams; full UI and scene restoration verification pending.
+
+## 2026-10-09T13:35:59.947625+00:00 — T02 merged
+
+- PR66 merged as d36e170 after all fresh automatic checks passed.
+- Gateway regex portability fixed with explicit ECMA whitespace and black-box rejection tests; strict checker retained.
+- T03 unblocked and underway; canonical-byte vectors registered through the existing discovery convention.
+- T07 UI/restoration suite still running; no step-5 work started.
