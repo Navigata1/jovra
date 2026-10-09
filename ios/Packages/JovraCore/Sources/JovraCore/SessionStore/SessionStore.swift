@@ -22,6 +22,50 @@ public enum SessionWriteCheckpoint: Sendable {
     case documentRenamed(URL)
 }
 
+public struct SessionQuery: Sendable {
+    public var search: String
+    public var kind: SessionDocumentSessionKind?
+    public var sample: Bool?
+    public var original: SessionOriginalStateState?
+    public var analysis: SessionAnalysisState?
+    public var review: SessionReviewState?
+    public var archive: SessionArchiveStateState?
+    public init(search: String = "", kind: SessionDocumentSessionKind? = nil, sample: Bool? = nil,
+                original: SessionOriginalStateState? = nil, analysis: SessionAnalysisState? = nil,
+                review: SessionReviewState? = nil, archive: SessionArchiveStateState? = nil) {
+        self.search = search; self.kind = kind; self.sample = sample; self.original = original
+        self.analysis = analysis; self.review = review; self.archive = archive
+    }
+}
+
+public struct SessionSummary: Codable, Equatable, Sendable {
+    public let id: String
+    public let title: String
+    public let createdAt: String
+    public let kind: SessionDocumentSessionKind
+    public let players: [SessionPlayer]
+    public let sides: SessionSides?
+    public let hasMatch: Bool
+    public let sample: Bool
+    public let notes: String?
+    public let original: SessionOriginalState?
+    public let analysis: SessionAnalysis?
+    public let review: SessionReview?
+    public let archive: SessionArchiveState
+    init(_ value: SessionDocument) {
+        id = value.id; title = value.title; createdAt = value.createdAt; kind = value.sessionKind
+        players = value.players; sides = value.sides; hasMatch = value.match != nil
+        sample = value.sample != nil; notes = value.notes
+        original = value.original; analysis = value.analysis; review = value.review; archive = value.archive
+    }
+}
+
+public struct QuarantinedSession: Codable, Equatable, Sendable {
+    public let sessionID: String
+    public let reason: String
+    public let folderName: String
+}
+
 /// Synchronous filesystem transactions deliberately contain no suspension point. All
 /// writers must share this actor: its document is authoritative, never the library index.
 public actor SessionStore {
@@ -92,14 +136,120 @@ public actor SessionStore {
         try write(document, to: folder(id))
     }
 
-    private func folder(_ id: String) throws -> URL {
+    /// Folder-derived on every call: even a stale or malicious index cannot hide a session.
+    public func list(_ query: SessionQuery = .init()) throws -> [SessionSummary] {
+        let all = try rebuildIndex()
+        let search = query.search.trimmingCharacters(in: .whitespacesAndNewlines)
+        return all.filter { summary in
+            (query.kind == nil || query.kind == summary.kind) &&
+            (query.sample == nil || query.sample == summary.sample) &&
+            (query.original == nil || query.original == summary.original?.state) &&
+            (query.analysis == nil || query.analysis == summary.analysis?.state) &&
+            (query.review == nil || query.review == summary.review?.state) &&
+            (query.archive == nil || query.archive == summary.archive.state) &&
+            (search.isEmpty || ([summary.title, summary.notes ?? ""] + summary.players.map(\.displayName))
+                .joined(separator: " ").localizedCaseInsensitiveContains(search))
+        }
+    }
+
+    @discardableResult public func rebuildIndex() throws -> [SessionSummary] {
+        var summaries: [SessionSummary] = []
+        for entry in try FileManager.default.contentsOfDirectory(at: sessions, includingPropertiesForKeys: [.isDirectoryKey]) {
+            let type = try FileManager.default.attributesOfItem(atPath: entry.path)[.type] as? FileAttributeType
+            guard type == .typeDirectory || type == .typeSymbolicLink else { continue }
+            let document: SessionDocument
+            do { document = try load(entry.lastPathComponent) }
+            catch is ContractError { try quarantineEntry(entry, reason: "Invalid or unsupported document"); continue }
+            catch is DecodingError { try quarantineEntry(entry, reason: "Invalid document fields"); continue }
+            catch let error as SessionStoreError {
+                guard [.invalidID, .unsafePath, .notFound].contains(error) else { throw error }
+                try quarantineEntry(entry, reason: String(describing: error)); continue
+            }
+            // Migration I/O failures propagate without relocating a healthy original.
+            let migrated: SessionDocument
+            do { migrated = try migrate(document) }
+            catch SessionStoreError.unsupportedMigration {
+                try quarantineEntry(entry, reason: "Unsupported document version"); continue
+            }
+            if migrated != document { try write(migrated, to: folder(document.id), upgradeVersion: false) }
+            summaries.append(SessionSummary(migrated))
+        }
+        summaries.sort { $0.createdAt == $1.createdAt ? $0.id < $1.id : $0.createdAt > $1.createdAt }
+        // The index is disposable: lack of room for this cache must not hide originals.
+        try? CanonicalJSON.encode(summaries).write(to: root.appendingPathComponent("index.json"), options: .atomic)
+        return summaries
+    }
+
+    public func quarantine(_ id: String, reason: String) throws {
+        // Move the entry itself, including a malicious link, without following it.
+        // The report lives in a new container, never inside untrusted media.
+        try quarantineEntry(folder(id, allowSymbolicLink: true), reason: reason)
+    }
+
+    private func quarantineEntry(_ source: URL, reason: String) throws {
+        let id = source.lastPathComponent
+        let destination = try auxiliaryFolder("quarantine")
+        let name = UUID().uuidString
+        let container = destination.appendingPathComponent(name, isDirectory: true)
+        try FileManager.default.createDirectory(at: container, withIntermediateDirectories: false)
+        let record = QuarantinedSession(sessionID: id, reason: reason, folderName: name)
+        do {
+            try CanonicalJSON.encode(record).write(to: container.appendingPathComponent("quarantine.json"), options: .atomic)
+            try FileManager.default.moveItem(at: source, to: container.appendingPathComponent("session"))
+        } catch { try? FileManager.default.removeItem(at: container); throw error }
+    }
+
+    /// Pure additive migration. Unknown fields already refused by ContractCodec remain preserved in quarantine.
+    public func migrate(_ document: SessionDocument) throws -> SessionDocument {
+        guard document.schemaVersion.major == 1, (document.schemaVersion.minor < SchemaVersion.current.minor ||
+               (document.schemaVersion.minor == SchemaVersion.current.minor &&
+                document.schemaVersion.patch <= SchemaVersion.current.patch)) else {
+            throw SessionStoreError.unsupportedMigration
+        }
+        var result = document
+        result.schemaVersion = .current
+        return result
+    }
+
+    public func opponentHistory(playerID: String, opponentID: String) throws -> [SessionSummary] {
+        guard playerID != opponentID else { return [] }
+        return try list(.init(sample: false)).filter { summary in
+            guard summary.hasMatch, let sides = summary.sides else { return false }
+            return (sides.A.contains(playerID) && sides.B.contains(opponentID)) ||
+                (sides.B.contains(playerID) && sides.A.contains(opponentID))
+        }
+    }
+
+    public func headToHead(playerID: String, opponentID: String) throws -> [SessionSummary] {
+        try opponentHistory(playerID: playerID, opponentID: opponentID)
+    }
+
+    public func quarantinedSessions() throws -> [QuarantinedSession] {
+        let directory = try auxiliaryFolder("quarantine")
+        return try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            .map { entry in
+                try Self.refuseSymbolicLink(entry)
+                let record = entry.appendingPathComponent("quarantine.json")
+                try Self.refuseSymbolicLink(record)
+                return try ContractCodec.decode(QuarantinedSession.self, from: Data(contentsOf: record))
+            }.sorted { $0.sessionID < $1.sessionID }
+    }
+
+    private func auxiliaryFolder(_ name: String) throws -> URL {
+        let directory = root.appendingPathComponent(name, isDirectory: true)
+        try Self.refuseSymbolicLink(directory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory
+    }
+
+    private func folder(_ id: String, allowSymbolicLink: Bool = false) throws -> URL {
         guard !id.isEmpty, id.count <= 160, id != ".", id != "..",
               id.unicodeScalars.allSatisfy({ CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_").contains($0) }) else {
             throw SessionStoreError.invalidID
         }
         let result = sessions.appendingPathComponent(id, isDirectory: true)
         try Self.refuseSymbolicLink(sessions)
-        try Self.refuseSymbolicLink(result)
+        if !allowSymbolicLink { try Self.refuseSymbolicLink(result) }
         return result
     }
 
@@ -107,12 +257,7 @@ public actor SessionStore {
         let destination = folder.appendingPathComponent("session.json")
         try Self.refuseSymbolicLink(destination)
         let temporary = folder.appendingPathComponent(".session-\(UUID().uuidString).tmp")
-        var persisted = document
-        // New facets/capture metadata may use1.1 fields. Preserve legacy documents
-        // at creation, but never stamp a mutation containing new fields as1.0.
-        if upgradeVersion, persisted.schemaVersion.major == 1, persisted.schemaVersion.minor == 0 {
-            persisted.schemaVersion = .v1_1
-        }
+        let persisted = upgradeVersion ? try migrate(document) : document
         let bytes = try CanonicalJSON.encode(persisted)
         guard FileManager.default.createFile(atPath: temporary.path, contents: nil) else { throw CocoaError(.fileWriteUnknown) }
         let handle = try FileHandle(forWritingTo: temporary)
@@ -127,9 +272,11 @@ public actor SessionStore {
         let result = fsync(descriptor)
         let failure = errno
         _ = close(descriptor)
-        // Rename has occurred; the caller must not acknowledge durability if sync fails.
+        // Rename has occurred. On a synchronization error a fresh load may see the
+        // new document, but the caller must not report this transaction as durable.
         guard result == 0 else { throw SessionStoreError.durabilityUnconfirmed(failure) }
     }
+
     private static func refuseSymbolicLink(_ url: URL) throws {
         do {
             let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
