@@ -197,7 +197,7 @@ private extension FullScreenRoute {
         case .capture:
             cover("capture", "T17", String(localized: "Capture", table: "App", comment: "Screen name"),
                   String(localized: "Close capture", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Capture/CaptureScreen.swift")
+                  "Features/Capture/CaptureScreen.swift", placeholder: CaptureScreen.isPlaceholder)
         case .replay:
             cover("replay", "T28", String(localized: "Smart replay", table: "App", comment: "Screen name"),
                   String(localized: "Close replay", table: "App", comment: "VoiceOver label of the Close control"),
@@ -311,8 +311,8 @@ private func push(_ name: String, _ ticket: String, _ title: String, _ file: Str
     RouteInfo(kind: .push, launchName: name, ticket: ticket, title: title, file: file)
 }
 
-private func cover(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String) -> RouteInfo {
-    RouteInfo(kind: .fullScreen, launchName: name, ticket: ticket, title: title, closeLabel: close, file: file)
+private func cover(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String, placeholder: Bool = true) -> RouteInfo {
+    RouteInfo(kind: .fullScreen, launchName: name, ticket: ticket, title: title, closeLabel: close, file: file, isPlaceholder: placeholder)
 }
 
 private func sheet(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String) -> RouteInfo {
