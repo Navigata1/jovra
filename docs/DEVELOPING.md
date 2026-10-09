@@ -261,6 +261,12 @@ There are two documented audit exceptions, and the test logs every issue it igno
   tree. Tab bar items are always checked. Each slow swipe moves the page by more than 16 pt and by
   less than the visible height, and every screen ends with 32 pt of padding. So every element is
   audited clear of the bar at some step.
+  On a full-screen page with a fixed header, the same rendering-only rule uses the actual scroll
+  viewport intersected with the app frame: the issue must match a descendant of that scroll view
+  by type, identifier, label and frame, and be vertically cropped by that viewport. A fixed header
+  control or a fully visible scrolling element remains checked. Text clipping, touch targets and
+  semantic findings remain failures even for an occluded scrolling element. `ScrollViewportAuditTests`
+  includes visible-content, fixed-header, invalid-viewport and non-rendering negative controls.
 
 Text contrast for every colour role is also enforced independently by `ColorRoleContrastTests`
 (≥ 4.5:1 in light, dark and Increase Contrast).
