@@ -27,6 +27,9 @@ struct AppRoot: View {
                     .transition(.opacity)
             }
         }
+        #if DEBUG
+        .modifier(CoreComponentsGalleryHarness())
+        #endif
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.3), value: router.preShell == nil)
         .environment(router)
         .onOpenURL { url in

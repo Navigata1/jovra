@@ -1,0 +1,28 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/ios/Jovra.xcodeproj
+==> JovraUITests on 4265ADFD-39A3-4E71-8482-1945DDB5F899, only: JovraUITests/CoreComponentsUITests/testEmptyStateOffersWorkingRecordAndImportActions
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/.derivedData/ui-tests-20261009-095713.xcresult
+
+2026-10-09 09:57:50.748 xcodebuild[82019:131261553] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 09:57:50.748 xcodebuild[82019:131261553] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 09:58:13.545 xcodebuild[82019:131261553] [MT] IDETestOperationsObserverDebug: 31.057 elapsed -- Testing started completed.
+2026-10-09 09:58:13.545 xcodebuild[82019:131261553] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 09:58:13.545 xcodebuild[82019:131261553] [MT] IDETestOperationsObserverDebug: 31.057 sec, +31.057 sec -- end
+Failing tests:
+	CoreComponentsUITests.testEmptyStateOffersWorkingRecordAndImportActions()
+
+** TEST FAILED **
+
+Testing started
+==> Screenshots exported to /Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/evidence/ios/12-core-state-components
+==> Summary
+Test class                          passed  failed  skipped  expected
+JovraUITests/CoreComponentsUITests       0       1        0         0
+Total: 0 passed, 1 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED CoreComponentsUITests/testEmptyStateOffersWorkingRecordAndImportActions(): XCTAssertTrue failed
+Device: JOVRA-Codex-T07 4265ADFD-39A3-4E71-8482-1945DDB5F899 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: /Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/.derivedData/ui-tests-20261009-095713.xcresult
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.
