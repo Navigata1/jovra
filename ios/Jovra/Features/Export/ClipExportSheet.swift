@@ -42,7 +42,8 @@ struct ClipExportSheet: View {
                     if let package = model.package { done(package) }
                 }.padding(.horizontal, Space.screenMargin).padding(.bottom, Space.x4)
                     .frame(maxWidth: 720, alignment: .leading).frame(maxWidth: .infinity)
-            }.clipped().scrollDismissesKeyboard(.interactively)
+            }.clipped().scrollDismissesKeyboard(.interactively).accessibilityIdentifier("export.scroll")
+                .ignoresSafeArea(.container, edges: .bottom)
         }
         .background(Color.jovra(.background).ignoresSafeArea())
         .interactiveDismissDisabled(model.isWorking)
