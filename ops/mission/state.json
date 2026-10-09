@@ -10,7 +10,7 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T16:49:15.226157+00:00",
+    "updated": "2026-10-09T17:36:54.009263+00:00",
     "sessionCount": 1
   },
   "policies": {
@@ -178,9 +178,9 @@
           "title": "Domain and conformance tests",
           "command": "swift test --package-path ios/Packages/JovraCore",
           "status": "pending",
-          "evidence": null,
+          "evidence": "evidence/core/t29-reviewed-point-store/13-integrated-full-core.txt",
           "lastRun": null,
-          "notes": ""
+          "notes": "Latest exact corrected PointStore/current-Core composition:12XCTest and57Swift tests PASS; every fixture kind consumed. Final flow assembly will require updated domain/media gates as source changes."
         },
         {
           "id": "P4-G2",
@@ -225,7 +225,7 @@
             "T04"
           ],
           "pr": null,
-          "notes": "Native StatsEngine351merged933b4a7 after separate final nomenclature reviews and fresh green CI. Focused6public controls and110canonical/schema stat outputsPASS; prior fullCore12XCTest+48Swift proof separately bound. DataExporter samplegoldenCSV firstpublic controlPASS; fullcorpus/current JSON validator and UI export remain pending."
+          "notes": "Stats351 and DataExporter357 merged after separate axes and fresh CI. Native session/points CSV/stats CSV reflect one fresh fold; actual sample goldens, correction/escaping/unknown controls and independent native JSON artifact validation PASS. Reviewed-point359 current Core gate12XCTest+57Swift tests PASS, all fixture kinds consumed. Full overview/trends and native export integration remain pending."
         },
         {
           "id": "T08",
@@ -249,7 +249,7 @@
             "T03"
           ],
           "pr": null,
-          "notes": "Capture pipeline334/335/337/338/340 and directory durability350 merged. Recovery layout/atomic adoption and finished-stale decode/receipt slices in progress; actual torn-prefix and termination-loss gates pending. Physical camera/endurance/power-loss remain unverified."
+          "notes": "Capture334/335/337/338/340, directory350, fragmented-layout/atomic-adoption354 and finished-stale scanner358 merged. Actual marked/unmarked adopted sessions independently schema/canonical validated; receipt canonical bytes and decoded media/hash evidence passed; integrated85Media tests PASS serially. Parallel decoder-pool stall retained as failed/incomplete; native Media harness now serial. Unfinished/torn-prefix/termination-loss/startup and physical/endurance/power-loss remain unverified; fullT16 open."
         },
         {
           "id": "T14",
@@ -259,7 +259,7 @@
             "T03"
           ],
           "pr": null,
-          "notes": "Exact decoded still-frame adapter passed200seeded forward/backward selections at60/240fps; not yet published. Full transport/proxy/timing/UI acceptance remains pending."
+          "notes": "Exact decoded still-frame adapter355 merged873c1cf after separate axes/fresh CI.200seeded selections at60/240fps and integrated78Media tests PASS. Verified CFR only; full transport/proxy/VFR index/timing/UI acceptance remains pending."
         },
         {
           "id": "P4-UI",
@@ -273,7 +273,7 @@
             "T04"
           ],
           "pr": null,
-          "notes": "T12boundedcomponents347merged35117e1 after separate reviews and fresh CI. Baselinec867:167nativeunits and15scenarioauditsPASS. Corrected820CTA/badge2testsPASS plusfive-tabAX5testPASS; earlier NoSpace receipt retained as UNVERIFIED. Native fresh-session/capture service public API red-to-green underway. Actual full record/library/replay/score/export integration pending; full feature AC remains open. Fresh-session service349 merged. Native coordinator exact188 control5PASS including120actual decoded saved frames; coordinator353merged0998d76. ActualCaptureSetup2nativePASS; CaptureFlow2tests fail at missing setup fields/unsupported doubles copy before views are implemented. Final CoreFlow remains pending."
+          "notes": "Bounded components347 and shared capture/coordinator349/353 merged. Actual chosen fixture capture/save plus unsupported-mode controls passed; AX5 form audit passed after genuine clipping/target failures. Review found false stopped-state label, schema length limits and normal native-input22pt target; corrective public red/green retained, final capture gate still pending. Capture setup/input and UI publish as separate slices. Durable reviewed-point/correction359 merged29eba0f after provenance fix and full69Core tests; actual corrected JSON schema/reference/canonical PASS. Library/replay integration and final CoreFlow still pending."
         },
         {
           "id": "P4-EXPORT",
@@ -288,7 +288,7 @@
             "url": "https://github.com/Navigata1/jovra/pull/352",
             "mergedAt": "2026-10-09T16:38:00Z"
           },
-          "notes": "Local clip primitive352mergedd192744 after separate independent axes and fresh green CI.76Media tests plus externalFFmpeg full decode/counter inspection of6retained synthetic outputsPASS. Full export UI/records/relaunch and data export pending; end-to-end gate not yet run."
+          "notes": "Clip primitive352 and DataExporter357 merged after separate independent axes/fresh CI; actual clip decode/counter/audio and CSV/schema proofs retained. Durable four-file local export package/version records now has genuine public control draft, implementation/runtime pending. Native export UI/relaunch/whole-flow proof pending; fullT36 stays open."
         }
       ]
     }
@@ -510,6 +510,48 @@
       "url": "https://github.com/Navigata1/jovra/pull/353",
       "phase": "P4",
       "mergedAt": "2026-10-09T16:48:43Z"
+    },
+    {
+      "number": 354,
+      "title": "Fragmented-layout and atomic recovery prerequisites",
+      "url": "https://github.com/Navigata1/jovra/pull/354",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T16:51:25Z"
+    },
+    {
+      "number": 355,
+      "title": "Exact decoded CFR frame lookup",
+      "url": "https://github.com/Navigata1/jovra/pull/355",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T17:00:20Z"
+    },
+    {
+      "number": 356,
+      "title": "Native progress heartbeat",
+      "url": "https://github.com/Navigata1/jovra/pull/356",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T17:07:11Z"
+    },
+    {
+      "number": 357,
+      "title": "Current-log session JSON and CSV data export",
+      "url": "https://github.com/Navigata1/jovra/pull/357",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T17:07:34Z"
+    },
+    {
+      "number": 358,
+      "title": "Verified finished-stale recovery and serial Media gate",
+      "url": "https://github.com/Navigata1/jovra/pull/358",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T17:28:41Z"
+    },
+    {
+      "number": 359,
+      "title": "Durable reviewed points and honest winner corrections",
+      "url": "https://github.com/Navigata1/jovra/pull/359",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T17:30:40Z"
     }
   ],
   "resume": {
