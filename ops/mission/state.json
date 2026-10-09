@@ -67,11 +67,20 @@
         {
           "id": "P2-G2",
           "title": "Native unit and UI verification on dedicated simulator",
-          "command": "scripts/ios/core-flow-test.sh",
+          "command": "scripts/ios/test.sh",
           "status": "pending",
           "evidence": null,
           "lastRun": null,
-          "notes": ""
+          "notes": "Run with SIMULATOR_ID set to a dedicated JOVRA simulator; use scripts/ios/ui-test.sh for its separate full UI gate."
+        },
+        {
+          "id": "P2-G3",
+          "title": "Navigation/permissions UI suite on dedicated simulator",
+          "command": "scripts/ios/ui-test.sh",
+          "status": "pending",
+          "evidence": null,
+          "lastRun": null,
+          "notes": "SIMULATOR_ID must identify a dedicated JOVRA simulator, not a shared default."
         }
       ],
       "tasks": [
@@ -112,7 +121,7 @@
         {
           "id": "P3-G2",
           "title": "Validator negative tests",
-          "command": "python3 -m unittest discover -s scripts/spec -p test_*.py",
+          "command": "python3 -m unittest discover -s scripts/spec -p \"test_*.py\"",
           "status": "pending",
           "evidence": null,
           "lastRun": null,
@@ -161,7 +170,7 @@
           "status": "pending",
           "evidence": null,
           "lastRun": null,
-          "notes": ""
+          "notes": "Pending future integration harness; command will be implemented before this gate is run."
         }
       ],
       "tasks": [

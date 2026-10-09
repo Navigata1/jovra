@@ -65,14 +65,14 @@ button.copy:hover{background:rgba(88,215,179,.2)}
 
 <main>
   <header class="hero">
-    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-10-09 13:16Z</p>
+    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-10-09 13:24Z</p>
     <h1>JOVRA core continuation</h1>
     <p class="tagline">Record safely. Review honestly. Own the export.</p>
     <div style="margin-top:14px">
       <span class="chip blue">mission: active</span>
       <span class="chip green">active phase: P1</span>
       <span class="chip blue">0/13 tasks</span>
-      <span class="chip amber">0/7 gates passed</span>
+      <span class="chip amber">0/8 gates passed</span>
       <span class="chip ">0 PRs merged</span>
       <span class="chip ">sessions: 1</span>
       <span class="chip ">updated: 2026-10-09T13:16:58.646541+00:00</span>
@@ -172,8 +172,13 @@ Operating procedure:
       <td>&mdash;</td>
       <td>&mdash;</td></tr><tr>
       <td><span class="chip ">pending</span></td>
-      <td><b>Native unit and UI verification on dedicated simulator</b></td>
-      <td><code>scripts/ios/core-flow-test.sh</code></td>
+      <td><b>Native unit and UI verification on dedicated simulator</b><br><span class="small">Run with SIMULATOR_ID set to a dedicated JOVRA simulator; use scripts/ios/ui-test.sh for its separate full UI gate.</span></td>
+      <td><code>scripts/ios/test.sh</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td></tr><tr>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Navigation/permissions UI suite on dedicated simulator</b><br><span class="small">SIMULATOR_ID must identify a dedicated JOVRA simulator, not a shared default.</span></td>
+      <td><code>scripts/ios/ui-test.sh</code></td>
       <td>&mdash;</td>
       <td>&mdash;</td></tr></tbody></table></div>
       <details class="resume"><summary>Resume prompt for P2 (copy into a fresh session)</summary>
@@ -190,7 +195,8 @@ Remaining tasks:
   - [pending] T07: Complete navigation/permissions review and merge PR 321
 Gates not yet passed:
   - [pending] Shared contracts and fixtures  -&gt;  python3 scripts/spec/validate.py
-  - [pending] Native unit and UI verification on dedicated simulator  -&gt;  scripts/ios/core-flow-test.sh
+  - [pending] Native unit and UI verification on dedicated simulator  -&gt;  scripts/ios/test.sh
+  - [pending] Navigation/permissions UI suite on dedicated simulator  -&gt;  scripts/ios/ui-test.sh
 Mission conventions:
   - Tier 2 subagents: independent implementation and verification, isolated worktrees.
   - Stop after P4 passes; step 5 requires new founder authorization.
@@ -221,7 +227,7 @@ Operating procedure:
       <td>&mdash;</td></tr><tr>
       <td><span class="chip ">pending</span></td>
       <td><b>Validator negative tests</b></td>
-      <td><code>python3 -m unittest discover -s scripts/spec -p test_*.py</code></td>
+      <td><code>python3 -m unittest discover -s scripts/spec -p &quot;test_*.py&quot;</code></td>
       <td>&mdash;</td>
       <td>&mdash;</td></tr></tbody></table></div>
       <details class="resume"><summary>Resume prompt for P3 (copy into a fresh session)</summary>
@@ -238,7 +244,7 @@ Remaining tasks:
   - [pending] P3-T2: Resolve court coordinate and key-moment vocabulary discrepancies
 Gates not yet passed:
   - [pending] Studio validator  -&gt;  python3 scripts/spec/validate_studio.py
-  - [pending] Validator negative tests  -&gt;  python3 -m unittest discover -s scripts/spec -p test_*.py
+  - [pending] Validator negative tests  -&gt;  python3 -m unittest discover -s scripts/spec -p &quot;test_*.py&quot;
 Mission conventions:
   - Tier 2 subagents: independent implementation and verification, isolated worktrees.
   - Stop after P4 passes; step 5 requires new founder authorization.
@@ -268,7 +274,7 @@ Operating procedure:
       <td>&mdash;</td>
       <td>&mdash;</td></tr><tr>
       <td><span class="chip ">pending</span></td>
-      <td><b>Dedicated simulator core flow and export evidence</b></td>
+      <td><b>Dedicated simulator core flow and export evidence</b><br><span class="small">Pending future integration harness; command will be implemented before this gate is run.</span></td>
       <td><code>scripts/ios/core-flow-test.sh</code></td>
       <td>&mdash;</td>
       <td>&mdash;</td></tr></tbody></table></div>
