@@ -7,3 +7,5 @@ Public controls were red before implementation, and independent review exposed t
 The final assembled candidate 7e16353 passes 106 fixtures, 107 independent schema/canonical output comparisons and 38 Swift tests. This buildable split removes the redundant raw-JSON corpus test; the discovered typed runner and independent Python verifier retain full corpus coverage. Fresh split and dependency reconciliation evidence follows.
 
 This partial flow slice does not close T04: sideMismatch, practice_set/free quota presets, reanalysis protection and richer game/set/result diff remain pending. T05 stats/CSV/provenance/trends remain pending. No native UI, simulator, device or ML validation is claimed.
+
+Reconciled buildable split: 42 Swift Testing tests pass, 106 typed inputs and 107 complete golden outputs round-trip, the discovered runner consumes all 106 scoring fixtures and refuses all 18 error cases. Independent Python validates 107 emitted folds against the closed schema and canonical golden bytes. Every scoring source file is byte-identical to independently reviewed assembled candidate 7e16353. Fresh full CI will repeat the existing store XCTest as well.
