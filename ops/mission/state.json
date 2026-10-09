@@ -10,14 +10,14 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T14:10:40.308897+00:00",
+    "updated": "2026-10-09T15:14:55.173661+00:00",
     "sessionCount": 1
   },
   "policies": {
     "merge": "auto",
     "branchPrefix": "codex/",
     "maxPrLines": 400,
-    "notes": "One feature per PR. Merge only after independent review, fresh local gates and green CI. Manual implementation slices target400lines; generated schemas/models, evidence and mission HTML are recorded separately. T03 coherent347typed-model mapping was independently reviewed as one contract port."
+    "notes": "One feature per PR. Approximately400manual source/test lines per slice; generated concrete models, fixtures and retained evidence counted separately. T08 atomic/query/custody are separate slices; unused Trash stays pending. T15 journal, writer contracts, sources, engine and operational controls form five buildable PRs. T04 models, value-state policy and full fold form three native slices. Merge only after independent review and fresh green CI."
   },
   "phases": [
     {
@@ -56,35 +56,35 @@
       "id": "P2",
       "title": "Finish prerequisite reviews",
       "goal": "Review T02 and T07 independently, resolve findings, merge only when gates and CI pass.",
-      "status": "in_progress",
+      "status": "done",
       "sessionsEstimate": "1",
       "gates": [
         {
           "id": "P2-G1",
           "title": "Shared contracts and fixtures",
           "command": "python3 scripts/spec/validate.py",
-          "status": "pending",
-          "evidence": null,
-          "lastRun": null,
-          "notes": ""
+          "status": "passed",
+          "evidence": "evidence/spec/core-continuation/",
+          "lastRun": "2026-10-09T15:02:55.288434+00:00",
+          "notes": "At the recorded P2 closing run, T02 was merged and103scoring reference fixtures validated. Later P4 amendments are tracked in their PR evidence."
         },
         {
           "id": "P2-G2",
           "title": "Native unit and UI verification on dedicated simulator",
           "command": "scripts/ios/test.sh",
-          "status": "pending",
-          "evidence": null,
-          "lastRun": null,
-          "notes": "Run with SIMULATOR_ID set to a dedicated JOVRA simulator; use scripts/ios/ui-test.sh for its separate full UI gate."
+          "status": "passed",
+          "evidence": "evidence/ios/codex-t07-independent/",
+          "lastRun": "2026-10-09T15:02:55.288434+00:00",
+          "notes": "T07 native units164PASS; native process-death controlPASS; final focusedUI7PASS. Initial fullUI31pass/AXtimeout/expectednegative retained; focused exactAXrerunPASS. Skipped hosted native job is not simulator evidence."
         },
         {
           "id": "P2-G3",
           "title": "Navigation/permissions UI suite on dedicated simulator",
           "command": "scripts/ios/ui-test.sh",
-          "status": "pending",
-          "evidence": null,
-          "lastRun": null,
-          "notes": "SIMULATOR_ID must identify a dedicated JOVRA simulator, not a shared default."
+          "status": "passed",
+          "evidence": "evidence/ios/codex-t07-independent/",
+          "lastRun": "2026-10-09T15:02:55.288434+00:00",
+          "notes": "T07 native units164PASS; native process-death controlPASS; final focusedUI7PASS. Initial fullUI31pass/AXtimeout/expectednegative retained; focused exactAXrerunPASS. Skipped hosted native job is not simulator evidence."
         }
       ],
       "tasks": [
@@ -103,10 +103,14 @@
         {
           "id": "T07",
           "title": "Complete navigation/permissions review and merge PR 321",
-          "status": "in_progress",
+          "status": "done",
           "dependsOn": [],
-          "pr": null,
-          "notes": "Dedicated simulator: 15 core, 63 media and 70 hosted tests independently pass. Full UI/restoration tests still running."
+          "pr": {
+            "number": 321,
+            "url": "https://github.com/Navigata1/jovra/pull/321",
+            "mergedAt": "2026-10-09T14:53:49Z"
+          },
+          "notes": "Merged1605f4f after independent review, native proof and freshCI37947031822. Test receipt gate now fails closed on incomplete/empty results."
         }
       ]
     },
@@ -201,17 +205,17 @@
             "url": "https://github.com/Navigata1/jovra/pull/330",
             "mergedAt": "2026-10-09T14:08:38Z"
           },
-          "notes": "Typed models and14runner kinds merged1b4b481;31Swift tests,36independent reencoded outputs,82Python tests. Fresh Linux CI found newline parsing defect; full-token correction now verified green."
+          "notes": "Typed contracts merged1b4b481; exact canonical/schema conformance. Later ADR0030 expands current contract1.2 without changing old fixture bytes."
         },
         {
           "id": "T04",
           "title": "Scoring engine and correction propagation",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [
             "T03"
           ],
           "pr": null,
-          "notes": ""
+          "notes": "ADR0030 PR332merged5456fbf. Native105fixture candidate passes; independent review discovered negative-checkpoint trap and cyclic correction anchor. Minimal shared/native refusal guards underway before fold publication. Models/state slices reviewed. Shared zero-stroke correction PR339merged017d9da. FullT04 remains open."
         },
         {
           "id": "T05",
@@ -230,18 +234,22 @@
           "dependsOn": [
             "T03"
           ],
-          "pr": null,
-          "notes": "T08 split into atomic transactions, folder-derived queries/quarantine/migration/trash, and media custody PRs. Atomic slice independently reviewed; repeated1000interleavings pass. Remaining slices pending; ticket stays open."
+          "pr": {
+            "number": 331,
+            "url": "https://github.com/Navigata1/jovra/pull/331",
+            "mergedAt": "2026-10-09T14:48:50Z"
+          },
+          "notes": "Atomic store331merged1233ff0; query336merged46a2c59 after independent12+31tests/3preservationcontrols andfreshCI. Media custody/atomic capture handoff under test. Trash outside immediate flow pending; fullticket remains open."
         },
         {
           "id": "T15-T16",
           "title": "Recording pipeline and recovery",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [
             "T03"
           ],
           "pr": null,
-          "notes": ""
+          "notes": "Bounded capture candidate independently34Core/70Media/all19hashes/schemaPASS. Five source-preserving slices334/335/337/338/340; journal334merged54c37fc andwriter335mergedd2f921f. Source337awaits freshCI; remaining slices sequential. T16startup recovery next. PhysicalCamera/AVsync/lossbudget unverified."
         },
         {
           "id": "T14",
@@ -256,7 +264,7 @@
         {
           "id": "P4-UI",
           "title": "Native recording, library, replay and reviewed-score integration",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [
             "T07",
             "T08",
@@ -265,7 +273,7 @@
             "T04"
           ],
           "pr": null,
-          "notes": ""
+          "notes": "T12corestate/samplecomponents started with sole owned simulator4265ADFD-39A3-4E71-8482-1945DDB5F899. Native record/library/replay/score/export wiring awaits prerequisite publication. Remaining fullfeature AC stay open."
         },
         {
           "id": "P4-EXPORT",
@@ -285,7 +293,7 @@
     {
       "label": "Closed feature tickets at kickoff",
       "baseline": "13",
-      "current": "15",
+      "current": "16",
       "target": "Authorized flow, not entire backlog",
       "direction": "up"
     }
@@ -330,14 +338,70 @@
       "url": "https://github.com/Navigata1/jovra/pull/330",
       "phase": "P4",
       "mergedAt": "2026-10-09T14:08:38Z"
+    },
+    {
+      "number": 332,
+      "title": "Reviewed order contracts1.2",
+      "url": "https://github.com/Navigata1/jovra/pull/332",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T14:36:17Z"
+    },
+    {
+      "number": 333,
+      "title": "Codex ticket localization ownership",
+      "url": "https://github.com/Navigata1/jovra/pull/333",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T14:45:03Z"
+    },
+    {
+      "number": 331,
+      "title": "Atomic durable session store",
+      "url": "https://github.com/Navigata1/jovra/pull/331",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T14:48:50Z"
+    },
+    {
+      "number": 321,
+      "title": "Native routing and permissions",
+      "url": "https://github.com/Navigata1/jovra/pull/321",
+      "phase": "P2",
+      "mergedAt": "2026-10-09T14:53:49Z"
+    },
+    {
+      "number": 334,
+      "title": "Capture journal prerequisite",
+      "url": "https://github.com/Navigata1/jovra/pull/334",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:01:08Z"
+    },
+    {
+      "number": 336,
+      "title": "Folder-derived local library and preservation",
+      "url": "https://github.com/Navigata1/jovra/pull/336",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:10:53Z"
+    },
+    {
+      "number": 335,
+      "title": "Capture writer and policy seams",
+      "url": "https://github.com/Navigata1/jovra/pull/335",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:10:57Z"
+    },
+    {
+      "number": 339,
+      "title": "Preserve unknown zero-stroke rally length",
+      "url": "https://github.com/Navigata1/jovra/pull/339",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T15:11:00Z"
     }
   ],
   "resume": {
-    "activePhase": "P2",
+    "activePhase": "P4",
     "nextActions": [
-      "Finish T07 independent process-death restoration test and merge after fresh CI.",
-      "Independently review and merge typed Swift contracts T03, then T04 scoring and T05 stats.",
-      "Continue durable T08 store and T15 capture; integrate native replay, scoring corrections and exports. Stop before step5."
+      "Finish sequential accepted capture/scoring publication slices with freshCI.",
+      "Publish independently reviewed media custody/atomic capture handoff; add verified-prefix startup recovery.",
+      "Finish one native iOS record\u2192library\u2192replay\u2192corrected score\u2192clip/data export flow and test it. Hold before step5."
     ],
     "blockers": [],
     "conventions": [

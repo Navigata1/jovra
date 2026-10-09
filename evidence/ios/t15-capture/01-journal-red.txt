@@ -1,0 +1,182 @@
+[0/6] Write sources
+[0/6] Write FixtureRunnerGenerator-tool-entitlement.plist
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling FixtureRunnerGenerator main.swift
+[5/8] Emitting module FixtureRunnerGenerator
+[5/8] Write Objects.LinkFileList
+[6/8] Linking FixtureRunnerGenerator-tool
+[7/8] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/19] Write sources
+[2/19] Write FixtureRunnerGenerator-entitlement.plist
+[4/19] Write sources
+[5/19] Write FixtureRunnerGenerator-tool-entitlement.plist
+[6/19] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/.build/core-capture/arm64-apple-macosx/debug/JovraCorePackageTests.derived/runner.swift
+[7/19] Write sources
+[8/19] Write swift-version--58304C5D6DBC2206.txt
+[9/21] Write Objects.LinkFileList
+[11/33] Compiling JovraCore Provenance.swift
+[12/33] Compiling JovraCore DurationLabel.swift
+[13/33] Compiling JovraCore FrameRate.swift
+[14/33] Emitting module FixtureRunnerGenerator
+[15/33] Compiling FixtureRunnerGenerator main.swift
+[15/33] Write Objects.LinkFileList
+[16/33] Linking FixtureRunnerGenerator-tool
+[17/33] Applying FixtureRunnerGenerator-tool
+[19/33] Compiling JovraCore ContrastRequirement.swift
+[20/33] Compiling JovraCore SRGBColor.swift
+[21/33] Compiling JovraCore Percent.swift
+[22/33] Compiling JovraCore Units.swift
+[22/33] Linking FixtureRunnerGenerator
+[23/33] Applying FixtureRunnerGenerator
+[24/33] Discover conformance runners by kind
+[25/33] Write sources
+[27/33] Compiling JovraCore CanonicalJSON.swift
+[28/33] Compiling JovraCore ContractPrimitives.swift
+[29/33] Emitting module JovraCore
+[30/33] Compiling JovraCore DocumentModels.swift
+[31/33] Compiling JovraCore CapabilityRegistryLoader.swift
+[32/62] Compiling JovraCoreTests FrameRateTests.swift
+[33/63] Compiling JovraCoreTests DurationLabelTests.swift
+[34/63] Compiling JovraCoreTests UnitsTests.swift
+[35/63] Compiling JovraCoreTests ContrastTests.swift
+[36/63] Compiling JovraCoreTests ProvenanceTests.swift
+[37/63] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[38/63] Compiling JovraCoreTests GroundTruthRunner.swift
+[39/63] Compiling JovraCoreTests PctRunner.swift
+[40/63] Compiling JovraCoreTests BenchmarkRunner.swift
+[41/63] Compiling JovraCoreTests CSVContractRunner.swift
+[42/63] Compiling JovraCoreTests ManifestTests.swift
+[43/63] Compiling JovraCoreTests MediaRecordContractTests.swift
+[44/63] Compiling JovraCoreTests SessionRunner.swift
+[45/63] Compiling JovraCoreTests UnitsRunner.swift
+[46/63] Compiling JovraCoreTests PracticePlanRunner.swift
+[47/63] Compiling JovraCoreTests SampleMediaRunner.swift
+[48/63] Emitting module JovraCoreTests
+[49/63] Compiling JovraCoreTests SessionContractTests.swift
+[50/63] Compiling JovraCoreTests ContractSafetyTests.swift
+[51/63] Compiling JovraCoreTests FixtureManifest.swift
+[52/63] Compiling JovraCoreTests EquipmentRunner.swift
+[53/63] Compiling JovraCoreTests ExportRunner.swift
+[54/63] Compiling JovraCoreTests CanonicalRunner.swift
+[55/63] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[56/63] Compiling JovraCoreTests PercentTests.swift
+[57/63] Compiling JovraCoreTests RegistryContractTests.swift
+[58/63] Compiling JovraCoreTests ArchiveRunner.swift
+[59/63] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[60/63] Compiling JovraCoreTests CaptureJournalTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:9:23: error: cannot find 'CaptureJournal' in scope
+ 7 |     defer { try? FileManager.default.removeItem(at: folder) }
+ 8 |     let url = folder.appendingPathComponent("capture-journal.json")
+ 9 |     let journal = try CaptureJournal(url: url, sessionID: "capture-test", mode: .simulatorFixture, microphone: .denied)
+   |                       `- error: cannot find 'CaptureJournal' in scope
+10 |     let segment = SessionSegment(id: "segment-0", index: 0, file: RecordFileReference(path: "originals/segment-0.mp4"), startMs: 0, durationMs: 0, frameRate: RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: false)
+11 |     try journal.beginSegment(segment)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:9:82: error: cannot infer contextual base in reference to member 'simulatorFixture'
+ 7 |     defer { try? FileManager.default.removeItem(at: folder) }
+ 8 |     let url = folder.appendingPathComponent("capture-journal.json")
+ 9 |     let journal = try CaptureJournal(url: url, sessionID: "capture-test", mode: .simulatorFixture, microphone: .denied)
+   |                                                                                  `- error: cannot infer contextual base in reference to member 'simulatorFixture'
+10 |     let segment = SessionSegment(id: "segment-0", index: 0, file: RecordFileReference(path: "originals/segment-0.mp4"), startMs: 0, durationMs: 0, frameRate: RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: false)
+11 |     try journal.beginSegment(segment)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:9:113: error: cannot infer contextual base in reference to member 'denied'
+ 7 |     defer { try? FileManager.default.removeItem(at: folder) }
+ 8 |     let url = folder.appendingPathComponent("capture-journal.json")
+ 9 |     let journal = try CaptureJournal(url: url, sessionID: "capture-test", mode: .simulatorFixture, microphone: .denied)
+   |                                                                                                                 `- error: cannot infer contextual base in reference to member 'denied'
+10 |     let segment = SessionSegment(id: "segment-0", index: 0, file: RecordFileReference(path: "originals/segment-0.mp4"), startMs: 0, durationMs: 0, frameRate: RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: false)
+11 |     try journal.beginSegment(segment)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:12:24: error: cannot find 'CaptureJournal' in scope
+10 |     let segment = SessionSegment(id: "segment-0", index: 0, file: RecordFileReference(path: "originals/segment-0.mp4"), startMs: 0, durationMs: 0, frameRate: RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: false)
+11 |     try journal.beginSegment(segment)
+12 |     let intended = try CaptureJournal.open(url: url).snapshot()
+   |                        `- error: cannot find 'CaptureJournal' in scope
+13 |     #expect(intended.segments.count == 1)
+14 |     #expect(intended.lastConfirmedMediaTime == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:16:25: error: cannot find 'CaptureJournal' in scope
+14 |     #expect(intended.lastConfirmedMediaTime == nil)
+15 |     try journal.confirmDurableMedia(segmentID: segment.id, segmentDurationMs: 2000, sessionTime: MediaTime(value: 2, timescale: 1), bytes: 4096)
+16 |     let confirmed = try CaptureJournal.open(url: url).snapshot()
+   |                         `- error: cannot find 'CaptureJournal' in scope
+17 |     #expect(confirmed.lastConfirmedMediaTime == (try MediaTime(value: 2, timescale: 1)))
+18 |     #expect(confirmed.segments[0].file.bytes == 4096)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:23:21: error: cannot find 'CaptureJournal' in scope
+21 |     try journal.appendGap(SessionGap(startMs: 2000, endMs: 5000, reason: .userPaused))
+22 |     try journal.finish()
+23 |     let saved = try CaptureJournal.open(url: url).snapshot()
+   |                     `- error: cannot find 'CaptureJournal' in scope
+24 |     #expect(saved.recording.segments[0].finalized)
+25 |     #expect(saved.recording.gaps == [SessionGap(startMs: 2000, endMs: 5000, reason: .userPaused)])
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:26:44: error: cannot infer contextual base in reference to member 'denied'
+24 |     #expect(saved.recording.segments[0].finalized)
+25 |     #expect(saved.recording.gaps == [SessionGap(startMs: 2000, endMs: 5000, reason: .userPaused)])
+26 |     #expect(saved.recording.microphone == .denied)
+   |                                            `- error: cannot infer contextual base in reference to member 'denied'
+27 |     #expect(saved.recording.mediaAvailable)
+28 | }
+[61/63] Compiling JovraCoreTests CanonicalJSONTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:9:23: error: cannot find 'CaptureJournal' in scope
+ 7 |     defer { try? FileManager.default.removeItem(at: folder) }
+ 8 |     let url = folder.appendingPathComponent("capture-journal.json")
+ 9 |     let journal = try CaptureJournal(url: url, sessionID: "capture-test", mode: .simulatorFixture, microphone: .denied)
+   |                       `- error: cannot find 'CaptureJournal' in scope
+10 |     let segment = SessionSegment(id: "segment-0", index: 0, file: RecordFileReference(path: "originals/segment-0.mp4"), startMs: 0, durationMs: 0, frameRate: RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: false)
+11 |     try journal.beginSegment(segment)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:9:82: error: cannot infer contextual base in reference to member 'simulatorFixture'
+ 7 |     defer { try? FileManager.default.removeItem(at: folder) }
+ 8 |     let url = folder.appendingPathComponent("capture-journal.json")
+ 9 |     let journal = try CaptureJournal(url: url, sessionID: "capture-test", mode: .simulatorFixture, microphone: .denied)
+   |                                                                                  `- error: cannot infer contextual base in reference to member 'simulatorFixture'
+10 |     let segment = SessionSegment(id: "segment-0", index: 0, file: RecordFileReference(path: "originals/segment-0.mp4"), startMs: 0, durationMs: 0, frameRate: RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: false)
+11 |     try journal.beginSegment(segment)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:9:113: error: cannot infer contextual base in reference to member 'denied'
+ 7 |     defer { try? FileManager.default.removeItem(at: folder) }
+ 8 |     let url = folder.appendingPathComponent("capture-journal.json")
+ 9 |     let journal = try CaptureJournal(url: url, sessionID: "capture-test", mode: .simulatorFixture, microphone: .denied)
+   |                                                                                                                 `- error: cannot infer contextual base in reference to member 'denied'
+10 |     let segment = SessionSegment(id: "segment-0", index: 0, file: RecordFileReference(path: "originals/segment-0.mp4"), startMs: 0, durationMs: 0, frameRate: RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: false)
+11 |     try journal.beginSegment(segment)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:12:24: error: cannot find 'CaptureJournal' in scope
+10 |     let segment = SessionSegment(id: "segment-0", index: 0, file: RecordFileReference(path: "originals/segment-0.mp4"), startMs: 0, durationMs: 0, frameRate: RecordedFrameRate(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: false)
+11 |     try journal.beginSegment(segment)
+12 |     let intended = try CaptureJournal.open(url: url).snapshot()
+   |                        `- error: cannot find 'CaptureJournal' in scope
+13 |     #expect(intended.segments.count == 1)
+14 |     #expect(intended.lastConfirmedMediaTime == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:16:25: error: cannot find 'CaptureJournal' in scope
+14 |     #expect(intended.lastConfirmedMediaTime == nil)
+15 |     try journal.confirmDurableMedia(segmentID: segment.id, segmentDurationMs: 2000, sessionTime: MediaTime(value: 2, timescale: 1), bytes: 4096)
+16 |     let confirmed = try CaptureJournal.open(url: url).snapshot()
+   |                         `- error: cannot find 'CaptureJournal' in scope
+17 |     #expect(confirmed.lastConfirmedMediaTime == (try MediaTime(value: 2, timescale: 1)))
+18 |     #expect(confirmed.segments[0].file.bytes == 4096)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:23:21: error: cannot find 'CaptureJournal' in scope
+21 |     try journal.appendGap(SessionGap(startMs: 2000, endMs: 5000, reason: .userPaused))
+22 |     try journal.finish()
+23 |     let saved = try CaptureJournal.open(url: url).snapshot()
+   |                     `- error: cannot find 'CaptureJournal' in scope
+24 |     #expect(saved.recording.segments[0].finalized)
+25 |     #expect(saved.recording.gaps == [SessionGap(startMs: 2000, endMs: 5000, reason: .userPaused)])
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Tests/JovraCoreTests/CaptureJournal/CaptureJournalTests.swift:26:44: error: cannot infer contextual base in reference to member 'denied'
+24 |     #expect(saved.recording.segments[0].finalized)
+25 |     #expect(saved.recording.gaps == [SessionGap(startMs: 2000, endMs: 5000, reason: .userPaused)])
+26 |     #expect(saved.recording.microphone == .denied)
+   |                                            `- error: cannot infer contextual base in reference to member 'denied'
+27 |     #expect(saved.recording.mediaAvailable)
+28 | }
+error: fatalError

@@ -1,0 +1,13 @@
+    private enum CodingKeys: String, CodingKey { case match, sets, games, points, next, checkpoints, conflicts, history, changes }
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        match = try c.decode(TimelineMatchSummary.self, forKey: .match)
+        sets = try c.decode([TimelineSetRecord].self, forKey: .sets)
+        games = try c.decode([TimelineGameRecord].self, forKey: .games)
+        points = try c.decode([TimelinePointRecord].self, forKey: .points)
+        next = try c.decode(ContractNullable<TimelinePointState>.self, forKey: .next)
+        checkpoints = try c.decode([TimelineCheckpointResult].self, forKey: .checkpoints)
+        conflicts = try c.decode([TimelineConflict].self, forKey: .conflicts)
+        history = try c.decode(TimelineHistory.self, forKey: .history)
+        changes = c.contains(.changes) ? try c.decode(ContractNullable<TimelineChanges>.self, forKey: .changes) : nil
+    }

@@ -1,0 +1,28 @@
+test_future_supersede_cycle_refuses_missing_insert_anchor (test_log_safety.LogTraversalSafety.test_future_supersede_cycle_refuses_missing_insert_anchor) ... ERROR
+
+======================================================================
+ERROR: test_future_supersede_cycle_refuses_missing_insert_anchor (test_log_safety.LogTraversalSafety.test_future_supersede_cycle_refuses_missing_insert_anchor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/log-safety/scripts/spec/test_log_safety.py", line 28, in test_future_supersede_cycle_refuses_missing_insert_anchor
+    child = subprocess.run([sys.executable, '-c', code], cwd=ROOT, input=json.dumps(setup),
+                           text=True, capture_output=True, timeout=2)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 557, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 2154, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1268, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['/opt/homebrew/opt/python@3.14/bin/python3.14', '-c', "import json,sys\nsys.path.insert(0, 'spec/reference')\nfrom jovra_ref.scoring import fold\nfrom jovra_ref.log import LogError\nsetup=json.loads(sys.stdin.read())\ntry: fold(setup,setup['log'])\nexcept LogError as error: print(error.code)\n"]' timed out after 2 seconds
+
+----------------------------------------------------------------------
+Ran 1 test in 2.006s
+
+FAILED (errors=1)

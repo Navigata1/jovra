@@ -1,0 +1,139 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+Building for debugging...
+[0/15] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/.build/media-capture/arm64-apple-macosx/debug/JovraMediaPackageTests.derived/runner.swift
+[1/15] Write sources
+[6/15] Write jovra-benchmark-entitlement.plist
+[7/15] Write sources
+[9/15] Write swift-version--58304C5D6DBC2206.txt
+[11/28] Compiling JovraCore SRGBColor.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[12/28] Compiling JovraCore Percent.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[13/28] Compiling JovraCore FrameRate.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[14/28] Compiling JovraCore Provenance.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[15/28] Compiling JovraCore Units.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:61:93: error: expected pattern
+ 59 |               matched == text.startIndex..<text.endIndex,
+ 60 | >>>>>>> origin/main
+ 61 |               let value = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")), !value.isNaN,
+    |                                                                                             `- error: expected pattern
+ 62 |               try CanonicalJSON.canonicalize(Data(normalized.utf8)) == CanonicalJSON.canonicalize(Data(NSDecimalNumber(decimal: value).stringValue.utf8)) else {
+ 63 |             throw UnitError.invalidDecimal(text)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:65:16: error: value of optional type 'Decimal?' must be unwrapped to a value of type 'Decimal'
+ 59 |               matched == text.startIndex..<text.endIndex,
+ 60 | >>>>>>> origin/main
+ 61 |               let value = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")), !value.isNaN,
+    |                   |       |- note: coalesce using '??' to provide a default when the optional value contains 'nil'
+    |                   |       `- note: force-unwrap using '!' to abort execution if the optional value contains 'nil'
+    |                   `- note: short-circuit using 'guard' to exit this function early if the optional value contains 'nil'
+ 62 |               try CanonicalJSON.canonicalize(Data(normalized.utf8)) == CanonicalJSON.canonicalize(Data(NSDecimalNumber(decimal: value).stringValue.utf8)) else {
+ 63 |             throw UnitError.invalidDecimal(text)
+ 64 |         }
+ 65 |         return value
+    |                |- error: value of optional type 'Decimal?' must be unwrapped to a value of type 'Decimal'
+    |                |- note: coalesce using '??' to provide a default when the optional value contains 'nil'
+    |                `- note: force-unwrap using '!' to abort execution if the optional value contains 'nil'
+ 66 |     }
+ 67 |     private static func multiply(_ a: Decimal, _ b: Decimal) throws -> Decimal {
+error: emit-module command failed with exit code 1 (use -v to see invocation)
+[16/28] Emitting module JovraCore
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[17/28] Compiling JovraCore ContractPrimitives.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[18/28] Compiling JovraCore DocumentModels.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[19/28] Compiling JovraCore CaptureJournal.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[20/28] Compiling JovraCore DurationLabel.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[21/28] Compiling JovraCore CanonicalJSON.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[22/28] Compiling JovraCore ContrastRequirement.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+[23/28] Compiling JovraCore CapabilityRegistryLoader.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media/ios/Packages/JovraCore/Sources/JovraCore/Units/Units.swift:55:2: error: source control conflict marker in source file
+ 53 |         var normalized = text
+ 54 |         while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
+ 55 | <<<<<<< HEAD
+    |  `- error: source control conflict marker in source file
+ 56 |         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
+ 57 | =======
+error: fatalError

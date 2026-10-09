@@ -1,0 +1,29 @@
+FAIL spec/fixtures/records/reviewer-captured-session.json: $.sample.mediaIds[0] 'fixture-camera' names no entry in the sample media manifest
+FAIL spec/fixtures/records/reviewer-captured-session.json: $.derivedValues[0]: range {'high': 106, 'low': 86, 'pct': 10} is not ±15% of 96 mph ({'low': 82, 'high': 110, 'pct': 15})
+FAIL spec/fixtures/records/reviewer-captured-session.json: $.calibrations[0].staleFromMs at 420000 ms is past the end of the recording (60000 ms)
+---- spec validation summary ----
+benchmark bindings                 1
+benchmark records                  3
+closed-object rejections           154
+cross-references                   1
+csv byte-for-byte                  2
+file hashes                        6
+hand assertions                    527
+instances valid                    118
+jovra.fixture.canonical checks     1
+jovra.sampleMediaManifest checks   1
+kind-to-schema names               17
+media ground truth                 19
+media self-tests                   37
+pct fixtures                       1
+pct vectors                        32
+reference-integrity documents      117
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  26
+schemas                            19
+scoring fixtures                   74
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: FAIL (3 failure(s))
