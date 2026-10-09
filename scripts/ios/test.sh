@@ -13,7 +13,9 @@ python3 "$ROOT/scripts/media/render.py" --check
 
 for package in JovraCore JovraMedia; do
   echo "==> swift test ($package)"
-  swift test --package-path "$IOS_DIR/Packages/$package" --scratch-path "$DERIVED_DATA/spm-$package"
+  swift_test_flags=(--package-path "$IOS_DIR/Packages/$package" --scratch-path "$DERIVED_DATA/spm-$package")
+  if [ "$package" = JovraMedia ]; then swift_test_flags+=(--no-parallel); fi
+  swift test "${swift_test_flags[@]}"
 done
 
 "$(dirname "$0")/generate.sh"

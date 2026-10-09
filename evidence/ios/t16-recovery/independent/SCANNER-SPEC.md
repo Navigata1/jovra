@@ -1,0 +1,19 @@
+# Finished-stale recovery — independent SPEC axis
+
+Pinned e1c1213 vsdd1cebe; no compiler or foreign edits by reviewer. Read RecoveryFiles/RecoveryScanner/public controls and retained evidence. Healthy finished-stale final-handoff failure is decoded to60frames, fingerprints originals/WAL, produces a separate stable receipt, preserves edited facets through separate atomic adoption, and isolates missing/corrupt peers. Literal invalid peer bytes are never called captured footage. Full unfinished/torn/reset/termination-loss/startup acceptance remains explicitly pending.
+
+SPEC finding: RecoveryScanner passes snapshot.captureEvents unchanged into recovered recording without validating their times or conditional payloads. Shared session schema captureEvent requires nonnegative common timeMs; frameRateChange requires frameRate, thermalState requires thermalState (session.schema.json848–860). Generated SessionCaptureEvent Codable accepts negative tMs and nil payloads; these values can therefore be acknowledged as saved/adopted while producing invalid metadata. Stories99/Recovery architecture require trustworthy journalled thermal/frame-rate metadata. Public negative/future event and missing-rate/missing-thermal controls requested before narrow refusal guards. Raw WAL/originals must remain unchanged. Source SPEC acceptance HELD for this bounded corruption defect, separate from pending full-ticket work.
+
+A separate author/root finding in CaptureEngine.markPoint source=captureMark violates the shared provenance source pattern. A genuine marked-capture/schema control and production user-source correction are required before final combined media/UI acceptance; this is outside the scanner author source delta and has been escalated separately.
+
+## Corrective source rebind
+
+SPEC ACCEPT bounded scanner1cc78efeceeb391ccf11755b379df2396990ee2f, including narrow T15 provenance repair, againstdd1cebe. Independently read exact8-line event guard, source=user correction and public control delta. Activated22 records15 invalid-event acceptance issues plus actual mark-source failure;23 actual retained marked session independently failed schema.24 passes4Swift Testing controls with11 corruption parameters. Corrected guard refuses negative/future event times, missing conditional frame-rate/thermal payload and nonpositive frame-rate numerator/denominator before writing any receipt; raw originals/WAL remain unchanged.
+
+The native actual saved-document control independently reproduced the same mark defect in this reviewer's own simulator; the author corrected only producer provenance.source to valid user, retaining Manual/Sample. Reviewer separately ran Python schema and exact canonical checks on author's actual marked positive session/receipt: schemaPASS, canonicalPASS; sessionSHA256eacd9f6110959a35b39412c867e5bb38822ab0b9bbefd2cd92962d277cf8ae50; receipt41aa3055afe92c69b484b4d6f90e84528d591144e40fa8c07bb95512c3a6f9df. First canonical helper invocation passed a dict rather than its required JSON text and was a setup error, not behavioral proof; corrected explicit text invocation passed. No package/native compiler by this SPEC reviewer.
+
+The bounded corruption finding is closed. Native UI final rebind must include corrected engine source and rerun actual mark/schema proof. Full T16 unfinished/torn/reset/kill/startup/hardware criteria remain pending; no whole-ticket completion inferred.
+
+## Fresh-main source rebind
+
+SPEC ACCEPT2688fb1bd52775b2d98aec798f4fd7386828e1d3 against873c1cf. Independently compared1cc78ef..2688fb1 across CaptureEngine, RecoveryScanner, RecoveryFiles and public recovery tests: empty. This explicitly binds new integrated source SHA; no changed bounded semantics or new findings. Full integrated package proof belongs to the implementation owner; prior source acceptance is not relabelled new-head runtime proof.
