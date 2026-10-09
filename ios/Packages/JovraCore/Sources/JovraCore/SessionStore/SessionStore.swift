@@ -84,15 +84,18 @@ public actor SessionStore {
     public func create(_ document: SessionDocument) throws {
         let folder = try folder(document.id)
         guard !FileManager.default.fileExists(atPath: folder.path) else { throw SessionStoreError.alreadyExists }
+        let parentIdentity = try DurableDirectory.identity(of: sessions)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false)
+        let folderIdentity = try DurableDirectory.identity(of: folder)
         do {
             try write(document, to: folder, upgradeVersion: false)
-            try DurableDirectory.synchronize(sessions)
+            try DurableDirectory.synchronize(sessions, matching: parentIdentity)
         }
         catch {
             // A renamed document may survive a refused directory flush. Retain it,
             // and never clean up through a parent that was replaced with a link.
-            if (try? Self.refuseSymbolicLink(sessions)) != nil,
+            if (try? DurableDirectory.identity(of: sessions)) == parentIdentity,
+               (try? DurableDirectory.identity(of: folder)) == folderIdentity,
                !FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path) {
                 try? FileManager.default.removeItem(at: folder)
             }
@@ -299,6 +302,7 @@ public actor SessionStore {
     }
 
     private func write(_ document: SessionDocument, to folder: URL, upgradeVersion: Bool = true) throws {
+        let folderIdentity = try DurableDirectory.identity(of: folder)
         let destination = folder.appendingPathComponent("session.json")
         try Self.refuseSymbolicLink(destination)
         let temporary = folder.appendingPathComponent(".session-\(UUID().uuidString).tmp")
@@ -312,14 +316,11 @@ public actor SessionStore {
         try writeFault?(.temporaryFileFlushed(temporary))
         guard rename(temporary.path, destination.path) == 0 else { throw SessionStoreError.renameFailed(errno) }
         try writeFault?(.documentRenamed(destination))
-        let descriptor = open(folder.path, O_RDONLY)
-        guard descriptor >= 0 else { throw SessionStoreError.durabilityUnconfirmed(errno) }
-        let result = fsync(descriptor)
-        let failure = errno
-        _ = close(descriptor)
-        // Rename has occurred. On a synchronization error a fresh load may see the
-        // new document, but the caller must not report this transaction as durable.
-        guard result == 0 else { throw SessionStoreError.durabilityUnconfirmed(failure) }
+        // The path must still identify the directory this transaction wrote into.
+        // A replacement directory must not turn another tree's rename into an acknowledgment.
+        do { try DurableDirectory.synchronize(folder, matching: folderIdentity) }
+        catch DirectoryDurabilityError.filesystem(let failure) { throw SessionStoreError.durabilityUnconfirmed(failure) }
+
     }
 
     private static func refuseSymbolicLink(_ url: URL) throws {

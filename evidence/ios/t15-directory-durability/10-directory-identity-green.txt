@@ -1,0 +1,37 @@
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/6] Compiling JovraCore DurableDirectory.swift
+[5/6] Emitting module JovraCore
+[6/8] Compiling JovraCore CaptureJournal.swift
+[7/8] Compiling JovraCore SessionStore.swift
+[8/10] Emitting module JovraCoreTests
+[8/10] Write Objects.LinkFileList
+[9/10] Linking JovraCorePackageTests
+Build complete! (3.22s)
+Test Suite 'Selected tests' started at 2026-10-09 11:01:11.171.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 11:01:11.172.
+Test Suite 'SessionStoreTests' started at 2026-10-09 11:01:11.172.
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' passed (0.143 seconds).
+Test Suite 'SessionStoreTests' passed at 2026-10-09 11:01:11.316.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.143 (0.143) seconds
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 11:01:11.316.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.143 (0.143) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:01:11.316.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.143 (0.144) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+◇ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() started.
+◇ Test failedJournalReplacementPreservesPreviouslyDurableSnapshot() started.
+◇ Test durableJournalReopensWithOnlyConfirmedMediaAndSegmentIntent() started.
+◇ Test case passing 1 argument symbolicLink → false to sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+◇ Test case passing 1 argument symbolicLink → true to sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+✔ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() passed after 0.007 seconds.
+✔ Test failedJournalReplacementPreservesPreviouslyDurableSnapshot() passed after 0.008 seconds.
+✔ Test durableJournalReopensWithOnlyConfirmedMediaAndSegmentIntent() passed after 0.012 seconds.
+✔ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) with 2 test cases passed after 0.129 seconds.
+✔ Test run with 4 tests in 0 suites passed after 0.129 seconds.
