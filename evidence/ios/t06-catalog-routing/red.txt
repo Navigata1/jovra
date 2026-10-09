@@ -1,0 +1,14 @@
+..F.....
+======================================================================
+FAIL: test_codex_ticket_branches_keep_exact_catalog_ownership (test_catalog_ownership.CatalogOwnershipTests.test_codex_ticket_branches_keep_exact_catalog_ownership)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/l10n/scripts/l10n/tests/test_catalog_ownership.py", line 35, in test_codex_ticket_branches_keep_exact_catalog_ownership
+    self.assertEqual(catalog_ownership.ticket_of("codex/t23-framing-calibration"), "T23")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'T23'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.145s
+
+FAILED (failures=1)

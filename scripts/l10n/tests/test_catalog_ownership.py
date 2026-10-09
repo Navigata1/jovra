@@ -31,6 +31,16 @@ class CatalogOwnershipTests(unittest.TestCase):
         pr = json.loads((FIXTURES / "pr-edits-its-own-table.json").read_text())
         self.assertEqual(check(pr["branch"], pr["changed"]), [])
 
+    def test_codex_ticket_branches_keep_exact_catalog_ownership(self):
+        self.assertEqual(catalog_ownership.ticket_of("codex/t23-framing-calibration"), "T23")
+        self.assertEqual(check("codex/t23-framing-calibration", [f"{L10N}/Capture.Framing.xcstrings"]), [])
+        problems = check("codex/t23-framing-calibration", [f"{L10N}/Home.xcstrings"])
+        self.assertEqual(len(problems), 1)
+        self.assertIn("belongs to T19", problems[0])
+        self.assertEqual(check("codex/t06-localization", [f"{L10N}/InfoPlist.xcstrings"]), [])
+        self.assertEqual(len(check("codex/core-progress", [f"{L10N}/Home.xcstrings"])), 1)
+        self.assertIsNone(catalog_ownership.ticket_of("other/codex/t23-framing"))
+
     def test_the_most_specific_owned_area_owns_a_table(self):
         self.assertEqual(catalog_ownership.owner_of("Capture.Framing", TICKETS), "T23")
         self.assertEqual(catalog_ownership.owner_of("Capture.Framing.Assist", TICKETS), "T35")
@@ -49,7 +59,7 @@ class CatalogOwnershipTests(unittest.TestCase):
         self.assertEqual(check("ticket/t19-home-dashboard", ["ios/Jovra/Features/Home/Home.xcstrings"]),
                          ["ios/Jovra/Features/Home/Home.xcstrings: String Catalogs live in ios/Jovra/Resources/Localization"])
         self.assertEqual(check("fix/typo", [f"{L10N}/Home.xcstrings"]),
-                         [f"{L10N}/Home.xcstrings: branch fix/typo is not a ticket branch (ticket/tNN-slug), so it owns no table"])
+                         [f"{L10N}/Home.xcstrings: branch fix/typo is not a ticket branch (ticket/tNN-slug or codex/tNN-slug), so it owns no table"])
 
     def test_changes_without_catalogs_always_pass(self):
         self.assertEqual(check("fix/typo", ["ios/Jovra/Features/Home/HomeView.swift"]), [])
