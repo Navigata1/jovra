@@ -7,7 +7,7 @@ import Glibc
 
 public enum SessionStoreError: Error, Equatable, Sendable {
     case invalidID, unsafePath, alreadyExists, notFound, invalidEvents, noMatch
-    case confirmationRequired, unsupportedMigration, renameFailed(Int32)
+    case confirmationRequired, unsupportedMigration, renameFailed(Int32), durabilityUnconfirmed(Int32)
 }
 
 public enum SessionFacet: Sendable {
@@ -17,19 +17,24 @@ public enum SessionFacet: Sendable {
     case archive(SessionArchiveState)
 }
 
+public enum SessionWriteCheckpoint: Sendable {
+    case temporaryFileFlushed(URL)
+    case documentRenamed(URL)
+}
+
 /// Synchronous filesystem transactions deliberately contain no suspension point. All
 /// writers must share this actor: its document is authoritative, never the library index.
 public actor SessionStore {
     private let root: URL
     private let sessions: URL
-    private let writeFault: (@Sendable (URL) throws -> Void)?
+    private let writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)?
 
-    public init(root: URL, writeFault: (@Sendable (URL) throws -> Void)? = nil) throws {
+    public init(root: URL, writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = nil) throws {
         self.root = root.standardizedFileURL.resolvingSymlinksInPath()
         self.sessions = self.root.appendingPathComponent("sessions", isDirectory: true)
         self.writeFault = writeFault
         try FileManager.default.createDirectory(at: sessions, withIntermediateDirectories: true)
-        guard self.sessions.resolvingSymlinksInPath().path == self.sessions.path else { throw SessionStoreError.unsafePath }
+        try Self.refuseSymbolicLink(self.sessions)
     }
 
     public func create(_ document: SessionDocument) throws {
@@ -44,7 +49,7 @@ public actor SessionStore {
         let folder = try folder(id)
         let url = folder.appendingPathComponent("session.json")
         guard FileManager.default.fileExists(atPath: url.path) else { throw SessionStoreError.notFound }
-        guard url.resolvingSymlinksInPath().path == url.path else { throw SessionStoreError.unsafePath }
+        try Self.refuseSymbolicLink(url)
         let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: url))
         guard document.id == id else { throw SessionStoreError.invalidID }
         return document
@@ -67,7 +72,7 @@ public actor SessionStore {
         guard var match = document.match else { throw SessionStoreError.noMatch }
         var ids = Set(match.log.map(\.id))
         var sequences = Set(match.log.map(\.seq))
-        var previous = match.log.map(\.seq).max() ?? -1
+        var previous = match.log.map(\.seq).max() ?? 0
         for event in events {
             guard !event.id.isEmpty, ids.insert(event.id).inserted,
                   sequences.insert(event.seq).inserted, event.seq > previous else { throw SessionStoreError.invalidEvents }
@@ -90,13 +95,14 @@ public actor SessionStore {
             throw SessionStoreError.invalidID
         }
         let result = sessions.appendingPathComponent(id, isDirectory: true)
-        guard result.resolvingSymlinksInPath().path == result.path else { throw SessionStoreError.unsafePath }
+        try Self.refuseSymbolicLink(sessions)
+        try Self.refuseSymbolicLink(result)
         return result
     }
 
     private func write(_ document: SessionDocument, to folder: URL) throws {
         let destination = folder.appendingPathComponent("session.json")
-        guard destination.resolvingSymlinksInPath().path == destination.path else { throw SessionStoreError.unsafePath }
+        try Self.refuseSymbolicLink(destination)
         let temporary = folder.appendingPathComponent(".session-\(UUID().uuidString).tmp")
         let bytes = try CanonicalJSON.encode(document)
         guard FileManager.default.createFile(atPath: temporary.path, contents: nil) else { throw CocoaError(.fileWriteUnknown) }
@@ -104,9 +110,21 @@ public actor SessionStore {
         do { try handle.write(contentsOf: bytes); try handle.synchronize(); try handle.close() }
         catch { try? handle.close(); try? FileManager.default.removeItem(at: temporary); throw error }
         // A simulated process death leaves a temp file; loads intentionally ignore it.
-        try writeFault?(temporary)
+        try writeFault?(.temporaryFileFlushed(temporary))
         guard rename(temporary.path, destination.path) == 0 else { throw SessionStoreError.renameFailed(errno) }
+        try writeFault?(.documentRenamed(destination))
         let descriptor = open(folder.path, O_RDONLY)
-        if descriptor >= 0 { _ = fsync(descriptor); _ = close(descriptor) }
+        guard descriptor >= 0 else { throw SessionStoreError.durabilityUnconfirmed(errno) }
+        let result = fsync(descriptor)
+        let failure = errno
+        _ = close(descriptor)
+        // Rename has occurred; the caller must not acknowledge durability if sync fails.
+        guard result == 0 else { throw SessionStoreError.durabilityUnconfirmed(failure) }
+    }
+    private static func refuseSymbolicLink(_ url: URL) throws {
+        do {
+            let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+            if attributes[.type] as? FileAttributeType == .typeSymbolicLink { throw SessionStoreError.unsafePath }
+        } catch let error as CocoaError where error.code == .fileReadNoSuchFile { }
     }
 }
