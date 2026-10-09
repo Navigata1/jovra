@@ -1,0 +1,15 @@
+test_ordinary_record_integrity_rejects_dangling_override_targets_and_players (test_order_overrides.ReviewedOrderPairs.test_ordinary_record_integrity_rejects_dangling_override_targets_and_players) ... FAIL
+
+======================================================================
+FAIL: test_ordinary_record_integrity_rejects_dangling_override_targets_and_players (test_order_overrides.ReviewedOrderPairs.test_ordinary_record_integrity_rejects_dangling_override_targets_and_players)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 203, in test_ordinary_record_integrity_rejects_dangling_override_targets_and_players
+    self.assertTrue(any("targetPointId" in p for p in problems))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

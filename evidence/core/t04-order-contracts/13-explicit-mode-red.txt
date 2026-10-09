@@ -1,0 +1,14 @@
+test_explicit_fold_mode_overrides_document_preference (test_order_overrides.ReviewedOrderPairs.test_explicit_fold_mode_overrides_document_preference) ... ERROR
+
+======================================================================
+ERROR: test_explicit_fold_mode_overrides_document_preference (test_order_overrides.ReviewedOrderPairs.test_explicit_fold_mode_overrides_document_preference)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 191, in test_explicit_fold_mode_overrides_document_preference
+    rules = scoring.fold(setup, log, mode="rules")
+TypeError: fold() got an unexpected keyword argument 'mode'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.2.0",
+  "kind": "jovra.fixture.scoring",
+  "id": "E12-override-target-not-prior-point",
+  "title": "Reviewed order structural refusal: override-target-not-prior-point",
+  "covers": ["ADR0030", "overrideTargetInvalid"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "jon", "displayName": "Jon", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "alex", "displayName": "Alex", "handedness": "left", "backhand": "oneHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["jon"], "B": ["alex"]},
+    "toss": {"firstServer": "jon", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "p01", "seq": 1, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "o02", "seq": 2, "type": "serverOverride", "targetPointId": "o02", "server": "alex", "continuation": "pointOnly", "provenance": "reviewed", "source": "user"}
+    ],
+    "resolutionMode": "asPlayed"
+  },
+  "expectError": {"code": "overrideTargetInvalid"}
+}
