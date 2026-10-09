@@ -1,0 +1,29 @@
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/10] Write sources
+[2/10] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Discover conformance runners by kind
+[4/6] Write sources
+[6/8] Compiling JovraCore SessionStore.swift
+[7/8] Emitting module JovraCore
+[8/12] Emitting module JovraCoreTests
+[9/12] Compiling JovraCoreTests CaptureHandoffTests.swift
+[10/12] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[10/12] Write Objects.LinkFileList
+[11/12] Linking JovraCorePackageTests
+Build complete! (3.35s)
+Test Suite 'Selected tests' started at 2026-10-09 10:29:16.617.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 10:29:16.619.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 10:29:16.619.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:29:16.619.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test captureHandoffAtomicallyKeepsExistingMarksAndStateFacetsAcrossRelaunch() started.
+◇ Test independentCaptureFaultKeepsRecordingMarksFacetsAndEditedNoteTogether() started.
+✘ Test independentCaptureFaultKeepsRecordingMarksFacetsAndEditedNoteTogether() recorded an issue at CaptureHandoffTests.swift:59:5: Expectation failed: (actual.storage.originals → .none) == .onDevice
+✘ Test independentCaptureFaultKeepsRecordingMarksFacetsAndEditedNoteTogether() failed after 0.354 seconds with 1 issue.
+✔ Test captureHandoffAtomicallyKeepsExistingMarksAndStateFacetsAcrossRelaunch() passed after 0.355 seconds.
+✘ Test run with 2 tests in 0 suites failed after 0.355 seconds with 1 issue.

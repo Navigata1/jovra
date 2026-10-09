@@ -1,0 +1,32 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/reviews/t08-custody/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/6] Write sources
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Emitting module JovraMedia
+[5/8] Compiling JovraMedia MediaLibrary.swift
+[5/9] Write Objects.LinkFileList
+[7/12] Emitting module JovraMediaTests
+[7/12] Linking jovra-benchmark
+[8/12] Applying jovra-benchmark
+[10/12] Compiling JovraMediaTests MediaLibraryTests.swift
+[10/12] Write Objects.LinkFileList
+[11/12] Linking JovraMediaPackageTests
+Build complete! (1.87s)
+Test Suite 'Selected tests' started at 2026-10-09 10:24:15.135.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 10:24:15.136.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 10:24:15.136.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:24:15.136.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() started.
+◇ Test independentBackupOptInClearsEveryExistingOriginalExclusionFlag() started.
+◇ Test independentBackupFailureRestoresFlagsAndRefusesExternalLinks() started.
+✔ Test independentBackupOptInClearsEveryExistingOriginalExclusionFlag() passed after 0.440 seconds.
+✔ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() passed after 1.090 seconds.
+✔ Test independentBackupFailureRestoresFlagsAndRefusesExternalLinks() passed after 1.538 seconds.
+✔ Test run with 3 tests in 0 suites passed after 1.539 seconds.
