@@ -1,0 +1,832 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/14] Write sources
+[3/14] Copying stats.v1.json
+[4/14] Copying points.v1.json
+[5/14] Write sources
+[8/14] Write swift-version--58304C5D6DBC2206.txt
+[10/31] Compiling JovraCore CapabilityRegistryLoader.swift
+[11/31] Compiling JovraCore CaptureJournal.swift
+[12/31] Compiling JovraCore CanonicalJSON.swift
+[13/31] Compiling JovraCore ContractPrimitives.swift
+[14/31] Compiling JovraCore DocumentModels.swift
+[15/31] Compiling JovraCore ContrastRequirement.swift
+[16/31] Compiling JovraCore DurationLabel.swift
+[17/31] Compiling JovraCore DataExporter.swift
+[18/31] Compiling JovraCore ExportStats.swift
+[19/31] Compiling JovraCore PointCSV.swift
+[20/31] Compiling JovraCore DurableDirectory.swift
+[21/31] Compiling JovraCore FrameRate.swift
+[22/31] Compiling JovraCore Percent.swift
+[23/31] Compiling JovraCore Provenance.swift
+[24/31] Compiling JovraCore ReviewedPointStore.swift
+[25/31] Compiling JovraCore SRGBColor.swift
+[26/31] Emitting module JovraCore
+[27/46] Compiling JovraCore LogResolver.swift
+[28/46] Compiling JovraCore MatchState.swift
+[29/46] Compiling JovraCore OrderOverrides.swift
+[30/46] Compiling JovraCore OutcomeInterpreter.swift
+[31/46] Compiling JovraCore ScoringEngine.swift
+[32/46] Compiling JovraCore ScoringInput.swift
+[33/46] Compiling JovraCore TimelineDiff.swift
+[34/46] Compiling JovraCore TimelineModels.swift
+[35/46] Compiling JovraCore SessionStore.swift
+[36/46] Compiling JovraCore DerivedStat.swift
+[37/46] Compiling JovraCore StatsEngine.swift
+[38/46] Compiling JovraCore StatsModels.swift
+[39/46] Compiling JovraCore StatsMomentumPair.swift
+[40/46] Compiling JovraCore Units.swift
+[41/46] Compiling JovraCore resource_bundle_accessor.swift
+[42/55] Emitting module JovraMedia
+[43/55] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[44/55] Compiling JovraMedia CaptureEngine.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[45/55] Compiling JovraMedia CaptureSegmentWriter.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[46/55] Compiling JovraMedia CaptureTypes.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[47/55] Compiling JovraMedia DecodedCapture.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[48/55] Compiling JovraMedia FixtureCamera.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[49/55] Compiling JovraMedia FragmentedMovieLayout.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[50/55] Compiling JovraMedia RecoveryFiles.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[51/62] Compiling JovraMedia RecoveryScanner.swift
+[52/62] Compiling JovraMedia DeviceBudget.swift
+[53/62] Compiling JovraMedia ClipExporter.swift
+[54/62] Compiling JovraMedia FrameTime.swift
+[55/62] Compiling JovraMedia MediaLibrary.swift
+[56/62] Compiling JovraMedia FramePlayback.swift
+[57/62] Compiling JovraMedia MediaProbe.swift
+[58/71] Emitting module JovraBenchmark
+[59/71] Compiling JovraBenchmark DecodedFrameReader.swift
+[60/71] Compiling JovraBenchmark FrameSignature.swift
+[61/71] Compiling JovraBenchmark GroundTruth.swift
+[62/71] Compiling JovraBenchmark LumaPlane.swift
+[63/71] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[64/71] Compiling JovraBenchmark BenchmarkHarness.swift
+[65/71] Compiling JovraBenchmark BenchmarkRecord.swift
+[66/71] Compiling JovraBenchmark CapabilityGate.swift
+[67/78] Compiling JovraBenchmark Estimator.swift
+[68/78] Compiling JovraBenchmark EstimatorRegistry.swift
+[69/78] Compiling JovraBenchmark EventTimesTask.swift
+[70/78] Compiling JovraBenchmark Floor.swift
+[71/78] Compiling JovraBenchmark JSONValue.swift
+[72/78] Compiling JovraBenchmark Rational.swift
+[73/78] Compiling JovraBenchmark JovraBenchmark.swift
+[74/88] Emitting module jovra_benchmark
+[75/88] Compiling jovra_benchmark main.swift
+[76/93] Emitting module JovraMediaTests
+[77/100] Emitting module JovraBenchmarkTests
+[78/103] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+[79/103] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[80/103] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[81/103] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:24:33: error: cannot find 'LocalExportService' in scope
+ 22 |         let originalBytes = try Data(contentsOf: original)
+ 23 |         let id = document.id
+ 24 |         let package = try await LocalExportService(store: store).export(sessionID: id,
+    |                                 `- error: cannot find 'LocalExportService' in scope
+ 25 |             range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 26 |                 if progress == .artifactsReady { _ = try await store.correctReviewedWinner(pointID: first.id, winner: .b, for: id) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:33:33: error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 31 |         #expect(names == ["clip.mp4", "points.csv", "session.json", "stats.csv"])
+ 32 |         let snapshot = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: package.sessionJSON))
+ 33 |         #expect(snapshot.match?.log == [.point(first)])
+    |                                 `- error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 34 |         #expect(snapshot.exports == nil)
+ 35 |         let expected = try DataExporter.exportSession(snapshot)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:65:27: error: cannot find 'LocalExportService' in scope
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+    |                           `- error: cannot find 'LocalExportService' in scope
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 67 |                     if progress == .artifactsReady { fault.enable() }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:31: error: cannot find 'LocalExportService' in scope
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                               `- error: cannot find 'LocalExportService' in scope
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:94: error: cannot infer contextual base in reference to member 'init'
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                              `- error: cannot infer contextual base in reference to member 'init'
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:64:9: warning: no 'async' operations occur within 'await' expression
+ 62 |         _ = try await capture(store: store, id: document.id)
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:91:23: error: cannot find 'LocalExportService' in scope
+ 89 |         try await store.create(document)
+ 90 |         _ = try await capture(store: store, id: document.id)
+ 91 |         let service = LocalExportService(store: store)
+    |                       `- error: cannot find 'LocalExportService' in scope
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:93:13: warning: no 'async' operations occur within 'await' expression
+ 91 |         let service = LocalExportService(store: store)
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+    |             `- warning: no 'async' operations occur within 'await' expression
+ 94 |         }
+ 95 |         #expect(try await store.load(document.id).exports == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:27: error: cannot find 'LocalExportService' in scope
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                           `- error: cannot find 'LocalExportService' in scope
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:99: error: cannot infer contextual base in reference to member 'init'
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                                   `- error: cannot infer contextual base in reference to member 'init'
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:113:9: warning: no 'async' operations occur within 'await' expression
+111 |         try FileManager.default.removeItem(at: exports)
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+115 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:121:24: error: cannot find 'FixtureManifest' in scope
+119 | 
+120 |     private func sample() throws -> SessionDocument {
+121 |         let path = try FixtureManifest.repository().appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
+    |                        `- error: cannot find 'FixtureManifest' in scope
+122 |         var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))
+123 |         document.marks = nil; document.voiceNotes = nil; document.comparisons = nil; document.derivedValues = nil
+[82/103] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:24:33: error: cannot find 'LocalExportService' in scope
+ 22 |         let originalBytes = try Data(contentsOf: original)
+ 23 |         let id = document.id
+ 24 |         let package = try await LocalExportService(store: store).export(sessionID: id,
+    |                                 `- error: cannot find 'LocalExportService' in scope
+ 25 |             range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 26 |                 if progress == .artifactsReady { _ = try await store.correctReviewedWinner(pointID: first.id, winner: .b, for: id) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:33:33: error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 31 |         #expect(names == ["clip.mp4", "points.csv", "session.json", "stats.csv"])
+ 32 |         let snapshot = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: package.sessionJSON))
+ 33 |         #expect(snapshot.match?.log == [.point(first)])
+    |                                 `- error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 34 |         #expect(snapshot.exports == nil)
+ 35 |         let expected = try DataExporter.exportSession(snapshot)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:65:27: error: cannot find 'LocalExportService' in scope
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+    |                           `- error: cannot find 'LocalExportService' in scope
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 67 |                     if progress == .artifactsReady { fault.enable() }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:31: error: cannot find 'LocalExportService' in scope
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                               `- error: cannot find 'LocalExportService' in scope
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:94: error: cannot infer contextual base in reference to member 'init'
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                              `- error: cannot infer contextual base in reference to member 'init'
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:64:9: warning: no 'async' operations occur within 'await' expression
+ 62 |         _ = try await capture(store: store, id: document.id)
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:91:23: error: cannot find 'LocalExportService' in scope
+ 89 |         try await store.create(document)
+ 90 |         _ = try await capture(store: store, id: document.id)
+ 91 |         let service = LocalExportService(store: store)
+    |                       `- error: cannot find 'LocalExportService' in scope
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:93:13: warning: no 'async' operations occur within 'await' expression
+ 91 |         let service = LocalExportService(store: store)
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+    |             `- warning: no 'async' operations occur within 'await' expression
+ 94 |         }
+ 95 |         #expect(try await store.load(document.id).exports == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:27: error: cannot find 'LocalExportService' in scope
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                           `- error: cannot find 'LocalExportService' in scope
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:99: error: cannot infer contextual base in reference to member 'init'
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                                   `- error: cannot infer contextual base in reference to member 'init'
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:113:9: warning: no 'async' operations occur within 'await' expression
+111 |         try FileManager.default.removeItem(at: exports)
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+115 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:121:24: error: cannot find 'FixtureManifest' in scope
+119 | 
+120 |     private func sample() throws -> SessionDocument {
+121 |         let path = try FixtureManifest.repository().appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
+    |                        `- error: cannot find 'FixtureManifest' in scope
+122 |         var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))
+123 |         document.marks = nil; document.voiceNotes = nil; document.comparisons = nil; document.derivedValues = nil
+[83/103] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:24:33: error: cannot find 'LocalExportService' in scope
+ 22 |         let originalBytes = try Data(contentsOf: original)
+ 23 |         let id = document.id
+ 24 |         let package = try await LocalExportService(store: store).export(sessionID: id,
+    |                                 `- error: cannot find 'LocalExportService' in scope
+ 25 |             range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 26 |                 if progress == .artifactsReady { _ = try await store.correctReviewedWinner(pointID: first.id, winner: .b, for: id) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:33:33: error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 31 |         #expect(names == ["clip.mp4", "points.csv", "session.json", "stats.csv"])
+ 32 |         let snapshot = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: package.sessionJSON))
+ 33 |         #expect(snapshot.match?.log == [.point(first)])
+    |                                 `- error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 34 |         #expect(snapshot.exports == nil)
+ 35 |         let expected = try DataExporter.exportSession(snapshot)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:65:27: error: cannot find 'LocalExportService' in scope
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+    |                           `- error: cannot find 'LocalExportService' in scope
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 67 |                     if progress == .artifactsReady { fault.enable() }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:31: error: cannot find 'LocalExportService' in scope
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                               `- error: cannot find 'LocalExportService' in scope
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:94: error: cannot infer contextual base in reference to member 'init'
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                              `- error: cannot infer contextual base in reference to member 'init'
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:64:9: warning: no 'async' operations occur within 'await' expression
+ 62 |         _ = try await capture(store: store, id: document.id)
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:91:23: error: cannot find 'LocalExportService' in scope
+ 89 |         try await store.create(document)
+ 90 |         _ = try await capture(store: store, id: document.id)
+ 91 |         let service = LocalExportService(store: store)
+    |                       `- error: cannot find 'LocalExportService' in scope
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:93:13: warning: no 'async' operations occur within 'await' expression
+ 91 |         let service = LocalExportService(store: store)
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+    |             `- warning: no 'async' operations occur within 'await' expression
+ 94 |         }
+ 95 |         #expect(try await store.load(document.id).exports == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:27: error: cannot find 'LocalExportService' in scope
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                           `- error: cannot find 'LocalExportService' in scope
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:99: error: cannot infer contextual base in reference to member 'init'
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                                   `- error: cannot infer contextual base in reference to member 'init'
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:113:9: warning: no 'async' operations occur within 'await' expression
+111 |         try FileManager.default.removeItem(at: exports)
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+115 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:121:24: error: cannot find 'FixtureManifest' in scope
+119 | 
+120 |     private func sample() throws -> SessionDocument {
+121 |         let path = try FixtureManifest.repository().appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
+    |                        `- error: cannot find 'FixtureManifest' in scope
+122 |         var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))
+123 |         document.marks = nil; document.voiceNotes = nil; document.comparisons = nil; document.derivedValues = nil
+[84/103] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:24:33: error: cannot find 'LocalExportService' in scope
+ 22 |         let originalBytes = try Data(contentsOf: original)
+ 23 |         let id = document.id
+ 24 |         let package = try await LocalExportService(store: store).export(sessionID: id,
+    |                                 `- error: cannot find 'LocalExportService' in scope
+ 25 |             range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 26 |                 if progress == .artifactsReady { _ = try await store.correctReviewedWinner(pointID: first.id, winner: .b, for: id) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:33:33: error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 31 |         #expect(names == ["clip.mp4", "points.csv", "session.json", "stats.csv"])
+ 32 |         let snapshot = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: package.sessionJSON))
+ 33 |         #expect(snapshot.match?.log == [.point(first)])
+    |                                 `- error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 34 |         #expect(snapshot.exports == nil)
+ 35 |         let expected = try DataExporter.exportSession(snapshot)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:65:27: error: cannot find 'LocalExportService' in scope
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+    |                           `- error: cannot find 'LocalExportService' in scope
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 67 |                     if progress == .artifactsReady { fault.enable() }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:31: error: cannot find 'LocalExportService' in scope
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                               `- error: cannot find 'LocalExportService' in scope
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:94: error: cannot infer contextual base in reference to member 'init'
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                              `- error: cannot infer contextual base in reference to member 'init'
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:64:9: warning: no 'async' operations occur within 'await' expression
+ 62 |         _ = try await capture(store: store, id: document.id)
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:91:23: error: cannot find 'LocalExportService' in scope
+ 89 |         try await store.create(document)
+ 90 |         _ = try await capture(store: store, id: document.id)
+ 91 |         let service = LocalExportService(store: store)
+    |                       `- error: cannot find 'LocalExportService' in scope
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:93:13: warning: no 'async' operations occur within 'await' expression
+ 91 |         let service = LocalExportService(store: store)
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+    |             `- warning: no 'async' operations occur within 'await' expression
+ 94 |         }
+ 95 |         #expect(try await store.load(document.id).exports == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:27: error: cannot find 'LocalExportService' in scope
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                           `- error: cannot find 'LocalExportService' in scope
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:99: error: cannot infer contextual base in reference to member 'init'
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                                   `- error: cannot infer contextual base in reference to member 'init'
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:113:9: warning: no 'async' operations occur within 'await' expression
+111 |         try FileManager.default.removeItem(at: exports)
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+115 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:121:24: error: cannot find 'FixtureManifest' in scope
+119 | 
+120 |     private func sample() throws -> SessionDocument {
+121 |         let path = try FixtureManifest.repository().appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
+    |                        `- error: cannot find 'FixtureManifest' in scope
+122 |         var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))
+123 |         document.marks = nil; document.voiceNotes = nil; document.comparisons = nil; document.derivedValues = nil
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:24:33: error: cannot find 'LocalExportService' in scope
+ 22 |         let originalBytes = try Data(contentsOf: original)
+ 23 |         let id = document.id
+ 24 |         let package = try await LocalExportService(store: store).export(sessionID: id,
+    |                                 `- error: cannot find 'LocalExportService' in scope
+ 25 |             range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 26 |                 if progress == .artifactsReady { _ = try await store.correctReviewedWinner(pointID: first.id, winner: .b, for: id) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:33:33: error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 31 |         #expect(names == ["clip.mp4", "points.csv", "session.json", "stats.csv"])
+ 32 |         let snapshot = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: package.sessionJSON))
+ 33 |         #expect(snapshot.match?.log == [.point(first)])
+    |                                 `- error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 34 |         #expect(snapshot.exports == nil)
+ 35 |         let expected = try DataExporter.exportSession(snapshot)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:65:27: error: cannot find 'LocalExportService' in scope
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+    |                           `- error: cannot find 'LocalExportService' in scope
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 67 |                     if progress == .artifactsReady { fault.enable() }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:31: error: cannot find 'LocalExportService' in scope
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                               `- error: cannot find 'LocalExportService' in scope
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:94: error: cannot infer contextual base in reference to member 'init'
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                              `- error: cannot infer contextual base in reference to member 'init'
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:64:9: warning: no 'async' operations occur within 'await' expression
+ 62 |         _ = try await capture(store: store, id: document.id)
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:91:23: error: cannot find 'LocalExportService' in scope
+ 89 |         try await store.create(document)
+ 90 |         _ = try await capture(store: store, id: document.id)
+ 91 |         let service = LocalExportService(store: store)
+    |                       `- error: cannot find 'LocalExportService' in scope
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:93:13: warning: no 'async' operations occur within 'await' expression
+ 91 |         let service = LocalExportService(store: store)
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+    |             `- warning: no 'async' operations occur within 'await' expression
+ 94 |         }
+ 95 |         #expect(try await store.load(document.id).exports == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:27: error: cannot find 'LocalExportService' in scope
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                           `- error: cannot find 'LocalExportService' in scope
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:99: error: cannot infer contextual base in reference to member 'init'
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                                   `- error: cannot infer contextual base in reference to member 'init'
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:113:9: warning: no 'async' operations occur within 'await' expression
+111 |         try FileManager.default.removeItem(at: exports)
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+115 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:121:24: error: cannot find 'FixtureManifest' in scope
+119 | 
+120 |     private func sample() throws -> SessionDocument {
+121 |         let path = try FixtureManifest.repository().appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
+    |                        `- error: cannot find 'FixtureManifest' in scope
+122 |         var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))
+123 |         document.marks = nil; document.voiceNotes = nil; document.comparisons = nil; document.derivedValues = nil
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:24:33: error: cannot find 'LocalExportService' in scope
+ 22 |         let originalBytes = try Data(contentsOf: original)
+ 23 |         let id = document.id
+ 24 |         let package = try await LocalExportService(store: store).export(sessionID: id,
+    |                                 `- error: cannot find 'LocalExportService' in scope
+ 25 |             range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 26 |                 if progress == .artifactsReady { _ = try await store.correctReviewedWinner(pointID: first.id, winner: .b, for: id) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:33:33: error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 31 |         #expect(names == ["clip.mp4", "points.csv", "session.json", "stats.csv"])
+ 32 |         let snapshot = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: package.sessionJSON))
+ 33 |         #expect(snapshot.match?.log == [.point(first)])
+    |                                 `- error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 34 |         #expect(snapshot.exports == nil)
+ 35 |         let expected = try DataExporter.exportSession(snapshot)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:65:27: error: cannot find 'LocalExportService' in scope
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+    |                           `- error: cannot find 'LocalExportService' in scope
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 67 |                     if progress == .artifactsReady { fault.enable() }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:31: error: cannot find 'LocalExportService' in scope
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                               `- error: cannot find 'LocalExportService' in scope
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:94: error: cannot infer contextual base in reference to member 'init'
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                              `- error: cannot infer contextual base in reference to member 'init'
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:64:9: warning: no 'async' operations occur within 'await' expression
+ 62 |         _ = try await capture(store: store, id: document.id)
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:91:23: error: cannot find 'LocalExportService' in scope
+ 89 |         try await store.create(document)
+ 90 |         _ = try await capture(store: store, id: document.id)
+ 91 |         let service = LocalExportService(store: store)
+    |                       `- error: cannot find 'LocalExportService' in scope
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:93:13: warning: no 'async' operations occur within 'await' expression
+ 91 |         let service = LocalExportService(store: store)
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+    |             `- warning: no 'async' operations occur within 'await' expression
+ 94 |         }
+ 95 |         #expect(try await store.load(document.id).exports == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:27: error: cannot find 'LocalExportService' in scope
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                           `- error: cannot find 'LocalExportService' in scope
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:99: error: cannot infer contextual base in reference to member 'init'
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                                   `- error: cannot infer contextual base in reference to member 'init'
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:113:9: warning: no 'async' operations occur within 'await' expression
+111 |         try FileManager.default.removeItem(at: exports)
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+115 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:121:24: error: cannot find 'FixtureManifest' in scope
+119 | 
+120 |     private func sample() throws -> SessionDocument {
+121 |         let path = try FixtureManifest.repository().appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
+    |                        `- error: cannot find 'FixtureManifest' in scope
+122 |         var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))
+123 |         document.marks = nil; document.voiceNotes = nil; document.comparisons = nil; document.derivedValues = nil
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:24:33: error: cannot find 'LocalExportService' in scope
+ 22 |         let originalBytes = try Data(contentsOf: original)
+ 23 |         let id = document.id
+ 24 |         let package = try await LocalExportService(store: store).export(sessionID: id,
+    |                                 `- error: cannot find 'LocalExportService' in scope
+ 25 |             range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 26 |                 if progress == .artifactsReady { _ = try await store.correctReviewedWinner(pointID: first.id, winner: .b, for: id) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:33:33: error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 31 |         #expect(names == ["clip.mp4", "points.csv", "session.json", "stats.csv"])
+ 32 |         let snapshot = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: package.sessionJSON))
+ 33 |         #expect(snapshot.match?.log == [.point(first)])
+    |                                 `- error: cannot convert value of type 'Optional<_>' to expected argument type 'Array<Optional<_>>'
+ 34 |         #expect(snapshot.exports == nil)
+ 35 |         let expected = try DataExporter.exportSession(snapshot)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:65:27: error: cannot find 'LocalExportService' in scope
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+    |                           `- error: cannot find 'LocalExportService' in scope
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+ 67 |                     if progress == .artifactsReady { fault.enable() }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:31: error: cannot find 'LocalExportService' in scope
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                               `- error: cannot find 'LocalExportService' in scope
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:77:94: error: cannot infer contextual base in reference to member 'init'
+ 75 |         let retained = try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4"))
+ 76 |         fault.disable()
+ 77 |         let retry = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                              `- error: cannot infer contextual base in reference to member 'init'
+ 78 |         #expect(retry.directory != packages.first)
+ 79 |         #expect(try Data(contentsOf: #require(packages.first).appendingPathComponent("clip.mp4")) == retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:64:9: warning: no 'async' operations occur within 'await' expression
+ 62 |         _ = try await capture(store: store, id: document.id)
+ 63 |         let id = document.id
+ 64 |         await #expect(throws: ExportFailure.injected) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+ 65 |             _ = try await LocalExportService(store: store).export(sessionID: id,
+ 66 |                 range: MediaRange(fromMs: 0, toMs: 1000)) { progress in
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:91:23: error: cannot find 'LocalExportService' in scope
+ 89 |         try await store.create(document)
+ 90 |         _ = try await capture(store: store, id: document.id)
+ 91 |         let service = LocalExportService(store: store)
+    |                       `- error: cannot find 'LocalExportService' in scope
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:93:13: warning: no 'async' operations occur within 'await' expression
+ 91 |         let service = LocalExportService(store: store)
+ 92 |         for range in [MediaRange(fromMs: -1, toMs: 500), .init(fromMs: 0, toMs: 3000), .init(fromMs: 1000, toMs: 1000)] {
+ 93 |             await #expect(throws: (any Error).self) { _ = try await service.export(sessionID: document.id, range: range) }
+    |             `- warning: no 'async' operations occur within 'await' expression
+ 94 |         }
+ 95 |         #expect(try await store.load(document.id).exports == nil)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:27: error: cannot find 'LocalExportService' in scope
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                           `- error: cannot find 'LocalExportService' in scope
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:114:99: error: cannot infer contextual base in reference to member 'init'
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+    |                                                                                                   `- error: cannot infer contextual base in reference to member 'init'
+115 |         }
+116 |         #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:113:9: warning: no 'async' operations occur within 'await' expression
+111 |         try FileManager.default.removeItem(at: exports)
+112 |         try FileManager.default.createSymbolicLink(at: exports, withDestinationURL: outside)
+113 |         await #expect(throws: (any Error).self) {
+    |         `- warning: no 'async' operations occur within 'await' expression
+114 |             _ = try await LocalExportService(store: store).export(sessionID: document.id, range: .init(fromMs: 0, toMs: 1000))
+115 |         }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraMedia/Tests/JovraMediaTests/Export/LocalExportServiceTests.swift:121:24: error: cannot find 'FixtureManifest' in scope
+119 | 
+120 |     private func sample() throws -> SessionDocument {
+121 |         let path = try FixtureManifest.repository().appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
+    |                        `- error: cannot find 'FixtureManifest' in scope
+122 |         var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))
+123 |         document.marks = nil; document.voiceNotes = nil; document.comparisons = nil; document.derivedValues = nil
+[91/103] Write Objects.LinkFileList
+[92/103] Linking jovra-benchmark
+[94/103] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[95/103] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[96/103] Compiling JovraMediaTests RealFootageProbeTests.swift
+[97/103] Compiling JovraMediaTests FrameTimeTests.swift
+[98/103] Compiling JovraMediaTests FrameTimingTests.swift
+[99/103] Compiling JovraMediaTests MediaLibraryTests.swift
+[100/103] Compiling JovraMediaTests FramePlaybackTests.swift
+[100/103] Applying jovra-benchmark
+error: fatalError
