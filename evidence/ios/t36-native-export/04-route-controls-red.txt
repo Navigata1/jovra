@@ -1,0 +1,17 @@
+COMMAND ['xcodebuild', 'test-without-building', '-project', 'ios/Jovra.xcodeproj', '-scheme', 'Jovra', '-destination', 'id=4265ADFD-39A3-4E71-8482-1945DDB5F899', '-derivedDataPath', '.derivedData-export', '-only-testing:JovraUITests/NativeExportUITests', '-parallel-testing-enabled', 'NO', '-resultBundlePath', '.derivedData-export/04-route-controls-red.xcresult', '-quiet']
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/.derivedData-export/04-route-controls-red.xcresult
+
+2026-10-09 13:44:30.601 xcodebuild[42087:132864120] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 13:44:30.601 xcodebuild[42087:132864120] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 13:44:49.492 xcodebuild[42087:132864120] [MT] IDETestOperationsObserverDebug: 20.626 elapsed -- Testing started completed.
+2026-10-09 13:44:49.492 xcodebuild[42087:132864120] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 13:44:49.492 xcodebuild[42087:132864120] [MT] IDETestOperationsObserverDebug: 20.626 sec, +20.626 sec -- end
+Failing tests:
+	NativeExportUITests.testExistingExportRouteShowsRealRangeControlsAndRefusesMissingSession()
+
+** TEST EXECUTE FAILED **
+
+Testing started
+
+EXIT 65; ELAPSED 25.445s

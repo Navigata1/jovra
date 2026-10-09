@@ -65,6 +65,10 @@ actor LocalCaptureLibrary: RecordingSink {
         try await store.list(query)
     }
 
+    func exportClip(_ id: SessionID, range: MediaRange, includeAudio: Bool) async throws -> LocalExportPackage {
+        try await LocalExportService(store: store).export(sessionID: id.rawValue, range: range, includeAudio: includeAudio)
+    }
+
     func saveRecording(sessionID: String, recording: SessionRecording, marks: [SessionMark]) async throws {
         try await store.saveCapture(recording, marks: marks, for: sessionID)
     }
