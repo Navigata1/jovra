@@ -1,0 +1,140 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-durability/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/12] Write sources
+[6/12] Write swift-version--58304C5D6DBC2206.txt
+[8/23] Emitting module JovraCore
+[9/23] Compiling JovraCore CapabilityRegistryLoader.swift
+[10/23] Compiling JovraCore CaptureJournal.swift
+[11/23] Compiling JovraCore CanonicalJSON.swift
+[12/23] Compiling JovraCore ContractPrimitives.swift
+[13/23] Compiling JovraCore DocumentModels.swift
+[14/23] Compiling JovraCore ContrastRequirement.swift
+[15/23] Compiling JovraCore DurationLabel.swift
+[16/23] Compiling JovraCore FrameRate.swift
+[17/23] Compiling JovraCore Percent.swift
+[18/23] Compiling JovraCore Provenance.swift
+[19/32] Compiling JovraCore SRGBColor.swift
+[20/32] Compiling JovraCore LogResolver.swift
+[21/32] Compiling JovraCore MatchState.swift
+[22/32] Compiling JovraCore OrderOverrides.swift
+[23/32] Compiling JovraCore OutcomeInterpreter.swift
+[24/32] Compiling JovraCore ScoringInput.swift
+[25/32] Compiling JovraCore TimelineModels.swift
+[26/32] Compiling JovraCore SessionStore.swift
+[27/32] Compiling JovraCore Units.swift
+[28/38] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-durability/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[29/38] Compiling JovraMedia CaptureEngine.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-durability/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[30/38] Compiling JovraMedia CaptureSegmentWriter.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-durability/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[31/38] Compiling JovraMedia CaptureTypes.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-durability/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[32/38] Compiling JovraMedia DecodedCapture.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-durability/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[33/38] Emitting module JovraMedia
+[34/42] Compiling JovraMedia FixtureCamera.swift
+[35/42] Compiling JovraMedia DeviceBudget.swift
+[36/42] Compiling JovraMedia FrameTime.swift
+[37/42] Compiling JovraMedia MediaProbe.swift
+[38/51] Emitting module JovraBenchmark
+[39/51] Compiling JovraBenchmark DecodedFrameReader.swift
+[40/51] Compiling JovraBenchmark FrameSignature.swift
+[41/51] Compiling JovraBenchmark GroundTruth.swift
+[42/51] Compiling JovraBenchmark LumaPlane.swift
+[43/51] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[44/51] Compiling JovraBenchmark BenchmarkHarness.swift
+[45/51] Compiling JovraBenchmark BenchmarkRecord.swift
+[46/51] Compiling JovraBenchmark CapabilityGate.swift
+[47/58] Compiling JovraBenchmark Estimator.swift
+[48/58] Compiling JovraBenchmark EstimatorRegistry.swift
+[49/58] Compiling JovraBenchmark EventTimesTask.swift
+[50/58] Compiling JovraBenchmark Floor.swift
+[51/58] Compiling JovraBenchmark JSONValue.swift
+[52/58] Compiling JovraBenchmark Rational.swift
+[53/58] Compiling JovraBenchmark JovraBenchmark.swift
+[54/65] Emitting module jovra_benchmark
+[55/65] Compiling jovra_benchmark main.swift
+[56/70] Emitting module JovraBenchmarkTests
+[57/73] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+[58/73] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[59/73] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[60/73] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+[61/73] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+[62/73] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+[63/73] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+[63/73] Write Objects.LinkFileList
+[69/73] Emitting module JovraMediaTests
+[69/77] Linking jovra-benchmark
+[70/77] Applying jovra-benchmark
+[72/77] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[73/77] Compiling JovraMediaTests RealFootageProbeTests.swift
+[74/77] Compiling JovraMediaTests FrameTimeTests.swift
+[75/77] Compiling JovraMediaTests FrameTimingTests.swift
+[75/77] Write Objects.LinkFileList
+[76/77] Linking JovraMediaPackageTests
+Build complete! (19.11s)
+Test Suite 'Selected tests' started at 2026-10-09 10:41:39.526.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 10:41:39.528.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 10:41:39.528.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:41:39.528.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) started.
+◇ Test case passing 1 argument replaceFile → false to movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) started.
+◇ Test case passing 1 argument replaceFile → true to movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) started.
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) recorded an issue with 1 argument replaceFile → false at MediaDirectoryDurabilityTests.swift:56:11: Expectation failed: an error was expected but none was thrown
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) recorded an issue with 1 argument replaceFile → true at MediaDirectoryDurabilityTests.swift:56:11: Expectation failed: an error was expected but none was thrown
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) recorded an issue with 1 argument replaceFile → false at MediaDirectoryDurabilityTests.swift:61:65: Issue recorded
+↳ Source fault did not settle
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) recorded an issue with 1 argument replaceFile → false at MediaDirectoryDurabilityTests.swift:65:5: Expectation failed: (snapshot.lastConfirmedMediaTime → MediaTime(value: 16800, timescale: 600)) == (confirmed → MediaTime(value: 1200, timescale: 600))
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) recorded an issue with 1 argument replaceFile → true at MediaDirectoryDurabilityTests.swift:61:65: Issue recorded
+↳ Source fault did not settle
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) recorded an issue with 1 argument replaceFile → true at MediaDirectoryDurabilityTests.swift:65:5: Expectation failed: (snapshot.lastConfirmedMediaTime → MediaTime(value: 16800, timescale: 600)) == (confirmed → MediaTime(value: 1200, timescale: 600))
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) with 2 test cases failed after 8.649 seconds with 6 issues.
+✘ Test run with 1 test in 0 suites failed after 8.649 seconds with 6 issues.

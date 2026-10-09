@@ -2,6 +2,7 @@
 import Foundation
 import UniformTypeIdentifiers
 import JovraCore
+import Darwin
 
 /// Owns the real encoder. Its delegate receives completed fMP4 container fragments; confirmed time only
 /// advances after writing and synchronizing those bytes, never merely after append(sampleBuffer) succeeds.
@@ -10,6 +11,7 @@ final class CaptureSegmentWriter: NSObject, AVAssetWriterDelegate, @unchecked Se
     private let video: AVAssetWriterInput
     private let audio: AVAssetWriterInput?
     private let handle: FileHandle
+    private let mediaURL: URL
     private let journal: CaptureJournal
     private let segment: SessionSegment
     private let sessionStart: CMTime
@@ -23,11 +25,12 @@ final class CaptureSegmentWriter: NSObject, AVAssetWriterDelegate, @unchecked Se
 
     init(url: URL, segment: SessionSegment, preset: CapturePreset, format: CaptureSourceFormat,
          sessionStart: CMTime, journal: CaptureJournal) throws {
+        self.mediaURL = url
         self.segment = segment; self.journal = journal; self.sessionStart = sessionStart; self.frameRate = format.frameRate
         guard !FileManager.default.fileExists(atPath: url.path) else { throw CaptureError.storageUnavailable }
         let directory = url.deletingLastPathComponent()
         let createdDirectory = !FileManager.default.fileExists(atPath: directory.path)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try DurableDirectory.create(at: directory)
         if createdDirectory {
             var directory = directory
             var values = URLResourceValues(); values.isExcludedFromBackup = true
@@ -81,8 +84,21 @@ final class CaptureSegmentWriter: NSObject, AVAssetWriterDelegate, @unchecked Se
         try lock.withLock {
             if let failure { throw failure }
             guard writer.status == .completed else { throw CaptureError.writerFailed(writer.error?.localizedDescription ?? "finishWriting") }
-            try handle.synchronize(); try handle.close()
+            try synchronizeMediaLocation(); try handle.close()
         }
+    }
+    /// An orphaned descriptor is not durable media at the path promised by the journal.
+    private func synchronizeMediaLocation() throws {
+        try handle.synchronize()
+        var declared = stat(), opened = stat()
+        guard lstat(mediaURL.path, &declared) == 0, fstat(handle.fileDescriptor, &opened) == 0 else {
+            throw CaptureError.storageUnavailable
+        }
+        guard declared.st_mode & mode_t(S_IFMT) == mode_t(S_IFREG),
+              declared.st_dev == opened.st_dev, declared.st_ino == opened.st_ino else {
+            throw CaptureError.storageUnavailable
+        }
+        try DurableDirectory.synchronize(mediaURL.deletingLastPathComponent())
     }
     func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data,
                      segmentType: AVAssetSegmentType, segmentReport: AVAssetSegmentReport?) {
@@ -90,7 +106,7 @@ final class CaptureSegmentWriter: NSObject, AVAssetWriterDelegate, @unchecked Se
             guard failure == nil else { return }
             do {
                 try handle.write(contentsOf: segmentData)
-                try handle.synchronize()
+                try synchronizeMediaLocation()
                 bytes += segmentData.count
                 if let report = segmentReport?.trackReports.first(where: { $0.mediaType == .video }),
                    report.earliestPresentationTimeStamp.isNumeric, report.duration.isNumeric {
