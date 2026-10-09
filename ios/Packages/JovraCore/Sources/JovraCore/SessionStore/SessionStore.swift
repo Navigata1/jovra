@@ -200,7 +200,7 @@ public actor SessionStore {
 
     /// The media service supplies flushed/decoded artifacts. Merge only their records,
     /// keeping corrections made while rendering and the historical source log version.
-    public func recordExports(_ records: [SessionExportRecord], for id: String,
+    public func recordExports(_ records: [SessionExportRecord], artifacts: [RecordFileReference], for id: String,
                               expectedFolderIdentity: DurableDirectory.Identity? = nil) throws {
         var document = try load(id)
         let folder = try folder(id)
@@ -208,12 +208,19 @@ public actor SessionStore {
         var existing = document.exports ?? []
         var ids = Set(existing.map(\.id))
         let version = document.match?.log.map(\.seq).max() ?? 0
-        guard !records.isEmpty else { throw SessionStoreError.invalidExports }
+        guard !records.isEmpty, artifacts.count == 4, Set(artifacts.map(\.path)).count == 4 else {
+            throw SessionStoreError.invalidExports
+        }
         for record in records {
             guard !record.id.isEmpty, ids.insert(record.id).inserted,
                   record.status == .done, record.destination == .app,
                   record.eventLogVersion >= 0, record.eventLogVersion <= version,
-                  let file = record.file, let bytes = file.bytes else { throw SessionStoreError.invalidExports }
+                  let file = record.file, artifacts.contains(file) else { throw SessionStoreError.invalidExports }
+        }
+        // All four files are checked inside the same non-suspending transaction as
+        // registration, including CSVs that have no individual session export record.
+        for file in artifacts {
+            guard let bytes = file.bytes, bytes >= 0 else { throw SessionStoreError.invalidExports }
             let parts = file.path.split(separator: "/", omittingEmptySubsequences: false)
             guard parts.count >= 3, parts[0] == "exports", parts.allSatisfy({
                 !$0.isEmpty && $0 != "." && $0 != ".." && !$0.contains("\\") && !$0.contains("\0")

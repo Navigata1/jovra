@@ -117,6 +117,34 @@ struct LocalExportServiceTests {
         #expect(try await store.load(document.id).exports == nil)
     }
 
+    @Test(arguments: ["points.csv", "stats.csv", "redirected-stats.csv"])
+    func everyArtifactMustStillBeOwnedAndPresentAtRegistration(change: String) async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        var document = try sample()
+        document.match?.log = []; document.exports = nil
+        try await store.create(document)
+        _ = try await capture(store: store, id: document.id)
+        let id = document.id
+        let folder = try await store.sessionDirectory(id)
+        await #expect(throws: (any Error).self) {
+            _ = try await LocalExportService(store: store).export(sessionID: id, range: .init(fromMs: 0, toMs: 1000)) { _ in
+                let packages = try FileManager.default.contentsOfDirectory(at: folder.appendingPathComponent("exports"), includingPropertiesForKeys: nil)
+                let package = try #require(packages.first)
+                let file = package.appendingPathComponent(change == "redirected-stats.csv" ? "stats.csv" : change)
+                let bytes = try Data(contentsOf: file)
+                try FileManager.default.removeItem(at: file)
+                if change == "redirected-stats.csv" {
+                    let outside = root.appendingPathComponent("outside.csv")
+                    try bytes.write(to: outside)
+                    try FileManager.default.createSymbolicLink(at: file, withDestinationURL: outside)
+                }
+            }
+        }
+        #expect(try await store.load(id).exports == nil)
+    }
+
     private func sample() throws -> SessionDocument {
         let path = MediaFixtureCatalog.repository().root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")
         var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: path))

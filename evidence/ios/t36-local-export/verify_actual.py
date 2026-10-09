@@ -7,7 +7,7 @@ from jsonschema_subset import SchemaSet
 from canonical_json import canonicalize
 from jovra_ref import references,scoring,stats,csv_export
 from validate import engine_input_from_session
-base=Path(__file__).parent/'actual-session'
+base=Path(sys.argv[1]) if len(sys.argv)>1 else Path(__file__).parent/'actual-session'
 schemas=SchemaSet(ROOT/'spec/schemas')
 snapshots=list((base/'exports').glob('*/session.json'))
 assert len(snapshots)==1

@@ -68,15 +68,20 @@ public actor LocalExportService {
         guard let clipBytes, clipBytes.int64Value > 0 else { throw LocalExportError.unsafePath }
         let createdAt = Date.now.ISO8601Format()
         let prefix = "exports/\(id)/"
+        let clipFile = RecordFileReference(path: prefix + "clip.mp4", mimeType: "video/mp4", bytes: clipBytes.intValue)
+        let jsonFile = RecordFileReference(path: prefix + "session.json", mimeType: "application/json", bytes: data.sessionJSON.count)
+        let artifacts = [clipFile, jsonFile,
+            RecordFileReference(path: prefix + "points.csv", mimeType: "text/csv", bytes: data.pointsCSV.count),
+            RecordFileReference(path: prefix + "stats.csv", mimeType: "text/csv", bytes: data.statsCSV.count)]
         let records = [
             SessionExportRecord(id: id + "-clip", kind: .clip, createdAt: createdAt,
                 eventLogVersion: version, includesAudio: result.includesAudio, range: range, destination: .app,
-                file: .init(path: prefix + "clip.mp4", mimeType: "video/mp4", bytes: clipBytes.intValue), status: .done),
+                file: clipFile, status: .done),
             SessionExportRecord(id: id + "-data", kind: .sessionData, createdAt: createdAt,
                 eventLogVersion: version, includesAudio: false, destination: .app,
-                file: .init(path: prefix + "session.json", mimeType: "application/json", bytes: data.sessionJSON.count), status: .done)
+                file: jsonFile, status: .done)
         ]
-        try await store.recordExports(records, for: sessionID, expectedFolderIdentity: folderIdentity)
+        try await store.recordExports(records, artifacts: artifacts, for: sessionID, expectedFolderIdentity: folderIdentity)
         return LocalExportPackage(directory: directory, videoFrames: result.videoFrames)
     }
 
