@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.2.0",
+  "kind": "jovra.fixture.scoring",
+  "id": "E16-singles-receiver-override",
+  "title": "Reviewed order structural refusal: singles-receiver-override",
+  "covers": ["ADR0030", "receiverOverrideInvalid"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "jon", "displayName": "Jon", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "alex", "displayName": "Alex", "handedness": "left", "backhand": "oneHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["jon"], "B": ["alex"]},
+    "toss": {"firstServer": "jon", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "p01", "seq": 1, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "o02", "seq": 2, "type": "receiverOverride", "targetPointId": "p01", "receivingSide": "B", "deuceReceiver": "alex", "provenance": "reviewed", "source": "user"}
+    ],
+    "resolutionMode": "asPlayed"
+  },
+  "expectError": {"code": "receiverOverrideInvalid"}
+}

@@ -223,7 +223,7 @@
       "required": ["type"],
       "additionalProperties": false,
       "properties": {
-        "type": {"enum": ["serverMismatch", "pointsAfterMatchEnd", "checkpointConflict", "outcomeInconsistent", "eventAfterMatchEnd", "walkoverAfterPlay", "doublesOrderConflict", "decidingPointSideIgnored"], "description": "decidingPointSideIgnored: a point recorded decidingPointSide where the receiver does not choose the half; recorded = the stored side, derived = the side used."},
+        "type": {"enum": ["serverMismatch", "pointsAfterMatchEnd", "checkpointConflict", "outcomeInconsistent", "eventAfterMatchEnd", "walkoverAfterPlay", "doublesOrderConflict", "decidingPointSideIgnored", "receiverMismatch", "overrideContextChanged"], "description": "decidingPointSideIgnored: a point recorded decidingPointSide where the receiver does not choose the half; recorded = the stored side, derived = the side used."},
         "pointId": {"$ref": "common.schema.json#/$defs/id"},
         "eventId": {"$ref": "common.schema.json#/$defs/id"},
         "checkpointId": {"$ref": "common.schema.json#/$defs/id"},

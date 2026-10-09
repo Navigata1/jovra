@@ -39,10 +39,11 @@
       "required": ["code"],
       "additionalProperties": false,
       "properties": {
-        "code": {"enum": ["duplicateId", "seqNotIncreasing", "unknownEventType", "voidTargetMissing", "voidTargetNotEarlier", "supersedeTargetMissing", "supersedeTypeMismatch", "insertTargetMissing", "doublesOrderMissing", "doublesOrderInvalid", "unknownPlayer"]}
+        "code": {"enum": ["duplicateId", "seqNotIncreasing", "unknownEventType", "voidTargetMissing", "voidTargetNotEarlier", "supersedeTargetMissing", "supersedeTypeMismatch", "insertTargetMissing", "doublesOrderMissing", "doublesOrderInvalid", "unknownPlayer", "invalidResolutionMode", "overrideTargetMissing", "overrideTargetInvalid", "overrideMetadataInvalid", "receiverOverrideInvalid", "overrideRotationInvalid"]}
       }
     }
   },
+  "allOf": [{"if": {"properties": {"schemaVersion": {"pattern": "^0*1\\.0*[01]\\."}}}, "then": {"properties": {"input": {"properties": {"resolutionMode": false, "log": {"items": {"not": {"properties": {"type": {"enum": ["serverOverride", "receiverOverride"]}}}}}}}}}}],
   "oneOf": [
     {"required": ["checkpoints", "assertions"], "not": {"required": ["expectError"]}},
     {"required": ["expectError"], "not": {"anyOf": [{"required": ["checkpoints"]}, {"required": ["assertions"]}]}}
@@ -57,7 +58,8 @@
         "players": {"type": "array", "minItems": 2, "maxItems": 4, "items": {"$ref": "session.schema.json#/$defs/player"}},
         "sides": {"$ref": "session.schema.json#/$defs/sides"},
         "toss": {"$ref": "session.schema.json#/$defs/toss"},
-        "log": {"type": "array", "items": {"$ref": "session.schema.json#/$defs/logEvent"}}
+        "log": {"type": "array", "items": {"$ref": "session.schema.json#/$defs/logEvent"}},
+        "resolutionMode": {"enum": ["rules", "asPlayed"]}
       }
     },
     "assertion": {

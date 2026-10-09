@@ -309,7 +309,7 @@ These are encoded in the engine and pinned by fixtures; change them only through
 
 ## Not yet covered (needs fixtures before either app relies on it)
 
-As-played mode with `ServerOverride` / `ReceiverOverride` (Rule 27c-e), suspensions, wrong-ends and wrong-half
+Suspensions, wrong-ends and wrong-half
 corrections, checkpoint auto-fill, Canadian/Australian doubles, mixed-doubles No-Ad receiver rule, practice sets
 without a match end, the manual-assisted serve-speed formula and the court homography. The capability registry lists
 the analysis capabilities; none is `validated`, and the audio, rally and camera-moved detectors stay `disabled` until
@@ -323,3 +323,11 @@ keys at every depth, compact separators, no trailing newline, unescaped Unicode 
 point; negative zero is `0`. Decimal strings remain strings and rational times remain integer pairs. A native encoder's
 output is compared to that independently canonicalized expectation, never to an expectation produced by that native
 encoder. Stored/exported records use these canonical bytes. See `docs/adr/0029-core-contract-vocabulary.md`.
+
+## Reviewed order views (ADR0030)
+
+Session schema1.2 adds optional match.resolutionMode and closed reviewed serverOverride/receiverOverride events.
+Absent mode remains Rules; As-Played accepts explicit observations and reviewed persistent rotation anchors.
+Corrections that move a target off a legal boundary raise overrideContextChanged rather than guessing a boundary.
+The shared order pairs assert manually derived values in both modes before full outputs are written. Existing1.0/1.1
+fixtures remain unchanged. This is recorded-order replay, not automatic officiating or fault adjudication.

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.2.0",
+  "kind": "jovra.fixture.scoring",
+  "id": "E13-unknown-player-voided-override",
+  "title": "Reviewed order structural refusal: unknown-player-voided-override",
+  "covers": ["ADR0030", "unknownPlayer"],
+  "input": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "players": [
+      {"id": "jon", "displayName": "Jon", "handedness": "right", "backhand": "twoHanded", "isSelf": true},
+      {"id": "alex", "displayName": "Alex", "handedness": "left", "backhand": "oneHanded", "isSelf": false}
+    ],
+    "sides": {"A": ["jon"], "B": ["alex"]},
+    "toss": {"firstServer": "jon", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "p01", "seq": 1, "type": "point", "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}},
+      {"id": "o02", "seq": 2, "type": "serverOverride", "targetPointId": "p01", "server": "zed", "continuation": "pointOnly", "provenance": "reviewed", "source": "user"},
+      {"id": "o03", "seq": 3, "type": "void", "target": "o02"}
+    ],
+    "resolutionMode": "asPlayed"
+  },
+  "expectError": {"code": "unknownPlayer"}
+}
