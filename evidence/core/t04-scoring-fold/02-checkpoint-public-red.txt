@@ -1,0 +1,93 @@
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module FixtureRunnerGenerator
+[4/6] Compiling FixtureRunnerGenerator main.swift
+[4/7] Write Objects.LinkFileList
+[5/7] Linking FixtureRunnerGenerator-tool
+[6/7] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/13] Write sources
+[4/13] Write swift-version--58304C5D6DBC2206.txt
+[6/36] Emitting module FixtureRunnerGenerator
+[6/37] Write Objects.LinkFileList
+[8/37] Compiling FixtureRunnerGenerator main.swift
+[9/37] Emitting module FixtureRunnerGenerator
+[9/38] Write Objects.LinkFileList
+[11/38] Compiling JovraCore OutcomeInterpreter.swift
+[11/39] Linking FixtureRunnerGenerator-tool
+[12/39] Applying FixtureRunnerGenerator-tool
+[14/39] Compiling JovraCore Percent.swift
+[15/39] Compiling JovraCore SRGBColor.swift
+[16/39] Compiling JovraCore ScoringEngine.swift
+[16/39] Linking FixtureRunnerGenerator
+[17/39] Applying FixtureRunnerGenerator
+[18/39] Discover conformance runners by kind
+[19/39] Write sources
+[21/39] Compiling JovraCore Units.swift
+[22/39] Compiling JovraCore SessionStore.swift
+[23/39] Compiling JovraCore MatchState.swift
+[24/39] Compiling JovraCore OrderOverrides.swift
+[25/39] Compiling JovraCore LogResolver.swift
+[26/39] Compiling JovraCore ScoringInput.swift
+[27/39] Compiling JovraCore TimelineDiff.swift
+[28/39] Compiling JovraCore FrameRate.swift
+[29/39] Compiling JovraCore DurationLabel.swift
+[30/39] Compiling JovraCore CapabilityRegistryLoader.swift
+[31/39] Compiling JovraCore CanonicalJSON.swift
+[32/39] Compiling JovraCore ContrastRequirement.swift
+[33/39] Compiling JovraCore Provenance.swift
+[34/39] Compiling JovraCore TimelineModels.swift
+[35/39] Compiling JovraCore ContractPrimitives.swift
+[36/39] Compiling JovraCore DocumentModels.swift
+[37/39] Emitting module JovraCore
+[38/70] Compiling JovraCoreTests ProvenanceTests.swift
+[39/70] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[40/70] Compiling JovraCoreTests EquipmentRunner.swift
+[41/70] Compiling JovraCoreTests MediaRecordContractTests.swift
+[42/70] Compiling JovraCoreTests PercentTests.swift
+[43/70] Compiling JovraCoreTests ContrastTests.swift
+[44/70] Compiling JovraCoreTests DurationLabelTests.swift
+[45/70] Compiling JovraCoreTests ExportRunner.swift
+[46/70] Compiling JovraCoreTests GroundTruthRunner.swift
+[47/70] Compiling JovraCoreTests SessionContractTests.swift
+[48/70] Compiling JovraCoreTests UnitsTests.swift
+[49/70] Compiling JovraCoreTests RegistryContractTests.swift
+[50/70] Compiling JovraCoreTests ArchiveRunner.swift
+[51/70] Compiling JovraCoreTests CanonicalJSONTests.swift
+[52/70] Compiling JovraCoreTests ContractSafetyTests.swift
+[53/70] Compiling JovraCoreTests CSVContractRunner.swift
+[54/70] Compiling JovraCoreTests CanonicalRunner.swift
+[55/70] Compiling JovraCoreTests ScoringTests.swift
+[56/70] Emitting module JovraCoreTests
+[57/70] Compiling JovraCoreTests FrameRateTests.swift
+[58/70] Compiling JovraCoreTests FixtureManifest.swift
+[59/70] Compiling JovraCoreTests ManifestTests.swift
+[60/70] Compiling JovraCoreTests SampleMediaRunner.swift
+[61/70] Compiling JovraCoreTests ScoringRunner.swift
+[62/70] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[63/70] Compiling JovraCoreTests BenchmarkRunner.swift
+[64/70] Compiling JovraCoreTests SessionStoreTests.swift
+[65/70] Compiling JovraCoreTests SessionRunner.swift
+[66/70] Compiling JovraCoreTests UnitsRunner.swift
+[67/70] Compiling JovraCoreTests PctRunner.swift
+[68/70] Compiling JovraCoreTests PracticePlanRunner.swift
+[69/71] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[69/71] Write Objects.LinkFileList
+[70/71] Linking JovraCorePackageTests
+Build complete! (10.69s)
+error: Process '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/swiftpm-testing-helper --test-bundle-path /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/scratch/t03-core/arm64-apple-macosx/debug/JovraCorePackageTests.xctest/Contents/MacOS/JovraCorePackageTests --package-path ios/Packages/JovraCore --scratch-path /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/scratch/t03-core --filter negativeCheckpointIndexRefusesBeforeLookup /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/scratch/t03-core/arm64-apple-macosx/debug/JovraCorePackageTests.xctest/Contents/MacOS/JovraCorePackageTests --testing-library swift-testing' exited with unexpected signal code 5
+Test Suite 'Selected tests' started at 2026-10-09 10:08:49.261.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 10:08:49.262.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 10:08:49.262.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:08:49.262.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test negativeCheckpointIndexRefusesBeforeLookup() started.
+Swift/ContiguousArrayBuffer.swift:692: Fatal error: Index out of range

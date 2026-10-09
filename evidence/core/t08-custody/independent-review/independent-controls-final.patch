@@ -1,0 +1,98 @@
+diff --git a/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift b/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift
+index 98078fe..c03f00c 100644
+--- a/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift
++++ b/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/CaptureHandoffTests.swift
+@@ -31,3 +31,32 @@ import JovraCore
+     #expect(actual.match == document.match)
+     #expect(actual.schemaVersion == .current)
+ }
++
++@Test func independentCaptureFaultKeepsRecordingMarksFacetsAndEditedNoteTogether() async throws {
++    var repo = URL(fileURLWithPath: #filePath)
++    for _ in 0..<7 { repo.deleteLastPathComponent() }
++    var document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: repo.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
++    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++    defer { try? FileManager.default.removeItem(at: folder) }
++    let edited = SessionMark(id: "existing", tMs: 500, kind: .point, note: "User edited", provenance: .init(status: .manual, source: "user"))
++    document.marks = [edited]; document.sample = nil
++    document.storage.originals = .none; document.storage.includeInDeviceBackup = true
++    let store = try SessionStore(root: folder); try await store.create(document)
++    let metadata = folder.appendingPathComponent("sessions/\(document.id)/session.json")
++    let before = try Data(contentsOf: metadata)
++    let segment = SessionSegment(id: "video", index: 0, file: .init(path: "originals/video.mp4"), startMs: 0, durationMs: 2000, frameRate: .init(num: 30, den: 1), width: 1280, height: 720, codec: .h264, hasAudio: false, finalized: true)
++    let recording = SessionRecording(mode: .simulatorFixture, durationMs: 2000, segments: [segment], gaps: [], microphone: .denied, mediaAvailable: true)
++    var stale = edited; stale.note = "Stale journal note"
++    let incoming = SessionMark(id: "incoming", tMs: 1000, kind: .point, provenance: .init(status: .manual, source: "captureMark", sample: true))
++    let failing = try SessionStore(root: folder, writeFault: { _ in throw CocoaError(.fileWriteOutOfSpace) })
++    await #expect(throws: (any Error).self) { try await failing.saveCapture(recording, marks: [stale,incoming], for: document.id) }
++    #expect(try Data(contentsOf: metadata) == before)
++    try await store.saveCapture(recording, marks: [stale,incoming], for: document.id)
++    let actual = try await store.load(document.id)
++    #expect(actual.marks == [edited,incoming])
++    #expect(actual.recording == recording)
++    #expect(actual.analysis == document.analysis && actual.review == document.review && actual.archive == document.archive)
++    #expect(actual.sample?.synthetic == true)
++    #expect(actual.storage.originals == .onDevice)
++    #expect(actual.storage.includeInDeviceBackup == true)
++}
+diff --git a/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift b/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift
+index d64ab23..b138ffe 100644
+--- a/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift
++++ b/ios/Packages/JovraMedia/Tests/JovraMediaTests/Library/MediaLibraryTests.swift
+@@ -45,3 +45,56 @@ import JovraMedia
+     }
+     #expect(try FileManager.default.contentsOfDirectory(atPath: outside.path).isEmpty)
+ }
++
++@Test func independentBackupOptInClearsEveryExistingOriginalExclusionFlag() async throws {
++    var repo = URL(fileURLWithPath: #filePath)
++    for _ in 0..<7 { repo.deleteLastPathComponent() }
++    let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: repo.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
++    let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++    defer { try? FileManager.default.removeItem(at: root) }
++    let store = try SessionStore(root: root); try await store.create(document)
++    let library = MediaLibrary(store: store)
++    let folder = try await library.recordingFolder(sessionID: document.id)
++    var nested = folder.appendingPathComponent("originals/nested", isDirectory: true)
++    try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
++    var file = nested.appendingPathComponent("previously-excluded.mp4")
++    try Data([1,2,3]).write(to: file)
++    var excluded = URLResourceValues(); excluded.isExcludedFromBackup = true
++    try nested.setResourceValues(excluded); try file.setResourceValues(excluded)
++    try await library.includeOriginalsInDeviceBackup(true, sessionID: document.id)
++    #expect(try nested.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
++    #expect(try file.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == false)
++    #expect(try folder.appendingPathComponent("session.json").resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup != true)
++}
++
++@Test func independentBackupFailureRestoresFlagsAndRefusesExternalLinks() async throws {
++    var repo = URL(fileURLWithPath: #filePath)
++    for _ in 0..<7 { repo.deleteLastPathComponent() }
++    let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: repo.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
++    for afterRename in [false,true] {
++        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
++        defer { try? FileManager.default.removeItem(at: root) }
++        let store = try SessionStore(root: root); try await store.create(document)
++        let library = MediaLibrary(store: store)
++        let folder = try await library.recordingFolder(sessionID: document.id)
++        var file = try await library.reserveOriginalURL(sessionID: document.id, relativePath: "originals/original.mp4")
++        try Data([1,2,3]).write(to: file)
++        var excluded = URLResourceValues(); excluded.isExcludedFromBackup = true; try file.setResourceValues(excluded)
++        let failingStore = try SessionStore(root: root, writeFault: { checkpoint in
++            if case .documentRenamed = checkpoint, afterRename { throw SessionStoreError.durabilityUnconfirmed(5) }
++            if case .temporaryFileFlushed = checkpoint, !afterRename { throw CocoaError(.fileWriteOutOfSpace) }
++        })
++        let failing = MediaLibrary(store: failingStore)
++        await #expect(throws: (any Error).self) { try await failing.includeOriginalsInDeviceBackup(true, sessionID: document.id) }
++        #expect(try await store.load(document.id).storage.includeInDeviceBackup == afterRename)
++        #expect(try file.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == !afterRename)
++        #expect(try Data(contentsOf: file) == Data([1,2,3]))
++        var external = root.appendingPathComponent("external.mp4"); try Data([9]).write(to: external)
++        try external.setResourceValues(excluded)
++        try FileManager.default.createSymbolicLink(at: folder.appendingPathComponent("originals/external-link"), withDestinationURL: external)
++        await #expect(throws: MediaLibraryError.unsafePath) { try await library.includeOriginalsInDeviceBackup(true, sessionID: document.id) }
++        await #expect(throws: MediaLibraryError.unsafePath) { try await library.fileURL(sessionID: document.id, relativePath: "originals/external-link") }
++        #expect(try external.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
++        #expect(try Data(contentsOf: external) == Data([9]))
++    }
++}
