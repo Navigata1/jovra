@@ -1,0 +1,9 @@
+# T04 public fold — prerequisite 3 of 3
+
+Public Foundation-only ScoringEngine folds the complete effective log and exposes checkpoint recomputation and correction diff. The discovered scoring fixture runner compares every complete typed fold and stable refusal; a separate Python verifier schema-checks emitted bytes and compares independent canonical goldens. Stats remain deliberately pending for T05.
+
+Public controls were red before implementation, and independent review exposed two additional safety hazards. The negative checkpoint control trapped before the typed invalidSetup guard (file02). The activated bounded cycle probe writes a filesystem marker immediately before public fold, and explicitly terminates the separate SwiftPM testing helper when the old resolver hangs (file03); no probe helper survives. The reviewed replay state includes the visited-anchor guard.
+
+The final assembled candidate 7e16353 passes 106 fixtures, 107 independent schema/canonical output comparisons and 38 Swift tests. This buildable split removes the redundant raw-JSON corpus test; the discovered typed runner and independent Python verifier retain full corpus coverage. Fresh split and dependency reconciliation evidence follows.
+
+This partial flow slice does not close T04: sideMismatch, practice_set/free quota presets, reanalysis protection and richer game/set/result diff remain pending. T05 stats/CSV/provenance/trends remain pending. No native UI, simulator, device or ML validation is claimed.

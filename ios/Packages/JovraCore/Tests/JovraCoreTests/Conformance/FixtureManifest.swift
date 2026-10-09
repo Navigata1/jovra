@@ -8,7 +8,7 @@ protocol FixtureRunner: Sendable {
 }
 enum FixtureManifestError: Error, Equatable { case repositoryMissing, duplicateRunner(String), unconsumedKind(String) }
 enum FixtureManifest {
-    static let pending: Set<String> = ["jovra.fixture.scoring", "jovra.fixture.stats", "jovra.fixture.sample"]
+    static let pending: Set<String> = ["jovra.fixture.stats", "jovra.fixture.sample"]
     static func repository() throws -> URL {
         var url = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
         while !FileManager.default.fileExists(atPath: url.appendingPathComponent("spec/schemas/session.schema.json").path) {
