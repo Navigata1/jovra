@@ -226,7 +226,7 @@ their benchmark gates pass.
 
 Fixture files use the reference printer's human-readable, insertion-order layout. That source whitespace is cosmetic.
 For byte comparisons, parse the fixture and independently serialize canonical JSON: UTF-8, lexically sorted object
-keys at every depth, compact separators, no trailing newline, unescaped Unicode and forward slashes. Numbers retain
-their mathematical value; decimal strings remain strings and rational times remain integer pairs. A native encoder's
+keys at every depth, compact separators, no trailing newline, unescaped Unicode and forward slashes. Numeric tokens use plain decimal notation without exponents, fractional trailing zeroes or a trailing decimal
+point; negative zero is `0`. Decimal strings remain strings and rational times remain integer pairs. A native encoder's
 output is compared to that independently canonicalized expectation, never to an expectation produced by that native
 encoder. Stored/exported records use these canonical bytes. See `docs/adr/0029-core-contract-vocabulary.md`.
