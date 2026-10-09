@@ -26,8 +26,11 @@ enum LogResolver {
         var doubles: [Int: SessionDoublesOrderEvent] = [:], inert = voided, tombstones = Set<String>()
         func current(_ value: String) -> String { var id = value; while let next = replaced[id] { id = next }; return id }
         func slot(_ value: String) -> String {
-            var id = current(value)
-            while !order.contains(id), let target = seen[id]?.supersedes { id = current(target) }
+            var id = current(value), visited = Set<String>()
+            while !order.contains(id), let target = seen[id]?.supersedes {
+                if !visited.insert(id).inserted { break }
+                id = current(target)
+            }
             return id
         }
         for event in events {
