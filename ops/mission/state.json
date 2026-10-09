@@ -10,7 +10,7 @@
     "northStar": "Finish the authorized native iOS recording-to-export flow; hold before Studio expansion, Android and watches.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-10-09T15:56:06.334017+00:00",
+    "updated": "2026-10-09T16:39:43.866736+00:00",
     "sessionCount": 1
   },
   "policies": {
@@ -239,7 +239,7 @@
             "url": "https://github.com/Navigata1/jovra/pull/331",
             "mergedAt": "2026-10-09T14:48:50Z"
           },
-          "notes": "Atomic331/query336/custody344 merged. Separate Standards/Spec review and5independent runtime controls accepted. Recursive backup flags and confirmed storage.onDevice findings fixed red-to-green; full12XCTest+35Swift+64MediaPASS. FullT08Trash/importpending."
+          "notes": "Atomic331/query336/custody344 merged. Separate Standards/Spec review and5independent runtime controls accepted. Recursive backup flags and confirmed storage.onDevice findings fixed red-to-green; full12XCTest+35Swift+64MediaPASS. FullT08Trash/importpending. Directory durability350 now confirms parent/child identity and directory flush before acknowledgment; replaced parents fail closed without overwriting their bytes."
         },
         {
           "id": "T15-T16",
@@ -249,17 +249,17 @@
             "T03"
           ],
           "pr": null,
-          "notes": "Capture334/335/337/338/340 merged; independent34Core/70Media/all19hashes/schema accepted frozen source. Directory entry flush follow-up and verified-prefix startup recovery T16 in progress. PhysicalCamera/AVsync/power-loss budget unverified."
+          "notes": "Capture pipeline334/335/337/338/340 and directory durability350 merged. Recovery layout/atomic adoption and finished-stale decode/receipt slices in progress; actual torn-prefix and termination-loss gates pending. Physical camera/endurance/power-loss remain unverified."
         },
         {
           "id": "T14",
           "title": "Frame-accurate playback",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [
             "T03"
           ],
           "pr": null,
-          "notes": ""
+          "notes": "Exact decoded still-frame adapter passed200seeded forward/backward selections at60/240fps; not yet published. Full transport/proxy/timing/UI acceptance remains pending."
         },
         {
           "id": "P4-UI",
@@ -273,18 +273,22 @@
             "T04"
           ],
           "pr": null,
-          "notes": "T12boundedcomponents347merged35117e1 after separate reviews and fresh CI. Baselinec867:167nativeunits and15scenarioauditsPASS. Corrected820CTA/badge2testsPASS plusfive-tabAX5testPASS; earlier NoSpace receipt retained as UNVERIFIED. Native fresh-session/capture service public API red-to-green underway. Actual full record/library/replay/score/export integration pending; full feature AC remains open."
+          "notes": "T12boundedcomponents347merged35117e1 after separate reviews and fresh CI. Baselinec867:167nativeunits and15scenarioauditsPASS. Corrected820CTA/badge2testsPASS plusfive-tabAX5testPASS; earlier NoSpace receipt retained as UNVERIFIED. Native fresh-session/capture service public API red-to-green underway. Actual full record/library/replay/score/export integration pending; full feature AC remains open. Fresh-session service349 merged. Native coordinator exact188 control5PASS including120actual decoded saved frames; publication and actual Capture UI pending."
         },
         {
           "id": "P4-EXPORT",
           "title": "Clip/data export and end-to-end proof",
-          "status": "pending",
+          "status": "in_progress",
           "dependsOn": [
             "P4-UI",
             "T05"
           ],
-          "pr": null,
-          "notes": ""
+          "pr": {
+            "number": 352,
+            "url": "https://github.com/Navigata1/jovra/pull/352",
+            "mergedAt": "2026-10-09T16:38:00Z"
+          },
+          "notes": "Local clip primitive352mergedd192744 after separate independent axes and fresh green CI.76Media tests plus externalFFmpeg full decode/counter inspection of6retained synthetic outputsPASS. Full export UI/records/relaunch and data export pending; end-to-end gate not yet run."
         }
       ]
     }
@@ -464,6 +468,34 @@
       "url": "https://github.com/Navigata1/jovra/pull/347",
       "phase": "P4",
       "mergedAt": "2026-10-09T15:54:45Z"
+    },
+    {
+      "number": 348,
+      "title": "Core foundations heartbeat and guarded native flow harness",
+      "url": "https://github.com/Navigata1/jovra/pull/348",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T16:05:38Z"
+    },
+    {
+      "number": 349,
+      "title": "Native fresh capture session service",
+      "url": "https://github.com/Navigata1/jovra/pull/349",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T16:13:16Z"
+    },
+    {
+      "number": 350,
+      "title": "Directory durability and custody identity checks",
+      "url": "https://github.com/Navigata1/jovra/pull/350",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T16:17:07Z"
+    },
+    {
+      "number": 352,
+      "title": "Verified local clip export with default silent audio",
+      "url": "https://github.com/Navigata1/jovra/pull/352",
+      "phase": "P4",
+      "mergedAt": "2026-10-09T16:38:00Z"
     }
   ],
   "resume": {
