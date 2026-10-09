@@ -79,7 +79,11 @@ def resolve(events):
         """The placed id (or tombstone) holding ``event_id``'s position; an undone correction
         resolves to the version it tried to replace."""
         event_id = current(event_id)
+        visited = set()
         while event_id not in order and event_id in seen and "supersedes" in seen[event_id]:
+            if event_id in visited:
+                break  # A cycle of future corrections cannot provide an earlier placed anchor.
+            visited.add(event_id)
             event_id = current(seen[event_id]["supersedes"])
         return event_id
 
