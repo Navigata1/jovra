@@ -1,0 +1,3 @@
+# T15 prerequisite 4: capture state machine and first real-media proof
+
+349 manual Swift lines copied from accepted candidate48a1372: unchanged CaptureEngine plus the first two capture tests/helper definitions. Full slice media suite passes65 tests. The fixture is decoded and encoded through the same AVAssetWriter;60virtual seconds yield1800decoded video frames, audio presence, actual byte-count and exact saved-through checkpoint. Pause/interruption retain two finalized video-only segments, visible gaps and denied microphone metadata. Atomic recording/mark sink callback is present; dedicated operational tests follow in prerequisite5. No app/store adapter is activated here. Physical capture/crash-loss/AVsync/battery acceptance remains unverified and T15 stays open.
