@@ -1,0 +1,49 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/6] Write sources
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling JovraCore SessionStore.swift
+[5/9] Compiling JovraCore ReviewedPointStore.swift
+[6/9] Emitting module JovraCore
+[7/11] Compiling JovraMedia LocalExportService.swift
+[8/11] Emitting module JovraMedia
+[9/12] Compiling JovraMedia MediaLibrary.swift
+[10/14] Emitting module JovraBenchmark
+[11/18] Emitting module JovraBenchmarkTests
+[11/19] Write Objects.LinkFileList
+[12/19] Linking jovra-benchmark
+[13/19] Applying jovra-benchmark
+[15/19] Compiling JovraMediaTests RecoveryScannerTests.swift
+[16/19] Compiling JovraMediaTests LocalExportServiceTests.swift
+[17/19] Emitting module JovraMediaTests
+[18/20] Compiling JovraMediaTests MediaLibraryTests.swift
+[18/20] Write Objects.LinkFileList
+[19/20] Linking JovraMediaPackageTests
+Build complete! (4.72s)
+Test Suite 'Selected tests' started at 2026-10-09 13:02:39.740.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 13:02:39.741.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 13:02:39.741.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 13:02:39.741.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Durable local export package" started.
+◇ Test realClipAndSnapshotCommitWithoutLosingAnInterveningPoint() started.
+✔ Test realClipAndSnapshotCommitWithoutLosingAnInterveningPoint() passed after 1.168 seconds.
+◇ Test metadataFailureRetainsFourFilesButNeverRegistersDone() started.
+✔ Test metadataFailureRetainsFourFilesButNeverRegistersDone() passed after 0.682 seconds.
+◇ Test invalidRangesNeverPublishARecordOrAnArtifact() started.
+✔ Test invalidRangesNeverPublishARecordOrAnArtifact() passed after 0.540 seconds.
+◇ Test redirectedExportFolderCannotWriteOutsideTheSession() started.
+✔ Test redirectedExportFolderCannotWriteOutsideTheSession() passed after 0.505 seconds.
+◇ Test everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) started.
+◇ Test case passing 1 argument change → "points.csv" to everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) started.
+◇ Test case passing 1 argument change → "stats.csv" to everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) started.
+◇ Test case passing 1 argument change → "redirected-stats.csv" to everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) started.
+✔ Test everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) with 3 test cases passed after 1.683 seconds.
+✔ Suite "Durable local export package" passed after 4.580 seconds.
+✔ Test run with 5 tests in 1 suite passed after 4.580 seconds.
