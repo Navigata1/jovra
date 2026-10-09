@@ -1,0 +1,26 @@
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/9] Write swift-version--58304C5D6DBC2206.txt
+[2/5] Discover conformance runners by kind
+[3/5] Write sources
+[5/7] Compiling JovraCoreTests DirectoryCreationDurabilityTests.swift
+[6/7] Emitting module JovraCoreTests
+[7/8] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[7/9] Write Objects.LinkFileList
+[8/9] Linking JovraCorePackageTests
+Build complete! (1.80s)
+Test Suite 'Selected tests' started at 2026-10-09 11:00:19.258.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 11:00:19.259.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 11:00:19.259.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:00:19.259.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+◇ Test case passing 1 argument symbolicLink → false to sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+◇ Test case passing 1 argument symbolicLink → true to sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) started.
+✘ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) recorded an issue with 1 argument symbolicLink → false at DirectoryCreationDurabilityTests.swift:21:11: Expectation failed: an error was expected but none was thrown
+✘ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) with 2 test cases failed after 0.138 seconds with 1 issue.
+✘ Test run with 1 test in 0 suites failed after 0.139 seconds with 1 issue.

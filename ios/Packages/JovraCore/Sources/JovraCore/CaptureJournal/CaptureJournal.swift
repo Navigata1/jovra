@@ -127,7 +127,7 @@ public final class CaptureJournal: @unchecked Sendable {
     private static func replace(_ snapshot: CaptureJournalSnapshot, at url: URL,
                                 beforeReplace: (@Sendable () throws -> Void)?) throws {
         let directory = url.deletingLastPathComponent()
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try DurableDirectory.create(at: directory)
         let temporary = directory.appendingPathComponent(".capture-\(UUID().uuidString).tmp")
         let data = try CanonicalJSON.encode(snapshot)
         guard FileManager.default.createFile(atPath: temporary.path, contents: nil, attributes: [.posixPermissions: 0o600]) else {

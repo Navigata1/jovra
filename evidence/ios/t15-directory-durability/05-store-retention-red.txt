@@ -1,0 +1,61 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-durability/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/11] Write sources
+[2/11] Write swift-version--58304C5D6DBC2206.txt
+[3/7] Discover conformance runners by kind
+[4/7] Write sources
+[6/9] Compiling JovraCore DurableDirectory.swift
+[7/9] Emitting module JovraCore
+[8/10] Compiling JovraCore SessionStore.swift
+[9/27] Compiling JovraCoreTests CaptureJournalTests.swift
+[10/27] Compiling JovraCoreTests CanonicalJSONTests.swift
+[11/27] Compiling JovraCoreTests ContractSafetyTests.swift
+[12/27] Compiling JovraCoreTests FixtureManifest.swift
+[13/27] Compiling JovraCoreTests MediaRecordContractTests.swift
+[14/27] Compiling JovraCoreTests PercentTests.swift
+[15/27] Compiling JovraCoreTests RegistryContractTests.swift
+[16/27] Compiling JovraCoreTests ArchiveRunner.swift
+[17/27] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[18/27] Compiling JovraCoreTests BenchmarkRunner.swift
+[19/27] Compiling JovraCoreTests CSVContractRunner.swift
+[20/27] Compiling JovraCoreTests CanonicalRunner.swift
+[21/27] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[22/27] Compiling JovraCoreTests EquipmentRunner.swift
+[23/27] Compiling JovraCoreTests ExportRunner.swift
+[24/27] Compiling JovraCoreTests GroundTruthRunner.swift
+[25/27] Emitting module JovraCoreTests
+[26/42] Compiling JovraCoreTests PctRunner.swift
+[27/42] Compiling JovraCoreTests PracticePlanRunner.swift
+[28/42] Compiling JovraCoreTests SampleMediaRunner.swift
+[29/42] Compiling JovraCoreTests SessionRunner.swift
+[30/42] Compiling JovraCoreTests UnitsRunner.swift
+[31/42] Compiling JovraCoreTests SessionContractTests.swift
+[32/42] Compiling JovraCoreTests UnitsTests.swift
+[33/42] Compiling JovraCoreTests ContrastTests.swift
+[34/42] Compiling JovraCoreTests DurationLabelTests.swift
+[35/42] Compiling JovraCoreTests FrameRateTests.swift
+[36/42] Compiling JovraCoreTests ProvenanceTests.swift
+[37/42] Compiling JovraCoreTests ScoringContractTests.swift
+[38/42] Compiling JovraCoreTests DirectoryCreationDurabilityTests.swift
+[39/42] Compiling JovraCoreTests SessionStoreTests.swift
+[40/42] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+[40/42] Write Objects.LinkFileList
+[41/42] Linking JovraCorePackageTests
+Build complete! (4.81s)
+Test Suite 'Selected tests' started at 2026-10-09 10:44:42.908.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-09 10:44:42.909.
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-09 10:44:42.909.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 10:44:42.909.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory() started.
+✘ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory() recorded an issue at DirectoryCreationDurabilityTests.swift:5:2: Caught error: Error Domain=NSCocoaErrorDomain Code=260 "The file “session.json” couldn’t be opened because there is no such file." UserInfo={NSFilePath=/var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/EDBE3D37-3F54-4C38-9D30-ED8600A8166A/retained-sessions/b75c57d3-04df-5b4d-b969-32ed5cbfd97a/session.json, NSURL=file:///var/folders/7h/7yl2w89958s0s90j1dvth2880000gp/T/EDBE3D37-3F54-4C38-9D30-ED8600A8166A/retained-sessions/b75c57d3-04df-5b4d-b969-32ed5cbfd97a/session.json, NSUnderlyingError=0x9376701b0 {Error Domain=NSPOSIXErrorDomain Code=2 "No such file or directory"}}
+✘ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory() failed after 0.061 seconds with 1 issue.
+✘ Test run with 1 test in 0 suites failed after 0.061 seconds with 1 issue.
