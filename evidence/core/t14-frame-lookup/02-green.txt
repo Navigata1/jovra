@@ -1,0 +1,43 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/9] Compiling JovraMedia FramePlayback.swift
+[4/9] Emitting module JovraMedia
+[4/9] Write Objects.LinkFileList
+[5/15] Linking jovra-benchmark
+[6/15] Applying jovra-benchmark
+[8/15] Compiling JovraMediaTests CapturePipelineTests.swift
+[9/15] Compiling JovraMediaTests MediaDirectoryDurabilityTests.swift
+[10/15] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[11/15] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[12/15] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[13/15] Emitting module JovraMediaTests
+[14/20] Compiling JovraMediaTests RealFootageProbeTests.swift
+[15/20] Compiling JovraMediaTests FrameTimeTests.swift
+[16/20] Compiling JovraMediaTests FrameTimingTests.swift
+[17/20] Compiling JovraMediaTests MediaLibraryTests.swift
+[18/20] Compiling JovraMediaTests FramePlaybackTests.swift
+[19/22] Emitting module JovraMediaPackageTests
+[20/22] Compiling JovraMediaPackageTests runner.swift
+[20/22] Write Objects.LinkFileList
+[21/22] Linking JovraMediaPackageTests
+Build complete! (5.13s)
+Test Suite 'Selected tests' started at 2026-10-09 11:38:31.292.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 11:38:31.293.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 11:38:31.293.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 11:38:31.293.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Exact replay frame lookup" started.
+◇ Test seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) started.
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) started.
+✔ Test seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) with 2 test cases passed after 4.085 seconds.
+✔ Suite "Exact replay frame lookup" passed after 4.086 seconds.
+✔ Test run with 1 test in 1 suite passed after 4.086 seconds.

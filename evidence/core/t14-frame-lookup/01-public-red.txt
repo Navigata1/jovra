@@ -1,0 +1,236 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+Building for debugging...
+[0/15] /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/.build/arm64-apple-macosx/debug/JovraMediaPackageTests.derived/runner.swift
+[1/15] Write sources
+[2/15] Write jovra-benchmark-entitlement.plist
+[3/15] Write sources
+[9/15] Write swift-version--58304C5D6DBC2206.txt
+[11/27] Compiling JovraCore CapabilityRegistryLoader.swift
+[12/27] Compiling JovraCore CaptureJournal.swift
+[13/27] Compiling JovraCore CanonicalJSON.swift
+[14/27] Compiling JovraCore ContractPrimitives.swift
+[15/27] Compiling JovraCore DocumentModels.swift
+[16/27] Compiling JovraCore ContrastRequirement.swift
+[17/27] Compiling JovraCore DurationLabel.swift
+[18/27] Compiling JovraCore DurableDirectory.swift
+[19/27] Compiling JovraCore FrameRate.swift
+[20/27] Compiling JovraCore Percent.swift
+[21/27] Compiling JovraCore Provenance.swift
+[22/27] Emitting module JovraCore
+[23/38] Compiling JovraCore SRGBColor.swift
+[24/38] Compiling JovraCore LogResolver.swift
+[25/38] Compiling JovraCore MatchState.swift
+[26/38] Compiling JovraCore OrderOverrides.swift
+[27/38] Compiling JovraCore OutcomeInterpreter.swift
+[28/38] Compiling JovraCore ScoringEngine.swift
+[29/38] Compiling JovraCore ScoringInput.swift
+[30/38] Compiling JovraCore TimelineDiff.swift
+[31/38] Compiling JovraCore TimelineModels.swift
+[32/38] Compiling JovraCore SessionStore.swift
+[33/38] Compiling JovraCore Units.swift
+[34/44] Emitting module JovraMedia
+[35/44] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[36/44] Compiling JovraMedia CaptureEngine.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[37/44] Compiling JovraMedia CaptureSegmentWriter.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[38/44] Compiling JovraMedia CaptureTypes.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[39/44] Compiling JovraMedia DecodedCapture.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[40/49] Compiling JovraMedia FixtureCamera.swift
+[41/49] Compiling JovraMedia DeviceBudget.swift
+[42/49] Compiling JovraMedia FrameTime.swift
+[43/49] Compiling JovraMedia MediaLibrary.swift
+[44/49] Compiling JovraMedia MediaProbe.swift
+[45/58] Emitting module JovraBenchmark
+[46/58] Compiling JovraBenchmark DecodedFrameReader.swift
+[47/58] Compiling JovraBenchmark FrameSignature.swift
+[48/58] Compiling JovraBenchmark GroundTruth.swift
+[49/58] Compiling JovraBenchmark LumaPlane.swift
+[50/58] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[51/58] Compiling JovraBenchmark BenchmarkHarness.swift
+[52/58] Compiling JovraBenchmark BenchmarkRecord.swift
+[53/58] Compiling JovraBenchmark CapabilityGate.swift
+[54/65] Compiling JovraBenchmark Estimator.swift
+[55/65] Compiling JovraBenchmark EstimatorRegistry.swift
+[56/65] Compiling JovraBenchmark EventTimesTask.swift
+[57/65] Compiling JovraBenchmark Floor.swift
+[58/65] Compiling JovraBenchmark JSONValue.swift
+[59/65] Compiling JovraBenchmark Rational.swift
+[60/65] Compiling JovraBenchmark JovraBenchmark.swift
+[61/73] Emitting module jovra_benchmark
+[62/73] Compiling jovra_benchmark main.swift
+[63/78] Emitting module JovraMediaTests
+[64/83] Emitting module JovraBenchmarkTests
+[65/86] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:14:28: error: cannot find 'FramePlayback' in scope
+12 |         let truth = try catalog.truth(id: id)
+13 |         let rate = truth.video.frameRate.frameRate
+14 |         let playback = try FramePlayback(url: catalog.mediaURL(for: truth), rate: rate, frameCount: truth.video.frameCount)
+   |                            `- error: cannot find 'FramePlayback' in scope
+15 |         var seed: UInt64 = 0x1234
+16 |         for _ in 0..<100 {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:25:9: warning: no 'async' operations occur within 'await' expression
+23 |             #expect(frame.time == CMTime(frame: index, at: rate))
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+27 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:26:9: warning: no 'async' operations occur within 'await' expression
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+27 |     }
+28 | }
+[66/86] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:14:28: error: cannot find 'FramePlayback' in scope
+12 |         let truth = try catalog.truth(id: id)
+13 |         let rate = truth.video.frameRate.frameRate
+14 |         let playback = try FramePlayback(url: catalog.mediaURL(for: truth), rate: rate, frameCount: truth.video.frameCount)
+   |                            `- error: cannot find 'FramePlayback' in scope
+15 |         var seed: UInt64 = 0x1234
+16 |         for _ in 0..<100 {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:25:9: warning: no 'async' operations occur within 'await' expression
+23 |             #expect(frame.time == CMTime(frame: index, at: rate))
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+27 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:26:9: warning: no 'async' operations occur within 'await' expression
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+27 |     }
+28 | }
+[67/86] Compiling JovraMediaTests FrameTimingTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:14:28: error: cannot find 'FramePlayback' in scope
+12 |         let truth = try catalog.truth(id: id)
+13 |         let rate = truth.video.frameRate.frameRate
+14 |         let playback = try FramePlayback(url: catalog.mediaURL(for: truth), rate: rate, frameCount: truth.video.frameCount)
+   |                            `- error: cannot find 'FramePlayback' in scope
+15 |         var seed: UInt64 = 0x1234
+16 |         for _ in 0..<100 {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:25:9: warning: no 'async' operations occur within 'await' expression
+23 |             #expect(frame.time == CMTime(frame: index, at: rate))
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+27 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:26:9: warning: no 'async' operations occur within 'await' expression
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+27 |     }
+28 | }
+[68/86] Compiling JovraMediaTests MediaLibraryTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:14:28: error: cannot find 'FramePlayback' in scope
+12 |         let truth = try catalog.truth(id: id)
+13 |         let rate = truth.video.frameRate.frameRate
+14 |         let playback = try FramePlayback(url: catalog.mediaURL(for: truth), rate: rate, frameCount: truth.video.frameCount)
+   |                            `- error: cannot find 'FramePlayback' in scope
+15 |         var seed: UInt64 = 0x1234
+16 |         for _ in 0..<100 {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:25:9: warning: no 'async' operations occur within 'await' expression
+23 |             #expect(frame.time == CMTime(frame: index, at: rate))
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+27 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:26:9: warning: no 'async' operations occur within 'await' expression
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+27 |     }
+28 | }
+[69/86] Compiling JovraMediaTests FramePlaybackTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:14:28: error: cannot find 'FramePlayback' in scope
+12 |         let truth = try catalog.truth(id: id)
+13 |         let rate = truth.video.frameRate.frameRate
+14 |         let playback = try FramePlayback(url: catalog.mediaURL(for: truth), rate: rate, frameCount: truth.video.frameCount)
+   |                            `- error: cannot find 'FramePlayback' in scope
+15 |         var seed: UInt64 = 0x1234
+16 |         for _ in 0..<100 {
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:25:9: warning: no 'async' operations occur within 'await' expression
+23 |             #expect(frame.time == CMTime(frame: index, at: rate))
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+27 |     }
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/frame-playback/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/FramePlaybackTests.swift:26:9: warning: no 'async' operations occur within 'await' expression
+24 |         }
+25 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: -1) }
+26 |         await #expect(throws: (any Error).self) { _ = try await playback.frame(at: truth.video.frameCount) }
+   |         `- warning: no 'async' operations occur within 'await' expression
+27 |     }
+28 | }
+[70/86] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+[73/86] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+[74/86] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+[75/86] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+[76/86] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+[76/86] Write Objects.LinkFileList
+[77/86] Linking jovra-benchmark
+[78/86] Applying jovra-benchmark
+error: fatalError
