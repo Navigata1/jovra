@@ -26,6 +26,18 @@ import XCTest
 ///   ends with 32 pt of padding, so every element is audited clear of both bars at some step. Every
 ///   other audit type fails wherever the element is.
 enum AccessibilityAudit {
+    /// A renderer cannot assess a scrolling node whose pixels are cropped by its own viewport.
+    /// Membership must be established from the scroll subtree; geometry alone must not exempt a
+    /// fixed header control. Text clipping and all semantic/interaction findings always fail.
+    static func isOccludedScrollIssue(type: XCUIAccessibilityAuditType, frame: CGRect,
+                                      viewport: CGRect, isScrollDescendant: Bool) -> Bool {
+        guard type == .contrast || type == .elementDetection,
+              isScrollDescendant, !viewport.isNull, !viewport.isEmpty,
+              !frame.isNull, !frame.isEmpty,
+              [frame.minY, frame.maxY, viewport.minY, viewport.maxY].allSatisfy({ $0.isFinite }) else { return false }
+        return frame.minY < viewport.minY || frame.maxY > viewport.maxY
+    }
+
     /// Height of the band above the tab bar in which contrast sampling is unreliable.
     static let edgeBand: CGFloat = 16
     static let maximumSteps = 6
@@ -119,6 +131,19 @@ extension XCTestCase {
                 print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue on “\(element.label)” at \(frame) set aside: the audit moved the page by \(marker.frame.minY - markerY) pt")
                 setAside.append(element.label)
                 return true
+            }
+            let scrollView = app.scrollViews.firstMatch
+            if isRendered, scrollView.exists {
+                let viewport = scrollView.frame.intersection(app.frame)
+                let matches = scrollView.descendants(matching: element.elementType).matching(
+                    NSPredicate(format: "identifier == %@ AND label == %@", element.identifier, element.label)
+                ).allElementsBoundByIndex
+                let belongsToScroll = matches.contains { $0.frame == frame }
+                if AccessibilityAudit.isOccludedScrollIssue(type: issue.auditType, frame: frame,
+                                                           viewport: viewport, isScrollDescendant: belongsToScroll) {
+                    print("audit: \(AccessibilityAudit.name(of: issue.auditType)) on scrolling “\(element.label)” at \(frame) cropped by actual viewport \(viewport); assessed when visible")
+                    return true
+                }
             }
             let isTabBarItem = element.identifier.hasPrefix("tab.")
             let isClipped = !isTabBarItem && (frame.maxY > visibleBottom - AccessibilityAudit.edgeBand || frame.minY < visibleTop)
