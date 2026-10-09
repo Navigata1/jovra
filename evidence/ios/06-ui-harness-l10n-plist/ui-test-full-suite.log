@@ -1,0 +1,224 @@
+$ SIMULATOR_ID=5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 DERIVED_DATA=$PWD/.derivedData scripts/ios/ui-test.sh   (full suite + system-appearance passes; 2026-10-07, verifier round 2)
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at ios/Jovra.xcodeproj
+==> JovraUITests on 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (full suite)
+Writing result bundle at path:
+	.derivedData/ui-tests-20261007-212829.xcresult
+
+2026-10-07 21:42:07.081 xcodebuild[84746:120351297] [MT] IDETestOperationsObserverDebug: 814.573 elapsed -- Testing started completed.
+2026-10-07 21:42:07.081 xcodebuild[84746:120351297] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-07 21:42:07.081 xcodebuild[84746:120351297] [MT] IDETestOperationsObserverDebug: 814.573 sec, +814.573 sec -- end
+Testing started
+==> Screenshots exported to evidence/ios/06-ui-harness-l10n-plist
+   evidence/ios/06-ui-harness-l10n-plist/harness-start-route-insights.png
+   evidence/ios/06-ui-harness-l10n-plist/ax5-5-profile.png
+   evidence/ios/06-ui-harness-l10n-plist/ax5-4-insights.png
+   evidence/ios/06-ui-harness-l10n-plist/ax5-3-record.png
+   evidence/ios/06-ui-harness-l10n-plist/ax5-2-sessions.png
+   evidence/ios/06-ui-harness-l10n-plist/ax5-1-home.png
+   evidence/ios/06-ui-harness-l10n-plist/dark-5-profile.png
+   evidence/ios/06-ui-harness-l10n-plist/dark-4-insights.png
+   evidence/ios/06-ui-harness-l10n-plist/dark-3-record.png
+   evidence/ios/06-ui-harness-l10n-plist/dark-2-sessions.png
+   evidence/ios/06-ui-harness-l10n-plist/dark-1-home.png
+   evidence/ios/06-ui-harness-l10n-plist/light-5-profile.png
+   evidence/ios/06-ui-harness-l10n-plist/light-4-insights.png
+   evidence/ios/06-ui-harness-l10n-plist/light-3-record.png
+   evidence/ios/06-ui-harness-l10n-plist/light-2-sessions.png
+   evidence/ios/06-ui-harness-l10n-plist/light-1-home.png
+   evidence/ios/06-ui-harness-l10n-plist/light-7-after-route.png
+   evidence/ios/06-ui-harness-l10n-plist/light-6-capture-route.png
+   evidence/ios/06-ui-harness-l10n-plist/system-home.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-5-profile.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-4-insights.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-3-record.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-2-sessions.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-1-home.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-double-5-profile.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-double-4-insights.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-double-3-record.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-double-2-sessions.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-double-1-home.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-ax5-5-profile.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-ax5-4-insights.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-ax5-3-record.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-ax5-2-sessions.png
+   evidence/ios/06-ui-harness-l10n-plist/pseudo-ax5-1-home.png
+==> Summary
+Test class                        passed  failed  skipped
+JovraUITests/HarnessUITests            9       0        0
+JovraUITests/JovraSmokeUITests         6       0        0
+JovraUITests/PseudoLocaleUITests       4       0        0
+Total: 19 passed, 0 failed, 0 skipped in 3 classes (xcresult summary: 19 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/ui-tests-20261007-212829.xcresult
+==> System appearance pass: simulator in light
+Writing result bundle at path:
+	.derivedData/ui-system-light-20261007-212829.xcresult
+
+2026-10-07 21:42:41.583 xcodebuild[58881:120640759] [MT] IDETestOperationsObserverDebug: 26.966 elapsed -- Testing started completed.
+2026-10-07 21:42:41.583 xcodebuild[58881:120640759] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-07 21:42:41.583 xcodebuild[58881:120640759] [MT] IDETestOperationsObserverDebug: 26.966 sec, +26.966 sec -- end
+Testing started
+   evidence/ios/06-ui-harness-l10n-plist/simulator-light-system-home.png
+Test class                      passed  failed  skipped
+JovraUITests/JovraSmokeUITests       1       0        0
+Total: 1 passed, 0 failed, 0 skipped in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/ui-system-light-20261007-212829.xcresult
+==> System appearance pass: simulator in dark
+Writing result bundle at path:
+	.derivedData/ui-system-dark-20261007-212829.xcresult
+
+2026-10-07 21:43:10.856 xcodebuild[60957:120647883] [MT] IDETestOperationsObserverDebug: 26.465 elapsed -- Testing started completed.
+2026-10-07 21:43:10.856 xcodebuild[60957:120647883] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-07 21:43:10.856 xcodebuild[60957:120647883] [MT] IDETestOperationsObserverDebug: 26.465 sec, +26.465 sec -- end
+Testing started
+   evidence/ios/06-ui-harness-l10n-plist/simulator-dark-system-home.png
+Test class                      passed  failed  skipped
+JovraUITests/JovraSmokeUITests       1       0        0
+Total: 1 passed, 0 failed, 0 skipped in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/ui-system-dark-20261007-212829.xcresult
+exit 0
+
+--- Summaries re-printed with the expected-failure column (scripts/ios/xcresult-summary.py after this round)
+Test class                        passed  failed  skipped  expected
+JovraUITests/HarnessUITests            9       0        0         1
+JovraUITests/JovraSmokeUITests         6       0        0         0
+JovraUITests/PseudoLocaleUITests       4       0        0         0
+Total: 19 passed, 0 failed, 0 skipped, 1 expected failure(s) in 3 classes (xcresult summary: 19 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/ui-tests-20261007-212829.xcresult
+Test class                      passed  failed  skipped  expected
+JovraUITests/JovraSmokeUITests       1       0        0         0
+Total: 1 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/ui-system-light-20261007-212829.xcresult
+Test class                      passed  failed  skipped  expected
+JovraUITests/JovraSmokeUITests       1       0        0         0
+Total: 1 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T06 5B425B6C-1D36-4B65-A3ED-6EF26F50FA22 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/ui-system-dark-20261007-212829.xcresult
+
+--- Audit decisions in the full-suite run (test stdout from the result bundle; tab-bar dynamicType exemptions omitted).
+--- "set aside" = issue found while the audit itself moved the page; the audit is then repeated at the settled position.
+--- Counts: 49 set aside, 20 repeats, 0 FAILS, 14 ignored as clipped.
+HarnessUITests.testABadScreenshotNameFailsTheTestInsteadOfCrashing passed
+HarnessUITests.testAScreensOwnCorrectionWinsOverTheDefault passed
+HarnessUITests.testBriefCopyIsTheQuotedCopyOfEachScreen passed
+HarnessUITests.testCopyAssertionFindsTheShellsBriefCopyOnHome passed
+Test Case '-[JovraUITests.HarnessUITests testEveryControlOnEveryTabIsAtLeast44Points]' passed (17.970 seconds).
+HarnessUITests.testHonestyCorrectionsReplaceOrDropTheBriefsClaims passed
+HarnessUITests.testScreenshotNamesAreLowerCaseWordsJoinedByHyphens passed
+HarnessUITests.testStartRouteOpensAFullScreenRouteWithoutTheTabBar passed
+HarnessUITests.testStartRouteOpensTheNamedTab passed
+HarnessUITests.testUndersizedControlsAreReported passed
+audit: contrast issue on “Record a session” at (44.0, 598.6666666666666, 305.0, 211.33333333333326) set aside: the audit moved the page by 296.9999999999999 pt
+audit: repeating the audit at the settled position for ["Record a session"]
+audit: contrast issue on “Your game, in focus.” at (20.0, 8.332845052083314, 269.0, 130.66666666666666) set aside: the audit moved the page by 814.6666666666666 pt
+audit: repeating the audit at the settled position for ["Your game, in focus."]
+audit: contrast issue on “Your game, in focus.” at (20.0, 8.332845052083314, 269.0, 130.66666666666666) set aside: the audit moved the page by 1353.0 pt
+audit: repeating the audit at the settled position for ["Your game, in focus."]
+audit: contrast issue on “Your game, in focus.” at (20.0, 8.332845052083314, 269.0, 130.66666666666666) set aside: the audit moved the page by 1883.9999999999998 pt
+audit: repeating the audit at the settled position for ["Your game, in focus."]
+audit: contrast issue on “Your game, in focus.” at (20.0, 8.332845052083314, 269.0, 130.66666666666666) set aside: the audit moved the page by 2017.3333333333333 pt
+audit: contrast issue on “Record a session” at (44.0, 598.6666666666666, 305.0, 211.33333333333326) set aside: the audit moved the page by 2017.3333333333333 pt
+audit: repeating the audit at the settled position for ["Your game, in focus.", "Record a session"]
+audit: contrast issue on “Your sessions” at (20.0, 133.99951171875, 257.0, 155.33333333333331) set aside: the audit moved the page by 515.6666666666667 pt
+audit: repeating the audit at the settled position for ["Your sessions"]
+audit: contrast issue on “Choose a singles or doubles match, serve practice or stroke practice, then frame your court and record.” at (44.0, 551.99951171875, 313.6666666666667, 621.3333333333333) set aside: the audit moved the page by 1063.6666666666665 pt
+audit: repeating the audit at the settled position for ["Choose a singles or doubles match, serve practice or stroke practice, then frame your court and record."]
+audit: contrast issue on “Shot placement, Serve Lab, Stroke Lab, progress trends and practice suggestions, each linked to the points they came from.” at (44.0, 608.99951171875, 314.0, 745.3333333333333), visible 62.0–759.3333129882812: ignored (clipped or in the edge band)
+audit: contrast issue on “Shot placement, Serve Lab, Stroke Lab, progress trends and practice suggestions, each linked to the points they came from.” at (44.0, 564.6661783854167, 314.0, 745.3333333333333) set aside: the audit moved the page by 1038.3333333333333 pt
+audit: repeating the audit at the settled position for ["Shot placement, Serve Lab, Stroke Lab, progress trends and practice suggestions, each linked to the points they came from."]
+audit: contrast issue on “See the work pay off.” at (20.0, 171.33284505208334, 313.3333333333333, 130.66666666666666) set aside: the audit moved the page by 1539.0 pt
+audit: contrast issue on “Coming in a later ticket” at (44.0, 417.99951171875, 299.6666666666667, 130.66666666666674) set aside: the audit moved the page by 1539.0 pt
+audit: contrast issue on “Shot placement, Serve Lab, Stroke Lab, progress trends and practice suggestions, each linked to the points they came from.” at (44.0, 564.6661783854167, 314.0, 745.3333333333333) set aside: the audit moved the page by 1539.0 pt
+audit: repeating the audit at the settled position for ["See the work pay off.", "Coming in a later ticket", "Shot placement, Serve Lab, Stroke Lab, progress trends and practice suggestions, each linked to the points they came from."]
+audit: contrast issue on “See the work pay off.” at (20.0, 171.33284505208334, 313.3333333333333, 130.66666666666666) set aside: the audit moved the page by 2016.3333333333337 pt
+audit: contrast issue on “Coming in a later ticket” at (44.0, 417.99951171875, 299.6666666666667, 130.66666666666674) set aside: the audit moved the page by 2016.3333333333337 pt
+audit: contrast issue on “Shot placement, Serve Lab, Stroke Lab, progress trends and practice suggestions, each linked to the points they came from.” at (44.0, 564.6661783854167, 314.0, 745.3333333333333) set aside: the audit moved the page by 2016.3333333333337 pt
+audit: repeating the audit at the settled position for ["See the work pay off.", "Coming in a later ticket", "Shot placement, Serve Lab, Stroke Lab, progress trends and practice suggestions, each linked to the points they came from."]
+audit: contrast issue on “System” at (40.0, 770.0, 322.0, 66.66666666666663), visible 62.0–759.3333129882812: ignored (clipped or in the edge band)
+audit: contrast issue on “System” at (40.0, 770.0, 322.0, 66.66666666666663) set aside: the audit moved the page by 540.0 pt
+audit: contrast issue on “Appearance” at (36.0, 459.99951171875, 273.0, 63.33333333333326) set aside: the audit moved the page by 540.0 pt
+audit: repeating the audit at the settled position for ["System", "Appearance"]
+audit: contrast issue on “System” at (40.0, 770.0, 322.0, 66.66666666666663), visible 62.0–759.3333129882812: ignored (clipped or in the edge band)
+audit: contrast issue on “System” at (40.0, 770.0, 322.0, 66.66666666666663) set aside: the audit moved the page by 1043.0 pt
+audit: repeating the audit at the settled position for ["System"]
+audit: contrast issue on “System” at (40.0, 770.0, 322.0, 66.66666666666663), visible 62.0–759.3333129882812: ignored (clipped or in the edge band)
+audit: contrast issue on “System” at (40.0, 770.0, 322.0, 66.66666666666663) set aside: the audit moved the page by 1485.3333333333333 pt
+audit: repeating the audit at the settled position for ["System"]
+audit: contrast issue on “System” at (40.0, 770.0, 322.0, 66.66666666666663), visible 62.0–759.3333129882812: ignored (clipped or in the edge band)
+JovraSmokeUITests.testEveryTabAtLargestAccessibilityTextSize passed
+audit: contrast issue on “This week” at (20.0, 340.33333333333326, 92.33333333333333, 24.0) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “Placeholder screen” at (45.33333206176758, 755.0, 145.3333282470703, 16.4132080078125) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “Sample” at (328.0, 348.0, 44.0, 14.333333333333258) set aside: the audit moved the page by 61.66666666666666 pt
+audit: repeating the audit at the settled position for ["This week", "Placeholder screen", "Sample"]
+audit: contrast issue on “Placeholder screen” at (45.33333206176758, 755.0, 145.3333282470703, 16.4132080078125), visible 68.0–766.6666870117188: ignored (clipped or in the edge band)
+audit: contrast issue on “Insights” at (20.0, 89.66666666666673, 136.66666666666666, 45.66666666666664) set aside: the audit moved the page by 66.66666666666667 pt
+audit: contrast issue on “Checked or corrected by you.” at (44.0, 759.3333333333335, 203.0, 18.0) set aside: the audit moved the page by 66.66666666666667 pt
+audit: repeating the audit at the settled position for ["Insights", "Checked or corrected by you."]
+audit: contrast issue on “Checked or corrected by you.” at (44.0, 759.3333333333335, 203.0, 18.0), visible 62.0–766.6666870117188: ignored (clipped or in the edge band)
+audit: contrast issue on “Preferences” at (20.0, 231.66666666666666, 111.0, 24.0) set aside: the audit moved the page by 21.66666666666667 pt
+audit: contrast issue on “System” at (40.0, 352.0, 104.66666666666666, 44.0) set aside: the audit moved the page by 21.66666666666667 pt
+audit: contrast issue on “Light” at (148.66666666666666, 352.0, 104.66666666666669, 44.0) set aside: the audit moved the page by 21.66666666666667 pt
+audit: contrast issue on “Follow the system, or always light or dark.” at (84.0, 302.0, 232.66666666666663, 38.0) set aside: the audit moved the page by 21.66666666666667 pt
+audit: repeating the audit at the settled position for ["Preferences", "System", "Light", "Follow the system, or always light or dark."]
+JovraSmokeUITests.testEveryTabInDarkAppearance passed
+audit: contrast issue on “This week” at (20.0, 340.33333333333326, 92.33333333333333, 24.0) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “Placeholder screen” at (45.33333206176758, 755.0, 145.3333282470703, 16.4132080078125) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “Sample” at (328.0, 348.0, 44.0, 14.333333333333258) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “8” at (34.0, 428.33333333333326, 18.666666666666664, 33.66666666666657) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “6h 42m” at (157.33333333333331, 428.33333333333326, 86.66666666666666, 28.666666666666572) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “67%” at (280.66666666666663, 428.33333333333326, 62.333333333333314, 33.66666666666657) set aside: the audit moved the page by 61.66666666666666 pt
+audit: repeating the audit at the settled position for ["This week", "Placeholder screen", "Sample", "8", "6h 42m", "67%"]
+audit: contrast issue on “Placeholder screen” at (45.33333206176758, 755.0, 145.3333282470703, 16.4132080078125), visible 68.0–766.6666870117188: ignored (clipped or in the edge band)
+audit: contrast issue on “Checked or corrected by you.” at (44.0, 803.6666666666669, 203.0, 18.0), visible 62.0–766.6666870117188: ignored (clipped or in the edge band)
+audit: contrast issue on “Reviewed” at (69.33333333333333, 781.3333333333335, 56.33333333333334, 14.333333333333371), visible 62.0–766.6666870117188: ignored (clipped or in the edge band)
+audit: contrast issue on “Insights” at (20.0, 89.66666666666673, 136.66666666666666, 45.66666666666664) set aside: the audit moved the page by 66.66666666666667 pt
+audit: contrast issue on “See the work pay off.” at (20.0, 139.33333333333337, 183.66666666666666, 24.0) set aside: the audit moved the page by 66.66666666666667 pt
+audit: contrast issue on “Checked or corrected by you.” at (44.0, 759.3333333333335, 203.0, 18.0) set aside: the audit moved the page by 66.66666666666667 pt
+audit: contrast issue on “Reviewed” at (69.33333333333333, 737.0000000000001, 56.33333333333334, 14.333333333333371) set aside: the audit moved the page by 66.66666666666667 pt
+audit: repeating the audit at the settled position for ["Insights", "See the work pay off.", "Checked or corrected by you.", "Reviewed"]
+audit: contrast issue on “Checked or corrected by you.” at (44.0, 759.3333333333335, 203.0, 18.0), visible 62.0–766.6666870117188: ignored (clipped or in the edge band)
+audit: contrast issue on “Questions: hello@islanddevcrew.com” at (20.0, 740.6666666666666, 224.66666666666666, 15.666666666666742), visible 62.0–766.6666870117188: ignored (clipped or in the edge band)
+audit: contrast issue on “Preferences” at (20.0, 231.66666666666666, 111.0, 24.0) set aside: the audit moved the page by 21.66666666666667 pt
+audit: contrast issue on “System” at (40.0, 352.0, 104.66666666666666, 44.0) set aside: the audit moved the page by 21.66666666666667 pt
+audit: contrast issue on “Dark” at (257.3333333333333, 352.0, 104.66666666666669, 44.0) set aside: the audit moved the page by 21.66666666666667 pt
+audit: contrast issue on “Questions: hello@islanddevcrew.com” at (20.0, 740.6666666666666, 224.66666666666666, 15.666666666666742) set aside: the audit moved the page by 21.66666666666667 pt
+audit: contrast issue on “Follow the system, or always light or dark.” at (84.0, 302.0, 232.66666666666663, 38.0) set aside: the audit moved the page by 21.66666666666667 pt
+audit: repeating the audit at the settled position for ["Preferences", "System", "Dark", "Questions: hello@islanddevcrew.com", "Follow the system, or always light or dark."]
+audit: contrast issue on “Questions: hello@islanddevcrew.com” at (20.0, 740.6666666666666, 224.66666666666666, 15.666666666666742), visible 62.0–766.6666870117188: ignored (clipped or in the edge band)
+JovraSmokeUITests.testEveryTabInLightAppearance passed
+JovraSmokeUITests.testFullScreenRouteHidesTabsAndReturns passed
+JovraSmokeUITests.testHomeHeroOpensRecordTab passed
+audit: contrast issue on “This week” at (20.0, 340.33333333333326, 92.33333333333333, 24.0) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “Placeholder screen” at (45.33333206176758, 755.0, 145.3333282470703, 16.4132080078125) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “Sample” at (328.0, 348.0, 44.0, 14.333333333333258) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “8” at (34.0, 428.33333333333326, 18.666666666666664, 33.66666666666657) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “6h 42m” at (157.33333333333331, 428.33333333333326, 86.66666666666666, 28.666666666666572) set aside: the audit moved the page by 61.66666666666666 pt
+audit: contrast issue on “67%” at (280.66666666666663, 428.33333333333326, 62.333333333333314, 33.66666666666657) set aside: the audit moved the page by 61.66666666666666 pt
+audit: repeating the audit at the settled position for ["This week", "Placeholder screen", "Sample", "8", "6h 42m", "67%"]
+audit: contrast issue on “Placeholder screen” at (45.33333206176758, 755.0, 145.3333282470703, 16.4132080078125), visible 68.0–766.6666870117188: ignored (clipped or in the edge band)
+JovraSmokeUITests.testSystemAppearanceIsFollowed passed
+PseudoLocaleUITests.testEveryTabPassesTheTextClippedAuditInThePseudoLocale passed
+PseudoLocaleUITests.testTabTitlesFitInTheDoubleLengthPseudoLocale passed
+PseudoLocaleUITests.testTabTitlesFitInTheDoubleLengthPseudoLocaleAtLargestAccessibilityTextSize passed
+PseudoLocaleUITests.testTabTitlesFitInThePseudoLocaleAtLargestAccessibilityTextSize passed
+
+--- AX5 one-line tab title assertion, final code, English (testEveryTabAtLargestAccessibilityTextSize alone):
+Test Case '-[JovraUITests.JovraSmokeUITests testEveryTabAtLargestAccessibilityTextSize]' passed (332.072 seconds).
+ax5: tab item heights [60.666666666666515, 60.666666666666515, 60.666666666666515, 60.666666666666515, 60.666666666666515] pt; one-line limit 71.220703125 pt
+
+--- NEGATIVE (temporary variant, not committed): the same AX5 test launched with -pseudoLocale doubleLength, continueAfterFailure on,
+--- so every title wraps uniformly to two lines (the case the old equal-heights assertion could not see). exit 65. First tab:
+ax5: tab item heights [83.66666666666652, 83.66666666666652, 83.66666666666652, 83.66666666666652, 83.66666666666652] pt; one-line limit 71.220703125 pt
+ios/JovraUITests/JovraSmokeUITests.swift:86: error: -[JovraUITests.JovraSmokeUITests testEveryTabAtLargestAccessibilityTextSize] : XCTAssertLessThan failed: ("83.66666666666652") is not less than ("71.220703125") - tab.home title stays on one line at AX5 (83.66666666666652 pt; a second line adds 21.48046875 pt)
+ios/JovraUITests/JovraSmokeUITests.swift:86: error: -[JovraUITests.JovraSmokeUITests testEveryTabAtLargestAccessibilityTextSize] : XCTAssertLessThan failed: ("83.66666666666652") is not less than ("71.220703125") - tab.sessions title stays on one line at AX5 (83.66666666666652 pt; a second line adds 21.48046875 pt)
+ios/JovraUITests/JovraSmokeUITests.swift:86: error: -[JovraUITests.JovraSmokeUITests testEveryTabAtLargestAccessibilityTextSize] : XCTAssertLessThan failed: ("83.66666666666652") is not less than ("71.220703125") - tab.record title stays on one line at AX5 (83.66666666666652 pt; a second line adds 21.48046875 pt)
+ios/JovraUITests/JovraSmokeUITests.swift:86: error: -[JovraUITests.JovraSmokeUITests testEveryTabAtLargestAccessibilityTextSize] : XCTAssertLessThan failed: ("83.66666666666652") is not less than ("71.220703125") - tab.insights title stays on one line at AX5 (83.66666666666652 pt; a second line adds 21.48046875 pt)
+ios/JovraUITests/JovraSmokeUITests.swift:86: error: -[JovraUITests.JovraSmokeUITests testEveryTabAtLargestAccessibilityTextSize] : XCTAssertLessThan failed: ("83.66666666666652") is not less than ("71.220703125") - tab.profile title stays on one line at AX5 (83.66666666666652 pt; a second line adds 21.48046875 pt)

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /v1/camera-invites/redeem request",
+  "description": "cameraInvites.redeem (jovra-gateway; caller: guest). A JWT, if present, is verified and its sub is the only source of redeemed_by_user_id. A request descriptor: pathParams, query, headers and body. JSON body: #/$defs/body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "headers",
+    "body"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "headers": {
+      "$ref": "#/$defs/headers"
+    },
+    "body": {
+      "$ref": "#/$defs/body"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "description": "One of: none; user.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "Idempotency-Key",
+            "Content-Type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "Idempotency-Key": {
+              "$ref": "common.schema.json#/$defs/idempotencyKeyHeader"
+            },
+            "Content-Type": {
+              "$ref": "common.schema.json#/$defs/jsonContentType"
+            },
+            "X-Request-Id": {
+              "$ref": "common.schema.json#/$defs/requestIdHeader"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "Authorization",
+            "Idempotency-Key",
+            "Content-Type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "Authorization": {
+              "$ref": "common.schema.json#/$defs/bearerAuthorization"
+            },
+            "Idempotency-Key": {
+              "$ref": "common.schema.json#/$defs/idempotencyKeyHeader"
+            },
+            "Content-Type": {
+              "$ref": "common.schema.json#/$defs/jsonContentType"
+            },
+            "X-Request-Id": {
+              "$ref": "common.schema.json#/$defs/requestIdHeader"
+            }
+          }
+        }
+      ]
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "code",
+        "devicePublicKey",
+        "deviceLabel"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "common.schema.json#/$defs/inviteCode"
+        },
+        "devicePublicKey": {
+          "$ref": "common.schema.json#/$defs/p256PublicJwk"
+        },
+        "deviceLabel": {
+          "$ref": "common.schema.json#/$defs/displayLabel"
+        }
+      }
+    }
+  }
+}

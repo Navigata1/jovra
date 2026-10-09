@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /v1/jobs/{jobId}/review request",
+  "description": "jobs.review (jovra-gateway; caller: owner). A request descriptor: pathParams, query, headers and body. JSON body: #/$defs/body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers",
+    "body"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "jobId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "jobId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    },
+    "body": {
+      "$ref": "#/$defs/body"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "Authorization",
+        "Idempotency-Key",
+        "Content-Type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Authorization": {
+          "$ref": "common.schema.json#/$defs/bearerAuthorization"
+        },
+        "Idempotency-Key": {
+          "$ref": "common.schema.json#/$defs/idempotencyKeyHeader"
+        },
+        "Content-Type": {
+          "$ref": "common.schema.json#/$defs/jsonContentType"
+        },
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        }
+      }
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "decision"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "approve",
+            "revise"
+          ]
+        },
+        "storyPlanVersionId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "decision"
+            ],
+            "properties": {
+              "decision": {
+                "const": "revise"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "storyPlanVersionId"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "storyPlanVersionId"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GET /v1/me response",
+  "description": "me: a response descriptor (status, headers, body). Success body: JSON. Every response carries X-Request-Id; a JSON body's requestId equals it.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/success"
+    },
+    {
+      "$ref": "#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "success": {
+      "description": "Success: 200 with the §5 envelope {data, requestId}.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": 200
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "type": "object",
+          "required": [
+            "data",
+            "requestId"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/data"
+            },
+            "requestId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            },
+            "clientRequestId": {
+              "$ref": "common.schema.json#/$defs/uuid"
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "description": "An error: the §5 envelope with one of this route's codes at its HTTP status.",
+      "type": "object",
+      "required": [
+        "status",
+        "headers",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            401,
+            500
+          ]
+        },
+        "headers": {
+          "$ref": "common.schema.json#/$defs/jsonResponseHeaders"
+        },
+        "body": {
+          "$ref": "common.schema.json#/$defs/errorBody"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": 401
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "unauthorized",
+                        "demo_not_accepted"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": 500
+            },
+            "body": {
+              "properties": {
+                "error": {
+                  "properties": {
+                    "code": {
+                      "enum": [
+                        "internal"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "userId",
+        "displayName",
+        "env",
+        "features"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "userId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        },
+        "displayName": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            }
+          ]
+        },
+        "env": {
+          "$ref": "common.schema.json#/$defs/env"
+        },
+        "features": {
+          "description": "Server-enabled feature ids (INFERRED shape).",
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9.-]{0,63}$"
+          }
+        }
+      }
+    }
+  }
+}

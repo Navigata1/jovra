@@ -1,0 +1,53 @@
+backend-db	supabase test db	﻿2026-10-08T18:33:14.0080977Z ##[group]Run supabase test db
+backend-db	supabase test db	2026-10-08T18:33:14.0081311Z ^[[36;1msupabase test db^[[0m
+backend-db	supabase test db	2026-10-08T18:33:14.0158118Z shell: /usr/bin/bash -e {0}
+backend-db	supabase test db	2026-10-08T18:33:14.0158395Z env:
+backend-db	supabase test db	2026-10-08T18:33:14.0158636Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase test db	2026-10-08T18:33:14.0159285Z ##[endgroup]
+backend-db	supabase test db	2026-10-08T18:33:14.4091066Z Connecting to local database...
+backend-db	supabase test db	2026-10-08T18:33:16.4153282Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+backend-db	supabase test db	2026-10-08T18:33:16.4462010Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .............. ok
+backend-db	supabase test db	2026-10-08T18:33:16.5000470Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ..... ok
+backend-db	supabase test db	2026-10-08T18:33:16.5736927Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ... ok
+backend-db	supabase test db	2026-10-08T18:33:16.6138583Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql:25: ERROR:  role "jovra_gateway" does not exist
+backend-db	supabase test db	2026-10-08T18:33:16.6181066Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ...... 
+backend-db	supabase test db	2026-10-08T18:33:16.6182223Z # Failed test 2: "schema app_gateway exists"
+backend-db	supabase test db	2026-10-08T18:33:16.6183347Z # Failed test 4: "jovra_owner exists and cannot log in, inherit, bypass RLS or act as superuser"
+backend-db	supabase test db	2026-10-08T18:33:16.6184488Z #     (test result was NULL)
+backend-db	supabase test db	2026-10-08T18:33:16.6185391Z # Failed test 5: "jovra_gateway: login, noinherit, nobypassrls, connection limit 20"
+backend-db	supabase test db	2026-10-08T18:33:16.6186290Z #     (test result was NULL)
+backend-db	supabase test db	2026-10-08T18:33:16.6187141Z # Failed test 6: "jovra_orchestrator: login, noinherit, nobypassrls, connection limit 10"
+backend-db	supabase test db	2026-10-08T18:33:16.6188086Z #     (test result was NULL)
+backend-db	supabase test db	2026-10-08T18:33:16.6188714Z Dubious, test returned 3 (wstat 768, 0x300)
+backend-db	supabase test db	2026-10-08T18:33:16.6189706Z Failed 30/32 subtests 
+backend-db	supabase test db	2026-10-08T18:33:16.6516854Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql:29: ERROR:  relation "public.projects" does not exist
+backend-db	supabase test db	2026-10-08T18:33:16.6517983Z LINE 1: insert into public.projects (id, owner_id, local_project_id,...
+backend-db	supabase test db	2026-10-08T18:33:16.6518756Z                     ^
+backend-db	supabase test db	2026-10-08T18:33:16.6547189Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .. 
+backend-db	supabase test db	2026-10-08T18:33:16.6549115Z Dubious, test returned 3 (wstat 768, 0x300)
+backend-db	supabase test db	2026-10-08T18:33:16.6552086Z Failed 74/74 subtests 
+backend-db	supabase test db	2026-10-08T18:33:16.6798472Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql:14: ERROR:  relation "public.projects" does not exist
+backend-db	supabase test db	2026-10-08T18:33:16.6800640Z LINE 1: insert into public.projects (id, owner_id, local_project_id,...
+backend-db	supabase test db	2026-10-08T18:33:16.6802023Z                     ^
+backend-db	supabase test db	2026-10-08T18:33:16.6825610Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ....... 
+backend-db	supabase test db	2026-10-08T18:33:16.6826749Z Dubious, test returned 3 (wstat 768, 0x300)
+backend-db	supabase test db	2026-10-08T18:33:16.6840269Z Failed 30/30 subtests 
+backend-db	supabase test db	2026-10-08T18:33:16.6840532Z 
+backend-db	supabase test db	2026-10-08T18:33:16.6849793Z Test Summary Report
+backend-db	supabase test db	2026-10-08T18:33:16.6850702Z -------------------
+backend-db	supabase test db	2026-10-08T18:33:16.6858644Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql    (Wstat: 768 (exited 3) Tests: 6 Failed: 4)
+backend-db	supabase test db	2026-10-08T18:33:16.6866531Z   Failed tests:  2, 4-6
+backend-db	supabase test db	2026-10-08T18:33:16.6867327Z   Non-zero exit status: 3
+backend-db	supabase test db	2026-10-08T18:33:16.6868219Z   Parse errors: Bad plan.  You planned 32 tests but ran 6.
+backend-db	supabase test db	2026-10-08T18:33:16.6869809Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql (Wstat: 768 (exited 3) Tests: 0 Failed: 0)
+backend-db	supabase test db	2026-10-08T18:33:16.6871090Z   Non-zero exit status: 3
+backend-db	supabase test db	2026-10-08T18:33:16.6871741Z   Parse errors: Bad plan.  You planned 74 tests but ran 0.
+backend-db	supabase test db	2026-10-08T18:33:16.6872930Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql     (Wstat: 768 (exited 3) Tests: 0 Failed: 0)
+backend-db	supabase test db	2026-10-08T18:33:16.6874050Z   Non-zero exit status: 3
+backend-db	supabase test db	2026-10-08T18:33:16.6874687Z   Parse errors: Bad plan.  You planned 30 tests but ran 0.
+backend-db	supabase test db	2026-10-08T18:33:16.6875587Z Files=6, Tests=49,  0 wallclock secs ( 0.03 usr  0.01 sys +  0.07 cusr  0.02 csys =  0.13 CPU)
+backend-db	supabase test db	2026-10-08T18:33:16.6876429Z Result: FAIL
+backend-db	supabase test db	2026-10-08T18:33:16.8294772Z 
+backend-db	supabase test db	2026-10-08T18:33:16.8295161Z error running container: exit 1
+backend-db	supabase test db	2026-10-08T18:33:16.8295910Z Try rerunning the command with --debug to troubleshoot the error.
+backend-db	supabase test db	2026-10-08T18:33:16.8486187Z ##[error]Process completed with exit code 1.

@@ -7,17 +7,24 @@ import SwiftUI
 /// Dynamic Type: like the system tab bar, the labels stop growing at `maxLabelSize` and every tab
 /// offers the Large Content Viewer (touch and hold at accessibility sizes shows the tab enlarged).
 /// Letting a five-column bar grow without limit breaks every label mid-word and eats the screen.
+/// A title too long for one line (a long translation) wraps rather than being truncated; the
+/// pseudo-locale UI tests check every title fits.
 struct JovraTabBar: View {
     /// Largest Dynamic Type size the tab labels follow. Beyond it, the Large Content Viewer takes over.
     static let maxLabelSize = DynamicTypeSize.xxxLarge
     /// Height of the strip the bar reserves above its top edge for the Record circle's overhang.
     static let recordOverhang: CGFloat = 12
+    /// Keeps neighbouring titles apart when both fill their columns.
+    static let columnGap: CGFloat = 2
+    /// Bar edge inset. With `columnGap` the columns are as wide as with the former 8 pt inset and no
+    /// gap (an English title at the xxxLarge cap, semibold, needs 75 pt on iPhone 17 Pro).
+    static let edgeInset: CGFloat = 3
 
     @Binding var selection: AppTab
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        HStack(alignment: .top, spacing: 0) {
+        HStack(alignment: .top, spacing: Self.columnGap) {
             ForEach(AppTab.allCases) { tab in
                 Button {
                     if reduceMotion {
@@ -39,7 +46,7 @@ struct JovraTabBar: View {
             }
         }
         .dynamicTypeSize(...Self.maxLabelSize)
-        .padding(.horizontal, Space.x1)
+        .padding(.horizontal, Self.edgeInset)
         .padding(.top, Space.x1)
         .frame(maxWidth: 640)
         .frame(maxWidth: .infinity)
@@ -65,6 +72,7 @@ struct JovraTabBar: View {
 /// has the same structure, so all five titles share one baseline.
 private struct TabLabel: View {
     static let iconSlot: CGFloat = 28
+    static let titleLineLimit = 3
 
     var tab: AppTab
     var isSelected: Bool
@@ -73,15 +81,25 @@ private struct TabLabel: View {
         VStack(spacing: 3) {
             icon
                 .frame(height: Self.iconSlot)
-            Text(tab.title)
-                .font(.caption.weight(isSelected ? .semibold : .regular))
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
+            title
             SelectionDot(isVisible: isSelected)
         }
         .foregroundStyle(.jovra(isSelected ? .tabSelected : .tabUnselected))
         .frame(maxWidth: .infinity)
         .contentShape(Rectangle())
+    }
+
+    /// One line when the title fits its column. A longer title (a long translation) wraps onto up
+    /// to three centred lines and only then shrinks, to 75 % at most, so it is never truncated. No
+    /// single-line limit: the textClipped audit reports a tight one-line title as clipped.
+    private var title: some View {
+        Text(tab.title)
+            .font(.caption.weight(isSelected ? .semibold : .regular))
+            .multilineTextAlignment(.center)
+            .lineLimit(Self.titleLineLimit)
+            .minimumScaleFactor(0.75)
+            .allowsTightening(true)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     @ViewBuilder private var icon: some View {

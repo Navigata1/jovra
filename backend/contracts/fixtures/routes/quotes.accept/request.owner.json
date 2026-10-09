@@ -1,0 +1,21 @@
+{
+  "pathParams": {
+    "quoteId": "00000000-0000-4000-8000-000000000403"
+  },
+  "headers": {
+    "Authorization": "Bearer sample-access-token-owner-tester",
+    "Idempotency-Key": "00000000-0000-4000-8000-000000000d0d",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "inputsSha256": "c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+    "consent": {
+      "cloudProcessing": true,
+      "modelProvider": false,
+      "textClasses": [],
+      "retentionDays": 7,
+      "consentTextVersion": "studio-cloud-consent@1.0.0"
+    },
+    "acceptedCapCredits": 12
+  }
+}

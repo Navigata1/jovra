@@ -1,0 +1,103 @@
+== 1. a temporary cases module with one new vector kind (temp-probe) and no checker
+$ cat spec/reference/studio/cases/temp_probe_cases.py
+"""A temporary cases module (S03 negative test only)."""
+
+KIND = "temp-probe"
+
+
+def fixtures(sample):
+    return {"vectors/temp-probe.json": {
+        "schemaVersion": "jovra.studio-fixture.vectors/1", "kind": KIND, "status": "test only",
+        "cases": [{"id": "two-plus-two", "a": 2, "b": 2, "expect": 4}]}}
+
+$ python3 spec/reference/studio/generate_studio_fixtures.py
+wrote 64 fixture files, the story-profile catalog and the module index
+[exit 0]
+
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+FAIL spec/studio/fixtures/vectors/temp-probe.json: no checker for kind temp-probe (register one in the VECTOR_CHECKERS of the cases module that writes it)
+RESULT: FAIL
+[exit 1]
+
+== 2. its checker added, but no module page
+$ tail -9 spec/reference/studio/cases/temp_probe_cases.py
+
+def check_probe(ctx, case, report, where):
+    if case["a"] + case["b"] == case["expect"]:
+        report.ok("temp-probe vectors")
+    else:
+        report.fail(where, "sum differs")
+
+
+VECTOR_CHECKERS = {KIND: check_probe}
+
+$ python3 spec/reference/studio/generate_studio_fixtures.py
+wrote 64 fixture files, the story-profile catalog and the module index
+[exit 0]
+
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+FAIL module pages: kind temp-probe has no module page (add it to the kinds: of spec/studio/modules/<module>.md)
+temp-probe vectors                   1
+RESULT: FAIL
+[exit 1]
+
+== 3. its module page added
+$ cat spec/studio/modules/temp-probe.md
+---
+module: temp-probe
+reference: []
+cases: [spec/reference/studio/cases/temp_probe_cases.py]
+kinds: [temp-probe]
+coverage: covered
+swift: pending
+kotlin: pending
+---
+# Temporary probe (S03 negative test only)
+
+$ python3 spec/reference/studio/generate_studio_fixtures.py
+wrote 64 fixture files, the story-profile catalog and the module index
+[exit 0]
+$ grep temp-probe spec/studio/modules/README.md
+- [temp-probe](temp-probe.md)
+
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+temp-probe vectors                   1
+RESULT: PASS
+[exit 0]
+$ python3 scripts/spec/validate_studio.py --list | grep -E '^kind|temp-probe'
+kind                                  type    count  invalid  module         coverage     swift    kotlin
+temp-probe                            vector  1      -        temp-probe     covered      pending  pending
+
+== 4. temporary files removed
+
+$ rm spec/reference/studio/cases/temp_probe_cases.py spec/studio/modules/temp-probe.md
+[exit 0]
+
+$ python3 spec/reference/studio/generate_studio_fixtures.py
+wrote 63 fixture files, the story-profile catalog and the module index
+[exit 0]
+
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+RESULT: PASS
+[exit 0]
+$ git status --short spec/
+(no temporary file left)
+
+== 5. one existing vector file removed (proves the manifest is complete)
+
+$ rm spec/studio/fixtures/vectors/quote-credits.json
+[exit 0]
+
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+FAIL module pages: kind quote-credits has a checker but no vector file
+FAIL determinism: generated file missing: vectors/quote-credits.json; run spec/reference/studio/generate_studio_fixtures.py
+RESULT: FAIL
+[exit 1]
+
+$ python3 spec/reference/studio/generate_studio_fixtures.py
+wrote 63 fixture files, the story-profile catalog and the module index
+[exit 0]
+
+$ python3 scripts/spec/validate_studio.py | grep -E '^FAIL|temp-probe|RESULT'
+RESULT: PASS
+[exit 0]

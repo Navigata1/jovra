@@ -1,0 +1,7 @@
+// Copy to ios/Config/Drive.xcconfig (git-ignored) and replace the example values with the iOS OAuth
+// client from the Google Cloud console. The reversed client id is the client id's domain parts in
+// reverse: 123456789012-abc.apps.googleusercontent.com -> com.googleusercontent.apps.123456789012-abc
+// Never commit a filled-in copy: client ids come from configuration, not source (CLAUDE.md rule 5).
+JOVRA_DRIVE_CLIENT_ID = 000000000000-example.apps.googleusercontent.com
+JOVRA_DRIVE_REVERSED_CLIENT_ID = com.googleusercontent.apps.000000000000-example
+JOVRA_DRIVE_XCCONFIG_LOADED = YES

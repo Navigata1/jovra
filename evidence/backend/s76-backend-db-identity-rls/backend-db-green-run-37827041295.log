@@ -1,0 +1,298 @@
+backend-db	No hosted identifiers or real email addresses in the tree	﻿2026-10-08T18:48:02.1158658Z ##[group]Run supabase/scripts/check-hosted-identifiers.sh
+backend-db	No hosted identifiers or real email addresses in the tree	2026-10-08T18:48:02.1159215Z ^[[36;1msupabase/scripts/check-hosted-identifiers.sh^[[0m
+backend-db	No hosted identifiers or real email addresses in the tree	2026-10-08T18:48:02.1440596Z shell: /usr/bin/bash -e {0}
+backend-db	No hosted identifiers or real email addresses in the tree	2026-10-08T18:48:02.1441035Z ##[endgroup]
+backend-db	No hosted identifiers or real email addresses in the tree	2026-10-08T18:48:02.2061304Z OK  257 files: no supabase.co host, API key, JWT or email outside example.test
+backend-db	supabase db reset (migrations and seed from scratch)	﻿2026-10-08T18:48:53.2589908Z ##[group]Run supabase db reset
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:48:53.2591021Z ^[[36;1msupabase db reset^[[0m
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:48:53.2652934Z shell: /usr/bin/bash -e {0}
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:48:53.2653412Z env:
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:48:53.2653647Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:48:53.2653946Z ##[endgroup]
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:48:53.6385813Z Resetting local database...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:48:53.9433857Z Recreating database...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:05.1705040Z Initialising schema...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:05.6905978Z Seeding globals from roles.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:05.7035193Z Applying migration 20261008000000_tester_signup_lock.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:05.7164576Z Applying migration 20261008010000_identity_membership_rls.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:05.7220330Z NOTICE (42P06): schema "app_private" already exists, skipping
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:05.7221274Z NOTICE (42P06): schema "app_ops" already exists, skipping
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:05.7972917Z Seeding data from supabase/seed/00_testers.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:05.8083096Z Restarting containers...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-08T18:49:06.0451515Z Finished supabase db reset on branch ticket/s76-backend-db-identity-rls.
+backend-db	supabase db advisors (security, fail on warn)	﻿2026-10-08T18:49:06.0968595Z ##[group]Run supabase db advisors --local --type security --fail-on warn
+backend-db	supabase db advisors (security, fail on warn)	2026-10-08T18:49:06.0970053Z ^[[36;1msupabase db advisors --local --type security --fail-on warn^[[0m
+backend-db	supabase db advisors (security, fail on warn)	2026-10-08T18:49:06.1167147Z shell: /usr/bin/bash -e {0}
+backend-db	supabase db advisors (security, fail on warn)	2026-10-08T18:49:06.1167568Z env:
+backend-db	supabase db advisors (security, fail on warn)	2026-10-08T18:49:06.1177012Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase db advisors (security, fail on warn)	2026-10-08T18:49:06.1177587Z ##[endgroup]
+backend-db	supabase db advisors (security, fail on warn)	2026-10-08T18:49:06.5923919Z Connecting to local database...
+backend-db	supabase db advisors (security, fail on warn)	2026-10-08T18:49:06.6883831Z No issues found
+backend-db	supabase test db	﻿2026-10-08T18:49:06.7184884Z ##[group]Run supabase test db
+backend-db	supabase test db	2026-10-08T18:49:06.7185444Z ^[[36;1msupabase test db^[[0m
+backend-db	supabase test db	2026-10-08T18:49:06.7277376Z shell: /usr/bin/bash -e {0}
+backend-db	supabase test db	2026-10-08T18:49:06.7277845Z env:
+backend-db	supabase test db	2026-10-08T18:49:06.7278260Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase test db	2026-10-08T18:49:06.7278797Z ##[endgroup]
+backend-db	supabase test db	2026-10-08T18:49:07.1273600Z Connecting to local database...
+backend-db	supabase test db	2026-10-08T18:49:09.5841474Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+backend-db	supabase test db	2026-10-08T18:49:09.6151954Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .............. ok
+backend-db	supabase test db	2026-10-08T18:49:09.6645306Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ..... ok
+backend-db	supabase test db	2026-10-08T18:49:09.7359537Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ... ok
+backend-db	supabase test db	2026-10-08T18:49:09.8407261Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ...... ok
+backend-db	supabase test db	2026-10-08T18:49:09.9998609Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .. ok
+backend-db	supabase test db	2026-10-08T18:49:10.0870547Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ....... ok
+backend-db	supabase test db	2026-10-08T18:49:10.0878244Z All tests successful.
+backend-db	supabase test db	2026-10-08T18:49:10.0884520Z Files=6, Tests=179,  1 wallclock secs ( 0.04 usr  0.02 sys +  0.07 cusr  0.04 csys =  0.17 CPU)
+backend-db	supabase test db	2026-10-08T18:49:10.0885952Z Result: PASS
+backend-db	pgTAP assertions by id	﻿2026-10-08T18:49:10.2710698Z ##[group]Run supabase status -o env > "$RUNNER_TEMP/supabase-db.env"
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2711638Z ^[[36;1msupabase status -o env > "$RUNNER_TEMP/supabase-db.env"^[[0m
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2712554Z ^[[36;1mdb_url="$(grep '^DB_URL=' "$RUNNER_TEMP/supabase-db.env" | cut -d= -f2- | tr -d '"')"^[[0m
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2713416Z ^[[36;1mfor f in supabase/tests/database/*.test.sql; do^[[0m
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2713970Z ^[[36;1m  echo "# $f"^[[0m
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2714659Z ^[[36;1m  psql "$db_url" -X -q -t -A -v ON_ERROR_STOP=1 -f "$f" 2>&1 | grep -E '^(not )?ok |^1\.\.|ERROR'^[[0m
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2715412Z ^[[36;1mdone^[[0m
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2886891Z shell: /usr/bin/bash -e {0}
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2887341Z env:
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2887730Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.2888249Z ##[endgroup]
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.7269313Z Stopped services: [supabase_realtime_jovra-local supabase_storage_jovra-local supabase_imgproxy_jovra-local supabase_pg_meta_jovra-local supabase_studio_jovra-local supabase_edge_runtime_jovra-local supabase_analytics_jovra-local supabase_vector_jovra-local supabase_pooler_jovra-local]
+backend-db	pgTAP assertions by id	2026-10-08T18:49:10.7478492Z # supabase/tests/database/000_harness.test.sql
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.2810301Z 1..1
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.2831279Z ok 1 - harness: tests schema installed
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.2831998Z # supabase/tests/database/001_harness_selftest.test.sql
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3698398Z 1..12
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3720956Z ok 1 - two test users get distinct ids
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3731108Z ok 2 - create_supabase_user keeps an explicit email
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3741049Z ok 3 - test users have a confirmed email
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3761093Z ok 4 - an unknown identifier raises instead of returning null
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3780677Z ok 5 - authenticate_as sets auth.uid()
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3790801Z ok 6 - authenticate_as switches to the authenticated role
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3801120Z ok 7 - the claims carry the user's email
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3820803Z ok 8 - the claims say the user is not anonymous
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3840808Z ok 9 - authenticate_as can switch to another user
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3860639Z ok 10 - clear_authentication leaves no user
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3861493Z ok 11 - clear_authentication switches to the anon role
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3890776Z ok 12 - authenticate_as_service_role switches to service_role
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.3930732Z # supabase/tests/database/010_tester_signup_lock.test.sql
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4751208Z 1..30
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4770846Z ok 1 - the before_user_created hook exists
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4781305Z ok 2 - the hook is security definer
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4790564Z ok 3 - the hook pins an empty search_path
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4810643Z ok 4 - email_hmac pins an empty search_path
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4831233Z ok 5 - supabase_auth_admin can run the hook
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4870552Z ok 6 - anon cannot run the hook
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4871289Z ok 7 - authenticated cannot run the hook
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4900422Z ok 8 - service_role cannot run the hook
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4921020Z ok 9 - PUBLIC has no EXECUTE on the hook
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4940587Z ok 10 - anon cannot run email_hmac
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4941339Z ok 11 - authenticated cannot run email_hmac
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4960805Z ok 12 - supabase_auth_admin cannot run email_hmac directly
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.4980623Z ok 13 - PUBLIC has no EXECUTE on email_hmac
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5000955Z ok 14 - anon cannot use app_private or app_ops; authenticated cannot use app_ops
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5011137Z ok 15 - no client or API role can read or write the allow-list
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5012240Z ok 16 - every table in schema app_ops has row level security enabled
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5013336Z ok 17 - the allow-list stores only an HMAC, never the address
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5014661Z ok 18 - an allow-listed tester may be created
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5015602Z ok 19 - an allow-listed address that has no account yet may be created
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5016750Z ok 20 - the address is trimmed and lower-cased before it is checked
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5017872Z ok 21 - an address that is not on the allow-list is refused with 403 signup_not_allowed
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5018917Z ok 22 - a sign-up without an email (phone) is refused
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5019733Z ok 23 - an anonymous sign-up is refused
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5020913Z ok 24 - an event without a user is refused
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5021700Z ok 25 - the seed creates five testers
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5022451Z ok 26 - every seeded address is at example.test
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5023346Z ok 27 - every seeded tester has a confirmed email and no password
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5024224Z ok 28 - every seeded tester is on the allow-list
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5025020Z ok 29 - with no HMAC key email_hmac returns null
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5025889Z ok 30 - with no HMAC key even an allow-listed tester is refused
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5026840Z # supabase/tests/database/identity_01_catalog.test.sql
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5831950Z 1..32
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5834393Z ok 1 - schema app_private exists
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5834895Z ok 2 - schema app_gateway exists
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5835344Z ok 3 - schema app_ops exists
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5835989Z ok 4 - jovra_owner exists and cannot log in, inherit, bypass RLS or act as superuser
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5836919Z ok 5 - jovra_gateway: login, noinherit, nobypassrls, connection limit 20
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5837776Z ok 6 - jovra_orchestrator: login, noinherit, nobypassrls, connection limit 10
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5838672Z ok 7 - no client, gateway or orchestrator role holds the privileges of jovra_owner
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5840362Z ok 8 - policies may call app_private helpers as authenticated (security-model §3); anon may not reach them
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5841401Z ok 9 - app_ops is unreachable for client roles
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5842148Z ok 10 - every table in schema public has row level security enabled
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5843346Z ok 11 - T-DB-02: public holds the migration 1 tables (the checks below are not vacuous)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5844594Z ok 12 - T-DB-02: every public table has the restrictive <table>_real_users_only policy for authenticated
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5845689Z ok 13 - T-DB-03: no security definer function in public
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5846390Z ok 14 - T-DB-03: every function in public and app_* pins search_path=''
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5847098Z ok 15 - T-DB-03: no function pins search_path to public
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5847872Z ok 16 - T-DB-03: no function in public, app_private or app_gateway is executable by PUBLIC or anon
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5848901Z ok 17 - T-DB-03: every app_gateway function is volatile (the backstop against Hyperdrive result caching)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5849864Z ok 18 - T-DB-03: no trigger function is executable by authenticated
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5855174Z ok 19 - T-DB-04: authenticated and anon have no USAGE on app_gateway
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5856040Z ok 20 - T-DB-04: no app_gateway function is executable by authenticated or anon
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5856954Z ok 21 - T-DB-04: the gateway and orchestrator roles may use app_gateway
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5858057Z ok 22 - T-DB-05: jovra_gateway and jovra_orchestrator have no privilege on any table in public, app_private or app_ops
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5864701Z ok 23 - T-DB-05: the command roles cannot use app_private or app_ops
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5865921Z ok 24 - T-DB-66: every table in public and app_ops is owned by jovra_owner
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5866623Z ok 25 - T-DB-66: every enum in public is owned by jovra_owner
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5867414Z ok 26 - T-DB-66: every helper, trigger and command function is owned by jovra_owner
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5868618Z ok 27 - T-DB-66: proowner = relowner for every definer helper and every public table
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5869592Z ok 28 - T-DB-66: no table is FORCE ROW LEVEL SECURITY, so definer helpers read rows as the owner
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5871646Z ok 29 - T-DB-67: at least one client-insertable table exists (the lint below is not vacuous)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5872619Z ok 30 - T-DB-67: every client-insertable table has a row-level BEFORE INSERT trigger a00_rls_guard
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5873522Z ok 31 - T-DB-67: no BEFORE INSERT trigger sorts before a00_rls_guard
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5874446Z ok 32 - T-DB-67: the INSERT policy and a00_rls_guard call the same app_private.can_insert_<table> predicate
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.5884832Z # supabase/tests/database/identity_02_role_matrix.test.sql
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7795292Z 1..74
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7799049Z ok 1 - a profile is created for every new auth user, with no display name and is_tester false
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7801247Z ok 2 - creating a project creates exactly one owner membership for its owner
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7802614Z ok 3 - T-DB-01: unauthenticated select on profiles is denied
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7804196Z ok 4 - T-DB-01: unauthenticated select on projects is denied
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7805543Z ok 5 - T-DB-01: unauthenticated select on project_members is denied
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7807132Z ok 6 - T-DB-01: unauthenticated select on camera_invites is denied
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7808344Z ok 7 - T-DB-01: unauthenticated insert into projects is denied
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7810205Z ok 8 - T-DB-01: unauthenticated callers cannot reach the app_private helpers
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7811565Z ok 9 - T-DB-01: anon holds no privilege on any table in public
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7813119Z ok 10 - owner sees their live project only (not B, not the deleted D)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7814509Z ok 11 - owner sees every membership row of their project (owner, coach, pending, revoked, expired)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7816218Z ok 12 - owner sees the camera invites of their live project
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7817842Z ok 13 - owner cannot select camera_invites.code_hash
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7819536Z ok 14 - owner cannot select the guest device thumbprint
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7821222Z ok 15 - owner creates a project through the client path; owner_id defaults to auth.uid()
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7822986Z ok 16 - the new project's owner membership is visible to the owner
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7825684Z ok 17 - owner updates the title of their project; revision is bumped
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7826959Z ok 18 - owner cannot write camera_invites directly
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7828501Z ok 19 - owner cannot delete a project (deletion goes through deletion_requests)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7832188Z ok 20 - T-DB-08: owner cannot update projects.owner_id
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7832864Z ok 21 - T-DB-08: owner cannot clear deleted_at
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7833622Z ok 22 - T-DB-09: owner updating another owner's project title changes 0 rows
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7834441Z ok 23 - T-DB-10: owner cannot insert a membership directly
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7835322Z ok 24 - T-DB-10: owner cannot approve a coach by writing project_members (approve_member only)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7836349Z ok 25 - T-DB-31: owner sees no membership rows of a project with deleted_at set
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7837871Z ok 26 - T-DB-31: owner sees no camera invites of a project with deleted_at set
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7838710Z ok 27 - T-DB-31: owner cannot update a project with deleted_at set
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7839688Z ok 28 - T-DB-63: owner sees self and the approved coach; not the pending, revoked or expired coaches
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7840852Z ok 29 - T-DB-30: is_tester is not selectable
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7841525Z ok 30 - T-DB-30: only id, display_name and created_at are selectable
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7842242Z ok 31 - T-DB-30: a user updates their own display name
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7842881Z ok 32 - T-DB-30: a user cannot set is_tester
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7843497Z ok 33 - T-DB-30: profiles cannot be inserted by a client
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7844213Z ok 34 - T-DB-06: unrelated user sees 0 projects of other owners
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7844923Z ok 35 - T-DB-06: unrelated user sees 0 membership rows
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7845593Z ok 36 - T-DB-06: unrelated user sees 0 camera invites
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7846563Z ok 37 - T-DB-30: unrelated user sees only their own profile
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7847298Z ok 38 - T-DB-30: updating another user's profile changes 0 rows
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7848138Z ok 39 - T-DB-07: inserting a project for another owner is denied
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7848931Z ok 40 - T-DB-06: unrelated user cannot update another owner's project
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7849718Z ok 41 - T-DB-06: has_project_role is false for an unrelated user
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7850733Z ok 42 - T-DB-06: shares_project_with is false for an unrelated user
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7851516Z ok 43 - coach sees the project they coach (not the deleted D, not B)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7852236Z ok 44 - coach sees only their own membership row
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7853007Z ok 45 - coach sees self and the project owner (co-member); not the pending coach
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7853746Z ok 46 - coach sees no camera invites
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7854301Z ok 47 - project_role is coach for an approved coach
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7855015Z ok 48 - T-DB-11: coach updating the project title changes 0 rows
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7855713Z ok 49 - T-DB-10: coach cannot grant themselves owner
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7856334Z ok 50 - T-DB-10: coach cannot escalate their role
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7857002Z ok 51 - T-DB-31: a coach row on a deleted project grants nothing
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7857715Z ok 52 - T-DB-63: a pending coach sees only their own profile
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7858395Z ok 53 - T-DB-63: a pending coach sees 0 membership rows
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7859033Z ok 54 - T-DB-63: a pending coach sees 0 projects
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7859753Z ok 55 - T-DB-63: shares_project_with is false while the coach is pending
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7860878Z ok 56 - viewer without a grant sees no project, membership or invite
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7861602Z ok 57 - viewer sees only their own profile
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7862391Z ok 58 - camera sees the invite it redeemed after approval, and not the unapproved one
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7863275Z ok 59 - camera sees no project and no membership
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7863891Z ok 60 - camera sees only its own profile
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7864520Z ok 61 - T-DB-28: acting as an anonymous-authenticated user
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7865274Z ok 62 - T-DB-28: anonymous user sees 0 profiles, not even its own
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.7865991Z ok 63 - T-DB-28: anonymous user sees 0 projects
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8036185Z ok 64 - T-DB-28: anonymous user sees 0 memberships
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8037221Z ok 65 - T-DB-28: anonymous user sees 0 camera invites
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8038491Z ok 66 - T-DB-28: anonymous user cannot insert a project (RLS violation)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8039663Z ok 67 - T-DB-28: anonymous user cannot update even its own profile
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8231876Z ok 68 - T-DB-32: a revoked coach sees 0 projects and 0 memberships
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8240792Z ok 69 - T-DB-32: an expired coach sees 0 projects and 0 memberships
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8349464Z ok 70 - T-DB-32: revoking the coach removes the project at once
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8351285Z ok 71 - T-DB-32: the revoked coach no longer sees the owner's profile
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8361533Z ok 72 - B's title and revision are untouched
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8362477Z ok 73 - A's owner is unchanged
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8363730Z ok 74 - owner_a's display name is the one they set
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.8364801Z # supabase/tests/database/identity_03_guards.test.sql
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9054233Z 1..30
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9055318Z ok 1 - current_actor() equals auth.uid() for a signed-in user
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9056869Z ok 2 - is_real_user() is true for a signed-in, non-anonymous user
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9058409Z ok 3 - current_actor() follows auth.uid() for the legacy claim setting
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9060197Z ok 4 - current_actor() is null when no claim is set
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9063750Z ok 5 - T-DB-67: postgres (operator, migrations) is not the client path
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9064585Z ok 6 - T-DB-67: the projects predicate refuses a row owned by someone else
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9065576Z ok 7 - T-DB-67: a server command run by jovra_gateway inserts past the guard (is_client_path() false)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9066904Z ok 8 - T-DB-67: the same definer insert called through the client role is refused by the guard
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9068161Z ok 9 - T-DB-67: exactly the server-created project was added for the victim
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9068963Z ok 10 - T-DB-65: anonymous user, valid row: 42501 RLS error, no DETAIL
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9069796Z ok 11 - T-DB-65: anonymous user, over-long title: the same 42501, not the length error
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9070781Z ok 12 - T-DB-65: anonymous user, invalid kind: the same 42501
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9071547Z ok 13 - T-DB-65: anonymous user naming the victim's local project id: the same 42501
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9072585Z ok 14 - T-DB-65: an unrelated user reusing the victim's local project id learns nothing (own row, no conflict)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9073569Z ok 15 - T-DB-65: the victim's project and revision are untouched
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9074339Z ok 16 - a 121-character title: P0422 field_too_long:title
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9074953Z ok 17 - a 120-character title is accepted
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9075573Z ok 18 - an unknown kind: P0422 invalid_value:kind (no CHECK DETAIL)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9076333Z ok 19 - a missing local project id: P0422 required:local_project_id
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9077086Z ok 20 - a null title: P0422 required:title (no NOT NULL DETAIL)
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9077683Z ok 21 - an over-long title on update: P0422
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9078236Z ok 22 - an 81-character display name: P0422
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9078784Z ok 23 - an 80-character display name is accepted
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9079363Z ok 24 - camera_invites: a 61-character label is P0422
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9080409Z ok 25 - camera_invites: a code hash that is not 32 bytes is P0422 without echoing it
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9081294Z ok 26 - camera_invites: redeem_by more than 10 minutes out is P0422
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9082137Z ok 27 - camera_invites: an invite created by someone other than the project owner is P0422
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9082997Z ok 28 - a second owner row (not the project owner) is refused
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9083617Z ok 29 - the project still has exactly one owner row
+backend-db	pgTAP assertions by id	2026-10-08T18:49:11.9084153Z ok 30 - an update bumps revision by one
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	﻿2026-10-08T18:49:11.9136285Z ##[group]Run supabase status -o env > "$RUNNER_TEMP/supabase-status.env"
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:11.9137245Z ^[[36;1msupabase status -o env > "$RUNNER_TEMP/supabase-status.env"^[[0m
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:11.9138195Z ^[[36;1mpython3 supabase/scripts/otp_smoke.py "$RUNNER_TEMP/supabase-status.env"^[[0m
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:11.9209166Z shell: /usr/bin/bash -e {0}
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:11.9209630Z env:
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:11.9210308Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:11.9210856Z ##[endgroup]
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.2864349Z Stopped services: [supabase_realtime_jovra-local supabase_storage_jovra-local supabase_imgproxy_jovra-local supabase_pg_meta_jovra-local supabase_studio_jovra-local supabase_edge_runtime_jovra-local supabase_analytics_jovra-local supabase_vector_jovra-local supabase_pooler_jovra-local]
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8905617Z PASS  seed tester can request an email code (create_user false)  (HTTP 200)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8908108Z PASS  the code arrives in Mailpit  (six digits found)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8955118Z PASS  the tester signs in with the code  (HTTP 200)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8955971Z PASS  the access token is ES256  (alg ES256)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8957029Z PASS  the token belongs to the seeded tester
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8958065Z PASS  the token is a real, non-anonymous user
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8959140Z PASS  the same code cannot be used twice  (HTTP 403)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8960868Z PASS  OTP with create_user true for an unknown email is refused  (HTTP 422 {"code": 422, "error_code": "signup_disabled", "msg": "Signups not allowed for this instance"})
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8962589Z PASS  no user row was created for the unknown email
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8964020Z PASS  anonymous sign-in is refused  (HTTP 422 {"code": 422, "error_code": "anonymous_provider_disabled", "msg": "Anonymous sign-ins are disabled"})
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8966086Z PASS  the hook alone refuses an unknown email (invite path, sign-up switch not involved)  (HTTP 403 {"code": 403, "error_code": "unknown", "msg": "signup_not_allowed"})
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8967431Z PASS  no user row was created on the invite path
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8968614Z PASS  the hook lets an allow-listed email through on the same path  (HTTP 200)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8969731Z PASS  the operator can create an allow-listed tester with sign-ups off  (HTTP 200)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8971062Z 
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-08T18:49:12.8971547Z OK: 0 failing check(s)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	﻿2026-10-08T18:49:12.9018726Z ##[group]Run python3 supabase/scripts/postgrest_identity_smoke.py "$RUNNER_TEMP/supabase-status.env"
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:12.9019490Z ^[[36;1mpython3 supabase/scripts/postgrest_identity_smoke.py "$RUNNER_TEMP/supabase-status.env"^[[0m
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:12.9081428Z shell: /usr/bin/bash -e {0}
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:12.9081711Z env:
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:12.9081949Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:12.9082254Z ##[endgroup]
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2056538Z PASS  T-DB-35: Accept-Profile app_private is refused  (HTTP 406 PGRST106)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2071348Z PASS  T-DB-35: the refusal lists exactly ['graphql_public', 'public']  (['graphql_public', 'public'])
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2076076Z PASS  T-DB-35: Accept-Profile app_gateway is refused  (HTTP 406 PGRST106)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2077195Z PASS  T-DB-35: the refusal lists exactly ['graphql_public', 'public']  (['graphql_public', 'public'])
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2078459Z PASS  T-DB-35: Accept-Profile app_ops is refused  (HTTP 406 PGRST106)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2079734Z PASS  T-DB-35: the refusal lists exactly ['graphql_public', 'public']  (['graphql_public', 'public'])
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2081378Z PASS  T-DB-35: an RPC into app_private is refused  (HTTP 406 {"code": "PGRST106", "message": "Invalid schema: app_private"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2082855Z PASS  T-DB-01: unauthenticated GET /projects is denied  (HTTP 401 {"code": "42501", "message": "permission denied for table projects"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2084380Z PASS  T-DB-01: unauthenticated POST /projects is denied  (HTTP 401 {"code": "42501", "message": "permission denied for table projects"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2085643Z PASS  owner creates a project; owner_id comes from the token  (HTTP 201)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2086557Z PASS  the owner membership row follows the project  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2087658Z PASS  T-DB-07: naming owner_id is denied  (HTTP 403 {"code": "42501", "message": "permission denied for table projects"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2088988Z PASS  T-DB-30: profiles.is_tester is not selectable  (HTTP 403 {"code": "42501", "message": "permission denied for table profiles"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2090966Z PASS  T-DB-06: the unrelated user sees 0 rows of the owner's project  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2091973Z PASS  T-DB-06: the unrelated user sees 0 membership rows  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2092908Z PASS  T-DB-09: the unrelated user's PATCH changes 0 rows  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2093721Z PASS  the owner's project is unchanged  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-08T18:49:13.2094389Z {"failed": 0}

@@ -1,0 +1,117 @@
+# JOVRA local Supabase project (ticket S75 / B-02). Local stack only: nothing here names a hosted project, URL,
+# project ref or key (ADR-0014 activation gates; CLAUDE.md rule 5). Reference:
+# https://supabase.com/docs/guides/local-development/cli/config
+#
+# Before the first `supabase start`, generate the local ES256 signing key (never committed; see README.md):
+#   supabase/scripts/gen-signing-key.sh
+project_id = "jovra-local"
+
+[api]
+enabled = true
+port = 54321
+# Only the default schemas are exposed. app_private and app_ops are never exposed (security-model §3).
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+health_timeout = "2m"
+major_version = 17
+
+[db.pooler]
+enabled = false
+
+[db.migrations]
+enabled = true
+
+[db.seed]
+# Fictional testers at example.test, the allow-list and a local-only HMAC key (seed/README.md).
+enabled = true
+sql_paths = ["./seed/*.sql"]
+
+# Media lives in private R2 behind the signing gateway (ADR-0018), never in Supabase Storage.
+[storage]
+enabled = false
+
+[realtime]
+enabled = false
+
+[studio]
+enabled = false
+
+[edge_runtime]
+enabled = false
+
+[analytics]
+enabled = false
+
+# Mailpit: every local auth email (the OTP) lands here, at http://127.0.0.1:54324. Nothing is delivered.
+[inbucket]
+enabled = true
+port = 54324
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:3000"
+additional_redirect_urls = []
+jwt_expiry = 3600
+# ES256 signing key generated locally by supabase/scripts/gen-signing-key.sh; gitignored (ADR-0022: tokens are ES256).
+signing_keys_path = "./signing_keys.json"
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+# The isolated-test lock (ADR-0022, security-model §13.3): sign-ups are off and the before_user_created hook
+# below rejects every email that is not on app_ops.tester_allowlist. Testers are pre-created by the seed (local)
+# or by the operator script (hosted test, gate G1). A client's shouldCreateUser: false is never the control.
+enable_signup = false
+enable_anonymous_sign_ins = false
+enable_manual_linking = false
+
+[auth.rate_limit]
+email_sent = 2
+sms_sent = 30
+anonymous_users = 30
+token_refresh = 150
+sign_in_sign_ups = 30
+token_verifications = 30
+web3 = 30
+
+[auth.email]
+# Despite its name this key enables the email provider itself (the CLI maps it to GOTRUE_EXTERNAL_EMAIL_ENABLED,
+# OBSERVED in supabase/cli gotrue.service.ts); false would disable email codes entirely. Sign-ups are closed by
+# `[auth] enable_signup = false` (GOTRUE_DISABLE_SIGNUP) and the hook.
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+secure_password_change = false
+max_frequency = "1s"
+# Six-digit code, one hour expiry (security-model §2.1).
+otp_length = 6
+otp_expiry = 3600
+
+# The OTP email. Paths in templates resolve from the Supabase workdir (backend/), unlike signing_keys_path.
+[auth.email.template.magic_link]
+subject = "Your JOVRA test sign-in code"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.sms]
+enable_signup = false
+enable_confirmations = false
+
+# Mandatory second lock (ADR-0022). Defined in migrations/20261008000000_tester_signup_lock.sql.
+[auth.hook.before_user_created]
+enabled = true
+uri = "pg-functions://postgres/app_private/before_user_created"
+
+[auth.mfa.totp]
+enroll_enabled = false
+verify_enabled = false
+
+[auth.mfa.phone]
+enroll_enabled = false
+verify_enabled = false
+
+# Sign in with Apple is a live-environment provider (ADR-0022); it stays off locally.
+[auth.external.apple]
+enabled = false

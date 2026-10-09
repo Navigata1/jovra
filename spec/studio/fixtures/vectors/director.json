@@ -1,0 +1,2920 @@
+{
+  "schemaVersion": "jovra.studio-fixture.vectors/1",
+  "kind": "director",
+  "status": "Sample: expect from spec/reference/studio/director.py (briefs, card catalog, grammar lint); assert blocks are hand-derived from the profile grammar and the ST29 copy",
+  "cases": [
+    {
+      "id": "context-sample-court-day",
+      "why": "The sample-court-day planning context every other case starts from (its contextPatch applies to this)",
+      "op": "context",
+      "input": {},
+      "expect": {
+        "context": {
+          "projectId": "sample-court-day",
+          "sample": true,
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "coverageSeconds": 3600,
+          "primaryHasAudio": true,
+          "juniorMode": false,
+          "pointCoverageComplete": false,
+          "keepers": [
+            {
+              "keeperId": "k-01",
+              "origin": "point",
+              "eventRefs": [
+                "p-003"
+              ],
+              "session": {
+                "startUs": 12000000,
+                "endUs": 19500000
+              },
+              "slots": [
+                "near-baseline",
+                "far-baseline"
+              ],
+              "selection": "manual",
+              "provenance": "manual",
+              "markIds": [],
+              "lessonClipIds": [],
+              "facts": {
+                "index": 2,
+                "rallyLength": 14,
+                "rallyReal": true,
+                "breakPoint": false,
+                "setPoint": false,
+                "matchPoint": false,
+                "provenance": "manual"
+              }
+            },
+            {
+              "keeperId": "k-02",
+              "origin": "point",
+              "eventRefs": [
+                "p-041"
+              ],
+              "session": {
+                "startUs": 1196000000,
+                "endUs": 1264000000
+              },
+              "slots": [
+                "near-baseline"
+              ],
+              "selection": "manual",
+              "provenance": "reviewed",
+              "markIds": [],
+              "lessonClipIds": [
+                "l3-clip-1"
+              ],
+              "facts": {
+                "index": 40,
+                "rallyLength": 9,
+                "rallyReal": true,
+                "breakPoint": true,
+                "setPoint": false,
+                "matchPoint": false,
+                "provenance": "reviewed"
+              }
+            },
+            {
+              "keeperId": "k-03",
+              "origin": "point",
+              "eventRefs": [
+                "p-067",
+                "p-068"
+              ],
+              "session": {
+                "startUs": 1998000000,
+                "endUs": 2085000000
+              },
+              "slots": [
+                "near-baseline"
+              ],
+              "selection": "manual",
+              "provenance": "manual",
+              "markIds": [],
+              "lessonClipIds": [],
+              "facts": {
+                "index": 66,
+                "rallyLength": 6,
+                "rallyReal": true,
+                "breakPoint": false,
+                "setPoint": false,
+                "matchPoint": false,
+                "provenance": "manual"
+              }
+            },
+            {
+              "keeperId": "k-04",
+              "origin": "point",
+              "eventRefs": [
+                "p-090"
+              ],
+              "session": {
+                "startUs": 2498000000,
+                "endUs": 2620000000
+              },
+              "slots": [
+                "near-baseline",
+                "far-baseline"
+              ],
+              "selection": "heuristic",
+              "provenance": "estimated",
+              "markIds": [],
+              "lessonClipIds": [],
+              "facts": {
+                "index": 89,
+                "rallyLength": 11,
+                "rallyReal": false,
+                "breakPoint": false,
+                "setPoint": false,
+                "matchPoint": false,
+                "provenance": "estimated"
+              }
+            }
+          ],
+          "brolls": [
+            {
+              "brollId": "b-01",
+              "chapter": "arrival",
+              "durationMs": 60000,
+              "depictsThisMatch": true,
+              "revealsLocation": false
+            },
+            {
+              "brollId": "b-02",
+              "chapter": "after",
+              "durationMs": 90000,
+              "depictsThisMatch": true,
+              "revealsLocation": false
+            }
+          ],
+          "references": [
+            {
+              "refId": "p-041",
+              "kind": "score",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "p-090",
+              "kind": "score",
+              "provenance": "manual"
+            },
+            {
+              "refId": "game-07",
+              "kind": "score",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "game-08",
+              "kind": "score",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "stat-first-serve-in",
+              "kind": "metric",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "note-caption",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-goal",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-drill",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-next",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-players",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "note-lesson-2",
+              "kind": "note",
+              "provenance": "manual"
+            },
+            {
+              "refId": "l3-note-1",
+              "kind": "note",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "l3-note-2",
+              "kind": "note",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "ann-01",
+              "kind": "annotation",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "cue-03",
+              "kind": "cue",
+              "provenance": "reviewed"
+            },
+            {
+              "refId": "cue-04",
+              "kind": "cue",
+              "provenance": "estimated"
+            }
+          ],
+          "notes": [
+            {
+              "noteId": "note-caption",
+              "use": "caption",
+              "date": null
+            },
+            {
+              "noteId": "note-goal",
+              "use": "goal",
+              "date": null
+            },
+            {
+              "noteId": "note-drill",
+              "use": "drill",
+              "date": null
+            },
+            {
+              "noteId": "note-next",
+              "use": "next",
+              "date": null
+            },
+            {
+              "noteId": "note-players",
+              "use": "players",
+              "date": null
+            },
+            {
+              "noteId": "note-lesson-2",
+              "use": "lesson",
+              "date": "2026-09-23"
+            },
+            {
+              "noteId": "l3-note-1",
+              "use": "lesson",
+              "date": "2026-10-07"
+            },
+            {
+              "noteId": "l3-note-2",
+              "use": "lesson",
+              "date": "2026-10-07"
+            }
+          ],
+          "lessons": [
+            {
+              "lessonId": "lesson-0909",
+              "date": "2026-09-09",
+              "noteIds": []
+            },
+            {
+              "lessonId": "lesson-0923",
+              "date": "2026-09-23",
+              "noteIds": [
+                "note-lesson-2"
+              ]
+            },
+            {
+              "lessonId": "lesson-1007",
+              "date": "2026-10-07",
+              "noteIds": [
+                "l3-note-1",
+                "l3-note-2"
+              ]
+            }
+          ],
+          "cues": [
+            {
+              "cueId": "cue-03",
+              "keeperId": "k-02",
+              "provenance": "reviewed"
+            },
+            {
+              "cueId": "cue-04",
+              "keeperId": "k-02",
+              "provenance": "estimated"
+            }
+          ],
+          "annotations": [
+            {
+              "refId": "ann-01",
+              "keeperId": "k-02"
+            }
+          ],
+          "progress": {
+            "statId": "stat-first-serve-in",
+            "statDefinitionId": "first-serve-in-pct",
+            "earlier": {
+              "date": "2026-09-09",
+              "sessionIds": [
+                "session-0909"
+              ],
+              "sessionKind": "practice",
+              "statDefinitionId": "first-serve-in-pct",
+              "methodId": "manual-tagging-v1",
+              "methodVersion": "1",
+              "capabilityVersion": null,
+              "selectionRule": "all",
+              "numerator": 12,
+              "denominator": 30,
+              "provenance": "reviewed"
+            },
+            "later": {
+              "date": "2026-10-07",
+              "sessionIds": [
+                "session-1007"
+              ],
+              "sessionKind": "practice",
+              "statDefinitionId": "first-serve-in-pct",
+              "methodId": "manual-tagging-v1",
+              "methodVersion": "1",
+              "capabilityVersion": null,
+              "selectionRule": "all",
+              "numerator": 18,
+              "denominator": 30,
+              "provenance": "reviewed"
+            },
+            "dates": {
+              "k-02": "2026-09-09",
+              "k-04": "2026-10-07"
+            },
+            "selectionRule": "all"
+          },
+          "rights": [
+            {
+              "rightsRecordId": "rights-track-01",
+              "assetId": "track-01"
+            }
+          ],
+          "consents": [
+            {
+              "consentRecordId": "consent-voice-jon",
+              "scope": [
+                "narration-voice"
+              ],
+              "granted": true
+            }
+          ]
+        }
+      },
+      "assert": {
+        "coverageSeconds": 3600,
+        "primaryHasAudio": true,
+        "bindings": {
+          "eventRevision": 3,
+          "syncRevision": 2,
+          "keeperCatalogRevision": 1,
+          "brollCatalogRevision": 1
+        },
+        "keepers": {
+          "k-01": [
+            [
+              "near-baseline",
+              "far-baseline"
+            ],
+            [],
+            true,
+            false,
+            7500
+          ],
+          "k-02": [
+            [
+              "near-baseline"
+            ],
+            [
+              "l3-clip-1"
+            ],
+            true,
+            true,
+            68000
+          ],
+          "k-03": [
+            [
+              "near-baseline"
+            ],
+            [],
+            true,
+            false,
+            87000
+          ],
+          "k-04": [
+            [
+              "near-baseline",
+              "far-baseline"
+            ],
+            [],
+            false,
+            false,
+            122000
+          ]
+        },
+        "cues": {
+          "cue-03": [
+            "k-02",
+            "reviewed"
+          ],
+          "cue-04": [
+            "k-02",
+            "estimated"
+          ]
+        },
+        "notes": {
+          "note-caption": "caption",
+          "note-goal": "goal",
+          "note-drill": "drill",
+          "note-next": "next",
+          "note-players": "players",
+          "note-lesson-2": "lesson",
+          "l3-note-1": "lesson",
+          "l3-note-2": "lesson"
+        },
+        "brollMs": {
+          "b-01": 60000,
+          "b-02": 90000
+        },
+        "lessons": {
+          "lesson-0909": [],
+          "lesson-0923": [
+            "note-lesson-2"
+          ],
+          "lesson-1007": [
+            "l3-note-1",
+            "l3-note-2"
+          ]
+        }
+      }
+    },
+    {
+      "id": "full-coach-cut",
+      "why": "Full is the profile maximum bounded by the 3600 s recording: 600 s",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 600,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 600,
+        "briefId": "brief-coach-cut-full",
+        "lint": []
+      }
+    },
+    {
+      "id": "full-match-broadcast",
+      "why": "Full is the profile maximum bounded by the 3600 s recording: 3600 s",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-match-broadcast-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "match-broadcast",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.relive-match",
+          "audience": "self",
+          "durationTargetSeconds": 3600,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 3600,
+        "briefId": "brief-match-broadcast-full",
+        "lint": []
+      }
+    },
+    {
+      "id": "full-rally-pulse",
+      "why": "Full is the profile maximum bounded by the 3600 s recording: 180 s",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-rally-pulse-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "rally-pulse",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.worth-keeping",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "briefId": "brief-rally-pulse-full",
+        "lint": []
+      }
+    },
+    {
+      "id": "full-progress-story",
+      "why": "Full is the profile maximum bounded by the 3600 s recording: 360 s",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "progress-story",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-progress-story-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "progress-story",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.growing-game",
+          "audience": "self",
+          "durationTargetSeconds": 360,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 360,
+        "briefId": "brief-progress-story-full",
+        "lint": []
+      }
+    },
+    {
+      "id": "full-court-memories",
+      "why": "Full is the profile maximum bounded by the 3600 s recording: 480 s",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 480,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 480,
+        "briefId": "brief-court-memories-full",
+        "lint": []
+      }
+    },
+    {
+      "id": "default-length-coach-cut",
+      "why": "ST29: 5 min by default when the profile allows it",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {}
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 300,
+        "length": "5min",
+        "aspect": "16:9",
+        "audio": "continuous-primary-court-audio",
+        "effectIntensity": "low",
+        "audience": "self",
+        "cleanAlternate": false,
+        "lint": []
+      }
+    },
+    {
+      "id": "default-length-rally-pulse",
+      "why": "Rally Pulse cannot be 5 min, so it starts at 3 min",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {}
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-rally-pulse-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "rally-pulse",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.worth-keeping",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 180,
+        "length": "3min",
+        "cleanAlternate": true
+      }
+    },
+    {
+      "id": "court-memories-defaults",
+      "why": "Court Memories is for family by default, venue hidden, faces shown",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "court-memories",
+        "options": {}
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 300,
+        "audience": "family",
+        "venueVisible": false,
+        "faces": "show"
+      }
+    },
+    {
+      "id": "refuse-match-broadcast-3min",
+      "why": "The disabled length's reason",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {
+          "length": "3min"
+        }
+      },
+      "expect": {
+        "refusal": {
+          "code": "lengthUnavailable",
+          "message": "Match Broadcast needs at least 5 min."
+        }
+      },
+      "assert": {
+        "refusal": [
+          "lengthUnavailable",
+          "Match Broadcast needs at least 5 min."
+        ]
+      }
+    },
+    {
+      "id": "refuse-rally-pulse-5min",
+      "why": "The disabled length's reason",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "refusal": {
+          "code": "lengthUnavailable",
+          "message": "Rally Pulse films are up to 3 min."
+        }
+      },
+      "assert": {
+        "refusal": [
+          "lengthUnavailable",
+          "Rally Pulse films are up to 3 min."
+        ]
+      }
+    },
+    {
+      "id": "short-recording-5min",
+      "why": "A 3 min 20 s recording cannot make a 5 min film",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/coverageSeconds",
+          "value": 200
+        }
+      ],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "length": "5min"
+        }
+      },
+      "expect": {
+        "refusal": {
+          "code": "lengthUnavailable",
+          "message": "The recording is shorter than 5 min."
+        }
+      },
+      "assert": {
+        "refusal": [
+          "lengthUnavailable",
+          "The recording is shorter than 5 min."
+        ]
+      }
+    },
+    {
+      "id": "short-recording-full",
+      "why": "Full is bounded by the 200 s recording",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/coverageSeconds",
+          "value": 200
+        }
+      ],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-full",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 200,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "full",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "target": 200
+      }
+    },
+    {
+      "id": "short-recording-broadcast-full",
+      "why": "Full Match Broadcast from 200 s is under its 5 min minimum",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/coverageSeconds",
+          "value": 200
+        }
+      ],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {
+          "length": "full"
+        }
+      },
+      "expect": {
+        "refusal": {
+          "code": "lengthUnavailable",
+          "message": "Match Broadcast needs at least 5 min."
+        }
+      },
+      "assert": {
+        "refusal": [
+          "lengthUnavailable",
+          "Match Broadcast needs at least 5 min."
+        ]
+      }
+    },
+    {
+      "id": "no-keepers-coach-cut",
+      "why": "Any profile with no keepers: 'Mark a few moments first'",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/keepers",
+          "value": []
+        }
+      ],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {}
+      },
+      "expect": {
+        "refusal": {
+          "code": "noKeepers",
+          "message": "Mark a few moments first"
+        }
+      },
+      "assert": {
+        "refusal": [
+          "noKeepers",
+          "Mark a few moments first"
+        ]
+      }
+    },
+    {
+      "id": "no-keepers-match-broadcast",
+      "why": "Any profile with no keepers: 'Mark a few moments first'",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/keepers",
+          "value": []
+        }
+      ],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {}
+      },
+      "expect": {
+        "refusal": {
+          "code": "noKeepers",
+          "message": "Mark a few moments first"
+        }
+      },
+      "assert": {
+        "refusal": [
+          "noKeepers",
+          "Mark a few moments first"
+        ]
+      }
+    },
+    {
+      "id": "no-keepers-rally-pulse",
+      "why": "Any profile with no keepers: 'Mark a few moments first'",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/keepers",
+          "value": []
+        }
+      ],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {}
+      },
+      "expect": {
+        "refusal": {
+          "code": "noKeepers",
+          "message": "Mark a few moments first"
+        }
+      },
+      "assert": {
+        "refusal": [
+          "noKeepers",
+          "Mark a few moments first"
+        ]
+      }
+    },
+    {
+      "id": "no-keepers-progress-story",
+      "why": "Any profile with no keepers: 'Mark a few moments first'",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/keepers",
+          "value": []
+        }
+      ],
+      "input": {
+        "profileId": "progress-story",
+        "options": {}
+      },
+      "expect": {
+        "refusal": {
+          "code": "noKeepers",
+          "message": "Mark a few moments first"
+        }
+      },
+      "assert": {
+        "refusal": [
+          "noKeepers",
+          "Mark a few moments first"
+        ]
+      }
+    },
+    {
+      "id": "no-keepers-court-memories",
+      "why": "Any profile with no keepers: 'Mark a few moments first'",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/keepers",
+          "value": []
+        }
+      ],
+      "input": {
+        "profileId": "court-memories",
+        "options": {}
+      },
+      "expect": {
+        "refusal": {
+          "code": "noKeepers",
+          "message": "Mark a few moments first"
+        }
+      },
+      "assert": {
+        "refusal": [
+          "noKeepers",
+          "Mark a few moments first"
+        ]
+      }
+    },
+    {
+      "id": "portrait-letterboxed",
+      "why": "SD15: 9:16 is letterboxed landscape by default",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "length": "3min",
+          "aspect": "9:16"
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-rally-pulse-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "rally-pulse",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.worth-keeping",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "9:16",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "3min",
+          "framing": "letterbox",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "aspect": "9:16",
+        "framing": "letterbox"
+      }
+    },
+    {
+      "id": "junior-mode-no-audio",
+      "why": "SD5: junior mode films have no audio",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/juniorMode",
+          "value": true
+        }
+      ],
+      "input": {
+        "profileId": "court-memories",
+        "options": {}
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "no-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "audio": "no-audio"
+      }
+    },
+    {
+      "id": "silent-source-no-audio",
+      "why": "SD5: a primary with no audio track gives a film with no audio",
+      "op": "brief",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/primaryHasAudio",
+          "value": false
+        }
+      ],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {}
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "no-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "audio": "no-audio"
+      }
+    },
+    {
+      "id": "rally-pulse-medium-effects",
+      "why": "Rally Pulse offers Medium effects",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "effects": "medium"
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-rally-pulse-3min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "rally-pulse",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.worth-keeping",
+          "audience": "self",
+          "durationTargetSeconds": 180,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "medium",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "3min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "effectIntensity": "medium",
+        "lint": []
+      }
+    },
+    {
+      "id": "rally-pulse-high-effects",
+      "why": "High is not in the grammar yet (low or medium)",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "effects": "high"
+        }
+      },
+      "expect": {
+        "rejectCode": "optionUnavailable"
+      },
+      "assert": {
+        "rejectCode": "optionUnavailable"
+      }
+    },
+    {
+      "id": "effects-on-coach-cut",
+      "why": "Only Rally Pulse offers an effects choice",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "effects": "medium"
+        }
+      },
+      "expect": {
+        "rejectCode": "optionUnavailable"
+      },
+      "assert": {
+        "rejectCode": "optionUnavailable"
+      }
+    },
+    {
+      "id": "shake-stays-off",
+      "why": "Shake is off",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "shake": true
+        }
+      },
+      "expect": {
+        "rejectCode": "optionUnavailable"
+      },
+      "assert": {
+        "rejectCode": "optionUnavailable"
+      }
+    },
+    {
+      "id": "rallies-stay-whole",
+      "why": "Keep full rallies is on",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "rally-pulse",
+        "options": {
+          "keepFullRallies": false
+        }
+      },
+      "expect": {
+        "rejectCode": "optionUnavailable"
+      },
+      "assert": {
+        "rejectCode": "optionUnavailable"
+      }
+    },
+    {
+      "id": "music-on-coach-cut",
+      "why": "Coach's Cut has no music",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "music": {
+            "assetId": "track-01"
+          }
+        }
+      },
+      "expect": {
+        "rejectCode": "optionUnavailable"
+      },
+      "assert": {
+        "rejectCode": "optionUnavailable"
+      }
+    },
+    {
+      "id": "court-memories-licensed-music",
+      "why": "Music is bound to its rights record",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "music": {
+            "assetId": "track-01"
+          }
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": {
+            "assetId": "track-01",
+            "rightsRecordId": "rights-track-01"
+          },
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "music": {
+          "assetId": "track-01",
+          "rightsRecordId": "rights-track-01"
+        }
+      }
+    },
+    {
+      "id": "narration-with-consent",
+      "why": "Narration needs the granted voice consent",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "narration": {
+            "voice": "user-recorded",
+            "consentRecordId": "consent-voice-jon"
+          }
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-coach-cut-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "coach-cut",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.next-action",
+          "audience": "self",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": false,
+          "privacy": {
+            "venueVisible": false,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": {
+            "voice": "user-recorded",
+            "consentRecordId": "consent-voice-jon"
+          },
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": null,
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "narration": {
+          "voice": "user-recorded",
+          "consentRecordId": "consent-voice-jon"
+        },
+        "lint": []
+      }
+    },
+    {
+      "id": "narration-on-broadcast",
+      "why": "Match Broadcast has no narration",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "match-broadcast",
+        "options": {
+          "narration": {
+            "voice": "user-recorded",
+            "consentRecordId": "consent-voice-jon"
+          }
+        }
+      },
+      "expect": {
+        "rejectCode": "optionUnavailable"
+      },
+      "assert": {
+        "rejectCode": "optionUnavailable"
+      }
+    },
+    {
+      "id": "narration-without-consent",
+      "why": "A consent record the project does not hold",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "narration": {
+            "voice": "user-recorded",
+            "consentRecordId": "consent-voice-alex"
+          }
+        }
+      },
+      "expect": {
+        "rejectCode": "noConsent"
+      },
+      "assert": {
+        "rejectCode": "noConsent"
+      }
+    },
+    {
+      "id": "caption-and-venue",
+      "why": "Caption note and venue opt-in",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "caption": "note-caption",
+          "venueVisible": true
+        }
+      },
+      "expect": {
+        "brief": {
+          "schemaVersion": "jovra.story-brief/1",
+          "briefId": "brief-court-memories-5min",
+          "projectId": "sample-court-day",
+          "revision": 1,
+          "sample": true,
+          "profile": {
+            "id": "court-memories",
+            "revision": 1
+          },
+          "bindings": {
+            "eventRevision": 3,
+            "syncRevision": 2,
+            "keeperCatalogRevision": 1,
+            "brollCatalogRevision": 1
+          },
+          "planner": {
+            "kind": "heuristic",
+            "modelId": null,
+            "adapterVersion": "jovra-planner@0.1.0"
+          },
+          "feelingKey": "feeling.day-mattered",
+          "audience": "family",
+          "durationTargetSeconds": 300,
+          "aspect": "16:9",
+          "primaryAudioPolicy": "continuous-primary-court-audio",
+          "effectIntensity": "low",
+          "cleanAlternate": true,
+          "privacy": {
+            "venueVisible": true,
+            "faces": "show"
+          },
+          "music": null,
+          "narration": null,
+          "beats": [],
+          "comparisons": [],
+          "omitted": [],
+          "unresolved": []
+        },
+        "directions": {
+          "length": "5min",
+          "framing": "fill",
+          "shake": false,
+          "keepFullRallies": true,
+          "caption": "note-caption",
+          "dedication": null,
+          "musicUnavailable": null
+        }
+      },
+      "assert": {
+        "venueVisible": true,
+        "caption": "note-caption"
+      }
+    },
+    {
+      "id": "caption-must-be-a-caption",
+      "why": "The goal note is not a caption",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "court-memories",
+        "options": {
+          "caption": "note-goal"
+        }
+      },
+      "expect": {
+        "rejectCode": "untrustedReference"
+      },
+      "assert": {
+        "rejectCode": "untrustedReference"
+      }
+    },
+    {
+      "id": "unknown-option",
+      "why": "Options are a closed set",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "coach-cut",
+        "options": {
+          "music2": true
+        }
+      },
+      "expect": {
+        "rejectCode": "unknownField"
+      },
+      "assert": {
+        "rejectCode": "unknownField"
+      }
+    },
+    {
+      "id": "unknown-profile",
+      "why": "Five profiles only",
+      "op": "brief",
+      "contextPatch": [],
+      "input": {
+        "profileId": "highlight-reel",
+        "options": {}
+      },
+      "expect": {
+        "rejectCode": "unknownProfile"
+      },
+      "assert": {
+        "rejectCode": "unknownProfile"
+      }
+    },
+    {
+      "id": "card-templates",
+      "why": "The card text catalog: template ids with typed slots, and the Coach's Cut cards that instruct",
+      "op": "templates",
+      "input": {},
+      "expect": {
+        "templates": {
+          "card.goal": {
+            "profiles": [
+              "coach-cut",
+              "progress-story"
+            ],
+            "note": "goal",
+            "slots": [
+              "note",
+              "date"
+            ]
+          },
+          "card.examples": {
+            "profiles": [
+              "coach-cut"
+            ],
+            "note": null,
+            "slots": [],
+            "text": "Your examples"
+          },
+          "card.drill": {
+            "profiles": [
+              "coach-cut"
+            ],
+            "note": "drill",
+            "slots": [
+              "note"
+            ]
+          },
+          "card.next-checkpoint": {
+            "profiles": [
+              "coach-cut"
+            ],
+            "note": "next",
+            "slots": [
+              "note"
+            ]
+          },
+          "card.match-intro": {
+            "profiles": [
+              "match-broadcast"
+            ],
+            "note": "players",
+            "slots": [
+              "note",
+              "date",
+              "format"
+            ]
+          },
+          "card.final-score": {
+            "profiles": [
+              "match-broadcast"
+            ],
+            "note": null,
+            "slots": [
+              "score"
+            ]
+          },
+          "card.accent": {
+            "profiles": [
+              "rally-pulse"
+            ],
+            "note": null,
+            "slots": [
+              "date"
+            ]
+          },
+          "card.lesson": {
+            "profiles": [
+              "progress-story"
+            ],
+            "note": "lesson",
+            "slots": [
+              "note",
+              "date"
+            ]
+          },
+          "card.what-changed": {
+            "profiles": [
+              "progress-story"
+            ],
+            "note": null,
+            "slots": [
+              "comparison"
+            ]
+          },
+          "card.method-change": {
+            "profiles": [
+              "progress-story"
+            ],
+            "note": null,
+            "slots": [
+              "dates"
+            ],
+            "text": "These sessions were counted differently, so they are not compared."
+          },
+          "card.not-compared": {
+            "profiles": [
+              "progress-story"
+            ],
+            "note": null,
+            "slots": [
+              "dates",
+              "reason"
+            ]
+          },
+          "card.next-goal": {
+            "profiles": [
+              "progress-story"
+            ],
+            "note": "next",
+            "slots": [
+              "note"
+            ]
+          },
+          "card.date": {
+            "profiles": [
+              "court-memories"
+            ],
+            "note": null,
+            "slots": [
+              "date"
+            ]
+          },
+          "card.dedication": {
+            "profiles": [
+              "court-memories"
+            ],
+            "note": "dedication",
+            "slots": [
+              "note"
+            ]
+          }
+        },
+        "instructionTemplates": [
+          "card.drill",
+          "card.next-checkpoint"
+        ]
+      },
+      "assert": {
+        "ids": [
+          "card.accent",
+          "card.date",
+          "card.dedication",
+          "card.drill",
+          "card.examples",
+          "card.final-score",
+          "card.goal",
+          "card.lesson",
+          "card.match-intro",
+          "card.method-change",
+          "card.next-checkpoint",
+          "card.next-goal",
+          "card.not-compared",
+          "card.what-changed"
+        ],
+        "examplesText": "Your examples",
+        "instruction": [
+          "card.drill",
+          "card.next-checkpoint"
+        ]
+      }
+    },
+    {
+      "id": "sample-court-memories-brief",
+      "why": "The Sample court-memories brief keeps its grammar",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromRecord": "records/story-brief.court-memories.json",
+      "expect": {
+        "findings": []
+      },
+      "assert": {
+        "rules": []
+      }
+    },
+    {
+      "id": "sample-progress-brief-replay-first",
+      "why": "The Sample progress brief shows k-04 only as a replay, before any original-speed showing (film-engine 6.0: replays come after the 1x showing)",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromRecord": "records/story-brief.progress.json",
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "replay-before-live",
+            "beatId": "b04"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "replay-before-live",
+            "b04"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "planned-coach-cut-clean",
+      "why": "The planner's own plan passes",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "coach-cut-3min",
+      "planPatch": [],
+      "expect": {
+        "findings": []
+      },
+      "assert": {
+        "rules": []
+      }
+    },
+    {
+      "id": "replay-at-one-eighth",
+      "why": "Coach's Cut replays at 1/2 or 1/4 only",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/3/replaySpeedDen",
+          "value": 8
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "replay-speed",
+            "beatId": "b04"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "replay-speed",
+            "b04"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "replay-before-its-live",
+      "why": "A replay of k-03 before k-03 is shown at 1x",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/3/keeperId",
+          "value": "k-03"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "replay-before-live",
+            "beatId": "b04"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "replay-before-live",
+            "b04"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "estimated-cue-as-instruction",
+      "why": "An estimated cue is never an instruction title, and with no reviewed cue left the drill and checkpoint cards would instruct without one",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/2/overlays/1/refId",
+          "value": "cue-04"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "overlay-not-allowed",
+            "beatId": "b03"
+          },
+          {
+            "code": "grammarViolation",
+            "rule": "instruction-without-cue",
+            "beatId": "b07"
+          },
+          {
+            "code": "grammarViolation",
+            "rule": "instruction-without-cue",
+            "beatId": "b08"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "overlay-not-allowed",
+            "b03"
+          ],
+          [
+            "instruction-without-cue",
+            "b07"
+          ],
+          [
+            "instruction-without-cue",
+            "b08"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "music-in-coach-cut",
+      "why": "Coach's Cut has no music",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/music",
+          "value": {
+            "assetId": "track-01",
+            "rightsRecordId": "rights-track-01"
+          }
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "music",
+            "beatId": null
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "music",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "id": "medium-effects-in-coach-cut",
+      "why": "Effects above low only in Rally Pulse",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "coach-cut-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/effectIntensity",
+          "value": "medium"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "effect-intensity",
+            "beatId": null
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "effect-intensity",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "id": "instruction-without-reviewed-cue",
+      "why": "Story 125: a drill card in 'Your examples' would instruct without a reviewed cue",
+      "op": "lint",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/cues/0/provenance",
+          "value": "estimated"
+        },
+        {
+          "op": "replace",
+          "path": "/references/14/provenance",
+          "value": "estimated"
+        }
+      ],
+      "input": {},
+      "fromCase": "coach-cut-your-examples",
+      "planPatch": [
+        {
+          "op": "add",
+          "path": "/beats/-",
+          "value": {
+            "beatId": "b05",
+            "role": "drill",
+            "treatment": "title-card",
+            "keeperId": null,
+            "brollId": null,
+            "angle": null,
+            "replaySpeedDen": null,
+            "overlays": [],
+            "noteId": "note-drill",
+            "templateId": "card.drill",
+            "reasonForReview": "Sample: an added drill card."
+          }
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "instruction-without-cue",
+            "beatId": "b05"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "instruction-without-cue",
+            "b05"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "broadcast-off-the-wide-angle",
+      "why": "During live play Match Broadcast stays on the wide angle",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "match-broadcast-5min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/1/angle",
+          "value": "far-baseline"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "wide-angle-only",
+            "beatId": "b02"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "wide-angle-only",
+            "b02"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "broadcast-out-of-order",
+      "why": "Match Broadcast is strictly chronological: k-02 after k-03",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "match-broadcast-5min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/3/keeperId",
+          "value": "k-03"
+        },
+        {
+          "op": "replace",
+          "path": "/beats/4/keeperId",
+          "value": "k-02"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "strict-chronology",
+            "beatId": "b05"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "strict-chronology",
+            "b05"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "broadcast-replay-after-the-next-point",
+      "why": "A replay must end before the next point's serve: k-01's replay (b03) moved after k-02's point",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "match-broadcast-5min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/2",
+          "value": {
+            "beatId": "b04",
+            "role": "point",
+            "treatment": "live",
+            "keeperId": "k-02",
+            "brollId": null,
+            "angle": "near-baseline",
+            "replaySpeedDen": null,
+            "overlays": [
+              {
+                "kind": "score",
+                "refId": "p-041"
+              }
+            ],
+            "noteId": null,
+            "templateId": null,
+            "reasonForReview": "k-02 in match order."
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/beats/3",
+          "value": {
+            "beatId": "b03",
+            "role": "replay",
+            "treatment": "replay",
+            "keeperId": "k-01",
+            "brollId": null,
+            "angle": "far-baseline",
+            "replaySpeedDen": 2,
+            "overlays": [],
+            "noteId": null,
+            "templateId": null,
+            "reasonForReview": "Replay of k-01 from the far-baseline angle after the point."
+          }
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "strict-chronology",
+            "beatId": "b03"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "strict-chronology",
+            "b03"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "final-score-on-incomplete-coverage",
+      "why": "A final score card only when every point is recorded",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "match-broadcast-5min",
+      "planPatch": [
+        {
+          "op": "add",
+          "path": "/beats/-",
+          "value": {
+            "beatId": "b08",
+            "role": "final-score",
+            "treatment": "title-card",
+            "keeperId": null,
+            "brollId": null,
+            "angle": null,
+            "replaySpeedDen": null,
+            "overlays": [],
+            "noteId": null,
+            "templateId": "card.final-score",
+            "reasonForReview": "Sample: an added final score."
+          }
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "final-score-incomplete",
+            "beatId": "b08"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "final-score-incomplete",
+            "b08"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "narration-in-broadcast",
+      "why": "Match Broadcast invents no commentary",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "match-broadcast-5min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/narration",
+          "value": {
+            "voice": "user-recorded",
+            "consentRecordId": "consent-voice-jon"
+          }
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "narration",
+            "beatId": null
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "narration",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "id": "rally-pulse-five-minutes",
+      "why": "Rally Pulse runs 30-180 s",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "rally-pulse-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/durationTargetSeconds",
+          "value": 300
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "duration-range",
+            "beatId": null
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "duration-range",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "id": "freeze-in-rally-pulse",
+      "why": "Rally Pulse has no freeze",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "rally-pulse-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/0/treatment",
+          "value": "freeze"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "op-not-in-profile",
+            "beatId": "b01"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "op-not-in-profile",
+            "b01"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "goal-card-in-rally-pulse",
+      "why": "card.goal is not a Rally Pulse card",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "rally-pulse-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/3/templateId",
+          "value": "card.goal"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "card-template",
+            "beatId": "b04"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "card-template",
+            "b04"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "percent-improvement",
+      "why": "'% improvement' on a proportion is banned",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "progress-story-5min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/comparisons/0/display/delta",
+          "value": "+50% improvement"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "comparison-claim",
+            "beatId": null
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "comparison-claim",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "id": "change-claim-from-manual-counts",
+      "why": "Improvement language needs Reviewed on both sides",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "progress-story-5min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/comparisons/0/before/provenance",
+          "value": "manual"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "comparison-claim",
+            "beatId": null
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "comparison-claim",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "id": "broll-not-from-this-match",
+      "why": "B-roll must depict this match",
+      "op": "lint",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/brolls/1/depictsThisMatch",
+          "value": false
+        }
+      ],
+      "input": {},
+      "fromCase": "court-memories-3min",
+      "planPatch": [],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "broll-not-this-match",
+            "beatId": "b05"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "broll-not-this-match",
+            "b05"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "broll-reveals-hidden-venue",
+      "why": "A hidden location stays hidden",
+      "op": "lint",
+      "contextPatch": [
+        {
+          "op": "replace",
+          "path": "/brolls/0/revealsLocation",
+          "value": true
+        }
+      ],
+      "input": {},
+      "fromCase": "court-memories-3min",
+      "planPatch": [],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "hidden-location",
+            "beatId": "b01"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "hidden-location",
+            "b01"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "same-moment-twice",
+      "why": "A moment is shown at 1x once",
+      "op": "lint",
+      "contextPatch": [],
+      "input": {},
+      "fromCase": "court-memories-3min",
+      "planPatch": [
+        {
+          "op": "replace",
+          "path": "/beats/3/keeperId",
+          "value": "k-02"
+        }
+      ],
+      "expect": {
+        "findings": [
+          {
+            "code": "grammarViolation",
+            "rule": "one-live-showing",
+            "beatId": "b04"
+          }
+        ]
+      },
+      "assert": {
+        "rules": [
+          [
+            "one-live-showing",
+            "b04"
+          ]
+        ]
+      }
+    }
+  ]
+}

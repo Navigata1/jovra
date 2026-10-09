@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GET /internal/v1/attempts/{attemptId}/inputs/{inputRef} request",
+  "description": "internal.input (jovra-internal; caller: render host). inputRef must be in render_attempts.input_refs; nothing from the queue message is consulted. A request descriptor: pathParams, query, headers and body. No body. Header names are canonical; compare them case-insensitively. A real request may carry other headers (User-Agent, Accept-Encoding) that the contract does not use.",
+  "type": "object",
+  "required": [
+    "pathParams",
+    "headers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pathParams": {
+      "type": "object",
+      "required": [
+        "attemptId",
+        "inputRef"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "attemptId": {
+          "$ref": "common.schema.json#/$defs/uuid"
+        },
+        "inputRef": {
+          "$ref": "common.schema.json#/$defs/inputRef"
+        }
+      }
+    },
+    "headers": {
+      "$ref": "#/$defs/headers"
+    }
+  },
+  "$defs": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "Authorization",
+        "JOVRA-Lease"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Authorization": {
+          "$ref": "common.schema.json#/$defs/hostAuthorization"
+        },
+        "JOVRA-Lease": {
+          "$ref": "common.schema.json#/$defs/leaseHeader"
+        },
+        "X-Request-Id": {
+          "$ref": "common.schema.json#/$defs/requestIdHeader"
+        },
+        "Range": {
+          "$ref": "common.schema.json#/$defs/rangeHeader"
+        },
+        "JOVRA-Timestamp": {
+          "$ref": "common.schema.json#/$defs/signatureTimestampHeader"
+        },
+        "JOVRA-Nonce": {
+          "$ref": "common.schema.json#/$defs/signatureNonceHeader"
+        },
+        "JOVRA-Signature": {
+          "$ref": "common.schema.json#/$defs/hostSignatureHeader"
+        }
+      },
+      "dependentRequired": {
+        "JOVRA-Signature": [
+          "JOVRA-Timestamp",
+          "JOVRA-Nonce"
+        ]
+      }
+    }
+  }
+}
