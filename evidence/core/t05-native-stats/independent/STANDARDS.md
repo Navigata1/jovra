@@ -9,3 +9,7 @@ No package build, simulator or native run performed by this reviewer for this ax
 ## Publication rebind
 
 Standards ACCEPT exact `6ba0b3aa8fce39cc8c3fedbe0342265d042f7d86`. Stats source, tests, generator and independent comparator are byte-identical to accepted `106293d`. The narrow research/iOS-spec documentation reconciliation explicitly cites shared-contract decision 4 for point-penalty total-point/eligible-break-point-slot accounting and excludes penalties from service/return points and serve stats. Existing contract policy is made visible without a new implementation policy. Zero documented-standard breaches or substantive Fowler heuristics in this delta. Added evidence and main reconciliation do not transfer reviewer-owned runtime acceptance.
+
+## Naming finding withdrawal
+
+The initial zero-findings acceptance above is withdrawn for the naming axis: GLOSSARY's Stat entry explicitly avoids Metric. `StatsMetric`, `StatsEngine.metric` and local metric names violated that rule. The bounded correction uses `StatSelector`, `StatsEngine.stat` and stat locals; fresh focused/corpus verification and an exact corrected-head Standards rebind are required before merge. Prior numerical/source evidence remains historical evidence, not approval for the corrected head.

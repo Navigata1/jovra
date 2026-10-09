@@ -14,22 +14,22 @@ import JovraCore
     #expect(stats.shots.total == 386)
 }
 
-@Test func estimatedContributorKeepsHeadlineMetricProvisionalAndTraceable() throws {
+@Test func estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() throws {
     let root = try FixtureManifest.repository()
     let document = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: root.appendingPathComponent("spec/fixtures/sample/jon-vs-alex.session.json")))
     var timeline = try ScoringEngine.fold(ScoringInput(session: document))
     timeline.points[0].provenance = .estimated
     timeline.points[0].reviewState = .unreviewed
-    let metric = try StatsEngine.metric(.pointsWon(.a), in: timeline, sample: true)
-    #expect(metric.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
-    #expect(metric.evidence.provenance == .estimated)
-    #expect(metric.evidence.contributingPointIDs.count == 124)
-    #expect(metric.evidence.contributingPointIDs.first == timeline.points[0].id)
-    #expect(metric.evidence.unreviewedCount == 9) // Changed first point plus eight existing needs-review points.
-    #expect(metric.evidence.sample)
+    let stat = try StatsEngine.stat(.pointsWon(.a), in: timeline, sample: true)
+    #expect(stat.value == .ratio(.init(n: 72, d: 124, pct: .init(58), display: "58%")))
+    #expect(stat.evidence.provenance == .estimated)
+    #expect(stat.evidence.contributingPointIDs.count == 124)
+    #expect(stat.evidence.contributingPointIDs.first == timeline.points[0].id)
+    #expect(stat.evidence.unreviewedCount == 9) // Changed first point plus eight existing needs-review points.
+    #expect(stat.evidence.sample)
     for index in timeline.points.indices { timeline.points[index].reviewState = .reviewed }
     timeline.points[0].reviewState = .unreviewed
-    let singleUnreviewed = try StatsEngine.metric(.pointsWon(.a), in: timeline)
+    let singleUnreviewed = try StatsEngine.stat(.pointsWon(.a), in: timeline)
     #expect(singleUnreviewed.evidence.provenance == .estimated && singleUnreviewed.evidence.unreviewedCount == 1)
 }
 
@@ -40,11 +40,11 @@ import JovraCore
     for index in timeline.points.indices { timeline.points[index].strokeCount = .init(nil) }
     let numeric = try StatsEngine.compute(timeline)
     #expect(numeric.shots.total == 0 && numeric.shots.pointsWithStrokeCount == 0)
-    let metric = try StatsEngine.metric(.shots, in: timeline)
-    #expect(metric.value == nil && metric.evidence.provenance == nil)
-    #expect(metric.evidence.contributingPointIDs.isEmpty)
+    let stat = try StatsEngine.stat(.shots, in: timeline)
+    #expect(stat.value == nil && stat.evidence.provenance == nil)
+    #expect(stat.evidence.contributingPointIDs.isEmpty)
     timeline.points[0].strokeCount = .init(0)
-    let observedZero = try StatsEngine.metric(.shots, in: timeline)
+    let observedZero = try StatsEngine.stat(.shots, in: timeline)
     #expect(observedZero.value == .count(0))
     #expect(observedZero.evidence.contributingPointIDs == [timeline.points[0].id])
 }
@@ -56,11 +56,11 @@ import JovraCore
     for index in timeline.points.indices {
         timeline.points[index].provenance = timeline.points[index].serverSide.value == .a ? .validated : .estimated
     }
-    let metric = try StatsEngine.metric(.firstServeIn(.a), in: timeline)
-    #expect(metric.value == .ratio(.init(n: 40, d: 60, pct: .init(67), display: "67%")))
-    #expect(metric.evidence.contributingPointIDs.count == 60)
-    #expect(metric.evidence.provenance == .validated)
-    #expect(!metric.evidence.sample)
+    let stat = try StatsEngine.stat(.firstServeIn(.a), in: timeline)
+    #expect(stat.value == .ratio(.init(n: 40, d: 60, pct: .init(67), display: "67%")))
+    #expect(stat.evidence.contributingPointIDs.count == 60)
+    #expect(stat.evidence.provenance == .validated)
+    #expect(!stat.evidence.sample)
 }
 
 @Test func momentumAndRequiredNullableDurationKeepTheirClosedContract() throws {

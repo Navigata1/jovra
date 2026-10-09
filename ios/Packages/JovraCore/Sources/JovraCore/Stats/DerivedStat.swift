@@ -1,7 +1,7 @@
 import Foundation
 
 /// The first overview's supported selectors. Other stats remain in the closed numeric result.
-public enum StatsMetric: Equatable, Sendable {
+public enum StatSelector: Equatable, Sendable {
     case points, pointsWon(Side), firstServeIn(Side), firstServePointsWon(Side), shots
 }
 public enum StatValue: Equatable, Sendable { case count(Int), ratio(RateRatio) }
@@ -18,13 +18,13 @@ public struct DerivedStat: Equatable, Sendable {
 }
 
 extension StatsEngine {
-    public static func metric(_ metric: StatsMetric, in timeline: MatchTimeline, sample: Bool = false) throws -> DerivedStat {
+    public static func stat(_ selector: StatSelector, in timeline: MatchTimeline, sample: Bool = false) throws -> DerivedStat {
         let stats = try compute(timeline)
         let counted = timeline.points.filter { $0.determined && !$0.afterMatchEnd && $0.winner.value != nil }
         let played = counted.filter { $0.kind == .point }
         let points: [TimelinePointRecord]
         let value: StatValue
-        switch metric {
+        switch selector {
         case .points: points = counted; value = .count(stats.countedPoints)
         case .pointsWon(let side):
             points = counted; value = .ratio(side == .a ? stats.sides.A.totalPointsWon : stats.sides.B.totalPointsWon)
