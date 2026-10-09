@@ -225,12 +225,23 @@ def _consent_problems(consent: dict) -> list[str]:
     if consent.get("juniorPlayerIds") and consent["status"] == "notRequired":
         problems.append("$.consent.status is notRequired but juniorPlayerIds is not empty (junior consent is "
                         "required)")
+    # Schema `format` is intentionally an annotation. Check these instants before comparing them:
+    # an impossible calendar date must produce a refusal, never crash an import/validation pass.
+    withdrawn = None
     if "withdrawnAt" in consent:
-        withdrawn = _instant(consent["withdrawnAt"])
-        for i, written in enumerate(consent.get("writtenConsents", [])):
-            if withdrawn < _instant(written["attachedAt"]):
-                problems.append(f"$.consent.withdrawnAt {consent['withdrawnAt']} is before writtenConsents[{i}]"
-                                f".attachedAt {written['attachedAt']}")
+        try:
+            withdrawn = _instant(consent["withdrawnAt"])
+        except ValueError:
+            problems.append("$.consent.withdrawnAt is not a valid calendar timestamp")
+    for i, written in enumerate(consent.get("writtenConsents", [])):
+        try:
+            attached = _instant(written["attachedAt"])
+        except ValueError:
+            problems.append(f"$.consent.writtenConsents[{i}].attachedAt is not a valid calendar timestamp")
+            continue
+        if withdrawn is not None and withdrawn < attached:
+            problems.append(f"$.consent.withdrawnAt {consent['withdrawnAt']} is before writtenConsents[{i}]"
+                            f".attachedAt {written['attachedAt']}")
     return problems
 
 

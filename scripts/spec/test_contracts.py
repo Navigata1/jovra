@@ -562,6 +562,28 @@ class ConsentConsistencyTests(unittest.TestCase):
         self.assertTrue(any("withdrawnAt" in p for p in session_problems(doc)))
 
 
+    def test_impossible_consent_dates_are_rejected_without_crashing(self):
+        for field in ("withdrawnAt", "attachedAt"):
+            with self.subTest(field=field):
+                doc = load(ALL_FIELDS_SESSION)
+                target = doc["consent"] if field == "withdrawnAt" else doc["consent"]["writtenConsents"][0]
+                target[field] = "2026-02-30T00:00:00Z"
+                self.assertTrue(any(field in problem and "calendar timestamp" in problem
+                                    for problem in session_problems(doc)))
+
+    def test_written_consent_dates_are_checked_without_a_withdrawal(self):
+        doc = load(ALL_FIELDS_SESSION)
+        doc["consent"].pop("withdrawnAt")
+        doc["consent"]["writtenConsents"][0]["attachedAt"] = "2026-04-31T00:00:00Z"
+        self.assertTrue(any("attachedAt" in problem for problem in session_problems(doc)))
+
+    def test_valid_leap_day_consent_timestamps_remain_valid(self):
+        doc = load(ALL_FIELDS_SESSION)
+        doc["consent"]["writtenConsents"][0]["attachedAt"] = "2024-02-29T00:00:00Z"
+        doc["consent"]["withdrawnAt"] = "2024-02-29T00:00:01Z"
+        self.assertEqual(session_problems(doc), [])
+
+
 class RecordingBoundsTests(unittest.TestCase):
     """1.1 times fall inside the recording (verifier round 2, finding 8). The example records 600,000 ms."""
 
