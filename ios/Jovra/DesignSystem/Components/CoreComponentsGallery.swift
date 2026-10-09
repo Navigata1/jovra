@@ -84,7 +84,7 @@ struct CoreComponentsGallery: View {
                 SampleBadge(onForest: true)
                 ProvenanceBadge(kind: .provenance(.estimated), onForest: true)
             }
-            DemoBanner { actionResult = String(localized: "Sample closed", table: "DesignSystem.Components") }
+            DemoBanner { actionResult = String(localized: "Onboarding requested", table: "DesignSystem.Components") }
         }
     }
 }

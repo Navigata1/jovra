@@ -42,9 +42,10 @@ struct StateCard: View {
     }
 }
 
-/// Sample mode is always visible and offers an explicit caller-owned exit action.
+/// Sample mode is always visible; the caller connects its action to onboarding or another safe exit.
 struct DemoBanner: View {
-    var leaveSample: () -> Void
+    var actionTitle: String = String(localized: "Make it yours", table: "DesignSystem.Components")
+    var action: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.x2) {
@@ -53,7 +54,7 @@ struct DemoBanner: View {
                 .font(.jovraHeadline)
                 .foregroundStyle(.jovra(.textPrimary))
                 .fixedSize(horizontal: false, vertical: true)
-            Button(String(localized: "Leave sample", table: "DesignSystem.Components"), action: leaveSample)
+            Button(actionTitle, action: action)
                 .buttonStyle(.jovraSecondary)
         }
         .jovraCard()

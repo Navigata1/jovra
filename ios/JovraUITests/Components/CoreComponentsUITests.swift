@@ -49,8 +49,12 @@ final class CoreComponentsUITests: XCTestCase {
         XCTAssertEqual(sample.label, "Sample data")
         XCTAssertTrue(app.staticTexts["gallery.sample"].exists, "A badge describes data; it is not an unlabeled interactive container")
         XCTAssertEqual(app.descendants(matching: .any)["gallery.fixture"].label, "Simulator fixture camera")
-        app.buttons["Leave sample"].tap()
-        XCTAssertTrue(app.staticTexts["Sample closed"].exists)
+        let makeItYours = app.buttons["Make it yours"]
+        XCTAssertTrue(makeItYours.exists, "The default banner CTA follows the sample-to-onboarding spec")
+        guard makeItYours.exists else { return }
+        makeItYours.tap()
+        XCTAssertTrue(app.staticTexts["Onboarding requested"].exists)
+        attachScreenshot(app, name: "t12-sample-cta")
     }
 
     @MainActor
