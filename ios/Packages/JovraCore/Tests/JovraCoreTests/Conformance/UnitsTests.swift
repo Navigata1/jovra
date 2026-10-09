@@ -8,3 +8,8 @@ import Testing
     #expect(try Units.display("1.25", unit: "m/s", preferredUnit: "km/h").value == "5")
     #expect(Units.gaugeHint("17").ranges.count == 2)
 }
+
+@Test func exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() throws {
+    #expect(try Units.display("00052.00", unit: "lb", preferredUnit: "lb").value == "00052.00")
+    #expect(try Units.convert("00052.00", from: "lb", to: "kg", places: 8) == "23.58680324")
+}

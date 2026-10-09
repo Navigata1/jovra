@@ -50,9 +50,11 @@ public enum Units {
         return result
     }
     private static func value(_ text: String) throws -> Decimal {
+        var normalized = text
+        while normalized.hasPrefix("0"), normalized.count > 1, normalized.dropFirst().first != "." { normalized.removeFirst() }
         guard text.range(of: #"^[0-9]+(\.[0-9]+)?$"#, options: .regularExpression) != nil,
               let value = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")), !value.isNaN,
-              try CanonicalJSON.canonicalize(Data(text.utf8)) == CanonicalJSON.canonicalize(Data(NSDecimalNumber(decimal: value).stringValue.utf8)) else {
+              try CanonicalJSON.canonicalize(Data(normalized.utf8)) == CanonicalJSON.canonicalize(Data(NSDecimalNumber(decimal: value).stringValue.utf8)) else {
             throw UnitError.invalidDecimal(text)
         }
         return value
