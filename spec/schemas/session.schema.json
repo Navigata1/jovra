@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA session document (session.json / session.jovra.json)",
   "description": "One session folder's document (ADR-0002). The same JSON is the Drive sidecar and the export format. Scores are never stored: the match log is folded by the scoring engine (ADR-0003).",
-  "$comment": "Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, sample.mediaIds (sample media manifest ids), analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt, derivedValues[].range (an estimate's range), original (the original facet). Bookmark notes reuse marks[].note. A document stamped 1.0.x may carry none of them ($defs/v1_0). Ids these fields hold must resolve inside the document, and their times fall inside the recording (jovra_ref/references.py).",
+  "$comment": "Schema 1.2.0 (ADR0030): reviewed server/receiver overrides and optional match.resolutionMode. Earlier versions forbid them. Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, sample.mediaIds (sample media manifest ids), analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt, derivedValues[].range (an estimate's range), original (the original facet). Bookmark notes reuse marks[].note. A document stamped 1.0.x may carry none of them ($defs/v1_0). Ids these fields hold must resolve inside the document, and their times fall inside the recording (jovra_ref/references.py).",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "sport", "createdAt", "updatedAt", "title", "sessionKind", "players", "recording", "storage", "archive"],
   "additionalProperties": false,
@@ -42,6 +42,7 @@
     "original": {"$ref": "#/$defs/originalState"}
   },
   "allOf": [
+    {"if": {"properties": {"schemaVersion": {"pattern": "^0*1\\.0*[01]\\."}}}, "then": {"$ref": "#/$defs/pre_v1_2"}},
     {
       "if": {"properties": {"sessionKind": {"enum": ["match", "tiebreakOnly", "practiceSet"]}}},
       "then": {"required": ["sides", "match"]}
@@ -52,6 +53,7 @@
     }
   ],
   "$defs": {
+    "pre_v1_2": {"properties": {"match": {"properties": {"resolutionMode": false, "log": {"items": {"not": {"properties": {"type": {"enum": ["serverOverride", "receiverOverride"]}}}}}}}}},
     "sampleInfo": {
       "description": "Present only on demo/sample content. The UI must badge it 'Sample' (CLAUDE.md hard rule 1).",
       "type": "object",
@@ -102,7 +104,8 @@
       "properties": {
         "format": {"$ref": "#/$defs/matchFormat"},
         "toss": {"$ref": "#/$defs/toss"},
-        "log": {"type": "array", "items": {"$ref": "#/$defs/logEvent"}}
+        "log": {"type": "array", "items": {"$ref": "#/$defs/logEvent"}},
+        "resolutionMode": {"enum": ["rules", "asPlayed"], "description": "Since 1.2.0. Absent means rules. ADR0030 reviewed order observations."}
       }
     },
     "matchFormat": {
@@ -194,9 +197,13 @@
         {"$ref": "#/$defs/checkpointEvent"},
         {"$ref": "#/$defs/penaltyEvent"},
         {"$ref": "#/$defs/endEvent"},
-        {"$ref": "#/$defs/rallyLetEvent"}
+        {"$ref": "#/$defs/rallyLetEvent"},
+        {"$ref": "#/$defs/serverOverrideEvent"},
+        {"$ref": "#/$defs/receiverOverrideEvent"}
       ]
     },
+    "serverOverrideEvent": {"type": "object", "required": ["id", "seq", "type", "targetPointId", "server", "continuation", "provenance", "source"], "additionalProperties": false, "properties": {"id": {"$ref": "common.schema.json#/$defs/id"}, "seq": {"$ref": "#/$defs/seq"}, "at": {"$ref": "common.schema.json#/$defs/dateTime"}, "targetPointId": {"$ref": "common.schema.json#/$defs/id"}, "supersedes": {"$ref": "common.schema.json#/$defs/id"}, "provenance": {"enum": ["manual", "reviewed"]}, "source": {"$ref": "common.schema.json#/$defs/source"}, "note": {"type": "string", "maxLength": 500}, "type": {"const": "serverOverride"}, "server": {"$ref": "common.schema.json#/$defs/id"}, "continuation": {"enum": ["pointOnly", "completedStandardGame", "oddTiebreak"]}, "discoveryAfterPointId": {"$ref": "common.schema.json#/$defs/id"}, "rotation": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "common.schema.json#/$defs/id"}}}, "allOf": [{"if": {"properties": {"continuation": {"const": "pointOnly"}}}, "then": {"properties": {"discoveryAfterPointId": false, "rotation": false}}, "else": {"required": ["discoveryAfterPointId"]}}]},
+    "receiverOverrideEvent": {"type": "object", "required": ["id", "seq", "type", "targetPointId", "receivingSide", "deuceReceiver", "provenance", "source"], "additionalProperties": false, "properties": {"id": {"$ref": "common.schema.json#/$defs/id"}, "seq": {"$ref": "#/$defs/seq"}, "at": {"$ref": "common.schema.json#/$defs/dateTime"}, "targetPointId": {"$ref": "common.schema.json#/$defs/id"}, "supersedes": {"$ref": "common.schema.json#/$defs/id"}, "provenance": {"enum": ["manual", "reviewed"]}, "source": {"$ref": "common.schema.json#/$defs/source"}, "note": {"type": "string", "maxLength": 500}, "type": {"const": "receiverOverride"}, "receivingSide": {"$ref": "common.schema.json#/$defs/side"}, "deuceReceiver": {"$ref": "common.schema.json#/$defs/id"}}},
     "seq": {"type": "integer", "minimum": 1, "description": "Append order; strictly increasing within a log."},
     "pointEvent": {
       "description": "One played point. detected = automatic suggestion (kept for benchmarking); reviewed = the user's decision. The effective outcome is reviewed when present (whole block).",

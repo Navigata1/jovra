@@ -1,0 +1,144 @@
+test_doubles_reviewed_rotation_preserves_explicit_partner_order (test_order_overrides.ReviewedOrderPairs.test_doubles_reviewed_rotation_preserves_explicit_partner_order) ... ERROR
+test_even_tiebreak_endpoint_keeps_observation_but_refuses_inferred_anchor (test_order_overrides.ReviewedOrderPairs.test_even_tiebreak_endpoint_keeps_observation_but_refuses_inferred_anchor) ... ERROR
+test_midgame_point_identity_does_not_infer_persistent_rotation (test_order_overrides.ReviewedOrderPairs.test_midgame_point_identity_does_not_infer_persistent_rotation) ... ERROR
+test_missing_override_target_is_stable_structural_error (test_order_overrides.ReviewedOrderPairs.test_missing_override_target_is_stable_structural_error) ... FAIL
+test_override_void_redo_keeps_original_observation (test_order_overrides.ReviewedOrderPairs.test_override_void_redo_keeps_original_observation) ... ERROR
+test_receiver_override_expires_after_one_game (test_order_overrides.ReviewedOrderPairs.test_receiver_override_expires_after_one_game) ... ERROR
+test_singles_completed_game_preserves_observation_and_reanchors_next_game (test_order_overrides.ReviewedOrderPairs.test_singles_completed_game_preserves_observation_and_reanchors_next_game) ... ERROR
+test_tiebreak_odd_discovery_retains_block_phase (test_order_overrides.ReviewedOrderPairs.test_tiebreak_odd_discovery_retains_block_phase) ... ERROR
+
+======================================================================
+ERROR: test_doubles_reviewed_rotation_preserves_explicit_partner_order (test_order_overrides.ReviewedOrderPairs.test_doubles_reviewed_rotation_preserves_explicit_partner_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 88, in test_doubles_reviewed_rotation_preserves_explicit_partner_order
+    rules, played = views(config, log)
+                    ~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 45, in views
+    result[mode] = scoring.fold(config, log)
+                   ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/scoring.py", line 488, in fold
+    placed, doubles_orders, history = resolve(log)
+                                      ~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/log.py", line 47, in resolve
+    raise LogError("unknownEventType", e["type"])
+jovra_ref.log.LogError: unknownEventType: serverOverride
+
+======================================================================
+ERROR: test_even_tiebreak_endpoint_keeps_observation_but_refuses_inferred_anchor (test_order_overrides.ReviewedOrderPairs.test_even_tiebreak_endpoint_keeps_observation_but_refuses_inferred_anchor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 104, in test_even_tiebreak_endpoint_keeps_observation_but_refuses_inferred_anchor
+    rules, played = views(singles(TB_ONLY_10), log)
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 45, in views
+    result[mode] = scoring.fold(config, log)
+                   ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/scoring.py", line 488, in fold
+    placed, doubles_orders, history = resolve(log)
+                                      ~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/log.py", line 47, in resolve
+    raise LogError("unknownEventType", e["type"])
+jovra_ref.log.LogError: unknownEventType: serverOverride
+
+======================================================================
+ERROR: test_midgame_point_identity_does_not_infer_persistent_rotation (test_order_overrides.ReviewedOrderPairs.test_midgame_point_identity_does_not_infer_persistent_rotation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 76, in test_midgame_point_identity_does_not_infer_persistent_rotation
+    rules, played = views(singles(CLUB_BO3), log)
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 45, in views
+    result[mode] = scoring.fold(config, log)
+                   ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/scoring.py", line 488, in fold
+    placed, doubles_orders, history = resolve(log)
+                                      ~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/log.py", line 47, in resolve
+    raise LogError("unknownEventType", e["type"])
+jovra_ref.log.LogError: unknownEventType: serverOverride
+
+======================================================================
+ERROR: test_override_void_redo_keeps_original_observation (test_order_overrides.ReviewedOrderPairs.test_override_void_redo_keeps_original_observation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 124, in test_override_void_redo_keeps_original_observation
+    _, played = views(singles(CLUB_BO3), log)
+                ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 45, in views
+    result[mode] = scoring.fold(config, log)
+                   ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/scoring.py", line 488, in fold
+    placed, doubles_orders, history = resolve(log)
+                                      ~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/log.py", line 47, in resolve
+    raise LogError("unknownEventType", e["type"])
+jovra_ref.log.LogError: unknownEventType: serverOverride
+
+======================================================================
+ERROR: test_receiver_override_expires_after_one_game (test_order_overrides.ReviewedOrderPairs.test_receiver_override_expires_after_one_game)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 114, in test_receiver_override_expires_after_one_game
+    rules, played = views(config, log)
+                    ~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 45, in views
+    result[mode] = scoring.fold(config, log)
+                   ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/scoring.py", line 488, in fold
+    placed, doubles_orders, history = resolve(log)
+                                      ~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/log.py", line 47, in resolve
+    raise LogError("unknownEventType", e["type"])
+jovra_ref.log.LogError: unknownEventType: receiverOverride
+
+======================================================================
+ERROR: test_singles_completed_game_preserves_observation_and_reanchors_next_game (test_order_overrides.ReviewedOrderPairs.test_singles_completed_game_preserves_observation_and_reanchors_next_game)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 63, in test_singles_completed_game_preserves_observation_and_reanchors_next_game
+    rules, played = views(singles(CLUB_BO3), log)
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 45, in views
+    result[mode] = scoring.fold(config, log)
+                   ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/scoring.py", line 488, in fold
+    placed, doubles_orders, history = resolve(log)
+                                      ~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/log.py", line 47, in resolve
+    raise LogError("unknownEventType", e["type"])
+jovra_ref.log.LogError: unknownEventType: serverOverride
+
+======================================================================
+ERROR: test_tiebreak_odd_discovery_retains_block_phase (test_order_overrides.ReviewedOrderPairs.test_tiebreak_odd_discovery_retains_block_phase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 96, in test_tiebreak_odd_discovery_retains_block_phase
+    rules, played = views(singles(TB_ONLY_10), log)
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 45, in views
+    result[mode] = scoring.fold(config, log)
+                   ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/scoring.py", line 488, in fold
+    placed, doubles_orders, history = resolve(log)
+                                      ~~~~~~~^^^^^
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/spec/reference/jovra_ref/log.py", line 47, in resolve
+    raise LogError("unknownEventType", e["type"])
+jovra_ref.log.LogError: unknownEventType: serverOverride
+
+======================================================================
+FAIL: test_missing_override_target_is_stable_structural_error (test_order_overrides.ReviewedOrderPairs.test_missing_override_target_is_stable_structural_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/domain/scripts/spec/test_order_overrides.py", line 134, in test_missing_override_target_is_stable_structural_error
+    self.assertEqual(caught.exception.code, "overrideTargetMissing")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'unknownEventType' != 'overrideTargetMissing'
+- unknownEventType
++ overrideTargetMissing
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+FAILED (failures=1, errors=7)

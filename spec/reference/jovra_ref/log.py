@@ -17,7 +17,7 @@ The match log is append-only (ADR-0003). Nothing is ever edited in place:
 * ``doublesOrder`` events are not placed; the last active one per ``setIndex`` applies.
 """
 
-PLACEABLE = ("point", "checkpoint", "penalty", "retirement", "default", "walkover", "rallyLet")
+PLACEABLE = ("point", "checkpoint", "penalty", "retirement", "default", "walkover", "rallyLet", "serverOverride", "receiverOverride")
 UNPLACED = ("void", "doublesOrder")
 
 
