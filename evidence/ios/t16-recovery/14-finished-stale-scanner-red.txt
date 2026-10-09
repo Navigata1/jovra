@@ -1,0 +1,56 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/6] Write sources
+[1/6] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module JovraMediaTests
+[4/6] Compiling JovraMediaTests RecoveryScannerTests.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/RecoveryScannerTests.swift:40:19: error: cannot find 'RecoveryScanner' in scope
+38 |     let rawURL = folder.appendingPathComponent(try #require(snapshot.segments.first).file.path)
+39 |     let rawMovie = try Data(contentsOf: rawURL)
+40 |     let scanner = RecoveryScanner(root: root)
+   |                   `- error: cannot find 'RecoveryScanner' in scope
+41 |     let recovered = try await scanner.scan()
+42 |     let result = try #require(recovered.first)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/RecoveryScannerTests.swift:46:78: error: cannot infer contextual base in reference to member 'saved'
+44 |     #expect(result.recording.recovery?.outcome == .complete)
+45 |     #expect(result.recording.recovery?.savedThroughMs == 2000)
+46 |     #expect(result.recording.durationMs == 2000 && result.original.state == .saved)
+   |                                                                              `- error: cannot infer contextual base in reference to member 'saved'
+47 |     let retained = folder.appendingPathComponent(try #require(result.recording.segments.first).file.path)
+48 |     let asset = AVURLAsset(url: retained)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/RecoveryScannerTests.swift:49:73: error: cannot infer contextual base in reference to member 'video'
+47 |     let retained = folder.appendingPathComponent(try #require(result.recording.segments.first).file.path)
+48 |     let asset = AVURLAsset(url: retained)
+49 |     let track = try #require(try await asset.loadTracks(withMediaType: .video).first)
+   |                                                                         `- error: cannot infer contextual base in reference to member 'video'
+50 |     let reader = try AVAssetReader(asset: asset)
+51 |     let output = AVAssetReaderTrackOutput(track: track, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/RecoveryScannerTests.swift:57:31: error: cannot infer contextual base in reference to member 'completed'
+55 |         #expect(CMSampleBufferGetImageBuffer(sample) != nil); frames += 1
+56 |     }
+57 |     #expect(reader.status == .completed && frames == 60)
+   |                               `- error: cannot infer contextual base in reference to member 'completed'
+58 |     try await store.applyRecoveredCapture(result.recording, marks: result.marks, original: result.original, for: result.sessionID)
+59 |     let sessionBytes = try Data(contentsOf: folder.appendingPathComponent("session.json"))
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/RecoveryScannerTests.swift:42:18: warning: no calls to throwing functions occur within 'try' expression
+40 |     let scanner = RecoveryScanner(root: root)
+41 |     let recovered = try await scanner.scan()
+42 |     let result = try #require(recovered.first)
+   |                  `- warning: no calls to throwing functions occur within 'try' expression
+43 |     #expect(recovered.count == 1 && result.sessionID == document.id)
+44 |     #expect(result.recording.recovery?.outcome == .complete)
+
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-recovery/ios/Packages/JovraMedia/Tests/JovraMediaTests/Capture/Recovery/RecoveryScannerTests.swift:49:17: warning: no calls to throwing functions occur within 'try' expression
+47 |     let retained = folder.appendingPathComponent(try #require(result.recording.segments.first).file.path)
+48 |     let asset = AVURLAsset(url: retained)
+49 |     let track = try #require(try await asset.loadTracks(withMediaType: .video).first)
+   |                 `- warning: no calls to throwing functions occur within 'try' expression
+50 |     let reader = try AVAssetReader(asset: asset)
+51 |     let output = AVAssetReaderTrackOutput(track: track, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
+error: fatalError
