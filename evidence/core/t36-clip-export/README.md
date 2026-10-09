@@ -8,6 +8,6 @@ The added real2second FixtureCamera source test initially asserted a nonzero AVF
 
 Independent ffmpeg complete decode, burned-counter inspection and ffprobe track checks passed on all six retained outputs (06); hashes and byte counts are in retained-media-manifest.json. Actual captured source has60 frames/raw0.043333 start; its exported clip has30 frames, starts0 and lasts1second without audio. This proof uses synthetic media, no private player footage.
 
-Latest main directory-durability code has since been integrated. A fresh combined Media gate and final two-axis source rebind are pending before publication. Earlier75-test evidence is bound to the previous package composition, not a claim of that final combined run.
+Latest main directory-durability code3ae5caa is integrated. The fresh combined Media gate07 passes76tests in14suites; independent ffmpeg inspection08 passesall6integratedfiles. Retained final synthetic MP4s are under media/ with integrated-media-manifest.json hashes. Earlier75-test evidence remains bound to its previous package composition. Production source is unchanged from reviewedc41d7b8; separate final Standards/Spec rebind precedes publication.
 
 FullT36 remains open: multi-segment selection, durable progress/relaunch status, per-session event-log-version export records, clip sheet/Photos permissions/junior copy policy and full visual/accessibility criteria require further integration. No Studio/cloud/Android/watch work or physical-device/signing/store readiness is claimed.
