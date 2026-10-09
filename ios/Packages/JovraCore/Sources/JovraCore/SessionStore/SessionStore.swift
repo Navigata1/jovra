@@ -41,7 +41,7 @@ public actor SessionStore {
         let folder = try folder(document.id)
         guard !FileManager.default.fileExists(atPath: folder.path) else { throw SessionStoreError.alreadyExists }
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false)
-        do { try write(document, to: folder) }
+        do { try write(document, to: folder, upgradeVersion: false) }
         catch { try? FileManager.default.removeItem(at: folder); throw error }
     }
 
@@ -100,11 +100,17 @@ public actor SessionStore {
         return result
     }
 
-    private func write(_ document: SessionDocument, to folder: URL) throws {
+    private func write(_ document: SessionDocument, to folder: URL, upgradeVersion: Bool = true) throws {
         let destination = folder.appendingPathComponent("session.json")
         try Self.refuseSymbolicLink(destination)
         let temporary = folder.appendingPathComponent(".session-\(UUID().uuidString).tmp")
-        let bytes = try CanonicalJSON.encode(document)
+        var persisted = document
+        // New facets/capture metadata may use1.1 fields. Preserve legacy documents
+        // at creation, but never stamp a mutation containing new fields as1.0.
+        if upgradeVersion, persisted.schemaVersion.major == 1, persisted.schemaVersion.minor == 0 {
+            persisted.schemaVersion = .v1_1
+        }
+        let bytes = try CanonicalJSON.encode(persisted)
         guard FileManager.default.createFile(atPath: temporary.path, contents: nil) else { throw CocoaError(.fileWriteUnknown) }
         let handle = try FileHandle(forWritingTo: temporary)
         do { try handle.write(contentsOf: bytes); try handle.synchronize(); try handle.close() }

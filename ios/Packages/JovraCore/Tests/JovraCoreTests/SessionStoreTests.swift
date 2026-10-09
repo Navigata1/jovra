@@ -76,6 +76,20 @@ final class SessionStoreTests: XCTestCase {
         XCTAssertEqual(actual.match, document.match)
     }
 
+    func testNewOriginalFacetUpgradesLegacyDocumentWithoutChangingMatch() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let document = try sample()
+        XCTAssertEqual(document.schemaVersion, .v1)
+        let store = try SessionStore(root: root)
+        try await store.create(document)
+        try await store.update(document.id, facet: .original(.init(state: .saved)))
+        let actual = try await store.load(document.id)
+        XCTAssertEqual(actual.schemaVersion, .v1_1)
+        XCTAssertEqual(actual.match, document.match)
+        XCTAssertEqual(actual.original?.state, .saved)
+    }
+
     func testCreateSurvivesStoreRelaunchAndInterruptedWriteKeepsPreviousDocument() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }
