@@ -6,6 +6,7 @@ edit it by hand. A new page appears here when the generator runs. Each page's fr
 `python3 scripts/spec/validate_studio.py --list` prints every registered kind with its module and status.
 
 - [bundle](bundle.md)
+- [compile](compile.md)
 - [core](core.md)
 - [edl](edl.md)
 - [jobstate](jobstate.md)
