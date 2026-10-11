@@ -1,0 +1,55 @@
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/local-export/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/10] Emitting module JovraCore
+[5/10] Compiling JovraCore SessionStore.swift
+[6/11] Compiling JovraCore ReviewedPointStore.swift
+[7/13] Emitting module JovraMedia
+[8/13] Compiling JovraMedia LocalExportService.swift
+[9/14] Compiling JovraMedia MediaLibrary.swift
+[10/15] Emitting module JovraBenchmark
+[11/24] Emitting module JovraBenchmarkTests
+[11/24] Write Objects.LinkFileList
+[12/24] Linking jovra-benchmark
+[13/24] Applying jovra-benchmark
+[15/24] Compiling JovraMediaTests CapturePipelineTests.swift
+[16/24] Compiling JovraMediaTests MediaDirectoryDurabilityTests.swift
+[17/24] Compiling JovraMediaTests FragmentedMovieLayoutTests.swift
+[18/24] Compiling JovraMediaTests RecoveryScannerTests.swift
+[19/24] Compiling JovraMediaTests ClipExporterTests.swift
+[20/24] Compiling JovraMediaTests LocalExportServiceTests.swift
+[21/24] Compiling JovraMediaTests DecodedFrameHashTests.swift
+[22/24] Emitting module JovraMediaTests
+[23/31] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[24/31] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[25/31] Compiling JovraMediaTests RealFootageProbeTests.swift
+[26/31] Compiling JovraMediaTests FrameTimeTests.swift
+[27/31] Compiling JovraMediaTests FrameTimingTests.swift
+[28/31] Compiling JovraMediaTests MediaLibraryTests.swift
+[29/31] Compiling JovraMediaTests FramePlaybackTests.swift
+[29/31] Write Objects.LinkFileList
+[30/31] Linking JovraMediaPackageTests
+Build complete! (8.41s)
+Test Suite 'Selected tests' started at 2026-10-09 12:52:46.499.
+Test Suite 'JovraMediaPackageTests.xctest' started at 2026-10-09 12:52:46.502.
+Test Suite 'JovraMediaPackageTests.xctest' passed at 2026-10-09 12:52:46.502.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-09 12:52:46.502.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Durable local export package" started.
+◇ Test realClipAndSnapshotCommitWithoutLosingAnInterveningPoint() started.
+✔ Test realClipAndSnapshotCommitWithoutLosingAnInterveningPoint() passed after 2.296 seconds.
+◇ Test metadataFailureRetainsFourFilesButNeverRegistersDone() started.
+✔ Test metadataFailureRetainsFourFilesButNeverRegistersDone() passed after 0.625 seconds.
+◇ Test invalidRangesNeverPublishARecordOrAnArtifact() started.
+✔ Test invalidRangesNeverPublishARecordOrAnArtifact() passed after 0.480 seconds.
+◇ Test redirectedExportFolderCannotWriteOutsideTheSession() started.
+✔ Test redirectedExportFolderCannotWriteOutsideTheSession() passed after 0.510 seconds.
+✔ Suite "Durable local export package" passed after 3.914 seconds.
+✔ Test run with 4 tests in 1 suite passed after 3.914 seconds.
