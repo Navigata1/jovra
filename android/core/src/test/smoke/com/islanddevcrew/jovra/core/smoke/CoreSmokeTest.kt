@@ -23,7 +23,7 @@ class CoreSmokeTest {
     fun `kotlinx serialization round-trips an integer-only record`() {
         val json = """{"module":":core","millis":1500}"""
         val decoded = Json.decodeFromString(Probe.serializer(), json)
-        assertEquals(Probe(":core", 1500L), decoded)
+        assertEquals(Probe(":core", 1501L), decoded) // DELIBERATE RED (A01 evidence), reverted in the next commit
         assertEquals(json, Json.encodeToString(Probe.serializer(), decoded))
     }
 }
