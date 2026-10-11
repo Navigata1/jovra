@@ -1,0 +1,45 @@
+# A14 evidence, captured 2026-10-11T22:26Z on the build Mac, Python 3.14.7
+
+$ python3 scripts/spec/validate_adaptive.py -v
+  breakpoints match ADR-0025 §2
+  matrix: 60 vectors
+  boundary: 14 vectors
+  compactHeight: 7 vectors
+  fontScale: 9 vectors
+  inputMode: 12 vectors
+  posture: 15 vectors
+  separatingHinge: 10 vectors
+  occludingHinge: 2 vectors
+  nonSeparatingFold: 1 vectors
+  tabletop: 3 vectors
+pane-policy: OK 110 vectors (15 posture, Android only; 95 for both platforms) and 9 text-scale band cases; reference agrees with all 119
+exit=0
+
+$ python3 scripts/spec/validate_adaptive.py --mutations
+mutation [font-scale rule removed]: caught (exit 1)
+mutation [compact-height cap removed (width alone)]: caught (exit 1)
+mutation [separating-hinge split removed]: caught (exit 1)
+mutation [tabletop arrangement removed]: caught (exit 1)
+mutation [a broken vector (panes flipped)]: caught (exit 1)
+mutation [posture tag removed]: caught (exit 1)
+mutation [tabletop category emptied]: caught (exit 1)
+mutation [font-scale vector below one pane]: caught (exit 1)
+MUTATIONS: all 8 caught
+exit=0
+
+# Manual scratch mutation: font-scale rule removed from a copy of the reference (sed), validator run against it
+$ diff spec/adaptive/reference/pane_policy.py <scratch copy>
+103c103
+<     if text_scale_band == "accessibility":
+---
+>     if False:
+$ python3 scripts/spec/validate_adaptive.py --reference <scratch>/pane_policy_no_font.py
+FAIL font-scale-large-workspace: reference disagrees (expected, got): {'panes': (2, 3)}
+FAIL font-scale-expanded-listDetail: reference disagrees (expected, got): {'arrangement': ('single', 'columns'), 'panes': (1, 2)}
+FAIL font-scale-medium-listDetail: reference disagrees (expected, got): {'arrangement': ('single', 'columns'), 'panes': (1, 2)}
+FAIL font-scale-extra-large-supporting: reference disagrees (expected, got): {'arrangement': ('single', 'columns'), 'panes': (1, 2)}
+FAIL posture-separating-vertical-font-scale: reference disagrees (expected, got): {'arrangement': ('single', 'splitAtHinge'), 'panes': (1, 2)}
+FAIL posture-occluding-vertical-font-scale: reference disagrees (expected, got): {'arrangement': ('single', 'splitAtHinge'), 'panes': (1, 2)}
+FAIL posture-tabletop-player-font-scale: reference disagrees (expected, got): {'arrangement': ('single', 'tabletop'), 'panes': (1, 2)}
+pane-policy: FAILED with 7 problem(s); 112/119 cases agree
+exit=1
