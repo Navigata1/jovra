@@ -151,6 +151,11 @@ final class NavigationRoutesUITests: XCTestCase {
     func testRecordPresentsCaptureAndClosingReturnsToRecord() {
         let app = XCUIApplication.launchJovra { $0.appearance = .light }
         app.buttons["tab.record"].tap()
+        for (id, value) in [("capture.setup.title", "Navigation test"), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
+            let field = app.textFields[id]
+            field.tap(); field.typeText(value + "\n")
+        }
+        app.swipeUp()
         app.buttons["record.previewCapture"].tap()
         XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 5))
         XCTAssertFalse(app.otherElements["tabBar"].exists)
@@ -199,6 +204,11 @@ final class NavigationRoutesUITests: XCTestCase {
     @MainActor
     private func assertPlaceholder(_ expected: Expected, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertTrue(app.heading(expected.title).waitForExistence(timeout: 8), "\(expected.launchName) shows “\(expected.title)”", file: file, line: line)
+        if expected.launchName == "capture" {
+            XCTAssertTrue(app.staticTexts["capture.kind"].exists, "Capture now renders its actual setup", file: file, line: line)
+            XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
+            return
+        }
         let ticket = app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch
         XCTAssertTrue(ticket.exists, "\(expected.launchName) shows the ticket that builds it", file: file, line: line)
         XCTAssertEqual(ticket.label, "Built in ticket \(expected.ticket)", file: file, line: line)
