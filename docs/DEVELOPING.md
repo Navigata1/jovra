@@ -313,3 +313,36 @@ it when you finish a ticket: `rm -rf .derivedData`.
 A ticket is done when a check that could fail has passed (CLAUDE.md rule 9). Attach command output,
 test counts, the simulator id and the screenshots from `evidence/ios/<ticket>/` to the PR. Report
 simulator results, device results and store readiness separately.
+
+## Android (Lane A, ADR-0024)
+
+The Android build lives in `android/` (one Gradle build; the wrapper is `android/gradlew`). Toolchain: Gradle 9.3.1
+(wrapper pinned by `distributionSha256Sum`), AGP 9.1.1 with built-in Kotlin, KGP 2.4.20, JDK 17, compileSdk 36 /
+targetSdk 36 / minSdk 29 (Wear minSdk 30). Versions live in `android/gradle/libs.versions.toml`; SDK levels live only in
+`android/build-logic` (`JovraSdk`). Lane B (compileSdk 37) is one catalog diff plus `COMPILE_SDK`, after gate G-SDK37.
+
+```sh
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export ANDROID_HOME=$HOME/Library/Android/sdk          # not needed for the pure-JVM modules
+android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test   # what android-core runs
+android/gradlew -p android checkModuleBoundaries       # module-boundary rules (also part of `check`)
+android/gradlew -p android/build-logic :convention:test # the boundary rules' own tests
+android/gradlew -p android help :app:dependencies :app:checkDebugAarMetadata :wear:checkDebugAarMetadata  # G-RESOLVE
+android/gradlew -p android assembleDebug :wear:assembleDebug testDebugUnitTest
+android/gradlew -p android clean                        # at the end of every Android ticket (story 343)
+```
+
+- **Modules** (ADR-0024): pure JVM `:core`, `:studio-core`, `:room-protocol`, `:testing`; Android libraries
+  `:designsystem`, `:data`, `:media`, `:room-transport`, `:wear-bridge`, `:feature:*`, `:studio:*`; apps `:app`, `:wear`.
+  Each build file already declares the Lane A dependencies the module is planned to need; a missing one is a
+  one-line catalog-fix PR. There is never a bare `:room` module, and no database library or annotation processing.
+- **Module boundaries** (`checkModuleBoundaries`): JVM modules never depend on Android modules; feature modules never
+  depend on each other; only `:room-transport` references sockets, `NsdManager` or `WifiManager`; only `:media`
+  references or declares CameraX, Media3 or `MediaCodec`. `:media` exports the camera preview, player surface and QR
+  scanner frames the other modules need.
+- **Smoke tests** sit in each module's `src/test/smoke`. Tests in the JVM modules get the repository root as the
+  `jovra.repoRoot` system property, with `spec/` as a declared input, so the conformance harness reads fixtures in place.
+- **Disk:** check `df -h /` before the first build (budget 3.5–6 GB of Gradle caches that survive `clean`); do not
+  start below 8 GB free. No SDK packages, system images or AVDs are installed by a ticket without its named gate.
+- **CI:** `.github/workflows/android.yml`, job `android-core` (required): temurin 17 with the runner's Android SDK
+  moved out of reach, then the JVM module tests, the boundary check and the build-logic tests.
