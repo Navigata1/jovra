@@ -1,0 +1,104 @@
+$ scripts/ios/generate.sh && xcodebuild build-for-testing (scheme Jovra, JOVRA-S04, iOS 26.5 simulator)
+$ plutil -p .derivedData/Build/Products/Debug-iphonesimulator/Jovra.app/Info.plist
+{
+  "BGTaskSchedulerPermittedIdentifiers" => [
+    0 => "com.islanddevcrew.jovra.processing.overnight"
+    1 => "com.islanddevcrew.jovra.continued.*"
+    2 => "com.islanddevcrew.jovra.continued.studio-render"
+  ]
+  "BuildMachineOSBuild" => "25G83"
+  "CFBundleDevelopmentRegion" => "en"
+  "CFBundleDisplayName" => "JOVRA"
+  "CFBundleExecutable" => "Jovra"
+  "CFBundleIcons" => {
+    "CFBundlePrimaryIcon" => {
+      "CFBundleIconFiles" => [
+        0 => "AppIcon60x60"
+      ]
+      "CFBundleIconName" => "AppIcon"
+    }
+  }
+  "CFBundleIcons~ipad" => {
+    "CFBundlePrimaryIcon" => {
+      "CFBundleIconFiles" => [
+        0 => "AppIcon60x60"
+        1 => "AppIcon76x76"
+      ]
+      "CFBundleIconName" => "AppIcon"
+    }
+  }
+  "CFBundleIdentifier" => "com.islanddevcrew.jovra"
+  "CFBundleInfoDictionaryVersion" => "6.0"
+  "CFBundleName" => "Jovra"
+  "CFBundlePackageType" => "APPL"
+  "CFBundleShortVersionString" => "0.1.0"
+  "CFBundleSupportedPlatforms" => [
+    0 => "iPhoneSimulator"
+  ]
+  "CFBundleURLTypes" => [
+    0 => {
+      "CFBundleTypeRole" => "Viewer"
+      "CFBundleURLName" => "com.islanddevcrew.jovra.deeplink"
+      "CFBundleURLSchemes" => [
+        0 => "jovra"
+      ]
+    }
+    1 => {
+      "CFBundleTypeRole" => "Viewer"
+      "CFBundleURLName" => "com.islanddevcrew.jovra.drive-oauth"
+      "CFBundleURLSchemes" => [
+        0 => "com.islanddevcrew.jovra.drive-unconfigured"
+      ]
+    }
+  ]
+  "CFBundleVersion" => "1"
+  "DTCompiler" => "com.apple.compilers.llvm.clang.1_0"
+  "DTPlatformBuild" => "23F81a"
+  "DTPlatformName" => "iphonesimulator"
+  "DTPlatformVersion" => "26.5"
+  "DTSDKBuild" => "23F81a"
+  "DTSDKName" => "iphonesimulator26.5"
+  "DTXcode" => "2660"
+  "DTXcodeBuild" => "17F113"
+  "ITSAppUsesNonExemptEncryption" => false
+  "JovraAppleSignInEnabled" => "YES"
+  "JovraDriveClientID" => ""
+  "JovraDriveRedirectScheme" => "com.islanddevcrew.jovra.drive-unconfigured"
+  "JovraDriveXcconfigLoaded" => "NO"
+  "JovraStudioEnvironment" => "demo"
+  "LSRequiresIPhoneOS" => true
+  "MinimumOSVersion" => "18.0"
+  "NSAccentColorName" => "AccentColor"
+  "NSBonjourServices" => [
+    0 => "_jovra-room._tcp"
+  ]
+  "NSCameraUsageDescription" => "JOVRA uses the camera to record your tennis sessions. Videos are saved on this device."
+  "NSHealthUpdateUsageDescription" => "If you turn on Apple Health in Settings, JOVRA saves each tennis session as a workout with only its start time, end time and session reference, nothing else."
+  "NSLocalNetworkUsageDescription" => "JOVRA Room uses your local network to find and connect the phones filming your match together."
+  "NSMicrophoneUsageDescription" => "Optional. JOVRA can use the microphone to capture audio for hit detection and voice notes. Recording works without it."
+  "NSPhotoLibraryAddUsageDescription" => "JOVRA saves clips and exports you choose to your photo library."
+  "UIApplicationSceneManifest" => {
+    "UIApplicationSupportsMultipleScenes" => false
+  }
+  "UIBackgroundModes" => [
+    0 => "processing"
+  ]
+  "UIDeviceFamily" => [
+    0 => 1
+    1 => 2
+  ]
+  "UILaunchScreen" => {
+    "UIColorName" => "LaunchBackground"
+  }
+  "UISupportedInterfaceOrientations" => [
+    0 => "UIInterfaceOrientationPortrait"
+    1 => "UIInterfaceOrientationLandscapeLeft"
+    2 => "UIInterfaceOrientationLandscapeRight"
+  ]
+  "UISupportedInterfaceOrientations~ipad" => [
+    0 => "UIInterfaceOrientationPortrait"
+    1 => "UIInterfaceOrientationPortraitUpsideDown"
+    2 => "UIInterfaceOrientationLandscapeLeft"
+    3 => "UIInterfaceOrientationLandscapeRight"
+  ]
+}

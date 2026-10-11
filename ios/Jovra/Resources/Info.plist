@@ -6,6 +6,7 @@
 	<array>
 		<string>com.islanddevcrew.jovra.processing.overnight</string>
 		<string>com.islanddevcrew.jovra.continued.*</string>
+		<string>com.islanddevcrew.jovra.continued.studio-render</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -58,12 +59,20 @@
 	<string>$(JOVRA_DRIVE_REVERSED_CLIENT_ID)</string>
 	<key>JovraDriveXcconfigLoaded</key>
 	<string>$(JOVRA_DRIVE_XCCONFIG_LOADED)</string>
+	<key>JovraStudioEnvironment</key>
+	<string>$(STUDIO_ENVIRONMENT)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_jovra-room._tcp</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>JOVRA uses the camera to record your tennis sessions. Videos are saved on this device.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>If you turn on Apple Health in Settings, JOVRA saves each tennis session as a workout with only its start time, end time and session reference, nothing else.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>JOVRA Room uses your local network to find and connect the phones filming your match together.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Optional. JOVRA can use the microphone to capture audio for hit detection and voice notes. Recording works without it.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
