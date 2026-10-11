@@ -237,7 +237,7 @@ private extension SheetRoute {
         case .clipExport:
             sheet("clipExport", "T36", String(localized: "Clip export", table: "App", comment: "Sheet name"),
                   String(localized: "Close clip export", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Export/ClipExportSheet.swift")
+                  "Features/Export/ClipExportSheet.swift", placeholder: ClipExportSheet.isPlaceholder)
         case .sharePack:
             sheet("sharePack", "T38", String(localized: "Share Pack", table: "App", comment: "Sheet name"),
                   String(localized: "Close Share Pack", table: "App", comment: "VoiceOver label of the Close control"),
@@ -315,6 +315,6 @@ private func cover(_ name: String, _ ticket: String, _ title: String, _ close: S
     RouteInfo(kind: .fullScreen, launchName: name, ticket: ticket, title: title, closeLabel: close, file: file, isPlaceholder: placeholder)
 }
 
-private func sheet(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String) -> RouteInfo {
-    RouteInfo(kind: .sheet, launchName: "sheet.\(name)", ticket: ticket, title: title, closeLabel: close, file: file)
+private func sheet(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String, placeholder: Bool = true) -> RouteInfo {
+    RouteInfo(kind: .sheet, launchName: "sheet.\(name)", ticket: ticket, title: title, closeLabel: close, file: file, isPlaceholder: placeholder)
 }
