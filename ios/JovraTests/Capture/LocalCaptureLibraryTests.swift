@@ -67,7 +67,7 @@ final class LocalCaptureLibraryTests: XCTestCase {
         let id = try await library.createCapture(seed, mode: .simulatorFixture)
         let recording = SessionRecording(mode: .simulatorFixture, segments: [], gaps: [], microphone: .denied, mediaAvailable: false)
         let marks = [SessionMark(id: "first-mark", tMs: 500, kind: .highlight,
-                                 provenance: .init(status: .manual, source: "player", sample: true))]
+                                 provenance: .init(status: .manual, source: "user", sample: true))]
         let sink: any RecordingSink = library
         try await sink.saveRecording(sessionID: id.rawValue, recording: recording, marks: marks)
         let reopened = try LocalCaptureLibrary(root: root)

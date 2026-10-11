@@ -1,0 +1,37 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/ios/Jovra.xcodeproj
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/.derivedData/t17-capture-native-input-green.xcresult
+
+2026-10-09 12:32:28.698 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 12:32:28.698 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 12:33:05.464 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 12:33:05.464 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 12:35:04.040 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 12:35:04.040 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 12:35:28.290 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 12:35:28.290 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 12:35:30.408 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 12:35:30.408 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 12:35:35.848 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 12:35:35.848 xcodebuild[69843:132455760] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 12:36:01.928 xcodebuild[69843:132455760] [MT] IDETestOperationsObserverDebug: 217.051 elapsed -- Testing started completed.
+2026-10-09 12:36:01.928 xcodebuild[69843:132455760] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 12:36:01.928 xcodebuild[69843:132455760] [MT] IDETestOperationsObserverDebug: 217.051 sec, +217.051 sec -- end
+Failing tests:
+	NavigationRoutesUITests.testEveryFullScreenRouteHasACloseControlAndHidesTheTabs()
+
+** TEST FAILED **
+
+Testing started
+Test class                            passed  failed  skipped  expected
+JovraTests/CaptureTextBoundaryTests        3       0        0         0
+JovraUITests/CaptureFlowUITests            3       0        0         0
+JovraUITests/NavigationRoutesUITests       0       1        0         0
+Total: 6 passed, 1 failed, 0 skipped, 0 expected failure(s) in 3 classes (xcresult summary: 6 passed, 1 failed, 0 skipped; result Failed)
+FAILED NavigationRoutesUITests/testEveryFullScreenRouteHasACloseControlAndHidesTheTabs(): Contrast failed
+Device: JOVRA-Codex-T07 4265ADFD-39A3-4E71-8482-1945DDB5F899 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/t17-capture-native-input-green.xcresult
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.
