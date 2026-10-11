@@ -96,10 +96,27 @@ These follow ADR-0025 but resolve wording the ADR leaves open; each is pinned by
 3. **Font scale after the hinge.** User story 204: an unfolded phone at a large font scale falls back from two panes to
    one (`posture-separating-vertical-font-scale`); the hinge-bounds rule still applies.
 4. **Tabletop for non-player screens** keeps the table's columns and treats the hinge band as `noControls`
-   (`posture-tabletop-listDetail-keeps-columns`).
+   (`posture-tabletop-listDetail-keeps-columns`). This is a real wording conflict, not just an open point:
+   `docs/spec/adaptive-screens.md` §0.2 says screens without a player "treat it as a gutter", and the same file uses
+   "gutter" for the occluding hinge, where nothing may be drawn (`noContent`). The vector keeps content allowed in the
+   band and forbids only controls. If the owner reads §0.2 as a content-free gutter, the override is: this vector's
+   `hingeBounds` becomes `noContent`, the tabletop branch in `reference/pane_policy.py` follows, and the validator is
+   re-run.
 5. **Navigation at compact height.** ADR-0025 §3 puts a rail on any compact-height window, including compact width
    (`compact-height-compact-width-supporting`). Material's default navigation-suite type for compact height and for
    tabletop may differ (recalled, UNVERIFIED here); A15 must set the type from this policy rather than the default.
+
+## Recording the review
+
+The vectors are pinned to the five decisions above until the `spec/` contracts owner (android-v1-spec G-PANE;
+adaptive-open-findings F-PANE-VECTORS) records a decision on each of them on the pull request, as accept or override.
+Agents do not record this review for the owner; the status line above and in `pane-policy.vectors.json` stays "Pending
+review" until it exists. When it lands:
+
+- An accepted decision needs no change.
+- For an overridden decision, change the named vector (and any vector the validator then reports), update the reference,
+  and re-run `validate_adaptive.py` and `--mutations`.
+- Then change the status in this file and in the vectors file to name the review.
 
 ## Changing the contract
 
