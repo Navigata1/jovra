@@ -1,0 +1,7 @@
+# Source-bound native core flow
+
+Publication preserves every tracked iOS byte from tested73ce5c2f3627e3a599118d8b44ba66f2928bbd3f. Non-iOS differences are retained prerequisite evidence and this proof packet. Native receipts remain bound to tested73; publication identity is explicitly reviewed separately, not reclassified as a new native run.
+
+Actual labelled synthetic capture: save, real Library row, original decoded frames, append Reviewed point decisions, correct first winner, second point pre-score0-15, A2/4=50%, unknown serve/shot metrics, foreground Replay audit, one silent0-1000ms export with Done/Share enabled and foreground Export audit, relaunch and corrected score persistence. Final result4PASS/0failed/0skipped/0expected. Actual JSON/schema/canonical/history/CSV/original hash and decoded clip independently PASS. Clip1s/30frames/noaudio.
+
+The export-finished attachment shows the scrolled input/Create region; do not claim visual inspection of the Done card from that PNG. The test independently asserts Done/Share and the acknowledged package is validated. Raw result bundles, earlier failures, original and copied actual output remain preserved locally. No external recipient transfer, Photos/cloud, multiple segments, real-match analysis, full ticket closure, physical-device/store readiness or step-5 expansion is claimed. Required hosted checks are blocked before execution by GitHub account billing; no waiver/merge.

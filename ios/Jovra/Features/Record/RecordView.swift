@@ -2,22 +2,17 @@ import SwiftUI
 
 struct RecordView: View {
     @Environment(AppRouter.self) private var router
+    @State private var choices = CaptureSetupChoices()
 
     var body: some View {
         JovraScreen(title: String(localized: "Set up your session", table: "Record")) {
-            ComingLaterCard(
-                symbol: "video",
-                message: String(localized: "Choose a singles or doubles match, serve practice or stroke practice, then frame your court and record.", table: "Record")
-            )
-            VStack(alignment: .leading, spacing: Space.x1) {
-                SectionHeader(title: String(localized: "Full-screen flows", table: "Record"))
-                Text("Capture, replay and compare take over the whole screen and hide the tabs.", tableName: "Record")
-                    .font(.jovraBody)
-                    .foregroundStyle(.jovra(.textSecondary))
-                    .fixedSize(horizontal: false, vertical: true)
+            Text("Singles match", tableName: "Capture").font(.jovraHeadline)
+            CaptureSetupFields(choices: $choices)
+            Button(String(localized: "Frame your court", table: "Capture")) {
+                router.present(.capture(.init(kind: .singlesMatch, captureChoices: choices)))
             }
-            Button(String(localized: "Preview the capture screen", table: "Record")) { router.present(.capture(nil)) }
                 .buttonStyle(.jovraPrimary)
+                .disabled(!choices.isValid)
                 .accessibilityIdentifier("record.previewCapture")
         }
     }

@@ -1,0 +1,609 @@
+SOURCE e4fcc5345aae198d61b991059281a69732d7525e
+COMMAND ['swift', 'test', '--package-path', 'ios/Packages/JovraMedia', '--scratch-path', '/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/media-stack/.build/stack-media', '--jobs', '2', '--no-parallel']
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+Building for debugging...
+[0/11] Write sources
+[3/11] Copying points.v1.json
+[4/12] Write sources
+[5/12] Copying stats.v1.json
+[6/12] Write sources
+[8/12] Write swift-version--58304C5D6DBC2206.txt
+[10/29] Compiling JovraCore CapabilityRegistryLoader.swift
+[11/29] Compiling JovraCore CaptureJournal.swift
+[12/29] Compiling JovraCore CanonicalJSON.swift
+[13/29] Compiling JovraCore ContractPrimitives.swift
+[14/29] Compiling JovraCore DocumentModels.swift
+[15/29] Compiling JovraCore ContrastRequirement.swift
+[16/29] Compiling JovraCore DurationLabel.swift
+[17/29] Compiling JovraCore DataExporter.swift
+[18/29] Compiling JovraCore ExportStats.swift
+[19/29] Compiling JovraCore PointCSV.swift
+[20/29] Compiling JovraCore DurableDirectory.swift
+[21/29] Compiling JovraCore FrameRate.swift
+[22/29] Compiling JovraCore Percent.swift
+[23/29] Compiling JovraCore Provenance.swift
+[24/29] Compiling JovraCore ReviewedPointStore.swift
+[25/29] Compiling JovraCore SRGBColor.swift
+[26/29] Emitting module JovraCore
+[27/44] Compiling JovraCore LogResolver.swift
+[28/44] Compiling JovraCore MatchState.swift
+[29/44] Compiling JovraCore OrderOverrides.swift
+[30/44] Compiling JovraCore OutcomeInterpreter.swift
+[31/44] Compiling JovraCore ScoringEngine.swift
+[32/44] Compiling JovraCore ScoringInput.swift
+[33/44] Compiling JovraCore TimelineDiff.swift
+[34/44] Compiling JovraCore TimelineModels.swift
+[35/44] Compiling JovraCore SessionStore.swift
+[36/44] Compiling JovraCore DerivedStat.swift
+[37/44] Compiling JovraCore StatsEngine.swift
+[38/44] Compiling JovraCore StatsModels.swift
+[39/44] Compiling JovraCore StatsMomentumPair.swift
+[40/44] Compiling JovraCore Units.swift
+[41/44] Compiling JovraCore resource_bundle_accessor.swift
+[42/53] Emitting module JovraMedia
+[43/53] Compiling JovraMedia CameraSource.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[44/53] Compiling JovraMedia CaptureEngine.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[45/53] Compiling JovraMedia CaptureSegmentWriter.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[46/53] Compiling JovraMedia CaptureTypes.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[47/53] Compiling JovraMedia DecodedCapture.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[48/53] Compiling JovraMedia FixtureCamera.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[49/53] Compiling JovraMedia FragmentedMovieLayout.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[50/53] Compiling JovraMedia RecoveryFiles.swift
+/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: warning: will never be executed
+ 97 |             didReset = false
+ 98 |             #endif
+ 99 |             if didReset {
+    |                `- note: condition always evaluates to false
+100 |                 self.control.async { self.resetRequired = true }
+    |                 `- warning: will never be executed
+101 |                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+102 |             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[51/61] Compiling JovraMedia RecoveryScanner.swift
+[52/61] Compiling JovraMedia DeviceBudget.swift
+[53/61] Compiling JovraMedia ClipExporter.swift
+[54/61] Compiling JovraMedia LocalExportService.swift
+[55/61] Compiling JovraMedia FrameTime.swift
+[56/61] Compiling JovraMedia MediaLibrary.swift
+[57/61] Compiling JovraMedia FramePlayback.swift
+[58/61] Compiling JovraMedia MediaProbe.swift
+[59/71] Emitting module JovraBenchmark
+[60/71] Compiling JovraBenchmark DecodedFrameReader.swift
+[61/71] Compiling JovraBenchmark FrameSignature.swift
+[62/71] Compiling JovraBenchmark GroundTruth.swift
+[63/71] Compiling JovraBenchmark LumaPlane.swift
+[64/71] Compiling JovraBenchmark MediaFixtureCatalog.swift
+[65/71] Compiling JovraBenchmark BenchmarkHarness.swift
+[66/71] Compiling JovraBenchmark BenchmarkRecord.swift
+[67/71] Compiling JovraBenchmark CapabilityGate.swift
+[68/78] Compiling JovraBenchmark Estimator.swift
+[69/78] Compiling JovraBenchmark EstimatorRegistry.swift
+[70/78] Compiling JovraBenchmark EventTimesTask.swift
+[71/78] Compiling JovraBenchmark Floor.swift
+[72/78] Compiling JovraBenchmark JSONValue.swift
+[73/78] Compiling JovraBenchmark Rational.swift
+[74/78] Compiling JovraBenchmark JovraBenchmark.swift
+[75/89] Compiling jovra_benchmark main.swift
+[76/89] Emitting module jovra_benchmark
+[77/94] Emitting module JovraMediaTests
+[78/101] Compiling JovraBenchmarkTests BenchmarkHarnessTests.swift
+[79/101] Compiling JovraBenchmarkTests CapabilityBindingTests.swift
+[80/101] Compiling JovraBenchmarkTests CommittedRecordTests.swift
+[81/101] Compiling JovraBenchmarkTests EventTimesScoringTests.swift
+[82/101] Emitting module JovraBenchmarkTests
+[83/104] Compiling JovraMediaTests FrameCounterFixtureTests.swift
+[84/104] Compiling JovraMediaTests ImportFixtureProbeTests.swift
+[85/104] Compiling JovraMediaTests RealFootageProbeTests.swift
+[86/104] Compiling JovraMediaTests FrameTimeTests.swift
+[87/104] Compiling JovraMediaTests FrameTimingTests.swift
+[88/104] Compiling JovraMediaTests MediaLibraryTests.swift
+[89/104] Compiling JovraMediaTests FramePlaybackTests.swift
+[90/104] Compiling JovraBenchmarkTests HarnessProvenanceTests.swift
+[91/104] Compiling JovraBenchmarkTests MalformedRecordDecodingTests.swift
+[92/104] Compiling JovraBenchmarkTests MediaProvenanceTests.swift
+[92/104] Write Objects.LinkFileList
+[93/104] Linking jovra-benchmark
+[94/104] Applying jovra-benchmark
+[102/104] Write Objects.LinkFileList
+[103/104] Linking JovraMediaPackageTests
+Build complete! (19.66s)
+Test Suite 'All tests' started at 2026-10-09 13:58:17.342.
+Test Suite 'All tests' passed at 2026-10-09 13:58:17.345.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Benchmark harness" started.
+◇ Test "the oracle passes the floor on the held-out seed" started.
+✔ Test "the oracle passes the floor on the held-out seed" passed after 0.002 seconds.
+◇ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" started.
+✔ Test "the null estimator fails the floor: recall 0, precision and MAE undefined" passed after 0.001 seconds.
+◇ Test "gating on a tuning seed is refused before the estimator runs" started.
+✔ Test "gating on a tuning seed is refused before the estimator runs" passed after 0.001 seconds.
+◇ Test "a clip with no benchmark split cannot be gated on" started.
+✔ Test "a clip with no benchmark split cannot be gated on" passed after 0.001 seconds.
+◇ Test "a gating run needs a floor" started.
+✔ Test "a gating run needs a floor" passed after 0.001 seconds.
+◇ Test "tuning runs use tuning seeds only and carry no verdict" started.
+✔ Test "tuning runs use tuning seeds only and carry no verdict" passed after 0.001 seconds.
+◇ Test "the record carries the truth-events digest the reference validator recomputes" started.
+✔ Test "the record carries the truth-events digest the reference validator recomputes" passed after 0.001 seconds.
+✔ Suite "Benchmark harness" passed after 0.005 seconds.
+◇ Suite "Capability bindings" started.
+◇ Test "audio.hitDetection is bound to eventTimes 1.0.0 at 50 ms, with the gate's metric names" started.
+✔ Test "audio.hitDetection is bound to eventTimes 1.0.0 at 50 ms, with the gate's metric names" passed after 0.001 seconds.
+◇ Test "every binding maps each gate metric of its capability exactly once" started.
+✔ Test "every binding maps each gate metric of its capability exactly once" passed after 0.001 seconds.
+◇ Test "a perfect candidate passes the real audio.hitDetection registry gate" started.
+✘ Test "a perfect candidate passes the real audio.hitDetection registry gate" recorded an issue at CapabilityBindingTests.swift:31:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed23.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "a perfect candidate passes the real audio.hitDetection registry gate" failed after 0.001 seconds with 1 issue.
+◇ Test "a capability run with any other tolerance is refused before the estimator runs" started.
+✔ Test "a capability run with any other tolerance is refused before the estimator runs" passed after 0.001 seconds.
+◇ Test "a gated capability without a binding is refused before the estimator runs" started.
+✔ Test "a gated capability without a binding is refused before the estimator runs" passed after 0.001 seconds.
+◇ Test "a run request takes the binding's tolerance unless one is given" started.
+✔ Test "a run request takes the binding's tolerance unless one is given" passed after 0.001 seconds.
+✘ Suite "Capability bindings" failed after 0.002 seconds with 1 issue.
+↳ /// A record that names a capability is judged by that capability's registry gate, so its task, tolerance and
+↳ /// metric names come from `spec/fixtures/media/benchmark-bindings.json`, never from the caller.
+◇ Suite "Committed benchmark records are reproducible" started.
+◇ Test "oracle gate, null gate and a tuning run are committed" started.
+✔ Test "oracle gate, null gate and a tuning run are committed" passed after 0.001 seconds.
+◇ Test "re-running the estimator reproduces the record" started.
+◇ Test case passing 1 argument file → "null.gate.json" to "re-running the estimator reproduces the record" started.
+◇ Test case passing 1 argument file → "oracle.gate.json" to "re-running the estimator reproduces the record" started.
+◇ Test case passing 1 argument file → "oracle.tuning.json" to "re-running the estimator reproduces the record" started.
+✔ Test "re-running the estimator reproduces the record" with 3 test cases passed after 0.002 seconds.
+◇ Test "the committed gate records pass and fail as the self-test requires" started.
+✔ Test "the committed gate records pass and fail as the self-test requires" passed after 0.001 seconds.
+✔ Suite "Committed benchmark records are reproducible" passed after 0.004 seconds.
+◇ Suite "eventTimes scoring" started.
+◇ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" started.
+✔ Test "4 predictions, 3 truth events, 50 ms tolerance: 2 matches, P 0.5000, R 0.6667, MAE 7.000 ms" passed after 0.001 seconds.
+◇ Test "a tie in distance goes to the earlier prediction, which is then consumed" started.
+✔ Test "a tie in distance goes to the earlier prediction, which is then consumed" passed after 0.001 seconds.
+◇ Test "one prediction serves only one truth event" started.
+✔ Test "one prediction serves only one truth event" passed after 0.001 seconds.
+◇ Test "an exact tolerance boundary matches; one tick past it does not" started.
+✔ Test "an exact tolerance boundary matches; one tick past it does not" passed after 0.001 seconds.
+◇ Test "no predictions: precision and MAE are undefined (null), recall is 0" started.
+✔ Test "no predictions: precision and MAE are undefined (null), recall is 0" passed after 0.001 seconds.
+◇ Test "clips pool: matches, predictions and truth events add up across clips" started.
+✔ Test "clips pool: matches, predictions and truth events add up across clips" passed after 0.001 seconds.
+✔ Suite "eventTimes scoring" passed after 0.001 seconds.
+◇ Suite "Benchmark harness provenance" started.
+◇ Test "an oracle or null run cannot name a capability" started.
+◇ Test case passing 1 argument role → .oracle to "an oracle or null run cannot name a capability" started.
+◇ Test case passing 1 argument role → .null to "an oracle or null run cannot name a capability" started.
+✔ Test "an oracle or null run cannot name a capability" with 2 test cases passed after 0.001 seconds.
+◇ Test "a run that names a capability must use that capability's registry gate" started.
+✔ Test "a run that names a capability must use that capability's registry gate" passed after 0.001 seconds.
+◇ Test "an unknown capability or one without a gate is refused" started.
+✔ Test "an unknown capability or one without a gate is refused" passed after 0.001 seconds.
+◇ Test "a candidate run on the registry gate is accepted and carries the capability" started.
+✘ Test "a candidate run on the registry gate is accepted and carries the capability" recorded an issue at HarnessProvenanceTests.swift:47:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed23.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "a candidate run on the registry gate is accepted and carries the capability" failed after 0.001 seconds with 1 issue.
+◇ Test "a clip listed twice is refused before the estimator runs" started.
+✔ Test "a clip listed twice is refused before the estimator runs" passed after 0.001 seconds.
+✘ Suite "Benchmark harness provenance" failed after 0.001 seconds with 1 issue.
+↳ /// Provenance rules the harness enforces before any estimator runs (ADR-0004): only a candidate estimator can
+↳ /// back a capability, a run that names a capability is gated by that capability's registry gate, and every
+↳ /// clip counts once.
+◇ Suite "Malformed benchmark JSON throws instead of trapping" started.
+◇ Test "the committed record decodes (the cases below change one field each)" started.
+✔ Test "the committed record decodes (the cases below change one field each)" passed after 0.001 seconds.
+◇ Test "a zero or negative timescale is a decoding error" started.
+◇ Test case passing 1 argument timescale → 0 to "a zero or negative timescale is a decoding error" started.
+◇ Test case passing 1 argument timescale → -1000 to "a zero or negative timescale is a decoding error" started.
+✔ Test "a zero or negative timescale is a decoding error" with 2 test cases passed after 0.001 seconds.
+◇ Test "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "1e-3" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "0.9.1" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "-1" to "a floor threshold that is not a plain decimal is a decoding error" started.
+◇ Test case passing 1 argument threshold → "abc" to "a floor threshold that is not a plain decimal is a decoding error" started.
+✔ Test "a floor threshold that is not a plain decimal is a decoding error" with 5 test cases passed after 0.002 seconds.
+◇ Test "a metric fraction with a zero denominator is a decoding error" started.
+✔ Test "a metric fraction with a zero denominator is a decoding error" passed after 0.001 seconds.
+◇ Test "a ground-truth frame rate of zero is a decoding error" started.
+✔ Test "a ground-truth frame rate of zero is a decoding error" passed after 0.001 seconds.
+✔ Suite "Malformed benchmark JSON throws instead of trapping" passed after 0.004 seconds.
+◇ Suite "Benchmark media provenance" started.
+◇ Test "a candidate run on a clip that is not rendered is refused before the estimator runs" started.
+✔ Test "a candidate run on a clip that is not rendered is refused before the estimator runs" passed after 0.003 seconds.
+◇ Test "a candidate run on a rendered clip that is not the committed media is refused before the estimator runs" started.
+✘ Test "a candidate run on a rendered clip that is not the committed media is refused before the estimator runs" recorded an issue at MediaProvenanceTests.swift:41:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed11.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "a candidate run on a rendered clip that is not the committed media is refused before the estimator runs" failed after 0.001 seconds with 1 issue.
+◇ Test "a candidate reads the verified media file" started.
+✘ Test "a candidate reads the verified media file" recorded an issue at MediaProvenanceTests.swift:61:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed23.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "a candidate reads the verified media file" failed after 0.001 seconds with 1 issue.
+◇ Test "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+◇ Test case passing 1 argument role → .candidate to "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+✘ Test "every record clip carries its truth's renderer source hash and decoded-frame hash" recorded an issue with 1 argument role → .candidate at MediaProvenanceTests.swift:70:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed23.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument role → .oracle to "every record clip carries its truth's renderer source hash and decoded-frame hash" started.
+✘ Test "every record clip carries its truth's renderer source hash and decoded-frame hash" with 2 test cases failed after 0.001 seconds with 1 issue.
+◇ Test "an overflowing tolerance names itself in the error" started.
+✔ Test "an overflowing tolerance names itself in the error" passed after 0.001 seconds.
+✘ Suite "Benchmark media provenance" failed after 0.004 seconds with 3 issues.
+↳ /// A candidate record is tied to the media it analysed: the harness refuses a candidate run whose clip is not
+↳ /// rendered, or whose rendered clip does not decode to the committed decoded-frame hash, before estimating,
+↳ /// and every record clip carries the renderer source hash and decoded-frame hash of its ground truth.
+◇ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() started.
+✘ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() recorded an issue at CapturePipelineTests.swift:16:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test fixtureSamplesReallyEncodeAndConfirmSixtySecondsOfDecodableMedia() failed after 0.001 seconds with 1 issue.
+◇ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() started.
+✘ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() recorded an issue at CapturePipelineTests.swift:80:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test pauseAndInterruptionKeepOneSessionAndDeniedMicrophoneKeepsVideo() failed after 0.001 seconds with 1 issue.
+◇ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() started.
+✘ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() recorded an issue at CapturePipelineTests.swift:116:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test injectedDeviceBudgetIsVisibleBeforeRecordingAndLowStorageRefusesStart() failed after 0.001 seconds with 1 issue.
+◇ Test thermalBudgetRungsAreJournalledAndShutdownClosesPlayableMedia() started.
+✘ Test thermalBudgetRungsAreJournalledAndShutdownClosesPlayableMedia() recorded an issue at CapturePipelineTests.swift:135:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test thermalBudgetRungsAreJournalledAndShutdownClosesPlayableMedia() failed after 0.001 seconds with 1 issue.
+◇ Test injectedSourceInterruptionClosesSegmentAndCanResume() started.
+✘ Test injectedSourceInterruptionClosesSegmentAndCanResume() recorded an issue at CapturePipelineTests.swift:161:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test injectedSourceInterruptionClosesSegmentAndCanResume() failed after 0.001 seconds with 1 issue.
+◇ Test liveMarkNoteSurvivesReopeningTheJournal() started.
+✘ Test liveMarkNoteSurvivesReopeningTheJournal() recorded an issue at CapturePipelineTests.swift:184:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test liveMarkNoteSurvivesReopeningTheJournal() failed after 0.001 seconds with 1 issue.
+◇ Test resumedSourceFailureReturnsToPausedAndKeepsPreviouslyConfirmedMedia() started.
+✘ Test resumedSourceFailureReturnsToPausedAndKeepsPreviouslyConfirmedMedia() recorded an issue at CapturePipelineTests.swift:227:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test resumedSourceFailureReturnsToPausedAndKeepsPreviouslyConfirmedMedia() failed after 0.001 seconds with 1 issue.
+◇ Suite "Local clip export" started.
+◇ Test decodedRangeMatchesChosenFrames(id:) started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to decodedRangeMatchesChosenFrames(id:) started.
+✘ Test decodedRangeMatchesChosenFrames(id:) recorded an issue with 1 argument id → "frameCounter/fc-060" at ClipExporterTests.swift:12:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-060fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to decodedRangeMatchesChosenFrames(id:) started.
+✘ Test decodedRangeMatchesChosenFrames(id:) recorded an issue with 1 argument id → "frameCounter/fc-240" at ClipExporterTests.swift:12:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-240fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test decodedRangeMatchesChosenFrames(id:) with 2 test cases failed after 0.001 seconds with 2 issues.
+◇ Test audioIsOmittedUnlessExplicitlyIncluded(include:) started.
+◇ Test case passing 1 argument include → false to audioIsOmittedUnlessExplicitlyIncluded(include:) started.
+✘ Test audioIsOmittedUnlessExplicitlyIncluded(include:) recorded an issue with 1 argument include → false at ClipExporterTests.swift:33:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument include → true to audioIsOmittedUnlessExplicitlyIncluded(include:) started.
+✘ Test audioIsOmittedUnlessExplicitlyIncluded(include:) recorded an issue with 1 argument include → true at ClipExporterTests.swift:33:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test audioIsOmittedUnlessExplicitlyIncluded(include:) with 2 test cases failed after 0.001 seconds with 2 issues.
+◇ Test capturedFragmentedVideoExportsACompleteLocalRange() started.
+✘ Test capturedFragmentedVideoExportsACompleteLocalRange() recorded an issue at ClipExporterTests.swift:49:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test capturedFragmentedVideoExportsACompleteLocalRange() failed after 0.001 seconds with 1 issue.
+◇ Test invalidRangeAndExistingDestinationPreserveBytes() started.
+✔ Test invalidRangeAndExistingDestinationPreserveBytes() passed after 0.001 seconds.
+✘ Suite "Local clip export" failed after 0.003 seconds with 5 issues.
+◇ Suite "AVFoundation decodes every supported fixture to its committed signature hash" started.
+◇ Test "decoded-frame signature hash equals the ground truth" started.
+◇ Test case passing 1 argument id → "fixtureCamera/fixture-camera" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "fixtureCamera/fixture-camera" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "frameCounter/fc-024" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-024fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "frameCounter/fc-030" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-030fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "frameCounter/fc-060" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-060fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "frameCounter/fc-120" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-120fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "frameCounter/fc-240" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-240fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "harness/events-s11" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "harness/events-s11" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed11.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "harness/events-s23" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "harness/events-s23" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed23.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/duplicate-a" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/duplicate-a" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/duplicate-a.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/duplicate-b" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/duplicate-b" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/duplicate-b.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/h264-1080p30-landscape" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-1080p30-landscape.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/h264-360p2997-landscape" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-360p29.97-landscape.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/h264-720x1280-24-portrait" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-720x1280-24fps-portrait.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/hevc-1080p30-portrait-rotated" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-1080p30-portrait-rotated.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/hevc-720p240-slowmo" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p240-slowmo.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/hevc-720p30-vfr" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p30-vfr.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/hevc-720p60-landscape" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p60-landscape.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "decoded-frame signature hash equals the ground truth" started.
+✘ Test "decoded-frame signature hash equals the ground truth" recorded an issue with 1 argument id → "import/hevc-hlg-720p30" at DecodedFrameHashTests.swift:16:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-hlg-720p30.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "decoded-frame signature hash equals the ground truth" with 18 test cases failed after 0.002 seconds with 18 issues.
+◇ Test "every clip burns in its own frame index" started.
+◇ Test case passing 1 argument id → "fixtureCamera/fixture-camera" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "fixtureCamera/fixture-camera" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "frameCounter/fc-024" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-024fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "frameCounter/fc-030" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-030fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "frameCounter/fc-060" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-060fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "frameCounter/fc-120" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-120fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "frameCounter/fc-240" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-240fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "harness/events-s11" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "harness/events-s11" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed11.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "harness/events-s23" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "harness/events-s23" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/harness-4d9c18d5b3e4de4c/events-seed23.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/duplicate-a" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/duplicate-a" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/duplicate-a.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/duplicate-b" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/duplicate-b" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/duplicate-b.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/h264-1080p30-landscape" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-1080p30-landscape.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/h264-360p2997-landscape" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-360p29.97-landscape.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/h264-720x1280-24-portrait" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-720x1280-24fps-portrait.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/hevc-1080p30-portrait-rotated" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-1080p30-portrait-rotated.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/hevc-720p240-slowmo" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p240-slowmo.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/hevc-720p30-vfr" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p30-vfr.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/hevc-720p60-landscape" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p60-landscape.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "every clip burns in its own frame index" started.
+✘ Test "every clip burns in its own frame index" recorded an issue with 1 argument id → "import/hevc-hlg-720p30" at DecodedFrameHashTests.swift:24:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-hlg-720p30.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "every clip burns in its own frame index" with 18 test cases failed after 0.001 seconds with 18 issues.
+◇ Test "the fixture set covers capture, playback, import and the harness" started.
+✔ Test "the fixture set covers capture, playback, import and the harness" passed after 0.001 seconds.
+✘ Suite "AVFoundation decodes every supported fixture to its committed signature hash" failed after 0.005 seconds with 36 issues.
+↳ /// The committed `decodedFramesSha256` was computed by the renderer from ffmpeg's decode. AVFoundation must
+↳ /// decode every supported clip to the same frame signatures, frame for frame: no dropped, repeated or
+↳ /// reordered frames, and the same picture in every cell.
+◇ Test fragmentLayoutKeepsOnlyCompletePairsAndRejectsUnboundedSizes() started.
+✔ Test fragmentLayoutKeepsOnlyCompletePairsAndRejectsUnboundedSizes() passed after 0.001 seconds.
+◇ Test fragmentLayoutRefusesLinksAndIncompleteHeaders() started.
+✔ Test fragmentLayoutRefusesLinksAndIncompleteHeaders() passed after 0.001 seconds.
+◇ Test fragmentLayoutRefusesNamedPipesWithoutWaitingForWriter() started.
+✔ Test fragmentLayoutRefusesNamedPipesWithoutWaitingForWriter() passed after 0.001 seconds.
+◇ Suite "Frame-counter fixtures decode to their own frame index" started.
+◇ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" started.
+✔ Test "the frame-counter set covers 24, 30, 60, 120 and 240 fps" passed after 0.001 seconds.
+◇ Test "every decoded frame N shows counter N at presentation time N / fps" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "every decoded frame N shows counter N at presentation time N / fps" started.
+✘ Test "every decoded frame N shows counter N at presentation time N / fps" recorded an issue with 1 argument id → "frameCounter/fc-024" at FrameCounterFixtureTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-024fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "every decoded frame N shows counter N at presentation time N / fps" started.
+✘ Test "every decoded frame N shows counter N at presentation time N / fps" recorded an issue with 1 argument id → "frameCounter/fc-030" at FrameCounterFixtureTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-030fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "every decoded frame N shows counter N at presentation time N / fps" started.
+✘ Test "every decoded frame N shows counter N at presentation time N / fps" recorded an issue with 1 argument id → "frameCounter/fc-060" at FrameCounterFixtureTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-060fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "every decoded frame N shows counter N at presentation time N / fps" started.
+✘ Test "every decoded frame N shows counter N at presentation time N / fps" recorded an issue with 1 argument id → "frameCounter/fc-120" at FrameCounterFixtureTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-120fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "every decoded frame N shows counter N at presentation time N / fps" started.
+✘ Test "every decoded frame N shows counter N at presentation time N / fps" recorded an issue with 1 argument id → "frameCounter/fc-240" at FrameCounterFixtureTests.swift:24:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-240fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "every decoded frame N shows counter N at presentation time N / fps" with 5 test cases failed after 0.001 seconds with 5 issues.
+◇ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+◇ Test case passing 1 argument id → "frameCounter/fc-024" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+✘ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" recorded an issue with 1 argument id → "frameCounter/fc-024" at FrameCounterFixtureTests.swift:36:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-024fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-030" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+✘ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" recorded an issue with 1 argument id → "frameCounter/fc-030" at FrameCounterFixtureTests.swift:36:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-030fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+✘ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" recorded an issue with 1 argument id → "frameCounter/fc-060" at FrameCounterFixtureTests.swift:36:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-060fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-120" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+✘ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" recorded an issue with 1 argument id → "frameCounter/fc-120" at FrameCounterFixtureTests.swift:36:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-120fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to "seeking with zero tolerance to frame N shows counter N (sampled frames)" started.
+✘ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" recorded an issue with 1 argument id → "frameCounter/fc-240" at FrameCounterFixtureTests.swift:36:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-240fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "seeking with zero tolerance to frame N shows counter N (sampled frames)" with 5 test cases failed after 0.002 seconds with 5 issues.
+✘ Suite "Frame-counter fixtures decode to their own frame index" failed after 0.005 seconds with 10 issues.
+↳ /// The frame-counter fixtures (scripts/media, set `frameCounter`) burn their own frame index into every
+↳ /// frame. Expected values come from the ground truth the Python renderer wrote, never from this package.
+◇ Suite "Exact replay frame lookup" started.
+◇ Test refusesClockValuesThatCannotBeRepresentedWithoutOverflow() started.
+✘ Test refusesClockValuesThatCannotBeRepresentedWithoutOverflow() recorded an issue at FramePlaybackTests.swift:10:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-060fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test refusesClockValuesThatCannotBeRepresentedWithoutOverflow() failed after 0.001 seconds with 1 issue.
+◇ Test seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) started.
+◇ Test case passing 1 argument id → "frameCounter/fc-060" to seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) started.
+✘ Test seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) recorded an issue with 1 argument id → "frameCounter/fc-060" at FramePlaybackTests.swift:22:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-060fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "frameCounter/fc-240" to seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) started.
+✘ Test seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) recorded an issue with 1 argument id → "frameCounter/fc-240" at FramePlaybackTests.swift:22:6: Caught error: Media fixture .cache/media/frameCounter-68a198241bee4053/frame-counter-240fps.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test seededForwardAndBackwardTargetsDecodeToTheirOwnFrame(id:) with 2 test cases failed after 0.001 seconds with 2 issues.
+✘ Suite "Exact replay frame lookup" failed after 0.001 seconds with 3 issues.
+◇ Suite "Frame-accurate CMTime" started.
+◇ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" started.
+✔ Test "frame 30 at 29.97 fps is exactly 1001/1000 s, with no rounding" passed after 0.001 seconds.
+◇ Test "frame 120 at 240 fps is half a second" started.
+✔ Test "frame 120 at 240 fps is half a second" passed after 0.001 seconds.
+◇ Test "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 0 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 1 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 59 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 60 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 3599 to "every frame start round-trips to its frame index" started.
+◇ Test case passing 1 argument frame → 216000 to "every frame start round-trips to its frame index" started.
+✔ Test "every frame start round-trips to its frame index" with 6 test cases passed after 0.001 seconds.
+◇ Test "a time between frames maps to the frame on screen" started.
+✔ Test "a time between frames maps to the frame on screen" passed after 0.001 seconds.
+◇ Test "invalid and negative times map to frame 0" started.
+✔ Test "invalid and negative times map to frame 0" passed after 0.001 seconds.
+✔ Suite "Frame-accurate CMTime" passed after 0.001 seconds.
+◇ Suite "Frame rate from presentation timestamps" started.
+◇ Test "constant 30 fps at timescale 30000" started.
+✔ Test "constant 30 fps at timescale 30000" passed after 0.001 seconds.
+◇ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" started.
+✔ Test "29.97 fps stays exact: 1001/30000 s per frame is 30000/1001" passed after 0.001 seconds.
+◇ Test "one-tick rounding (29.97 fps at timescale 600: 20 ticks and every 50th 21) is 30000/1001, constant" started.
+✔ Test "one-tick rounding (29.97 fps at timescale 600: 20 ticks and every 50th 21) is 30000/1001, constant" passed after 0.001 seconds.
+◇ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" started.
+✔ Test "an Android 13 original (timescale 90000: mostly 2999 ticks, some 3000, 2998 and dropped 5998) is 30 fps, variable" passed after 0.002 seconds.
+◇ Test "a constant rate that is no standard rate is reported exactly" started.
+✔ Test "a constant rate that is no standard rate is reported exactly" passed after 0.001 seconds.
+◇ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" started.
+✔ Test "a phone VFR clip with a 749/30000 s frame reports 30 fps, variable, not 40 fps" passed after 0.001 seconds.
+◇ Test "decode order with B-frames: timestamps are sorted before differencing" started.
+✔ Test "decode order with B-frames: timestamps are sorted before differencing" passed after 0.001 seconds.
+◇ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" started.
+✔ Test "fallback without sample timestamps: nominal 29.97 snaps to 30000/1001, 30 with a 749/30000 s frame is VFR" passed after 0.001 seconds.
+◇ Test "fewer than two frames or a bad timescale states no rate" started.
+✔ Test "fewer than two frames or a bad timescale states no rate" passed after 0.001 seconds.
+✔ Suite "Frame rate from presentation timestamps" passed after 0.003 seconds.
+◇ Suite "MediaProbe reports every import fixture's ground truth" started.
+◇ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+◇ Test case passing 1 argument id → "import/duplicate-a" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/duplicate-a" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/duplicate-a.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/duplicate-b" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/duplicate-b" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/duplicate-b.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/ffv1-unsupported" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/ffv1-unsupported" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/ffv1-unsupported.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-1080p30-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/h264-1080p30-landscape" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-1080p30-landscape.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-360p2997-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/h264-360p2997-landscape" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-360p29.97-landscape.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/h264-720x1280-24-portrait" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/h264-720x1280-24-portrait" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/h264-720x1280-24fps-portrait.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-1080p30-portrait-rotated" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/hevc-1080p30-portrait-rotated" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-1080p30-portrait-rotated.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p240-slowmo" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/hevc-720p240-slowmo" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p240-slowmo.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p30-vfr" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/hevc-720p30-vfr" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p30-vfr.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-720p60-landscape" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/hevc-720p60-landscape" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-720p60-landscape.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument id → "import/hevc-hlg-720p30" to "codec, fps, HDR, orientation, rotation, size, audio and decodability match" started.
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" recorded an issue with 1 argument id → "import/hevc-hlg-720p30" at ImportFixtureProbeTests.swift:18:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/hevc-hlg-720p30.mov is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "codec, fps, HDR, orientation, rotation, size, audio and decodability match" with 11 test cases failed after 0.001 seconds with 11 issues.
+◇ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec" started.
+✔ Test "the set has HEVC and H.264, HDR, both orientations, 24 to 240 fps, VFR and an unsupported codec" passed after 0.001 seconds.
+◇ Test "the duplicate pair is byte-identical under two names" started.
+✘ Test "the duplicate pair is byte-identical under two names" recorded an issue at ImportFixtureProbeTests.swift:53:6: Caught error: Media fixture .cache/media/import-c057f208a9012761/duplicate-a.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test "the duplicate pair is byte-identical under two names" failed after 0.001 seconds with 1 issue.
+✘ Suite "MediaProbe reports every import fixture's ground truth" failed after 0.003 seconds with 12 issues.
+↳ /// `MediaProbe` reports what import needs to know about a file. Every import fixture's probed properties
+↳ /// must equal the ground truth the renderer wrote (codec, frame rate, HDR, orientation and the rest).
+◇ Suite "Durable local export package" started.
+◇ Test realClipAndSnapshotCommitWithoutLosingAnInterveningPoint() started.
+✘ Test realClipAndSnapshotCommitWithoutLosingAnInterveningPoint() recorded an issue at LocalExportServiceTests.swift:10:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test realClipAndSnapshotCommitWithoutLosingAnInterveningPoint() failed after 0.041 seconds with 1 issue.
+◇ Test metadataFailureRetainsFourFilesButNeverRegistersDone() started.
+✘ Test metadataFailureRetainsFourFilesButNeverRegistersDone() recorded an issue at LocalExportServiceTests.swift:54:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test metadataFailureRetainsFourFilesButNeverRegistersDone() failed after 0.042 seconds with 1 issue.
+◇ Test invalidRangesNeverPublishARecordOrAnArtifact() started.
+✘ Test invalidRangesNeverPublishARecordOrAnArtifact() recorded an issue at LocalExportServiceTests.swift:85:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test invalidRangesNeverPublishARecordOrAnArtifact() failed after 0.046 seconds with 1 issue.
+◇ Test redirectedExportFolderCannotWriteOutsideTheSession() started.
+✘ Test redirectedExportFolderCannotWriteOutsideTheSession() recorded an issue at LocalExportServiceTests.swift:102:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test redirectedExportFolderCannotWriteOutsideTheSession() failed after 0.043 seconds with 1 issue.
+◇ Test everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) started.
+◇ Test case passing 1 argument change → "points.csv" to everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) started.
+✘ Test everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) recorded an issue with 1 argument change → "points.csv" at LocalExportServiceTests.swift:122:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument change → "stats.csv" to everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) started.
+✘ Test everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) recorded an issue with 1 argument change → "stats.csv" at LocalExportServiceTests.swift:122:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument change → "redirected-stats.csv" to everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) started.
+✘ Test everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) recorded an issue with 1 argument change → "redirected-stats.csv" at LocalExportServiceTests.swift:122:6: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test everyArtifactMustStillBeOwnedAndPresentAtRegistration(change:) with 3 test cases failed after 0.131 seconds with 3 issues.
+✘ Suite "Durable local export package" failed after 0.306 seconds with 7 issues.
+◇ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) started.
+◇ Test case passing 1 argument replaceFile → false to movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) started.
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) recorded an issue with 1 argument replaceFile → false at MediaDirectoryDurabilityTests.swift:44:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument replaceFile → true to movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) started.
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) recorded an issue with 1 argument replaceFile → true at MediaDirectoryDurabilityTests.swift:44:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test movingDeclaredMediaAfterFirstCheckpointRefusesFurtherAcknowledgment(replaceFile:) with 2 test cases failed after 0.001 seconds with 2 issues.
+◇ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() started.
+✔ Test mediaCustodyConfinesOriginalsAndKeepsCachesOutOfBackup() passed after 0.746 seconds.
+◇ Suite "MediaProbe on private real footage (skipped when absent)" started.
+◇ Test "Sep 29 phone original: 30 fps, variable frame rate" started.
+✔ Test "Sep 29 phone original: 30 fps, variable frame rate" passed after 0.733 seconds.
+◇ Test "Oct 4 phone original: 30 fps, variable frame rate" started.
+✔ Test "Oct 4 phone original: 30 fps, variable frame rate" passed after 0.568 seconds.
+◇ Test "constant-frame-rate excerpt: 30 fps, constant" started.
+✔ Test "constant-frame-rate excerpt: 30 fps, constant" passed after 0.010 seconds.
+✔ Suite "MediaProbe on private real footage (skipped when absent)" passed after 1.312 seconds.
+◇ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() started.
+✘ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() recorded an issue at RecoveryScannerTests.swift:36:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() failed after 0.001 seconds with 1 issue.
+◇ Test brokenMediaPeersAreExplicitlyRefusedWithoutHidingHealthyCapture() started.
+✘ Test brokenMediaPeersAreExplicitlyRefusedWithoutHidingHealthyCapture() recorded an issue at RecoveryScannerTests.swift:79:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test brokenMediaPeersAreExplicitlyRefusedWithoutHidingHealthyCapture() failed after 0.001 seconds with 1 issue.
+◇ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+◇ Test case passing 1 argument fault → "negative-mark" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-mark" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "future-mark" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "future-mark" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "overlapping-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "overlapping-gap" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "negative-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-gap" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "backwards-gap" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "backwards-gap" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "overlapping-gaps" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "overlapping-gaps" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "negative-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "negative-event" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "future-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "future-event" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "missing-rate-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "missing-rate-event" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "missing-thermal-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "missing-thermal-event" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+◇ Test case passing 1 argument fault → "bad-rate-event" to corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) started.
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) recorded an issue with 1 argument fault → "bad-rate-event" at RecoveryScannerTests.swift:105:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) with 11 test cases failed after 0.003 seconds with 11 issues.
+◇ Test capturedPointMarkPreservesSchemaProducerAndSampleLabelThroughRecovery() started.
+✘ Test capturedPointMarkPreservesSchemaProducerAndSampleLabelThroughRecovery() recorded an issue at RecoveryScannerTests.swift:134:2: Caught error: Media fixture .cache/media/fixtureCamera-8710c28d160f8765/fixture-camera-720p30.mp4 is not rendered for this renderer version. Run: python3 scripts/media/render.py
+✘ Test capturedPointMarkPreservesSchemaProducerAndSampleLabelThroughRecovery() failed after 0.001 seconds with 1 issue.
+✘ Test run with 90 tests in 16 suites failed after 2.421 seconds with 101 issues.
+
+EXIT 1; ELAPSED 23.918s

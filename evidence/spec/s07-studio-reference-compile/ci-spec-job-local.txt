@@ -1,0 +1,42 @@
+$ python3 scripts/spec/validate.py
+---- spec validation summary ----
+benchmark bindings                 1
+benchmark records                  3
+closed-object rejections           154
+cross-references                   1
+csv byte-for-byte                  2
+file hashes                        6
+hand assertions                    611
+instances valid                    150
+jovra.fixture.canonical checks     1
+jovra.sampleMediaManifest checks   1
+kind-to-schema names               17
+media ground truth                 19
+media self-tests                   37
+pct fixtures                       1
+pct vectors                        32
+reference-integrity documents      150
+registry checks                    1
+sample match (C1-C16)              1
+schema self-tests                  26
+schemas                            19
+scoring fixtures                   106
+stats fixtures                     3
+units fixtures                     1
+units vectors                      31
+RESULT: PASS
+$ python3 -m unittest discover -s scripts/spec -p "test_*.py"
+----------------------------------------------------------------------
+Ran 99 tests in 44.800s
+
+OK
+$ python3 scripts/spec/validate_room.py
+cases passed: 232, failed: 0
+PASS: JOVRA Room v1 contracts
+$ python3 spec/reference/generate_fixtures.py && git status --porcelain spec
+scoring_cases 74, order_cases 30, rally_cases 2, log_safety_cases 1, stats_cases 4, units_cases 1, canonical_cases 1, sample_cases 1, records 5, sample_media 1, contract_examples 4
+ M spec/studio/modules/README.md
+?? spec/reference/studio/cases/compile_cases.py
+?? spec/reference/studio/compile.py
+?? spec/studio/fixtures/vectors/compile.json
+?? spec/studio/modules/compile.md
