@@ -1,0 +1,159 @@
+# android-core CI, green run on PR #378 (commit c164970)
+# Run: https://github.com/Navigata1/jovra/actions/runs/38181170433/job/114593852650
+# Excerpt of the job log (ANSI colour codes stripped): setup-java, SDK removal and proof, the three Gradle steps.
+
+Run actions/setup-java@v4	2026-10-11T22:37:49.7509608Z ##[group]Run actions/setup-java@v4
+Run actions/setup-java@v4	2026-10-11T22:37:49.7509931Z with:
+Run actions/setup-java@v4	2026-10-11T22:37:49.7510143Z   distribution: temurin
+Run actions/setup-java@v4	2026-10-11T22:37:49.7510377Z   java-version: 17
+Run actions/setup-java@v4	2026-10-11T22:37:49.7510593Z   java-package: jdk
+Run actions/setup-java@v4	2026-10-11T22:37:49.7510807Z   check-latest: false
+Run actions/setup-java@v4	2026-10-11T22:37:49.7511023Z   server-id: github
+Run actions/setup-java@v4	2026-10-11T22:37:49.7511446Z   server-username: GITHUB_ACTOR
+Run actions/setup-java@v4	2026-10-11T22:37:49.7511709Z   server-password: GITHUB_TOKEN
+Run actions/setup-java@v4	2026-10-11T22:37:49.7511966Z   overwrite-settings: true
+Run actions/setup-java@v4	2026-10-11T22:37:49.7512202Z   job-status: success
+Run actions/setup-java@v4	2026-10-11T22:37:49.7514877Z   token: ***
+Run actions/setup-java@v4	2026-10-11T22:37:49.9173299Z ##[warning]setup-java v4 is deprecated and will no longer receive updates. Please migrate to actions/setup-java@v5.
+Run actions/setup-java@v4	2026-10-11T22:37:49.9181954Z ##[group]Installed distributions
+Run actions/setup-java@v4	2026-10-11T22:37:49.9331344Z Resolved Java 17.0.20+1 from tool-cache
+Run actions/setup-java@v4	2026-10-11T22:37:49.9332257Z Setting Java 17.0.20+1 as the default
+Run actions/setup-java@v4	2026-10-11T22:37:49.9343447Z (node:2298) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Run actions/setup-java@v4	2026-10-11T22:37:49.9344473Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Run actions/setup-java@v4	2026-10-11T22:37:49.9347000Z Creating toolchains.xml for JDK version 17 from temurin
+Run actions/setup-java@v4	2026-10-11T22:37:49.9423024Z Writing to /home/runner/.m2/toolchains.xml
+Run actions/setup-java@v4	2026-10-11T22:37:49.9423852Z Java configuration:
+Run actions/setup-java@v4	2026-10-11T22:37:49.9424331Z   Distribution: temurin
+Run actions/setup-java@v4	2026-10-11T22:37:49.9424794Z   Version: 17.0.20+1
+Run actions/setup-java@v4	2026-10-11T22:37:49.9425396Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+Run actions/setup-java@v4	2026-10-11T22:37:49.9445729Z Creating settings.xml with server-id: github
+Run actions/setup-java@v4	2026-10-11T22:37:49.9474677Z Writing to /home/runner/.m2/settings.xml
+Remove the runner's Android SDK	2026-10-11T22:37:49.9673756Z ##[group]Run for dir in /usr/local/lib/android "${ANDROID_HOME:-}" "${ANDROID_SDK_ROOT:-}"; do
+Remove the runner's Android SDK	2026-10-11T22:37:49.9674882Z for dir in /usr/local/lib/android "${ANDROID_HOME:-}" "${ANDROID_SDK_ROOT:-}"; do
+Remove the runner's Android SDK	2026-10-11T22:37:49.9675865Z   if [ -n "$dir" ] && [ -e "$dir" ]; then sudo mv "$dir" "${dir}.hidden-by-android-core"; fi
+Remove the runner's Android SDK	2026-10-11T22:37:49.9676554Z done
+Remove the runner's Android SDK	2026-10-11T22:37:49.9676867Z {
+Remove the runner's Android SDK	2026-10-11T22:37:49.9677187Z   echo "ANDROID_HOME="
+Remove the runner's Android SDK	2026-10-11T22:37:49.9677615Z   echo "ANDROID_SDK_ROOT="
+Remove the runner's Android SDK	2026-10-11T22:37:49.9678052Z } >> "$GITHUB_ENV"
+Prove no Android SDK is reachable	2026-10-11T22:37:50.0292303Z ##[group]Run java -version
+Prove no Android SDK is reachable	2026-10-11T22:37:50.0292655Z java -version
+Prove no Android SDK is reachable	2026-10-11T22:37:50.0293042Z echo "ANDROID_HOME='${ANDROID_HOME}' ANDROID_SDK_ROOT='${ANDROID_SDK_ROOT}'"
+Prove no Android SDK is reachable	2026-10-11T22:37:50.0293542Z test -z "${ANDROID_HOME}" && test -z "${ANDROID_SDK_ROOT}"
+Prove no Android SDK is reachable	2026-10-11T22:37:50.0293908Z test ! -e /usr/local/lib/android
+Prove no Android SDK is reachable	2026-10-11T22:37:50.0294224Z test ! -e android/local.properties
+Prove no Android SDK is reachable	2026-10-11T22:37:50.0294667Z if command -v sdkmanager; then echo "sdkmanager is still on PATH"; exit 1; fi
+Prove no Android SDK is reachable	2026-10-11T22:37:50.0295104Z echo "No Android SDK: OK"
+Prove no Android SDK is reachable	2026-10-11T22:37:52.0919545Z openjdk version "17.0.20.1" 2026-08-18
+Prove no Android SDK is reachable	2026-10-11T22:37:52.0920333Z OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+Prove no Android SDK is reachable	2026-10-11T22:37:52.0921447Z OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+Prove no Android SDK is reachable	2026-10-11T22:37:52.1065941Z ANDROID_HOME='' ANDROID_SDK_ROOT=''
+Prove no Android SDK is reachable	2026-10-11T22:37:52.1067809Z No Android SDK: OK
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:53.1791726Z ##[group]Run env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test --console=plain
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:53.1793498Z env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test --console=plain
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:53.1859143Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:53.1859629Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:56.2275967Z .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:57.8026898Z Welcome to Gradle 9.3.1!
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:57.8028926Z Here are the highlights of this release:
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:57.8036631Z  - Test reporting improvements
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:57.8037204Z  - Error and warning improvements
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:57.8037740Z  - Build authoring improvements
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:57.8038474Z For more details see https://docs.gradle.org/9.3.1/release-notes.html
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:37:57.9019578Z Starting a Gradle Daemon (subsequent builds will be faster)
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:38:00.7020898Z Calculating task graph as no cached configuration is available for tasks: :core:test :studio-core:test :room-protocol:test :testing:test
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:38:45.9084168Z > Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:38:56.8040886Z > Task :build-logic:convention:pluginDescriptors
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:38:56.8042197Z > Task :build-logic:convention:processResources
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:05.4018738Z > Task :build-logic:convention:compileKotlin
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:05.4023609Z > Task :build-logic:convention:compileJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:05.4024626Z > Task :build-logic:convention:classes
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:05.5022808Z > Task :build-logic:convention:jar
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.4025373Z > Task :testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.4032474Z > Task :core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.4033557Z > Task :core:processResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5018866Z > Task :testing:processResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5019952Z > Task :core:processTestResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5021039Z > Task :studio-core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5022422Z > Task :core:compileKotlin NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5025536Z > Task :testing:compileKotlin NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5026711Z > Task :studio-core:processResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5027706Z > Task :studio-core:processTestResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5028543Z > Task :core:compileJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5031550Z > Task :core:classes UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5032882Z > Task :room-protocol:checkKotlinGradlePluginConfigurationErrors SKIPPED
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5034005Z > Task :room-protocol:processTestResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5035340Z > Task :room-protocol:processResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5036222Z > Task :testing:processTestResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5037102Z > Task :testing:compileJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5037850Z > Task :testing:classes UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5038549Z > Task :core:jar
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5039208Z > Task :studio-core:compileKotlin NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5039803Z > Task :room-protocol:compileKotlin NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5040281Z > Task :testing:jar
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5040662Z > Task :room-protocol:compileJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5041403Z > Task :room-protocol:classes UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5041899Z > Task :studio-core:compileJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5042371Z > Task :studio-core:classes UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5042803Z > Task :studio-core:jar
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:40.5043469Z > Task :room-protocol:jar
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1019125Z > Task :testing:compileTestKotlin
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1019991Z > Task :testing:compileTestJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1020854Z > Task :testing:testClasses UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1021771Z > Task :room-protocol:compileTestKotlin
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1027185Z > Task :studio-core:compileTestKotlin
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1027983Z > Task :studio-core:compileTestJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1028723Z > Task :studio-core:testClasses UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1029835Z > Task :room-protocol:compileTestJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1030628Z > Task :room-protocol:testClasses UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1031597Z > Task :core:compileTestKotlin
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1032270Z > Task :core:compileTestJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:52.1032952Z > Task :core:testClasses UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:55.6026064Z > Task :core:test
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:55.6032290Z > Task :testing:test
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:55.7020996Z > Task :studio-core:test
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:55.7028055Z > Task :room-protocol:test
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:55.8032570Z gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1791758283853.json
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:55.8062375Z BUILD SUCCESSFUL in 2m 2s
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:55.8063144Z 16 actionable tasks: 16 executed
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:39:55.8063797Z Configuration cache entry stored.
+Module-boundary check	2026-10-11T22:39:56.1616160Z ##[group]Run env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android checkModuleBoundaries --console=plain
+Module-boundary check	2026-10-11T22:39:56.1617014Z env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android checkModuleBoundaries --console=plain
+Module-boundary check	2026-10-11T22:39:56.1682552Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+Module-boundary check	2026-10-11T22:39:56.1683072Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+Module-boundary check	2026-10-11T22:39:56.9912447Z Calculating task graph as no cached configuration is available for tasks: checkModuleBoundaries
+Module-boundary check	2026-10-11T22:39:57.2915325Z > Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Module-boundary check	2026-10-11T22:39:57.3918602Z > Task :build-logic:convention:compileKotlin UP-TO-DATE
+Module-boundary check	2026-10-11T22:39:57.3941899Z > Task :build-logic:convention:compileJava NO-SOURCE
+Module-boundary check	2026-10-11T22:39:57.3962223Z > Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+Module-boundary check	2026-10-11T22:39:57.3997887Z > Task :build-logic:convention:processResources UP-TO-DATE
+Module-boundary check	2026-10-11T22:39:57.4017697Z > Task :build-logic:convention:classes UP-TO-DATE
+Module-boundary check	2026-10-11T22:39:57.4018761Z > Task :build-logic:convention:jar UP-TO-DATE
+Module-boundary check	2026-10-11T22:39:58.6930381Z > Task :checkModuleBoundaries
+Module-boundary check	2026-10-11T22:39:58.6962199Z Checked 20 modules: 0 violation(s).
+Module-boundary check	2026-10-11T22:39:58.6963467Z gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_4-1791758396887.json
+Module-boundary check	2026-10-11T22:39:58.6991902Z BUILD SUCCESSFUL in 2s
+Module-boundary check	2026-10-11T22:39:58.6992440Z 5 actionable tasks: 1 executed, 4 up-to-date
+Module-boundary check	2026-10-11T22:39:58.6992992Z Configuration cache entry stored.
+build-logic tests (module-boundary rules)	2026-10-11T22:39:58.7410102Z ##[group]Run env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android/build-logic :convention:test --console=plain
+build-logic tests (module-boundary rules)	2026-10-11T22:39:58.7412298Z env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android/build-logic :convention:test --console=plain
+build-logic tests (module-boundary rules)	2026-10-11T22:39:58.7486004Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+build-logic tests (module-boundary rules)	2026-10-11T22:39:58.7486783Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+build-logic tests (module-boundary rules)	2026-10-11T22:39:59.4806629Z Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
+build-logic tests (module-boundary rules)	2026-10-11T22:40:06.4823884Z > Task :convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+build-logic tests (module-boundary rules)	2026-10-11T22:40:06.8818869Z > Task :convention:compileKotlin UP-TO-DATE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:06.8839679Z > Task :convention:compileJava NO-SOURCE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:06.8840578Z > Task :convention:pluginDescriptors UP-TO-DATE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:06.8841830Z > Task :convention:processResources UP-TO-DATE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:06.8859300Z > Task :convention:classes UP-TO-DATE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:06.8875911Z > Task :convention:jar UP-TO-DATE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:07.6812429Z > Task :convention:pluginUnderTestMetadata
+build-logic tests (module-boundary rules)	2026-10-11T22:40:07.6813475Z > Task :convention:processTestResources NO-SOURCE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:13.8809391Z > Task :convention:compileTestKotlin
+build-logic tests (module-boundary rules)	2026-10-11T22:40:13.8820724Z > Task :convention:compileTestJava NO-SOURCE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:13.8821800Z > Task :convention:testClasses UP-TO-DATE
+build-logic tests (module-boundary rules)	2026-10-11T22:40:16.4798369Z > Task :convention:test
+build-logic tests (module-boundary rules)	2026-10-11T22:40:16.5519728Z gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_5-1791758402192.json
+build-logic tests (module-boundary rules)	2026-10-11T22:40:16.5540310Z BUILD SUCCESSFUL in 17s
+build-logic tests (module-boundary rules)	2026-10-11T22:40:16.5541974Z 7 actionable tasks: 3 executed, 4 up-to-date
+build-logic tests (module-boundary rules)	2026-10-11T22:40:16.5543666Z Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html

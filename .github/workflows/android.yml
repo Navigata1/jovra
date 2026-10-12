@@ -1,0 +1,65 @@
+name: Android
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Required check (ADR-0024, android-v1-spec "Testing Decisions"): the pure-JVM Android modules build and pass their
+  # tests on a plain JDK 17 with NO Android SDK. This is the cross-platform conformance gate: a spec/ change that the
+  # Kotlin domain has not caught up with fails here. The runner image ships an Android SDK, so the job moves it out of
+  # reach and unsets the SDK variables first, then proves it is gone.
+  android-core:
+    name: android-core
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Remove the runner's Android SDK
+        run: |
+          for dir in /usr/local/lib/android "${ANDROID_HOME:-}" "${ANDROID_SDK_ROOT:-}"; do
+            if [ -n "$dir" ] && [ -e "$dir" ]; then sudo mv "$dir" "${dir}.hidden-by-android-core"; fi
+          done
+          {
+            echo "ANDROID_HOME="
+            echo "ANDROID_SDK_ROOT="
+          } >> "$GITHUB_ENV"
+      - name: Prove no Android SDK is reachable
+        run: |
+          java -version
+          echo "ANDROID_HOME='${ANDROID_HOME}' ANDROID_SDK_ROOT='${ANDROID_SDK_ROOT}'"
+          test -z "${ANDROID_HOME}" && test -z "${ANDROID_SDK_ROOT}"
+          test ! -e /usr/local/lib/android
+          test ! -e android/local.properties
+          if command -v sdkmanager; then echo "sdkmanager is still on PATH"; exit 1; fi
+          echo "No Android SDK: OK"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: JVM module tests (:core, :studio-core, :room-protocol, :testing)
+        run: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test --console=plain
+      - name: Module-boundary check
+        run: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android checkModuleBoundaries --console=plain
+      - name: build-logic tests (module-boundary rules)
+        run: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android/build-logic :convention:test --console=plain
+      - name: Test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-core-test-reports
+          path: |
+            android/*/build/reports/tests
+            android/build-logic/convention/build/reports/tests
+            android/build/reports/module-boundaries
+          if-no-files-found: ignore
