@@ -26,6 +26,8 @@ struct LocalExportServiceTests {
                 if progress == .artifactsReady { _ = try await store.correctReviewedWinner(pointID: first.id, winner: .b, for: id) }
             }
         #expect(package.videoFrames == 30)
+        #expect(package.eventLogVersion == 1, "Returned version belongs to the immutable pre-correction snapshot")
+        #expect(!package.includesAudio)
         #expect(try await AVURLAsset(url: package.clip).loadTracks(withMediaType: .audio).isEmpty)
         let names = try FileManager.default.contentsOfDirectory(atPath: package.directory.path).sorted()
         #expect(names == ["clip.mp4", "points.csv", "session.json", "stats.csv"])
