@@ -15,7 +15,7 @@ final class ReplayPlaybackModel {
     var isWorking = false
     var showStill = false
     var error: String?
-    var frameStatus = "Reading frames…"
+    var frameStatus = String(localized: "Reading frames…", table: "Replay")
     @ObservationIgnored private var library: LocalCaptureLibrary?
     @ObservationIgnored private var session: SessionID?
     @ObservationIgnored private var playback: FramePlayback?
@@ -34,19 +34,19 @@ final class ReplayPlaybackModel {
             guard generation == token else { return }
             document = loaded
             guard let first = segments.first, loaded.recording.mediaAvailable else {
-                error = "The original isn't available on this iPhone."; return
+                error = String(localized: "The original isn't available on this iPhone.", table: "Replay"); return
             }
             await selectSegment(first.id)
         } catch {
             guard generation == token else { return }
-            self.error = "Couldn't open the session. Try again."
+            self.error = String(localized: "Couldn't open the session. Try again.", table: "Replay")
         }
     }
 
     func selectSegment(_ id: String) async {
         guard !isWorking, let library, let session, let segment = segments.first(where: { $0.id == id }) else { return }
         player?.pause(); player = nil; playback = nil; frameRate = nil; frame = nil; frameCount = 0; showStill = false
-        selectedSegmentID = id; error = nil; frameStatus = "Reading frames…"; isWorking = true
+        selectedSegmentID = id; error = nil; frameStatus = String(localized: "Reading frames…", table: "Replay"); isWorking = true
         let token = generation
         defer { if generation == token { isWorking = false } }
         do {
@@ -58,7 +58,7 @@ final class ReplayPlaybackModel {
                 let info = try await MediaProbe.probe(url)
                 guard let video = info.video, video.isDecodable, !video.isVariableFrameRate,
                       let rate = video.frameRate else {
-                    frameStatus = "Exact frame stepping is unavailable for this source. Video still plays."; return
+                    frameStatus = String(localized: "Exact frame stepping is unavailable for this source. Video still plays.", table: "Replay"); return
                 }
                 let decoded = try await decodeCaptureToEnd(url)
                 try Task.checkCancellation()
@@ -66,14 +66,15 @@ final class ReplayPlaybackModel {
                 let first = try await adapter.frame(at: 0)
                 guard generation == token else { return }
                 playback = adapter; frameRate = rate; frameCount = decoded.videoFrames; frame = first
-                frameStatus = "\(rate.framesPerSecond.formatted()) fps · \(decoded.videoFrames) decoded frames"
+                let rateLabel = JovraFormat.count(rate.frames) + (rate.perSeconds == 1 ? "" : "/" + JovraFormat.count(rate.perSeconds))
+                frameStatus = String(localized: "\(rateLabel) fps · \(JovraFormat.count(decoded.videoFrames)) decoded frames", table: "Replay")
             } catch {
                 guard generation == token else { return }
-                frameStatus = "Couldn't read exact frames. Video playback remains available."
+                frameStatus = String(localized: "Couldn't read exact frames. Video playback remains available.", table: "Replay")
             }
         } catch {
             guard generation == token else { return }
-            self.error = "The original isn't available on this iPhone."
+            self.error = String(localized: "The original isn't available on this iPhone.", table: "Replay")
         }
     }
 
@@ -98,7 +99,7 @@ final class ReplayPlaybackModel {
             await player?.seek(to: decoded.time, toleranceBefore: .zero, toleranceAfter: .zero)
         } catch {
             guard generation == token else { return }
-            frameStatus = "Couldn't read this frame. Try another frame."
+            frameStatus = String(localized: "Couldn't read this frame. Try another frame.", table: "Replay")
         }
     }
 

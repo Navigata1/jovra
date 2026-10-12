@@ -1,0 +1,54 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/ios/Jovra.xcodeproj
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/.derivedData/t20-native-library-corrected-green.xcresult
+
+2026-10-09 13:38:32.017 xcodebuild[38012:132821963] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 13:38:32.017 xcodebuild[38012:132821963] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 13:38:55.262 xcodebuild[38012:132821963] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 13:38:55.262 xcodebuild[38012:132821963] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 13:41:22.256 xcodebuild[38012:132821963] [MT] IDETestOperationsObserverDebug: 171.844 elapsed -- Testing started completed.
+2026-10-09 13:41:22.256 xcodebuild[38012:132821963] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 13:41:22.256 xcodebuild[38012:132821963] [MT] IDETestOperationsObserverDebug: 171.844 sec, +171.844 sec -- end
+Failing tests:
+	NativeLibraryUITests.testSavedFixtureRemainsInLibraryAfterRelaunchAndOpensReplay()
+
+** TEST FAILED **
+
+Testing started
+Test class                         passed  failed  skipped  expected
+JovraUITests/NativeLibraryUITests       0       1        0         0
+Total: 0 passed, 1 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED NativeLibraryUITests/testSavedFixtureRemainsInLibraryAfterRelaunchAndOpensReplay(): Failed to get matching snapshot: Find single matching element. Multiple matching elements found for <XCUIElementQuery: 0x11501c050>.
+Sparse tree of matches:
+→Application, pid: 38389, label: 'JOVRA'
+  ↳Window (Main)
+    ↳Other
+    ⋅ ↳Other
+    ⋅   ↳Other
+    ⋅     ↳ScrollView
+    ⋅       ↳Other
+    ⋅         ↳StaticText, identifier: 'screen.title', label: 'Smart replay'
+    ↳Other
+      ↳Other
+        ↳Other
+          ↳Other
+            ↳Other
+              ↳Other
+                ↳Other
+                  ↳Other
+                    ↳Other
+                      ↳Other
+                        ↳Other
+                          ↳Other
+                            ↳Other
+                              ↳Other
+                                ↳Other
+                                  ↳ScrollView
+                                    ↳Other
+                                      ↳StaticText, identifier: 'screen.title', label: 'Your sessions'
+Device: JOVRA-Codex-T07 4265ADFD-39A3-4E71-8482-1945DDB5F899 (iPhone 17 Pro, iOS Simulator 26.5)
+Result bundle: .derivedData/t20-native-library-corrected-green.xcresult
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.
