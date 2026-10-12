@@ -30,7 +30,7 @@ create function pg_temp.fk(p_table text, p_cols text[]) returns text language sq
   select c.confrelid::regclass::text || '(' ||
          (select string_agg(a.attname, ',' order by k.ord) from unnest(c.confkey) with ordinality k(n, ord)
             join pg_attribute a on a.attrelid = c.confrelid and a.attnum = k.n) || ') on delete ' ||
-         c.confdeltype ||
+         c.confdeltype::text ||
          coalesce(' set null (' || (select string_agg(a.attname, ',') from unnest(c.confdelsetcols) n
                                        join pg_attribute a on a.attrelid = c.conrelid and a.attnum = n) || ')', '')
     from pg_constraint c

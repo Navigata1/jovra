@@ -4,7 +4,7 @@
 -- devices conflict instead of overwriting). docs/backend/security-model.md §4, §5.3-§5.6, §6.2, §13.8, §13.9, §13.16.
 -- Fixtures are written as postgres (the server path); app_gateway commands run as jovra_gateway. The file rolls back.
 begin;
-select plan(71);
+select plan(72);
 
 select tests.create_supabase_user('owner');        -- owns projects A and A2 and lesson LO
 select tests.create_supabase_user('owner_b');      -- owns project B
@@ -264,16 +264,22 @@ select is((select count(*)::int from public.observations where lesson_id is not 
 select throws_ok($$update public.observations set body = 'edited by coach'
                    where id = '0b300000-0000-4000-8000-000000000001'$$,
   'P0401', 'not_author', 'only the author may change an observation''s text');
-select results_eq($$insert into public.lesson_clips (id, lesson_id, project_id, source_id, match_start_us,
+select results_eq($$insert into public.lesson_clips (lesson_id, project_id, source_id, match_start_us,
                                                      match_end_us, keeper_ref)
-                    values ('c1300000-0000-4000-8000-000000000002', '1e300000-0000-4000-8000-000000000002',
-                            'a3000000-0000-4000-8000-000000000001', '5a300000-0000-4000-8000-000000000001',
-                            10000000, 14000000, 'k-rally')
+                    values ('1e300000-0000-4000-8000-000000000002', 'a3000000-0000-4000-8000-000000000001',
+                            '5a300000-0000-4000-8000-000000000001', 10000000, 14000000, 'k-rally')
                     returning share_approved_at$$,
   $$values (null::timestamptz)$$, 'T-DB-46: the coach attaches a clip of the owner''s match to their own lesson');
 select is((select count(*)::int from public.lesson_clips), 1,
   'the coach sees their own clip, not the owner''s lesson clips');
+select throws_ok($$insert into public.lesson_clips (id, lesson_id, project_id, match_start_us, match_end_us)
+                   values (gen_random_uuid(), '1e300000-0000-4000-8000-000000000002',
+                           'a3000000-0000-4000-8000-000000000001', 0, 1000000)$$,
+  '42501', 'permission denied for table lesson_clips', 'a client cannot choose a clip''s id');
 reset role;
+-- Name the coach's clip CC for the checks below (ids are server-generated; this is fixture bookkeeping).
+update public.lesson_clips set id = 'c1300000-0000-4000-8000-000000000002'
+ where lesson_id = '1e300000-0000-4000-8000-000000000002';
 
 -- The server renders the coach clip's excerpt and links it; the excerpt must belong to that clip (§13.16).
 insert into public.artifacts (id, project_id, lesson_clip_id, kind, bucket_class, r2_key, state) values
