@@ -1,0 +1,49 @@
+name: Studio
+
+# JOVRA Studio checks (S04, docs/studio/DEVELOPING.md). Separate from the core ci.yml, which Studio never edits.
+# Both jobs run on every pull request (no path filter), so either can be made a required check.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: studio-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Shared Studio contracts (spec/studio/README.md): schemas, fixtures, the Python reference, module pages and
+  # fixture determinism. Python standard library only.
+  studio-contracts:
+    name: studio-contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Studio contracts and fixtures
+        run: python3 scripts/spec/validate_studio.py
+
+  # The Foundation-only Studio domain layer builds and passes its tests on Linux, so it can never depend on an
+  # Apple-only framework (the same rule as the core jovra-core job, ADR-0006).
+  jovra-studio-core:
+    name: jovra-studio-core
+    runs-on: ubuntu-latest
+    container: swift:6.1
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: No Apple-only imports in JovraStudioCore
+        run: |
+          if grep -rnE "import (AVFoundation|UIKit|SwiftUI)" ios/Packages/JovraStudioCore; then
+            echo "JovraStudioCore must stay Foundation-only" >&2
+            exit 1
+          fi
+      - name: swift test (JovraStudioCore)
+        working-directory: ios/Packages/JovraStudioCore
+        run: swift test

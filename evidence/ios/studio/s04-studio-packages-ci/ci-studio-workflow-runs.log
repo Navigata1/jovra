@@ -1,0 +1,17 @@
+# Deliberate red run: commit 4e62f8b set spec/studio/fixtures/records/project-lock.json revision to the string "one".
+# studio.yml run 38181778523: https://github.com/Navigata1/jovra/actions/runs/38181778523
+studio-contracts	failure	https://github.com/Navigata1/jovra/actions/runs/38181778523/job/114595683640
+jovra-studio-core	success	https://github.com/Navigata1/jovra/actions/runs/38181778523/job/114595683800
+
+# studio-contracts failure lines:
+2026-10-11T22:47:07.5798664Z FAIL records/project-lock.json: schema project-lock.schema.json: $.revision: expected type ['integer'], got string
+2026-10-11T22:47:07.5799863Z FAIL spec/studio/fixtures/invalid/project-lock.invalid.json#demo-with-quote: reference case must pass the schema first: $.revision: expected type ['integer'], got string
+2026-10-11T22:47:07.5800854Z FAIL spec/studio/fixtures/invalid/project-lock.invalid.json#demo-upload: reference case must pass the schema first: $.revision: expected type ['integer'], got string
+2026-10-11T22:47:07.5801831Z FAIL spec/studio/fixtures/invalid/project-lock.invalid.json#hidden-but-visible: reference case must pass the schema first: $.revision: expected type ['integer'], got string
+2026-10-11T22:47:07.5802731Z FAIL determinism: records/project-lock.json is stale; run spec/reference/studio/generate_studio_fixtures.py
+2026-10-11T22:47:07.5820696Z RESULT: FAIL
+2026-10-11T22:47:07.5890950Z ##[error]Process completed with exit code 1.
+
+# Green run on 5b86d32 (before the break): https://github.com/Navigata1/jovra/actions/runs/38181282981
+studio-contracts	success	https://github.com/Navigata1/jovra/actions/runs/38181282981/job/114594186634
+jovra-studio-core	success	https://github.com/Navigata1/jovra/actions/runs/38181282981/job/114594186841

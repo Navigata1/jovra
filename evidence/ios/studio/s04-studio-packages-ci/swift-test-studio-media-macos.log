@@ -1,0 +1,10 @@
+$ swift test --package-path ios/Packages/JovraStudioMedia
+◇ Test run started.
+✔ Test "an NTSC source keeps its exact rational end: 30 frames at 30000/1001 fps end at 1.001 s" passed after 0.001 seconds.
+✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 0.001 seconds.
+✔ Test "a fixture that does not exist is an error naming the path, never a silent empty read" passed after 0.001 seconds.
+✔ Suite "Studio fixture locator" passed after 0.001 seconds.
+✔ Test "every Sample source ends exactly at its stated duration: frameCount frames at the nominal rate, no rounding" passed after 0.001 seconds.
+✔ Suite "Studio source timing" passed after 0.001 seconds.
+✔ Test run with 4 tests in 2 suites passed after 0.001 seconds.
+exit=0

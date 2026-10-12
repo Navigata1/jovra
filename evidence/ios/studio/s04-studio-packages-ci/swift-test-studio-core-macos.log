@@ -1,0 +1,15 @@
+$ swift --version
+swift-driver version: 1.148.6 Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)
+$ swift test --package-path ios/Packages/JovraStudioCore
+◇ Test run started.
+✔ Test "a record without a sample flag is not Sample data" passed after 0.001 seconds.
+✔ Test "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" with 10 test cases passed after 0.001 seconds.
+✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 0.001 seconds.
+✔ Test "a fixture that does not exist is an error naming the path, never a silent empty read" passed after 0.001 seconds.
+✔ Test "a record that is not a JSON object with a schemaVersion string is an error" passed after 0.001 seconds.
+✔ Suite "Studio fixture locator" passed after 0.001 seconds.
+✔ Test "an edit plan names version 2 of its contract" passed after 0.001 seconds.
+✔ Test "the Sample project lock names jovra.project-lock version 1 and is Sample data" passed after 0.001 seconds.
+✔ Suite "Studio record header" passed after 0.001 seconds.
+✔ Test run with 7 tests in 2 suites passed after 0.001 seconds.
+exit=0
