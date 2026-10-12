@@ -304,8 +304,9 @@ select is(pg_temp.approve('unrelated', 'c1300000-0000-4000-8000-000000000002'), 
   'an unrelated actor gets P0404');
 select is(pg_temp.approve('owner', 'c1300000-0000-4000-8000-000000000002'), 'ok',
   'T-DB-46: the project owner approves sharing exactly this window');
-select is((select share_approved_sha256 = app_private.clip_share_fingerprint(c) from public.lesson_clips c
-            where id = 'c1300000-0000-4000-8000-000000000002'), true,
+select is((select share_approved_sha256 = sha256(convert_to(concat_ws('|', project_id, source_id, match_start_us,
+                                                                    match_end_us, keeper_ref, '-', '-'), 'UTF8'))
+             from public.lesson_clips where id = 'c1300000-0000-4000-8000-000000000002'), true,
   'finding 20: the approval is pinned to the clip''s fingerprint');
 insert into public.access_grants (id, kind, lesson_clip_id, grantee_user_id, invitee_email_hmac, created_by,
                                   redeem_by, redeemed_at)

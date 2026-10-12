@@ -392,14 +392,16 @@ language sql stable security definer set search_path = '' as $$
   end
 $$;
 
--- Everything a viewer of a shared clip would see (security-model §13.8). Called only by definer helpers, triggers
--- and commands, which run as jovra_owner.
-create function app_private.clip_share_fingerprint(c public.lesson_clips) returns bytea
-language sql stable set search_path = '' as $$
+-- Everything a viewer of a shared clip would see (security-model §13.8). It takes the clip's columns rather than a
+-- clip id, so the SELECT policy can judge a row from its own values (also a row being inserted, which a lookup by
+-- id cannot see). It hashes values the caller already holds, so authenticated may execute it.
+create function app_private.clip_share_fingerprint(p_project uuid, p_source uuid, p_start_us bigint, p_end_us bigint,
+                                                   p_keeper text, p_sync_map_revision int, p_event_revision int)
+returns bytea language sql immutable set search_path = '' as $$
   select pg_catalog.sha256(pg_catalog.convert_to(pg_catalog.concat_ws('|',
-           c.project_id::text, coalesce(c.source_id::text, '-'), c.match_start_us::text, c.match_end_us::text,
-           coalesce(c.keeper_ref, '-'), coalesce(c.sync_map_revision::text, '-'),
-           coalesce(c.event_revision::text, '-')), 'UTF8'))
+           p_project::text, coalesce(p_source::text, '-'), p_start_us::text, p_end_us::text,
+           coalesce(p_keeper, '-'), coalesce(p_sync_map_revision::text, '-'),
+           coalesce(p_event_revision::text, '-')), 'UTF8'))
 $$;
 
 -- A clip is shareable when the lesson owner owns the clip's project, or the project owner approved exactly this
@@ -413,32 +415,42 @@ language sql stable security definer set search_path = '' as $$
      where c.id = p_clip
        and (p.owner_id = l.owner_id
             or (c.share_approved_at is not null
-                and c.share_approved_sha256 = app_private.clip_share_fingerprint(c))))
+                and c.share_approved_sha256 = app_private.clip_share_fingerprint(
+                      c.project_id, c.source_id, c.match_start_us, c.match_end_us, c.keeper_ref, c.sync_map_revision,
+                      c.event_revision))))
 $$;
 
 -- A clip is visible only while (a) its project is not deleted, (b) the lesson owner still holds an active role on
--- the clip's project, and (c) for anyone but the lesson owner, the clip is shareable. Revoking a coach therefore
--- removes every downstream viewer's access too.
-create function app_private.can_view_lesson_clip(p_clip uuid) returns boolean
-language sql stable security definer set search_path = '' as $$
+-- the clip's project, and (c) for anyone but the lesson owner, the clip is shareable (the lesson owner owns the
+-- project, or p_approved: the project owner's approval still equals the clip's fingerprint). Revoking a coach
+-- therefore removes every downstream viewer's access too. The policy passes the row's own columns.
+create function app_private.can_view_lesson_clip_row(p_clip uuid, p_lesson uuid, p_project uuid, p_approved boolean)
+returns boolean language sql stable security definer set search_path = '' as $$
   select exists (
-    select 1 from public.lesson_clips c
-      join public.lessons l  on l.id = c.lesson_id
-      join public.projects p on p.id = c.project_id and p.deleted_at is null
-     where c.id = p_clip
+    select 1 from public.lessons l
+      join public.projects p on p.id = p_project and p.deleted_at is null
+     where l.id = p_lesson
        and exists (select 1 from public.project_members m
-                    where m.project_id = c.project_id and m.user_id = l.owner_id and m.revoked_at is null
+                    where m.project_id = p_project and m.user_id = l.owner_id and m.revoked_at is null
                       and (m.expires_at is null or m.expires_at > now())
                       and (m.role = 'owner' or m.approved_at is not null))
        and (l.owner_id = app_private.current_actor()
-            or ((p.owner_id = l.owner_id
-                 or (c.share_approved_at is not null
-                     and c.share_approved_sha256 = app_private.clip_share_fingerprint(c)))
-                and (app_private.lesson_access(c.lesson_id) in ('coach', 'viewer')
+            or ((p.owner_id = l.owner_id or coalesce(p_approved, false))
+                and (app_private.lesson_access(p_lesson) in ('coach', 'viewer')
                      or exists (select 1 from public.access_grants g
-                                 where g.lesson_clip_id = c.id and g.kind = 'lesson_clip_view'
+                                 where g.lesson_clip_id = p_clip and g.kind = 'lesson_clip_view'
                                    and g.grantee_user_id = app_private.current_actor()
                                    and app_private.grant_active(g))))))
+$$;
+
+create function app_private.can_view_lesson_clip(p_clip uuid) returns boolean
+language sql stable security definer set search_path = '' as $$
+  select coalesce((select app_private.can_view_lesson_clip_row(c.id, c.lesson_id, c.project_id,
+                            c.share_approved_at is not null
+                            and c.share_approved_sha256 = app_private.clip_share_fingerprint(
+                                  c.project_id, c.source_id, c.match_start_us, c.match_end_us, c.keeper_ref,
+                                  c.sync_map_revision, c.event_revision))
+                     from public.lesson_clips c where c.id = p_clip), false)
 $$;
 
 -- Viewer path only (owners and coaches use has_project_role). A viewer may see a granted film or clip excerpt and
@@ -1094,7 +1106,11 @@ $$;
 create function app_private.pin_shared_clip() returns trigger
 language plpgsql security definer set search_path = '' as $$
 begin
-  if app_private.clip_share_fingerprint(new) is distinct from app_private.clip_share_fingerprint(old) then
+  if app_private.clip_share_fingerprint(new.project_id, new.source_id, new.match_start_us, new.match_end_us,
+                                        new.keeper_ref, new.sync_map_revision, new.event_revision)
+     is distinct from
+     app_private.clip_share_fingerprint(old.project_id, old.source_id, old.match_start_us, old.match_end_us,
+                                        old.keeper_ref, old.sync_map_revision, old.event_revision) then
     new.share_approved_at := null;
     new.share_approved_sha256 := null;
     if old.excerpt_artifact_id is not null then
@@ -1366,7 +1382,10 @@ create policy lessons_update on public.lessons for update to authenticated
 -- lesson_clips: a viewer sees the clip row (window, note, keeper ref), never the project, its sources or other
 -- clips; the media they can stream is only the clip_excerpt artifact.
 create policy lesson_clips_select on public.lesson_clips for select to authenticated
-  using (app_private.can_view_lesson_clip(id));
+  using (app_private.can_view_lesson_clip_row(id, lesson_id, project_id,
+           share_approved_at is not null
+           and share_approved_sha256 = app_private.clip_share_fingerprint(project_id, source_id, match_start_us,
+                                         match_end_us, keeper_ref, sync_map_revision, event_revision)));
 create policy lesson_clips_insert on public.lesson_clips for insert to authenticated
   with check (app_private.can_insert_lesson_clips(lesson_id, project_id));
 create policy lesson_clips_update on public.lesson_clips for update to authenticated
@@ -1476,7 +1495,10 @@ begin
     raise exception using errcode = 'P0404', message = 'not_found';
   end if;
   update public.lesson_clips
-     set share_approved_at = v_at, share_approved_sha256 = app_private.clip_share_fingerprint(v_clip)
+     set share_approved_at = v_at,
+         share_approved_sha256 = app_private.clip_share_fingerprint(
+           v_clip.project_id, v_clip.source_id, v_clip.match_start_us, v_clip.match_end_us, v_clip.keeper_ref,
+           v_clip.sync_map_revision, v_clip.event_revision)
    where id = p_clip;
   return v_at;
 end
@@ -1501,8 +1523,8 @@ $$;
 -- 8. Function privileges ----------------------------------------------------------------------------------------------
 revoke all on function
   app_private.grant_active(public.access_grants), app_private.lesson_access(uuid),
-  app_private.clip_share_fingerprint(public.lesson_clips), app_private.clip_is_shareable(uuid),
-  app_private.can_view_lesson_clip(uuid), app_private.viewer_can_see_artifact(uuid),
+  app_private.clip_share_fingerprint(uuid, uuid, bigint, bigint, text, int, int), app_private.clip_is_shareable(uuid),
+  app_private.can_view_lesson_clip_row(uuid, uuid, uuid, boolean), app_private.can_view_lesson_clip(uuid), app_private.viewer_can_see_artifact(uuid),
   app_private.is_own_live_camera_invite(uuid),
   app_private.can_insert_sync_maps(uuid, public.review_state),
   app_private.can_insert_calibration_versions(uuid, public.provenance),
@@ -1525,10 +1547,11 @@ revoke all on function
   app_gateway.approve_clip_share(uuid, uuid, uuid), app_gateway.revoke_clip_share(uuid, uuid, uuid)
   from public, anon, authenticated, service_role;
 
--- Only what policies call. grant_active, the fingerprint, clip_is_shareable, the check_* helpers and every trigger
+-- Only what policies call. grant_active, can_view_lesson_clip (by id), clip_is_shareable, the check_* helpers and every trigger
 -- function: no EXECUTE for any client role.
 grant execute on function
-  app_private.lesson_access(uuid), app_private.can_view_lesson_clip(uuid), app_private.viewer_can_see_artifact(uuid),
+  app_private.lesson_access(uuid), app_private.can_view_lesson_clip_row(uuid, uuid, uuid, boolean),
+  app_private.clip_share_fingerprint(uuid, uuid, bigint, bigint, text, int, int), app_private.viewer_can_see_artifact(uuid),
   app_private.is_own_live_camera_invite(uuid),
   app_private.can_insert_sync_maps(uuid, public.review_state),
   app_private.can_insert_calibration_versions(uuid, public.provenance),
@@ -1560,7 +1583,8 @@ alter table app_ops.quota_counters owner to jovra_owner;
 
 alter function app_private.grant_active(public.access_grants) owner to jovra_owner;
 alter function app_private.lesson_access(uuid) owner to jovra_owner;
-alter function app_private.clip_share_fingerprint(public.lesson_clips) owner to jovra_owner;
+alter function app_private.clip_share_fingerprint(uuid, uuid, bigint, bigint, text, int, int) owner to jovra_owner;
+alter function app_private.can_view_lesson_clip_row(uuid, uuid, uuid, boolean) owner to jovra_owner;
 alter function app_private.clip_is_shareable(uuid) owner to jovra_owner;
 alter function app_private.can_view_lesson_clip(uuid) owner to jovra_owner;
 alter function app_private.viewer_can_see_artifact(uuid) owner to jovra_owner;
