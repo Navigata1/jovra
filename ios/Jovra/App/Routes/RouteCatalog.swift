@@ -201,7 +201,7 @@ private extension FullScreenRoute {
         case .replay:
             cover("replay", "T28", String(localized: "Smart replay", table: "App", comment: "Screen name"),
                   String(localized: "Close replay", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Replay/ReplayScreen.swift")
+                  "Features/Replay/ReplayScreen.swift", placeholder: ReplayScreen.isPlaceholder)
         case .compare:
             cover("compare", "T45", String(localized: "Compare", table: "App", comment: "Screen name"),
                   String(localized: "Close compare", table: "App", comment: "VoiceOver label of the Close control"),
