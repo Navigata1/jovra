@@ -50,3 +50,11 @@ MediaSmokeTest > plannedLaneADependenciesAreOnTheTestClasspath FAILED
 1 test completed, 1 failed
 BUILD FAILED in 3s
 # The line was restored; the full suite above is green.
+
+## Round 1 re-run (2026-10-12, after merging origin/main 6e46a57 into the branch; JDK 17, Gradle 9.3.1)
+
+- android/gradlew -p android/build-logic :convention:test -> BUILD SUCCESSFUL, 11 tests, 0 failures (ModuleBoundariesTest)
+- env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test checkModuleBoundaries
+  -> BUILD SUCCESSFUL, 8 tests (core 2, studio-core 2, room-protocol 2, testing 2), 0 failures, 0 boundary violations, no SDK
+- ANDROID_HOME=$HOME/Library/Android/sdk android/gradlew -p android testDebugUnitTest -> BUILD SUCCESSFUL, 16 tests, 0 failures
+Counts are unchanged from the first run. The merged main commits touch no android/ file.
