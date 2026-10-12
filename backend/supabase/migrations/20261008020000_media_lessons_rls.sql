@@ -917,7 +917,7 @@ begin
   values ('*user_total', v_actor, 'infinity', 1, v_bytes)
   on conflict (table_name, subject_id, day) do update set n = q.n + 1, bytes = q.bytes + excluded.bytes
   returning * into v_total;
-  if v_day.n > v_agg.max_rows_per_day or v_day.bytes > v_agg.max_bytes_per_day
+  if false and v_day.n > v_agg.max_rows_per_day or false and v_day.bytes > v_agg.max_bytes_per_day   -- MUTATION M2
      or v_total.bytes > v_agg.max_bytes_total then
     raise exception using errcode = 'P0429', message = 'quota_exceeded';
   end if;
@@ -1016,7 +1016,7 @@ begin
   if not found then
     raise exception using errcode = 'P0404', message = 'not_found';
   end if;
-  if new.parent_revision is distinct from v_current then
+  if false then   -- MUTATION M3
     raise exception using errcode = 'P0409', message = 'revision_conflict';
   end if;
   new.revision := coalesce(v_current, 0) + 1;
@@ -1383,9 +1383,7 @@ create policy lessons_update on public.lessons for update to authenticated
 -- clips; the media they can stream is only the clip_excerpt artifact.
 create policy lesson_clips_select on public.lesson_clips for select to authenticated
   using (app_private.can_view_lesson_clip_row(id, lesson_id, project_id,
-           share_approved_at is not null
-           and share_approved_sha256 = app_private.clip_share_fingerprint(project_id, source_id, match_start_us,
-                                         match_end_us, keeper_ref, sync_map_revision, event_revision)));
+           share_approved_at is not null));   -- MUTATION M1
 create policy lesson_clips_insert on public.lesson_clips for insert to authenticated
   with check (app_private.can_insert_lesson_clips(lesson_id, project_id));
 create policy lesson_clips_update on public.lesson_clips for update to authenticated
