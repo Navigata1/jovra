@@ -11,7 +11,7 @@ Design: `docs/backend/architecture.md` (layout §1.2, local test strategy §12, 
 
 | Folder | What | Test command | CI workflow | Status |
 |---|---|---|---|---|
-| `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migration 1 (S76 / B-03) |
+| `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migrations 1 (S76 / B-03) and 2 (S77 / B-04) |
 | `gateway/` | Cloudflare signing gateway Worker | — | — | Not started (B-07) |
 | `render/` | Render-host image | — | — | Not started (B-13) |
 | `contracts/` | Gateway and queue JSON Schemas | — | — | Not started (B-01) |
@@ -110,9 +110,51 @@ the owner/unrelated paths through PostgREST with real ES256 session tokens minte
   chosen plan, the operator script that creates testers from the untracked allow-list, and where the hosted HMAC key
   lives (security-model §13.2–13.3).
 - `gateway/` will hold its own `.dev.vars` (already gitignored).
-- Migration 1 leaves to later tickets: T-DB-29 (`provider_connections`, B-05), T-DB-33 (owner-only `app_gateway`
-  commands and `audit_denial`, B-06), the `parent_revision` variant of T-DB-65 (`point_event_revisions`, B-04;
-  the guard pattern and the T-DB-67 lint that will hold that table to it are in place), quotas on `projects`
-  (`a20_enforce_quota`, T-DB-64/70, B-25) and the `project_members.grant_id` foreign key (B-05).
+- Migration 1 leaves to later tickets: T-DB-29 (`provider_connections`, B-05) and T-DB-33 (owner-only
+  `app_gateway` commands and `audit_denial`, B-06). Migration 2 closed the rest: the `parent_revision` variant of
+  T-DB-65, quotas on `projects` and the `project_members.grant_id` foreign key.
 - The two S75 auth-hook functions (`before_user_created`, `email_hmac`) read Vault and keep the migration owner;
   T-DB-66 names them as its only exception.
+
+## Migration 2 (S77 / B-04)
+
+`migrations/20261008020000_media_lessons_rls.sql` (architecture §4.1, §4.3, §4.4; security-model §4, §5.3–5.6,
+§13.0, §13.5, §13.8–13.11, §13.16):
+
+- Tables `camera_sources`, `source_manifests`, `sync_maps`, `calibration_versions`, `point_event_revisions`,
+  `observations`, `lessons`, `lesson_clips`, `story_plans` and `story_plan_versions`, plus `artifacts` and
+  `access_grants`, which this migration's helpers and triggers need (`lesson_access`, clip sharing, excerpts, stale
+  marking). Their full column sets are in place; migration 3 (S78) adds the `artifacts.job_id`/`attempt_id` foreign
+  keys with `render_jobs`/`render_attempts`, `artifact_sources`, and the audit and outbox rows noted below.
+- Composite foreign keys make cross-project references impossible: a clip, observation, calibration or artifact
+  names a source of its own project, an artifact's parent and a grant's artifact are of the same project, and a
+  plan version is bound to its plan's project (findings 17, 31). `story_plans (project_id, id)` and
+  `story_plan_versions (story_plan_id, id)` are the targets S78's jobs, quotes and reservations reference.
+  Deleting a source keeps clips and observations with `source_id` null (`ON DELETE SET NULL (source_id)`,
+  finding 22a; user story 173).
+- Append-only tables (`point_event_revisions`, `source_manifests`, `sync_maps`, `calibration_versions`,
+  `story_plan_versions`): revision or version assigned under a per-project advisory lock, no UPDATE or DELETE grant.
+  An event revision whose `parent_revision` is not the project's current one is `P0409 revision_conflict`; a new
+  revision marks older films, previews, clip excerpts and plan versions `stale`.
+- Clip sharing (finding 20): `app_gateway.approve_clip_share` (project owner only, else `P0404`) pins the approval
+  to `clip_share_fingerprint`; `b20_pin_shared_clip` clears it, unlinks the excerpt and hides it when the window,
+  source, keeper or bound revisions change; `can_view_lesson_clip` also requires the stored fingerprint to equal the
+  current one, so a bypassed trigger still cannot carry an approval to another window; `app_gateway.revoke_clip_share`
+  withdraws it. A clip-bearing grant is refused (`P0409 clip_share_not_approved`) until the clip is shareable.
+- Quotas (finding 23): `a20_enforce_quota` on every client-insertable table (including `projects`), per project or
+  per user, plus the per-user aggregate `*user_total`, in `app_ops.quota_limits` / `quota_counters`. A missing
+  limits row refuses, a lesson-only observation counts against the writing user, a refusal rolls its increments
+  back (`P0429 quota_exceeded`).
+- Every client-insertable table has `a00_rls_guard` (one function, `app_private.rls_guard()`, calling the same
+  `can_insert_<table>` predicate as the INSERT policy) and coded `P0422` validation before constraints.
+
+Tests: `media_01_catalog` (tables, composite FKs and delete actions, append-only grants, hidden columns, quota
+lints, command privileges, T-DB-01 for the new tables), `media_02_sources_events` (T-DB-12, 13, 14, 15, 16, 24, 43,
+59 FK half, the `parent_revision` variant of T-DB-65), `media_03_lessons_clips` (T-DB-17, 18–23, 41, 42, 45, 46, 49,
+52, 62, 69; stories 173 and 179) and `media_04_quotas` (T-DB-64, 70).
+
+Not covered here (later tickets): the render_jobs/quotes half of T-DB-59 and the `render_attempts.lease_token_hash`
+and `quotes.cap_cost_micro_usd` columns of T-DB-17 (S78 creates those tables); the gateway `404` halves of
+T-DB-46/62 (gateway routes, S83 onward); `lesson_embeddings` in T-DB-49 (B-20); audit rows for the clip-share
+commands and the outbox row that deletes an unlinked excerpt's object (`app_ops.audit_events`, `app_ops.job_outbox`,
+S78); `create_grant`'s creator checks (S79).
