@@ -14,7 +14,7 @@ Design: `docs/backend/architecture.md` (layout §1.2, local test strategy §12, 
 | `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migration 1 (S76 / B-03) |
 | `gateway/` | Cloudflare signing gateway Worker | — | — | Not started (B-07) |
 | `render/` | Render-host image | — | — | Not started (B-13) |
-| `contracts/` | Gateway and queue JSON Schemas | — | — | Not started (B-01) |
+| `contracts/` | Gateway and queue JSON Schemas | See `contracts/README.md` | `.github/workflows/backend-contracts.yml` | Implemented contract/checker foundation (S81 / B-01); gateway/render runtime remains separate |
 
 ## `supabase/` (S75)
 
