@@ -1,0 +1,173 @@
+{
+  "verdict": "Merged manual core; finish safe everyday iOS before claiming automatic analysis/premium production.",
+  "chapters": [
+    {
+      "id": 0,
+      "question": "What is actually usable?",
+      "visual": "court path + fact strip"
+    },
+    {
+      "id": 1,
+      "question": "What is measured?",
+      "visual": "ticket bars + maturity matrix"
+    },
+    {
+      "id": 2,
+      "question": "What remains?",
+      "visual": "outcome-grouped findings"
+    },
+    {
+      "id": 3,
+      "question": "How does it connect?",
+      "visual": "local-first stack"
+    },
+    {
+      "id": 4,
+      "question": "What happens next?",
+      "visual": "baseline/target table + gated roadmap"
+    },
+    {
+      "id": 5,
+      "question": "How does another session resume?",
+      "visual": "copyable prompt and guardrails"
+    },
+    {
+      "id": 6,
+      "question": "What changed from the old report?",
+      "visual": "claim/refutation ledger"
+    },
+    {
+      "id": 7,
+      "question": "Why trust this?",
+      "visual": "source ledger + scored rubric"
+    }
+  ],
+  "theme": {
+    "name": "Court Ledger",
+    "ethos": "JOVRA forest and warm ivory meet court boundary rules: preserve the playable local core and make the unfinished frontier visible.",
+    "defaultMode": "light",
+    "modeReason": "The source screen references and ivory/forest brand live in daylight on a tennis court; a warm readable light plane suits a founder decision document. Dark uses the same court identity at night.",
+    "personality": {
+      "warm_cool": 0.35,
+      "quiet_loud": 0.28,
+      "organic_engineered": 0.72,
+      "luminous_grounded": 0.32
+    },
+    "sources": [
+      {
+        "kind": "repo",
+        "ref": "ios/Jovra/DesignSystem/Tokens/ColorRole.swift:5-12",
+        "note": "Forest, ivory, chartreuse and clay derive from the implemented brand palette."
+      },
+      {
+        "kind": "repo",
+        "ref": "design-reference/brief/brand-decision.md",
+        "note": "Court Arc geometry and premium restrained editorial framing inform the court plate and chapter typography."
+      },
+      {
+        "kind": "subject",
+        "ref": "Tennis court service boxes and record-to-export flow",
+        "note": "Court lines become scope boundaries; the rally path names actual native stages rather than decorative particles."
+      },
+      {
+        "kind": "validation",
+        "ref": "evidence/signal-validation.txt and browser-qa.json",
+        "note": "Both modes have computed contrast gates and explicit responsive/browser checks."
+      }
+    ],
+    "modes": {
+      "dark": {
+        "bg": "#070f0c",
+        "text": "#f4f1e8",
+        "a1": "#d7f56a"
+      },
+      "light": {
+        "bg": "#f4f1e8",
+        "text": "#182f29",
+        "a1": "#092a25"
+      }
+    }
+  },
+  "heroData": {
+    "stages": [
+      {
+        "name": "Record",
+        "x": 120,
+        "y": 435
+      },
+      {
+        "name": "Save",
+        "x": 330,
+        "y": 435
+      },
+      {
+        "name": "Library",
+        "x": 120,
+        "y": 385
+      },
+      {
+        "name": "Replay",
+        "x": 330,
+        "y": 325
+      },
+      {
+        "name": "Correct",
+        "x": 120,
+        "y": 265
+      },
+      {
+        "name": "Export",
+        "x": 330,
+        "y": 185
+      }
+    ],
+    "historicalNativePass": 4,
+    "tracks": 4,
+    "mappedTickets": 295,
+    "openTickets": 278,
+    "closedTickets": 17,
+    "cycleSeconds": 8
+  },
+  "rubric": [
+    [
+      "Evidence integrity",
+      2
+    ],
+    [
+      "Subject-native visual thesis",
+      2
+    ],
+    [
+      "Court hero composition",
+      2
+    ],
+    [
+      "Two sourced evidence grammars",
+      2
+    ],
+    [
+      "Gated system/plan view",
+      2
+    ],
+    [
+      "Theme derivation and both modes",
+      2
+    ],
+    [
+      "Visual-cue density",
+      2
+    ],
+    [
+      "Editorial pacing/readability",
+      2
+    ],
+    [
+      "Interaction and performance",
+      1
+    ],
+    [
+      "Static parity",
+      2
+    ]
+  ]
+}

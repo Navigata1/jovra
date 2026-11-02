@@ -1,0 +1,170 @@
+{
+  "summary": {
+    "head": "6e46a576",
+    "verdict": "A substantial manual, local-first recording-to-export MVP is merged. The full specified iOS v1 remains incomplete.",
+    "merged_status": "Live GitHub queries confirm PRs365–371 MERGED on October11–12. The contrary mission-state statements are stale.",
+    "historical_evidence_boundary": "Current main and tested73ce5c2 have exactly the same iOS subtree:9a925bbca83a7545b40e8053ac0c2b4e8cc62243. Historical native4PASS and artifact checks therefore describe byte-identical iOS source, but were not rerun against current main in this audit.",
+    "scope_limits": "Read-only source/document/GitHub audit. No Xcode build, simulator, decoder, physical-device, signing or release checks run."
+  },
+  "strengths": [
+    {
+      "title": "The core flow is real and merged",
+      "detail": "Singles setup, recording controls, acknowledged local save, persisted library rows, original replay, reviewed decisions, corrections and local four-file exports have native implementations.",
+      "file": "ios/Jovra/Platform/Capture/LocalCaptureLibrary.swift:28"
+    },
+    {
+      "title": "Scores and stats use a fresh authoritative fold",
+      "detail": "ReviewedPointModel reloads the document and computes scoring and derived stats after each append/correction. Unknown serve and shot observations remain unknown.",
+      "file": "ios/Jovra/Features/Replay/ReviewedPointModel.swift:79"
+    },
+    {
+      "title": "Honest source and export presentation",
+      "detail": "Synthetic sessions retain Sample badges; playback explicitly labels its selected decoded frame; exports show historical event version and actual audio inclusion.",
+      "file": "ios/Jovra/Features/Replay/ReplayScreen.swift:80; ios/Jovra/Features/Export/ClipExportSheet.swift:94"
+    },
+    {
+      "title": "A coherent shared storage boundary",
+      "detail": "Capture, library, review and export share one local actor/store rather than separate demo stores.",
+      "file": "ios/Jovra/Platform/Capture/LocalCaptureLibraryKey.swift:8"
+    },
+    {
+      "title": "Meaningful historical acceptance evidence",
+      "detail": "Retained native test covers recording→library→decoded replay→four decisions→correction→export→relaunch, with independent JSON/CSV/original-hash/video validation.",
+      "file": "evidence/ios/core-flow-final/README.md:3"
+    }
+  ],
+  "findings": [
+    {
+      "title": "Mission state and resume instructions contradict merged reality",
+      "severity": "high",
+      "detail": "Mission state still calls365–370 unmerged, treats the old billing failure as the present blocker, and directs a future worker to merge them. Live GitHub confirms all365–371 merged. It also retains the old step5 hold despite merged authorization372 and subsequent Studio373. Do not reuse this resume block unchanged.",
+      "file": "ops/mission/state.json:288; ops/mission/state.json:641",
+      "fix": "Reconcile mission state, journal, heartbeat and handoff from live PR/head facts. Preserve old billing evidence as historical; verify current CI separately. Distinguish merged authorization from implemented Studio functionality."
+    },
+    {
+      "title": "Crash recovery is not integrated into the usable app",
+      "severity": "high",
+      "detail": "RecoveryScanner exists in the media package, but the app contains no scanner invocation. Its current scanner explicitly refuses unfinished recordings. The app library initializer only constructs SessionStore and MediaLibrary. Finished stale handoff recovery is useful, but does not fulfill startup/torn-prefix/termination recovery.",
+      "file": "ios/Packages/JovraMedia/Sources/JovraMedia/Capture/Recovery/RecoveryScanner.swift:21; ios/Packages/JovraMedia/Sources/JovraMedia/Capture/Recovery/RecoveryScanner.swift:56; ios/Jovra/Platform/Capture/LocalCaptureLibrary.swift:22",
+      "fix": "Finish T16 with startup orchestration, explicit recovery/refusal states and unfinished/torn-prefix handling. Verify interrupted real writer sessions before claiming session-loss protection. No actual runtime data loss was reproduced in this audit."
+    },
+    {
+      "title": "Existing tennis footage cannot yet enter through the application",
+      "severity": "high",
+      "detail": "Photos/Files import remains a RoutePlaceholder. This blocks the founder's existing match footage from the normal product path and prevents realistic imported-source analysis/review validation.",
+      "file": "ios/Jovra/Features/Sessions/Import/ImportScreen.swift:3",
+      "fix": "Implement T26 import with permission handling, per-file outcomes, duplicates, original preservation and playable media validation; then test the supplied real footage through that public path."
+    },
+    {
+      "title": "The tennis-analysis promise currently exceeds the available experience",
+      "severity": "high",
+      "detail": "The usable review flow manually enters point start/end milliseconds and winners. Fast Point Review, processing, calibration, Serve Lab, Stroke Lab and comparison screens remain placeholders. Audio hit detection and rally segmentation are disabled in the registry. This is a manual review MVP, not a functioning automatic tennis-analysis product.",
+      "file": "ios/Jovra/Features/Replay/ReplayScreen.swift:105; ios/Jovra/Features/PointReview/PointReviewScreen.swift:10; ios/Jovra/Features/Processing/ProcessingScreen.swift:9; spec/contracts/capability-registry.v1.json:48",
+      "fix": "Explicitly choose manual-MVP versus full-v1 release scope. For full v1, prioritize efficient review/timeline tools, processing and benchmark-gated suggestions; retain disabled/unsupported capability states until their evidence gates pass."
+    },
+    {
+      "title": "Storage, deletion and privacy controls are incomplete",
+      "severity": "high",
+      "detail": "Settings, Storage, Trash and Delete-all-data screens remain placeholders. The eraser registry exists, but only preferences register an eraser; the session library does not. A user can accumulate original recordings without the intended in-app management/deletion workflow.",
+      "file": "ios/Jovra/Features/Settings/SettingsScreen.swift:7; ios/Jovra/Features/Settings/DataSlot/DeleteAllDataSheet.swift:7; ios/Jovra/Features/Sessions/Library/TrashSheet.swift:7; ios/Jovra/Platform/Preferences/AppPreferences.swift:103",
+      "fix": "Complete T20/T56/T57 local management first: search, Trash/restore, storage visibility, explicit deletion scope, session eraser registration and failure reporting. Archive integrations can follow independently."
+    },
+    {
+      "title": "Capture currently always requests silent recording",
+      "severity": "medium",
+      "detail": "The native screen passes microphone.notRequested even on hardware. The UI honestly says No sound, but permission infrastructure alone does not make recording audio available. This also prevents the planned audio-analysis path from originating in normal app capture.",
+      "file": "ios/Jovra/Features/Capture/CaptureScreen.swift:125; ios/Jovra/Features/Capture/CaptureScreen.swift:151",
+      "fix": "Add explicit optional microphone choice and permission handling while preserving video-only fallback. Validate actual encoded audio and interruption behavior on hardware."
+    },
+    {
+      "title": "The surrounding product still behaves like a foundation shell",
+      "severity": "medium",
+      "detail": "Home shows fixed Sample tiles; Insights is Coming later; Profile only implements appearance. WelcomeGate always bypasses onboarding. Static inventory finds38 of56 Features Swift files directly render RoutePlaceholder; this is a file inventory, not a screen-completion percentage.",
+      "file": "ios/Jovra/Features/Home/HomeView.swift:15; ios/Jovra/Features/Insights/InsightsView.swift:14; ios/Jovra/Features/Profile/ProfileView.swift:27; ios/Jovra/Features/Welcome/WelcomeGate.swift:8",
+      "fix": "Finish first-run/profile and real-session dashboard bindings, then expose only functioning destinations or clearly communicate their unavailable state."
+    },
+    {
+      "title": "Native playback and export are intentionally narrower than v1 specifications",
+      "severity": "medium",
+      "detail": "Exact stepping supports verified CFR sources after a full decode. Continuous score/playhead overlay, advanced timeline, speed/loop tools and fast review are absent. Export supports one finalized segment/range and four local files, with no demonstrated Photos save, Share Pack or destination transfer.",
+      "file": "ios/Jovra/Features/Replay/ReplayPlaybackModel.swift:58; ios/Jovra/Features/Replay/ReplayScreen.swift:95; ios/Jovra/Features/Export/NativeExportModel.swift:67; ios/Jovra/Features/Export/ClipExportSheet.swift:104",
+      "fix": "Finish the selected T14/T28/T29/T36 acceptance scope, test long recordings and imported VFR sources, and separately verify actual share/save destinations."
+    },
+    {
+      "title": "Release readiness is not established by the historical simulator flow",
+      "severity": "high",
+      "detail": "The app targets iOS18 but documented runtime evidence covers iOS26.5. Capture has a separate physical-camera branch. Development team is unset and version remains0.1.0. Current-main end-to-end, physical capture/endurance, signing and release QA are not established by this audit.",
+      "file": "docs/DEVELOPING.md:16; ios/Jovra/Features/Capture/CaptureScreen.swift:140; ios/project.yml:13",
+      "fix": "Run current-main native gates, iOS18 compatibility, real-camera/audio/interruption/thermal/storage tests and T63 release/accessibility/privacy checks. Keep simulator, hardware and store verdicts separate."
+    }
+  ],
+  "remaining": [
+    {
+      "priority": 1,
+      "scope": "Reconcile current truth and rerun integrated baseline",
+      "tickets": [
+        "Mission state",
+        "T63"
+      ],
+      "acceptance": "Live merged heads/CI accurately recorded; current-main native CoreFlow and independent actual artifacts verified without reassigning historical runtime SHAs."
+    },
+    {
+      "priority": 2,
+      "scope": "Make recordings safe and manageable in normal use",
+      "tickets": [
+        "T16",
+        "T17",
+        "T20",
+        "T25",
+        "T56",
+        "T57"
+      ],
+      "acceptance": "Startup recovery, interruptions, heat/storage behavior, Trash/deletion, local data ownership and physical-camera gates."
+    },
+    {
+      "priority": 3,
+      "scope": "Bring real footage and efficient review into the app",
+      "tickets": [
+        "T26",
+        "T14",
+        "T28",
+        "T29",
+        "T30"
+      ],
+      "acceptance": "Public import, long/VFR playback validation, useful point navigation/editing and fast review rather than repeated manual millisecond entry."
+    },
+    {
+      "priority": 4,
+      "scope": "Complete the everyday native product",
+      "tickets": [
+        "T18",
+        "T19",
+        "T21",
+        "T22",
+        "T36"
+      ],
+      "acceptance": "Onboarding/profile, real dashboard/overview, supported session modes and reliable original/clip/data sharing."
+    },
+    {
+      "priority": 5,
+      "scope": "Deliver the specified analysis and improvement layer",
+      "tickets": [
+        "T13",
+        "T23",
+        "T27",
+        "T32–T35",
+        "T41–T50"
+      ],
+      "acceptance": "Benchmark-gated suggestions, calibration, serve/stroke tools, comparison, progress and equipment linked to stored evidence. This is broader than a manual MVP."
+    }
+  ],
+  "evidence": [
+    "Fresh checkout HEAD6e46a57, clean status; no files changed by this audit.",
+    "Live GitHub GraphQL: PR365–371 MERGED, October11–12; merge OIDs match local history.",
+    "Live GitHub: T16#18,T17#19,T18#20,T20#22,T26#28,T28#30,T29#31,T36#38,T56#58,T57#59,T63#65 remain OPEN. Merged feature slices did not close those full tickets.",
+    "git rev-parse HEAD:ios and73ce5c2:ios both9a925bbca83a7545b40e8053ac0c2b4e8cc62243.",
+    "Historical core-flow packet explicitly scopes synthetic simulator4PASS and independent artifact checks; it excludes real-match accuracy, destination transfer, physical device and store readiness.",
+    "docs/spec/tickets.md:14–42 distinguishes remaining capture/recovery/import/review acceptance criteria.",
+    "No current native build, simulator run, decoder execution or physical-device test performed."
+  ]
+}
