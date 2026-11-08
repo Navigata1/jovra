@@ -1,7 +1,8 @@
 name: room
 
 # JOVRA Room v1 and the watch bridge (G-ROOM / G-W-CONTRACT, docs/spec/watch-v1-spec.md). Two jobs:
-#   room-contracts  the Python reference and fixtures in spec/room agree (scripts/spec/validate_room.py);
+#   room-contracts  the Python reference and fixtures in spec/room agree (scripts/spec/validate_room.py), and
+#                   scripts/spec/test_validate_room.py proves that breaking a fixture turns that validator red;
 #   jovra-room      the Swift port in ios/Packages/JovraRoom passes every spec/room fixture on Linux, and the package
 #                   imports no UI or watch-transport framework.
 # The core ci.yml and studio checks are deliberately not edited; ci.yml also runs validate_room.py in its spec job.
@@ -14,6 +15,7 @@ on:
       - spec/schemas/common.schema.json
       - spec/schemas/studio/studio-common.schema.json
       - scripts/spec/validate_room.py
+      - scripts/spec/test_validate_room.py
       - scripts/spec/jsonschema_subset.py
       - design-reference/adaptive/brief/**
       - docs/handoff/adaptive-v3/scripts/**
@@ -28,6 +30,7 @@ on:
       - spec/schemas/common.schema.json
       - spec/schemas/studio/studio-common.schema.json
       - scripts/spec/validate_room.py
+      - scripts/spec/test_validate_room.py
       - scripts/spec/jsonschema_subset.py
       - design-reference/adaptive/brief/**
       - docs/handoff/adaptive-v3/scripts/**
@@ -54,6 +57,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate Room contracts, fixtures and reference
         run: python3 scripts/spec/validate_room.py
+      - name: Negative controls (a broken Room fixture must fail the validator)
+        run: python3 scripts/spec/test_validate_room.py -v
 
   jovra-room:
     name: jovra-room
