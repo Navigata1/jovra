@@ -1,0 +1,10 @@
+S79 mutation run 42525773849 (head 548387e: commit_spend's advisory lock removed; reverted by the next commit). The pgTAP suite still passes (one session cannot race); the two-session T-DB-71 check fails, so it can fail:
+Result: PASS
+PASS  T-DB-71 setup: two owners, verified sources and plans (committed)
+PASS  T-DB-71 setup: an environment ceiling that fits one of the two caps  (caps [227793, 227793])
+FAIL  T-DB-71: while A is open, B waits on the spend advisory lock  (waiting=0)
+FAIL  T-DB-71: exactly one of two concurrent acceptances succeeds, the other is P0402 budget_exceeded  (A=consented B=consented)
+FAIL  T-DB-71: B returned only after A committed (the ceiling checks were serialized)  (B took 0.1s)
+FAIL  T-DB-71: spend_commitments holds one cap_open row and one job exists for the two quotes  (commitments/ledger/jobs=2 2 2)
+PASS  T-DB-71 cleanup: users, projects and the limits row removed
+T-DB-71: 4 check(s) failed

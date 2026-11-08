@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA sample-library fixture",
+  "description": "The demo library oracle (T09, screens.md §0.6). The documents it names are the ones SampleContent installs; 'expected' is the library summary computed from them by the reference generator (jovra_ref/sample_match.py, library section) under the all-sample scope, and checked there against the brief's literals (8 sessions, 402 min, first serves in by week 24/50, 33/60, 38/60, 40/60, the Sep 9 string job linked to all 8).",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "covers", "sessionFiles", "equipmentFile", "practicePlanFile", "mediaManifest", "seeds", "expected"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.sampleLibrary"},
+    "id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "covers": {"type": "array", "items": {"type": "string"}},
+    "sessionFiles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "common.schema.json#/$defs/relativePath"}},
+    "equipmentFile": {"$ref": "common.schema.json#/$defs/relativePath"},
+    "practicePlanFile": {"$ref": "common.schema.json#/$defs/relativePath"},
+    "mediaManifest": {"type": "string", "minLength": 1, "description": "Path of the sample media manifest, relative to this file."},
+    "seeds": {
+      "description": "The SplitMix64 seed behind each generated match, by session slug.",
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "expected": {"$ref": "#/$defs/summary"}
+  },
+  "$defs": {
+    "summary": {
+      "description": "LibrarySummary: what Home, Progress and the String journal read for this scope.",
+      "type": "object",
+      "required": ["sample", "sessionCount", "totalMinutes", "window", "weeklyFirstServeIn", "firstServeInDelta", "stringJobs", "sessions"],
+      "additionalProperties": false,
+      "properties": {
+        "sample": {"type": "boolean", "description": "True only when every session in scope is Sample (the block carries the Sample badge)."},
+        "sessionCount": {"type": "integer", "minimum": 0},
+        "totalMinutes": {"type": "integer", "minimum": 0},
+        "window": {
+          "type": "object",
+          "required": ["from", "to"],
+          "additionalProperties": false,
+          "properties": {
+            "from": {"$ref": "common.schema.json#/$defs/date"},
+            "to": {"$ref": "common.schema.json#/$defs/date"}
+          }
+        },
+        "weeklyFirstServeIn": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["week", "from", "to", "sessionIds", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "week": {"type": "integer", "minimum": 1},
+              "from": {"$ref": "common.schema.json#/$defs/date"},
+              "to": {"$ref": "common.schema.json#/$defs/date"},
+              "sessionIds": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+              "value": {"$ref": "common.schema.json#/$defs/ratio", "description": "Pooled numerators and denominators of the player's first serves in, matches only."}
+            }
+          }
+        },
+        "firstServeInDelta": {"type": "string", "description": "Last week minus the week before, in percentage points from the displayed integers."},
+        "stringJobs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "strungOn", "linkedSessionIds", "loggedMinutes"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "common.schema.json#/$defs/id"},
+              "strungOn": {"$ref": "common.schema.json#/$defs/date"},
+              "linkedSessionIds": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+              "loggedMinutes": {"type": "integer", "minimum": 0}
+            }
+          }
+        },
+        "sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "date", "kind", "minutes", "mediaIds", "scoreline"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "common.schema.json#/$defs/id"},
+              "title": {"type": "string", "minLength": 1},
+              "date": {"$ref": "common.schema.json#/$defs/date"},
+              "kind": {"enum": ["match", "tiebreakOnly", "practiceSet", "servePractice", "strokePractice", "rally", "lesson", "drill"]},
+              "minutes": {"type": "integer", "minimum": 0},
+              "mediaIds": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+              "scoreline": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -124,13 +124,16 @@ select is_empty($$
    where n.nspname = 'public' and t.typtype = 'e' and t.typowner <> 'jovra_owner'::regrole
 $$, 'T-DB-66: every enum in public is owned by jovra_owner');
 -- The two S75 auth-hook functions read Vault and run for supabase_auth_admin; they are not RLS helpers, read no
--- Studio table and keep the migration owner (README "Not covered yet"). Every other function is jovra_owner's.
+-- Studio table and keep the migration owner (README "Not covered yet"). S79's auth_user_facts reads the auth schema,
+-- which jovra_owner cannot, and keeps the migration owner for the same reason (executable by jovra_owner only).
+-- Every other function is jovra_owner's.
 select is_empty($$
   select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname in ('public', 'app_private', 'app_gateway')
      and not exists (select 1 from pg_depend d where d.objid = p.oid and d.deptype = 'e')
      and p.oid not in ('app_private.before_user_created(jsonb)'::regprocedure,
-                       'app_private.email_hmac(text)'::regprocedure)
+                       'app_private.email_hmac(text)'::regprocedure,
+                       'app_private.auth_user_facts(uuid, uuid)'::regprocedure)
      and p.proowner <> 'jovra_owner'::regrole
 $$, 'T-DB-66: every helper, trigger and command function is owned by jovra_owner');
 -- SQL-language bodies record no dependency on the tables they read, so the pairing is checked exhaustively.
@@ -140,7 +143,8 @@ select is_empty($$
    cross join pg_class c
    where n.nspname in ('app_private', 'app_gateway') and p.prosecdef
      and p.oid not in ('app_private.before_user_created(jsonb)'::regprocedure,
-                       'app_private.email_hmac(text)'::regprocedure)
+                       'app_private.email_hmac(text)'::regprocedure,
+                       'app_private.auth_user_facts(uuid, uuid)'::regprocedure)
      and c.relnamespace = 'public'::regnamespace and c.relkind in ('r', 'p')
      and p.proowner <> c.relowner
 $$, 'T-DB-66: proowner = relowner for every definer helper and every public table');

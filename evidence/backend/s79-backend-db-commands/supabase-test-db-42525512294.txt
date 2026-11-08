@@ -1,0 +1,49 @@
+S79 backend-db run 42525512294 (head 6d550c1): supabase test db
+2026-11-08T21:31:26.3431667Z ##[group]Run supabase test db
+^[[36;1msupabase test db^[[0m
+env:
+  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+Connecting to local database...
+3.36: Pulling from supabase/pg_prove
+dcccee43ad5d: Pulling fs layer
+06d62d0de6d7: Pulling fs layer
+a22cb17b3b93: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+4f4fb700ef54: Waiting
+a22cb17b3b93: Verifying Checksum
+a22cb17b3b93: Download complete
+06d62d0de6d7: Verifying Checksum
+06d62d0de6d7: Download complete
+dcccee43ad5d: Verifying Checksum
+dcccee43ad5d: Download complete
+4f4fb700ef54: Download complete
+dcccee43ad5d: Pull complete
+06d62d0de6d7: Pull complete
+a22cb17b3b93: Pull complete
+4f4fb700ef54: Pull complete
+Digest: sha256:eda7c5e68719e9c8287e78c017118407b48df904a51c935f5ab6098b8c0bc6bc
+Status: Downloaded newer image for ghcr.io/supabase/pg_prove:3.36
+psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql ................................ ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ....................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ..................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_01_catalog.test.sql ................ ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_02_uploads_cameras.test.sql ........ ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_03_grants_links_deletion.test.sql .. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_04_money.test.sql .................. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_05_actor_audit.test.sql ............ ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ........................ ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ......................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql ........................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql .................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql ..................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql ............................ ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/money_01_catalog.test.sql ........................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/money_02_roles.test.sql ............................. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/money_03_integrity.test.sql ......................... ok
+All tests successful.
+Files=18, Tests=831,  2 wallclock secs ( 0.09 usr  0.03 sys +  0.12 cusr  0.09 csys =  0.33 CPU)
+Result: PASS
+A new version of Supabase CLI is available: v3.0.0 (currently installed v)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli

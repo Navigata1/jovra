@@ -1,0 +1,129 @@
+# swift test --filter EDL (macOS, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)), 2026-11-08T22:13:47Z
+# command: cd ios/Packages/JovraStudioCore && swift test --filter EDL
+Building for debugging...
+Build complete! (5.10 sec)
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "EDL exact arithmetic" started.
+◇ Suite "EDL stage allowlist (SD6b)" started.
+◇ Suite "EDL validator: parity with edl.py" started.
+◇ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" started.
+◇ Test "fractions compare exactly where binary floating point would not" started.
+◇ Test "products beyond Int64 stay exact" started.
+◇ Test "operations are read from the plan's fields" started.
+◇ Test "a stage that enables every operation the plan uses refuses nothing" started.
+◇ Test "narration and the warm grade are refused in S1" started.
+◇ Test "the Rally Pulse 9:16 fixture is valid under the contract and refused by S1 for reframe and music" started.
+◇ Test "S1 enables exactly the spec's list" started.
+◇ Test "validate() without a trusted context returns contextMissing" started.
+◇ Test "a boolean speed is badSpeed in the validator itself, not only in the schema layer" started.
+◇ Test "the trusted context is built from the stored records, with the reviewed sync map's coverage" started.
+◇ Test "the two clean-alternate pairs are reproduced byte for byte by cleanAlternate" started.
+◇ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" started.
+◇ Test "every valid edit-plan record passes as stored" started.
+◇ Test "the typed clean alternate equals the stored typed record" started.
+◇ Test "every finding code except the stage gate is a code edl.py raises" started.
+◇ Test "finding 2: a null keeperId does not switch contact protection off" started.
+◇ Test "finding 8: a plan naming another project is refused against this project's records" started.
+◇ Test "finding 0: the first frame of a restarted interval maps through that interval (half-open coverage)" started.
+◇ Test "finding 7: the alternate bed returning mid-segment, and an alternate bed at a dissolve without an audio dip" started.
+◇ Test "finding 1: re-showing a live moment as a second 1x live segment is a replay without its label" started.
+◇ Test "finding 0: a frame looked up without its window's interval maps half-open (freezes and overlay moments)" started.
+✔ Test "fractions compare exactly where binary floating point would not" passed after 0.026 seconds.
+✔ Test "products beyond Int64 stay exact" passed after 0.030 seconds.
+✔ Test "S1 enables exactly the spec's list" passed after 0.030 seconds.
+✔ Test "operations are read from the plan's fields" passed after 0.030 seconds.
+✔ Test "a stage that enables every operation the plan uses refuses nothing" passed after 0.030 seconds.
+✔ Suite "EDL exact arithmetic" passed after 0.030 seconds.
+✔ Test "narration and the warm grade are refused in S1" passed after 0.030 seconds.
+✔ Test "finding 0: a frame looked up without its window's interval maps half-open (freezes and overlay moments)" passed after 0.066 seconds.
+✔ Test "every finding code except the stage gate is a code edl.py raises" passed after 0.326 seconds.
+✔ Test "the trusted context is built from the stored records, with the reviewed sync map's coverage" passed after 0.921 seconds.
+  rally-pulse-portrait under S1: stageNotEnabled: alt-bed is not enabled in this build; it is enabled in S2
+  rally-pulse-portrait under S1: stageNotEnabled: multi-angle is not enabled in this build; it is enabled in S2
+  rally-pulse-portrait under S1: stageNotEnabled: music is not enabled in this build; it is enabled in S5
+  rally-pulse-portrait under S1: stageNotEnabled: reframe is not enabled in this build; it is enabled in S5
+✔ Test "the Rally Pulse 9:16 fixture is valid under the contract and refused by S1 for reframe and music" passed after 0.948 seconds.
+✔ Suite "EDL stage allowlist (SD6b)" passed after 0.949 seconds.
+✔ Test "finding 1: re-showing a live moment as a second 1x live segment is a replay without its label" passed after 0.989 seconds.
+✔ Test "a boolean speed is badSpeed in the validator itself, not only in the schema layer" passed after 1.047 seconds.
+✔ Test "finding 8: a plan naming another project is refused against this project's records" passed after 1.110 seconds.
+  clean alternate court-memories-storyboard: 8828 bytes, identical
+  clean alternate rally-pulse-portrait: 5715 bytes, identical
+✔ Test "the two clean-alternate pairs are reproduced byte for byte by cleanAlternate" passed after 1.261 seconds.
+✔ Test "validate() without a trusted context returns contextMissing" passed after 1.395 seconds.
+  valid edit-plan.coach-cut-serve: 7 segments, 192 s, motion false, needsCleanAlternate false
+  valid edit-plan.court-memories-final: 5 segments, 258 s, motion true, needsCleanAlternate true
+✔ Test "finding 2: a null keeperId does not switch contact protection off" passed after 1.462 seconds.
+  valid edit-plan.court-memories-storyboard.clean: 6 segments, 258 s, motion false, needsCleanAlternate false
+  valid edit-plan.court-memories-storyboard: 6 segments, 258 s, motion true, needsCleanAlternate true
+  valid edit-plan.match-broadcast-set-1: 4 segments, 300 s, motion true, needsCleanAlternate true
+  valid edit-plan.rally-pulse-portrait.clean: 4 segments, 45 s, motion false, needsCleanAlternate false
+  valid edit-plan.rally-pulse-portrait: 4 segments, 45 s, motion true, needsCleanAlternate true
+✔ Test "every valid edit-plan record passes as stored" passed after 1.568 seconds.
+✔ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" passed after 1.829 seconds.
+EDL parity: 79 edit-plan invalid cases, 79 match, 0 mismatch(es)
+  code                         cases  matched
+  badChapters                  1      1
+  badInteger                   1      1
+  badOutput                    2      2
+  badOverlays                  1      1
+  badReframe                   1      1
+  badSpeed                     2      2
+  badTemplate                  1      1
+  bedCoverage                  1      1
+  bedOutOfSync                 1      1
+  bedSwitchNotAtBoundary       2      2
+  chronology                   1      1
+  cleanFrameRule               1      1
+  consentMissing               3      3
+  contactProtected             1      1
+  contactUnprotected           1      1
+  courtBedOffLive              2      2
+  coverageMismatch             1      1
+  disclosureMissing            1      1
+  duplicateId                  1      1
+  durationMismatch             1      1
+  durationOutsideProfile       1      1
+  fadeTooShort                 3      3
+  forbiddenField               3      3
+  framingAspect                1      1
+  freezeDuration               1      1
+  holdBedNotContinuous         1      1
+  holdBedNotDeadTime           1      1
+  holdBedOverLive              1      1
+  incompleteCoverage           1      1
+  kindMismatch                 2      2
+  liveWithoutCourtAudio        1      1
+  motionInCleanAlternate       1      1
+  opNotAllowed                 3      3
+  outputGap                    1      1
+  outsideCoverage              1      1
+  overlayNotAllowed            1      1
+  overlayOutsideMoment         2      2
+  panTooFast                   1      1
+  projectMismatch              1      1
+  provenanceMismatch           1      1
+  provenanceNotAllowed         1      1
+  reframeNotReviewed           1      1
+  replayBeforeOriginal         1      1
+  replayOutsideOriginal        1      1
+  replayWithoutLabel           1      1
+  rightsMissing                4      4
+  sessionTimeMismatch          1      1
+  staleRevision                3      3
+  transitionHandle             1      1
+  transitionNotAllowed         2      2
+  transitionTooLong            1      1
+  unknownField                 1      1
+  unknownSource                1      1
+  untrustedReference           4      4
+  untrustedSource              1      1
+  upscaleRefused               1      1
+✔ Test "the typed clean alternate equals the stored typed record" passed after 1.866 seconds.
+✔ Suite "EDL validator: parity with edl.py" passed after 1.867 seconds.
+✔ Test "finding 7: the alternate bed returning mid-segment, and an alternate bed at a dissolve without an audio dip" passed after 1.891 seconds.
+✔ Test "finding 0: the first frame of a restarted interval maps through that interval (half-open coverage)" passed after 2.254 seconds.
+✔ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" passed after 2.254 seconds.
+✔ Test run with 21 tests in 4 suites passed after 2.255 seconds.

@@ -1,0 +1,184 @@
+{
+  "schemaVersion": "jovra.studio-media-truth/1",
+  "id": "broll/broll-ball-drop",
+  "set": "broll",
+  "role": "broll",
+  "description": "Sample video (synthetic), B-roll: a ball dropped on the near baseline bounces to rest.",
+  "sample": true,
+  "band": "synthetic",
+  "generator": {
+    "script": "scripts/media/studio/render_studio.py",
+    "version": "1.0.0",
+    "sourceHash": "c631433c6aad4a106f8c39d92a7c8f4870a9619f43b80771b6730824cbc6fb10"
+  },
+  "media": {
+    "path": ".cache/media/studio/broll-c631433c6aad4a10/broll-ball-drop.mp4",
+    "fileName": "broll-ball-drop.mp4",
+    "container": "mp4",
+    "bundled": false
+  },
+  "video": {
+    "codec": "h264",
+    "width": 640,
+    "height": 360,
+    "frameRate": {
+      "num": 30,
+      "den": 1
+    },
+    "frameCount": 180,
+    "duration": {
+      "value": 6,
+      "timescale": 1
+    }
+  },
+  "audio": {
+    "codec": "aac",
+    "sampleRate": 48000,
+    "channels": 1,
+    "sampleCount": 288000
+  },
+  "barcode": {
+    "method": "jovra.frame-barcode/1",
+    "bits": 40,
+    "rect": {
+      "x": 0,
+      "y": 340,
+      "width": 640,
+      "height": 20
+    },
+    "fields": {
+      "start": 1,
+      "source": 7,
+      "segment": 3,
+      "frame": 20,
+      "crc8": 8,
+      "stop": 1
+    },
+    "one": {
+      "y": 235
+    },
+    "zero": {
+      "y": 16
+    },
+    "threshold": {
+      "y": 128
+    },
+    "sourceId": 33,
+    "segment": 0,
+    "frameMap": [
+      {
+        "frame": 0,
+        "frameId": 0,
+        "count": 180
+      }
+    ],
+    "frameMapSha256": "c884e7b8aa7a808339c7ee789f42c3ba28acd1121ef9a96bf031c17e613af2d4"
+  },
+  "clicks": {
+    "hz": 1000,
+    "durationSamples": 480,
+    "peak": 16000,
+    "toleranceFrames": 1,
+    "events": [
+      {
+        "sample": 51126,
+        "time": {
+          "value": 8521,
+          "timescale": 8000
+        },
+        "frame": 31
+      },
+      {
+        "sample": 89103,
+        "time": {
+          "value": 29701,
+          "timescale": 16000
+        },
+        "frame": 55
+      },
+      {
+        "sample": 115686,
+        "time": {
+          "value": 19281,
+          "timescale": 8000
+        },
+        "frame": 72
+      },
+      {
+        "sample": 134295,
+        "time": {
+          "value": 8953,
+          "timescale": 3200
+        },
+        "frame": 83
+      },
+      {
+        "sample": 147321,
+        "time": {
+          "value": 49107,
+          "timescale": 16000
+        },
+        "frame": 92
+      },
+      {
+        "sample": 156439,
+        "time": {
+          "value": 156439,
+          "timescale": 48000
+        },
+        "frame": 97
+      }
+    ]
+  },
+  "labels": [
+    {
+      "text": "Sample video (synthetic)",
+      "region": {
+        "x": 0,
+        "y": 0,
+        "width": 288,
+        "height": 20
+      },
+      "ink": {
+        "y": 230
+      },
+      "background": {
+        "y": 28
+      },
+      "kind": "sample",
+      "cellHeight": 90
+    }
+  ],
+  "broll": {
+    "what": "a ball dropped on the near baseline bounces to rest",
+    "bounces": [
+      {
+        "sample": 51126
+      },
+      {
+        "sample": 89103
+      },
+      {
+        "sample": 115686
+      },
+      {
+        "sample": 134295
+      },
+      {
+        "sample": 147321
+      },
+      {
+        "sample": 156439
+      }
+    ]
+  },
+  "hashes": {
+    "renderedWithSourceHash": "c631433c6aad4a106f8c39d92a7c8f4870a9619f43b80771b6730824cbc6fb10",
+    "sourceFramesSha256": "3d69cdf7f0777e131206287e0f73783c9298d1287a5f5f59150be681f257b23f",
+    "decodedSignature": {
+      "method": "jovra.cellLuma.v1",
+      "sha256": "456bd8a0ef2e0e2ebb3931371b534882e27c35039fd6e482974cdf1c7b4fa7b1"
+    },
+    "pcmSha256": "ff019d23b03bbae58e39f0316b6e480de35b21e7bcbc190635a10f5425d5ee16"
+  }
+}

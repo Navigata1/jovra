@@ -1,0 +1,26 @@
+$ (cd ios/Packages/JovraCore && swift test --scratch-path <worktree>/.derivedData/spm-core)   exit 0
+
+## T09 tests (SampleContentTests: 15) and the library conformance runner
+✔ Test aMixedScopeCountsOnlyTheRealItems() passed after 5.202 seconds.
+✔ Test anAllSampleScopeCountsSamplesAndIsFlaggedSample() passed after 5.202 seconds.
+✔ Test anEmptyScopeIsNotSample() passed after 5.311 seconds.
+✔ Test installRefusesALibraryDocumentThatIsNotFlaggedSample() passed after 5.312 seconds.
+✔ Test aMissingSampleFileIsTheMissingMediaStateNotAnError() passed after 5.313 seconds.
+✔ Test pointsOutsideAnOlderSessionsShortClipAreNotInTheSampleVideo() passed after 5.710 seconds.
+✔ Test installNeverOverwritesARealSessionThatSharesASampleID() passed after 6.108 seconds.
+✔ Test everyMediaIDInTheInstalledSessionsExistsInTheSampleMediaManifest() passed after 6.652 seconds.
+✔ Test aScopeMixingOneRealSessionWithSamplesCountsOnlyTheRealSession() passed after 6.670 seconds.
+✔ Test installCreatesEightSampleSessionsPlusTheEquipmentAndPracticePlan() passed after 8.549 seconds.
+✔ Test installedLibrarySummaryEqualsTheReferenceLibraryOracle() passed after 9.065 seconds.
+✔ Test removeDeletesOnlySampleObjectsAndARealSessionSurvives() passed after 9.309 seconds.
+✔ Test installingTwiceKeepsThePlayersSampleEdits() passed after 9.627 seconds.
+✔ Test headToHeadExcludesSamplesUnlessAsked() passed after 9.704 seconds.
+✔ Test resetRestoresAnEditedSampleDocumentByteForByte() passed after 10.106 seconds.
+✔ Test allDiscoveredRunnerFixturesPass() passed after 16.559 seconds.
+Consumed jovra.fixture.sampleLibrary: 1 fixtures
+Consumed jovra.fixture.sample: 1 fixtures
+
+## Totals
+	 Executed 12 tests, with 0 failures (0 unexpected) in 330.492 (330.495) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 330.492 (330.497) seconds
+✔ Test run with 89 tests in 5 suites passed after 18.207 seconds.

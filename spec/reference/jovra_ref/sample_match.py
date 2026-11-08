@@ -176,13 +176,13 @@ def _durations(rng: SplitMix64, serves: list[list[dict]], counts: list[int]) -> 
     return out
 
 
-def _gaps(rng: SplitMix64, rests: list[str], durations: list[int]) -> list[int]:
+def _gaps(rng: SplitMix64, rests: list[str], durations: list[int], total_ms: int = MATCH_MS) -> list[int]:
     gaps = [None] * (len(rests) - 1)
     for i, rest in enumerate(rests[:-1]):
         if rest in REST_RANGES:
             gaps[i] = rng.between(*REST_RANGES[rest])
     free = [i for i, g in enumerate(gaps) if g is None]
-    remaining = MATCH_MS - sum(durations) - sum(g for g in gaps if g is not None)
+    remaining = total_ms - sum(durations) - sum(g for g in gaps if g is not None)
     jitter = [rng.between(-3000, 3000) for _ in free]
     mean = sum(jitter) // len(free)
     base = remaining // len(free)
@@ -448,3 +448,422 @@ def write(out, write_json, version) -> int:
         "expected": {"fold": result, "stats": st},
     })
     return 1
+
+
+# ----- the sample library (T09) ---------------------------------------------------------------------
+# The demo library every sample screen reads (screens.md §0.6): Jon vs Alex plus seven more sessions between
+# Sep 9 and Oct 6, 2026, the sample equipment (one Head Prestige string job dated Sep 9, linked to all eight)
+# and the sample practice plan. The library oracle (count, minutes, weekly pooled first serves, string-job
+# links) is computed below from these documents, then checked against the brief's literals. Nothing under
+# spec/fixtures/sample outside library/ is touched: the library carries its own copy of Jon vs Alex whose match
+# log is the shipped fixture's, plus the library fields (schema 1.2.0, sample.mediaIds, the Sep 9 string-job
+# link and the demo archive state).
+
+LIBRARY_GENERATOR = "sample:library@1.0.0"
+LIBRARY_SCHEMA = "1.2.0"
+LIBRARY_UPDATED_AT = "2026-10-07T01:30:00Z"
+TIME_ZONE = "America/Chicago"
+STRING_JOB_NAME = "stringJob/2026-09-09"
+SETUP_LABEL = "Head Prestige · Hyper-G 52 / Ghost Wire 50 lb"
+WINDOW_DAYS = 28
+LIBRARY_ORACLE = {  # the brief's literals (screens.md §0.6); the computed oracle must equal them
+    "sessionCount": 8, "totalMinutes": 402, "olderMinutes": 288,
+    "weeklyFirstServeIn": [(24, 50), (33, 60), (38, 60), (40, 60)], "delta": "+4 percentage points",
+}
+OPPONENTS = {
+    "alex": ALEX,
+    "sam": uid("player/sam"),
+    "chris": uid("player/chris"),
+}
+# slug (as in the sample media manifest), date, local start, kind, title, minutes, and for matches: opponent
+# key, the side that wins, Jon's service points, Jon's first serves in and the pinned seed (the first seed from
+# 1 whose fold gives that winner and that many Jon service points: find_seed(); _older_match asserts both).
+OLDER_SESSIONS = [
+    ("2026-09-28-match", "2026-09-28", "17:30", "match", "Jon vs Chris", 63,
+     {"opponent": "chris", "winner": "A", "servicePoints": 60, "firstServesIn": 38, "seed": 396}),
+    ("2026-09-21-serve-practice", "2026-09-21", "08:00", "servePractice", "Serve practice", 55, None),
+    ("2026-09-17-match", "2026-09-17", "18:00", "match", "Jon vs Alex", 58,
+     {"opponent": "alex", "winner": "B", "servicePoints": 60, "firstServesIn": 33, "seed": 42}),
+    ("2026-09-13-stroke-practice", "2026-09-13", "09:00", "strokePractice", "Stroke practice", 60, None),
+    ("2026-09-09-match", "2026-09-09", "18:00", "match", "Jon vs Sam", 52,
+     {"opponent": "sam", "winner": "A", "servicePoints": 50, "firstServesIn": 24, "seed": 131}),
+]
+RECENT_PRACTICE = [
+    ("2026-10-04-serve-practice", "2026-10-04", "08:30", "servePractice", "Serve practice", 22, "notStarted",
+     {"state": "queued", "provider": "googleDrive"}),
+    ("2026-10-02-forehand-session", "2026-10-02", "17:00", "strokePractice", "Forehand session", 38, "inProgress",
+     {"state": "failed", "provider": "googleDrive", "lastError": "Sample: the upload stopped. Retry backup."}),
+]
+OPPONENT_NAMES = {"alex": "Alex", "sam": "Sam", "chris": "Chris"}
+SECOND_FAULT_PER_10 = 3  # of lost second-serve points, about 3 in 10 are double faults
+OPPONENT_FIRST_IN_PER_100 = 60
+
+
+def _utc(date: str, local: str) -> str:
+    """Local wall time in America/Chicago (CDT, UTC-5, for every sample date) as a UTC timestamp."""
+    hour, minute = (int(x) for x in local.split(":"))
+    from datetime import datetime, timedelta, timezone
+    t = datetime.fromisoformat(f"{date}T{hour:02d}:{minute:02d}:00") + timedelta(hours=5)
+    return t.replace(tzinfo=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _plus_ms(stamp: str, ms: int) -> str:
+    from datetime import datetime, timedelta
+    t = datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ") + timedelta(milliseconds=ms)
+    return t.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _equipment_use(slug: str | None, minutes: int) -> dict:
+    return {
+        "id": uid(f"{slug}/equipmentUse/jon") if slug else uid("equipmentUse/jon"),
+        "playerId": JON,
+        "racketId": uid("racket/head-prestige"),
+        "stringJobId": uid(STRING_JOB_NAME),
+        "setupLabelSnapshot": SETUP_LABEL,
+        "activeMinutes": minutes,
+        "source": "manualLog",
+    }
+
+
+def _sample(media_ids: list[str], seed: int | None = None) -> dict:
+    generator = LIBRARY_GENERATOR if seed is None else f"{LIBRARY_GENERATOR} seed {seed}"
+    return {"label": "Sample", "synthetic": True, "generator": generator, "mediaIds": media_ids}
+
+
+def _fold_winners(s: dict, won_by: str) -> dict:
+    probe = LogBuilder()
+    probe.points(won_by)
+    return scoring.fold(s, probe.events)
+
+
+def _match_winners(seed: int, s: dict) -> str:
+    """A complete match from the seed: random point winners, cut at the point that wins the match."""
+    rng = SplitMix64(seed)
+    won_by = "".join("A" if rng.below(100) < 50 else "B" for _ in range(400))
+    result = _fold_winners(s, won_by)
+    end = next(i for i, p in enumerate(result["points"]) if p["after"]["matchWon"])
+    return won_by[: end + 1]
+
+
+def find_seed(s: dict, winner: str, service_points: int) -> int:
+    """Re-pins a seed after a deliberate change to the match plan (run by hand, never at generation time)."""
+    for seed in range(1, 5000):
+        won_by = _match_winners(seed, s)
+        result = _fold_winners(s, won_by)
+        jon = sum(1 for p in result["points"] if p["serverSide"] == "A")
+        if result["match"]["winner"] == winner and jon == service_points:
+            return seed
+    raise AssertionError("no seed")
+
+
+def _older_setup(opponent: str) -> dict:
+    s = setup()
+    s["players"] = [s["players"][0], {"id": OPPONENTS[opponent], "displayName": OPPONENT_NAMES[opponent],
+                                      "handedness": "right" if opponent != "sam" else "left",
+                                      "backhand": "oneHanded" if opponent == "alex" else "twoHanded",
+                                      "isSelf": False}]
+    s["sides"] = {"A": [JON], "B": [OPPONENTS[opponent]]}
+    return s
+
+
+def _older_match(slug: str, plan: dict, total_ms: int) -> tuple[dict, list[dict], int]:
+    """(setup, point log, seed) for one older singles match: every point reviewed, no lets, aces or placements."""
+    s = _older_setup(plan["opponent"])
+    seed = plan["seed"]
+    won_by = _match_winners(seed, s)
+    base = _fold_winners(s, won_by)
+    servers = [p["serverSide"] for p in base["points"]]
+    assert base["match"]["winner"] == plan["winner"]
+    assert servers.count("A") == plan["servicePoints"]
+    rng = SplitMix64(seed ^ 0x5A17)
+    jon_points = [i for i, side in enumerate(servers) if side == "A"]
+    first_in = set(rng.shuffled(jon_points)[: plan["firstServesIn"]])
+    serves, counts, ends = [], [], []
+    for i, side in enumerate(servers):
+        receiver = "B" if side == "A" else "A"
+        if side == "A":
+            first = i in first_in
+        else:
+            first = rng.below(100) < OPPONENT_FIRST_IN_PER_100
+        double_fault = not first and won_by[i] == receiver and rng.below(10) < SECOND_FAULT_PER_10
+        if first:
+            attempts = [{"result": "in"}]
+        elif double_fault:
+            attempts = [_fault(rng), _fault(rng)]
+        else:
+            attempts = [_fault(rng), {"result": "in"}]
+        n = 0 if double_fault else rng.weighted(STROKE_WEIGHTS)
+        if double_fault:
+            end = "doubleFault"
+        else:
+            last_hitter = side if n % 2 == 1 else receiver
+            end = "winner" if last_hitter == won_by[i] else ("forcedError" if rng.below(10) < 4 else "unforcedError")
+        serves.append(attempts)
+        counts.append(n)
+        ends.append(end)
+    durations = _durations(rng, serves, counts)
+    rests = [p["after"]["rest"] for p in base["points"]]
+    gaps = _gaps(rng, rests, durations, total_ms)
+    log, t = [], 0
+    for i in range(len(won_by)):
+        start, end_ms = t, t + durations[i]
+        t = end_ms + (gaps[i] if i < len(gaps) else 0)
+        log.append({
+            "id": uid(f"{slug}/point/{i + 1}"), "seq": i + 1, "type": "point",
+            "recordedServer": base["points"][i]["server"], "tStartMs": start, "tEndMs": end_ms,
+            "reviewed": {"winner": won_by[i], "endType": ends[i], "serves": serves[i], "strokeCount": counts[i],
+                         "provenance": "reviewed", "source": "user"},
+            "reviewState": "reviewed",
+        })
+    assert log[-1]["tEndMs"] == total_ms
+    for p, q, rest in zip(log, log[1:], rests):
+        gap = q["tStartMs"] - p["tEndMs"]
+        assert 0 <= gap <= REST_MAX[rest], f"{slug}: a {rest} rest of {gap} ms"
+    return s, log, seed
+
+
+def _session_shell(slug: str, date: str, local: str, kind: str, title: str, minutes: int, media_ids: list[str],
+                   archive: dict, review: str, seed: int | None = None) -> dict:
+    started = _utc(date, local)
+    duration = minutes * 60_000
+    doc = {
+        "schemaVersion": LIBRARY_SCHEMA, "kind": "jovra.session", "id": uid(f"session/{slug}"), "sport": "tennis",
+        "createdAt": started, "updatedAt": _plus_ms(started, duration + 30 * 60_000), "title": title,
+        "sample": _sample(media_ids, seed), "sessionKind": kind,
+        "players": [setup()["players"][0]],
+        "recording": {"mode": "none", "startedAt": started, "timeZone": TIME_ZONE, "durationMs": duration,
+                      "segments": [], "gaps": [], "microphone": "notRequested", "mediaAvailable": False},
+        "marks": [], "shots": [], "calibrations": [], "annotations": [], "voiceNotes": [], "comparisons": [],
+        "derivedValues": [], "analysis": {"state": "notRequested", "runs": []},
+        "review": {"state": review, "updatedAt": _plus_ms(started, duration + 30 * 60_000)},
+        "archive": archive, "storage": {"originals": "none", "includeInDeviceBackup": False},
+        "equipmentUse": [_equipment_use(slug, minutes)],
+        "consent": {"status": "informed", "competitionMode": False},
+    }
+    if kind == "strokePractice":
+        doc["capturePurpose"] = "sideOnTechnique"
+    return doc
+
+
+def _media_ids(manifest: dict, session_id: str) -> list[str]:
+    ids = [m["mediaId"] for m in manifest["media"] if m["sessionId"] == session_id]
+    assert ids, f"no sample media for session {session_id}"
+    return ids
+
+
+def library_sessions(manifest: dict) -> list[tuple[str, dict]]:
+    """(slug, session document) for all eight sample sessions, newest first."""
+    jon_vs_alex, _ = build()
+    jon_vs_alex = copy.deepcopy(jon_vs_alex)
+    jon_vs_alex["schemaVersion"] = LIBRARY_SCHEMA
+    jon_vs_alex["sample"]["mediaIds"] = _media_ids(manifest, jon_vs_alex["id"])
+    jon_vs_alex["archive"] = {"state": "uploading", "provider": "googleDrive"}
+    jon_vs_alex["equipmentUse"] = [_equipment_use(None, MATCH_MS // 60_000)]
+    out = [("jon-vs-alex", jon_vs_alex)]
+    for slug, date, local, kind, title, minutes, review, archive in RECENT_PRACTICE:
+        sid = uid(f"session/{slug}")
+        out.append((slug, _session_shell(slug, date, local, kind, title, minutes, _media_ids(manifest, sid),
+                                         archive, review)))
+    for slug, date, local, kind, title, minutes, plan in OLDER_SESSIONS:
+        sid = uid(f"session/{slug}")
+        started = _utc(date, local)
+        archive = {"state": "backedUp", "provider": "googleDrive",
+                   "backedUpAt": _plus_ms(started, (minutes + 120) * 60_000)}
+        if plan is None:
+            out.append((slug, _session_shell(slug, date, local, kind, title, minutes, _media_ids(manifest, sid),
+                                             archive, "complete")))
+            continue
+        s, log, seed = _older_match(slug, plan, minutes * 60_000)
+        doc = _session_shell(slug, date, local, kind, title, minutes, _media_ids(manifest, sid), archive,
+                             "complete", seed)
+        doc["capturePurpose"] = "match"
+        doc["players"] = s["players"]
+        doc["sides"] = s["sides"]
+        doc["match"] = {"format": s["format"], "toss": s["toss"], "log": log}
+        out.append((slug, doc))
+    return out
+
+
+def library_equipment(base: dict) -> dict:
+    """The library's equipment: the records example's user-entered text, restrung on Sep 9 (6h 42m ago)."""
+    doc = copy.deepcopy(base)
+    stamp = "2026-09-09T17:00:00Z"
+    for key in ("frameModels", "rackets", "stringProducts", "stringInventory", "stringJobs", "setupRatings"):
+        for entity in doc.get(key, []):
+            entity["createdAt"] = entity["updatedAt"] = stamp
+    old_job = doc["stringJobs"][0]["id"]
+    assert len(doc["stringJobs"]) == 1
+    doc["stringJobs"][0].update({"id": uid(STRING_JOB_NAME), "strungOn": "2026-09-09"})
+    for rating in doc.get("setupRatings", []):
+        assert rating["stringJobId"] == old_job
+        rating["stringJobId"] = uid(STRING_JOB_NAME)
+    doc["updatedAt"] = LIBRARY_UPDATED_AT
+    return doc
+
+
+def library_practice_plan(jon_vs_alex: dict) -> dict:
+    """Screen 15's sample plan: one focus from Jon vs Alex (28 of 40 first-serve points won), three serve drills."""
+    first_serve_points = [e["id"] for e in jon_vs_alex["match"]["log"] if e["recordedServer"] == JON
+                          and [a["result"] for a in e["reviewed"]["serves"] if a["result"] != "let"][0] == "in"]
+    assert len(first_serve_points) == 40
+    evidence = [{
+        "sessionId": jon_vs_alex["id"], "stat": "firstServePointsWon", "side": "A",
+        "value": {"n": 28, "d": 40, "pct": 70, "display": "70%"}, "text": "28 of 40 first-serve points won",
+        "pointIds": first_serve_points,
+        "provenance": {"status": "reviewed", "source": "rule:practice.firstServePointsWon@1.0.0", "denominator": 40,
+                       "sample": True},
+        "availability": "available",
+    }]
+    origin = {"kind": "rule", "ruleId": "practice.firstServePointsWon", "ruleVersion": "1.0.0",
+              "condition": "firstServePointsWon.pct < 75 over at least 30 service points"}
+    drills = [
+        ("toss", "Toss consistency", 8, 3, 10,
+         "Toss without hitting and let the ball land on a racket laid in front of your front foot. Three sets of "
+         "ten; a toss that misses the strings starts the set again."),
+        ("wide", "Wide serve targets", 12, None, None,
+         "Hit first serves to wide targets on both sides, deuce and ad. Focus on placement and margin over the "
+         "net."),
+        ("first-ball", "Serve + first ball", 15, None, None,
+         "With a partner: serve, then play the first ball after the return into the open court. Count the points "
+         "you finish within your first two shots."),
+    ]
+    items = []
+    for key, title, minutes, sets, reps, text in drills:
+        drill = {"title": title, "instructions": text, "durationMinutes": minutes}
+        if sets is not None:
+            drill.update({"sets": sets, "reps": reps})
+        items.append({"id": uid(f"library/plan/{key}"), "focus": "A steadier first serve", "drill": drill,
+                      "origin": origin, "evidence": evidence, "status": "planned", "userEdited": False})
+    return {
+        "schemaVersion": "1.1.0", "kind": "jovra.practicePlan", "id": uid("library/plan"),
+        "createdAt": LIBRARY_UPDATED_AT, "updatedAt": LIBRARY_UPDATED_AT, "title": "This week: a steadier first serve",
+        "label": "Suggested practice", "sample": True, "playerId": JON, "basedOnSessions": [jon_vs_alex["id"]],
+        "items": items,
+        "goals": [{"id": uid("library/goal/first-serve"), "stat": "firstServeIn", "target": 70,
+                   "sessionKind": "match", "window": "fourWeeks", "createdAt": LIBRARY_UPDATED_AT}],
+    }
+
+
+def _local_date(doc: dict) -> str:
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    rec = doc["recording"]
+    t = datetime.strptime(rec["startedAt"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=ZoneInfo("UTC"))
+    return t.astimezone(ZoneInfo(rec["timeZone"])).date().isoformat()
+
+
+def _self_side(doc: dict) -> str:
+    me = next(p["id"] for p in doc["players"] if p["isSelf"])
+    return "A" if me in doc["sides"]["A"] else "B"
+
+
+def library_summary(sessions: list[dict], equipment: dict) -> dict:
+    """The library oracle, computed the way the Swift LibrarySummary computes it (all-sample scope)."""
+    from datetime import date, timedelta
+    dates = {d["id"]: _local_date(d) for d in sessions}
+    end = date.fromisoformat(max(dates.values()))
+    start = end - timedelta(days=WINDOW_DAYS - 1)
+    weeks = []
+    for w in range(WINDOW_DAYS // 7):
+        lo, hi = start + timedelta(days=7 * w), start + timedelta(days=7 * w + 6)
+        n = d = 0
+        ids = []
+        for doc in sorted(sessions, key=lambda x: (dates[x["id"]], x["id"])):
+            if doc["sessionKind"] != "match" or not lo <= date.fromisoformat(dates[doc["id"]]) <= hi:
+                continue
+            inp = {**{k: doc["match"][k] for k in ("format", "toss")}, "players": doc["players"],
+                   "sides": doc["sides"], "log": doc["match"]["log"]}
+            fraction = stats.compute(scoring.fold(inp, inp["log"]))["sides"][_self_side(doc)]["firstServeIn"]
+            n, d = n + fraction["n"], d + fraction["d"]
+            ids.append(doc["id"])
+        pct = stats.pct(n, d) if d else None
+        weeks.append({"week": w + 1, "from": lo.isoformat(), "to": hi.isoformat(), "sessionIds": ids,
+                      "value": {"n": n, "d": d, "pct": pct, "display": f"{pct}%" if pct is not None else "—"}})
+    jobs = []
+    for job in equipment["stringJobs"]:
+        linked = sorted(doc["id"] for doc in sessions
+                        if any(u.get("stringJobId") == job["id"] for u in doc.get("equipmentUse", [])))
+        ms = sum(doc["recording"]["durationMs"] for doc in sessions if doc["id"] in linked)
+        jobs.append({"id": job["id"], "strungOn": job["strungOn"], "linkedSessionIds": linked,
+                     "loggedMinutes": (ms + 30_000) // 60_000})
+    last, prior = weeks[-1]["value"], weeks[-2]["value"]
+    delta = last["pct"] - prior["pct"]
+    rows = []
+    for doc in sorted(sessions, key=lambda x: (dates[x["id"]], x["id"]), reverse=True):
+        scoreline = None
+        if "match" in doc:
+            inp = {**{k: doc["match"][k] for k in ("format", "toss")}, "players": doc["players"],
+                   "sides": doc["sides"], "log": doc["match"]["log"]}
+            scoreline = scoring.fold(inp, inp["log"])["match"]["scoreline"]
+        rows.append({"id": doc["id"], "title": doc["title"], "date": dates[doc["id"]], "kind": doc["sessionKind"],
+                     "minutes": doc["recording"]["durationMs"] // 60_000, "mediaIds": doc["sample"]["mediaIds"],
+                     "scoreline": scoreline})
+    total_ms = sum(doc["recording"]["durationMs"] for doc in sessions)
+    return {
+        "sample": True,
+        "sessionCount": len(sessions),
+        "totalMinutes": (total_ms + 30_000) // 60_000,
+        "window": {"from": start.isoformat(), "to": end.isoformat()},
+        "weeklyFirstServeIn": weeks,
+        "firstServeInDelta": f"{'+' if delta > 0 else ''}{delta} percentage point{'' if abs(delta) == 1 else 's'}",
+        "stringJobs": jobs,
+        "sessions": rows,
+    }
+
+
+def _check_library(summary: dict, sessions: list[dict], shipped: dict) -> None:
+    o = LIBRARY_ORACLE
+    assert summary["sessionCount"] == o["sessionCount"], summary["sessionCount"]
+    assert summary["totalMinutes"] == o["totalMinutes"], summary["totalMinutes"]
+    older = [d for d in sessions if _local_date(d) < "2026-09-30"]
+    assert len(older) == 5 and sum(1 for d in older if d["sessionKind"] == "match") == 3
+    assert sum(d["recording"]["durationMs"] for d in older) == o["olderMinutes"] * 60_000
+    got = [(w["value"]["n"], w["value"]["d"]) for w in summary["weeklyFirstServeIn"]]
+    assert got == o["weeklyFirstServeIn"], got
+    assert [w["value"]["pct"] for w in summary["weeklyFirstServeIn"]] == [48, 55, 63, 67]
+    assert all(len(w["sessionIds"]) == 1 for w in summary["weeklyFirstServeIn"]), "one singles match per week"
+    assert summary["firstServeInDelta"] == o["delta"]
+    (job,) = summary["stringJobs"]
+    assert job["strungOn"] == "2026-09-09" and len(job["linkedSessionIds"]) == 8 and job["loggedMinutes"] == 402
+    library_jva = next(d for d in sessions if d["id"] == shipped["id"])
+    assert library_jva["match"] == shipped["match"], "the library's Jon vs Alex must keep the shipped match log"
+    differs = sorted(k for k in set(library_jva) | set(shipped) if library_jva.get(k) != shipped.get(k))
+    assert differs == ["archive", "equipmentUse", "sample", "schemaVersion"], differs
+    for doc in sessions:
+        if "match" in doc:
+            inp = {**{k: doc["match"][k] for k in ("format", "toss")}, "players": doc["players"],
+                   "sides": doc["sides"], "log": doc["match"]["log"]}
+            result = scoring.fold(inp, inp["log"])
+            assert result["match"]["status"] == "completed" and not result["conflicts"], (doc["title"], result["conflicts"])
+
+
+def write_library(out, write_json, manifest: dict, equipment_base: dict) -> int:
+    """Writes spec/fixtures/sample/library: eight sessions, equipment, practice plan and the library oracle."""
+    shipped, _ = build()
+    pairs = library_sessions(manifest)
+    sessions = [doc for _, doc in pairs]
+    equipment = library_equipment(equipment_base)
+    plan = library_practice_plan(sessions[0])
+    summary = library_summary(sessions, equipment)
+    _check_library(summary, sessions, shipped)
+    for slug, doc in pairs:
+        write_json(out / "sessions" / f"{slug}.session.json", doc)
+    write_json(out / "equipment.json", equipment)
+    write_json(out / "practice-plan.json", plan)
+    seeds = {"jon-vs-alex": SEED, **{row[0]: row[6]["seed"] for row in OLDER_SESSIONS if row[6] is not None}}
+    write_json(out / "library.expected.json", {
+        "schemaVersion": "1.0.0",
+        "kind": "jovra.fixture.sampleLibrary",
+        "id": "SAMPLE-library",
+        "title": "The sample library: eight Sample sessions (402 min), the Sep 9 string job and the practice plan",
+        "covers": ["screens.md §0.6 sample library rows", "screen 3 Home tiles", "screen 8 Session library",
+                   "screen 15 Practice plan", "screen 16 Progress trends", "screen 18 String journal",
+                   "the sample-scope rule"],
+        "sessionFiles": [f"sessions/{slug}.session.json" for slug, _ in pairs],
+        "equipmentFile": "equipment.json",
+        "practicePlanFile": "practice-plan.json",
+        "mediaManifest": "../media-manifest.json",
+        "seeds": seeds,
+        "expected": summary,
+    })
+    return len(pairs) + 3

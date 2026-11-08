@@ -1,0 +1,148 @@
+S79 pgTAP assertions by T-DB id, green backend-db run 42525512294 (head 6d550c1).
+Source: pgtap-assertions-42525512294.txt (every assertion of every file); supabase test db: Files=18, Tests=831, Result: PASS.
+T-DB-71 needs two concurrent sessions and runs as supabase/scripts/concurrent_accept_smoke.py: see t-db-71-concurrent-accept-42525512294.txt.
+
+## T-DB-04
+commands_gateway_01_catalog.test.sql: ok 2 - T-DB-04: no S79 command is executable by authenticated, anon or service_role
+commands_gateway_01_catalog.test.sql: ok 3 - T-DB-04: no S79 command is executable by PUBLIC
+commands_gateway_01_catalog.test.sql: ok 4 - T-DB-04: authenticated has no EXECUTE on accept_quote
+commands_gateway_01_catalog.test.sql: ok 5 - T-DB-04: anon has no EXECUTE on accept_quote
+commands_gateway_01_catalog.test.sql: ok 6 - T-DB-04: authenticated has no EXECUTE on create_quote
+commands_gateway_01_catalog.test.sql: ok 7 - T-DB-04: authenticated has no EXECUTE on redeem_grant
+commands_gateway_01_catalog.test.sql: ok 8 - T-DB-04: anon has no EXECUTE on complete_upload_check
+
+## T-DB-05
+commands_gateway_01_catalog.test.sql: ok 20 - T-DB-05: no client or command role may read or write app_ops.settings
+commands_gateway_01_catalog.test.sql: ok 21 - T-DB-05: jovra_gateway and jovra_orchestrator still hold no table privilege anywhere
+commands_gateway_01_catalog.test.sql: ok 22 - T-DB-05: as jovra_gateway, select on quotes is denied (42501)
+commands_gateway_01_catalog.test.sql: ok 23 - T-DB-05: as jovra_gateway, app_ops is unreachable except through commands
+
+## T-DB-33
+commands_gateway_05_actor_audit.test.sql: ok 2 - T-DB-33: declare_source
+commands_gateway_05_actor_audit.test.sql: ok 3 - T-DB-33: create_camera_invite
+commands_gateway_05_actor_audit.test.sql: ok 4 - T-DB-33: revoke_camera_invite
+commands_gateway_05_actor_audit.test.sql: ok 5 - T-DB-33: approve_camera_invite
+commands_gateway_05_actor_audit.test.sql: ok 6 - T-DB-33: authorize_upload
+commands_gateway_05_actor_audit.test.sql: ok 7 - T-DB-33: attach_upload_id
+commands_gateway_05_actor_audit.test.sql: ok 8 - T-DB-33: abort_upload
+commands_gateway_05_actor_audit.test.sql: ok 9 - T-DB-33: create_grant (project_coach)
+commands_gateway_05_actor_audit.test.sql: ok 10 - T-DB-33: create_grant (lesson_view)
+commands_gateway_05_actor_audit.test.sql: ok 11 - T-DB-33: create_grant (film_view)
+commands_gateway_05_actor_audit.test.sql: ok 12 - T-DB-33: create_grant (lesson_clip_view)
+commands_gateway_05_actor_audit.test.sql: ok 13 - T-DB-33: list_pending_members
+commands_gateway_05_actor_audit.test.sql: ok 14 - T-DB-33: approve_member
+commands_gateway_05_actor_audit.test.sql: ok 15 - T-DB-33: revoke_grant
+commands_gateway_05_actor_audit.test.sql: ok 16 - T-DB-33: revoke_member
+commands_gateway_05_actor_audit.test.sql: ok 17 - T-DB-33: create_share_link
+commands_gateway_05_actor_audit.test.sql: ok 18 - T-DB-33: create_quote
+commands_gateway_05_actor_audit.test.sql: ok 19 - T-DB-33: accept_quote
+commands_gateway_05_actor_audit.test.sql: ok 20 - T-DB-33: review_job
+commands_gateway_05_actor_audit.test.sql: ok 21 - T-DB-33: request_deletion (project)
+commands_gateway_05_actor_audit.test.sql: ok 22 - T-DB-33: request_deletion (source)
+commands_gateway_05_actor_audit.test.sql: ok 23 - T-DB-33: request_deletion (artifact)
+commands_gateway_05_actor_audit.test.sql: ok 24 - T-DB-33: request_deletion (lesson)
+commands_gateway_05_actor_audit.test.sql: ok 25 - T-DB-33: request_deletion (lesson_clip)
+commands_gateway_05_actor_audit.test.sql: ok 26 - T-DB-33: request_deletion (another user's account)
+commands_gateway_05_actor_audit.test.sql: ok 27 - T-DB-33: approve_clip_share
+commands_gateway_05_actor_audit.test.sql: ok 28 - T-DB-33: revoke_clip_share
+commands_gateway_05_actor_audit.test.sql: ok 29 - T-DB-33: audit_denial wrote one denied row per refused command (27)
+commands_gateway_05_actor_audit.test.sql: ok 30 - T-DB-33: no refused command left an allowed row (its own rows rolled back)
+
+## T-DB-34
+commands_gateway_04_money.test.sql: ok 15 - T-DB-34: accept_quote creates the job in consented
+commands_gateway_04_money.test.sql: ok 16 - T-DB-34: a retry with the same key is a replay
+commands_gateway_04_money.test.sql: ok 17 - T-DB-34: the replay returns the same job
+commands_gateway_04_money.test.sql: ok 18 - T-DB-34: one job for the quote
+commands_gateway_04_money.test.sql: ok 19 - T-DB-34: one held reservation for the quote
+commands_gateway_04_money.test.sql: ok 20 - T-DB-34: one cap_open commitment for the quote's cap (story 199: one charge)
+commands_gateway_04_money.test.sql: ok 26 - T-DB-34 / story 185: an expired quote is P0410 and needs a fresh quote
+commands_gateway_04_money.test.sql: ok 29 - T-DB-34: a different inputs hash is P0409 inputs_changed
+commands_gateway_04_money.test.sql: ok 32 - T-DB-34: a source rejected since the quote makes the presented (correct) hash stale: P0409 inputs_changed
+
+## T-DB-38
+commands_gateway_02_uploads_cameras.test.sql: ok 20 - T-DB-38: completion with a missing part is refused (P0409 parts_incomplete)
+commands_gateway_02_uploads_cameras.test.sql: ok 23 - T-DB-38: completion with a wrong last-part size is refused (P0409 part_size_mismatch)
+commands_gateway_02_uploads_cameras.test.sql: ok 24 - T-DB-38: a session of project A bound to project B's source is refused (wrong-project completion)
+commands_gateway_02_uploads_cameras.test.sql: ok 26 - T-DB-38: the superseded (stale) session can never complete
+
+## T-DB-39
+commands_gateway_02_uploads_cameras.test.sql: ok 39 - T-DB-39: redeeming the same code twice is P0404
+commands_gateway_02_uploads_cameras.test.sql: ok 40 - T-DB-39: issue_guest_capability before the host's approval is P0404
+commands_gateway_02_uploads_cameras.test.sql: ok 43 - T-DB-39: issue_guest_capability with another device key is P0404
+commands_gateway_02_uploads_cameras.test.sql: ok 49 - T-DB-39: redeeming after redeem_by is P0404
+commands_gateway_02_uploads_cameras.test.sql: ok 52 - T-DB-39: redeeming after revoke is P0404
+commands_gateway_02_uploads_cameras.test.sql: ok 54 - T-DB-39: a revoked invite gets no new capability
+
+## T-DB-51
+commands_gateway_03_grants_links_deletion.test.sql: ok 26 - T-DB-51: redeeming the project_coach code leaves the membership pending
+commands_gateway_03_grants_links_deletion.test.sql: ok 28 - T-DB-51: has_project_role is false while the membership is pending
+commands_gateway_03_grants_links_deletion.test.sql: ok 29 - T-DB-51: the pending coach sees no project row
+commands_gateway_03_grants_links_deletion.test.sql: ok 33 - T-DB-51: the owner approves with the matching code
+commands_gateway_03_grants_links_deletion.test.sql: ok 34 - T-DB-51: after approve_member the coach holds the coach role
+commands_gateway_03_grants_links_deletion.test.sql: ok 36 - T-DB-51: revoke_grant revoked the membership it created, in the same transaction
+commands_gateway_03_grants_links_deletion.test.sql: ok 37 - T-DB-51: the revoked coach holds no role at once
+
+## T-DB-54
+commands_gateway_02_uploads_cameras.test.sql: ok 4 - T-DB-54: a title over 120 characters is P0422 field_too_long:title with no DETAIL (no row values)
+commands_gateway_02_uploads_cameras.test.sql: ok 34 - T-DB-54: a 61-character invite label is P0422 field_too_long:display_label with no DETAIL
+
+## T-DB-56
+commands_gateway_04_money.test.sql: ok 39 - T-DB-56: identical work under a second quote while a reservation is held is P0409
+commands_gateway_04_money.test.sql: ok 41 - T-DB-56: accepting the superseding quote tops the held reservation up
+commands_gateway_04_money.test.sql: ok 55 - T-DB-56 / story 186: held caps plus the new cap beyond the owner's open cap is P0402
+commands_gateway_04_money.test.sql: ok 56 - T-DB-56: today's commitments plus the new cap beyond the environment ceiling is P0402
+
+## T-DB-58
+commands_gateway_03_grants_links_deletion.test.sql: ok 12 - T-DB-58: a stranger redeeming a forwarded project_coach code is P0404
+commands_gateway_03_grants_links_deletion.test.sql: ok 13 - T-DB-58: ... a forwarded lesson_coach code is P0404
+commands_gateway_03_grants_links_deletion.test.sql: ok 14 - T-DB-58: ... a forwarded lesson_view code is P0404
+commands_gateway_03_grants_links_deletion.test.sql: ok 15 - T-DB-58: ... a forwarded film_view code is P0404
+commands_gateway_03_grants_links_deletion.test.sql: ok 16 - T-DB-58: ... a forwarded lesson_clip_view code is P0404
+commands_gateway_03_grants_links_deletion.test.sql: ok 17 - T-DB-58: identical to an unknown code
+commands_gateway_03_grants_links_deletion.test.sql: ok 18 - T-DB-58: the invitee with an unconfirmed email gets P0404
+commands_gateway_03_grants_links_deletion.test.sql: ok 19 - T-DB-58: none of the refused redemptions bound a grantee
+commands_gateway_03_grants_links_deletion.test.sql: ok 20 - T-DB-58: the intended invitee redeems the lesson_coach code
+commands_gateway_03_grants_links_deletion.test.sql: ok 21 - T-DB-58: the intended invitee redeems the lesson_view code
+commands_gateway_03_grants_links_deletion.test.sql: ok 22 - T-DB-58: the intended invitee redeems the film_view code
+commands_gateway_03_grants_links_deletion.test.sql: ok 23 - T-DB-58: the intended invitee redeems the lesson_clip_view code
+commands_gateway_03_grants_links_deletion.test.sql: ok 30 - T-DB-58: the approval view shows the verified email masked, and no display_name
+commands_gateway_03_grants_links_deletion.test.sql: ok 31 - T-DB-58: the redeemer-chosen display name never reaches the owner's approval view
+
+## T-DB-59
+commands_gateway_04_money.test.sql: ok 11 - T-DB-59: create_quote naming B's story plan in A is P0404
+commands_gateway_04_money.test.sql: ok 12 - T-DB-59: create_quote naming B's plan version under A's plan is P0404
+commands_gateway_04_money.test.sql: ok 13 - T-DB-59: the former coach of B cannot quote in B
+commands_gateway_04_money.test.sql: ok 46 - T-DB-59: review_job naming B's plan version is P0404
+
+## T-DB-60
+commands_gateway_04_money.test.sql: ok 33 - T-DB-60: the first plan-by-job acceptance for P2 holds
+commands_gateway_04_money.test.sql: ok 34 - T-DB-60: the plan-by-job hold is keyed with planRevision null (core.output_spec_sha256)
+commands_gateway_04_money.test.sql: ok 36 - T-DB-60: the second plan-by-job acceptance of the same plan and output is P0409 duplicate_work
+commands_gateway_04_money.test.sql: ok 37 - T-DB-60: one held reservation for P2
+commands_gateway_04_money.test.sql: ok 47 - T-DB-60: a revision to V2 within the remaining reservation continues the same job
+commands_gateway_04_money.test.sql: ok 48 - T-DB-60: the job and its hold both moved to (P1, V2, core.output_spec_sha256 with planRevision 2)
+commands_gateway_04_money.test.sql: ok 50 - T-DB-60: the revise moved the reservation key, so the quote for V2 is refused (never a second hold)
+
+## T-DB-61
+commands_gateway_04_money.test.sql: ok 57 - T-DB-61: with no spend_limits rows at all, accept_quote is P0402
+commands_gateway_04_money.test.sql: ok 58 - T-DB-61: the default owner row alone (no environment row) is P0402
+commands_gateway_04_money.test.sql: ok 59 - T-DB-61: a NULL environment ceiling is P0402 (never a NULL comparison that passes)
+commands_gateway_04_money.test.sql: ok 60 - T-DB-61: a NULL owner open cap is P0402
+
+## T-DB-71
+PASS  T-DB-71 setup: two owners, verified sources and plans (committed)
+PASS  T-DB-71 setup: an environment ceiling that fits one of the two caps  (caps [227793, 227793])
+PASS  T-DB-71: while A is open, B waits on the spend advisory lock  (waiting=1)
+PASS  T-DB-71: exactly one of two concurrent acceptances succeeds, the other is P0402 budget_exceeded  (A=consented B=P0402)
+PASS  T-DB-71: B returned only after A committed (the ceiling checks were serialized)  (B took 3.1s)
+PASS  T-DB-71: spend_commitments holds one cap_open row and one job exists for the two quotes  (commitments/ledger/jobs=1 1 1)
+PASS  T-DB-71 cleanup: users, projects and the limits row removed
+
+## T-DB-47
+commands_gateway_03_grants_links_deletion.test.sql: ok 56 - T-DB-47: no jv[igslhc]_ value in any app_ops row, grant or invite
+
+## T-DB-57
+commands_gateway_01_catalog.test.sql: ok 11 - T-DB-57: jovra_orchestrator cannot execute any user-route command
+commands_gateway_01_catalog.test.sql: ok 12 - T-DB-57: the §13.1 lint query returns zero rows (no function executable by both roles)
+commands_gateway_01_catalog.test.sql: ok 13 - T-DB-57: authorize_upload('render_host', ...) is P0422 actor_kind_not_accepted
+commands_gateway_01_catalog.test.sql: ok 14 - T-DB-57: attach_upload_id refuses a render actor the same way

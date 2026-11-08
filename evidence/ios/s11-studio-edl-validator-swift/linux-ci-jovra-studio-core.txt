@@ -1,0 +1,406 @@
+# jovra-studio-core (Studio workflow) for PR #418, commit 851df42
+# https://github.com/Navigata1/jovra/actions/runs/42529480778/job/128880275847 (ubuntu-latest, container swift:6.1)
+# Excerpt: the container's Swift version and the full 'swift test (JovraStudioCore)' step.
+2026-11-08T22:17:52.1981608Z SWIFT_VERSION=swift-6.1.3-RELEASE
+﻿2026-11-08T22:17:58.5561987Z ##[group]Run swift test
+2026-11-08T22:17:58.5562193Z ^[[36;1mswift test^[[0m
+2026-11-08T22:17:58.5562436Z shell: sh -e {0}
+2026-11-08T22:17:58.5562567Z ##[endgroup]
+2026-11-08T22:17:59.8129059Z [0/5] Write sources
+2026-11-08T22:17:59.9122738Z [1/5] Write swift-version-24593BA9C3E375BF.txt
+2026-11-08T22:18:02.2960179Z [3/7] Emitting module StudioConsumerGenerator
+2026-11-08T22:18:02.4094323Z [5/8] Wrapping AST for StudioConsumerGenerator for debugging
+2026-11-08T22:18:02.4097936Z [6/8] Write Objects.LinkFileList
+2026-11-08T22:18:02.6555034Z [7/8] Linking StudioConsumerGenerator-tool
+2026-11-08T22:18:03.6638882Z warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+2026-11-08T22:18:03.6639455Z     /__w/jovra/jovra/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+2026-11-08T22:18:03.6798266Z Building for debugging...
+2026-11-08T22:18:03.6858455Z [1/27] Write sources
+2026-11-08T22:18:03.6858775Z [4/27] Copying stats.v1.json
+2026-11-08T22:18:03.6859063Z [5/27] Copying points.v1.json
+2026-11-08T22:18:03.6859332Z [6/27] Write sources
+2026-11-08T22:18:03.7877345Z [7/27] Write swift-version-24593BA9C3E375BF.txt
+2026-11-08T22:18:04.0393336Z [9/64] Emitting module StudioConsumerGenerator
+2026-11-08T22:18:04.3017033Z [13/66] Wrapping AST for StudioConsumerGenerator for debugging
+2026-11-08T22:18:04.3029027Z [14/66] Write Objects.LinkFileList
+2026-11-08T22:18:04.3445285Z [15/66] Wrapping AST for StudioConsumerGenerator for debugging
+2026-11-08T22:18:04.3454788Z [16/66] Write Objects.LinkFileList
+2026-11-08T22:18:04.6167265Z [17/66] Linking StudioConsumerGenerator
+2026-11-08T22:18:04.6740784Z [18/66] Linking StudioConsumerGenerator-tool
+2026-11-08T22:18:04.6867645Z [19/66] Discover Studio fixture consumers
+2026-11-08T22:18:04.6877570Z [20/66] Write sources
+2026-11-08T22:18:18.7686375Z [54/76] Emitting module JovraCore
+2026-11-08T22:18:18.9266260Z [66/77] Wrapping AST for JovraCore for debugging
+2026-11-08T22:18:21.0229340Z [76/95] Emitting module JovraStudioCore
+2026-11-08T22:18:28.7532372Z [86/96] Wrapping AST for JovraStudioCore for debugging
+2026-11-08T22:18:29.6204742Z [88/113] Emitting module JovraStudioCoreTests
+2026-11-08T22:18:30.9328754Z [110/119] /__w/jovra/jovra/ios/Packages/JovraStudioCore/.build/x86_64-unknown-linux-gnu/debug/JovraStudioCorePackageDiscoveredTests.derived/all-discovered-tests.swift
+2026-11-08T22:18:30.9330956Z [111/119] Write sources
+2026-11-08T22:18:30.9803380Z [112/119] Wrapping AST for JovraStudioCoreTests for debugging
+2026-11-08T22:18:32.0292112Z [116/122] Emitting module JovraStudioCorePackageDiscoveredTests
+2026-11-08T22:18:32.0785261Z [117/123] /__w/jovra/jovra/ios/Packages/JovraStudioCore/.build/x86_64-unknown-linux-gnu/debug/JovraStudioCorePackageTests.derived/runner.swift
+2026-11-08T22:18:32.0786499Z [118/123] Write sources
+2026-11-08T22:18:32.1298677Z [119/123] Wrapping AST for JovraStudioCorePackageDiscoveredTests for debugging
+2026-11-08T22:18:32.8332216Z [121/125] Emitting module JovraStudioCorePackageTests
+2026-11-08T22:18:32.9367170Z [123/126] Wrapping AST for JovraStudioCorePackageTests for debugging
+2026-11-08T22:18:32.9369770Z [124/126] Write Objects.LinkFileList
+2026-11-08T22:18:33.3220720Z [125/126] Linking JovraStudioCorePackageTests.xctest
+2026-11-08T22:18:33.3241145Z Build complete! (33.76s)
+2026-11-08T22:18:33.3464581Z Test Suite 'All tests' started at 2026-11-08 22:18:33.331
+2026-11-08T22:18:33.3465027Z Test Suite 'debug.xctest' started at 2026-11-08 22:18:33.332
+2026-11-08T22:18:33.3465282Z Test Suite 'debug.xctest' passed at 2026-11-08 22:18:33.332
+ Executed 0 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+2026-11-08T22:18:33.3466391Z Test Suite 'All tests' passed at 2026-11-08 22:18:33.332
+ Executed 0 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+2026-11-08T22:18:33.3467370Z ◇ Test run started.
+2026-11-08T22:18:33.3467693Z ↳ Testing Library Version: 6.1.3 (1d1f7e489c9c606)
+2026-11-08T22:18:33.3468056Z ↳ Target Platform: x86_64-unknown-linux-gnu
+2026-11-08T22:18:33.3468408Z ◇ Suite "EDL stage allowlist (SD6b)" started.
+2026-11-08T22:18:33.3468798Z ◇ Suite "Studio contracts: strict decoding" started.
+2026-11-08T22:18:33.3469167Z ◇ Suite "Studio fixture locator" started.
+2026-11-08T22:18:33.3469488Z ◇ Suite "Studio contracts: schema set" started.
+2026-11-08T22:18:33.3469819Z ◇ Suite "EDL exact arithmetic" started.
+2026-11-08T22:18:33.3470163Z ◇ Suite "Studio contracts: fixture manifest" started.
+2026-11-08T22:18:33.3470596Z ◇ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" started.
+2026-11-08T22:18:33.3471009Z ◇ Suite "Studio record header" started.
+2026-11-08T22:18:33.3471388Z ◇ Suite "Studio contracts: vector consumers" started.
+2026-11-08T22:18:33.3471778Z ◇ Suite "EDL validator: parity with edl.py" started.
+2026-11-08T22:18:33.3472131Z ◇ Suite "Studio contracts: invalid cases" started.
+2026-11-08T22:18:33.3472906Z ◇ Test "explicit null and absence stay distinct: a required nullable field must be present" started.
+2026-11-08T22:18:33.3473417Z ◇ Suite "Studio contracts: time" started.
+2026-11-08T22:18:33.3473838Z ◇ Test "an unknown property is refused, at the root and nested" started.
+2026-11-08T22:18:33.3474442Z ◇ Suite "Studio contracts: record round-trips" started.
+2026-11-08T22:18:33.3474927Z ◇ Test "a duplicate member name is refused before any schema check" started.
+2026-11-08T22:18:33.3475507Z ◇ Test "an integral float (744.0) in a frame field is refused; 744 is accepted" started.
+2026-11-08T22:18:33.3476151Z ◇ Test "decimals survive exactly: an observation's confidence 0.62 round-trips as 0.62" started.
+2026-11-08T22:18:33.3476718Z ◇ Test "operations are read from the plan's fields" started.
+2026-11-08T22:18:33.3477211Z ◇ Test "a document of another contract is refused by name" started.
+2026-11-08T22:18:33.3477893Z ◇ Test "the Rally Pulse 9:16 fixture is valid under the contract and refused by S1 for reframe and music" started.
+2026-11-08T22:18:33.3478626Z ◇ Test "the writer refuses a value that breaks its schema (an id ending in a newline)" started.
+2026-11-08T22:18:33.3479148Z ◇ Test "narration and the warm grade are refused in S1" started.
+2026-11-08T22:18:33.3479631Z ◇ Test "an exponent integer (7.44e2) is not an integer either" started.
+2026-11-08T22:18:33.3480228Z ◇ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" started.
+2026-11-08T22:18:33.3480668Z ◇ Test "a fixture that does not exist is an error naming the path, never a silent empty read" started.
+2026-11-08T22:18:33.3481260Z ◇ Test "an id pattern refuses a trailing newline and accepts the id" started.
+2026-11-08T22:18:33.3482331Z ◇ Test "a stage that enables every operation the plan uses refuses nothing" started.
+2026-11-08T22:18:33.3482794Z ◇ Test "every keyword the Studio schemas use is implemented, every $ref resolves, every pattern is portable" started.
+2026-11-08T22:18:33.3483189Z ◇ Test "malformed JSON is unreadable, never partially decoded" started.
+2026-11-08T22:18:33.3483459Z ◇ Test "S1 enables exactly the spec's list" started.
+2026-11-08T22:18:33.3483793Z ◇ Test "the loader reports an unsupported keyword, a dangling $ref and a non-portable escape" started.
+2026-11-08T22:18:33.3484415Z ◇ Test "oneOf needs exactly one match, if/then applies only when the condition holds" started.
+2026-11-08T22:18:33.3484863Z ◇ Test "the embedded schemas equal spec/schemas/studio byte for byte, and the models were generated from them" started.
+2026-11-08T22:18:33.3485276Z ◇ Test "fractions compare exactly where binary floating point would not" started.
+2026-11-08T22:18:33.3485703Z ◇ Test "products beyond Int64 stay exact" started.
+2026-11-08T22:18:33.3486030Z ◇ Test "finding 8: a plan naming another project is refused against this project's records" started.
+2026-11-08T22:18:33.3486485Z ◇ Test "finding 0: a frame looked up without its window's interval maps half-open (freezes and overlay moments)" started.
+2026-11-08T22:18:33.3486904Z ◇ Test "finding 2: a null keeperId does not switch contact protection off" started.
+2026-11-08T22:18:33.3487252Z ◇ Test "the repository's fixtures, module pages and Swift consumers agree" started.
+2026-11-08T22:18:33.3487599Z ◇ Test "ECMA-262 anchors: $ is rewritten outside character classes only" started.
+2026-11-08T22:18:33.3488031Z ◇ Test "finding 7: the alternate bed returning mid-segment, and an alternate bed at a dissolve without an audio dip" started.
+2026-11-08T22:18:33.3488511Z ◇ Test "finding 1: re-showing a live moment as a second 1x live segment is a replay without its label" started.
+2026-11-08T22:18:33.3488898Z ◇ Test "a page that says swift: consumed with no Swift consumer fails" started.
+2026-11-08T22:18:33.9838028Z ◇ Test "the records page is consumed only while its decoders stay registered" started.
+2026-11-08T22:18:33.9839119Z ◇ Test "finding 0: the first frame of a restarted interval maps through that interval (half-open coverage)" started.
+2026-11-08T22:18:33.9840346Z ◇ Test "a new kind whose page says swift: pending passes unconsumed" started.
+2026-11-08T22:18:33.9840966Z ◇ Test "a new fixture kind with no module page fails" started.
+2026-11-08T22:18:33.9844572Z ◇ Test "the Sample project lock names jovra.project-lock version 1 and is Sample data" started.
+2026-11-08T22:18:33.9845368Z ◇ Test "an edit plan names version 2 of its contract" started.
+2026-11-08T22:18:33.9846215Z ◇ Test "every registered vector checker runs on at least one case of its kind" started.
+2026-11-08T22:18:33.9846950Z ◇ Test "a record that is not a JSON object with a schemaVersion string is an error" started.
+2026-11-08T22:18:33.9847601Z ◇ Test "a record without a sample flag is not Sample data" started.
+2026-11-08T22:18:33.9848254Z ◇ Test "every finding code except the stage gate is a code edl.py raises" started.
+2026-11-08T22:18:33.9849038Z ◇ Test "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+2026-11-08T22:18:33.9849879Z ◇ Test "the trusted context is built from the stored records, with the reviewed sync map's coverage" started.
+2026-11-08T22:18:33.9850705Z ◇ Test "a boolean speed is badSpeed in the validator itself, not only in the schema layer" started.
+2026-11-08T22:18:33.9851411Z ◇ Test "the typed clean alternate equals the stored typed record" started.
+2026-11-08T22:18:33.9852129Z ◇ Test "the two clean-alternate pairs are reproduced byte for byte by cleanAlternate" started.
+2026-11-08T22:18:33.9852804Z ◇ Test "every valid edit-plan record passes as stored" started.
+2026-11-08T22:18:33.9853524Z ◇ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" started.
+2026-11-08T22:18:33.9854343Z ◇ Test "validate() without a trusted context returns contextMissing" started.
+2026-11-08T22:18:33.9855119Z ◇ Test "the trailing-newline id and hash cases are refused, although Python's re.search accepts them (finding 6)" started.
+2026-11-08T22:18:33.9855765Z ◇ Test "every schema-layer invalid case of a registered schema is refused" started.
+2026-11-08T22:18:33.9856364Z ◇ Test "reference-layer cases pass the Swift decoder unless they carry an integral float" started.
+2026-11-08T22:18:33.9857138Z ◇ Passing 1 argument text → "{"schemaVersion": "jovra.observation/1"" to "malformed JSON is unreadable, never partially decoded"
+2026-11-08T22:18:33.9857816Z ◇ Passing 1 argument text → "[1, 2" to "malformed JSON is unreadable, never partially decoded"
+2026-11-08T22:18:33.9858394Z ◇ Passing 1 argument text → "{"a": 01}" to "malformed JSON is unreadable, never partially decoded"
+2026-11-08T22:18:33.9858991Z ◇ Passing 1 argument text → "{"a": "\ud800"}" to "malformed JSON is unreadable, never partially decoded"
+2026-11-08T22:18:33.9859804Z ◇ Passing 1 argument text → "{} {}" to "malformed JSON is unreadable, never partially decoded"
+2026-11-08T22:18:33.9860389Z   rally-pulse-portrait under S1: stageNotEnabled: alt-bed is not enabled in this build; it is enabled in S2
+2026-11-08T22:18:33.9861056Z   rally-pulse-portrait under S1: stageNotEnabled: multi-angle is not enabled in this build; it is enabled in S2
+2026-11-08T22:18:33.9861701Z   rally-pulse-portrait under S1: stageNotEnabled: music is not enabled in this build; it is enabled in S5
+2026-11-08T22:18:33.9862327Z   rally-pulse-portrait under S1: stageNotEnabled: reframe is not enabled in this build; it is enabled in S5
+2026-11-08T22:18:33.9863125Z ◇ Passing 2 arguments pattern → "^[a-z]+$", expected → "^[a-z]+\z" to "ECMA-262 anchors: $ is rewritten outside character classes only"
+2026-11-08T22:18:33.9863917Z ◇ Passing 2 arguments pattern → "^[$]$", expected → "^[$]\z" to "ECMA-262 anchors: $ is rewritten outside character classes only"
+2026-11-08T22:18:33.9864914Z ◇ Passing 2 arguments pattern → "^a\$$", expected → "^a\$\z" to "ECMA-262 anchors: $ is rewritten outside character classes only"
+2026-11-08T22:18:33.9865687Z ◇ Passing 2 arguments pattern → "^(a|b)$", expected → "^(a|b)\z" to "ECMA-262 anchors: $ is rewritten outside character classes only"
+2026-11-08T22:18:33.9866408Z Studio fixture manifest: 39 kinds; consumers: ["ContractsConsumer", "EDLConsumer"]
+2026-11-08T22:18:33.9866838Z   compile page=compile swift=pending consumed=false files=1
+2026-11-08T22:18:33.9867208Z   director page=planner swift=pending consumed=false files=1
+2026-11-08T22:18:33.9867573Z   edl-context page=edl swift=consumed consumed=true files=1
+2026-11-08T22:18:33.9867966Z   job-transitions page=jobstate swift=pending consumed=false files=1
+2026-11-08T22:18:33.9868397Z   jovra.broll-catalog/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:33.9868842Z   jovra.camera-invite/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:33.9869284Z   jovra.credit-classes/1 page=ledger swift=pending consumed=true files=1
+2026-11-08T22:18:33.9869742Z   jovra.delivered-artifact/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:33.9870177Z   jovra.edit-plan/2 page=edl swift=consumed consumed=true files=7
+2026-11-08T22:18:34.5605471Z   jovra.keeper-catalog/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:34.5606572Z   jovra.lesson/1 page=records swift=consumed consumed=true files=3
+2026-11-08T22:18:34.5607121Z   jovra.observation/1 page=records swift=consumed consumed=true files=3
+2026-11-08T22:18:34.5607667Z   jovra.project-lock/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:34.5608248Z   jovra.pts-table/1 page=normalization swift=pending consumed=false files=1
+2026-11-08T22:18:34.5608785Z   jovra.quote/1 page=ledger swift=pending consumed=true files=3
+2026-11-08T22:18:34.5609356Z   jovra.reference-catalog/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:34.5610053Z   jovra.render-job-transitions/1 page=jobstate swift=pending consumed=true files=1
+2026-11-08T22:18:34.5610666Z   jovra.render-job/1 page=jobstate swift=pending consumed=true files=2
+2026-11-08T22:18:34.5611277Z   jovra.room-transcript/1 page=room swift=pending consumed=false files=4
+2026-11-08T22:18:34.5611843Z   jovra.room/1 page=room swift=pending consumed=false files=0
+2026-11-08T22:18:34.5612402Z   jovra.source-manifest/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:34.5613018Z   jovra.storage-providers/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:34.5613608Z   jovra.story-brief/1 page=records swift=consumed consumed=true files=2
+2026-11-08T22:18:34.5614383Z   jovra.story-profile-catalog/1 page=records swift=consumed consumed=true files=1
+2026-11-08T22:18:34.5615068Z   jovra.studio-fixture.invalid-cases/1 page=core swift=pending consumed=false files=30
+2026-11-08T22:18:34.5615739Z   jovra.studio-fixture.vectors/1 page=core swift=pending consumed=false files=15
+2026-11-08T22:18:34.5616897Z   jovra.sync-map/1 page=sync swift=pending consumed=true files=1
+2026-11-08T22:18:34.5617458Z   jovra.usage-reservation/1 page=ledger swift=pending consumed=true files=2
+2026-11-08T22:18:34.5618020Z   keepers page=keepers swift=pending consumed=false files=1
+2026-11-08T22:18:34.5618534Z   ledger page=ledger swift=pending consumed=false files=1
+2026-11-08T22:18:34.5619074Z   normalization page=normalization swift=pending consumed=false files=1
+2026-11-08T22:18:34.5619630Z   planner page=planner swift=pending consumed=false files=1
+2026-11-08T22:18:34.5620176Z   progress-comparison page=progress swift=pending consumed=false files=1
+2026-11-08T22:18:34.5620751Z   quote-credits page=ledger swift=pending consumed=false files=1
+2026-11-08T22:18:34.5621254Z   room page=room swift=pending consumed=false files=1
+2026-11-08T22:18:34.5621759Z   sample-truth page=bundle swift=pending consumed=false files=1
+2026-11-08T22:18:34.5622280Z   sound-delay page=sync swift=pending consumed=false files=1
+2026-11-08T22:18:34.5622795Z   staleness page=keepers swift=pending consumed=false files=1
+2026-11-08T22:18:34.5623288Z   sync-fit page=sync swift=pending consumed=false files=1
+2026-11-08T22:18:34.5624176Z ◇ Passing 1 argument text → "jovra.project-lock/1
+2026-11-08T22:18:34.5624692Z " to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5625808Z ◇ Passing 1 argument text → "jovra.project-lock" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5626874Z ◇ Passing 1 argument text → "jovra.project-lock/0" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5627924Z ◇ Passing 1 argument text → "jovra.project-lock/01" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5628970Z ◇ Passing 1 argument text → "jovra.project-lock/1.0" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5630024Z ◇ Passing 1 argument text → "jovra.Project-Lock/1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5631005Z ◇ Passing 1 argument text → "jovra./1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5632014Z ◇ Passing 1 argument text → "JOVRA.project-lock/1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5632990Z ◇ Passing 1 argument text → "other.project-lock/1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5634162Z ◇ Passing 1 argument text → " jovra.project-lock/1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>"
+2026-11-08T22:18:34.5634872Z   edl-context restart-first-frame: valid-plan
+2026-11-08T22:18:34.5635588Z   edl-context restart-extrapolated-session: sessionTimeMismatch: segment c05: sessionInUs must be 2000000000 from the sync map
+2026-11-08T22:18:34.5636304Z   edl-context window-ends-at-restart: valid-plan
+2026-11-08T22:18:34.5636900Z ◇ Test "zero denominators and overflow are errors, never wrong numbers" started.
+2026-11-08T22:18:34.5637498Z   clean alternate court-memories-storyboard: 8828 bytes, identical
+2026-11-08T22:18:34.5638053Z   clean alternate rally-pulse-portrait: 5715 bytes, identical
+2026-11-08T22:18:34.5638791Z ◇ Test "NTSC frames: 30000/1001 fps maps microseconds to frames exactly" started.
+2026-11-08T22:18:34.5639443Z ◇ Test "half-up rounds .5 away from minus infinity, for both signs" started.
+2026-11-08T22:18:34.8135046Z ◇ Test "it is the same rule as the core percentage (Percent.pct is half-up of 100n/d)" started.
+2026-11-08T22:18:34.8136757Z   edl-context dissolve-across-restart: transitionHandle: transition needs source handles [107996,108004) inside the same coverage (never across a gap)
+2026-11-08T22:18:34.8137666Z ◇ Test "a rational media time converts to exact microseconds" started.
+2026-11-08T22:18:34.8138794Z   valid edit-plan.coach-cut-serve: 7 segments, 192 s, motion false, needsCleanAlternate false
+2026-11-08T22:18:34.8139474Z   valid edit-plan.court-memories-final: 5 segments, 258 s, motion true, needsCleanAlternate true
+2026-11-08T22:18:34.8140162Z   valid edit-plan.court-memories-storyboard.clean: 6 segments, 258 s, motion false, needsCleanAlternate false
+2026-11-08T22:18:34.8140907Z   valid edit-plan.court-memories-storyboard: 6 segments, 258 s, motion true, needsCleanAlternate true
+2026-11-08T22:18:34.8141574Z   valid edit-plan.match-broadcast-set-1: 4 segments, 300 s, motion true, needsCleanAlternate true
+2026-11-08T22:18:34.8142256Z   valid edit-plan.rally-pulse-portrait.clean: 4 segments, 45 s, motion false, needsCleanAlternate false
+2026-11-08T22:18:34.8142922Z   valid edit-plan.rally-pulse-portrait: 4 segments, 45 s, motion true, needsCleanAlternate true
+2026-11-08T22:18:34.8143474Z EDL parity: 79 edit-plan invalid cases, 79 match, 0 mismatch(es)
+2026-11-08T22:18:34.8143902Z   code                         cases  matched
+2026-11-08T22:18:34.8144447Z   badChapters                  1      1
+2026-11-08T22:18:34.8144815Z   badInteger                   1      1
+2026-11-08T22:18:34.8145176Z   badOutput                    2      2
+2026-11-08T22:18:34.8145530Z   badOverlays                  1      1
+2026-11-08T22:18:34.8146106Z   badReframe                   1      1
+2026-11-08T22:18:34.8146460Z   badSpeed                     2      2
+2026-11-08T22:18:34.8146808Z   badTemplate                  1      1
+2026-11-08T22:18:34.8147161Z   bedCoverage                  1      1
+2026-11-08T22:18:34.8147525Z   bedOutOfSync                 1      1
+2026-11-08T22:18:34.8147893Z   bedSwitchNotAtBoundary       2      2
+2026-11-08T22:18:34.8148254Z   chronology                   1      1
+2026-11-08T22:18:34.8148598Z   cleanFrameRule               1      1
+2026-11-08T22:18:34.8148951Z   consentMissing               3      3
+2026-11-08T22:18:34.8149308Z   contactProtected             1      1
+2026-11-08T22:18:34.8149680Z   contactUnprotected           1      1
+2026-11-08T22:18:34.8150046Z   courtBedOffLive              2      2
+2026-11-08T22:18:34.8150405Z   coverageMismatch             1      1
+2026-11-08T22:18:34.8150762Z   disclosureMissing            1      1
+2026-11-08T22:18:34.8151127Z   duplicateId                  1      1
+2026-11-08T22:18:34.8151486Z   durationMismatch             1      1
+2026-11-08T22:18:34.8151852Z   durationOutsideProfile       1      1
+2026-11-08T22:18:34.8152218Z   fadeTooShort                 3      3
+2026-11-08T22:18:34.8152583Z   forbiddenField               3      3
+2026-11-08T22:18:34.8153170Z   framingAspect                1      1
+2026-11-08T22:18:34.8153530Z   freezeDuration               1      1
+2026-11-08T22:18:34.8153890Z   holdBedNotContinuous         1      1
+2026-11-08T22:18:34.8154373Z   holdBedNotDeadTime           1      1
+2026-11-08T22:18:34.8154734Z   holdBedOverLive              1      1
+2026-11-08T22:18:34.8155097Z   incompleteCoverage           1      1
+2026-11-08T22:18:34.8155464Z   kindMismatch                 2      2
+2026-11-08T22:18:34.8155838Z   liveWithoutCourtAudio        1      1
+2026-11-08T22:18:34.8156205Z   motionInCleanAlternate       1      1
+2026-11-08T22:18:34.8156570Z   opNotAllowed                 3      3
+2026-11-08T22:18:34.8156932Z   outputGap                    1      1
+2026-11-08T22:18:34.8157287Z   outsideCoverage              1      1
+2026-11-08T22:18:34.8157645Z   overlayNotAllowed            1      1
+2026-11-08T22:18:34.8158015Z   overlayOutsideMoment         2      2
+2026-11-08T22:18:34.8158386Z   panTooFast                   1      1
+2026-11-08T22:18:34.8158746Z   projectMismatch              1      1
+2026-11-08T22:18:34.8159109Z   provenanceMismatch           1      1
+2026-11-08T22:18:34.8159477Z   provenanceNotAllowed         1      1
+2026-11-08T22:18:34.8159847Z   reframeNotReviewed           1      1
+2026-11-08T22:18:34.8160214Z   replayBeforeOriginal         1      1
+2026-11-08T22:18:34.8160582Z   replayOutsideOriginal        1      1
+2026-11-08T22:18:34.8161091Z   replayWithoutLabel           1      1
+2026-11-08T22:18:34.8161466Z   rightsMissing                4      4
+2026-11-08T22:18:34.8161842Z   sessionTimeMismatch          1      1
+2026-11-08T22:18:34.8162202Z   staleRevision                3      3
+2026-11-08T22:18:34.8162568Z   transitionHandle             1      1
+2026-11-08T22:18:34.8162925Z   transitionNotAllowed         2      2
+2026-11-08T22:18:34.8163291Z   transitionTooLong            1      1
+2026-11-08T22:18:34.8163649Z   unknownField                 1      1
+2026-11-08T22:18:34.8164110Z   unknownSource                1      1
+2026-11-08T22:18:34.8164519Z   untrustedReference           4      4
+2026-11-08T22:18:34.8165007Z   untrustedSource              1      1
+2026-11-08T22:18:34.8165362Z   upscaleRefused               1      1
+2026-11-08T22:18:34.8165942Z ◇ Test "the typed model carries the fixture's values, not just its bytes" started.
+2026-11-08T22:18:34.8166649Z ◇ Test "a decoded record re-encodes through the codec and decodes to the same value" started.
+2026-11-08T22:18:34.8167395Z ◇ Test "every record with a registered decoder decodes and re-encodes byte-identically" started.
+2026-11-08T22:18:34.8168019Z Studio vector cases run by Swift checkers: [(key: "edl-context", value: 4)]
+2026-11-08T22:18:34.8168841Z ✔ Test "a duplicate member name is refused before any schema check" passed after 1.467 seconds.
+2026-11-08T22:18:34.8169664Z ✔ Test "explicit null and absence stay distinct: a required nullable field must be present" passed after 1.467 seconds.
+2026-11-08T22:18:34.8170489Z ✔ Test "an unknown property is refused, at the root and nested" passed after 1.467 seconds.
+2026-11-08T22:18:34.8171184Z ✔ Test "operations are read from the plan's fields" passed after 1.467 seconds.
+2026-11-08T22:18:34.8187305Z ✔ Test "a document of another contract is refused by name" passed after 1.467 seconds.
+2026-11-08T22:18:34.8188769Z ✔ Test "the writer refuses a value that breaks its schema (an id ending in a newline)" passed after 1.467 seconds.
+2026-11-08T22:18:34.8190108Z ✔ Test "decimals survive exactly: an observation's confidence 0.62 round-trips as 0.62" passed after 1.467 seconds.
+2026-11-08T22:18:34.8191661Z ✔ Test "an exponent integer (7.44e2) is not an integer either" passed after 1.467 seconds.
+2026-11-08T22:18:34.8213005Z ✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 1.467 seconds.
+2026-11-08T22:18:34.8214353Z ✔ Test "a fixture that does not exist is an error naming the path, never a silent empty read" passed after 1.467 seconds.
+2026-11-08T22:18:34.8215395Z ✔ Test "an id pattern refuses a trailing newline and accepts the id" passed after 1.467 seconds.
+2026-11-08T22:18:34.8216335Z ✔ Test "a stage that enables every operation the plan uses refuses nothing" passed after 1.467 seconds.
+2026-11-08T22:18:34.8217310Z ✔ Test "every keyword the Studio schemas use is implemented, every $ref resolves, every pattern is portable" passed after 1.467 seconds.
+2026-11-08T22:18:34.8218165Z ✔ Test "narration and the warm grade are refused in S1" passed after 1.467 seconds.
+2026-11-08T22:18:34.8218876Z ✔ Test "malformed JSON is unreadable, never partially decoded" passed after 1.467 seconds.
+2026-11-08T22:18:34.8219655Z ✔ Test "S1 enables exactly the spec's list" passed after 1.467 seconds.
+2026-11-08T22:18:34.8220441Z ✔ Test "the loader reports an unsupported keyword, a dangling $ref and a non-portable escape" passed after 1.467 seconds.
+2026-11-08T22:18:34.8221329Z ✔ Test "oneOf needs exactly one match, if/then applies only when the condition holds" passed after 1.467 seconds.
+2026-11-08T22:18:34.8222155Z ✔ Test "fractions compare exactly where binary floating point would not" passed after 1.467 seconds.
+2026-11-08T22:18:34.8222844Z ✔ Test "products beyond Int64 stay exact" passed after 1.467 seconds.
+2026-11-08T22:18:34.8223670Z ✔ Test "the embedded schemas equal spec/schemas/studio byte for byte, and the models were generated from them" passed after 1.467 seconds.
+2026-11-08T22:18:34.8225470Z ✔ Test "finding 0: a frame looked up without its window's interval maps half-open (freezes and overlay moments)" passed after 1.471 seconds.
+2026-11-08T22:18:34.8226386Z ✔ Test "an integral float (744.0) in a frame field is refused; 744 is accepted" passed after 1.472 seconds.
+2026-11-08T22:18:34.8227294Z ✔ Test "the Rally Pulse 9:16 fixture is valid under the contract and refused by S1 for reframe and music" passed after 1.472 seconds.
+2026-11-08T22:18:34.8228166Z ✔ Test "ECMA-262 anchors: $ is rewritten outside character classes only" passed after 1.471 seconds.
+2026-11-08T22:18:34.8229014Z ✔ Test "finding 8: a plan naming another project is refused against this project's records" passed after 1.471 seconds.
+2026-11-08T22:18:34.8229853Z ✔ Test "finding 2: a null keeperId does not switch contact protection off" passed after 1.471 seconds.
+2026-11-08T22:18:34.8230727Z ✔ Test "finding 1: re-showing a live moment as a second 1x live segment is a replay without its label" passed after 1.471 seconds.
+2026-11-08T22:18:34.8231752Z ✔ Test "finding 7: the alternate bed returning mid-segment, and an alternate bed at a dissolve without an audio dip" passed after 1.471 seconds.
+2026-11-08T22:18:34.8232683Z ✔ Test "the repository's fixtures, module pages and Swift consumers agree" passed after 1.471 seconds.
+2026-11-08T22:18:34.8233730Z ✔ Test "finding 0: the first frame of a restarted interval maps through that interval (half-open coverage)" passed after 1.471 seconds.
+2026-11-08T22:18:34.8234719Z ✔ Test "a page that says swift: consumed with no Swift consumer fails" passed after 1.471 seconds.
+2026-11-08T22:18:34.8235541Z ✔ Test "the Sample project lock names jovra.project-lock version 1 and is Sample data" passed after 1.471 seconds.
+2026-11-08T22:18:34.8236304Z ✔ Test "an edit plan names version 2 of its contract" passed after 1.471 seconds.
+2026-11-08T22:18:34.8237047Z ✔ Test "the records page is consumed only while its decoders stay registered" passed after 1.471 seconds.
+2026-11-08T22:18:34.8237887Z ✔ Test "a record that is not a JSON object with a schemaVersion string is an error" passed after 1.471 seconds.
+2026-11-08T22:18:34.8238635Z ✔ Test "a record without a sample flag is not Sample data" passed after 1.471 seconds.
+2026-11-08T22:18:34.8239369Z ✔ Test "every finding code except the stage gate is a code edl.py raises" passed after 1.471 seconds.
+2026-11-08T22:18:34.8240234Z ✔ Test "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" passed after 1.471 seconds.
+2026-11-08T22:18:34.8241164Z ✔ Test "the trusted context is built from the stored records, with the reviewed sync map's coverage" passed after 1.471 seconds.
+2026-11-08T22:18:34.8888105Z ✔ Test "a boolean speed is badSpeed in the validator itself, not only in the schema layer" passed after 1.471 seconds.
+2026-11-08T22:18:34.8889398Z ✔ Test "the typed clean alternate equals the stored typed record" passed after 1.471 seconds.
+2026-11-08T22:18:34.8890390Z ✔ Test "a new kind whose page says swift: pending passes unconsumed" passed after 1.471 seconds.
+2026-11-08T22:18:34.8891308Z ✔ Test "the two clean-alternate pairs are reproduced byte for byte by cleanAlternate" passed after 1.471 seconds.
+2026-11-08T22:18:34.8892237Z ◇ Passing 3 arguments num → 1, den → 2, expected → 1 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8893360Z ◇ Passing 3 arguments num → -1, den → 2, expected → 0 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8894198Z ◇ Passing 3 arguments num → 3, den → 2, expected → 2 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8894999Z ◇ Passing 3 arguments num → -3, den → 2, expected → -1 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8895815Z ◇ Passing 3 arguments num → 5, den → 3, expected → 2 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8896630Z ◇ Passing 3 arguments num → 4, den → 3, expected → 1 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8897794Z ◇ Passing 3 arguments num → -4, den → 3, expected → -1 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8898597Z ◇ Passing 3 arguments num → -5, den → 3, expected → -2 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8899515Z ◇ Passing 3 arguments num → 0, den → 7, expected → 0 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8900307Z ◇ Passing 3 arguments num → 7, den → -2, expected → -3 to "half-up rounds .5 away from minus infinity, for both signs"
+2026-11-08T22:18:34.8901056Z ✔ Test "a new fixture kind with no module page fails" passed after 1.480 seconds.
+2026-11-08T22:18:34.8901716Z ✔ Test "every valid edit-plan record passes as stored" passed after 1.479 seconds.
+2026-11-08T22:18:34.8902411Z ✔ Test "validate() without a trusted context returns contextMissing" passed after 1.479 seconds.
+2026-11-08T22:18:34.8903235Z ✔ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" passed after 1.479 seconds.
+2026-11-08T22:18:34.8903967Z   refused trailing newline: delivered-artifact.film.invalid.json#plan-hash-trailing-newline
+2026-11-08T22:18:34.8904679Z   refused trailing newline: lesson.2026-10-07.invalid.json#id-trailing-newline
+2026-11-08T22:18:34.8905466Z   refused trailing newline: quote.accepted.invalid.json#hash-trailing-newline
+2026-11-08T22:18:34.8906175Z ✔ Test "every registered vector checker runs on at least one case of its kind" passed after 1.521 seconds.
+2026-11-08T22:18:34.8906938Z ✔ Test "zero denominators and overflow are errors, never wrong numbers" passed after 0.339 seconds.
+2026-11-08T22:18:34.8907664Z ✔ Test "NTSC frames: 30000/1001 fps maps microseconds to frames exactly" passed after 0.310 seconds.
+2026-11-08T22:18:34.8908285Z ✔ Test "half-up rounds .5 away from minus infinity, for both signs" passed after 0.310 seconds.
+2026-11-08T22:18:34.8909002Z ✔ Test "it is the same rule as the core percentage (Percent.pct is half-up of 100n/d)" passed after 0.309 seconds.
+2026-11-08T22:18:34.8909724Z ✔ Test "a rational media time converts to exact microseconds" passed after 0.293 seconds.
+2026-11-08T22:18:34.8910383Z ✔ Test "the typed model carries the fixture's values, not just its bytes" passed after 0.137 seconds.
+2026-11-08T22:18:34.8911170Z ✔ Test "a decoded record re-encodes through the codec and decodes to the same value" passed after 0.137 seconds.
+2026-11-08T22:18:34.8912239Z ✔ Test "the trailing-newline id and hash cases are refused, although Python's re.search accepts them (finding 6)" passed after 1.521 seconds.
+2026-11-08T22:18:34.8912970Z ✔ Suite "Studio contracts: strict decoding" passed after 1.524 seconds.
+2026-11-08T22:18:34.8913467Z ✔ Suite "EDL stage allowlist (SD6b)" passed after 1.524 seconds.
+2026-11-08T22:18:34.8913918Z ✔ Suite "Studio fixture locator" passed after 1.524 seconds.
+2026-11-08T22:18:34.8914627Z ✔ Suite "Studio contracts: schema set" passed after 1.524 seconds.
+2026-11-08T22:18:34.8915150Z ✔ Suite "EDL exact arithmetic" passed after 1.524 seconds.
+2026-11-08T22:18:34.8915660Z ✔ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" passed after 1.524 seconds.
+2026-11-08T22:18:34.8916215Z ✔ Suite "Studio contracts: fixture manifest" passed after 1.524 seconds.
+2026-11-08T22:18:34.8916701Z ✔ Suite "Studio record header" passed after 1.524 seconds.
+2026-11-08T22:18:34.8917176Z ✔ Suite "EDL validator: parity with edl.py" passed after 1.524 seconds.
+2026-11-08T22:18:34.8917673Z ✔ Suite "Studio contracts: vector consumers" passed after 1.524 seconds.
+2026-11-08T22:18:34.8918140Z ✔ Suite "Studio contracts: time" passed after 1.524 seconds.
+2026-11-08T22:18:35.0842091Z   refused camera-invite.invalid.json#coach-invite: schema: $.invites[1].role: expected "camera", got "coach"
+2026-11-08T22:18:35.0843702Z   refused delivered-artifact.film.invalid.json#auto-published: schema: $.youtubePrep.published: expected false, got true
+2026-11-08T22:18:35.0853544Z   refused delivered-artifact.film.invalid.json#public-film: schema: $.delivery.visibility: expected "private", got "public"
+2026-11-08T22:18:35.0854993Z   refused delivered-artifact.film.invalid.json#plan-hash-trailing-newline: schema: $.bindings.editPlanSha256: "8888888888888888888888888888888888888888888888888888888888888888\n" does not match ^[0-9a-f]{64}$
+2026-11-08T22:18:35.0856550Z   refused edit-plan.coach-cut-serve.invalid.json#free-text-card: schema: $.segments[0]: matches 0 of oneOf (exactly 1 required); closest: $.segments[0].templateId: "Your goal: win" does not match ^[a-z][a-z0-9-]{0,31}(\.[a-z0
+2026-11-08T22:18:35.0858154Z   refused edit-plan.court-memories-storyboard.invalid.json#executable-command: schema: $.command: unknown property "command" (additionalProperties is false)
+2026-11-08T22:18:35.0859782Z   refused edit-plan.court-memories-storyboard.invalid.json#approval-in-plan: schema: $.approved: unknown property "approved" (additionalProperties is false)
+2026-11-08T22:18:35.0860978Z   refused edit-plan.court-memories-storyboard.invalid.json#signed-url-source: schema: $.sources[0].url: unknown property "url" (additionalProperties is false)
+2026-11-08T22:18:35.0862407Z   refused edit-plan.court-memories-storyboard.invalid.json#unlabelled-speed: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].speed.num: expected 1, got 5
+2026-11-08T22:18:35.0864481Z   refused edit-plan.court-memories-storyboard.invalid.json#wipe-transition: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].transitionIn.type: "wipe" is not one of the allowed values
+2026-11-08T22:18:35.0866104Z   refused edit-plan.court-memories-storyboard.invalid.json#copied-score-digits: schema: $.segments[2]: matches 0 of oneOf (exactly 1 required); closest: $.segments[2].overlayRefs[0].value: unknown property "value" (additionalProperties is f
+2026-11-08T22:18:35.0867452Z   refused edit-plan.court-memories-storyboard.invalid.json#aspect-21-9: schema: $.output.aspect: "21:9" is not one of the allowed values
+2026-11-08T22:18:35.0868797Z   refused edit-plan.court-memories-storyboard.invalid.json#model-guessed-reframe: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].framing: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].
+2026-11-08T22:18:35.0870245Z   refused lesson.2026-10-07.invalid.json#id-trailing-newline: schema: $.lessonId: "lesson-1007\n" does not match ^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$
+2026-11-08T22:18:35.0871174Z   refused observation.estimated-cue.invalid.json#certainty-over-one: schema: $.provenance.confidence: 1.5 > maximum 1
+2026-11-08T22:18:35.0872053Z   refused project-lock.invalid.json#recoloured-brand: schema: $.brand.chartreuse: expected "#D7F56A", got "#00FF00"
+2026-11-08T22:18:35.0872993Z   refused quote.accepted.invalid.json#unbound-quote: schema: $: missing required property "outputSpecSha256"
+2026-11-08T22:18:35.0873950Z   refused quote.accepted.invalid.json#retention-not-offered: schema: $.retentionDays: 14 is not one of the allowed values
+2026-11-08T22:18:35.0875176Z   refused quote.accepted.invalid.json#consent-without-model-field: schema: $.consent: matches 0 of oneOf (exactly 1 required); closest: $.consent: expected type ["null"], got object
+2026-11-08T22:18:35.0876464Z   refused quote.accepted.invalid.json#hash-trailing-newline: schema: $.outputSpecSha256: "8888888888888888888888888888888888888888888888888888888888888888\n" does not match ^[0-9a-f]{64}$
+2026-11-08T22:18:35.0877659Z   refused reference-catalog.invalid.json#value-in-catalog: schema: $.references[0].value: unknown property "value" (additionalProperties is false)
+2026-11-08T22:18:35.0878805Z   refused render-job.ready.invalid.json#resume-to-ready: schema: $.resumeStage: matches 0 of oneOf (exactly 1 required); closest: $.resumeStage: expected type ["null"], got string
+2026-11-08T22:18:35.0879924Z   refused source-manifest.invalid.json#file-path: schema: $.sources[0].original.path: unknown property "path" (additionalProperties is false)
+2026-11-08T22:18:35.0881092Z   refused storage-providers.invalid.json#provider-as-compute: schema: $.providers[0].processing: expected false, got true
+2026-11-08T22:18:35.0882112Z   refused story-brief.progress.invalid.json#score-text-in-brief: schema: $.beats[1].scoreText: unknown property "scoreText" (additionalProperties is false)
+2026-11-08T22:18:35.0883140Z   refused sync-map.invalid.json#validated-map: schema: $.provenance.status: "validated" is not one of the allowed values
+2026-11-08T22:18:37.2209522Z   refused sync-map.invalid.json#certainty-field: schema: $.sources[1].pieces[0].anchors[0].confidencePct: unknown property "confidencePct" (additionalProperties is false)
+2026-11-08T22:18:37.2210352Z   refused sync-map.invalid.json#fit-without-inliers: schema: $.sources[1].pieces[0].fit: matches 0 of oneOf (exactly 1 required); closest: $.sources[1].pieces[0].fit: expected type ["null"], got object
+2026-11-08T22:18:37.2211009Z   refused sync-map.invalid.json#failed-piece-claims-coverage: schema: $.sources[2].pieces[1].matchCoverage: expected type ["null"], got object
+2026-11-08T22:18:37.2211565Z   refused sync-map.invalid.json#no-overlap-state: schema: $.sources[2].pieces[0].state: "no-overlap" is not one of the allowed values
+2026-11-08T22:18:37.2212122Z Studio invalid cases (schema layer): 30 refused; unregistered schemas skipped: [(key: "jovra.pts-table/1", value: 5), (key: "jovra.room-transcript/1", value: 4)]
+2026-11-08T22:18:37.2213316Z ✔ Test "every schema-layer invalid case of a registered schema is refused" passed after 1.765 seconds.
+2026-11-08T22:18:37.2213665Z Studio round-trips: 34 records byte-identical across 19 schemas
+2026-11-08T22:18:37.2213892Z   jovra.broll-catalog/1: 1
+2026-11-08T22:18:37.2214211Z   jovra.camera-invite/1: 1
+2026-11-08T22:18:37.2214370Z   jovra.credit-classes/1: 1
+2026-11-08T22:18:37.2214626Z   jovra.delivered-artifact/1: 1
+2026-11-08T22:18:37.2214787Z   jovra.edit-plan/2: 7
+2026-11-08T22:18:37.2214934Z   jovra.keeper-catalog/1: 1
+2026-11-08T22:18:37.2215081Z   jovra.lesson/1: 3
+2026-11-08T22:18:37.2215224Z   jovra.observation/1: 3
+2026-11-08T22:18:37.2215377Z   jovra.project-lock/1: 1
+2026-11-08T22:18:37.2215524Z   jovra.quote/1: 3
+2026-11-08T22:18:37.2215671Z   jovra.reference-catalog/1: 1
+2026-11-08T22:18:37.2215838Z   jovra.render-job-transitions/1: 1
+2026-11-08T22:18:37.2216014Z   jovra.render-job/1: 2
+2026-11-08T22:18:37.2216160Z   jovra.source-manifest/1: 1
+2026-11-08T22:18:37.2216319Z   jovra.storage-providers/1: 1
+2026-11-08T22:18:37.2216475Z   jovra.story-brief/1: 2
+2026-11-08T22:18:37.2216630Z   jovra.story-profile-catalog/1: 1
+2026-11-08T22:18:37.2216797Z   jovra.sync-map/1: 1
+2026-11-08T22:18:37.2216941Z   jovra.usage-reservation/1: 2
+2026-11-08T22:18:37.2217837Z Studio records without a registered Swift decoder (their pages stay pending): records/pts-table.sample-corner.json (jovra.pts-table/1), records/room-transcript.st23-lobby.json (jovra.room-transcript/1), records/room-transcript.st23-trust.json (jovra.room-transcript/1), records/room-transcript.st24-contact-lost.json (jovra.room-transcript/1), records/room-transcript.st24-director.json (jovra.room-transcript/1)
+2026-11-08T22:18:37.2219448Z ✔ Test "every record with a registered decoder decodes and re-encodes byte-identically" passed after 0.533 seconds.
+2026-11-08T22:18:37.2219853Z ✔ Suite "Studio contracts: record round-trips" passed after 1.919 seconds.
+2026-11-08T22:18:37.2220427Z Studio invalid cases (reference layer): 154 decode (their rules belong to the module tickets); refused as integral floats: ["edit-plan.court-memories-storyboard.invalid.json#integral-float-frame"]
+2026-11-08T22:18:37.2221106Z ✔ Test "reference-layer cases pass the Swift decoder unless they carry an integral float" passed after 3.858 seconds.
+2026-11-08T22:18:37.2221502Z ✔ Suite "Studio contracts: invalid cases" passed after 3.861 seconds.
+2026-11-08T22:18:37.2221778Z ✔ Test run with 60 tests passed after 3.861 seconds.
