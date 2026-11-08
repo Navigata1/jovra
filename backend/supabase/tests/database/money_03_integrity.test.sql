@@ -124,7 +124,7 @@ select throws_ok($$insert into public.usage_reservations (project_id, owner_id, 
 create function pg_temp.consent(p_model boolean, p_classes text, p_days int) returns jsonb language sql as $$
   select format('{"consentRecordId": "consent-01", "uploadSelectedSources": true, "modelProvider": %s,
                   "textClasses": %s, "retentionDays": %s, "consentTextVersion": "studio-cloud-consent@1.0.0",
-                  "at": "2026-11-08T10:00:00Z"}', p_model, p_classes, p_days)::jsonb
+                  "at": "2026-11-08T10:00:00Z"}', p_model::text, p_classes, p_days)::jsonb
 $$;
 select throws_ok($$update public.quotes set state = 'accepted', accepted_at = now(),
                            consent = pg_temp.consent(true, '[]', 7)
@@ -380,7 +380,7 @@ select throws_ok('delete from public.lesson_clips', '42501', 'permission denied 
 select throws_ok('delete from public.lessons', '42501', 'permission denied for table lessons',
   'T-DB-48: the owner cannot delete a lesson directly');
 reset role;
-select results_eq($$select id::text from app_private.lesson_deletion_artifacts('1e830000-0000-4000-8000-000000000001')
+select results_eq($$select x::text from app_private.lesson_deletion_artifacts('1e830000-0000-4000-8000-000000000001') x
                     order by 1$$,
   $$values ('f7830000-0000-4000-8000-000000000011'), ('f7830000-0000-4000-8000-000000000012'),
            ('f7830000-0000-4000-8000-000000000021'), ('f7830000-0000-4000-8000-000000000031')$$,
