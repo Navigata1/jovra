@@ -53,6 +53,11 @@ jobs:
       - name: supabase db advisors (security, fail on warn)
         run: supabase db advisors --local --type security --fail-on warn
 
+      # Performance advisors (unindexed FKs, per-row auth calls, duplicate permissive policies): every finding is
+      # printed at info level as evidence, and a WARN fails the job. On a fresh database "unused_index" is always INFO.
+      - name: supabase db advisors (performance, fail on warn)
+        run: supabase db advisors --local --type performance --level info --fail-on warn
+
       - name: supabase test db
         run: supabase test db
 
