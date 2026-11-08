@@ -30,12 +30,19 @@ jobs:
         working-directory: ios/Packages/JovraCore
         env:
           JOVRA_DATA_EXPORT_OUTPUT_DIR: ${{ runner.temp }}/jovra-data-export
+          JOVRA_DATA_BUNDLE_OUTPUT_DIR: ${{ runner.temp }}/jovra-data-bundle
         run: swift test
       - name: Preserve native session JSON export
         uses: actions/upload-artifact@v4
         with:
           name: native-data-export
           path: ${{ runner.temp }}/jovra-data-export
+          if-no-files-found: error
+      - name: Preserve native export bundles (Export my data, Share Pack data)
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-data-bundle
+          path: ${{ runner.temp }}/jovra-data-bundle
           if-no-files-found: error
 
   native-data-export:
@@ -51,6 +58,12 @@ jobs:
           path: ${{ runner.temp }}/jovra-data-export
       - name: Independently validate native session export
         run: python3 scripts/spec/validate.py --encoded-dir "${{ runner.temp }}/jovra-data-export"
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-data-bundle
+          path: ${{ runner.temp }}/jovra-data-bundle
+      - name: Independently verify native export bundles (schemas, hashes, golden CSVs)
+        run: python3 scripts/spec/verify_native_bundle.py "${{ runner.temp }}/jovra-data-bundle"
 
   # Shared contracts (spec/README.md): fixtures regenerate byte-for-byte, every document validates and the
   # engine re-run agrees, and the contract tooling's own tests pass. Python standard library only.
