@@ -1,0 +1,25 @@
+# Issue #267 acceptance item, run in CI (2026-11-08): breaking a Room fixture turns room-contracts red.
+# Commit 9f5e7bd on ticket/w01-jovraroom-swift-records-freshness (PR #387) flipped spec/room/fixtures/vectors/freshness.json
+# case fresh-boundary from expect "Fresh" to "Delayed". The next commit reverts it. No scratch branch was pushed: push
+# policy allows only the ticket branch, so the ticket branch carried the break and the revert as ordinary commits.
+
+room workflow run 42467655816 (head 9f5e7bd), conclusion failure:
+  jovra-room: failure  https://github.com/Navigata1/jovra/actions/runs/42467655816/job/128690792941
+  room-contracts: failure  https://github.com/Navigata1/jovra/actions/runs/42467655816/job/128690793090
+CI workflow run 42467655785 (head 9f5e7bd), conclusion failure:
+  media-fixtures: success
+  l10n: success
+  spec: failure
+  jovra-core: success
+  ios-app (manual): skipped
+  native-data-export: success
+
+room-contracts failing log lines:
+room-contracts	Validate Room contracts, fixtures and reference	2026-11-08T09:33:12.9825563Z FAIL vectors/freshness.json#fresh-boundary: expected "Delayed", got "Fresh"
+room-contracts	Validate Room contracts, fixtures and reference	2026-11-08T09:33:12.9826194Z FAIL determinism: vectors/freshness.json differs from a fresh generation
+room-contracts	Validate Room contracts, fixtures and reference	2026-11-08T09:33:12.9832558Z cases passed: 231, failed: 1
+room-contracts	Validate Room contracts, fixtures and reference	2026-11-08T09:33:12.9832751Z FAILED: 2 problem(s)
+room-contracts	Validate Room contracts, fixtures and reference	2026-11-08T09:33:12.9912724Z ##[error]Process completed with exit code 1.
+jovra-room failing log lines:
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T09:34:06.8185502Z /__w/jovra/jovra/ios/Packages/JovraRoom/Tests/Part1/VectorConformanceTests.swift:15: error: VectorConformanceTests.test_freshnessVectors : XCTAssertEqual failed: ("["vect
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T09:34:06.8269502Z ##[error]Process completed with exit code 1.
