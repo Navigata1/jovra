@@ -1,0 +1,5 @@
+$ python3 spec/reference/generate_fixtures.py   # cases written, reference absent (red)
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "<repo>/spec/reference/cases/rally_cases.py", line 14, in <module>
+    from jovra_ref import conformance, rally, references, scoring
+ImportError: cannot import name 'rally' from 'jovra_ref' (<repo>/spec/reference/jovra_ref/__init__.py)

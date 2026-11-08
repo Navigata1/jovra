@@ -1,0 +1,183 @@
+S78 pgTAP assertions by T-DB id, green backend-db run 42513049102 (head f99f30c; the migration and tests are unchanged since).
+Source: evidence/backend/s78-backend-db-money-jobs-rls/pgtap-assertions-42513049102.txt (every assertion of every file); totals: Files=13, Tests=592, Result: PASS; money_01 76, money_02 67, money_03 84.
+
+## T-DB-01
+money_01_catalog.test.sql: ok 70 - T-DB-01: unauthenticated select on quotes is denied
+money_01_catalog.test.sql: ok 71 - T-DB-01: unauthenticated select on usage_reservations
+money_01_catalog.test.sql: ok 72 - T-DB-01: unauthenticated select on render_jobs is denied
+money_01_catalog.test.sql: ok 73 - T-DB-01: unauthenticated select on render_attempts is denied
+money_01_catalog.test.sql: ok 74 - T-DB-01: unauthenticated select on provider_connections
+money_01_catalog.test.sql: ok 75 - T-DB-01: unauthenticated insert into provider_connections
+money_01_catalog.test.sql: ok 76 - T-DB-01: unauthenticated select on deletion_requests
+
+## T-DB-06
+money_02_roles.test.sql: ok 45 - T-DB-06: unrelated user sees 0 quotes
+money_02_roles.test.sql: ok 46 - T-DB-06: unrelated user sees 0 reservations
+money_02_roles.test.sql: ok 47 - T-DB-06: unrelated user sees 0 jobs
+money_02_roles.test.sql: ok 48 - T-DB-06: unrelated user sees 0 attempts
+money_02_roles.test.sql: ok 49 - T-DB-06: unrelated user sees 0 artifacts
+
+## T-DB-17
+money_01_catalog.test.sql: ok 41 - T-DB-17 / finding 32: cost, lease, ref, measurement and requester columns are not granted to clients
+money_02_roles.test.sql: ok 4 - T-DB-17: quotes.cap_cost_micro_usd is not selectable, even by the owner
+money_02_roles.test.sql: ok 5 - T-DB-17: reservation micro-USD columns are not selectable
+money_02_roles.test.sql: ok 6 - T-DB-17: render_attempts.lease_token_hash is not selectable
+money_02_roles.test.sql: ok 40 - T-DB-17: the grantee cannot read the token hash
+
+## T-DB-25
+money_02_roles.test.sql: ok 30 - T-DB-25: a coach sees 0 quotes
+money_02_roles.test.sql: ok 31 - T-DB-25: a coach sees 0 reservations
+money_02_roles.test.sql: ok 34 - T-DB-25 / finding 32: a coach selecting render_attempts.measurements is denied (no cost is derivable)
+
+## T-DB-26
+money_01_catalog.test.sql: ok 43 - T-DB-26: no client role may insert, update, delete or truncate money, jobs, artifacts, grants or deletions
+money_02_roles.test.sql: ok 9 - T-DB-26: owner cannot create a quote
+money_02_roles.test.sql: ok 10 - T-DB-26: owner cannot accept or re-price a quote directly
+money_02_roles.test.sql: ok 11 - T-DB-26: owner cannot create an unbounded reservation
+money_02_roles.test.sql: ok 12 - T-DB-26: owner cannot raise a hold's cap
+money_02_roles.test.sql: ok 13 - T-DB-26: owner cannot create a job
+money_02_roles.test.sql: ok 14 - T-DB-26: owner cannot move a job to ready
+money_02_roles.test.sql: ok 15 - T-DB-26: owner cannot create an attempt
+money_02_roles.test.sql: ok 16 - T-DB-26: owner cannot create a ready artifact
+money_02_roles.test.sql: ok 17 - T-DB-26: owner cannot mark an artifact ready
+money_02_roles.test.sql: ok 18 - T-DB-26: owner cannot extend or un-revoke a grant directly
+money_02_roles.test.sql: ok 19 - T-DB-26: deletion requests go through the gateway
+money_02_roles.test.sql: ok 20 - T-DB-26: owner cannot mark a deletion done
+
+## T-DB-27
+money_02_roles.test.sql: ok 23 - T-DB-27: the creator reads both grants they created
+money_02_roles.test.sql: ok 39 - T-DB-27: the grantee reads their own grant row
+money_02_roles.test.sql: ok 43 - T-DB-27: the clip viewer reads their own grant row
+money_02_roles.test.sql: ok 50 - T-DB-27: unrelated user sees 0 grants
+
+## T-DB-28
+money_02_roles.test.sql: ok 55 - T-DB-28: an anonymous user sees 0 provider rows, jobs and deletion requests
+money_02_roles.test.sql: ok 56 - T-DB-28: an anonymous user cannot record a provider row (RLS violation)
+
+## T-DB-29
+money_01_catalog.test.sql: ok 45 - T-DB-29: no token column
+money_01_catalog.test.sql: ok 46 - T-DB-29: no access_token column
+money_01_catalog.test.sql: ok 47 - T-DB-29: no refresh_token column
+money_01_catalog.test.sql: ok 48 - T-DB-29: no id_token column
+money_01_catalog.test.sql: ok 49 - T-DB-29: no token_hash column
+money_01_catalog.test.sql: ok 50 - T-DB-29: no secret column
+money_01_catalog.test.sql: ok 51 - T-DB-29: no client_secret column
+money_01_catalog.test.sql: ok 52 - T-DB-29: no api_key column
+money_01_catalog.test.sql: ok 55 - T-DB-29: no provider_connections column is named like a token, secret, key, credential, URL or email
+money_02_roles.test.sql: ok 24 - T-DB-29: a user records a provider status row as themself
+money_02_roles.test.sql: ok 25 - T-DB-29: user_id is never client-chosen
+money_02_roles.test.sql: ok 29 - T-DB-29: the user updates their status row; the revision is bumped
+money_02_roles.test.sql: ok 38 - T-DB-29: a coach sees 0 of the owner's providers
+money_02_roles.test.sql: ok 52 - T-DB-29: unrelated user sees 0 of another user's provider rows
+money_02_roles.test.sql: ok 53 - T-DB-29: unrelated user updates 0 provider rows
+money_02_roles.test.sql: ok 54 - T-DB-29: unrelated user deletes 0 provider rows
+money_02_roles.test.sql: ok 57 - T-DB-29: the user deletes their own provider status row
+
+## T-DB-31
+money_02_roles.test.sql: ok 63 - T-DB-31: a coach sees 0 jobs and attempts of a project being deleted
+money_02_roles.test.sql: ok 64 - T-DB-31: the owner sees 0 quotes, holds, jobs and attempts of a project being deleted
+money_02_roles.test.sql: ok 65 - T-DB-31: the creator no longer sees the grants of a project being deleted
+
+## T-DB-47
+money_01_catalog.test.sql: ok 59 - T-DB-47: the app_ops tables with text or JSON columns exist (the lint below is not vacuous)
+money_01_catalog.test.sql: ok 60 - T-DB-47: every app_ops table with a text or JSON column refuses secrets BEFORE INSERT OR UPDATE
+money_01_catalog.test.sql: ok 61 - T-DB-47: the guard recognises invite codes, share links, JWTs and email addresses
+money_01_catalog.test.sql: ok 62 - T-DB-47: ids, R2 keys and a token-like run inside a longer base64url string are not flagged
+money_03_integrity.test.sql: ok 68 - T-DB-47: an idempotency body holding an invitation code is refused
+money_03_integrity.test.sql: ok 69 - T-DB-47: the redacted body (ids and expiry) is stored
+money_03_integrity.test.sql: ok 70 - T-DB-47: a lease token never lands in the outbox
+money_03_integrity.test.sql: ok 72 - T-DB-47: an email address never lands in the audit log
+money_03_integrity.test.sql: ok 73 - T-DB-47: a session capability never lands in an upload session row
+money_03_integrity.test.sql: ok 74 - T-DB-47: the app_ops scan finds a planted secret
+money_03_integrity.test.sql: ok 75 - T-DB-47: after every write in this file (holds, jobs, outbox, audit, idempotency), no jv[igslhc]_ value in app_ops
+
+## T-DB-48
+money_03_integrity.test.sql: ok 58 - T-DB-48: the owner cannot delete a lesson clip directly
+money_03_integrity.test.sql: ok 59 - T-DB-48: the owner cannot delete a lesson directly
+money_03_integrity.test.sql: ok 60 - T-DB-48: the deletion step enumerates every excerpt of the lesson and the excerpts' children (objects first)
+money_03_integrity.test.sql: ok 64 - T-DB-48: the row step removes the lesson's clips and lesson-only observations
+money_03_integrity.test.sql: ok 65 - T-DB-48: and the excerpt rows and their children
+money_03_integrity.test.sql: ok 66 - T-DB-48: the match film is untouched
+
+## T-DB-50
+money_02_roles.test.sql: ok 58 - T-DB-50: the film viewer sees 0 artifacts
+money_02_roles.test.sql: ok 59 - T-DB-50: the film viewer sees 0 grant rows
+money_02_roles.test.sql: ok 60 - T-DB-50: the clip viewer sees 0 clips
+money_02_roles.test.sql: ok 61 - T-DB-50: the clip viewer sees 0 excerpts
+money_02_roles.test.sql: ok 62 - T-DB-50: the clip viewer sees 0 grant rows
+
+## T-DB-53
+money_03_integrity.test.sql: ok 23 - T-DB-53: jovra_gateway cannot move a job by writing the table
+money_03_integrity.test.sql: ok 24 - T-DB-53: jovra_orchestrator moves jobs only through its commands (S80), never the table
+money_03_integrity.test.sql: ok 25 - T-DB-53: verifying -> ready without a verified artifact is P0409
+money_03_integrity.test.sql: ok 26 - T-DB-53: a film still verifying is not enough
+money_03_integrity.test.sql: ok 27 - T-DB-53: a verified preview is not a delivered film
+money_03_integrity.test.sql: ok 28 - T-DB-53: with a verified film the job reaches ready and is stamped finished
+
+## T-DB-55
+money_03_integrity.test.sql: ok 44 - T-DB-55 (table half): a zero stage reservation is impossible
+
+## T-DB-59
+money_01_catalog.test.sql: ok 20 - T-DB-59: quotes (project_id, story_plan_id) -> story_plans(project_id, id)
+money_01_catalog.test.sql: ok 21 - T-DB-59: quotes (story_plan_id, story_plan_version_id) -> story_plan_versions(story_plan_id, id)
+money_01_catalog.test.sql: ok 22 - T-DB-59: usage_reservations (project_id, story_plan_id) -> story_plans
+money_01_catalog.test.sql: ok 23 - T-DB-59: usage_reservations (story_plan_id, story_plan_version_id) -> story_plan_versions
+money_01_catalog.test.sql: ok 24 - T-DB-59: render_jobs (project_id, story_plan_id) -> story_plans(project_id, id)
+money_01_catalog.test.sql: ok 25 - T-DB-59: render_jobs (story_plan_id, story_plan_version_id) -> story_plan_versions(story_plan_id, id)
+money_03_integrity.test.sql: ok 29 - T-DB-59: as jovra_owner, a quote pairing project A with B's plan is an FK violation
+money_03_integrity.test.sql: ok 30 - T-DB-59: as jovra_owner, a quote naming A's plan with B's plan version is an FK violation
+money_03_integrity.test.sql: ok 31 - T-DB-59: as jovra_owner, a reservation pairing project A with B's plan is an FK violation
+money_03_integrity.test.sql: ok 32 - T-DB-59: as jovra_owner, a reservation naming B's plan version is an FK violation
+money_03_integrity.test.sql: ok 33 - T-DB-59: as jovra_owner, a job pairing project A with B's plan is an FK violation
+money_03_integrity.test.sql: ok 34 - T-DB-59: as jovra_owner, a job naming B's plan version is an FK violation
+money_03_integrity.test.sql: ok 35 - T-DB-59: the same quote with A's own plan and version passes (the check is the FK, not the role)
+
+## T-DB-62
+money_03_integrity.test.sql: ok 52 - T-DB-62: revoke_clip_share clears the approval, unlinks and hides the excerpt
+
+## finding 18 (one hold / one live job, NULLS NOT DISTINCT)
+money_01_catalog.test.sql: ok 38 - finding 18: one held reservation per (project, plan, version, output), NULLS NOT DISTINCT
+money_01_catalog.test.sql: ok 39 - finding 18: one non-terminal job per (project, plan, version, output), NULLS NOT DISTINCT
+money_03_integrity.test.sql: ok 1 - finding 18: a plan-by-job hold (story_plan_version_id null) is accepted
+money_03_integrity.test.sql: ok 2 - finding 18: a second held reservation with story_plan_version_id null for the same project, plan and output fails
+money_03_integrity.test.sql: ok 3 - §13.6: plan-by-job work for a different plan of the project is a different key
+money_03_integrity.test.sql: ok 4 - §13.6: the same plan with a different output is a different key
+money_03_integrity.test.sql: ok 5 - §13.6: once the hold is released, identical work may be held again
+money_03_integrity.test.sql: ok 18 - story 199: the accepted plan-by-job work runs as one job
+money_03_integrity.test.sql: ok 19 - story 199 / §13.6: identical work never runs as a second live job, also with version null
+money_03_integrity.test.sql: ok 61 - story 199: a double tap never starts a second deletion of the same lesson
+
+## finding 31 / finding 32
+money_01_catalog.test.sql: ok 30 - finding 31: artifacts (project_id, job_id) -> render_jobs(project_id, id), SET NULL (job_id)
+money_01_catalog.test.sql: ok 31 - finding 31: artifacts (job_id, attempt_id) -> render_attempts(job_id, id), SET NULL (attempt_id)
+money_01_catalog.test.sql: ok 32 - finding 31 (excerpt): artifacts (project_id, lesson_clip_id) -> lesson_clips(project_id, id)
+money_01_catalog.test.sql: ok 33 - finding 31 (excerpt): lesson_clips (project_id, excerpt_artifact_id) -> artifacts(project_id, id)
+money_01_catalog.test.sql: ok 34 - finding 31 (excerpt): the single-column excerpt FKs of migration 2 are gone
+money_01_catalog.test.sql: ok 41 - T-DB-17 / finding 32: cost, lease, ref, measurement and requester columns are not granted to clients
+money_02_roles.test.sql: ok 7 - finding 32: the owner reads usage through the gateway, not rows
+money_02_roles.test.sql: ok 34 - T-DB-25 / finding 32: a coach selecting render_attempts.measurements is denied (no cost is derivable)
+money_02_roles.test.sql: ok 35 - finding 32: select * cannot reach measurements either
+money_02_roles.test.sql: ok 36 - finding 32: planner_budget (derived from cost) is hidden
+money_03_integrity.test.sql: ok 37 - finding 32: an output cap above the film ceiling (4 GiB) is refused
+money_03_integrity.test.sql: ok 38 - finding 32: an output without a byte cap is refused
+money_03_integrity.test.sql: ok 40 - finding 32: a film and a thumbnail at their ceilings are accepted
+money_03_integrity.test.sql: ok 45 - finding 32: an artifact larger than its kind's ceiling is refused
+money_03_integrity.test.sql: ok 46 - finding 31: an excerpt of project B naming A's clip is an FK violation
+money_03_integrity.test.sql: ok 47 - finding 31: an artifact of A listing B's source is an FK violation
+money_03_integrity.test.sql: ok 78 - finding 31: a session of project B naming A's source is an FK violation
+
+## Mutation (red) run 42513263821: NULLS NOT DISTINCT removed from usage_reservations_one_hold
+# Failed test 38: "finding 18: one held reservation per (project, plan, version, output), NULLS NOT DISTINCT"
+#         have: project_id,story_plan_id,story_plan_version_id,output_spec_sha256 unique where (state = 'held'::text)
+#         want: project_id,story_plan_id,story_plan_version_id,output_spec_sha256 unique nulls not distinct where (state = 'held'::text)
+# Failed test 2: "finding 18: a second held reservation with story_plan_version_id null for the same project, plan and output fails"
+#         have: ok
+#         want: 23505
+# Failed test 31: "T-DB-59: as jovra_owner, a reservation pairing project A with B's plan is an FK violation"
+#         have: 23505
+#         want: 23503
+# Failed test 32: "T-DB-59: as jovra_owner, a reservation naming B's plan version is an FK violation"
+#         have: 23505
+#         want: 23503
+  Failed test:  38
+  Failed tests:  2, 31-32

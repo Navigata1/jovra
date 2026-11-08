@@ -1,0 +1,6 @@
+$ mutation: rally ends only when gap > rallyGapMs (instead of >=); swift test --filter allDiscoveredRunnerFixturesPass
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at RallyRunner.swift:80:13: Expectation failed: value == expected
+↳ R02-threshold-edges 'exactly 3000 ms: the rally ends, the point does not'
+rally vectors R02-threshold-edges: 12
+✘ Test allDiscoveredRunnerFixturesPass() failed after 0.403 seconds with 1 issue.
+✘ Test run with 1 test in 0 suites failed after 0.403 seconds with 1 issue.
