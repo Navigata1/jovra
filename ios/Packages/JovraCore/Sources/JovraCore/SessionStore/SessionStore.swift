@@ -7,7 +7,7 @@ import Glibc
 
 public enum SessionStoreError: Error, Equatable, Sendable {
     case invalidID, unsafePath, alreadyExists, notFound, invalidEvents, noMatch, invalidCapture, invalidExports
-    case confirmationRequired, unsupportedMigration, renameFailed(Int32), durabilityUnconfirmed(Int32)
+    case confirmationRequired, unsupportedMigration, renameFailed(Int32), durabilityUnconfirmed(Int32), notInTrash
 }
 
 public enum SessionFacet: Sendable {
@@ -30,11 +30,14 @@ public struct SessionQuery: Sendable {
     public var analysis: SessionAnalysisState?
     public var review: SessionReviewState?
     public var archive: SessionArchiveStateState?
+    /// Trashed sessions stay out of the library unless asked for, or filtered by `original: .trashed`.
+    public var includeTrashed: Bool
     public init(search: String = "", kind: SessionDocumentSessionKind? = nil, sample: Bool? = nil,
                 original: SessionOriginalStateState? = nil, analysis: SessionAnalysisState? = nil,
-                review: SessionReviewState? = nil, archive: SessionArchiveStateState? = nil) {
+                review: SessionReviewState? = nil, archive: SessionArchiveStateState? = nil,
+                includeTrashed: Bool = false) {
         self.search = search; self.kind = kind; self.sample = sample; self.original = original
-        self.analysis = analysis; self.review = review; self.archive = archive
+        self.analysis = analysis; self.review = review; self.archive = archive; self.includeTrashed = includeTrashed
     }
 }
 
@@ -70,8 +73,10 @@ public struct QuarantinedSession: Codable, Equatable, Sendable {
 /// writers must share this actor: its document is authoritative, never the library index.
 public actor SessionStore {
     private let root: URL
-    private let sessions: URL
+    let sessions: URL
     private let writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)?
+    /// Store-issued, single-use purge tokens; they never outlive this actor or a restore.
+    var purgeTokens: [String: UUID] = [:]
 
     public init(root: URL, writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = nil) throws {
         self.root = root.standardizedFileURL.resolvingSymlinksInPath()
@@ -247,6 +252,7 @@ public actor SessionStore {
             (query.analysis == nil || query.analysis == summary.analysis?.state) &&
             (query.review == nil || query.review == summary.review?.state) &&
             (query.archive == nil || query.archive == summary.archive.state) &&
+            (query.includeTrashed || query.original == .trashed || summary.original?.state != .trashed) &&
             (search.isEmpty || ([summary.title, summary.notes ?? ""] + summary.players.map(\.displayName))
                 .joined(separator: " ").localizedCaseInsensitiveContains(search))
         }
@@ -335,14 +341,14 @@ public actor SessionStore {
             }.sorted { $0.sessionID < $1.sessionID }
     }
 
-    private func auxiliaryFolder(_ name: String) throws -> URL {
+    func auxiliaryFolder(_ name: String) throws -> URL {
         let directory = root.appendingPathComponent(name, isDirectory: true)
         try Self.refuseSymbolicLink(directory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory
     }
 
-    private func folder(_ id: String, allowSymbolicLink: Bool = false) throws -> URL {
+    func folder(_ id: String, allowSymbolicLink: Bool = false) throws -> URL {
         guard !id.isEmpty, id.count <= 160, id != ".", id != "..",
               id.unicodeScalars.allSatisfy({ CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_").contains($0) }) else {
             throw SessionStoreError.invalidID
@@ -353,13 +359,17 @@ public actor SessionStore {
         return result
     }
 
-    private func write(_ document: SessionDocument, to folder: URL, upgradeVersion: Bool = true) throws {
-        let folderIdentity = try DurableDirectory.identity(of: folder)
-        let destination = folder.appendingPathComponent("session.json")
-        try Self.refuseSymbolicLink(destination)
-        let temporary = folder.appendingPathComponent(".session-\(UUID().uuidString).tmp")
+    func write(_ document: SessionDocument, to folder: URL, upgradeVersion: Bool = true) throws {
         let persisted = upgradeVersion ? try migrate(document) : document
-        let bytes = try CanonicalJSON.encode(persisted)
+        try writeAtomically(CanonicalJSON.encode(persisted), named: "session.json", in: folder, temporaryPrefix: ".session-")
+    }
+
+    /// Temp file, flush, rename, then flush the folder that still holds the renamed entry.
+    func writeAtomically(_ bytes: Data, named name: String, in folder: URL, temporaryPrefix: String) throws {
+        let folderIdentity = try DurableDirectory.identity(of: folder)
+        let destination = folder.appendingPathComponent(name)
+        try Self.refuseSymbolicLink(destination)
+        let temporary = folder.appendingPathComponent("\(temporaryPrefix)\(UUID().uuidString).tmp")
         guard FileManager.default.createFile(atPath: temporary.path, contents: nil) else { throw CocoaError(.fileWriteUnknown) }
         let handle = try FileHandle(forWritingTo: temporary)
         do { try handle.write(contentsOf: bytes); try handle.synchronize(); try handle.close() }
@@ -375,7 +385,7 @@ public actor SessionStore {
 
     }
 
-    private static func refuseSymbolicLink(_ url: URL) throws {
+    static func refuseSymbolicLink(_ url: URL) throws {
         do {
             let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
             if attributes[.type] as? FileAttributeType == .typeSymbolicLink { throw SessionStoreError.unsafePath }
