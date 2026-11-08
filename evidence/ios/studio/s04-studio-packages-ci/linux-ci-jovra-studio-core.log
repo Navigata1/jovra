@@ -1,0 +1,31 @@
+# GitHub Actions studio.yml run 38181282981, job jovra-studio-core (ubuntu-latest, container swift:6.1), PR #379 head 5b86d32
+# https://github.com/Navigata1/jovra/actions/runs/38181282981/job/114594186841
+No Apple-only imports in JovraStudioCore	﻿2026-10-11T22:39:58.4219867Z ##[group]Run if grep -rnE "import (AVFoundation|UIKit|SwiftUI)" ios/Packages/JovraStudioCore; then
+No Apple-only imports in JovraStudioCore	2026-10-11T22:39:58.4220701Z ^[[36;1mif grep -rnE "import (AVFoundation|UIKit|SwiftUI)" ios/Packages/JovraStudioCore; then^[[0m
+No Apple-only imports in JovraStudioCore	2026-10-11T22:39:58.4221267Z ^[[36;1m  echo "JovraStudioCore must stay Foundation-only" >&2^[[0m
+No Apple-only imports in JovraStudioCore	2026-10-11T22:39:58.4221608Z ^[[36;1m  exit 1^[[0m
+No Apple-only imports in JovraStudioCore	2026-10-11T22:39:58.4221801Z ^[[36;1mfi^[[0m
+No Apple-only imports in JovraStudioCore	2026-10-11T22:39:58.4224952Z shell: sh -e {0}
+No Apple-only imports in JovraStudioCore	2026-10-11T22:39:58.4225209Z ##[endgroup]
+swift test (JovraStudioCore)	﻿2026-10-11T22:39:58.5004911Z ##[group]Run swift test
+swift test (JovraStudioCore)	2026-10-11T22:40:21.7415118Z [41/52] Compiling JovraStudioCore JovraStudioCore.swift
+swift test (JovraStudioCore)	2026-10-11T22:40:22.4373724Z [45/57] Compiling JovraStudioCoreTests FixtureLocatorTests.swift
+swift test (JovraStudioCore)	2026-10-11T22:40:22.4374802Z [46/57] Compiling JovraStudioCoreTests StudioFixtures.swift
+swift test (JovraStudioCore)	2026-10-11T22:40:22.4376289Z [48/57] Compiling JovraStudioCoreTests RecordHeaderTests.swift
+swift test (JovraStudioCore)	2026-10-11T22:40:23.7978166Z [53/61] Compiling JovraStudioCorePackageDiscoveredTests all-discovered-tests.swift
+swift test (JovraStudioCore)	2026-10-11T22:40:23.7978960Z [54/61] Compiling JovraStudioCorePackageDiscoveredTests JovraStudioCoreTests.swift
+swift test (JovraStudioCore)	2026-10-11T22:40:25.0858324Z [61/64] Compiling JovraStudioCorePackageTests runner.swift
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9669915Z Build complete! (26.51s)
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9906691Z ◇ Test run started.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9913773Z ◇ Test "a fixture that does not exist is an error naming the path, never a silent empty read" started.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9918718Z ◇ Test "a record that is not a JSON object with a schemaVersion string is an error" started.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9940640Z ✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 0.001 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9941980Z ✔ Test "an edit plan names version 2 of its contract" passed after 0.002 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9943264Z ✔ Test "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" passed after 0.001 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9944514Z ✔ Test "a record without a sample flag is not Sample data" passed after 0.002 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9945752Z ✔ Test "the Sample project lock names jovra.project-lock version 1 and is Sample data" passed after 0.002 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9947302Z ✔ Test "a fixture that does not exist is an error naming the path, never a silent empty read" passed after 0.002 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9948829Z ✔ Suite "Studio fixture locator" passed after 0.002 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9949860Z ✔ Test "a record that is not a JSON object with a schemaVersion string is an error" passed after 0.002 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9950680Z ✔ Suite "Studio record header" passed after 0.002 seconds.
+swift test (JovraStudioCore)	2026-10-11T22:40:25.9951099Z ✔ Test run with 7 tests passed after 0.003 seconds.

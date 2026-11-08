@@ -32,12 +32,12 @@ public enum ScoringEngine {
                 continue
             default: break
             }
-            let outcome: SessionOutcome?, winner: Side?, chosen: String?, recordedServer: String?
+            let outcome: SessionOutcome?, winner: Side?, chosen: String?, recordedServer: String?, servedFrom: String?
             switch event {
             case .point(let v):
                 guard let effective = v.reviewed ?? v.detected else { throw ScoringError(.outcomeMissing, v.id) }
-                outcome = effective; winner = Side(rawValue: effective.winner.rawValue); chosen = v.decidingPointSide?.rawValue; recordedServer = v.recordedServer
-            case .penalty(let v): outcome = nil; winner = match.sideOf[v.player]!.other; chosen = nil; recordedServer = nil
+                outcome = effective; winner = Side(rawValue: effective.winner.rawValue); chosen = v.decidingPointSide?.rawValue; recordedServer = v.recordedServer; servedFrom = v.servedFromSide?.rawValue
+            case .penalty(let v): outcome = nil; winner = match.sideOf[v.player]!.other; chosen = nil; recordedServer = nil; servedFrom = nil
             default: continue
             }
             stretch.append(event.id)
@@ -49,6 +49,8 @@ public enum ScoringEngine {
             var state = try match.state(server: server, chosen: chosen)
             state.receiver = .init(overrides.receiver(match, server: server, courtSide: state.courtSide.value))
             if let chosen, !match.sideChosen { conflicts.append(.init(type: .decidingPointSideIgnored, pointId: event.id, recorded: chosen, derived: state.courtSide.value!.rawValue)) }
+            // Rule 27a: served from the wrong half. The point and any earlier fault stand; the derived half is kept (decision 25).
+            if let servedFrom, let derived = state.courtSide.value?.rawValue, servedFrom != derived { conflicts.append(.init(type: .sideMismatch, pointId: event.id, recorded: servedFrom, derived: derived)) }
             if overrides.servers[event.id] == nil, let recordedServer, recordedServer != state.server { conflicts.append(.init(type: .serverMismatch, pointId: event.id, recorded: recordedServer, derived: state.server)) }
             var record = OutcomeInterpreter.record(event: event, index: points.count, state: state, afterEnd: false, outcome: outcome, winner: winner)
             guard let winner else { determined = false; points.append(record); continue }
