@@ -305,9 +305,11 @@ it when you finish a ticket: `rm -rf .derivedData`.
 `JovraWatch` is the Apple Watch companion (ADR-0026, `docs/spec/watch-v1-spec.md`): a single-target SwiftUI watchOS
 app, bundle id `com.islanddevcrew.jovra.watchkitapp`, `WKCompanionAppBundleIdentifier` `com.islanddevcrew.jovra`,
 deployment target **watchOS 11** to pair with iOS 18 (INFERRED from ADR-0007; to be recorded in the watch target ADR).
-It depends only on `JovraRoom`. It is **not yet embedded in `Jovra.app`**: adding `- target: JovraWatch` to the
-`Jovra` target's dependencies is the core owner's decision (it changes every iOS build and device signing), so the
-watch app is not yet installable through the companion flow.
+It depends only on `JovraRoom`. It is **not yet embedded in `Jovra.app`**, so the watch app is not yet installable
+through the companion flow (watch user story 1). Adding `- target: JovraWatch` to the `Jovra` target's dependencies
+changes every iOS build and device signing, so it needs a core-owner-reviewed `project.yml` diff. It is tracked in
+[#419](https://github.com/Navigata1/jovra/issues/419) and proposed for W07 (#284), whose simulator-pair gate is the
+first that needs the embed. The core owner has not yet confirmed that move.
 
 | Folder | Holds |
 |---|---|
