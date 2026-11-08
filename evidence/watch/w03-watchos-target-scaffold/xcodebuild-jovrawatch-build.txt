@@ -1,0 +1,18 @@
+$ scripts/ios/generate.sh && xcodebuild -project ios/Jovra.xcodeproj -scheme JovraWatch -destination 'platform=watchOS Simulator,name=JOVRA Watch Ultra 3 49mm' -derivedDataPath .derivedData clean build
+(2026-11-08T20:25:37Z, Xcode 27.2 Build version 27B52 )
+** CLEAN SUCCEEDED **
+ProcessInfoPlistFile .derivedData/Build/Products/Debug-watchsimulator/JovraCore_JovraCore.bundle/Info.plist .derivedData/Build/Intermediates.noindex/JovraCore.build/Debug-watchsimulator/JovraCore_JovraCore-b.build/empty-
+CodeSign .derivedData/Build/Products/Debug-watchsimulator/JovraCore_JovraCore.bundle (in target 'JovraCore_JovraCore' from project 'JovraCore')
+CompileAssetCatalogVariant thinned .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app ios/JovraWatch/Resources/Assets.xcassets (in target 'JovraWatch' from project 'Jovra')
+Ld .derivedData/Build/Products/Debug-watchsimulator/JovraCore.o normal (in target 'JovraCore' from project 'JovraCore')
+Ld .derivedData/Build/Products/Debug-watchsimulator/JovraRoom.o normal (in target 'JovraRoom' from project 'JovraRoom')
+Ld .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app/__preview.dylib normal (in target 'JovraWatch' from project 'Jovra')
+Ld .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app/JovraWatch.debug.dylib normal (in target 'JovraWatch' from project 'Jovra')
+ProcessInfoPlistFile .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app/Info.plist ios/JovraWatch/Resources/Info.plist (in target 'JovraWatch' from project 'Jovra')
+Ld .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app/JovraWatch normal (in target 'JovraWatch' from project 'Jovra')
+CopySwiftLibs .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app (in target 'JovraWatch' from project 'Jovra')
+CodeSign .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app/JovraWatch.debug.dylib (in target 'JovraWatch' from project 'Jovra')
+CodeSign .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app/__preview.dylib (in target 'JovraWatch' from project 'Jovra')
+CodeSign .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app (in target 'JovraWatch' from project 'Jovra')
+Validate .derivedData/Build/Products/Debug-watchsimulator/JovraWatch.app (in target 'JovraWatch' from project 'Jovra')
+** BUILD SUCCEEDED **

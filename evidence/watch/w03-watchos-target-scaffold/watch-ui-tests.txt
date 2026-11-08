@@ -1,0 +1,46 @@
+$ DERIVED_DATA=$PWD/.derivedData scripts/ios/watch-ui-test.sh   (2026-11-08T20:35:33Z, Xcode 27.2, watchOS Simulator 27.2)
+==> JovraWatchUITests on JOVRA Watch Ultra 3 49mm (6160B3B2-02AA-4FA0-BB5D-0C92684A667F)
+Test class                              passed  failed  skipped  expected
+JovraWatchUITests/FakeWatchBridgeTests       9       0        0         0
+JovraWatchUITests/HarnessSelfTests          10       0        0         0
+Total: 19 passed, 0 failed, 0 skipped, 0 expected failure(s) in 2 classes (xcresult summary: 19 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA Watch Ultra 3 49mm 6160B3B2-02AA-4FA0-BB5D-0C92684A667F (Apple Watch Ultra 3, watchOS Simulator 27.2)
+Result bundle: .derivedData/watch-tests-ultra49-20261108-142710.xcresult
+==> JovraWatchUITests on JOVRA Watch Series 11 42mm (9C03A702-072B-489B-93AA-6EA8DC429C60)
+Test class                              passed  failed  skipped  expected
+JovraWatchUITests/FakeWatchBridgeTests       9       0        0         0
+JovraWatchUITests/HarnessSelfTests          10       0        0         0
+Total: 19 passed, 0 failed, 0 skipped, 0 expected failure(s) in 2 classes (xcresult summary: 19 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA Watch Series 11 42mm 9C03A702-072B-489B-93AA-6EA8DC429C60 (Apple Watch Series 11, watchOS Simulator 27.2)
+Result bundle: .derivedData/watch-tests-series42-20261108-142710.xcresult
+==> JovraWatchUITests on JOVRA Watch SE 3 40mm (72335BBC-55EB-4F43-9E11-F6AE06C5AF37)
+Test class                              passed  failed  skipped  expected
+JovraWatchUITests/FakeWatchBridgeTests       9       0        0         0
+JovraWatchUITests/HarnessSelfTests          10       0        0         0
+Total: 19 passed, 0 failed, 0 skipped, 0 expected failure(s) in 2 classes (xcresult summary: 19 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA Watch SE 3 40mm 72335BBC-55EB-4F43-9E11-F6AE06C5AF37 (Apple Watch SE 3, watchOS Simulator 27.2)
+Result bundle: .derivedData/watch-tests-se40-20261108-142710.xcresult
+
+
+Test cases on each device (FakeWatchBridgeTests, then HarnessSelfTests; listing from the SE 3 40mm run):
+   Passed testAgesKeepGrowingOnTheWatchClock()
+   Passed testANewBridgeInstanceIsAcceptedFromItsFirstSequence()
+   Passed testAnInteractiveDeliveryAfterAQueuedOneRenewsFreshness()
+   Passed testDeliverNowMarksHeardCamerasFresh()
+   Passed testDropNeverArrives()
+   Passed testDuplicateIsAReplayNotARefresh()
+   Passed testQueuePathMarksEveryRowUnknown()
+   Passed testReorderedDeliveryKeepsTheNewestSnapshot()
+   Passed testRestartKeepsTheCachedSnapshotButEveryRowBecomesUnknown()
+   Passed testAcknowledgeClosesTheAlertSheet()
+   Passed testCopyClipsToEighteenCharactersAndKeepsShortText()
+   Passed testEveryRecordAStateNamesDecodesStrictly()
+   Passed testEveryRegisteredStateOpensItsSurface()
+   Passed testEveryRegisteredValueRoundTripsThroughTheLaunchArguments()
+   Passed testLargestTextSizeKeepsTheHealthShellReadable()
+   Passed testPagesRunHealthScoreServeMarkTopToBottom()
+   Passed testUnknownStateFailsWithTheListedError()
+   Passed testUnregisteredValuesAreProblemsNeverIgnored()
+   Passed testViewAllPushesEveryCamera()
+
+Registered -watchState values: 9
