@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.1.0",
+  "kind": "jovra.session",
+  "id": "rp-session-rolls",
+  "sport": "tennis",
+  "createdAt": "2026-11-08T18:00:00Z",
+  "updatedAt": "2026-11-08T18:00:00Z",
+  "title": "Rally fixture: per-session and per-clip rolls",
+  "sample": {"label": "Sample", "synthetic": true, "generator": "sample:rallyFixture@1.0.0"},
+  "sessionKind": "match",
+  "players": [
+    {
+      "id": "rp-player-jon",
+      "displayName": "Jon",
+      "handedness": "right",
+      "backhand": "twoHanded",
+      "isSelf": true
+    },
+    {
+      "id": "rp-player-alex",
+      "displayName": "Alex",
+      "handedness": "left",
+      "backhand": "oneHanded",
+      "isSelf": false
+    }
+  ],
+  "sides": {"A": ["rp-player-jon"], "B": ["rp-player-alex"]},
+  "match": {
+    "format": {
+      "presetId": "club_bo3",
+      "setsToWin": 2,
+      "gameScoring": "ad",
+      "set": {"kind": "tiebreakSet", "games": 6, "tiebreakAt": 6, "tiebreak": {"points": 7}},
+      "lets": "let"
+    },
+    "toss": {"firstServer": "rp-player-jon", "startingEnds": {"A": "near", "B": "far"}},
+    "log": [
+      {"id": "rp-point-1", "seq": 1, "type": "point", "recordedServer": "rp-player-jon", "tStartMs": 30000, "tEndMs": 38000, "reviewed": {"winner": "A", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}, "reviewState": "reviewed"},
+      {"id": "rp-point-2", "seq": 2, "type": "point", "recordedServer": "rp-player-jon", "tStartMs": 52000, "tEndMs": 61000, "reviewed": {"winner": "B", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}, "reviewState": "reviewed"},
+      {"id": "rp-point-3", "seq": 3, "type": "point", "recordedServer": "rp-player-jon", "tStartMs": 80000, "tEndMs": 95000, "reviewed": {"winner": "A", "endType": "winner", "serves": [{"result": "in"}], "strokeCount": 3, "provenance": "manual", "source": "user"}, "reviewState": "reviewed"}
+    ]
+  },
+  "recording": {
+    "mode": "camera",
+    "durationMs": 120000,
+    "segments": [
+      {"id": "rp-segment-0", "index": 0, "file": {"path": "media/segment-000.mp4"}, "startMs": 0, "durationMs": 120000, "frameRate": {"num": 60, "den": 1}, "width": 1920, "height": 1080, "codec": "hevc", "hasAudio": false, "finalized": true}
+    ],
+    "gaps": [],
+    "microphone": "notRequested",
+    "mediaAvailable": true
+  },
+  "marks": [
+    {
+      "id": "rp-mark-1",
+      "tMs": 100000,
+      "kind": "point",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    }
+  ],
+  "archive": {"state": "localOnly"},
+  "storage": {"originals": "onDevice", "includeInDeviceBackup": false},
+  "rallyPlayback": {
+    "preRollMs": 2000,
+    "postRollMs": 3000,
+    "clips": [
+      {"targetId": "rp-point-2", "preRollMs": 500},
+      {"targetId": "rp-mark-1", "postRollMs": 4000},
+      {"targetId": "rp-point-3", "excluded": true}
+    ]
+  }
+}
