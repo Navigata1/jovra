@@ -38,6 +38,15 @@ A moved or renamed fixtures folder makes the locator throw ("spec/studio/fixture
 instead of reading something else. Expected values come from the fixtures (the Python reference), never from the
 Swift code under test.
 
+### Contracts and fixture consumers (S10)
+
+`Sources/JovraStudioCore/Contracts` reads and writes every Studio record strictly (`StudioContractCodec`); its README
+explains the generated models and the schema check. A module whose tests consume shared fixtures adds one
+`Tests/JovraStudioCoreTests/<Module>/<Name>Consumer.swift` (`struct <Name>Consumer: StudioFixtureConsumer`) with its
+decoders and vector checkers; the test-only plugin finds it, so no shared list is edited. When its tests reproduce every
+kind on its module page, the ticket flips only that page's `swift:` line, and the manifest test
+(`ContractsFixtureManifestTests`) keeps the page honest.
+
 ## App, project and configuration
 
 S04 is the only Studio ticket that edits `ios/project.yml`. It added, once, everything later Studio tickets need:
@@ -80,6 +89,7 @@ come from configuration outside source control.
 | `swift test --package-path ios/Packages/JovraStudioCore` | Studio domain tests (macOS; the same suite runs on Linux in CI) |
 | `swift test --package-path ios/Packages/JovraStudioMedia` | Studio media tests (macOS) |
 | `python3 scripts/spec/validate_studio.py [-v \| --list]` | Studio contracts, fixtures, reference, module pages and determinism |
+| `python3 ios/Packages/JovraStudioCore/Tools/generate_contract_models.py [--check]` | regenerate (or check) the Swift Studio contract models and embedded schemas after a change under `spec/schemas/studio` (S10) |
 | `scripts/ios/generate.sh` | regenerate the Xcode project after adding or removing files |
 | `xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -only-testing:JovraTests/<StudioSuite> -destination id=<your simulator> -derivedDataPath <worktree>/.derivedData` | hosted Studio unit tests (`ios/JovraTests/Studio`) |
 | `scripts/ios/ui-test.sh -only-testing JovraUITests/<StudioClass> studio/<ticket>` | Studio UI tests (`ios/JovraUITests/Studio`), screenshots exported to `evidence/ios/studio/<ticket>/` |

@@ -1,0 +1,36 @@
+# S10 manifest negative transcripts (2026-11-08T19:09:51Z, a07ae4c + working tree)
+# Each step edits the real spec/studio tree with a temporary file, runs the repository manifest test, then restores it.
+
+## 1. new fixture kind with no module page: spec/studio/fixtures/vectors/zz-temp-new-kind.json
+$ swift test --filter ContractsFixtureManifestTests/repositoryPasses
+◇ Test run started.
+  sync-fit page=sync swift=pending consumed=false files=1
+  FAIL kind temp-new-kind has no module page (1 fixture file(s) state it)
+✘ Test "the repository's fixtures, module pages and Swift consumers agree" recorded an issue at ContractsFixtureManifestTests.swift:41:9: Expectation failed: report.failures.isEmpty
+✘ Test "the repository's fixtures, module pages and Swift consumers agree" failed after 0.324 seconds with 1 issue.
+✘ Test run with 1 test in 1 suite failed after 0.324 seconds with 1 issue.
+
+## 2. same kind, page spec/studio/modules/zztemp.md says swift: pending
+$ swift test --filter ContractsFixtureManifestTests/repositoryPasses
+◇ Test run started.
+✔ Test "the repository's fixtures, module pages and Swift consumers agree" passed after 0.296 seconds.
+✔ Test run with 1 test in 1 suite passed after 0.296 seconds.
+
+## 3. spec/studio/modules/sync.md temporarily says swift: consumed (no Swift consumer for its vector kinds)
+$ swift test --filter ContractsFixtureManifestTests/repositoryPasses
+◇ Test run started.
+  sync-fit page=sync swift=consumed consumed=false files=1
+  FAIL page sync says swift: consumed, but kind sync-fit has no registered Swift consumer
+  FAIL page sync says swift: consumed, but kind sound-delay has no registered Swift consumer
+✘ Test "the repository's fixtures, module pages and Swift consumers agree" recorded an issue at ContractsFixtureManifestTests.swift:41:9: Expectation failed: report.failures.isEmpty
+↳ ["page sync says swift: consumed, but kind sync-fit has no registered Swift consumer", "page sync says swift: consumed, but kind sound-delay has no registered Swift consumer"]
+↳   report.failures → ["page sync says swift: consumed, but kind sync-fit has no registered Swift consumer", "page sync says swift: consumed, but kind sound-delay has no registered Swift consumer"]
+✘ Test "the repository's fixtures, module pages and Swift consumers agree" failed after 0.291 seconds with 1 issue.
+✘ Test run with 1 test in 1 suite failed after 0.291 seconds with 1 issue.
+
+## 4. restored
+ M spec/studio/modules/records.md
+$ swift test --filter ContractsFixtureManifestTests/repositoryPasses
+◇ Test run started.
+✔ Test "the repository's fixtures, module pages and Swift consumers agree" passed after 0.314 seconds.
+✔ Test run with 1 test in 1 suite passed after 0.314 seconds.

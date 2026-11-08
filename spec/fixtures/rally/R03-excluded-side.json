@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.rally",
+  "id": "R03-excluded-side",
+  "title": "Hits attributed to the excluded frame half never form rallies; marks are never masked",
+  "covers": ["T32", "ios-v1-spec RallySegmenter", "screens.md N7", "stories 192, 195, 200"],
+  "cases": [
+    {
+      "op": "segment",
+      "name": "excluded left: left hits dropped, unattributed hits kept, no false point at 20 s",
+      "hits": [
+        {"id": "h1", "tMs": 10000, "kind": "hit", "side": "right"},
+        {"id": "h2", "tMs": 11000, "kind": "hit", "side": "left"},
+        {"id": "h3", "tMs": 12000, "kind": "hit"},
+        {"id": "h4", "tMs": 20000, "kind": "hit", "side": "left"},
+        {"id": "h5", "tMs": 30000, "kind": "hit", "side": "right"}
+      ],
+      "marks": [],
+      "params": {"durationMs": 60000, "excludedSide": "left"},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 12000, "clip": {"fromMs": 8500, "toMs": 14500}, "hitIds": ["h1", "h3"], "markIds": [], "rallies": [{"startMs": 10000, "endMs": 12000, "hitCount": 2}], "provenance": "estimated", "needsReview": true},
+          {"source": "hits", "startMs": 30000, "endMs": 30000, "clip": {"fromMs": 28500, "toMs": 32500}, "hitIds": ["h5"], "markIds": [], "rallies": [{"startMs": 30000, "endMs": 30000, "hitCount": 1}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": ["h2", "h4"], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "the same hits with no excluded side",
+      "hits": [
+        {"id": "h1", "tMs": 10000, "kind": "hit", "side": "right"},
+        {"id": "h2", "tMs": 11000, "kind": "hit", "side": "left"},
+        {"id": "h3", "tMs": 12000, "kind": "hit"},
+        {"id": "h4", "tMs": 20000, "kind": "hit", "side": "left"},
+        {"id": "h5", "tMs": 30000, "kind": "hit", "side": "right"}
+      ],
+      "marks": [],
+      "params": {"durationMs": 60000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 12000, "clip": {"fromMs": 8500, "toMs": 14500}, "hitIds": ["h1", "h2", "h3"], "markIds": [], "rallies": [{"startMs": 10000, "endMs": 12000, "hitCount": 3}], "provenance": "estimated", "needsReview": true},
+          {"source": "hits", "startMs": 20000, "endMs": 20000, "clip": {"fromMs": 18500, "toMs": 22500}, "hitIds": ["h4"], "markIds": [], "rallies": [{"startMs": 20000, "endMs": 20000, "hitCount": 1}], "provenance": "estimated", "needsReview": true},
+          {"source": "hits", "startMs": 30000, "endMs": 30000, "clip": {"fromMs": 28500, "toMs": 32500}, "hitIds": ["h5"], "markIds": [], "rallies": [{"startMs": 30000, "endMs": 30000, "hitCount": 1}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "bounces and other sounds are not hits",
+      "hits": [
+        {"id": "h1", "tMs": 10000, "kind": "hit"},
+        {"id": "o1", "tMs": 40000, "kind": "other"},
+        {"id": "b1", "tMs": 11000, "kind": "bounce"},
+        {"id": "h2", "tMs": 12000, "kind": "hit"}
+      ],
+      "marks": [],
+      "params": {"durationMs": 60000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 12000, "clip": {"fromMs": 8500, "toMs": 14500}, "hitIds": ["h1", "h2"], "markIds": [], "rallies": [{"startMs": 10000, "endMs": 12000, "hitCount": 2}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": ["b1", "o1"], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "excluded right: a mark among right-side hits still stands",
+      "hits": [
+        {"id": "r2", "tMs": 51000, "kind": "hit", "side": "right"},
+        {"id": "r1", "tMs": 50000, "kind": "hit", "side": "right"}
+      ],
+      "marks": [{"id": "m1", "tMs": 50500, "kind": "point"}],
+      "params": {"durationMs": 60000, "excludedSide": "right"},
+      "expected": {
+        "candidates": [
+          {"source": "mark", "startMs": 50500, "endMs": 50500, "clip": {"fromMs": 49000, "toMs": 53000}, "hitIds": [], "markIds": ["m1"], "rallies": [], "provenance": "manual", "needsReview": false}
+        ],
+        "dropped": {"excludedSide": ["r1", "r2"], "notHit": [], "notPointMark": []}
+      }
+    }
+  ]
+}

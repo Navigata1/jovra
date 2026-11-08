@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; media-src 'self'">
+<title>Jon vs Alex · JOVRA</title>
+<style>
+:root{--bg:#F4F1E8;--surface:#FBFAF6;--ink:#182F29;--ink2:#4D5853;--line:#DCD7CA;--accent:#4C6610;--editorial:#092A25;--on-editorial:#F4F1E8;--chartreuse:#D7F56A}
+@media (prefers-color-scheme:dark){:root{--bg:#092A25;--surface:#123C33;--ink:#F4F1E8;--ink2:#B4C2BB;--line:#25544A;--accent:#D7F56A;--editorial:#123C33}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.5 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;padding:24px 16px 48px}
+main{max-width:720px;margin:0 auto}
+header{background:var(--editorial);color:var(--on-editorial);border-radius:20px;padding:24px;margin-bottom:24px}
+h1{font-size:clamp(1.75rem,1.2rem + 2.5vw,2.5rem);line-height:1.1;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-size:1.125rem;margin:32px 0 12px}
+.meta{margin:0;opacity:.8}
+.result{margin:16px 0 0;font-size:1.25rem;font-weight:600;color:var(--chartreuse)}
+.badge{display:inline-block;margin:0 0 12px;padding:4px 12px;border-radius:999px;border:1.5px solid var(--ink);font-weight:600;font-size:.875rem}
+table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:16px;overflow:hidden}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-size:.8125rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink2)}
+tbody th{font-weight:500}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+.value{font-weight:700;font-variant-numeric:tabular-nums}
+.fraction{color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.note,.source{display:block;font-size:.8125rem;color:var(--ink2);font-weight:400}
+.source{color:var(--accent)}
+.foot,.empty{color:var(--ink2);font-size:.875rem}
+.review{margin:12px 0 0;font-weight:600}
+.clips,.files{padding-left:20px}
+.clips li,.files li{margin:8px 0}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+footer{margin-top:40px;color:var(--ink2);font-size:.875rem}
+@media (max-width:480px){th,td{padding:10px 8px}}
+</style>
+</head>
+<body><main>
+<p class="badge" role="note">Sample · demo data, not real play</p><header><h1>Jon vs Alex</h1><p class="meta">October 6, 2026</p><p class="result">Jon won 6-4 6-3</p></header><section aria-labelledby="stats"><h2 id="stats">Match stats</h2><table><thead><tr><th scope="col">Stat</th><th scope="col">Jon</th><th scope="col">Alex</th></tr></thead><tbody><tr><th scope="row">Points won</th><td><span class="value">58%</span> <span class="fraction">72 / 124</span></td><td><span class="value">42%</span> <span class="fraction">52 / 124</span></td></tr><tr><th scope="row">First serves in</th><td><span class="value">67%</span> <span class="fraction">40 / 60</span></td><td><span class="value">59%</span> <span class="fraction">38 / 64</span></td></tr><tr><th scope="row">First-serve points won</th><td><span class="value">70%</span> <span class="fraction">28 / 40</span></td><td><span class="value">55%</span> <span class="fraction">21 / 38</span></td></tr><tr><th scope="row">Second-serve points won<span class="note">Points after a 1st-serve fault, double faults included</span></th><td><span class="value">60%</span> <span class="fraction">12 / 20</span></td><td><span class="value">42%</span> <span class="fraction">11 / 26</span></td></tr><tr><th scope="row">Break points won</th><td><span class="value">50%</span> <span class="fraction">4 / 8</span></td><td><span class="value">40%</span> <span class="fraction">2 / 5</span></td></tr><tr><th scope="row">Break points saved</th><td><span class="value">60%</span> <span class="fraction">3 / 5</span></td><td><span class="value">50%</span> <span class="fraction">4 / 8</span></td></tr><tr><th scope="row">Aces</th><td><span class="value">4</span></td><td><span class="value">2</span></td></tr><tr><th scope="row">Double faults</th><td><span class="value">3</span></td><td><span class="value">5</span></td></tr><tr><th scope="row">Winners<span class="note">Aces not included</span></th><td><span class="value">23</span></td><td><span class="value">21</span></td></tr><tr><th scope="row">Unforced errors</th><td><span class="value">14</span></td><td><span class="value">26</span></td></tr><tr><th scope="row">Shots<span class="note">Racket contacts in live play</span></th><td colspan="2"><span class="value">386</span></td></tr></tbody></table><p class="review">8 of 124 points are not yet reviewed, so these numbers can still change.</p><p class="foot">Percentages are whole numbers rounded half up, with the fraction beside them. A dash means nothing to count yet.</p></section><section aria-labelledby="clips"><h2 id="clips">Clips</h2><ol class="clips"><li><a href="clips/point-42.mp4">Point 42 · 15–30</a><p>Watch the split step</p></li></ol></section><section aria-labelledby="data"><h2 id="data">Data</h2><ul class="files"><li><a href="match.json">match.json</a> · the full session record</li><li><a href="points.csv">points.csv</a> · 124 points</li></ul></section><footer>Made with JOVRA · Contact hello@islanddevcrew.com</footer>
+</main></body>
+</html>
