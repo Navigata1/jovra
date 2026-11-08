@@ -57,3 +57,11 @@ Steps1–3 complete; step4 remains in progress. T03/330, order amendment332, loc
 - Fresh bounded checks: Core69(12XCTest+57Swift), Python99, core/Studio/Room232/l10nPASS. No new simulator, fullMedia, Docker, physical device or external hosted-service test; about3GiB disk at start.
 - Main complete iOS tree9a925bb equals historical tested73. Historical native4 and actual artifacts remain SHA-bound; no runtime result relabelled. P4 staysin_progress with current-main native gatepending.
 - Full enhanced report lives in docs/reports/2026-11-02; durable entrypoint docs/handoff/CODEX-NEXT-SESSION.md. Recommended next slice: finished-journal startup reconciliation, then Files-only safe import. Preserve all original worktrees/media/failures.
+
+## 2026-11-08 — startup recovery, Files import and signed iPhone proof
+
+- Startup recovery #392 merged as `09e66a4` after separate exact-head reviews and required CI. It adopts only fully verified finished recordings and refuses changed candidates.
+- A signed iPhone test initially failed on a filesystem alias, despite a controlled fixture budget. #395 fixed that specific containment mismatch and merged as `7673f2b`.
+- Files import #393 merged as `70aad22` after separate exact-head reviews and required CI. Simulator 11 passed, including the native picker cancellation and CoreFlow. The actual synthetic import sidecar validates and matches the fixture hash and bytes.
+- The signed combined iPhone 15 Pro Max run passed 6. The merged iOS tree matches the tested tree. The actual simulator CoreFlow package independently passed JSON, CSV and decoded clip verification.
+- Retained Claude's original #389 and published isolated S88 draft #394 with 143/143 parity. Historical #380 RED was superseded by a green merge. Physical camera and Files-provider UI, Android app, and remaining full-ticket and release gates stay open.

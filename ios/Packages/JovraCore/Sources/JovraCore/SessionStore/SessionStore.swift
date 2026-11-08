@@ -76,6 +76,7 @@ public actor SessionStore {
     let sessions: URL
     private let writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)?
     /// Store-issued, single-use purge tokens; they never outlive this actor or a restore.
+    var activeFilesImports: Set<UUID> = []
     var purgeTokens: [String: UUID] = [:]
 
     public init(root: URL, writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = nil) throws {
@@ -170,6 +171,29 @@ public actor SessionStore {
                                       original: SessionOriginalState, for id: String) throws {
         guard recording.recovery != nil else { throw SessionStoreError.invalidCapture }
         try persistCapture(recording, marks: marks, original: original, for: id)
+    }
+
+    public func needsFinishedCaptureRecovery(_ id: String) throws -> Bool {
+        let document = try load(id)
+        switch document.original?.state {
+        case .recording, .recovering, .partial:
+            return document.recording.mode == .camera || document.recording.mode == .simulatorFixture
+        default:
+            return false
+        }
+    }
+
+    /// Recheck eligibility inside the write transaction: a stale scan must never replace a
+    /// successful handoff or revive a recording the player already moved to Trash.
+    public func reconcileFinishedCapture(_ recording: SessionRecording, marks: [SessionMark],
+                                         original: SessionOriginalState, for id: String,
+                                         verifyOriginals: @Sendable (URL) throws -> Void) throws -> Bool {
+        guard try needsFinishedCaptureRecovery(id) else { return false }
+        guard try load(id).recording.mode == recording.mode,
+              recording.recovery?.outcome == .complete else { throw SessionStoreError.invalidCapture }
+        try verifyOriginals(folder(id))
+        try applyRecoveredCapture(recording, marks: marks, original: original, for: id)
+        return true
     }
 
     private func persistCapture(_ recording: SessionRecording, marks: [SessionMark],

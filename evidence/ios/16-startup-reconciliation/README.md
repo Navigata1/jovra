@@ -1,0 +1,5 @@
+# T16/T17: finished capture recovery
+- Behavioral RED: a real synthetic capture completed its journal and the injected final library write refused. Reopening left the document in Recording, without the recovered mark or a receipt. Raw result is retained locally as recovery-red.xcresult.
+- At 4b6b3e3, serial hosted tests plus CoreFlow and three viewport accessibility controls passed on the dedicated iOS 27.2 simulator. This proves that tested revision, before the adoption witness change.
+- After independent review, a folder/file identity witness now binds the completed decode and hashes to the files present at adoption. A same-content inode replacement after verification is refused and the session stays unchanged. The final focused hosted result includes this witness test and the current-process, unfinished, existing-edit and repeat-startup controls.
+- Both suites used synthetic footage. Full torn-fragment recovery, real interruptions, and physical run acceptance remain separate. Original movie and capture-journal bytes are checked against their pre-reconciliation bytes.

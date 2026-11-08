@@ -1,5 +1,7 @@
 # JOVRA — next Codex session
 
+**Latest implementation handoff:** [November 8 continuation](CODEX-CONTINUATION-2026-11-08.md). The assessment below is historical.
+
 Assessment: **2026-11-02**, America/Chicago. This is a source/verification handoff, not a production release.
 
 Coordination issue: https://github.com/Navigata1/jovra/issues/382 (kept open for implementation follow-through).
