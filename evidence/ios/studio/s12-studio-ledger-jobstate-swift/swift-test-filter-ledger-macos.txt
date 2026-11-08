@@ -1,79 +1,79 @@
-# swift test --filter Ledger (macOS, macOS 27.2, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)) 2026-11-08T23:04:35Z
+# swift test --filter Ledger (macOS 27.2, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)) 2026-11-08T23:17:27Z, after merging origin/main
 ◇ Test run started.
 ↳ Testing Library Version: 2403
 ↳ Target Platform: arm64e-apple-macos14.0
-◇ Suite "Ledger: record rules and the reference's invalid cases" started.
-◇ Suite "Ledger: random retry and redelivery sequences" started.
-◇ Suite "Ledger: QuoteReservation (client quote and consent state)" started.
 ◇ Suite "Ledger: RenderJobMachine for local and cloud jobs" started.
 ◇ Suite "Ledger: vector parity with jobstate.py and ledger.py" started.
-◇ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" started.
-◇ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" started.
-◇ Test "every reference-layer invalid case fails with the reference's code; schema-layer cases never decode" started.
-◇ Test "every stored render-job, quote and usage-reservation record passes its rules" started.
-◇ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" started.
-◇ Test "1,000 seeded sequences: reserved never exceeds the cap, no stage is charged twice, credits are conserved" started.
-◇ Test "consent at 23:15:00.500Z on a quote that expires at 23:15:00Z is refused and the quote expires" started.
-◇ Test "a cap above the spending limit waits in aboveCap until the player raises the limit" started.
-◇ Test "a consent half a second before expiry is accepted; acceptance after expiry is not" started.
-◇ Test "consent needs the upload box, and the model-provider box exactly when the cloud plans the story" started.
-◇ Test "the happy path: none -> requested -> presented -> consented -> accepted(reservationId)" started.
-◇ Test "unavailable, expired-on-arrival, illustrative and live quotes never reach consent" started.
-◇ Test "demo mode ends in demoDisabled with the Sample quote and no reservation" started.
-◇ Test "the accept request carries no amount: the client never computes a price the server trusts" started.
+◇ Suite "Ledger: QuoteReservation (client quote and consent state)" started.
+◇ Suite "Ledger: random retry and redelivery sequences" started.
+◇ Suite "Ledger: record rules and the reference's invalid cases" started.
+◇ Test "pause, retry and cancel work the same for local jobs; a retry counts an attempt" started.
 ◇ Test "replaying the stored jobs reaches their state, resume stage and attempt" started.
-◇ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" started.
 ◇ Test "every working state belongs to a named stage, and analyzing is shown as Build film, never as analysis" started.
-◇ Test "the bundled contract drives the same machine as the repository's file" started.
+◇ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" started.
 ◇ Test "a local job never enters a cloud-only state" started.
 ◇ Test "a stored resume stage is checked, never trusted, whatever path the record took" started.
-◇ Test "pause, retry and cancel work the same for local jobs; a retry counts an attempt" started.
-◇ Test "all 8 quote-credit vectors give the reference's cap" started.
-◇ Test "the bundled contracts are the repository's render-job-transitions and credit-classes files, byte for byte" started.
+◇ Test "the bundled contract drives the same machine as the repository's file" started.
 ◇ Test "all 32 job-transition vectors give the reference's state, resume stage, attempt or code" started.
 ◇ Test "a vector with a wrong expectation is reported as a mismatch" started.
 ◇ Test "the jobstate and ledger pages say swift: consumed, and the manifest fails without LedgerConsumer" started.
+◇ Test "all 8 quote-credit vectors give the reference's cap" started.
 ◇ Test "all 21 ledger sequences give the reference's step results and final ledger" started.
-◇ Test case passing 1 argument state → .budgetExceeded to "a local job never enters a cloud-only state" started.
-◇ Test case passing 1 argument state → .consented to "a local job never enters a cloud-only state" started.
-◇ Test case passing 1 argument state → .queued to "a local job never enters a cloud-only state" started.
-◇ Test case passing 1 argument state → .quoteExpired to "a local job never enters a cloud-only state" started.
+◇ Test "the bundled contracts are the repository's render-job-transitions and credit-classes files, byte for byte" started.
+◇ Test "demo mode ends in demoDisabled with the Sample quote and no reservation" started.
+◇ Test "the accept request carries no amount: the client never computes a price the server trusts" started.
+◇ Test "a cap above the spending limit waits in aboveCap until the player raises the limit" started.
+◇ Test "consent needs the upload box, and the model-provider box exactly when the cloud plans the story" started.
+◇ Test "the happy path: none -> requested -> presented -> consented -> accepted(reservationId)" started.
+◇ Test "a consent half a second before expiry is accepted; acceptance after expiry is not" started.
+◇ Test "consent at 23:15:00.500Z on a quote that expires at 23:15:00Z is refused and the quote expires" started.
+◇ Test "unavailable, expired-on-arrival, illustrative and live quotes never reach consent" started.
+◇ Test "1,000 seeded sequences: reserved never exceeds the cap, no stage is charged twice, credits are conserved" started.
+◇ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" started.
+◇ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" started.
+◇ Test "every reference-layer invalid case fails with the reference's code; schema-layer cases never decode" started.
+◇ Test "every stored render-job, quote and usage-reservation record passes its rules" started.
+◇ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" started.
 ◇ Test case passing 1 argument state → .quoted to "a local job never enters a cloud-only state" started.
-◇ Test case passing 1 argument state → .uploadPending to "a local job never enters a cloud-only state" started.
 ◇ Test case passing 1 argument state → .uploading to "a local job never enters a cloud-only state" started.
-✔ Test "demo mode ends in demoDisabled with the Sample quote and no reservation" passed after 0.222 seconds.
-✔ Test "the happy path: none -> requested -> presented -> consented -> accepted(reservationId)" passed after 0.222 seconds.
-✔ Test "the accept request carries no amount: the client never computes a price the server trusts" passed after 0.222 seconds.
-✔ Test "every working state belongs to a named stage, and analyzing is shown as Build film, never as analysis" passed after 0.222 seconds.
-✔ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" passed after 0.222 seconds.
-✔ Test "pause, retry and cancel work the same for local jobs; a retry counts an attempt" passed after 0.222 seconds.
-✔ Test "a stored resume stage is checked, never trusted, whatever path the record took" passed after 0.222 seconds.
-✔ Test "all 8 quote-credit vectors give the reference's cap" passed after 0.222 seconds.
-✔ Test "a consent half a second before expiry is accepted; acceptance after expiry is not" passed after 0.222 seconds.
-✔ Test "consent at 23:15:00.500Z on a quote that expires at 23:15:00Z is refused and the quote expires" passed after 0.222 seconds.
-✔ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" passed after 0.222 seconds.
-✔ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" passed after 0.224 seconds.
-✔ Test "all 32 job-transition vectors give the reference's state, resume stage, attempt or code" passed after 0.227 seconds.
-✔ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" passed after 0.227 seconds.
-✔ Test "a local job never enters a cloud-only state" with 7 test cases passed after 0.227 seconds.
-✔ Test "consent needs the upload box, and the model-provider box exactly when the cloud plans the story" passed after 0.234 seconds.
-✔ Test "a cap above the spending limit waits in aboveCap until the player raises the limit" passed after 0.234 seconds.
-✔ Test "unavailable, expired-on-arrival, illustrative and live quotes never reach consent" passed after 0.239 seconds.
-✔ Suite "Ledger: QuoteReservation (client quote and consent state)" passed after 0.239 seconds.
-✔ Test "the bundled contract drives the same machine as the repository's file" passed after 0.251 seconds.
-✔ Test "the bundled contracts are the repository's render-job-transitions and credit-classes files, byte for byte" passed after 0.259 seconds.
-✔ Test "replaying the stored jobs reaches their state, resume stage and attempt" passed after 0.264 seconds.
-✔ Suite "Ledger: RenderJobMachine for local and cloud jobs" passed after 0.264 seconds.
-✔ Test "a vector with a wrong expectation is reported as a mismatch" passed after 0.295 seconds.
-✔ Test "all 21 ledger sequences give the reference's step results and final ledger" passed after 0.305 seconds.
+◇ Test case passing 1 argument state → .queued to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .budgetExceeded to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .uploadPending to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .quoteExpired to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .consented to "a local job never enters a cloud-only state" started.
+✔ Test "all 8 quote-credit vectors give the reference's cap" passed after 0.391 seconds.
+✔ Test "every working state belongs to a named stage, and analyzing is shown as Build film, never as analysis" passed after 0.391 seconds.
+✔ Test "pause, retry and cancel work the same for local jobs; a retry counts an attempt" passed after 0.391 seconds.
+✔ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" passed after 0.391 seconds.
+✔ Test "a local job never enters a cloud-only state" with 7 test cases passed after 0.391 seconds.
+✔ Test "all 32 job-transition vectors give the reference's state, resume stage, attempt or code" passed after 0.391 seconds.
+✔ Test "the bundled contract drives the same machine as the repository's file" passed after 0.391 seconds.
+✔ Test "a stored resume stage is checked, never trusted, whatever path the record took" passed after 0.391 seconds.
+✔ Test "the accept request carries no amount: the client never computes a price the server trusts" passed after 0.391 seconds.
+✔ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" passed after 0.391 seconds.
+✔ Test "demo mode ends in demoDisabled with the Sample quote and no reservation" passed after 0.394 seconds.
+✔ Test "consent needs the upload box, and the model-provider box exactly when the cloud plans the story" passed after 0.398 seconds.
+✔ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" passed after 0.398 seconds.
+✔ Test "consent at 23:15:00.500Z on a quote that expires at 23:15:00Z is refused and the quote expires" passed after 0.399 seconds.
+✔ Test "a consent half a second before expiry is accepted; acceptance after expiry is not" passed after 0.399 seconds.
+✔ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" passed after 0.406 seconds.
+✔ Test "all 21 ledger sequences give the reference's step results and final ledger" passed after 0.406 seconds.
+✔ Test "the happy path: none -> requested -> presented -> consented -> accepted(reservationId)" passed after 0.410 seconds.
+✔ Test "a cap above the spending limit waits in aboveCap until the player raises the limit" passed after 0.411 seconds.
+✔ Test "unavailable, expired-on-arrival, illustrative and live quotes never reach consent" passed after 0.419 seconds.
+✔ Suite "Ledger: QuoteReservation (client quote and consent state)" passed after 0.420 seconds.
+✔ Test "replaying the stored jobs reaches their state, resume stage and attempt" passed after 0.429 seconds.
+✔ Suite "Ledger: RenderJobMachine for local and cloud jobs" passed after 0.429 seconds.
+✔ Test "the bundled contracts are the repository's render-job-transitions and credit-classes files, byte for byte" passed after 0.434 seconds.
+✔ Test "a vector with a wrong expectation is reported as a mismatch" passed after 0.446 seconds.
 Ledger record rules accept: ["quote.accepted-storyboard.json", "quote.accepted.json", "quote.sample-illustrative.json", "render-job.queue-sample.json", "render-job.ready.json", "usage-reservation.held.json", "usage-reservation.settled.json"]
-✔ Test "every stored render-job, quote and usage-reservation record passes its rules" passed after 0.407 seconds.
-✔ Test "1,000 seeded sequences: reserved never exceeds the cap, no stage is charged twice, credits are conserved" passed after 0.511 seconds.
-✔ Suite "Ledger: random retry and redelivery sequences" passed after 0.511 seconds.
+✔ Test "every stored render-job, quote and usage-reservation record passes its rules" passed after 0.703 seconds.
 Ledger property test: base seed 0x51220261108, 1000 sequences, 17322 operations, 2193 replays, 2106 stage charges, 203 top-ups, 253 releases; rejections [(key: "budgetExceeded", value: 844), (key: "idempotencyConflict", value: 1511), (key: "insufficientCredits", value: 75), (key: "overCap", value: 1578), (key: "quoteNotAccepted", value: 2), (key: "reservationClosed", value: 1135)]
+✔ Test "1,000 seeded sequences: reserved never exceeds the cap, no stage is charged twice, credits are conserved" passed after 1.080 seconds.
+✔ Suite "Ledger: random retry and redelivery sequences" passed after 1.081 seconds.
 Ledger invalid cases refused with the reference's code: [(key: "jovra.quote/1", value: 11), (key: "jovra.render-job/1", value: 7), (key: "jovra.usage-reservation/1", value: 15), (key: "schema", value: 5)]
-✔ Test "every reference-layer invalid case fails with the reference's code; schema-layer cases never decode" passed after 0.556 seconds.
-✔ Suite "Ledger: record rules and the reference's invalid cases" passed after 0.556 seconds.
-✔ Test "the jobstate and ledger pages say swift: consumed, and the manifest fails without LedgerConsumer" passed after 1.700 seconds.
-✔ Suite "Ledger: vector parity with jobstate.py and ledger.py" passed after 1.701 seconds.
-✔ Test run with 27 tests in 5 suites passed after 1.701 seconds.
+✔ Test "every reference-layer invalid case fails with the reference's code; schema-layer cases never decode" passed after 1.350 seconds.
+✔ Suite "Ledger: record rules and the reference's invalid cases" passed after 1.350 seconds.
+✔ Test "the jobstate and ledger pages say swift: consumed, and the manifest fails without LedgerConsumer" passed after 3.395 seconds.
+✔ Suite "Ledger: vector parity with jobstate.py and ledger.py" passed after 3.398 seconds.
+✔ Test run with 27 tests in 5 suites passed after 3.399 seconds.

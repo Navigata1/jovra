@@ -1,0 +1,54 @@
+# Linux CI: jovra-studio-core (swift:6.1.3 container), PR #425 run 42533467275 job 128892525688 (commit da242f1 merged with main); log lines filtered to the Ledger suites
+SWIFT_VERSION=swift-6.1.3-RELEASE
+Ledger record rules accept: ["quote.accepted-storyboard.json", "quote.accepted.json", "quote.sample-illustrative.json", "render-job.queue-sample.json", "render-job.ready.json", "usage-reservation.held.json", "usage-reservation.settled.json"]
+Ledger invalid cases refused with the reference's code: [(key: "jovra.quote/1", value: 11), (key: "jovra.render-job/1", value: 7), (key: "jovra.usage-reservation/1", value: 15), (key: "schema", value: 5)]
+Studio fixture manifest: 39 kinds; consumers: ["ContractsConsumer", "EDLConsumer", "LedgerConsumer"]
+Ledger property test: base seed 0x51220261108, 1000 sequences, 17322 operations, 2193 replays, 2106 stage charges, 203 top-ups, 253 releases; rejections [(key: "budgetExceeded", value: 844), (key: "idempotencyConflict", value: 1511), (key: "insufficientCredits", value: 75), (key: "overCap", value: 1578), (key: "quoteNotAccepted", value: 2), (key: "reservationClosed", value: 1135)]
+Studio vector cases run by Swift checkers: [(key: "edl-context", value: 4), (key: "job-transitions", value: 32), (key: "ledger", value: 21), (key: "quote-credits", value: 8)]
+✔ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" passed after 4.377 seconds.
+✔ Test "every stored render-job, quote and usage-reservation record passes its rules" passed after 4.386 seconds.
+✔ Test "the trailing-newline id and hash cases are refused, although Python's re.search accepts them (finding 6)" passed after 4.425 seconds.
+✔ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" passed after 4.425 seconds.
+✔ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" passed after 4.425 seconds.
+✔ Test "the bundled contracts are the repository's render-job-transitions and credit-classes files, byte for byte" passed after 4.425 seconds.
+✔ Test "all 32 job-transition vectors give the reference's state, resume stage, attempt or code" passed after 4.425 seconds.
+✔ Test "a vector with a wrong expectation is reported as a mismatch" passed after 4.425 seconds.
+✔ Test "demo mode ends in demoDisabled with the Sample quote and no reservation" passed after 4.425 seconds.
+✔ Test "all 8 quote-credit vectors give the reference's cap" passed after 4.426 seconds.
+✔ Test "a cap above the spending limit waits in aboveCap until the player raises the limit" passed after 4.425 seconds.
+✔ Test "consent needs the upload box, and the model-provider box exactly when the cloud plans the story" passed after 4.425 seconds.
+✔ Test "a consent half a second before expiry is accepted; acceptance after expiry is not" passed after 4.425 seconds.
+✔ Test "the happy path: none -> requested -> presented -> consented -> accepted(reservationId)" passed after 4.425 seconds.
+✔ Test "every finding code except the stage gate is a code edl.py raises" passed after 4.425 seconds.
+✔ Test "1,000 seeded sequences: reserved never exceeds the cap, no stage is charged twice, credits are conserved" passed after 4.425 seconds.
+✔ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" passed after 4.425 seconds.
+✔ Test "the trusted context is built from the stored records, with the reviewed sync map's coverage" passed after 4.425 seconds.
+✔ Test "every valid edit-plan record passes as stored" passed after 4.425 seconds.
+✔ Test "the typed clean alternate equals the stored typed record" passed after 4.425 seconds.
+✔ Test "the jobstate and ledger pages say swift: consumed, and the manifest fails without LedgerConsumer" passed after 4.426 seconds.
+✔ Test "the loader reports an unsupported keyword, a dangling $ref and a non-portable escape" passed after 4.425 seconds.
+✔ Test "consent at 23:15:00.500Z on a quote that expires at 23:15:00Z is refused and the quote expires" passed after 4.425 seconds.
+✔ Test "unavailable, expired-on-arrival, illustrative and live quotes never reach consent" passed after 4.426 seconds.
+✔ Test "the accept request carries no amount: the client never computes a price the server trusts" passed after 4.426 seconds.
+✔ Test "an id pattern refuses a trailing newline and accepts the id" passed after 4.427 seconds.
+✔ Test "an integral float (744.0) in a frame field is refused; 744 is accepted" passed after 4.429 seconds.
+✔ Test "finding 1: re-showing a live moment as a second 1x live segment is a replay without its label" passed after 4.430 seconds.
+✔ Test "finding 8: a plan naming another project is refused against this project's records" passed after 4.427 seconds.
+✔ Test "finding 0: a frame looked up without its window's interval maps half-open (freezes and overlay moments)" passed after 4.426 seconds.
+✔ Test "every registered vector checker runs on at least one case of its kind" passed after 4.436 seconds.
+✔ Test "finding 2: a null keeperId does not switch contact protection off" passed after 4.427 seconds.
+✔ Test "a local job never enters a cloud-only state" passed after 4.322 seconds.
+✔ Test "every working state belongs to a named stage, and analyzing is shown as Build film, never as analysis" passed after 4.322 seconds.
+✔ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" passed after 4.198 seconds.
+✔ Test "the bundled contract drives the same machine as the repository's file" passed after 4.198 seconds.
+✔ Test "a stored resume stage is checked, never trusted, whatever path the record took" passed after 4.178 seconds.
+✔ Test "replaying the stored jobs reaches their state, resume stage and attempt" passed after 4.177 seconds.
+✔ Test "pause, retry and cancel work the same for local jobs; a retry counts an attempt" passed after 4.075 seconds.
+✔ Suite "Ledger: record rules and the reference's invalid cases" passed after 4.448 seconds.
+✔ Suite "Ledger: vector parity with jobstate.py and ledger.py" passed after 4.448 seconds.
+✔ Suite "Ledger: QuoteReservation (client quote and consent state)" passed after 4.448 seconds.
+✔ Suite "Ledger: random retry and redelivery sequences" passed after 4.448 seconds.
+✔ Suite "Ledger: RenderJobMachine for local and cloud jobs" passed after 4.449 seconds.
+✔ Test "finding 7: the alternate bed returning mid-segment, and an alternate bed at a dissolve without an audio dip" passed after 4.652 seconds.
+✔ Test "finding 0: the first frame of a restarted interval maps through that interval (half-open coverage)" passed after 4.854 seconds.
+✔ Test run with 87 tests passed after 6.096 seconds.

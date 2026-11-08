@@ -63,7 +63,7 @@ struct LedgerPropertyTests {
         var rid: String?
         for _ in 0..<Int.random(in: 4...30, using: &rng) {
             summary.operations += 1
-            do {
+            do throws(LedgerRejection) {
                 switch Int.random(in: 0..<10, using: &rng) {
                 case 0...1:   // reserve: a fresh request, or a redelivery of one already applied
                     let (q, credits) = applied.isEmpty || Bool.random(using: &rng)
@@ -98,8 +98,8 @@ struct LedgerPropertyTests {
                     _ = try ledger.release(reservationId: id, outcome: Ledger.Outcome.allCases.randomElement(using: &rng)!)
                     summary.releases += 1
                 }
-            } catch let rejection as LedgerRejection {
-                summary.rejections[rejection.code.rawValue, default: 0] += 1
+            } catch {
+                summary.rejections[error.code.rawValue, default: 0] += 1
             }
             try check(ledger, seed: seed, start: start, charged: charged)
         }
