@@ -88,6 +88,7 @@ actor LocalCaptureLibrary: RecordingSink {
     private func runStartupRecovery() async -> StartupRecoverySummary {
         let scanner = RecoveryScanner(root: root)
         var summary = StartupRecoverySummary()
+        do { try await store.discardAbandonedFilesImports() } catch { summary.scanFailed = true }
         do {
             let candidates = try await scanner.scan { id in try await self.isStartupRecoveryCandidate(id) }
             summary.refused = await scanner.refusals.count
@@ -115,6 +116,11 @@ actor LocalCaptureLibrary: RecordingSink {
     private func isStartupRecoveryCandidate(_ id: String) async throws -> Bool {
         guard !capturesStartedHere.contains(id) else { return false }
         return try await store.needsFinishedCaptureRecovery(id)
+    }
+
+    func importFile(_ source: URL, playerName: String) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).importVideo(source, playerName: playerName)
+        return SessionID(rawValue: id)
     }
 
     func appendReviewedPoint(winner: Side, startMs: Int, endMs: Int, for id: SessionID) async throws -> SessionPointEvent {

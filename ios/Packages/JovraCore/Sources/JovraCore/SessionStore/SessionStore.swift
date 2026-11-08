@@ -76,6 +76,7 @@ public actor SessionStore {
     let sessions: URL
     private let writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)?
     /// Store-issued, single-use purge tokens; they never outlive this actor or a restore.
+    var activeFilesImports: Set<UUID> = []
     var purgeTokens: [String: UUID] = [:]
 
     public init(root: URL, writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = nil) throws {

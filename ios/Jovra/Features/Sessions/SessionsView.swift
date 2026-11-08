@@ -40,6 +40,8 @@ struct SessionsView: View {
 
     var body: some View {
         JovraScreen(title: String(localized: "Your sessions", table: "Sessions"), subtitle: String(localized: "Review. Improve. Keep going.", table: "Sessions")) {
+            Button(String(localized: "Import a video", table: "Sessions.Import")) { router.show(.push(.sessions(.importVideos))) }
+                .buttonStyle(.jovraSecondary).accessibilityIdentifier("library.import")
             FilterPills(options: Filter.allCases, selection: $filter) { $0.title }
             if filter == .matches {
                 Text("Matches includes scored practice sets.", tableName: "Sessions.Library")

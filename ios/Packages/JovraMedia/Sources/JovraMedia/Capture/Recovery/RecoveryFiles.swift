@@ -7,7 +7,7 @@ struct RecoveryFingerprint: Codable, Equatable, Sendable {
     let sha256: String
     let bytes: Int
 }
-struct RecoveryFileIdentity: Equatable, Sendable {
+struct MediaFileIdentity: Equatable, Sendable {
     let device: UInt64, inode: UInt64, bytes: Int64
     let modifiedSeconds: Int, modifiedNanos: Int
     let changedSeconds: Int, changedNanos: Int
@@ -20,9 +20,9 @@ struct RecoveryFileIdentity: Equatable, Sendable {
     }
 }
 
-public struct RecoveryAdoptionWitness: Sendable {
+public struct MediaAdoptionWitness: Sendable {
     let directory: DurableDirectory.Identity
-    let files: [String: RecoveryFileIdentity]
+    let files: [String: MediaFileIdentity]
 
     /// A cheap final check within the store transaction, after the scanner decoded and hashed the files.
     public func verify(in folder: URL) throws {
@@ -31,7 +31,7 @@ public struct RecoveryAdoptionWitness: Sendable {
             let source = try RecoveryFiles(folder: folder).url(path)
             var actual = stat()
             guard lstat(source.path, &actual) == 0, (actual.st_mode & S_IFMT) == S_IFREG,
-                  RecoveryFileIdentity(actual) == expected else { throw RecoveryError.changedFile }
+                  MediaFileIdentity(actual) == expected else { throw RecoveryError.changedFile }
         }
     }
 }
@@ -58,7 +58,7 @@ struct RecoveryFiles {
             }
         } catch let error as CocoaError where error.code == .fileReadNoSuchFile { }
     }
-    func read(_ path: String, retainingUpTo limit: Int? = nil) throws -> (RecoveryFingerprint, Data, RecoveryFileIdentity) {
+    func read(_ path: String, retainingUpTo limit: Int? = nil) throws -> (RecoveryFingerprint, Data, MediaFileIdentity) {
         let source = try url(path)
         let descriptor = open(source.path, O_RDONLY | O_NOFOLLOW | O_NONBLOCK)
         guard descriptor >= 0 else { throw RecoveryError.filesystem(errno) }
@@ -80,9 +80,9 @@ struct RecoveryFiles {
         }
         _ = try url(path) // Recheck every owned component before acknowledging this fingerprint.
         guard fstat(descriptor, &after) == 0, lstat(source.path, &declared) == 0,
-              RecoveryFileIdentity(before) == RecoveryFileIdentity(declared),
-              RecoveryFileIdentity(before) == RecoveryFileIdentity(after), Int64(total) == before.st_size else { throw RecoveryError.changedFile }
-        return (.init(sha256: hash.finalize().map { String(format: "%02x", $0) }.joined(), bytes: total), retained, RecoveryFileIdentity(after))
+              MediaFileIdentity(before) == MediaFileIdentity(declared),
+              MediaFileIdentity(before) == MediaFileIdentity(after), Int64(total) == before.st_size else { throw RecoveryError.changedFile }
+        return (.init(sha256: hash.finalize().map { String(format: "%02x", $0) }.joined(), bytes: total), retained, MediaFileIdentity(after))
     }
     func writeReceipt(_ bytes: Data) throws {
         let destination = try url("capture-recovery.json")
