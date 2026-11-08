@@ -36,12 +36,33 @@ public enum DecodedFrameReader {
         output.alwaysCopiesSampleData = false
         reader.add(output)
         let job = ReadJob(reader: reader, output: output, url: url, columns: truth.signature.columns,
-                          rows: truth.signature.rows, cells: truth.frameCode.cells)
+                          rows: truth.signature.rows, cells: truth.frameCode?.cells ?? 0)
         // copyNextSampleBuffer blocks; keep it off the cooperative pool, where parallel tests would starve it.
         return try await withCheckedThrowingContinuation { continuation in
             Thread.detachNewThread {
                 continuation.resume(with: Result { try job.run() })
             }
+        }
+    }
+
+    /// The decoded luma of one frame (coded orientation), read by an AVAssetReader limited to that frame's
+    /// time range. Used to inspect burned-in content, such as the sample media label, on chosen frames.
+    public static func lumaPlane(of url: URL, frame: Int, rate: GroundTruth.Rate) async throws -> LumaPlane {
+        let asset = AVURLAsset(url: url)
+        guard let track = try await asset.loadTracks(withMediaType: .video).first else {
+            throw DecodedFrameReaderError.noVideoTrack(url)
+        }
+        let start = CMTime(value: CMTimeValue(frame * rate.den), timescale: CMTimeScale(rate.num))
+        let reader = try AVAssetReader(asset: asset)
+        reader.timeRange = CMTimeRange(start: start, duration: CMTime(value: CMTimeValue(rate.den), timescale: CMTimeScale(rate.num)))
+        let output = AVAssetReaderTrackOutput(track: track, outputSettings: [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange,
+        ])
+        output.alwaysCopiesSampleData = false
+        reader.add(output)
+        let job = OneFrameJob(reader: reader, output: output, url: url, start: start, frame: frame)
+        return try await withCheckedThrowingContinuation { continuation in
+            Thread.detachNewThread { continuation.resume(with: Result { try job.run() }) }
         }
     }
 
@@ -90,5 +111,35 @@ private final class ReadJob: @unchecked Sendable {
             throw DecodedFrameReaderError.readerFailed(url, reader.error?.localizedDescription ?? "unknown")
         }
         return frames
+    }
+}
+
+/// One synchronous single-frame read, owned by one thread (copyNextSampleBuffer blocks).
+private final class OneFrameJob: @unchecked Sendable {
+    let reader: AVAssetReader
+    let output: AVAssetReaderTrackOutput
+    let url: URL
+    let start: CMTime
+    let frame: Int
+
+    init(reader: AVAssetReader, output: AVAssetReaderTrackOutput, url: URL, start: CMTime, frame: Int) {
+        self.reader = reader
+        self.output = output
+        self.url = url
+        self.start = start
+        self.frame = frame
+    }
+
+    func run() throws -> LumaPlane {
+        guard reader.startReading() else {
+            throw DecodedFrameReaderError.readerFailed(url, reader.error?.localizedDescription ?? "could not start")
+        }
+        defer { reader.cancelReading() }
+        while let sample = output.copyNextSampleBuffer() {
+            guard let image = CMSampleBufferGetImageBuffer(sample),
+                  CMTimeCompare(CMSampleBufferGetPresentationTimeStamp(sample), start) >= 0 else { continue }
+            return try LumaPlane(pixelBuffer: image)
+        }
+        throw DecodedFrameReaderError.readerFailed(url, reader.error?.localizedDescription ?? "no frame \(frame)")
     }
 }
