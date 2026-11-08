@@ -188,10 +188,10 @@
           "id": "P4-G2",
           "title": "Dedicated simulator core flow and export evidence",
           "command": "xcodebuild test (CoreFlowUITests, FilesImportUITests, ScrollViewportAuditTests, FilesImportTests and StartupRecoveryTests) and independent JSON/CSV/FFmpeg artifact checks",
-          "status": "passed",
+          "status": "pending",
           "evidence": "ops/mission/evidence/2026-11-08-coreflow-actual.json",
           "lastRun": "2026-11-08T10:24:54Z",
-          "notes": "Bounded CoreFlow on tested iOS source d3049a8. Combined simulator run passed 11 tests. Independently verified actual session JSON, corrected point and stats CSV bytes, and a decoded 30-frame one-second clip. No independently sampled pre-export hash for this rerun."
+          "notes": "Bounded CoreFlow on tested iOS source d3049a8. Combined simulator run passed 11 tests. Independently verified actual session JSON, corrected point and stats CSV bytes, and a decoded 30-frame one-second clip. No independently sampled pre-export hash for this rerun. The final merged iOS tree has a separate signed focused receipt. Rerun full CoreFlow on current main for phase-close acceptance."
         },
         {
           "id": "P4-G3",

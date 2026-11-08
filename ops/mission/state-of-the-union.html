@@ -72,7 +72,7 @@ button.copy:hover{background:rgba(88,215,179,.2)}
       <span class="chip blue">mission: active</span>
       <span class="chip green">active phase: P4</span>
       <span class="chip blue">11/16 tasks</span>
-      <span class="chip amber">10/11 gates passed</span>
+      <span class="chip amber">9/11 gates passed</span>
       <span class="chip ">49 PRs merged</span>
       <span class="chip ">sessions: 3</span>
       <span class="chip ">updated: 2026-11-08T10:34:53+00:00</span>
@@ -263,8 +263,8 @@ Operating procedure:
       <td><code>swift test --package-path ios/Packages/JovraCore</code></td>
       <td>docs/reports/2026-11-02/evidence/swift-core-tests.txt</td>
       <td>2026-11-02T13:11:10.874209+00:00</td></tr><tr>
-      <td><span class="chip green">passed</span></td>
-      <td><b>Dedicated simulator core flow and export evidence</b><br><span class="small">Bounded CoreFlow on tested iOS source d3049a8. Combined simulator run passed 11 tests. Independently verified actual session JSON, corrected point and stats CSV bytes, and a decoded 30-frame one-second clip. No independently sampled pre-export hash for this rerun.</span></td>
+      <td><span class="chip ">pending</span></td>
+      <td><b>Dedicated simulator core flow and export evidence</b><br><span class="small">Bounded CoreFlow on tested iOS source d3049a8. Combined simulator run passed 11 tests. Independently verified actual session JSON, corrected point and stats CSV bytes, and a decoded 30-frame one-second clip. No independently sampled pre-export hash for this rerun. The final merged iOS tree has a separate signed focused receipt. Rerun full CoreFlow on current main for phase-close acceptance.</span></td>
       <td><code>xcodebuild test (CoreFlowUITests, FilesImportUITests, ScrollViewportAuditTests, FilesImportTests and StartupRecoveryTests) and independent JSON/CSV/FFmpeg artifact checks</code></td>
       <td>ops/mission/evidence/2026-11-08-coreflow-actual.json</td>
       <td>2026-11-08T10:24:54Z</td></tr><tr>
@@ -299,6 +299,7 @@ Remaining tasks:
   - [in_progress] T15-T16: Recording pipeline and recovery (Capture334/335/337/338/340, directory350, fragmented-layout/atomic-adoption354 and finished-stale scanner358 merged. Actual marked/unmarked adopted sessions independently schema/canonical validated; receipt canonical bytes and decoded media/hash evidence passed; integrated85Media tests PASS serially. Parallel decoder-pool stall retained as failed/incomplete; native Media harness now serial. Unfinished or torn startup recovery, termination loss, live physical capture, endurance and power loss remain unverified; full T16 open. Finished startup adoption landed in #392. The connected device exposed a path alias failure fixed in #395. Torn/unfinished recovery, real interruptions and endurance remain open.)
   - [in_progress] T14: Frame-accurate playback (Exact decoded still-frame adapter355 merged873c1cf after separate axes/fresh CI.200seeded selections at60/240fps and integrated78Media tests PASS. Verified CFR only; full transport/proxy/VFR index/timing/UI acceptance remains pending.)
 Gates not yet passed:
+  - [pending] Dedicated simulator core flow and export evidence  -&gt;  xcodebuild test (CoreFlowUITests, FilesImportUITests, ScrollViewportAuditTests, FilesImportTests and StartupRecoveryTests) and independent JSON/CSV/FFmpeg artifact checks
   - [pending] Physical live capture, interruption and provider selection  -&gt;  Run the connected iPhone acceptance steps in the continuation handoff
 Next actions (from last session):
   - Read the November 8 continuation and refresh live main, PR ownership and exact check status.
