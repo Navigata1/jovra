@@ -1,0 +1,9 @@
+$ swift test --package-path ios/Packages/JovraMedia --scratch-path .derivedData/media --filter RallyCompositionTests   # tests only (red)
+<repo>/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/RallyCompositionTests.swift:37:31: error: cannot find 'RallyComposition' in scope
+<repo>/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/RallyCompositionTests.swift:37:76: error: cannot find 'RallySource' in scope
+<repo>/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/RallyCompositionTests.swift:39:98: error: generic parameter 'some StringProtocol' could not be inferred
+<repo>/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/RallyCompositionTests.swift:40:34: error: cannot infer key path type from context; consider explicitly specifying a root type
+<repo>/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/RallyCompositionTests.swift:47:31: error: cannot find 'RallyComposition' in scope
+<repo>/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/RallyCompositionTests.swift:47:83: error: cannot find 'RallySource' in scope
+<repo>/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/RallyCompositionTests.swift:70:31: error: cannot find 'RallyComposition' in scope
+<repo>/ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/RallyCompositionTests.swift:70:76: error: cannot find 'RallySource' in scope

@@ -1,0 +1,4 @@
+# App build after the JovraStudioCore manifest change (plugin is test-only; the app links the library)
+$ xcodebuild build -project ios/Jovra.xcodeproj -scheme Jovra -destination generic/platform=iOS Simulator -derivedDataPath .derivedData/xcode CODE_SIGNING_ALLOWED=NO
+** BUILD SUCCEEDED **
+exit=0

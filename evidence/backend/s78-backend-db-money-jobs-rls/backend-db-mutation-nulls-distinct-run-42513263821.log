@@ -1,0 +1,80 @@
+backend-db	supabase test db	﻿2026-11-08T19:06:48.5381103Z ##[group]Run supabase test db
+backend-db	supabase test db	2026-11-08T19:06:48.5381276Z ^[[36;1msupabase test db^[[0m
+backend-db	supabase test db	2026-11-08T19:06:48.5400753Z shell: /usr/bin/bash -e {0}
+backend-db	supabase test db	2026-11-08T19:06:48.5400862Z env:
+backend-db	supabase test db	2026-11-08T19:06:48.5400993Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase test db	2026-11-08T19:06:48.5401078Z ##[endgroup]
+backend-db	supabase test db	2026-11-08T19:06:48.8729611Z Connecting to local database...
+backend-db	supabase test db	2026-11-08T19:06:49.9952657Z 3.36: Pulling from supabase/pg_prove
+backend-db	supabase test db	2026-11-08T19:06:50.1631138Z dcccee43ad5d: Pulling fs layer
+backend-db	supabase test db	2026-11-08T19:06:50.1631862Z 06d62d0de6d7: Pulling fs layer
+backend-db	supabase test db	2026-11-08T19:06:50.1632417Z a22cb17b3b93: Pulling fs layer
+backend-db	supabase test db	2026-11-08T19:06:50.1633015Z 4f4fb700ef54: Pulling fs layer
+backend-db	supabase test db	2026-11-08T19:06:50.1633410Z 4f4fb700ef54: Waiting
+backend-db	supabase test db	2026-11-08T19:06:50.4208394Z a22cb17b3b93: Verifying Checksum
+backend-db	supabase test db	2026-11-08T19:06:50.4209163Z a22cb17b3b93: Download complete
+backend-db	supabase test db	2026-11-08T19:06:50.5024657Z dcccee43ad5d: Verifying Checksum
+backend-db	supabase test db	2026-11-08T19:06:50.5025362Z dcccee43ad5d: Download complete
+backend-db	supabase test db	2026-11-08T19:06:50.5619713Z 06d62d0de6d7: Verifying Checksum
+backend-db	supabase test db	2026-11-08T19:06:50.5620416Z 06d62d0de6d7: Download complete
+backend-db	supabase test db	2026-11-08T19:06:50.6129169Z dcccee43ad5d: Pull complete
+backend-db	supabase test db	2026-11-08T19:06:50.6326108Z 4f4fb700ef54: Verifying Checksum
+backend-db	supabase test db	2026-11-08T19:06:50.6326652Z 4f4fb700ef54: Download complete
+backend-db	supabase test db	2026-11-08T19:06:51.2051709Z 06d62d0de6d7: Pull complete
+backend-db	supabase test db	2026-11-08T19:06:51.2311663Z a22cb17b3b93: Pull complete
+backend-db	supabase test db	2026-11-08T19:06:51.2407574Z 4f4fb700ef54: Pull complete
+backend-db	supabase test db	2026-11-08T19:06:51.2452227Z Digest: sha256:eda7c5e68719e9c8287e78c017118407b48df904a51c935f5ab6098b8c0bc6bc
+backend-db	supabase test db	2026-11-08T19:06:51.2464037Z Status: Downloaded newer image for ghcr.io/supabase/pg_prove:3.36
+backend-db	supabase test db	2026-11-08T19:06:51.4806827Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+backend-db	supabase test db	2026-11-08T19:06:51.5050143Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .............. ok
+backend-db	supabase test db	2026-11-08T19:06:51.5504131Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ..... ok
+backend-db	supabase test db	2026-11-08T19:06:51.6117145Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ... ok
+backend-db	supabase test db	2026-11-08T19:06:51.7006321Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ...... ok
+backend-db	supabase test db	2026-11-08T19:06:51.8469979Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .. ok
+backend-db	supabase test db	2026-11-08T19:06:51.9291725Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ....... ok
+backend-db	supabase test db	2026-11-08T19:06:52.0019690Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql ......... ok
+backend-db	supabase test db	2026-11-08T19:06:52.1386595Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql .. ok
+backend-db	supabase test db	2026-11-08T19:06:52.3910012Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql ... ok
+backend-db	supabase test db	2026-11-08T19:06:52.5159675Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql .......... ok
+backend-db	supabase test db	2026-11-08T19:06:52.6097676Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/money_01_catalog.test.sql ......... 
+backend-db	supabase test db	2026-11-08T19:06:52.6099268Z # Failed test 38: "finding 18: one held reservation per (project, plan, version, output), NULLS NOT DISTINCT"
+backend-db	supabase test db	2026-11-08T19:06:52.6105993Z #         have: project_id,story_plan_id,story_plan_version_id,output_spec_sha256 unique where (state = 'held'::text)
+backend-db	supabase test db	2026-11-08T19:06:52.6107462Z #         want: project_id,story_plan_id,story_plan_version_id,output_spec_sha256 unique nulls not distinct where (state = 'held'::text)
+backend-db	supabase test db	2026-11-08T19:06:52.6108540Z # Looks like you failed 1 test of 76
+backend-db	supabase test db	2026-11-08T19:06:52.6109133Z Failed 1/76 subtests 
+backend-db	supabase test db	2026-11-08T19:06:52.7443250Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/money_02_roles.test.sql ........... ok
+backend-db	supabase test db	2026-11-08T19:06:52.9023091Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/money_03_integrity.test.sql ....... 
+backend-db	supabase test db	2026-11-08T19:06:52.9025210Z # Failed test 2: "finding 18: a second held reservation with story_plan_version_id null for the same project, plan and output fails"
+backend-db	supabase test db	2026-11-08T19:06:52.9027164Z #         have: ok
+backend-db	supabase test db	2026-11-08T19:06:52.9027622Z #         want: 23505
+backend-db	supabase test db	2026-11-08T19:06:52.9028632Z # Failed test 31: "T-DB-59: as jovra_owner, a reservation pairing project A with B's plan is an FK violation"
+backend-db	supabase test db	2026-11-08T19:06:52.9029750Z #         have: 23505
+backend-db	supabase test db	2026-11-08T19:06:52.9030211Z #         want: 23503
+backend-db	supabase test db	2026-11-08T19:06:52.9030938Z # Failed test 32: "T-DB-59: as jovra_owner, a reservation naming B's plan version is an FK violation"
+backend-db	supabase test db	2026-11-08T19:06:52.9031416Z #         have: 23505
+backend-db	supabase test db	2026-11-08T19:06:52.9031642Z #         want: 23503
+backend-db	supabase test db	2026-11-08T19:06:52.9031876Z # Looks like you failed 3 tests of 84
+backend-db	supabase test db	2026-11-08T19:06:52.9032157Z Failed 3/84 subtests 
+backend-db	supabase test db	2026-11-08T19:06:52.9038551Z 
+backend-db	supabase test db	2026-11-08T19:06:52.9038912Z Test Summary Report
+backend-db	supabase test db	2026-11-08T19:06:52.9039309Z -------------------
+backend-db	supabase test db	2026-11-08T19:06:52.9040256Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/money_01_catalog.test.sql       (Wstat: 0 Tests: 76 Failed: 1)
+backend-db	supabase test db	2026-11-08T19:06:52.9041268Z   Failed test:  38
+backend-db	supabase test db	2026-11-08T19:06:52.9042160Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/money_03_integrity.test.sql     (Wstat: 0 Tests: 84 Failed: 3)
+backend-db	supabase test db	2026-11-08T19:06:52.9042957Z   Failed tests:  2, 31-32
+backend-db	supabase test db	2026-11-08T19:06:52.9043348Z Files=13, Tests=592,  1 wallclock secs ( 0.10 usr  0.02 sys +  0.12 cusr  0.09 csys =  0.33 CPU)
+backend-db	supabase test db	2026-11-08T19:06:52.9043769Z Result: FAIL
+backend-db	supabase test db	2026-11-08T19:06:53.0273630Z github.com/supabase/cli/internal/utils/docker.go:410 (0x12a58d8)
+backend-db	supabase test db	2026-11-08T19:06:53.0274817Z github.com/supabase/cli/internal/utils/docker.go:374 (0x12a52c5)
+backend-db	supabase test db	2026-11-08T19:06:53.0276113Z github.com/supabase/cli/internal/db/test/test.go:89 (0x1664770)
+backend-db	supabase test db	2026-11-08T19:06:53.0290134Z github.com/supabase/cli/cmd/db.go:265 (0x2cd658b)
+backend-db	supabase test db	2026-11-08T19:06:53.0291310Z github.com/spf13/cobra@v1.10.2/command.go:1015 (0x61b8c2)
+backend-db	supabase test db	2026-11-08T19:06:53.0292740Z github.com/spf13/cobra@v1.10.2/command.go:1148 (0x61c205)
+backend-db	supabase test db	2026-11-08T19:06:53.0293803Z github.com/supabase/cli/cmd/root.go:173 (0x2ce8f26)
+backend-db	supabase test db	2026-11-08T19:06:53.0294897Z github.com/supabase/cli/main.go:11 (0x2cee08f)
+backend-db	supabase test db	2026-11-08T19:06:53.0296292Z internal/runtime/atomic/types.go:194 (0x44953d)
+backend-db	supabase test db	2026-11-08T19:06:53.0297178Z runtime/asm_amd64.s:1693 (0x485ce1)
+backend-db	supabase test db	2026-11-08T19:06:53.0297713Z 
+backend-db	supabase test db	2026-11-08T19:06:53.0298076Z error running container: exit 1
+backend-db	supabase test db	2026-11-08T19:06:53.0298951Z Try rerunning the command with --debug to troubleshoot the error.
+backend-db	supabase test db	2026-11-08T19:06:53.0451253Z ##[error]Process completed with exit code 1.

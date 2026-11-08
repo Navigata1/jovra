@@ -3,7 +3,7 @@ import Testing
 import JovraStudioCore
 
 /// Smoke test for the package (S04): a Studio record read from the shared fixtures names its contract and whether it
-/// is Sample data. Full Codable models for every contract arrive with S10.
+/// is Sample data. The typed models for every contract are tested by the Contracts suites (S10).
 @Suite("Studio record header")
 struct RecordHeaderTests {
     @Test("the Sample project lock names jovra.project-lock version 1 and is Sample data")
