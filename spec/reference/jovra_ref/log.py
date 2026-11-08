@@ -14,6 +14,9 @@ The match log is append-only (ADR-0003). Nothing is ever edited in place:
   point therefore removes the point, while voiding the latest correction restores the version before
   it. A voided event keeps its position as a tombstone, so an ``insertBefore`` aimed at it still has
   an anchor. The fold never sees tombstones.
+* Re-analysis never overwrites a review (decision 24): a superseding ``point`` without a ``reviewed``
+  block (an automatic suggestion under a newer method version) whose current target has one is kept in
+  the log but changes nothing. Later references to it resolve to the reviewed point it aimed at.
 * ``doublesOrder`` events are not placed; the last active one per ``setIndex`` applies.
 """
 
@@ -69,10 +72,11 @@ def resolve(events):
     doubles = {}
     inert = set(voided)  # voided events plus corrections of voided events (transitively)
     tombstones = set()
+    refused = {}  # suggestion id -> the reviewed point it may not overwrite
 
     def current(event_id):
-        while event_id in replaced:
-            event_id = replaced[event_id]
+        while event_id in replaced or event_id in refused:
+            event_id = replaced.get(event_id) or refused[event_id]
         return event_id
 
     def slot(event_id):
@@ -105,6 +109,9 @@ def resolve(events):
                 raise LogError("supersedeTargetMissing", e["id"])
             if by_id[target_id]["type"] != e["type"]:
                 raise LogError("supersedeTypeMismatch", e["id"])
+            if e["type"] == "point" and "reviewed" not in e and "reviewed" in by_id[target_id]:
+                refused[e["id"]] = target_id  # a suggestion may only replace an unreviewed candidate
+                continue
             order[order.index(target_id)] = e["id"]
             replaced[target_id] = e["id"]
         elif "insertBefore" in e:

@@ -3368,6 +3368,7 @@ public struct SessionPointEvent: Codable, Equatable, Sendable {
     public var insertBefore: String?
     public var recordedServer: String?
     public var decidingPointSide: SessionPointEventDecidingPointSide?
+    public var servedFromSide: SessionPointEventServedFromSide?
     public var tStartMs: Int?
     public var tEndMs: Int?
     public var detected: SessionOutcome?
@@ -3376,7 +3377,7 @@ public struct SessionPointEvent: Codable, Equatable, Sendable {
     public var note: String?
     public var parentIds: [String]?
 
-    public init(id: String, seq: Int, type: SessionPointEventType = .value, at: String? = nil, supersedes: String? = nil, insertBefore: String? = nil, recordedServer: String? = nil, decidingPointSide: SessionPointEventDecidingPointSide? = nil, tStartMs: Int? = nil, tEndMs: Int? = nil, detected: SessionOutcome? = nil, reviewed: SessionOutcome? = nil, reviewState: SessionPointEventReviewState? = nil, note: String? = nil, parentIds: [String]? = nil) {
+    public init(id: String, seq: Int, type: SessionPointEventType = .value, at: String? = nil, supersedes: String? = nil, insertBefore: String? = nil, recordedServer: String? = nil, decidingPointSide: SessionPointEventDecidingPointSide? = nil, servedFromSide: SessionPointEventServedFromSide? = nil, tStartMs: Int? = nil, tEndMs: Int? = nil, detected: SessionOutcome? = nil, reviewed: SessionOutcome? = nil, reviewState: SessionPointEventReviewState? = nil, note: String? = nil, parentIds: [String]? = nil) {
         self.id = id
         self.seq = seq
         self.type = type
@@ -3385,6 +3386,7 @@ public struct SessionPointEvent: Codable, Equatable, Sendable {
         self.insertBefore = insertBefore
         self.recordedServer = recordedServer
         self.decidingPointSide = decidingPointSide
+        self.servedFromSide = servedFromSide
         self.tStartMs = tStartMs
         self.tEndMs = tEndMs
         self.detected = detected
@@ -3404,6 +3406,11 @@ public enum SessionPointEventReviewState: String, Codable, CaseIterable, Hashabl
     case unreviewed = "unreviewed"
     case needsReview = "needsReview"
     case reviewed = "reviewed"
+}
+
+public enum SessionPointEventServedFromSide: String, Codable, CaseIterable, Hashable, Sendable {
+    case deuce = "deuce"
+    case ad = "ad"
 }
 
 public enum SessionPointEventType: String, Codable, CaseIterable, Hashable, Sendable {

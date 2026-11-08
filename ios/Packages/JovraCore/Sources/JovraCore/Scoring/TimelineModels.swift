@@ -200,6 +200,7 @@ public enum TimelineConflictType: String, Codable, CaseIterable, Hashable, Senda
     case decidingPointSideIgnored = "decidingPointSideIgnored"
     case receiverMismatch = "receiverMismatch"
     case overrideContextChanged = "overrideContextChanged"
+    case sideMismatch = "sideMismatch"
 }
 
 public struct TimelineEnds: Codable, Equatable, Sendable {

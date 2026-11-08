@@ -1,0 +1,8 @@
+# RED: ScoringEngine.swift at 8512292 (no sideMismatch rule), regenerated models + S71 fixture present
+# swift test --package-path ios/Packages/JovraCore --skip XCTest  (2026-11-08T09:39:26Z)
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at ScoringRunner.swift:31:13: Expectation failed: result == checkpoints[index].expected.fold
+↳ S71-served-from-wrong-half checkpoint 0
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at ScoringRunner.swift:31:13: Expectation failed: result == checkpoints[index].expected.fold
+↳ S71-served-from-wrong-half checkpoint 1
+✘ Test allDiscoveredRunnerFixturesPass() failed after 0.890 seconds with 2 issues.
+✘ Test run with 64 tests in 5 suites failed after 3.904 seconds with 2 issues.
