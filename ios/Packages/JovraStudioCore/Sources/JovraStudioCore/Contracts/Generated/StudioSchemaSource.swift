@@ -2496,6 +2496,306 @@ extension StudioSchemaSource {
   }
 }
 """#,
+        "studio-media-demo-subset.schema.json": #"""
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio bundled demo subset (jovra.studio-media-demo-subset/1)",
+  "description": "Which generated Studio fixture media the app bundles for its demo (S08), where the installer puts it and the size budget it must fit. Written by scripts/media/studio/render_studio.py and read by scripts/media/studio/install_demo.py. Every file is synthetic and labelled Sample.",
+  "type": "object",
+  "required": ["schemaVersion", "sample", "installTo", "budgetBytes", "installer", "files"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.studio-media-demo-subset/1"},
+    "sample": {"const": true},
+    "installTo": {"const": "ios/Jovra/Resources/StudioSampleMedia"},
+    "budgetBytes": {"type": "integer", "minimum": 1, "maximum": 25000000},
+    "installer": {"const": "scripts/media/studio/install_demo.py"},
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["manifest", "fileName", "role"],
+        "additionalProperties": false,
+        "properties": {
+          "manifest": {"type": "string", "pattern": "^media/[A-Za-z]+/[a-z0-9-]+\\.json$"},
+          "fileName": {"type": "string", "pattern": "^[a-z0-9-]+\\.mp4$"},
+          "role": {"enum": ["barcodeSource", "match", "broll", "angle"]},
+          "angle": {"type": "string"}
+        }
+      }
+    }
+  }
+}
+"""#,
+        "studio-media-truth.schema.json": #"""
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio media fixture ground truth (jovra.studio-media-truth/1)",
+  "description": "The committed ground truth of one generated Studio fixture media file (S08). The media itself is never committed: scripts/media/studio/render_studio.py renders it into the git-ignored cache at media.path. Everything except `hashes` is the generator's plan and is recomputed by the Studio validator; `hashes` is what a render proves and every machine reproduces (drawn frames, the jovra.cellLuma.v1 decoded-frame signature, the click-track PCM). The media file's own SHA-256 is machine-specific (encoder builds differ) and is never committed. All content is synthetic and labelled Sample.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "set", "role", "description", "sample", "band", "generator", "media", "video", "audio", "barcode", "clicks", "labels", "hashes"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.studio-media-truth/1"},
+    "id": {"type": "string", "pattern": "^[A-Za-z]+/[a-z0-9-]+$"},
+    "set": {"enum": ["barcodeSources", "match", "broll", "angles"]},
+    "role": {"enum": ["barcodeSource", "match", "broll", "angle"]},
+    "description": {"type": "string", "minLength": 1, "maxLength": 300},
+    "sample": {"const": true},
+    "band": {"const": "synthetic"},
+    "generator": {
+      "type": "object",
+      "required": ["script", "version", "sourceHash"],
+      "additionalProperties": false,
+      "properties": {
+        "script": {"const": "scripts/media/studio/render_studio.py"},
+        "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "sourceHash": {"$ref": "studio-common.schema.json#/$defs/sha256"}
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": ["path", "fileName", "container", "bundled"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"type": "string", "pattern": "^\\.cache/media/studio/[A-Za-z]+-[0-9a-f]{16}/[a-z0-9-]+\\.mp4$"},
+        "fileName": {"type": "string", "pattern": "^[a-z0-9-]+\\.mp4$"},
+        "container": {"const": "mp4"},
+        "bundled": {"type": "boolean"}
+      }
+    },
+    "video": {
+      "type": "object",
+      "required": ["codec", "width", "height", "frameRate", "frameCount", "duration"],
+      "additionalProperties": false,
+      "properties": {
+        "codec": {"const": "h264"},
+        "width": {"type": "integer", "minimum": 2, "multipleOf": 2},
+        "height": {"type": "integer", "minimum": 2, "multipleOf": 2},
+        "frameRate": {"$ref": "studio-common.schema.json#/$defs/fps"},
+        "frameCount": {"type": "integer", "minimum": 1},
+        "duration": {"$ref": "#/$defs/rational"}
+      }
+    },
+    "audio": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["codec", "sampleRate", "channels", "sampleCount"],
+          "additionalProperties": false,
+          "properties": {
+            "codec": {"const": "aac"},
+            "sampleRate": {"const": 48000},
+            "channels": {"const": 1},
+            "sampleCount": {"type": "integer", "minimum": 1}
+          }
+        }
+      ]
+    },
+    "barcode": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/barcode"}]},
+    "clicks": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/clicks"}]},
+    "labels": {"type": "array", "items": {"$ref": "#/$defs/label"}},
+    "restart": {
+      "type": "object",
+      "required": ["group", "segment", "sessionStartFrame", "sessionFrameCount", "gaps", "clicksInGapFrames"],
+      "additionalProperties": false,
+      "properties": {
+        "group": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "segment": {"type": "integer", "minimum": 0, "maximum": 7},
+        "sessionStartFrame": {"type": "integer", "minimum": 0},
+        "sessionFrameCount": {"type": "integer", "minimum": 1},
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["fromFrame", "toFrame"],
+            "additionalProperties": false,
+            "properties": {"fromFrame": {"type": "integer", "minimum": 0}, "toFrame": {"type": "integer", "minimum": 1}}
+          }
+        },
+        "clicksInGapFrames": {"type": "array", "items": {"type": "integer", "minimum": 0}}
+      }
+    },
+    "match": {
+      "description": "The coherent synthetic match: the core sample's point event log, the setup it folds under, each point's window on this file and the score the log must fold to (checked through spec/reference/jovra_ref/scoring.py).",
+      "type": "object",
+      "required": ["basedOn", "setup", "log", "points", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "basedOn": {"type": "object"},
+        "setup": {"type": "object", "required": ["format", "toss", "sides"]},
+        "log": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "seq", "type"]}},
+        "points": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["pointNumber", "eventId", "tStartMs", "tEndMs", "startFrame", "endFrame", "hits"],
+            "additionalProperties": false,
+            "properties": {
+              "pointNumber": {"type": "integer", "minimum": 1},
+              "eventId": {"type": "string"},
+              "tStartMs": {"type": "integer", "minimum": 0},
+              "tEndMs": {"type": "integer", "minimum": 1},
+              "startFrame": {"type": "integer", "minimum": 0},
+              "endFrame": {"type": "integer", "minimum": 1},
+              "hits": {"type": "integer", "minimum": 0}
+            }
+          }
+        },
+        "expected": {
+          "type": "object",
+          "required": ["scoreline", "winnerSide", "sets", "status"],
+          "additionalProperties": false,
+          "properties": {
+            "scoreline": {"type": "string"},
+            "winnerSide": {"enum": ["A", "B"]},
+            "sets": {"type": "array", "items": {"type": "object"}},
+            "status": {"type": "string"}
+          }
+        }
+      }
+    },
+    "broll": {
+      "type": "object",
+      "required": ["what"],
+      "additionalProperties": false,
+      "properties": {
+        "what": {"type": "string", "minLength": 1},
+        "bounces": {"type": "array", "items": {"type": "object", "required": ["sample"], "additionalProperties": false,
+                                                "properties": {"sample": {"type": "integer", "minimum": 0}}}}
+      }
+    },
+    "angle": {
+      "type": "object",
+      "required": ["name", "slot", "camera", "matchWindow", "basedOn"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"enum": ["Baseline", "Far baseline", "Near left", "Near right", "Far left", "Far right"]},
+        "slot": {"type": "integer", "minimum": 1, "maximum": 6},
+        "camera": {"type": "object", "required": ["eyeM", "targetM", "focalPx"]},
+        "matchWindow": {
+          "type": "object",
+          "required": ["fromMs", "toMs"],
+          "additionalProperties": false,
+          "properties": {"fromMs": {"type": "integer", "minimum": 0}, "toMs": {"type": "integer", "minimum": 1}}
+        },
+        "basedOn": {"type": "object"}
+      }
+    },
+    "hashes": {
+      "type": "object",
+      "required": ["renderedWithSourceHash", "sourceFramesSha256", "decodedSignature", "pcmSha256"],
+      "additionalProperties": false,
+      "properties": {
+        "renderedWithSourceHash": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+        "sourceFramesSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+        "decodedSignature": {
+          "type": "object",
+          "required": ["method", "sha256"],
+          "additionalProperties": false,
+          "properties": {"method": {"const": "jovra.cellLuma.v1"}, "sha256": {"$ref": "studio-common.schema.json#/$defs/sha256"}}
+        },
+        "pcmSha256": {"oneOf": [{"type": "null"}, {"$ref": "studio-common.schema.json#/$defs/sha256"}]}
+      }
+    }
+  },
+  "$defs": {
+    "rational": {
+      "type": "object",
+      "required": ["value", "timescale"],
+      "additionalProperties": false,
+      "properties": {"value": {"type": "integer", "minimum": 0}, "timescale": {"type": "integer", "minimum": 1}}
+    },
+    "barcode": {
+      "type": "object",
+      "required": ["method", "bits", "rect", "fields", "one", "zero", "threshold", "sourceId", "segment", "frameMap", "frameMapSha256"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {"const": "jovra.frame-barcode/1"},
+        "bits": {"const": 40},
+        "rect": {
+          "type": "object",
+          "required": ["x", "y", "width", "height"],
+          "additionalProperties": false,
+          "properties": {
+            "x": {"type": "integer", "minimum": 0}, "y": {"type": "integer", "minimum": 0},
+            "width": {"type": "integer", "minimum": 40}, "height": {"type": "integer", "minimum": 1}
+          }
+        },
+        "fields": {"type": "object"},
+        "one": {"type": "object"},
+        "zero": {"type": "object"},
+        "threshold": {"type": "object"},
+        "sourceId": {"type": "integer", "minimum": 1, "maximum": 127},
+        "segment": {"type": "integer", "minimum": 0, "maximum": 7},
+        "frameMap": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["frame", "frameId", "count"],
+            "additionalProperties": false,
+            "properties": {
+              "frame": {"type": "integer", "minimum": 0},
+              "frameId": {"type": "integer", "minimum": 0, "maximum": 1048575},
+              "count": {"type": "integer", "minimum": 1}
+            }
+          }
+        },
+        "frameMapSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"}
+      }
+    },
+    "clicks": {
+      "type": "object",
+      "required": ["hz", "durationSamples", "peak", "toleranceFrames", "events"],
+      "additionalProperties": false,
+      "properties": {
+        "hz": {"const": 1000},
+        "durationSamples": {"const": 480},
+        "peak": {"type": "integer", "minimum": 1, "maximum": 32767},
+        "toleranceFrames": {"const": 1},
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sample", "time", "frame"],
+            "additionalProperties": false,
+            "properties": {
+              "sample": {"type": "integer", "minimum": 0},
+              "time": {"$ref": "#/$defs/rational"},
+              "frame": {"type": "integer", "minimum": 0}
+            }
+          }
+        }
+      }
+    },
+    "label": {
+      "type": "object",
+      "required": ["kind", "text", "region", "cellHeight", "ink", "background"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["sample", "angle"]},
+        "text": {"type": "string", "minLength": 1},
+        "region": {
+          "type": "object",
+          "required": ["x", "y", "width", "height"],
+          "additionalProperties": false,
+          "properties": {
+            "x": {"type": "integer", "minimum": 0}, "y": {"type": "integer", "minimum": 0},
+            "width": {"type": "integer", "minimum": 1}, "height": {"type": "integer", "minimum": 1}
+          }
+        },
+        "cellHeight": {"type": "integer", "minimum": 4},
+        "ink": {"type": "object", "required": ["y"]},
+        "background": {"type": "object", "required": ["y"]}
+      }
+    }
+  }
+}
+"""#,
         "sync-map.schema.json": #"""
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2712,5 +3012,5 @@ extension StudioSchemaSource {
     ]
 
     /// The digest of the embedded files when they were generated.
-    static let generatedDigest = "9c19ee7c374f18f1"
+    static let generatedDigest = "e8fa1378aefefe03"
 }
