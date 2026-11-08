@@ -10,7 +10,8 @@ spec/
   schemas/      JSON Schema 2020-12, schemaVersion "1.x.y" on every record
   contracts/    shipped data both apps read: capability-registry.v1.json, csv/points.v1.json, csv/stats.v1.json
   reference/    Python 3 standard-library reference engine + fixture generator (cases/ = one module per source)
-  fixtures/     golden cases: scoring/ (S01-S64, E01-E10), stats/ (T01-T04), units/ (U01), sample/, records/
+  fixtures/     golden cases: scoring/ (S01-S64, E01-E10), stats/ (T01-T04), units/ (U01), sample/, records/,
+                rally/ (R01-R05 segmentation and rally-only plan vectors, session.rolls.json; T32)
 scripts/spec/validate.py          validates everything and re-runs the engine; non-zero exit on any mismatch
 scripts/spec/test_contracts.py    tests of the contract tooling itself (plumbing by convention, closed objects, T02)
 ```
@@ -92,6 +93,7 @@ The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) a
 | `csv-contract.schema.json` | `contracts/csv/*.v1.json` | column order, nullability, quoting, line endings |
 | `engine-output.schema.json` | fold and stats outputs | the exact shape both platforms must produce |
 | `fixture-*.schema.json` | the fixtures themselves | |
+| `fixture-rally.schema.json` | `fixtures/rally/R*.json` (T32) | RallySegmenter `segment` and `RallyOnlyPlan.build` vectors with shared error codes; reference `jovra_ref/rally.py`, re-run by the `CHECKS` in `cases/rally_cases.py`. Gaps keep their duration and their GapChip label (`+0:42`, whole seconds truncated) |
 
 No schema has an `$id`: references are relative file references (`common.schema.json#/$defs/id`), so any 2020-12
 validator resolves them when loading from disk, and no URL appears before it resolves (IDC domain rule 1).
@@ -142,6 +144,7 @@ fixture change immediately fails whichever platform has not caught up.
 | … with `expectError` | Folding must throw a typed error whose code equals `expectError.code`. | Code string |
 | `jovra.fixture.stats` | Fold the whole log, compute stats. | Deep equality with `expected` |
 | `jovra.fixture.pct` | `ratio`, `delta` (percentage points from the displayed integers) and `pool` (sum numerators and denominators) | Deep equality per case |
+| `jovra.fixture.trend` | For each case, `TrendPool.bucketed(sessions, range, asOf, comparableKind, scope)`: bucket the comparable sessions of the scope (real excludes sample sessions; sample uses only them) into weeks (4W) or calendar months (3M, Year) ending on `asOf`, pool n/d per bucket, hide buckets below `defaultMinimums.bucketDenominator`, and compare the latest two shown buckets by their displayed integers when there are enough buckets and pooled points | Deep equality per case with `expected`; `defaultMinimums` equals the platform's constants |
 | `jovra.fixture.units` | `convert` (exact, half-up at `places`), `display` (half-up once to the unit's step; same unit returns the stored text untouched), `gaugeHint` | Deep equality per case |
 | `jovra.fixture.sample` | Load `jon-vs-alex.session.json` with the app's real session decoder, build the engine input from it, fold, compute stats, export both CSVs. | Fold + stats deep-equal; **CSV byte-for-byte** with the golden files; `overview` holds the screen-9 numbers |
 | records (`equipment`, `practice plan`, `export`, `archive`, registry, sample media manifest) | Decode with the app's real model types and re-encode. | Must decode without loss; schema-valid |
@@ -170,6 +173,7 @@ Implementation notes for the ports:
 | `log.py` | Append-only log resolution: voids (undo; voiding a void is redo; voiding an event also undoes every later correction of it), `supersedes` (replace in place, original kept), `insertBefore` (add a missed point; a voided event keeps its slot as an anchor), doubles orders per set; structural errors with stable codes |
 | `scoring.py` | The fold: ad/No-Ad games, tie-break sets at any trigger (6-6, 4-4, 3-3, 8-8), advantage sets, match tie-break in lieu of the final set (recorded as a set), sudden-death tie-breaks, best of 1/3/5; singles and doubles server rotation; deuce/ad court and receiver; ends (odd game in set, every 6 tie-break points, Coman, short-set); rests; lets, faults, double faults, point and game penalties, retirement, default, walkover; unknown winners → provisional; as-called checkpoints vs derived; conflicts; hypothetical folding for game/break/set/match points; `validate_log` (player ids and doubles orders, before the fold); `diff` between checkpoints |
 | `stats.py` | Every stat in rules §6 with the shared integer `pct`, pooling and percentage-point deltas |
+| `trend.py` | Pooled cross-session trends (§6.10): progress-window buckets, minimum samples, headline delta from displayed integers, sample scope kept apart |
 | `units.py` | Exact factors (lb↔kg↔N, mph↔km/h↔m/s, mm/cm/m/in/ft, cm²/in², g/oz), display steps, gauge help ranges |
 | `csv_export.py` | `points.csv` and `stats.csv`, driven by the hand-written contracts |
 | `references.py` | Reference integrity of 1.1 records (ids resolve, ranges run forwards, log versions, sample media ids) and the contract example's serve speed from its mark |
@@ -177,7 +181,8 @@ Implementation notes for the ports:
 
 ## Fixture inventory
 
-- **Scoring, 64 cases + 10 rejections**: love/4-2 holds, deuce chains, break via ad-out, No-Ad deciding point (both
+- **Scoring, 71 cases + 10 rejections** (`S01`–`S71`, `E01`–`E10`; `cases/order_cases.py` and `cases/log_safety_cases.py` add the 22 reviewed-order
+  `O` cases and rejections `E11`–`E18`, ADR0030): love/4-2 holds, deuce chains, break via ad-out, No-Ad deciding point (both
   outcomes, side recorded and not), service alternation across sets, end changes for odd and even sets, 7-5,
   tie-break 7-4 serve order and next-set first server, extended tie-breaks, best-of-1 tie-break loss, advantage set,
   advantage final set, match tie-break [10-8] and [12-10], Grand Slam final-set 10-point tie-break, pro set 9-8(5),
@@ -193,12 +198,20 @@ Implementation notes for the ports:
   game penalties ending a tie-break against the leader and ending a match tie-break, a point penalty converting a break
   point, retirement before play, a let in a No-Let format, voiding the original of a corrected point, re-entered doubles receivers reported as
   recalculated, the Fast4 sudden-death point keeping side parity (a recorded side flagged), a short-set tie-break whose
-  4-4 point is the receiver's choice; rejections for non-increasing seq, missing supersede target, missing doubles
+  4-4 point is the receiver's choice, a newer-version suggestion refused against a reviewed point (S67), undo and
+  redo of a correction (S68), a walkover logged after play (S69), a standalone 7-point tie-break (S70), a point served from the wrong half
+  and a correction that makes a recorded half wrong (`sideMismatch`, S71); rejections for non-increasing seq, missing supersede target, missing doubles
   order, missing void target, a doubles receiver from the wrong team, an order invalid for a set not yet reached, and
   unknown player ids (penalty, doubles receiver, toss first server, a voided retirement).
 - **Stats**: 24 integer-percentage vectors (incl. the §7 table, `1/8 → 13`, `199/200 → 100`, `1/201 → 0`, `0/0 → —`),
   5 delta and 3 pooling cases; every end type (`unknown` included) in one log; doubles per-server stats; a 7-6 set
   whose tie-break is not a service game.
+- **Trend** (`TR01-pooled-trends`, T05): 9 cases, 67 hand assertions: 1/2 with 30/40 pools to 31/42 = 74% (not the
+  62.5% average); the Home/Progress weekly series 48, 55, 63, 67 with "+4 percentage points" from the displayed
+  integers (the raw 3.33 would round to 3); buckets below 20 points hidden and skipped by the headline; sample
+  sessions excluded from a real trend and alone in a sample trend; months for 3 months and Year; sessions outside the
+  window or of another comparable kind excluded; a fall reads "-4 percentage points"; under 100 pooled points or no
+  sessions, no comparison.
 - **Units**: 31 vectors.
 - **Sample**: `jon-vs-alex.session.json` (124 points, labelled Sample, synthetic) with expected fold, stats, the
   screen-9 overview, all sixteen constraints (C15 is `partial`: its timestamp clause is waived, decision 18), and golden
@@ -306,11 +319,22 @@ These are encoded in the engine and pinned by fixtures; change them only through
     folds whose derived state differs in any field: determined, afterMatchEnd, set, game, gameInSet, tiebreak,
     pointInGame, server, receiver, serverSide, courtSide, ends, before, call, pressure, after (rules §4.4 "any flag or
     stat changed"). Re-entering doubles receivers changes only receivers and still marks every point (S62).
+24. **Re-analysis never overwrites a review** (ios-v1-spec correction semantics): a superseding `point` with no
+    `reviewed` block is an automatic suggestion. It may replace an unreviewed candidate, but when its target's current
+    version has a `reviewed` block it is kept in the log and changes nothing, whether it names the original candidate
+    or the reviewed version; later references to it resolve to that reviewed point (S67). Voiding a supersede
+    restores the version before it and voiding that void redoes it (S68).
+25. **Served from the wrong half** (rules §3, Rule 27a; session 1.2.0): a point may record `servedFromSide`, the
+    half the server actually served from (observed, never derived). When it differs from the rules-derived
+    `courtSide`, the fold raises `sideMismatch` (`recorded` = the half served from, `derived` = the half the rules
+    required). The point stands, a fault served before discovery stands, the timeline keeps the derived half and the
+    next point goes to the correct half. Nothing is compared while the derived half is unknown (a receiver's choice
+    not yet recorded), on provisional points or after the match ends. A correction that moves a point to the other
+    half flags its recorded half too (S71). Wrong ends (Rule 27b, the open fault is voided) remain uncovered.
 
 ## Not yet covered (needs fixtures before either app relies on it)
 
-Suspensions, wrong-ends and wrong-half
-corrections, checkpoint auto-fill, Canadian/Australian doubles, mixed-doubles No-Ad receiver rule, practice sets
+Suspensions, wrong-ends corrections (Rule 27b), checkpoint auto-fill, Canadian/Australian doubles, mixed-doubles No-Ad receiver rule, practice sets
 without a match end, the manual-assisted serve-speed formula and the court homography. The capability registry lists
 the analysis capabilities; none is `validated`, and the audio, rally and camera-moved detectors stay `disabled` until
 their benchmark gates pass.

@@ -1,0 +1,110 @@
+JovraRoom mutation run, 2026-11-08T09:09:37Z, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)
+== fresh threshold 6 s (Freshness/FreshnessRule.swift)
+   - public static let proposal = FreshnessPolicy(freshMaxMs: 5000
+   + public static let proposal = FreshnessPolicy(freshMaxMs: 6000
+	 Executed 11 tests, with 3 failures (0 unexpected) in 0.714 (0.715) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.159 (0.160) seconds
+	 Executed 25 tests, with 3 failures (0 unexpected) in 1.152 (1.156) seconds
+	 Executed 25 tests, with 3 failures (0 unexpected) in 1.152 (1.157) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.023 (0.023) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.061 (0.061) seconds
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.195 (0.196) seconds
+   Tests/Part1/VectorConformanceTests.swift:15: error: -[JovraRoomTests.VectorConformanceTests test_freshnessVectors] : XCTAssertEqual failed: ("["vectors/freshness.json#delayed-just-over: got \"Fresh\", expected \"Delayed\"", "vectors/freshness.json#delayed-by-watch-time: got \"Fresh\", expected \"Delayed\"", "vectors/freshness.json#transit-counts: got \"Fresh\", expected \"Delayed\""]") is not equal to ("[]") - freshness
+   KILLED (swift test exit 1)
+== unbounded transit treated as bounded (Freshness/FreshnessRule.swift)
+   - guard transitBounded, baselineValid else { return nil }
+   + guard baselineValid else { return nil }
+	 Executed 11 tests, with 2 failures (0 unexpected) in 0.163 (0.164) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.139 (0.139) seconds
+	 Executed 25 tests, with 3 failures (0 unexpected) in 0.663 (0.665) seconds
+	 Executed 25 tests, with 3 failures (0 unexpected) in 0.663 (0.666) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.021 (0.021) seconds
+	 Executed 4 tests, with 1 failure (0 unexpected) in 0.194 (0.195) seconds
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.146 (0.146) seconds
+   Tests/Part1/PackageHygieneTests.swift:63: error: -[JovraRoomTests.PackageHygieneTests test_processBaselineIsAValidRoomIdAndStableWithinTheProcess] : XCTAssertEqual failed: ("fresh") is not equal to ("unknown") - a queued delivery is Unknown
+   KILLED (swift test exit 1)
+== clock that stops during sleep (Freshness/MonotonicClock.swift)
+   - ContinuousClock.now
+   + SuspendingClock.now
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.154 (0.154) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.130 (0.131) seconds
+	 Executed 25 tests, with 2 failures (0 unexpected) in 0.638 (0.640) seconds
+	 Executed 25 tests, with 2 failures (0 unexpected) in 0.638 (0.641) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.018 (0.018) seconds
+	 Executed 4 tests, with 2 failures (0 unexpected) in 0.196 (0.196) seconds
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.140 (0.140) seconds
+   Tests/Part1/PackageHygieneTests.swift:36: error: -[JovraRoomTests.PackageHygieneTests test_freshnessUsesOnlyTheContinuousClock] : XCTAssertTrue failed
+   KILLED (swift test exit 1)
+== snapshot replay accepted (Snapshot/SnapshotReceiver.swift)
+   - env.snapshotSeq <= lastSeq
+   + env.snapshotSeq < lastSeq
+	 Executed 11 tests, with 2 failures (0 unexpected) in 0.352 (0.352) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.223 (0.224) seconds
+	 Executed 25 tests, with 2 failures (0 unexpected) in 0.780 (0.782) seconds
+	 Executed 25 tests, with 2 failures (0 unexpected) in 0.780 (0.783) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.020 (0.020) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.056 (0.056) seconds
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.130 (0.130) seconds
+   Tests/Part1/VectorConformanceTests.swift:16: error: -[JovraRoomTests.VectorConformanceTests test_snapshotVectors] : XCTAssertEqual failed: ("["vectors/snapshot.json#replay-and-order step 1: got accepted", "vectors/snapshot.json#restart-keeps-replay-protection step 3: got captureInstanceRetired"]") is not equal to ("[]") - snapshot
+   KILLED (swift test exit 1)
+== results always current (Analysis/ServeResultGate.swift)
+   - isCurrent ? .current : .previous
+   + .current
+	 Executed 11 tests, with 1 failure (0 unexpected) in 0.269 (0.269) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.133 (0.134) seconds
+	 Executed 25 tests, with 1 failure (0 unexpected) in 0.611 (0.613) seconds
+	 Executed 25 tests, with 1 failure (0 unexpected) in 0.611 (0.614) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.019 (0.019) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.058 (0.058) seconds
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.132 (0.132) seconds
+   Tests/Part1/VectorConformanceTests.swift:23: error: -[JovraRoomTests.VectorConformanceTests test_analysisVectors] : XCTAssertEqual failed: ("["vectors/analysis.json#serve-previous-point show: got \"current\", expected \"previous\""]") is not equal to ("[]") - analysis
+   KILLED (swift test exit 1)
+== Local not counted as fresh (Status/StatusRow.swift)
+   - self == .fresh || self == .local
+   + self == .fresh
+	 Executed 11 tests, with 1 failure (0 unexpected) in 0.278 (0.278) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.132 (0.132) seconds
+	 Executed 25 tests, with 1 failure (0 unexpected) in 0.620 (0.622) seconds
+	 Executed 25 tests, with 1 failure (0 unexpected) in 0.620 (0.623) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.019 (0.019) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.059 (0.059) seconds
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.132 (0.133) seconds
+   Tests/Part1/VectorConformanceTests.swift:17: error: -[JovraRoomTests.VectorConformanceTests test_phoneStatusVectors] : XCTAssertEqual failed: ("["vectors/phone-status.json#phone-local-camera counts: got RoomCounts(enrolled: 6, fresh: 5, delayed: 0, unknown: 0, reportedRecording: 6, freshRecording: 5, canClaimAllRecording: false)"]") is not equal to ("[]") - phone-status
+   KILLED (swift test exit 1)
+== remote elapsed extrapolated by age (Status/StatusRow.swift)
+   - elapsedMs: report.lastReportedElapsedMs, elapsedSource: .lastReported
+   + elapsedMs: report.lastReportedElapsedMs + (ageMs ?? 0), elapsedSource: .lastReported
+	 Executed 11 tests, with 2 failures (0 unexpected) in 0.289 (0.290) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.131 (0.131) seconds
+	 Executed 25 tests, with 2 failures (0 unexpected) in 0.627 (0.629) seconds
+	 Executed 25 tests, with 2 failures (0 unexpected) in 0.627 (0.630) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.019 (0.019) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.056 (0.056) seconds
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.133 (0.133) seconds
+   Tests/Part1/VectorConformanceTests.swift:18: error: -[JovraRoomTests.VectorConformanceTests test_displayVectors] : XCTAssertEqual failed: ("["vectors/display.json#c3-silent-recording: got {\"captureState\":\"Recording\",\"deviceId\":\"c3\",\"elapsedMs\":764000,\"elapsedSource\":\"last-reported\",\"extrapolated\":false,\"freshness\":\"Unknown\",\"lastHeardAgeMs\":18000,\"mayStillBeRecording\":true,\"stale\":true}", "vectors/display.json#delayed-recording: got {\"captureState\":\"Recording\",\"deviceId\":\"c2\",\"elapsedMs\":755000,\"elapsedSource\":\"last-reported\",\"extrapolated\":false,\"freshness\":\"Delayed\",\"lastHeardAgeMs\":9000,\"mayStillBeRecording\":true,\"stale\":true}", "vectors/display.json#fresh-not-extrapolated: got {\"captureState\":\"Recording\",\"deviceId\":\"c1\",\"elapsedMs\":747000,\"elapsedSource\":\"last-reported\",\"extrapolated\":false,\"freshness\":\"Fresh\",\"lastHeardAgeMs\":1000,\"mayStillBeRecording\":false,\"stale\":false}", "vectors/display.json#saved-stale: got {\"captureState\":\"Saved\",\"deviceId\":\"c3\",\"elapsedMs\":776000,\"elapsedSource\":\"last-reported\",\"extrapolated\":false,\"freshness\":\"Unknown\",\"lastHeardAgeMs\":30000,\"mayStillBeRecording\":false,\"stale\":true}"]") is not equal to ("[]") - display
+   KILLED (swift test exit 1)
+== unknown properties accepted (Records/RoomDecoding.swift)
+   - if let extra = all.allKeys
+   + if false, let extra = all.allKeys
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.149 (0.150) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.130 (0.130) seconds
+	 Executed 25 tests, with 2 failures (0 unexpected) in 0.648 (0.651) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.019 (0.020) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.055 (0.056) seconds
+	 Executed 5 tests, with 2 failures (0 unexpected) in 0.294 (0.295) seconds
+   Tests/Part1/RecordConformanceTests.swift:79: error: -[JovraRoomTests.RecordConformanceTests test_typedDecodersRefuseUnknownPropertiesOnTheirOwn] : XCTAssertThrowsError failed: did not throw an error
+   Tests/Part1/RecordConformanceTests.swift:85: error: -[JovraRoomTests.RecordConformanceTests test_typedDecodersRefuseUnknownPropertiesOnTheirOwn] : XCTAssertThrowsError failed: did not throw an error
+   KILLED (swift test exit 1)
+== command shape not checked (Records/RoomCommand.swift)
+   - try Self.checkShape(payload.type, target, baseEventRevision, c)
+   + _ = c
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.168 (0.169) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.147 (0.147) seconds
+	 Executed 25 tests, with 5 failures (0 unexpected) in 0.662 (0.665) seconds
+	 Executed 25 tests, with 5 failures (0 unexpected) in 0.662 (0.666) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.020 (0.020) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.060 (0.060) seconds
+	 Executed 5 tests, with 5 failures (0 unexpected) in 0.268 (0.269) seconds
+   Tests/Part1/RecordConformanceTests.swift:45: error: -[JovraRoomTests.RecordConformanceTests test_all103InvalidCasesAreRejectedByTheExpectedLayer] : failed - invalid/command.point-won.invalid.json#point-with-device-target: strict decoding accepted a schema-invalid record
+   KILLED (swift test exit 1)
+survivors: 0 of 9

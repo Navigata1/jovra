@@ -87,6 +87,13 @@ final class CaptureSegmentWriter: NSObject, AVAssetWriterDelegate, @unchecked Se
             try synchronizeMediaLocation(); try handle.close()
         }
     }
+    /// Crash emulation: stop at whatever fragments are already synchronized, as a killed process would. No
+    /// trailing fragment, no finish, no further journal checkpoint.
+    func abandon() {
+        lock.withLock { if failure == nil { failure = CaptureError.writerFailed("abandoned") } }
+        writer.cancelWriting()
+        lock.withLock { try? handle.close() }
+    }
     /// An orphaned descriptor is not durable media at the path promised by the journal.
     private func synchronizeMediaLocation() throws {
         try handle.synchronize()
@@ -125,7 +132,7 @@ final class CaptureSegmentWriter: NSObject, AVAssetWriterDelegate, @unchecked Se
     }
 }
 
-func retimeCaptureSample(_ sample: CMSampleBuffer, offset: CMTime) throws -> CMSampleBuffer {
+func retimeCaptureSample(_ sample: CMSampleBuffer, offset: CMTime, duration: CMTime? = nil) throws -> CMSampleBuffer {
     var count = 0
     guard CMSampleBufferGetSampleTimingInfoArray(sample, entryCount: 0, arrayToFill: nil, entriesNeededOut: &count) == noErr else {
         throw CaptureError.sourceFailed("sample timing")
@@ -137,6 +144,7 @@ func retimeCaptureSample(_ sample: CMSampleBuffer, offset: CMTime) throws -> CMS
     for index in times.indices {
         times[index].presentationTimeStamp = CMTimeAdd(times[index].presentationTimeStamp, offset)
         if times[index].decodeTimeStamp.isNumeric { times[index].decodeTimeStamp = CMTimeAdd(times[index].decodeTimeStamp, offset) }
+        if let duration { times[index].duration = duration }
     }
     var result: CMSampleBuffer?
     guard CMSampleBufferCreateCopyWithNewTiming(allocator: kCFAllocatorDefault, sampleBuffer: sample,

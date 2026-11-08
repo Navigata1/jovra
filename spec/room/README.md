@@ -27,6 +27,7 @@ spec/room/
   reference/    jovra_room/ (Python 3 standard library) + generate_room_fixtures.py
   fixtures/     records/ (valid), invalid/ (patch cases), vectors/ (rule scenarios), acceptance-map.json
 scripts/spec/validate_room.py   validates everything and re-runs the reference; non-zero exit on any failure
+scripts/spec/test_validate_room.py   negative controls: a broken, hand-edited or deleted fixture must fail the validator
 ```
 
 Run both from the repo root:
@@ -34,6 +35,7 @@ Run both from the repo root:
 ```
 python3 spec/room/reference/generate_room_fixtures.py   # rewrites spec/room/fixtures (same bytes every run)
 python3 scripts/spec/validate_room.py                   # add -v for detail
+python3 scripts/spec/test_validate_room.py -v           # proves a broken fixture turns the validator red
 ```
 
 The validator is separate from `scripts/spec/validate.py` (core) and `scripts/spec/validate_studio.py` (Studio). It

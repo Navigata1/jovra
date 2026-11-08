@@ -1,0 +1,257 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 960000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "bounces": [
+    {
+      "courtMm": {
+        "x": -940,
+        "y": 17494
+      },
+      "frame": 115,
+      "inCourt": true,
+      "time": {
+        "timescale": 1920,
+        "value": 3707
+      }
+    },
+    {
+      "courtMm": {
+        "x": -1107,
+        "y": 3470
+      },
+      "frame": 201,
+      "inCourt": true,
+      "time": {
+        "timescale": 48000,
+        "value": 161323
+      }
+    },
+    {
+      "courtMm": {
+        "x": 3140,
+        "y": 18157
+      },
+      "frame": 280,
+      "inCourt": true,
+      "time": {
+        "timescale": 48000,
+        "value": 224611
+      }
+    },
+    {
+      "courtMm": {
+        "x": -1914,
+        "y": 6464
+      },
+      "frame": 714,
+      "inCourt": true,
+      "time": {
+        "timescale": 24000,
+        "value": 285839
+      }
+    },
+    {
+      "courtMm": {
+        "x": 2452,
+        "y": 21526
+      },
+      "frame": 794,
+      "inCourt": true,
+      "time": {
+        "timescale": 48000,
+        "value": 635339
+      }
+    },
+    {
+      "courtMm": {
+        "x": 2535,
+        "y": 4759
+      },
+      "frame": 873,
+      "inCourt": true,
+      "time": {
+        "timescale": 960,
+        "value": 13973
+      }
+    },
+    {
+      "courtMm": {
+        "x": 252,
+        "y": 17546
+      },
+      "frame": 953,
+      "inCourt": true,
+      "time": {
+        "timescale": 2400,
+        "value": 38141
+      }
+    }
+  ],
+  "camera": {
+    "angle": "behindBaseline"
+  },
+  "description": "Sample video (synthetic): Week-1 singles match: thumbnail clip.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 90,
+      "sample": 72000,
+      "time": {
+        "timescale": 2,
+        "value": 3
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 151,
+      "sample": 121187,
+      "time": {
+        "timescale": 48000,
+        "value": 121187
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 232,
+      "sample": 185923,
+      "time": {
+        "timescale": 48000,
+        "value": 185923
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 690,
+      "sample": 552000,
+      "time": {
+        "timescale": 2,
+        "value": 23
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 749,
+      "sample": 599877,
+      "time": {
+        "timescale": 16000,
+        "value": 199959
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 821,
+      "sample": 657073,
+      "time": {
+        "timescale": 48000,
+        "value": 657073
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 905,
+      "sample": 724132,
+      "time": {
+        "timescale": 12000,
+        "value": 181033
+      },
+      "type": "hit"
+    }
+  ],
+  "frameCode": null,
+  "id": "sample/2026-09-09-match",
+  "kind": "jovra.groundTruth",
+  "label": {
+    "background": {
+      "y": 28
+    },
+    "ink": {
+      "y": 230
+    },
+    "region": {
+      "height": 20,
+      "width": 288,
+      "x": 0,
+      "y": 0
+    },
+    "text": "Sample video (synthetic)"
+  },
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/sample-12ab9717548a9735/sample-2026-09-09-match.mp4"
+  },
+  "rallies": [
+    {
+      "end": {
+        "timescale": 48000,
+        "value": 243523
+      },
+      "hits": 3,
+      "pointNumber": 1,
+      "start": {
+        "timescale": 2,
+        "value": 3
+      }
+    },
+    {
+      "end": {
+        "timescale": 12000,
+        "value": 195433
+      },
+      "hits": 4,
+      "pointNumber": 2,
+      "start": {
+        "timescale": 2,
+        "value": 23
+      }
+    }
+  ],
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "12ab9717548a973589818bc568f30bad043b341db30a2252849fd41e1aa067e2"
+  },
+  "sampleMedia": {
+    "mediaId": "sample-media.2026-09-09-match",
+    "thumbnailFrame": 181
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 1006,
+  "set": "sample",
+  "signature": {
+    "columns": 8,
+    "decodedFramesSha256": "64daf5419d658ff737cd76ffdba1c2b51935461eb11b7e662ebe7b7e5f92d943",
+    "frameCount": 1200,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 18,
+    "rows": 4,
+    "sourceFramesSha256": "8cdba87ebf62154b1f46c6c4a57e698c12f0b11fd18417c540b0f25d1a5da584"
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 360,
+    "codedWidth": 640,
+    "displayHeight": 360,
+    "displayWidth": 640,
+    "duration": {
+      "timescale": 1,
+      "value": 20
+    },
+    "fourCC": "avc1",
+    "frameCount": 1200,
+    "frameRate": {
+      "den": 1,
+      "num": 60
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true,
+    "variableFrameRate": false
+  }
+}

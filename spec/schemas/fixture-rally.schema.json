@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA rally segmentation and rally-only plan conformance vectors",
+  "description": "T32 (ios-v1-spec RallySegmenter, screens.md N7). segment: hits and marks to point candidates (a rally is hits with gaps below rallyGapMs; a gap above pointGapMs starts a new point; hits on the excluded frame half and non-hit sounds are dropped; point marks become candidates on their own when there is no audio, and otherwise join the first hit candidate whose clip holds them). plan: point or mark targets plus the session's rallyPlayback rolls to merged half-open ranges and the gaps between them, each gap with its duration and its chip label. All times are integer milliseconds on the session timeline; the reference is spec/reference/jovra_ref/rally.py.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "covers", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.rally"},
+    "id": {"type": "string", "pattern": "^R[0-9]{2}-[a-z0-9-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "covers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"oneOf": [{"$ref": "#/$defs/segmentCase"}, {"$ref": "#/$defs/planCase"}]}
+    }
+  },
+  "$defs": {
+    "errorCode": {
+      "description": "Why the input is refused. Both platforms raise the same code, checked in this order: parameters and rolls, then each hit, mark or target in input order (duplicate id, then backwards range, then time outside the recording).",
+      "enum": ["rallyGapNotPositive", "pointGapBelowRallyGap", "rollOutOfRange", "duplicateId", "rangeBackwards",
+               "timeOutsideRecording"]
+    },
+    "rollMs": {"type": "integer", "description": "Validated by the engine (0-10000), so out-of-range values can be fixtured."},
+    "ids": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+    "hit": {
+      "description": "One HitDetector candidate. side is the frame half the sound is attributed to; absent when unattributed.",
+      "type": "object",
+      "required": ["id", "tMs", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "tMs": {"type": "integer"},
+        "kind": {"enum": ["hit", "bounce", "other"]},
+        "side": {"enum": ["left", "right"]}
+      }
+    },
+    "mark": {
+      "type": "object",
+      "required": ["id", "tMs", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "tMs": {"type": "integer"},
+        "kind": {"enum": ["point", "note", "highlight", "stringBroke", "cameraMoved"]}
+      }
+    },
+    "segmentParams": {
+      "description": "Absent values take the defaults: rallyGapMs 3000, pointGapMs 5000, preRollMs 1500, postRollMs 2500, no excluded side.",
+      "type": "object",
+      "required": ["durationMs"],
+      "additionalProperties": false,
+      "properties": {
+        "durationMs": {"type": "integer", "minimum": 0},
+        "rallyGapMs": {"type": "integer"},
+        "pointGapMs": {"type": "integer"},
+        "preRollMs": {"$ref": "#/$defs/rollMs"},
+        "postRollMs": {"$ref": "#/$defs/rollMs"},
+        "excludedSide": {"enum": ["left", "right", null]}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "required": ["source", "startMs", "endMs", "clip", "hitIds", "markIds", "rallies", "provenance", "needsReview"],
+      "additionalProperties": false,
+      "properties": {
+        "source": {"enum": ["hits", "mark"], "description": "hits: estimated, needs review. mark: the player's own mark, manual."},
+        "startMs": {"$ref": "common.schema.json#/$defs/timeMs", "description": "First hit (or the mark)."},
+        "endMs": {"$ref": "common.schema.json#/$defs/timeMs", "description": "Last hit (or the mark)."},
+        "clip": {"$ref": "common.schema.json#/$defs/timeRange", "description": "startMs - preRoll to endMs + postRoll, clamped to the recording."},
+        "hitIds": {"$ref": "#/$defs/ids"},
+        "markIds": {"$ref": "#/$defs/ids"},
+        "rallies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["startMs", "endMs", "hitCount"],
+            "additionalProperties": false,
+            "properties": {
+              "startMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+              "endMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+              "hitCount": {"type": "integer", "minimum": 1}
+            }
+          }
+        },
+        "provenance": {"enum": ["estimated", "manual"]},
+        "needsReview": {"type": "boolean"}
+      }
+    },
+    "segmentation": {
+      "type": "object",
+      "required": ["candidates", "dropped"],
+      "additionalProperties": false,
+      "properties": {
+        "candidates": {"type": "array", "items": {"$ref": "#/$defs/candidate"}},
+        "dropped": {
+          "description": "Ids left out, each list ordered by time then id.",
+          "type": "object",
+          "required": ["excludedSide", "notHit", "notPointMark"],
+          "additionalProperties": false,
+          "properties": {
+            "excludedSide": {"$ref": "#/$defs/ids"},
+            "notHit": {"$ref": "#/$defs/ids"},
+            "notPointMark": {"$ref": "#/$defs/ids"}
+          }
+        }
+      }
+    },
+    "segmentCase": {
+      "type": "object",
+      "required": ["op", "name", "hits", "marks", "params"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"const": "segment"},
+        "name": {"type": "string", "minLength": 1},
+        "hits": {"description": "null when the session has no audio (bookmarks only).", "oneOf": [{"type": "null"}, {"type": "array", "items": {"$ref": "#/$defs/hit"}}]},
+        "marks": {"type": "array", "items": {"$ref": "#/$defs/mark"}},
+        "params": {"$ref": "#/$defs/segmentParams"},
+        "expected": {"$ref": "#/$defs/segmentation"},
+        "expectedError": {"$ref": "#/$defs/errorCode"}
+      },
+      "oneOf": [{"required": ["expected"]}, {"required": ["expectedError"]}]
+    },
+    "target": {
+      "type": "object",
+      "required": ["targetId", "startMs", "endMs"],
+      "additionalProperties": false,
+      "properties": {
+        "targetId": {"$ref": "common.schema.json#/$defs/id"},
+        "startMs": {"type": "integer"},
+        "endMs": {"type": "integer"}
+      }
+    },
+    "rolls": {
+      "description": "The session's rallyPlayback (session.schema.json); null when the session has none, so the defaults 1.5 s / 2.5 s apply.",
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["preRollMs", "postRollMs"],
+          "additionalProperties": false,
+          "properties": {
+            "preRollMs": {"$ref": "#/$defs/rollMs"},
+            "postRollMs": {"$ref": "#/$defs/rollMs"},
+            "clips": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["targetId"],
+                "additionalProperties": false,
+                "properties": {
+                  "targetId": {"$ref": "common.schema.json#/$defs/id"},
+                  "preRollMs": {"$ref": "#/$defs/rollMs"},
+                  "postRollMs": {"$ref": "#/$defs/rollMs"},
+                  "excluded": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "plan": {
+      "type": "object",
+      "required": ["ranges", "gaps", "excludedTargetIds", "keptMs", "skippedMs", "durationMs"],
+      "additionalProperties": false,
+      "properties": {
+        "ranges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["range", "durationMs", "targetIds"],
+            "additionalProperties": false,
+            "properties": {
+              "range": {"$ref": "common.schema.json#/$defs/timeRange"},
+              "durationMs": {"type": "integer", "minimum": 0},
+              "targetIds": {"$ref": "#/$defs/ids"}
+            }
+          }
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["range", "durationMs", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "range": {"$ref": "common.schema.json#/$defs/timeRange"},
+              "durationMs": {"type": "integer", "minimum": 1},
+              "label": {"type": "string", "pattern": "^\\+([0-9]+:[0-5][0-9]|[0-9]+:[0-5][0-9]:[0-5][0-9])$", "description": "GapChip text: + then m:ss, or h:mm:ss from one hour; whole seconds truncated so skipped time is never overstated."}
+            }
+          }
+        },
+        "excludedTargetIds": {"$ref": "#/$defs/ids"},
+        "keptMs": {"type": "integer", "minimum": 0},
+        "skippedMs": {"type": "integer", "minimum": 0},
+        "durationMs": {"type": "integer", "minimum": 0}
+      }
+    },
+    "planCase": {
+      "type": "object",
+      "required": ["op", "name", "targets", "rolls", "durationMs"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"const": "plan"},
+        "name": {"type": "string", "minLength": 1},
+        "targets": {"type": "array", "items": {"$ref": "#/$defs/target"}},
+        "rolls": {"$ref": "#/$defs/rolls"},
+        "durationMs": {"type": "integer", "minimum": 0},
+        "expected": {"$ref": "#/$defs/plan"},
+        "expectedError": {"$ref": "#/$defs/errorCode"}
+      },
+      "oneOf": [{"required": ["expected"]}, {"required": ["expectedError"]}]
+    }
+  }
+}

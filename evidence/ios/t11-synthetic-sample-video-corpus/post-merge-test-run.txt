@@ -1,0 +1,36 @@
+# scripts/ios/test.sh after merging origin/main (1f17732) into the T11 branch, 2026-11-08
+# SIMULATOR_ID=BFA5A503-0486-41C5-9BCB-6D79E55BF908 (JOVRA-T11, iPhone 17 Pro, iOS 27.2)
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 200.462 (200.463) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 200.462 (200.464) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 200.462 (200.466) seconds
+==> set sample budget: 43.17 MB of 60 MB (within)
+decoded-frame hash check: PASS (50 clips match the committed ground truth)
+✔ Test run with 45 tests in 8 suites passed after 1.529 seconds.
+✔ Test run with 59 tests in 10 suites passed after 225.559 seconds.
+✔ Test run with 67 tests in 5 suites passed after 5.782 seconds.
+==> JovraTests summary
+Test class                                                             passed  failed  skipped  expected
+JovraTests/CapturePhasePresentationTests                                    1       0        0         0
+JovraTests/CaptureSetupChoicesTests                                         2       0        0         0
+JovraTests/AppPreferencesTests (App preferences and the data eraser)       10       0        0         0
+JovraTests/CaptureTextBoundaryTests                                         3       0        0         0
+JovraTests/AppRouterTests (App router)                                     21       0        0         0
+JovraTests/FilesImportTests                                                 5       0        0         0
+JovraTests/ColorRoleContrastTests (Semantic colour contrast)                7       0        0         0
+JovraTests/LocalCaptureLibraryTests                                         4       0        0         0
+JovraTests/DriveClientConfigurationTests (Drive client configuration)       7       0        0         0
+JovraTests/NativeCaptureCoordinatorTests                                    1       0        0         0
+JovraTests/JovraFormatTests (Locale formatting)                             8       0        0         0
+JovraTests/NativeExportModelTests                                           1       0        0         0
+JovraTests/LaunchConfigurationTests (Launch configuration)                  7       0        0         0
+JovraTests/ReplayPlaybackModelTests                                         2       0        0         0
+JovraTests/PermissionsCenterTests (Permissions center)                      7       0        0         0
+JovraTests/ReviewedPointModelTests                                          1       0        0         0
+JovraTests/ServiceRegistrationTests (Service registration seam)             3       0        0         0
+JovraTests/SampleMediaBundleTests                                           1       0        0         0
+JovraTests/StudioWiringTests (Studio wiring)                                4       0        0         0
+JovraTests/StartupRecoveryTests                                             1       0        0         0
+Total: 96 passed, 0 failed, 0 skipped, 0 expected failure(s) in 20 classes (xcresult summary: 96 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T11 BFA5A503-0486-41C5-9BCB-6D79E55BF908 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: /Users/IDC2.5/jv/.claude/worktrees/t11-synthetic-sample-video-corpus/.derivedData/unit-tests-20261108-124043.xcresult

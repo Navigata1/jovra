@@ -1,0 +1,1235 @@
+﻿2026-11-08T19:04:34.9790024Z ##[group]Run supabase db advisors --local --type performance --level info --fail-on warn
+2026-11-08T19:04:34.9790723Z ^[[36;1msupabase db advisors --local --type performance --level info --fail-on warn^[[0m
+2026-11-08T19:04:34.9805935Z shell: /usr/bin/bash -e {0}
+2026-11-08T19:04:34.9806327Z env:
+2026-11-08T19:04:34.9806655Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+2026-11-08T19:04:34.9807057Z ##[endgroup]
+2026-11-08T19:04:35.2739385Z Connecting to local database...
+2026-11-08T19:04:35.3840527Z [
+2026-11-08T19:04:35.3840956Z   {
+2026-11-08T19:04:35.3841360Z     "name": "unused_index",
+2026-11-08T19:04:35.3841771Z     "title": "Unused Index",
+2026-11-08T19:04:35.3842143Z     "level": "INFO",
+2026-11-08T19:04:35.3842468Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3842863Z     "categories": [
+2026-11-08T19:04:35.3843247Z       "PERFORMANCE"
+2026-11-08T19:04:35.3843594Z     ],
+2026-11-08T19:04:35.3844005Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3845511Z     "detail": "Index `project_members_user_id_idx` on table `public.project_members` has not been used",
+2026-11-08T19:04:35.3846479Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3847135Z     "metadata": {
+2026-11-08T19:04:35.3847561Z       "name": "project_members",
+2026-11-08T19:04:35.3847965Z       "type": "table",
+2026-11-08T19:04:35.3848290Z       "schema": "public"
+2026-11-08T19:04:35.3848720Z     },
+2026-11-08T19:04:35.3849715Z A new version of Supabase CLI is available: v3.0.0 (currently installed v)
+2026-11-08T19:04:35.3851016Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+2026-11-08T19:04:35.3852063Z     "cache_key": "unused_index_public_project_members_project_members_user_id_idx"
+2026-11-08T19:04:35.3852531Z   },
+2026-11-08T19:04:35.3852757Z   {
+2026-11-08T19:04:35.3853018Z     "name": "unused_index",
+2026-11-08T19:04:35.3853330Z     "title": "Unused Index",
+2026-11-08T19:04:35.3853648Z     "level": "INFO",
+2026-11-08T19:04:35.3853930Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3854175Z     "categories": [
+2026-11-08T19:04:35.3854560Z       "PERFORMANCE"
+2026-11-08T19:04:35.3854765Z     ],
+2026-11-08T19:04:35.3855109Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3855697Z     "detail": "Index `camera_invites_project_id_idx` on table `public.camera_invites` has not been used",
+2026-11-08T19:04:35.3856319Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3856755Z     "metadata": {
+2026-11-08T19:04:35.3856967Z       "name": "camera_invites",
+2026-11-08T19:04:35.3857201Z       "type": "table",
+2026-11-08T19:04:35.3857461Z       "schema": "public"
+2026-11-08T19:04:35.3857682Z     },
+2026-11-08T19:04:35.3857982Z     "cache_key": "unused_index_public_camera_invites_camera_invites_project_id_idx"
+2026-11-08T19:04:35.3858348Z   },
+2026-11-08T19:04:35.3858518Z   {
+2026-11-08T19:04:35.3858702Z     "name": "unused_index",
+2026-11-08T19:04:35.3858936Z     "title": "Unused Index",
+2026-11-08T19:04:35.3859158Z     "level": "INFO",
+2026-11-08T19:04:35.3859363Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3859583Z     "categories": [
+2026-11-08T19:04:35.3859787Z       "PERFORMANCE"
+2026-11-08T19:04:35.3859983Z     ],
+2026-11-08T19:04:35.3860400Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3861079Z     "detail": "Index `camera_invites_redeemed_by_user_id_idx` on table `public.camera_invites` has not been used",
+2026-11-08T19:04:35.3862176Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3862650Z     "metadata": {
+2026-11-08T19:04:35.3862918Z       "name": "camera_invites",
+2026-11-08T19:04:35.3863175Z       "type": "table",
+2026-11-08T19:04:35.3863706Z       "schema": "public"
+2026-11-08T19:04:35.3863936Z     },
+2026-11-08T19:04:35.3864391Z     "cache_key": "unused_index_public_camera_invites_camera_invites_redeemed_by_user_id_idx"
+2026-11-08T19:04:35.3864834Z   },
+2026-11-08T19:04:35.3865015Z   {
+2026-11-08T19:04:35.3865203Z     "name": "unused_index",
+2026-11-08T19:04:35.3865436Z     "title": "Unused Index",
+2026-11-08T19:04:35.3865666Z     "level": "INFO",
+2026-11-08T19:04:35.3865886Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3866117Z     "categories": [
+2026-11-08T19:04:35.3866322Z       "PERFORMANCE"
+2026-11-08T19:04:35.3866521Z     ],
+2026-11-08T19:04:35.3866869Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3867469Z     "detail": "Index `camera_invites_created_by_idx` on table `public.camera_invites` has not been used",
+2026-11-08T19:04:35.3868083Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3868505Z     "metadata": {
+2026-11-08T19:04:35.3868707Z       "name": "camera_invites",
+2026-11-08T19:04:35.3868985Z       "type": "table",
+2026-11-08T19:04:35.3869247Z       "schema": "public"
+2026-11-08T19:04:35.3869503Z     },
+2026-11-08T19:04:35.3869894Z     "cache_key": "unused_index_public_camera_invites_camera_invites_created_by_idx"
+2026-11-08T19:04:35.3870384Z   },
+2026-11-08T19:04:35.3870601Z   {
+2026-11-08T19:04:35.3870818Z     "name": "unused_index",
+2026-11-08T19:04:35.3871101Z     "title": "Unused Index",
+2026-11-08T19:04:35.3871369Z     "level": "INFO",
+2026-11-08T19:04:35.3871572Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3871789Z     "categories": [
+2026-11-08T19:04:35.3871984Z       "PERFORMANCE"
+2026-11-08T19:04:35.3872170Z     ],
+2026-11-08T19:04:35.3872502Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3873055Z     "detail": "Index `camera_sources_invite_id_idx` on table `public.camera_sources` has not been used",
+2026-11-08T19:04:35.3873646Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3874059Z     "metadata": {
+2026-11-08T19:04:35.3874429Z       "name": "camera_sources",
+2026-11-08T19:04:35.3874747Z       "type": "table",
+2026-11-08T19:04:35.3875023Z       "schema": "public"
+2026-11-08T19:04:35.3875327Z     },
+2026-11-08T19:04:35.3875822Z     "cache_key": "unused_index_public_camera_sources_camera_sources_invite_id_idx"
+2026-11-08T19:04:35.3876187Z   },
+2026-11-08T19:04:35.3876358Z   {
+2026-11-08T19:04:35.3876540Z     "name": "unused_index",
+2026-11-08T19:04:35.3876779Z     "title": "Unused Index",
+2026-11-08T19:04:35.3877008Z     "level": "INFO",
+2026-11-08T19:04:35.3877219Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3877439Z     "categories": [
+2026-11-08T19:04:35.3877642Z       "PERFORMANCE"
+2026-11-08T19:04:35.3877840Z     ],
+2026-11-08T19:04:35.3878175Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3878766Z     "detail": "Index `camera_sources_uploader_user_id_idx` on table `public.camera_sources` has not been used",
+2026-11-08T19:04:35.3879402Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3879824Z     "metadata": {
+2026-11-08T19:04:35.3880031Z       "name": "camera_sources",
+2026-11-08T19:04:35.3880269Z       "type": "table",
+2026-11-08T19:04:35.3880478Z       "schema": "public"
+2026-11-08T19:04:35.3880678Z     },
+2026-11-08T19:04:35.3880983Z     "cache_key": "unused_index_public_camera_sources_camera_sources_uploader_user_id_idx"
+2026-11-08T19:04:35.3881615Z   },
+2026-11-08T19:04:35.3881785Z   {
+2026-11-08T19:04:35.3881969Z     "name": "unused_index",
+2026-11-08T19:04:35.3882220Z     "title": "Unused Index",
+2026-11-08T19:04:35.3882467Z     "level": "INFO",
+2026-11-08T19:04:35.3882668Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3882878Z     "categories": [
+2026-11-08T19:04:35.3883191Z       "PERFORMANCE"
+2026-11-08T19:04:35.3883375Z     ],
+2026-11-08T19:04:35.3883693Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3884563Z     "detail": "Index `calibration_versions_project_source_idx` on table `public.calibration_versions` has not been used",
+2026-11-08T19:04:35.3885224Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3885630Z     "metadata": {
+2026-11-08T19:04:35.3885893Z       "name": "calibration_versions",
+2026-11-08T19:04:35.3886211Z       "type": "table",
+2026-11-08T19:04:35.3886462Z       "schema": "public"
+2026-11-08T19:04:35.3886696Z     },
+2026-11-08T19:04:35.3887116Z     "cache_key": "unused_index_public_calibration_versions_calibration_versions_project_source_idx"
+2026-11-08T19:04:35.3887831Z   },
+2026-11-08T19:04:35.3888093Z   {
+2026-11-08T19:04:35.3888320Z     "name": "unused_index",
+2026-11-08T19:04:35.3888588Z     "title": "Unused Index",
+2026-11-08T19:04:35.3888886Z     "level": "INFO",
+2026-11-08T19:04:35.3889157Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3889418Z     "categories": [
+2026-11-08T19:04:35.3889682Z       "PERFORMANCE"
+2026-11-08T19:04:35.3889918Z     ],
+2026-11-08T19:04:35.3890362Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3891171Z     "detail": "Index `lesson_clips_lesson_id_idx` on table `public.lesson_clips` has not been used",
+2026-11-08T19:04:35.3892026Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3892640Z     "metadata": {
+2026-11-08T19:04:35.3892921Z       "name": "lesson_clips",
+2026-11-08T19:04:35.3893223Z       "type": "table",
+2026-11-08T19:04:35.3893520Z       "schema": "public"
+2026-11-08T19:04:35.3893814Z     },
+2026-11-08T19:04:35.3894202Z     "cache_key": "unused_index_public_lesson_clips_lesson_clips_lesson_id_idx"
+2026-11-08T19:04:35.3895461Z   },
+2026-11-08T19:04:35.3895679Z   {
+2026-11-08T19:04:35.3895926Z     "name": "unused_index",
+2026-11-08T19:04:35.3896221Z     "title": "Unused Index",
+2026-11-08T19:04:35.3896530Z     "level": "INFO",
+2026-11-08T19:04:35.3896822Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3897132Z     "categories": [
+2026-11-08T19:04:35.3897422Z       "PERFORMANCE"
+2026-11-08T19:04:35.3897674Z     ],
+2026-11-08T19:04:35.3898166Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3899051Z     "detail": "Index `lesson_clips_project_source_idx` on table `public.lesson_clips` has not been used",
+2026-11-08T19:04:35.3899975Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3900581Z     "metadata": {
+2026-11-08T19:04:35.3900869Z       "name": "lesson_clips",
+2026-11-08T19:04:35.3901508Z       "type": "table",
+2026-11-08T19:04:35.3901984Z       "schema": "public"
+2026-11-08T19:04:35.3902489Z     },
+2026-11-08T19:04:35.3903175Z     "cache_key": "unused_index_public_lesson_clips_lesson_clips_project_source_idx"
+2026-11-08T19:04:35.3903851Z   },
+2026-11-08T19:04:35.3904403Z   {
+2026-11-08T19:04:35.3904860Z     "name": "unused_index",
+2026-11-08T19:04:35.3905374Z     "title": "Unused Index",
+2026-11-08T19:04:35.3905836Z     "level": "INFO",
+2026-11-08T19:04:35.3906246Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3906648Z     "categories": [
+2026-11-08T19:04:35.3907038Z       "PERFORMANCE"
+2026-11-08T19:04:35.3907432Z     ],
+2026-11-08T19:04:35.3908013Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3909351Z     "detail": "Index `artifacts_parent_artifact_id_idx` on table `public.artifacts` has not been used",
+2026-11-08T19:04:35.3910441Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3911339Z     "metadata": {
+2026-11-08T19:04:35.3911737Z       "name": "artifacts",
+2026-11-08T19:04:35.3912290Z       "type": "table",
+2026-11-08T19:04:35.3912759Z       "schema": "public"
+2026-11-08T19:04:35.3913154Z     },
+2026-11-08T19:04:35.3913724Z     "cache_key": "unused_index_public_artifacts_artifacts_parent_artifact_id_idx"
+2026-11-08T19:04:35.3914549Z   },
+2026-11-08T19:04:35.3914914Z   {
+2026-11-08T19:04:35.3915455Z     "name": "unused_index",
+2026-11-08T19:04:35.3915916Z     "title": "Unused Index",
+2026-11-08T19:04:35.3916450Z     "level": "INFO",
+2026-11-08T19:04:35.3916870Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3917286Z     "categories": [
+2026-11-08T19:04:35.3917710Z       "PERFORMANCE"
+2026-11-08T19:04:35.3918081Z     ],
+2026-11-08T19:04:35.3918711Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3919757Z     "detail": "Index `artifacts_lesson_clip_id_idx` on table `public.artifacts` has not been used",
+2026-11-08T19:04:35.3920773Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3921791Z     "metadata": {
+2026-11-08T19:04:35.3922234Z       "name": "artifacts",
+2026-11-08T19:04:35.3922851Z       "type": "table",
+2026-11-08T19:04:35.3923359Z       "schema": "public"
+2026-11-08T19:04:35.3923770Z     },
+2026-11-08T19:04:35.3924601Z     "cache_key": "unused_index_public_artifacts_artifacts_lesson_clip_id_idx"
+2026-11-08T19:04:35.3925274Z   },
+2026-11-08T19:04:35.3925673Z   {
+2026-11-08T19:04:35.3926073Z     "name": "unused_index",
+2026-11-08T19:04:35.3926498Z     "title": "Unused Index",
+2026-11-08T19:04:35.3926909Z     "level": "INFO",
+2026-11-08T19:04:35.3927417Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3927885Z     "categories": [
+2026-11-08T19:04:35.3928302Z       "PERFORMANCE"
+2026-11-08T19:04:35.3928689Z     ],
+2026-11-08T19:04:35.3929301Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3930370Z     "detail": "Index `artifacts_project_source_idx` on table `public.artifacts` has not been used",
+2026-11-08T19:04:35.3931459Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3932221Z     "metadata": {
+2026-11-08T19:04:35.3932697Z       "name": "artifacts",
+2026-11-08T19:04:35.3933118Z       "type": "table",
+2026-11-08T19:04:35.3933574Z       "schema": "public"
+2026-11-08T19:04:35.3934015Z     },
+2026-11-08T19:04:35.3934768Z     "cache_key": "unused_index_public_artifacts_artifacts_project_source_idx"
+2026-11-08T19:04:35.3935440Z   },
+2026-11-08T19:04:35.3935785Z   {
+2026-11-08T19:04:35.3936205Z     "name": "unused_index",
+2026-11-08T19:04:35.3936705Z     "title": "Unused Index",
+2026-11-08T19:04:35.3937147Z     "level": "INFO",
+2026-11-08T19:04:35.3937666Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3938111Z     "categories": [
+2026-11-08T19:04:35.3938549Z       "PERFORMANCE"
+2026-11-08T19:04:35.3938964Z     ],
+2026-11-08T19:04:35.3939569Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3940692Z     "detail": "Index `lesson_clips_excerpt_artifact_id_idx` on table `public.lesson_clips` has not been used",
+2026-11-08T19:04:35.3941862Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3942674Z     "metadata": {
+2026-11-08T19:04:35.3943153Z       "name": "lesson_clips",
+2026-11-08T19:04:35.3943609Z       "type": "table",
+2026-11-08T19:04:35.3944071Z       "schema": "public"
+2026-11-08T19:04:35.3944648Z     },
+2026-11-08T19:04:35.3945223Z     "cache_key": "unused_index_public_lesson_clips_lesson_clips_excerpt_artifact_id_idx"
+2026-11-08T19:04:35.3946249Z   },
+2026-11-08T19:04:35.3946624Z   {
+2026-11-08T19:04:35.3947027Z     "name": "unused_index",
+2026-11-08T19:04:35.3947454Z     "title": "Unused Index",
+2026-11-08T19:04:35.3947858Z     "level": "INFO",
+2026-11-08T19:04:35.3948361Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3948970Z     "categories": [
+2026-11-08T19:04:35.3949417Z       "PERFORMANCE"
+2026-11-08T19:04:35.3949812Z     ],
+2026-11-08T19:04:35.3950493Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3951612Z     "detail": "Index `access_grants_grantee_user_id_idx` on table `public.access_grants` has not been used",
+2026-11-08T19:04:35.3953235Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3954046Z     "metadata": {
+2026-11-08T19:04:35.3954777Z       "name": "access_grants",
+2026-11-08T19:04:35.3955307Z       "type": "table",
+2026-11-08T19:04:35.3955843Z       "schema": "public"
+2026-11-08T19:04:35.3956243Z     },
+2026-11-08T19:04:35.3956826Z     "cache_key": "unused_index_public_access_grants_access_grants_grantee_user_id_idx"
+2026-11-08T19:04:35.3957509Z   },
+2026-11-08T19:04:35.3957890Z   {
+2026-11-08T19:04:35.3958289Z     "name": "unused_index",
+2026-11-08T19:04:35.3958755Z     "title": "Unused Index",
+2026-11-08T19:04:35.3959195Z     "level": "INFO",
+2026-11-08T19:04:35.3959674Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3960129Z     "categories": [
+2026-11-08T19:04:35.3960594Z       "PERFORMANCE"
+2026-11-08T19:04:35.3960975Z     ],
+2026-11-08T19:04:35.3961571Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3962605Z     "detail": "Index `access_grants_created_by_idx` on table `public.access_grants` has not been used",
+2026-11-08T19:04:35.3963627Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3964582Z     "metadata": {
+2026-11-08T19:04:35.3965031Z       "name": "access_grants",
+2026-11-08T19:04:35.3965462Z       "type": "table",
+2026-11-08T19:04:35.3965901Z       "schema": "public"
+2026-11-08T19:04:35.3966316Z     },
+2026-11-08T19:04:35.3966866Z     "cache_key": "unused_index_public_access_grants_access_grants_created_by_idx"
+2026-11-08T19:04:35.3967539Z   },
+2026-11-08T19:04:35.3967894Z   {
+2026-11-08T19:04:35.3968379Z     "name": "unused_index",
+2026-11-08T19:04:35.3968913Z     "title": "Unused Index",
+2026-11-08T19:04:35.3969303Z     "level": "INFO",
+2026-11-08T19:04:35.3969602Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3969936Z     "categories": [
+2026-11-08T19:04:35.3970229Z       "PERFORMANCE"
+2026-11-08T19:04:35.3970614Z     ],
+2026-11-08T19:04:35.3971130Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3971781Z     "detail": "Index `access_grants_lesson_id_idx` on table `public.access_grants` has not been used",
+2026-11-08T19:04:35.3972534Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3973044Z     "metadata": {
+2026-11-08T19:04:35.3973353Z       "name": "access_grants",
+2026-11-08T19:04:35.3973703Z       "type": "table",
+2026-11-08T19:04:35.3973999Z       "schema": "public"
+2026-11-08T19:04:35.3974565Z     },
+2026-11-08T19:04:35.3975124Z     "cache_key": "unused_index_public_access_grants_access_grants_lesson_id_idx"
+2026-11-08T19:04:35.3975753Z   },
+2026-11-08T19:04:35.3976131Z   {
+2026-11-08T19:04:35.3976550Z     "name": "unused_index",
+2026-11-08T19:04:35.3977013Z     "title": "Unused Index",
+2026-11-08T19:04:35.3977478Z     "level": "INFO",
+2026-11-08T19:04:35.3977923Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3978365Z     "categories": [
+2026-11-08T19:04:35.3978751Z       "PERFORMANCE"
+2026-11-08T19:04:35.3979124Z     ],
+2026-11-08T19:04:35.3979786Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3981061Z     "detail": "Index `access_grants_lesson_clip_id_idx` on table `public.access_grants` has not been used",
+2026-11-08T19:04:35.3982178Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3982976Z     "metadata": {
+2026-11-08T19:04:35.3983493Z       "name": "access_grants",
+2026-11-08T19:04:35.3984016Z       "type": "table",
+2026-11-08T19:04:35.3984561Z       "schema": "public"
+2026-11-08T19:04:35.3984993Z     },
+2026-11-08T19:04:35.3985576Z     "cache_key": "unused_index_public_access_grants_access_grants_lesson_clip_id_idx"
+2026-11-08T19:04:35.3986191Z   },
+2026-11-08T19:04:35.3986418Z   {
+2026-11-08T19:04:35.3986642Z     "name": "unused_index",
+2026-11-08T19:04:35.3986916Z     "title": "Unused Index",
+2026-11-08T19:04:35.3987179Z     "level": "INFO",
+2026-11-08T19:04:35.3987423Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3987680Z     "categories": [
+2026-11-08T19:04:35.3987926Z       "PERFORMANCE"
+2026-11-08T19:04:35.3988156Z     ],
+2026-11-08T19:04:35.3988572Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3989337Z     "detail": "Index `access_grants_project_artifact_idx` on table `public.access_grants` has not been used",
+2026-11-08T19:04:35.3990145Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3990733Z     "metadata": {
+2026-11-08T19:04:35.3990985Z       "name": "access_grants",
+2026-11-08T19:04:35.3991257Z       "type": "table",
+2026-11-08T19:04:35.3991510Z       "schema": "public"
+2026-11-08T19:04:35.3991756Z     },
+2026-11-08T19:04:35.3992135Z     "cache_key": "unused_index_public_access_grants_access_grants_project_artifact_idx"
+2026-11-08T19:04:35.3992604Z   },
+2026-11-08T19:04:35.3992804Z   {
+2026-11-08T19:04:35.3993020Z     "name": "unused_index",
+2026-11-08T19:04:35.3993298Z     "title": "Unused Index",
+2026-11-08T19:04:35.3993573Z     "level": "INFO",
+2026-11-08T19:04:35.3993822Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.3994088Z     "categories": [
+2026-11-08T19:04:35.3994460Z       "PERFORMANCE"
+2026-11-08T19:04:35.3994700Z     ],
+2026-11-08T19:04:35.3995129Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.3995892Z     "detail": "Index `project_members_grant_id_idx` on table `public.project_members` has not been used",
+2026-11-08T19:04:35.3996669Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.3997209Z     "metadata": {
+2026-11-08T19:04:35.3997463Z       "name": "project_members",
+2026-11-08T19:04:35.3997750Z       "type": "table",
+2026-11-08T19:04:35.3998006Z       "schema": "public"
+2026-11-08T19:04:35.3998254Z     },
+2026-11-08T19:04:35.3998624Z     "cache_key": "unused_index_public_project_members_project_members_grant_id_idx"
+2026-11-08T19:04:35.3999078Z   },
+2026-11-08T19:04:35.3999329Z   {
+2026-11-08T19:04:35.3999609Z     "name": "unused_index",
+2026-11-08T19:04:35.3999929Z     "title": "Unused Index",
+2026-11-08T19:04:35.4000234Z     "level": "INFO",
+2026-11-08T19:04:35.4000503Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4000790Z     "categories": [
+2026-11-08T19:04:35.4001064Z       "PERFORMANCE"
+2026-11-08T19:04:35.4001328Z     ],
+2026-11-08T19:04:35.4001803Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4002662Z     "detail": "Index `project_members_granted_by_idx` on table `public.project_members` has not been used",
+2026-11-08T19:04:35.4003566Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4004192Z     "metadata": {
+2026-11-08T19:04:35.4004603Z       "name": "project_members",
+2026-11-08T19:04:35.4004950Z       "type": "table",
+2026-11-08T19:04:35.4005259Z       "schema": "public"
+2026-11-08T19:04:35.4005747Z     },
+2026-11-08T19:04:35.4006176Z     "cache_key": "unused_index_public_project_members_project_members_granted_by_idx"
+2026-11-08T19:04:35.4006717Z   },
+2026-11-08T19:04:35.4006945Z   {
+2026-11-08T19:04:35.4007180Z     "name": "unused_index",
+2026-11-08T19:04:35.4007487Z     "title": "Unused Index",
+2026-11-08T19:04:35.4007784Z     "level": "INFO",
+2026-11-08T19:04:35.4008225Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4008521Z     "categories": [
+2026-11-08T19:04:35.4008798Z       "PERFORMANCE"
+2026-11-08T19:04:35.4009050Z     ],
+2026-11-08T19:04:35.4009673Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4010574Z     "detail": "Index `observations_project_source_idx` on table `public.observations` has not been used",
+2026-11-08T19:04:35.4011535Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4012192Z     "metadata": {
+2026-11-08T19:04:35.4012478Z       "name": "observations",
+2026-11-08T19:04:35.4012783Z       "type": "table",
+2026-11-08T19:04:35.4013058Z       "schema": "public"
+2026-11-08T19:04:35.4013315Z     },
+2026-11-08T19:04:35.4013726Z     "cache_key": "unused_index_public_observations_observations_project_source_idx"
+2026-11-08T19:04:35.4014519Z   },
+2026-11-08T19:04:35.4014783Z   {
+2026-11-08T19:04:35.4015037Z     "name": "unused_index",
+2026-11-08T19:04:35.4015345Z     "title": "Unused Index",
+2026-11-08T19:04:35.4015713Z     "level": "INFO",
+2026-11-08T19:04:35.4015958Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4016214Z     "categories": [
+2026-11-08T19:04:35.4016462Z       "PERFORMANCE"
+2026-11-08T19:04:35.4016698Z     ],
+2026-11-08T19:04:35.4017137Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4017879Z     "detail": "Index `observations_lesson_id_idx` on table `public.observations` has not been used",
+2026-11-08T19:04:35.4018675Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4019255Z     "metadata": {
+2026-11-08T19:04:35.4019513Z       "name": "observations",
+2026-11-08T19:04:35.4019806Z       "type": "table",
+2026-11-08T19:04:35.4020067Z       "schema": "public"
+2026-11-08T19:04:35.4020320Z     },
+2026-11-08T19:04:35.4020682Z     "cache_key": "unused_index_public_observations_observations_lesson_id_idx"
+2026-11-08T19:04:35.4021121Z   },
+2026-11-08T19:04:35.4021354Z   {
+2026-11-08T19:04:35.4021574Z     "name": "unused_index",
+2026-11-08T19:04:35.4021901Z     "title": "Unused Index",
+2026-11-08T19:04:35.4022196Z     "level": "INFO",
+2026-11-08T19:04:35.4022547Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4022816Z     "categories": [
+2026-11-08T19:04:35.4023109Z       "PERFORMANCE"
+2026-11-08T19:04:35.4023396Z     ],
+2026-11-08T19:04:35.4023872Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4024876Z     "detail": "Index `observations_calibration_version_id_idx` on table `public.observations` has not been used",
+2026-11-08T19:04:35.4025866Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4026496Z     "metadata": {
+2026-11-08T19:04:35.4026773Z       "name": "observations",
+2026-11-08T19:04:35.4027091Z       "type": "table",
+2026-11-08T19:04:35.4027390Z       "schema": "public"
+2026-11-08T19:04:35.4027677Z     },
+2026-11-08T19:04:35.4028136Z     "cache_key": "unused_index_public_observations_observations_calibration_version_id_idx"
+2026-11-08T19:04:35.4028702Z   },
+2026-11-08T19:04:35.4028927Z   {
+2026-11-08T19:04:35.4029176Z     "name": "unused_index",
+2026-11-08T19:04:35.4029501Z     "title": "Unused Index",
+2026-11-08T19:04:35.4029818Z     "level": "INFO",
+2026-11-08T19:04:35.4030118Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4030425Z     "categories": [
+2026-11-08T19:04:35.4030702Z       "PERFORMANCE"
+2026-11-08T19:04:35.4030970Z     ],
+2026-11-08T19:04:35.4031620Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4032539Z     "detail": "Index `story_plan_versions_project_id_idx` on table `public.story_plan_versions` has not been used",
+2026-11-08T19:04:35.4033367Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4034008Z     "metadata": {
+2026-11-08T19:04:35.4034392Z       "name": "story_plan_versions",
+2026-11-08T19:04:35.4034690Z       "type": "table",
+2026-11-08T19:04:35.4034910Z       "schema": "public"
+2026-11-08T19:04:35.4035124Z     },
+2026-11-08T19:04:35.4035447Z     "cache_key": "unused_index_public_story_plan_versions_story_plan_versions_project_id_idx"
+2026-11-08T19:04:35.4035836Z   },
+2026-11-08T19:04:35.4036059Z   {
+2026-11-08T19:04:35.4036252Z     "name": "unused_index",
+2026-11-08T19:04:35.4036710Z     "title": "Unused Index",
+2026-11-08T19:04:35.4037025Z     "level": "INFO",
+2026-11-08T19:04:35.4037310Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4037592Z     "categories": [
+2026-11-08T19:04:35.4037855Z       "PERFORMANCE"
+2026-11-08T19:04:35.4038101Z     ],
+2026-11-08T19:04:35.4038637Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4039233Z     "detail": "Index `story_plan_versions_project_plan_idx` on table `public.story_plan_versions` has not been used",
+2026-11-08T19:04:35.4039870Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4040289Z     "metadata": {
+2026-11-08T19:04:35.4040511Z       "name": "story_plan_versions",
+2026-11-08T19:04:35.4040753Z       "type": "table",
+2026-11-08T19:04:35.4040960Z       "schema": "public"
+2026-11-08T19:04:35.4041167Z     },
+2026-11-08T19:04:35.4041496Z     "cache_key": "unused_index_public_story_plan_versions_story_plan_versions_project_plan_idx"
+2026-11-08T19:04:35.4041887Z   },
+2026-11-08T19:04:35.4042057Z   {
+2026-11-08T19:04:35.4042232Z     "name": "unused_index",
+2026-11-08T19:04:35.4042455Z     "title": "Unused Index",
+2026-11-08T19:04:35.4042675Z     "level": "INFO",
+2026-11-08T19:04:35.4042879Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4043089Z     "categories": [
+2026-11-08T19:04:35.4043290Z       "PERFORMANCE"
+2026-11-08T19:04:35.4043776Z     ],
+2026-11-08T19:04:35.4044176Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4044995Z     "detail": "Index `sync_maps_project_manifest_idx` on table `public.sync_maps` has not been used",
+2026-11-08T19:04:35.4045641Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4046257Z     "metadata": {
+2026-11-08T19:04:35.4046475Z       "name": "sync_maps",
+2026-11-08T19:04:35.4046696Z       "type": "table",
+2026-11-08T19:04:35.4046908Z       "schema": "public"
+2026-11-08T19:04:35.4047112Z     },
+2026-11-08T19:04:35.4047400Z     "cache_key": "unused_index_public_sync_maps_sync_maps_project_manifest_idx"
+2026-11-08T19:04:35.4047733Z   },
+2026-11-08T19:04:35.4047900Z   {
+2026-11-08T19:04:35.4048092Z     "name": "unused_index",
+2026-11-08T19:04:35.4048321Z     "title": "Unused Index",
+2026-11-08T19:04:35.4048541Z     "level": "INFO",
+2026-11-08T19:04:35.4048745Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4048962Z     "categories": [
+2026-11-08T19:04:35.4049161Z       "PERFORMANCE"
+2026-11-08T19:04:35.4049350Z     ],
+2026-11-08T19:04:35.4049679Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4050209Z     "detail": "Index `sync_maps_created_by_idx` on table `public.sync_maps` has not been used",
+2026-11-08T19:04:35.4050767Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4051186Z     "metadata": {
+2026-11-08T19:04:35.4051393Z       "name": "sync_maps",
+2026-11-08T19:04:35.4051607Z       "type": "table",
+2026-11-08T19:04:35.4051953Z       "schema": "public"
+2026-11-08T19:04:35.4052166Z     },
+2026-11-08T19:04:35.4052434Z     "cache_key": "unused_index_public_sync_maps_sync_maps_created_by_idx"
+2026-11-08T19:04:35.4052764Z   },
+2026-11-08T19:04:35.4052937Z   {
+2026-11-08T19:04:35.4053121Z     "name": "unused_index",
+2026-11-08T19:04:35.4053345Z     "title": "Unused Index",
+2026-11-08T19:04:35.4053638Z     "level": "INFO",
+2026-11-08T19:04:35.4053841Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4054052Z     "categories": [
+2026-11-08T19:04:35.4054387Z       "PERFORMANCE"
+2026-11-08T19:04:35.4054661Z     ],
+2026-11-08T19:04:35.4055089Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4055615Z     "detail": "Index `sync_maps_reviewed_by_idx` on table `public.sync_maps` has not been used",
+2026-11-08T19:04:35.4056174Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4056593Z     "metadata": {
+2026-11-08T19:04:35.4056795Z       "name": "sync_maps",
+2026-11-08T19:04:35.4057013Z       "type": "table",
+2026-11-08T19:04:35.4057220Z       "schema": "public"
+2026-11-08T19:04:35.4057422Z     },
+2026-11-08T19:04:35.4057695Z     "cache_key": "unused_index_public_sync_maps_sync_maps_reviewed_by_idx"
+2026-11-08T19:04:35.4058016Z   },
+2026-11-08T19:04:35.4058184Z   {
+2026-11-08T19:04:35.4058360Z     "name": "unused_index",
+2026-11-08T19:04:35.4058582Z     "title": "Unused Index",
+2026-11-08T19:04:35.4058796Z     "level": "INFO",
+2026-11-08T19:04:35.4058992Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4059199Z     "categories": [
+2026-11-08T19:04:35.4059393Z       "PERFORMANCE"
+2026-11-08T19:04:35.4059580Z     ],
+2026-11-08T19:04:35.4059900Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4060720Z     "detail": "Index `calibration_versions_created_by_idx` on table `public.calibration_versions` has not been used",
+2026-11-08T19:04:35.4061374Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4061795Z     "metadata": {
+2026-11-08T19:04:35.4062011Z       "name": "calibration_versions",
+2026-11-08T19:04:35.4062259Z       "type": "table",
+2026-11-08T19:04:35.4062468Z       "schema": "public"
+2026-11-08T19:04:35.4062678Z     },
+2026-11-08T19:04:35.4063010Z     "cache_key": "unused_index_public_calibration_versions_calibration_versions_created_by_idx"
+2026-11-08T19:04:35.4063396Z   },
+2026-11-08T19:04:35.4063561Z   {
+2026-11-08T19:04:35.4063744Z     "name": "unused_index",
+2026-11-08T19:04:35.4063964Z     "title": "Unused Index",
+2026-11-08T19:04:35.4064184Z     "level": "INFO",
+2026-11-08T19:04:35.4064529Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4064750Z     "categories": [
+2026-11-08T19:04:35.4064946Z       "PERFORMANCE"
+2026-11-08T19:04:35.4065134Z     ],
+2026-11-08T19:04:35.4065460Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4066062Z     "detail": "Index `calibration_versions_reviewed_by_idx` on table `public.calibration_versions` has not been used",
+2026-11-08T19:04:35.4066692Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4067111Z     "metadata": {
+2026-11-08T19:04:35.4067329Z       "name": "calibration_versions",
+2026-11-08T19:04:35.4067570Z       "type": "table",
+2026-11-08T19:04:35.4067777Z       "schema": "public"
+2026-11-08T19:04:35.4067980Z     },
+2026-11-08T19:04:35.4068308Z     "cache_key": "unused_index_public_calibration_versions_calibration_versions_reviewed_by_idx"
+2026-11-08T19:04:35.4068691Z   },
+2026-11-08T19:04:35.4068858Z   {
+2026-11-08T19:04:35.4069038Z     "name": "unused_index",
+2026-11-08T19:04:35.4069261Z     "title": "Unused Index",
+2026-11-08T19:04:35.4069481Z     "level": "INFO",
+2026-11-08T19:04:35.4069694Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4070014Z     "categories": [
+2026-11-08T19:04:35.4070216Z       "PERFORMANCE"
+2026-11-08T19:04:35.4070409Z     ],
+2026-11-08T19:04:35.4070743Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4071342Z     "detail": "Index `point_event_revisions_created_by_idx` on table `public.point_event_revisions` has not been used",
+2026-11-08T19:04:35.4072054Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4072474Z     "metadata": {
+2026-11-08T19:04:35.4072687Z       "name": "point_event_revisions",
+2026-11-08T19:04:35.4072931Z       "type": "table",
+2026-11-08T19:04:35.4073147Z       "schema": "public"
+2026-11-08T19:04:35.4073354Z     },
+2026-11-08T19:04:35.4073684Z     "cache_key": "unused_index_public_point_event_revisions_point_event_revisions_created_by_idx"
+2026-11-08T19:04:35.4074066Z   },
+2026-11-08T19:04:35.4074392Z   {
+2026-11-08T19:04:35.4074726Z     "name": "unused_index",
+2026-11-08T19:04:35.4074958Z     "title": "Unused Index",
+2026-11-08T19:04:35.4075177Z     "level": "INFO",
+2026-11-08T19:04:35.4075380Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4075589Z     "categories": [
+2026-11-08T19:04:35.4075785Z       "PERFORMANCE"
+2026-11-08T19:04:35.4075986Z     ],
+2026-11-08T19:04:35.4076311Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4076860Z     "detail": "Index `observations_created_by_idx` on table `public.observations` has not been used",
+2026-11-08T19:04:35.4077439Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4077848Z     "metadata": {
+2026-11-08T19:04:35.4078048Z       "name": "observations",
+2026-11-08T19:04:35.4078270Z       "type": "table",
+2026-11-08T19:04:35.4078476Z       "schema": "public"
+2026-11-08T19:04:35.4078683Z     },
+2026-11-08T19:04:35.4078967Z     "cache_key": "unused_index_public_observations_observations_created_by_idx"
+2026-11-08T19:04:35.4079314Z   },
+2026-11-08T19:04:35.4079479Z   {
+2026-11-08T19:04:35.4079654Z     "name": "unused_index",
+2026-11-08T19:04:35.4079874Z     "title": "Unused Index",
+2026-11-08T19:04:35.4080095Z     "level": "INFO",
+2026-11-08T19:04:35.4080297Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4080508Z     "categories": [
+2026-11-08T19:04:35.4080702Z       "PERFORMANCE"
+2026-11-08T19:04:35.4080894Z     ],
+2026-11-08T19:04:35.4081224Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4081795Z     "detail": "Index `observations_reviewed_by_idx` on table `public.observations` has not been used",
+2026-11-08T19:04:35.4082396Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4082818Z     "metadata": {
+2026-11-08T19:04:35.4083024Z       "name": "observations",
+2026-11-08T19:04:35.4083255Z       "type": "table",
+2026-11-08T19:04:35.4083466Z       "schema": "public"
+2026-11-08T19:04:35.4083679Z     },
+2026-11-08T19:04:35.4083972Z     "cache_key": "unused_index_public_observations_observations_reviewed_by_idx"
+2026-11-08T19:04:35.4084479Z   },
+2026-11-08T19:04:35.4084670Z   {
+2026-11-08T19:04:35.4084870Z     "name": "unused_index",
+2026-11-08T19:04:35.4085123Z     "title": "Unused Index",
+2026-11-08T19:04:35.4085358Z     "level": "INFO",
+2026-11-08T19:04:35.4085588Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4085813Z     "categories": [
+2026-11-08T19:04:35.4086023Z       "PERFORMANCE"
+2026-11-08T19:04:35.4086225Z     ],
+2026-11-08T19:04:35.4086564Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4087116Z     "detail": "Index `story_plans_created_by_idx` on table `public.story_plans` has not been used",
+2026-11-08T19:04:35.4087706Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4088135Z     "metadata": {
+2026-11-08T19:04:35.4088447Z       "name": "story_plans",
+2026-11-08T19:04:35.4088679Z       "type": "table",
+2026-11-08T19:04:35.4088896Z       "schema": "public"
+2026-11-08T19:04:35.4089111Z     },
+2026-11-08T19:04:35.4089397Z     "cache_key": "unused_index_public_story_plans_story_plans_created_by_idx"
+2026-11-08T19:04:35.4089732Z   },
+2026-11-08T19:04:35.4089904Z   {
+2026-11-08T19:04:35.4090165Z     "name": "unused_index",
+2026-11-08T19:04:35.4090395Z     "title": "Unused Index",
+2026-11-08T19:04:35.4090622Z     "level": "INFO",
+2026-11-08T19:04:35.4090829Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4091049Z     "categories": [
+2026-11-08T19:04:35.4091259Z       "PERFORMANCE"
+2026-11-08T19:04:35.4091457Z     ],
+2026-11-08T19:04:35.4091792Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4092394Z     "detail": "Index `story_plan_versions_created_by_idx` on table `public.story_plan_versions` has not been used",
+2026-11-08T19:04:35.4093029Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4093451Z     "metadata": {
+2026-11-08T19:04:35.4093668Z       "name": "story_plan_versions",
+2026-11-08T19:04:35.4093921Z       "type": "table",
+2026-11-08T19:04:35.4094138Z       "schema": "public"
+2026-11-08T19:04:35.4094567Z     },
+2026-11-08T19:04:35.4095058Z     "cache_key": "unused_index_public_story_plan_versions_story_plan_versions_created_by_idx"
+2026-11-08T19:04:35.4095457Z   },
+2026-11-08T19:04:35.4095631Z   {
+2026-11-08T19:04:35.4095819Z     "name": "unused_index",
+2026-11-08T19:04:35.4096053Z     "title": "Unused Index",
+2026-11-08T19:04:35.4096294Z     "level": "INFO",
+2026-11-08T19:04:35.4096508Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4096728Z     "categories": [
+2026-11-08T19:04:35.4096934Z       "PERFORMANCE"
+2026-11-08T19:04:35.4097131Z     ],
+2026-11-08T19:04:35.4097469Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4098004Z     "detail": "Index `quotes_owner_id_idx` on table `public.quotes` has not been used",
+2026-11-08T19:04:35.4098567Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4098995Z     "metadata": {
+2026-11-08T19:04:35.4099201Z       "name": "quotes",
+2026-11-08T19:04:35.4099417Z       "type": "table",
+2026-11-08T19:04:35.4099635Z       "schema": "public"
+2026-11-08T19:04:35.4099849Z     },
+2026-11-08T19:04:35.4100103Z     "cache_key": "unused_index_public_quotes_quotes_owner_id_idx"
+2026-11-08T19:04:35.4100412Z   },
+2026-11-08T19:04:35.4100585Z   {
+2026-11-08T19:04:35.4100779Z     "name": "unused_index",
+2026-11-08T19:04:35.4101011Z     "title": "Unused Index",
+2026-11-08T19:04:35.4101239Z     "level": "INFO",
+2026-11-08T19:04:35.4101450Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4101670Z     "categories": [
+2026-11-08T19:04:35.4101873Z       "PERFORMANCE"
+2026-11-08T19:04:35.4102067Z     ],
+2026-11-08T19:04:35.4102403Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4102943Z     "detail": "Index `quotes_project_plan_idx` on table `public.quotes` has not been used",
+2026-11-08T19:04:35.4103513Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4103950Z     "metadata": {
+2026-11-08T19:04:35.4104155Z       "name": "quotes",
+2026-11-08T19:04:35.4104545Z       "type": "table",
+2026-11-08T19:04:35.4104770Z       "schema": "public"
+2026-11-08T19:04:35.4104987Z     },
+2026-11-08T19:04:35.4105256Z     "cache_key": "unused_index_public_quotes_quotes_project_plan_idx"
+2026-11-08T19:04:35.4105582Z   },
+2026-11-08T19:04:35.4105759Z   {
+2026-11-08T19:04:35.4105944Z     "name": "unused_index",
+2026-11-08T19:04:35.4106170Z     "title": "Unused Index",
+2026-11-08T19:04:35.4106394Z     "level": "INFO",
+2026-11-08T19:04:35.4106602Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4106978Z     "categories": [
+2026-11-08T19:04:35.4107184Z       "PERFORMANCE"
+2026-11-08T19:04:35.4107382Z     ],
+2026-11-08T19:04:35.4107719Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4108257Z     "detail": "Index `quotes_plan_version_idx` on table `public.quotes` has not been used",
+2026-11-08T19:04:35.4108841Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4109348Z     "metadata": {
+2026-11-08T19:04:35.4109555Z       "name": "quotes",
+2026-11-08T19:04:35.4109769Z       "type": "table",
+2026-11-08T19:04:35.4109986Z       "schema": "public"
+2026-11-08T19:04:35.4110205Z     },
+2026-11-08T19:04:35.4110469Z     "cache_key": "unused_index_public_quotes_quotes_plan_version_idx"
+2026-11-08T19:04:35.4110792Z   },
+2026-11-08T19:04:35.4110966Z   {
+2026-11-08T19:04:35.4111154Z     "name": "unused_index",
+2026-11-08T19:04:35.4111382Z     "title": "Unused Index",
+2026-11-08T19:04:35.4111612Z     "level": "INFO",
+2026-11-08T19:04:35.4111820Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4112036Z     "categories": [
+2026-11-08T19:04:35.4112238Z       "PERFORMANCE"
+2026-11-08T19:04:35.4112435Z     ],
+2026-11-08T19:04:35.4112768Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4113308Z     "detail": "Index `quotes_supersedes_idx` on table `public.quotes` has not been used",
+2026-11-08T19:04:35.4113878Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4114474Z     "metadata": {
+2026-11-08T19:04:35.4114713Z       "name": "quotes",
+2026-11-08T19:04:35.4114930Z       "type": "table",
+2026-11-08T19:04:35.4115146Z       "schema": "public"
+2026-11-08T19:04:35.4115363Z     },
+2026-11-08T19:04:35.4115628Z     "cache_key": "unused_index_public_quotes_quotes_supersedes_idx"
+2026-11-08T19:04:35.4115945Z   },
+2026-11-08T19:04:35.4116129Z   {
+2026-11-08T19:04:35.4116323Z     "name": "unused_index",
+2026-11-08T19:04:35.4116558Z     "title": "Unused Index",
+2026-11-08T19:04:35.4116784Z     "level": "INFO",
+2026-11-08T19:04:35.4116997Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4117216Z     "categories": [
+2026-11-08T19:04:35.4117422Z       "PERFORMANCE"
+2026-11-08T19:04:35.4117617Z     ],
+2026-11-08T19:04:35.4117956Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4118554Z     "detail": "Index `usage_reservations_owner_id_idx` on table `public.usage_reservations` has not been used",
+2026-11-08T19:04:35.4119178Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4119609Z     "metadata": {
+2026-11-08T19:04:35.4119820Z       "name": "usage_reservations",
+2026-11-08T19:04:35.4120067Z       "type": "table",
+2026-11-08T19:04:35.4120282Z       "schema": "public"
+2026-11-08T19:04:35.4120494Z     },
+2026-11-08T19:04:35.4120820Z     "cache_key": "unused_index_public_usage_reservations_usage_reservations_owner_id_idx"
+2026-11-08T19:04:35.4121197Z   },
+2026-11-08T19:04:35.4121370Z   {
+2026-11-08T19:04:35.4121550Z     "name": "unused_index",
+2026-11-08T19:04:35.4121778Z     "title": "Unused Index",
+2026-11-08T19:04:35.4122004Z     "level": "INFO",
+2026-11-08T19:04:35.4122220Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4122484Z     "categories": [
+2026-11-08T19:04:35.4122693Z       "PERFORMANCE"
+2026-11-08T19:04:35.4122888Z     ],
+2026-11-08T19:04:35.4123224Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4123833Z     "detail": "Index `usage_reservations_project_quote_idx` on table `public.usage_reservations` has not been used",
+2026-11-08T19:04:35.4124672Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4125114Z     "metadata": {
+2026-11-08T19:04:35.4125330Z       "name": "usage_reservations",
+2026-11-08T19:04:35.4125671Z       "type": "table",
+2026-11-08T19:04:35.4125885Z       "schema": "public"
+2026-11-08T19:04:35.4126095Z     },
+2026-11-08T19:04:35.4126437Z     "cache_key": "unused_index_public_usage_reservations_usage_reservations_project_quote_idx"
+2026-11-08T19:04:35.4126823Z   },
+2026-11-08T19:04:35.4126999Z   {
+2026-11-08T19:04:35.4127181Z     "name": "unused_index",
+2026-11-08T19:04:35.4127510Z     "title": "Unused Index",
+2026-11-08T19:04:35.4127738Z     "level": "INFO",
+2026-11-08T19:04:35.4127948Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4128168Z     "categories": [
+2026-11-08T19:04:35.4128372Z       "PERFORMANCE"
+2026-11-08T19:04:35.4128577Z     ],
+2026-11-08T19:04:35.4128912Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4129550Z     "detail": "Index `usage_reservations_project_initial_quote_idx` on table `public.usage_reservations` has not been used",
+2026-11-08T19:04:35.4130221Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4130658Z     "metadata": {
+2026-11-08T19:04:35.4130872Z       "name": "usage_reservations",
+2026-11-08T19:04:35.4131118Z       "type": "table",
+2026-11-08T19:04:35.4131331Z       "schema": "public"
+2026-11-08T19:04:35.4131542Z     },
+2026-11-08T19:04:35.4131899Z     "cache_key": "unused_index_public_usage_reservations_usage_reservations_project_initial_quote_idx"
+2026-11-08T19:04:35.4132322Z   },
+2026-11-08T19:04:35.4132491Z   {
+2026-11-08T19:04:35.4132673Z     "name": "unused_index",
+2026-11-08T19:04:35.4132901Z     "title": "Unused Index",
+2026-11-08T19:04:35.4133125Z     "level": "INFO",
+2026-11-08T19:04:35.4133333Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4133549Z     "categories": [
+2026-11-08T19:04:35.4133749Z       "PERFORMANCE"
+2026-11-08T19:04:35.4133942Z     ],
+2026-11-08T19:04:35.4134448Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4135189Z     "detail": "Index `usage_reservations_plan_version_idx` on table `public.usage_reservations` has not been used",
+2026-11-08T19:04:35.4135834Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4136270Z     "metadata": {
+2026-11-08T19:04:35.4136489Z       "name": "usage_reservations",
+2026-11-08T19:04:35.4136747Z       "type": "table",
+2026-11-08T19:04:35.4136970Z       "schema": "public"
+2026-11-08T19:04:35.4137184Z     },
+2026-11-08T19:04:35.4137518Z     "cache_key": "unused_index_public_usage_reservations_usage_reservations_plan_version_idx"
+2026-11-08T19:04:35.4137909Z   },
+2026-11-08T19:04:35.4138083Z   {
+2026-11-08T19:04:35.4138272Z     "name": "unused_index",
+2026-11-08T19:04:35.4138503Z     "title": "Unused Index",
+2026-11-08T19:04:35.4138727Z     "level": "INFO",
+2026-11-08T19:04:35.4138937Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4139155Z     "categories": [
+2026-11-08T19:04:35.4139356Z       "PERFORMANCE"
+2026-11-08T19:04:35.4139559Z     ],
+2026-11-08T19:04:35.4139893Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4140503Z     "detail": "Index `usage_reservations_project_plan_idx` on table `public.usage_reservations` has not been used",
+2026-11-08T19:04:35.4141143Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4141584Z     "metadata": {
+2026-11-08T19:04:35.4141796Z       "name": "usage_reservations",
+2026-11-08T19:04:35.4142041Z       "type": "table",
+2026-11-08T19:04:35.4142257Z       "schema": "public"
+2026-11-08T19:04:35.4142467Z     },
+2026-11-08T19:04:35.4142800Z     "cache_key": "unused_index_public_usage_reservations_usage_reservations_project_plan_idx"
+2026-11-08T19:04:35.4143188Z   },
+2026-11-08T19:04:35.4143357Z   {
+2026-11-08T19:04:35.4143543Z     "name": "unused_index",
+2026-11-08T19:04:35.4143768Z     "title": "Unused Index",
+2026-11-08T19:04:35.4144083Z     "level": "INFO",
+2026-11-08T19:04:35.4144413Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4144645Z     "categories": [
+2026-11-08T19:04:35.4144864Z       "PERFORMANCE"
+2026-11-08T19:04:35.4145067Z     ],
+2026-11-08T19:04:35.4145412Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4145991Z     "detail": "Index `render_jobs_project_plan_idx` on table `public.render_jobs` has not been used",
+2026-11-08T19:04:35.4146662Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4147091Z     "metadata": {
+2026-11-08T19:04:35.4147306Z       "name": "render_jobs",
+2026-11-08T19:04:35.4147536Z       "type": "table",
+2026-11-08T19:04:35.4147757Z       "schema": "public"
+2026-11-08T19:04:35.4147967Z     },
+2026-11-08T19:04:35.4148258Z     "cache_key": "unused_index_public_render_jobs_render_jobs_project_plan_idx"
+2026-11-08T19:04:35.4148605Z   },
+2026-11-08T19:04:35.4148782Z   {
+2026-11-08T19:04:35.4148964Z     "name": "unused_index",
+2026-11-08T19:04:35.4149188Z     "title": "Unused Index",
+2026-11-08T19:04:35.4149409Z     "level": "INFO",
+2026-11-08T19:04:35.4149616Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4149828Z     "categories": [
+2026-11-08T19:04:35.4150030Z       "PERFORMANCE"
+2026-11-08T19:04:35.4150224Z     ],
+2026-11-08T19:04:35.4150571Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4151129Z     "detail": "Index `render_jobs_plan_version_idx` on table `public.render_jobs` has not been used",
+2026-11-08T19:04:35.4151716Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4152141Z     "metadata": {
+2026-11-08T19:04:35.4152349Z       "name": "render_jobs",
+2026-11-08T19:04:35.4152573Z       "type": "table",
+2026-11-08T19:04:35.4152785Z       "schema": "public"
+2026-11-08T19:04:35.4152994Z     },
+2026-11-08T19:04:35.4153288Z     "cache_key": "unused_index_public_render_jobs_render_jobs_plan_version_idx"
+2026-11-08T19:04:35.4153641Z   },
+2026-11-08T19:04:35.4153813Z   {
+2026-11-08T19:04:35.4153998Z     "name": "unused_index",
+2026-11-08T19:04:35.4154365Z     "title": "Unused Index",
+2026-11-08T19:04:35.4154607Z     "level": "INFO",
+2026-11-08T19:04:35.4154821Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4155047Z     "categories": [
+2026-11-08T19:04:35.4155252Z       "PERFORMANCE"
+2026-11-08T19:04:35.4155451Z     ],
+2026-11-08T19:04:35.4155784Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4156352Z     "detail": "Index `render_jobs_project_quote_idx` on table `public.render_jobs` has not been used",
+2026-11-08T19:04:35.4156960Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4157380Z     "metadata": {
+2026-11-08T19:04:35.4157590Z       "name": "render_jobs",
+2026-11-08T19:04:35.4157816Z       "type": "table",
+2026-11-08T19:04:35.4158031Z       "schema": "public"
+2026-11-08T19:04:35.4158242Z     },
+2026-11-08T19:04:35.4158534Z     "cache_key": "unused_index_public_render_jobs_render_jobs_project_quote_idx"
+2026-11-08T19:04:35.4158877Z   },
+2026-11-08T19:04:35.4159047Z   {
+2026-11-08T19:04:35.4159235Z     "name": "unused_index",
+2026-11-08T19:04:35.4159465Z     "title": "Unused Index",
+2026-11-08T19:04:35.4159698Z     "level": "INFO",
+2026-11-08T19:04:35.4159905Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4160120Z     "categories": [
+2026-11-08T19:04:35.4160322Z       "PERFORMANCE"
+2026-11-08T19:04:35.4160517Z     ],
+2026-11-08T19:04:35.4160853Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4161432Z     "detail": "Index `render_jobs_project_reservation_idx` on table `public.render_jobs` has not been used",
+2026-11-08T19:04:35.4162041Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4162553Z     "metadata": {
+2026-11-08T19:04:35.4162762Z       "name": "render_jobs",
+2026-11-08T19:04:35.4162997Z       "type": "table",
+2026-11-08T19:04:35.4163212Z       "schema": "public"
+2026-11-08T19:04:35.4163424Z     },
+2026-11-08T19:04:35.4163731Z     "cache_key": "unused_index_public_render_jobs_render_jobs_project_reservation_idx"
+2026-11-08T19:04:35.4164177Z   },
+2026-11-08T19:04:35.4164433Z   {
+2026-11-08T19:04:35.4164625Z     "name": "unused_index",
+2026-11-08T19:04:35.4164856Z     "title": "Unused Index",
+2026-11-08T19:04:35.4165083Z     "level": "INFO",
+2026-11-08T19:04:35.4165291Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4165509Z     "categories": [
+2026-11-08T19:04:35.4165713Z       "PERFORMANCE"
+2026-11-08T19:04:35.4165919Z     ],
+2026-11-08T19:04:35.4166255Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4166823Z     "detail": "Index `render_jobs_project_parent_idx` on table `public.render_jobs` has not been used",
+2026-11-08T19:04:35.4167432Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4167857Z     "metadata": {
+2026-11-08T19:04:35.4168063Z       "name": "render_jobs",
+2026-11-08T19:04:35.4168291Z       "type": "table",
+2026-11-08T19:04:35.4168509Z       "schema": "public"
+2026-11-08T19:04:35.4168729Z     },
+2026-11-08T19:04:35.4169032Z     "cache_key": "unused_index_public_render_jobs_render_jobs_project_parent_idx"
+2026-11-08T19:04:35.4169397Z   },
+2026-11-08T19:04:35.4169569Z   {
+2026-11-08T19:04:35.4169754Z     "name": "unused_index",
+2026-11-08T19:04:35.4169989Z     "title": "Unused Index",
+2026-11-08T19:04:35.4170213Z     "level": "INFO",
+2026-11-08T19:04:35.4170424Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4170646Z     "categories": [
+2026-11-08T19:04:35.4170849Z       "PERFORMANCE"
+2026-11-08T19:04:35.4171046Z     ],
+2026-11-08T19:04:35.4171384Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4171957Z     "detail": "Index `render_jobs_requested_by_idx` on table `public.render_jobs` has not been used",
+2026-11-08T19:04:35.4172561Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4173146Z     "metadata": {
+2026-11-08T19:04:35.4173363Z       "name": "render_jobs",
+2026-11-08T19:04:35.4173589Z       "type": "table",
+2026-11-08T19:04:35.4173801Z       "schema": "public"
+2026-11-08T19:04:35.4174008Z     },
+2026-11-08T19:04:35.4174399Z     "cache_key": "unused_index_public_render_jobs_render_jobs_requested_by_idx"
+2026-11-08T19:04:35.4174758Z   },
+2026-11-08T19:04:35.4174934Z   {
+2026-11-08T19:04:35.4175117Z     "name": "unused_index",
+2026-11-08T19:04:35.4175353Z     "title": "Unused Index",
+2026-11-08T19:04:35.4175573Z     "level": "INFO",
+2026-11-08T19:04:35.4175781Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4176062Z     "categories": [
+2026-11-08T19:04:35.4176288Z       "PERFORMANCE"
+2026-11-08T19:04:35.4176484Z     ],
+2026-11-08T19:04:35.4176815Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4177426Z     "detail": "Index `usage_reservations_project_job_idx` on table `public.usage_reservations` has not been used",
+2026-11-08T19:04:35.4178067Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4178506Z     "metadata": {
+2026-11-08T19:04:35.4178722Z       "name": "usage_reservations",
+2026-11-08T19:04:35.4178975Z       "type": "table",
+2026-11-08T19:04:35.4179190Z       "schema": "public"
+2026-11-08T19:04:35.4179397Z     },
+2026-11-08T19:04:35.4179726Z     "cache_key": "unused_index_public_usage_reservations_usage_reservations_project_job_idx"
+2026-11-08T19:04:35.4180113Z   },
+2026-11-08T19:04:35.4180284Z   {
+2026-11-08T19:04:35.4180471Z     "name": "unused_index",
+2026-11-08T19:04:35.4180700Z     "title": "Unused Index",
+2026-11-08T19:04:35.4181013Z     "level": "INFO",
+2026-11-08T19:04:35.4181225Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4181457Z     "categories": [
+2026-11-08T19:04:35.4181672Z       "PERFORMANCE"
+2026-11-08T19:04:35.4181877Z     ],
+2026-11-08T19:04:35.4182217Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4182918Z     "detail": "Index `artifacts_project_job_idx` on table `public.artifacts` has not been used",
+2026-11-08T19:04:35.4183499Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4183926Z     "metadata": {
+2026-11-08T19:04:35.4184134Z       "name": "artifacts",
+2026-11-08T19:04:35.4184448Z       "type": "table",
+2026-11-08T19:04:35.4184672Z       "schema": "public"
+2026-11-08T19:04:35.4184895Z     },
+2026-11-08T19:04:35.4185176Z     "cache_key": "unused_index_public_artifacts_artifacts_project_job_idx"
+2026-11-08T19:04:35.4185509Z   },
+2026-11-08T19:04:35.4185690Z   {
+2026-11-08T19:04:35.4185878Z     "name": "unused_index",
+2026-11-08T19:04:35.4186107Z     "title": "Unused Index",
+2026-11-08T19:04:35.4186332Z     "level": "INFO",
+2026-11-08T19:04:35.4186542Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4186761Z     "categories": [
+2026-11-08T19:04:35.4186962Z       "PERFORMANCE"
+2026-11-08T19:04:35.4187156Z     ],
+2026-11-08T19:04:35.4187499Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4188050Z     "detail": "Index `artifacts_job_attempt_idx` on table `public.artifacts` has not been used",
+2026-11-08T19:04:35.4188631Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4189057Z     "metadata": {
+2026-11-08T19:04:35.4189265Z       "name": "artifacts",
+2026-11-08T19:04:35.4189486Z       "type": "table",
+2026-11-08T19:04:35.4189702Z       "schema": "public"
+2026-11-08T19:04:35.4189912Z     },
+2026-11-08T19:04:35.4190197Z     "cache_key": "unused_index_public_artifacts_artifacts_job_attempt_idx"
+2026-11-08T19:04:35.4190531Z   },
+2026-11-08T19:04:35.4190711Z   {
+2026-11-08T19:04:35.4190893Z     "name": "unused_index",
+2026-11-08T19:04:35.4191119Z     "title": "Unused Index",
+2026-11-08T19:04:35.4191343Z     "level": "INFO",
+2026-11-08T19:04:35.4191549Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4191769Z     "categories": [
+2026-11-08T19:04:35.4191970Z       "PERFORMANCE"
+2026-11-08T19:04:35.4192162Z     ],
+2026-11-08T19:04:35.4192504Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4193081Z     "detail": "Index `artifacts_project_lesson_clip_idx` on table `public.artifacts` has not been used",
+2026-11-08T19:04:35.4193686Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4194119Z     "metadata": {
+2026-11-08T19:04:35.4194443Z       "name": "artifacts",
+2026-11-08T19:04:35.4194678Z       "type": "table",
+2026-11-08T19:04:35.4194895Z       "schema": "public"
+2026-11-08T19:04:35.4195109Z     },
+2026-11-08T19:04:35.4195413Z     "cache_key": "unused_index_public_artifacts_artifacts_project_lesson_clip_idx"
+2026-11-08T19:04:35.4195778Z   },
+2026-11-08T19:04:35.4195954Z   {
+2026-11-08T19:04:35.4196136Z     "name": "unused_index",
+2026-11-08T19:04:35.4196368Z     "title": "Unused Index",
+2026-11-08T19:04:35.4196590Z     "level": "INFO",
+2026-11-08T19:04:35.4196800Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4197014Z     "categories": [
+2026-11-08T19:04:35.4197213Z       "PERFORMANCE"
+2026-11-08T19:04:35.4197404Z     ],
+2026-11-08T19:04:35.4197738Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4198322Z     "detail": "Index `lesson_clips_project_excerpt_idx` on table `public.lesson_clips` has not been used",
+2026-11-08T19:04:35.4198934Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4199437Z     "metadata": {
+2026-11-08T19:04:35.4199650Z       "name": "lesson_clips",
+2026-11-08T19:04:35.4199893Z       "type": "table",
+2026-11-08T19:04:35.4200109Z       "schema": "public"
+2026-11-08T19:04:35.4200321Z     },
+2026-11-08T19:04:35.4200626Z     "cache_key": "unused_index_public_lesson_clips_lesson_clips_project_excerpt_idx"
+2026-11-08T19:04:35.4201128Z   },
+2026-11-08T19:04:35.4201305Z   {
+2026-11-08T19:04:35.4201491Z     "name": "unused_index",
+2026-11-08T19:04:35.4201725Z     "title": "Unused Index",
+2026-11-08T19:04:35.4201953Z     "level": "INFO",
+2026-11-08T19:04:35.4202163Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4202385Z     "categories": [
+2026-11-08T19:04:35.4202591Z       "PERFORMANCE"
+2026-11-08T19:04:35.4202799Z     ],
+2026-11-08T19:04:35.4203136Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4203739Z     "detail": "Index `artifact_sources_project_artifact_idx` on table `public.artifact_sources` has not been used",
+2026-11-08T19:04:35.4204481Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4204918Z     "metadata": {
+2026-11-08T19:04:35.4205135Z       "name": "artifact_sources",
+2026-11-08T19:04:35.4205380Z       "type": "table",
+2026-11-08T19:04:35.4205597Z       "schema": "public"
+2026-11-08T19:04:35.4205823Z     },
+2026-11-08T19:04:35.4206160Z     "cache_key": "unused_index_public_artifact_sources_artifact_sources_project_artifact_idx"
+2026-11-08T19:04:35.4206557Z   },
+2026-11-08T19:04:35.4206730Z   {
+2026-11-08T19:04:35.4206916Z     "name": "unused_index",
+2026-11-08T19:04:35.4207151Z     "title": "Unused Index",
+2026-11-08T19:04:35.4207380Z     "level": "INFO",
+2026-11-08T19:04:35.4207622Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4207842Z     "categories": [
+2026-11-08T19:04:35.4208043Z       "PERFORMANCE"
+2026-11-08T19:04:35.4208240Z     ],
+2026-11-08T19:04:35.4208574Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4209178Z     "detail": "Index `artifact_sources_project_source_idx` on table `public.artifact_sources` has not been used",
+2026-11-08T19:04:35.4209816Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4210248Z     "metadata": {
+2026-11-08T19:04:35.4210456Z       "name": "artifact_sources",
+2026-11-08T19:04:35.4210536Z       "type": "table",
+2026-11-08T19:04:35.4210627Z       "schema": "public"
+2026-11-08T19:04:35.4210707Z     },
+2026-11-08T19:04:35.4210920Z     "cache_key": "unused_index_public_artifact_sources_artifact_sources_project_source_idx"
+2026-11-08T19:04:35.4211000Z   },
+2026-11-08T19:04:35.4211070Z   {
+2026-11-08T19:04:35.4211158Z     "name": "unused_index",
+2026-11-08T19:04:35.4211244Z     "title": "Unused Index",
+2026-11-08T19:04:35.4211331Z     "level": "INFO",
+2026-11-08T19:04:35.4211412Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4211501Z     "categories": [
+2026-11-08T19:04:35.4211587Z       "PERFORMANCE"
+2026-11-08T19:04:35.4211660Z     ],
+2026-11-08T19:04:35.4211893Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4212165Z     "detail": "Index `deletion_requests_requested_by_idx` on table `public.deletion_requests` has not been used",
+2026-11-08T19:04:35.4212426Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4212506Z     "metadata": {
+2026-11-08T19:04:35.4212605Z       "name": "deletion_requests",
+2026-11-08T19:04:35.4212694Z       "type": "table",
+2026-11-08T19:04:35.4212777Z       "schema": "public"
+2026-11-08T19:04:35.4212858Z     },
+2026-11-08T19:04:35.4213071Z     "cache_key": "unused_index_public_deletion_requests_deletion_requests_requested_by_idx"
+2026-11-08T19:04:35.4213153Z   },
+2026-11-08T19:04:35.4213224Z   {
+2026-11-08T19:04:35.4213317Z     "name": "unused_index",
+2026-11-08T19:04:35.4213466Z     "title": "Unused Index",
+2026-11-08T19:04:35.4213555Z     "level": "INFO",
+2026-11-08T19:04:35.4213645Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4213725Z     "categories": [
+2026-11-08T19:04:35.4213813Z       "PERFORMANCE"
+2026-11-08T19:04:35.4213886Z     ],
+2026-11-08T19:04:35.4214117Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4214490Z     "detail": "Index `audit_events_at_idx` on table `app_ops.audit_events` has not been used",
+2026-11-08T19:04:35.4214758Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4214849Z     "metadata": {
+2026-11-08T19:04:35.4214940Z       "name": "audit_events",
+2026-11-08T19:04:35.4215029Z       "type": "table",
+2026-11-08T19:04:35.4215118Z       "schema": "app_ops"
+2026-11-08T19:04:35.4215198Z     },
+2026-11-08T19:04:35.4215367Z     "cache_key": "unused_index_app_ops_audit_events_audit_events_at_idx"
+2026-11-08T19:04:35.4215458Z   },
+2026-11-08T19:04:35.4215533Z   {
+2026-11-08T19:04:35.4215628Z     "name": "unused_index",
+2026-11-08T19:04:35.4215719Z     "title": "Unused Index",
+2026-11-08T19:04:35.4215798Z     "level": "INFO",
+2026-11-08T19:04:35.4215888Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4215967Z     "categories": [
+2026-11-08T19:04:35.4216059Z       "PERFORMANCE"
+2026-11-08T19:04:35.4216135Z     ],
+2026-11-08T19:04:35.4216366Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4216597Z     "detail": "Index `audit_events_project_idx` on table `app_ops.audit_events` has not been used",
+2026-11-08T19:04:35.4216855Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4216943Z     "metadata": {
+2026-11-08T19:04:35.4217030Z       "name": "audit_events",
+2026-11-08T19:04:35.4217116Z       "type": "table",
+2026-11-08T19:04:35.4217200Z       "schema": "app_ops"
+2026-11-08T19:04:35.4217287Z     },
+2026-11-08T19:04:35.4217464Z     "cache_key": "unused_index_app_ops_audit_events_audit_events_project_idx"
+2026-11-08T19:04:35.4217543Z   },
+2026-11-08T19:04:35.4217622Z   {
+2026-11-08T19:04:35.4217705Z     "name": "unused_index",
+2026-11-08T19:04:35.4217793Z     "title": "Unused Index",
+2026-11-08T19:04:35.4217870Z     "level": "INFO",
+2026-11-08T19:04:35.4217961Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4218041Z     "categories": [
+2026-11-08T19:04:35.4218129Z       "PERFORMANCE"
+2026-11-08T19:04:35.4218202Z     ],
+2026-11-08T19:04:35.4218431Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4218706Z     "detail": "Index `upload_sessions_project_source_idx` on table `app_ops.upload_sessions` has not been used",
+2026-11-08T19:04:35.4218955Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4219039Z     "metadata": {
+2026-11-08T19:04:35.4219133Z       "name": "upload_sessions",
+2026-11-08T19:04:35.4219220Z       "type": "table",
+2026-11-08T19:04:35.4219301Z       "schema": "app_ops"
+2026-11-08T19:04:35.4219381Z     },
+2026-11-08T19:04:35.4219596Z     "cache_key": "unused_index_app_ops_upload_sessions_upload_sessions_project_source_idx"
+2026-11-08T19:04:35.4219667Z   },
+2026-11-08T19:04:35.4219748Z   {
+2026-11-08T19:04:35.4219831Z     "name": "unused_index",
+2026-11-08T19:04:35.4219922Z     "title": "Unused Index",
+2026-11-08T19:04:35.4219997Z     "level": "INFO",
+2026-11-08T19:04:35.4220086Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4220163Z     "categories": [
+2026-11-08T19:04:35.4220247Z       "PERFORMANCE"
+2026-11-08T19:04:35.4220324Z     ],
+2026-11-08T19:04:35.4220545Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4220826Z     "detail": "Index `upload_sessions_project_artifact_idx` on table `app_ops.upload_sessions` has not been used",
+2026-11-08T19:04:35.4221141Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4221227Z     "metadata": {
+2026-11-08T19:04:35.4221318Z       "name": "upload_sessions",
+2026-11-08T19:04:35.4221405Z       "type": "table",
+2026-11-08T19:04:35.4221493Z       "schema": "app_ops"
+2026-11-08T19:04:35.4221564Z     },
+2026-11-08T19:04:35.4221883Z     "cache_key": "unused_index_app_ops_upload_sessions_upload_sessions_project_artifact_idx"
+2026-11-08T19:04:35.4221955Z   },
+2026-11-08T19:04:35.4222035Z   {
+2026-11-08T19:04:35.4222119Z     "name": "unused_index",
+2026-11-08T19:04:35.4222250Z     "title": "Unused Index",
+2026-11-08T19:04:35.4222346Z     "level": "INFO",
+2026-11-08T19:04:35.4222428Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4222514Z     "categories": [
+2026-11-08T19:04:35.4222593Z       "PERFORMANCE"
+2026-11-08T19:04:35.4222672Z     ],
+2026-11-08T19:04:35.4222894Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4223117Z     "detail": "Index `job_outbox_job_id_idx` on table `app_ops.job_outbox` has not been used",
+2026-11-08T19:04:35.4223369Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4223455Z     "metadata": {
+2026-11-08T19:04:35.4223547Z       "name": "job_outbox",
+2026-11-08T19:04:35.4223631Z       "type": "table",
+2026-11-08T19:04:35.4223721Z       "schema": "app_ops"
+2026-11-08T19:04:35.4223794Z     },
+2026-11-08T19:04:35.4223966Z     "cache_key": "unused_index_app_ops_job_outbox_job_outbox_job_id_idx"
+2026-11-08T19:04:35.4224040Z   },
+2026-11-08T19:04:35.4224122Z   {
+2026-11-08T19:04:35.4224309Z     "name": "unused_index",
+2026-11-08T19:04:35.4224407Z     "title": "Unused Index",
+2026-11-08T19:04:35.4224506Z     "level": "INFO",
+2026-11-08T19:04:35.4224591Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4224682Z     "categories": [
+2026-11-08T19:04:35.4224764Z       "PERFORMANCE"
+2026-11-08T19:04:35.4224853Z     ],
+2026-11-08T19:04:35.4225089Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4225347Z     "detail": "Index `job_outbox_undispatched_idx` on table `app_ops.job_outbox` has not been used",
+2026-11-08T19:04:35.4225614Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4225696Z     "metadata": {
+2026-11-08T19:04:35.4225791Z       "name": "job_outbox",
+2026-11-08T19:04:35.4225873Z       "type": "table",
+2026-11-08T19:04:35.4225967Z       "schema": "app_ops"
+2026-11-08T19:04:35.4226041Z     },
+2026-11-08T19:04:35.4226239Z     "cache_key": "unused_index_app_ops_job_outbox_job_outbox_undispatched_idx"
+2026-11-08T19:04:35.4226323Z   },
+2026-11-08T19:04:35.4226399Z   {
+2026-11-08T19:04:35.4226489Z     "name": "unused_index",
+2026-11-08T19:04:35.4226577Z     "title": "Unused Index",
+2026-11-08T19:04:35.4226664Z     "level": "INFO",
+2026-11-08T19:04:35.4226751Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4226838Z     "categories": [
+2026-11-08T19:04:35.4226918Z       "PERFORMANCE"
+2026-11-08T19:04:35.4227002Z     ],
+2026-11-08T19:04:35.4227239Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4227535Z     "detail": "Index `idempotency_records_expires_at_idx` on table `app_ops.idempotency_records` has not been used",
+2026-11-08T19:04:35.4227804Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4227884Z     "metadata": {
+2026-11-08T19:04:35.4227989Z       "name": "idempotency_records",
+2026-11-08T19:04:35.4228070Z       "type": "table",
+2026-11-08T19:04:35.4228164Z       "schema": "app_ops"
+2026-11-08T19:04:35.4228245Z     },
+2026-11-08T19:04:35.4228474Z     "cache_key": "unused_index_app_ops_idempotency_records_idempotency_records_expires_at_idx"
+2026-11-08T19:04:35.4228553Z   },
+2026-11-08T19:04:35.4228626Z   {
+2026-11-08T19:04:35.4228782Z     "name": "unused_index",
+2026-11-08T19:04:35.4228869Z     "title": "Unused Index",
+2026-11-08T19:04:35.4228956Z     "level": "INFO",
+2026-11-08T19:04:35.4229038Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4229128Z     "categories": [
+2026-11-08T19:04:35.4229213Z       "PERFORMANCE"
+2026-11-08T19:04:35.4229285Z     ],
+2026-11-08T19:04:35.4229519Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4229817Z     "detail": "Index `spend_limits_owner_id_idx` on table `app_ops.spend_limits` has not been used",
+2026-11-08T19:04:35.4230083Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4230163Z     "metadata": {
+2026-11-08T19:04:35.4230257Z       "name": "spend_limits",
+2026-11-08T19:04:35.4230346Z       "type": "table",
+2026-11-08T19:04:35.4230431Z       "schema": "app_ops"
+2026-11-08T19:04:35.4230512Z     },
+2026-11-08T19:04:35.4230695Z     "cache_key": "unused_index_app_ops_spend_limits_spend_limits_owner_id_idx"
+2026-11-08T19:04:35.4230780Z   },
+2026-11-08T19:04:35.4230853Z   {
+2026-11-08T19:04:35.4230947Z     "name": "unused_index",
+2026-11-08T19:04:35.4231032Z     "title": "Unused Index",
+2026-11-08T19:04:35.4231117Z     "level": "INFO",
+2026-11-08T19:04:35.4231206Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4231289Z     "categories": [
+2026-11-08T19:04:35.4231375Z       "PERFORMANCE"
+2026-11-08T19:04:35.4231449Z     ],
+2026-11-08T19:04:35.4231681Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4231931Z     "detail": "Index `spend_commitments_at_idx` on table `app_ops.spend_commitments` has not been used",
+2026-11-08T19:04:35.4232193Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4232279Z     "metadata": {
+2026-11-08T19:04:35.4232375Z       "name": "spend_commitments",
+2026-11-08T19:04:35.4232468Z       "type": "table",
+2026-11-08T19:04:35.4232553Z       "schema": "app_ops"
+2026-11-08T19:04:35.4232634Z     },
+2026-11-08T19:04:35.4232831Z     "cache_key": "unused_index_app_ops_spend_commitments_spend_commitments_at_idx"
+2026-11-08T19:04:35.4232918Z   },
+2026-11-08T19:04:35.4232992Z   {
+2026-11-08T19:04:35.4233085Z     "name": "unused_index",
+2026-11-08T19:04:35.4233178Z     "title": "Unused Index",
+2026-11-08T19:04:35.4233263Z     "level": "INFO",
+2026-11-08T19:04:35.4233354Z     "facing": "EXTERNAL",
+2026-11-08T19:04:35.4233435Z     "categories": [
+2026-11-08T19:04:35.4233523Z       "PERFORMANCE"
+2026-11-08T19:04:35.4233598Z     ],
+2026-11-08T19:04:35.4233833Z     "description": "Detects if an index has never been used and may be a candidate for removal.",
+2026-11-08T19:04:35.4234120Z     "detail": "Index `spend_commitments_reservation_idx` on table `app_ops.spend_commitments` has not been used",
+2026-11-08T19:04:35.4234501Z     "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+2026-11-08T19:04:35.4234603Z     "metadata": {
+2026-11-08T19:04:35.4234701Z       "name": "spend_commitments",
+2026-11-08T19:04:35.4234792Z       "type": "table",
+2026-11-08T19:04:35.4234878Z       "schema": "app_ops"
+2026-11-08T19:04:35.4234964Z     },
+2026-11-08T19:04:35.4235184Z     "cache_key": "unused_index_app_ops_spend_commitments_spend_commitments_reservation_idx"
+2026-11-08T19:04:35.4235271Z   }
+2026-11-08T19:04:35.4235361Z ]

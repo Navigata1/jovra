@@ -1,0 +1,23 @@
+$ JOVRA_ROOT=<checkout without rendered media> scripts/ios/bundle-sample-media.sh <dest>
+error: Sample media is not rendered for this renderer version (11 of 11 files missing: sample-jon-vs-alex.mp4, sample-2026-10-04-serve-practice.mp4, sample-2026-10-02-forehand-session.mp4 ...). Run: python3 scripts/media/render.py --set sample   (about 5 minutes; needs ffmpeg)
+exit status 1
+
+$ scripts/ios/bundle-sample-media.sh <dest>   (rendered checkout)
+Bundled 11 sample media files, 43.17 MB of the 60 MB budget
+exit status 0
+total 84384
+drwxr-xr-x@ 15 IDC2.5  wheel       480 Nov  8 03:26 .
+drwx------@  5 IDC2.5  wheel       160 Nov  8 03:26 ..
+-rw-r--r--@  1 IDC2.5  wheel        54 Nov  8 03:26 bundle-status.json
+-rw-r--r--@  1 IDC2.5  wheel      7018 Nov  8 03:26 media-manifest.json
+-rw-r--r--@  1 IDC2.5  wheel    253353 Nov  8 03:26 sample-2026-09-09-match.mp4
+-rw-r--r--@  1 IDC2.5  wheel    218941 Nov  8 03:26 sample-2026-09-13-stroke-practice.mp4
+-rw-r--r--@  1 IDC2.5  wheel    257447 Nov  8 03:26 sample-2026-09-17-match.mp4
+-rw-r--r--@  1 IDC2.5  wheel    227247 Nov  8 03:26 sample-2026-09-21-serve-practice.mp4
+-rw-r--r--@  1 IDC2.5  wheel    254788 Nov  8 03:26 sample-2026-09-28-match.mp4
+-rw-r--r--@  1 IDC2.5  wheel    128350 Nov  8 03:26 sample-2026-09-28-serve-clip.mp4
+-rw-r--r--@  1 IDC2.5  wheel    218499 Nov  8 03:26 sample-2026-10-02-forehand-session.mp4
+-rw-r--r--@  1 IDC2.5  wheel   1111473 Nov  8 03:26 sample-2026-10-02-side-on-forehands.mp4
+-rw-r--r--@  1 IDC2.5  wheel   2003236 Nov  8 03:26 sample-2026-10-04-behind-baseline-12-serves.mp4
+-rw-r--r--@  1 IDC2.5  wheel    227719 Nov  8 03:26 sample-2026-10-04-serve-practice.mp4
+-rw-r--r--@  1 IDC2.5  wheel  38268074 Nov  8 03:26 sample-jon-vs-alex.mp4

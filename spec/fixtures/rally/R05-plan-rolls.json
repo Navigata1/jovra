@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.rally",
+  "id": "R05-plan-rolls",
+  "title": "Per-session and per-clip rolls, deselected clips, merged ranges and gap chips",
+  "covers": ["T32", "ios-v1-spec RallySegmenter", "screens.md N7", "stories 192, 195, 200"],
+  "cases": [
+    {
+      "op": "plan",
+      "name": "session rolls 2 s / 3 s, a per-clip pre-roll, a per-clip post-roll and a deselected point",
+      "targets": [
+        {"targetId": "rp-point-1", "startMs": 30000, "endMs": 38000},
+        {"targetId": "rp-point-2", "startMs": 52000, "endMs": 61000},
+        {"targetId": "rp-point-3", "startMs": 80000, "endMs": 95000},
+        {"targetId": "rp-mark-1", "startMs": 100000, "endMs": 100000}
+      ],
+      "rolls": {
+        "preRollMs": 2000,
+        "postRollMs": 3000,
+        "clips": [
+          {"targetId": "rp-point-2", "preRollMs": 500},
+          {"targetId": "rp-mark-1", "postRollMs": 4000},
+          {"targetId": "rp-point-3", "excluded": true}
+        ]
+      },
+      "durationMs": 120000,
+      "expected": {
+        "ranges": [
+          {"range": {"fromMs": 28000, "toMs": 41000}, "durationMs": 13000, "targetIds": ["rp-point-1"]},
+          {"range": {"fromMs": 51500, "toMs": 64000}, "durationMs": 12500, "targetIds": ["rp-point-2"]},
+          {"range": {"fromMs": 98000, "toMs": 104000}, "durationMs": 6000, "targetIds": ["rp-mark-1"]}
+        ],
+        "gaps": [
+          {"range": {"fromMs": 0, "toMs": 28000}, "durationMs": 28000, "label": "+0:28"},
+          {"range": {"fromMs": 41000, "toMs": 51500}, "durationMs": 10500, "label": "+0:10"},
+          {"range": {"fromMs": 64000, "toMs": 98000}, "durationMs": 34000, "label": "+0:34"},
+          {"range": {"fromMs": 104000, "toMs": 120000}, "durationMs": 16000, "label": "+0:16"}
+        ],
+        "excludedTargetIds": ["rp-point-3"],
+        "keptMs": 31500,
+        "skippedMs": 88500,
+        "durationMs": 120000
+      }
+    },
+    {
+      "op": "plan",
+      "name": "no rallyPlayback: the defaults apply and the end is clamped",
+      "targets": [{"targetId": "p1", "startMs": 30000, "endMs": 38000}],
+      "rolls": null,
+      "durationMs": 40000,
+      "expected": {
+        "ranges": [{"range": {"fromMs": 28500, "toMs": 40000}, "durationMs": 11500, "targetIds": ["p1"]}],
+        "gaps": [{"range": {"fromMs": 0, "toMs": 28500}, "durationMs": 28500, "label": "+0:28"}],
+        "excludedTargetIds": [],
+        "keptMs": 11500,
+        "skippedMs": 28500,
+        "durationMs": 40000
+      }
+    },
+    {
+      "op": "plan",
+      "name": "touching ranges merge; a clip roll wins over the session roll",
+      "targets": [
+        {"targetId": "c", "startMs": 15000, "endMs": 16000},
+        {"targetId": "a", "startMs": 10000, "endMs": 12000},
+        {"targetId": "b", "startMs": 13000, "endMs": 15000}
+      ],
+      "rolls": {"preRollMs": 0, "postRollMs": 0, "clips": [{"targetId": "a", "postRollMs": 1000}]},
+      "durationMs": 20000,
+      "expected": {
+        "ranges": [{"range": {"fromMs": 10000, "toMs": 16000}, "durationMs": 6000, "targetIds": ["a", "b", "c"]}],
+        "gaps": [
+          {"range": {"fromMs": 0, "toMs": 10000}, "durationMs": 10000, "label": "+0:10"},
+          {"range": {"fromMs": 16000, "toMs": 20000}, "durationMs": 4000, "label": "+0:04"}
+        ],
+        "excludedTargetIds": [],
+        "keptMs": 6000,
+        "skippedMs": 14000,
+        "durationMs": 20000
+      }
+    },
+    {
+      "op": "plan",
+      "name": "gap chips count hours from one hour",
+      "targets": [{"targetId": "x", "startMs": 3725000, "endMs": 3730000}],
+      "rolls": {"preRollMs": 0, "postRollMs": 0},
+      "durationMs": 3800000,
+      "expected": {
+        "ranges": [{"range": {"fromMs": 3725000, "toMs": 3730000}, "durationMs": 5000, "targetIds": ["x"]}],
+        "gaps": [
+          {"range": {"fromMs": 0, "toMs": 3725000}, "durationMs": 3725000, "label": "+1:02:05"},
+          {"range": {"fromMs": 3730000, "toMs": 3800000}, "durationMs": 70000, "label": "+1:10"}
+        ],
+        "excludedTargetIds": [],
+        "keptMs": 5000,
+        "skippedMs": 3795000,
+        "durationMs": 3800000
+      }
+    },
+    {
+      "op": "plan",
+      "name": "gap chips truncate to whole seconds",
+      "targets": [{"targetId": "y", "startMs": 1000, "endMs": 2000}],
+      "rolls": {"preRollMs": 0, "postRollMs": 0},
+      "durationMs": 2999,
+      "expected": {
+        "ranges": [{"range": {"fromMs": 1000, "toMs": 2000}, "durationMs": 1000, "targetIds": ["y"]}],
+        "gaps": [
+          {"range": {"fromMs": 0, "toMs": 1000}, "durationMs": 1000, "label": "+0:01"},
+          {"range": {"fromMs": 2000, "toMs": 2999}, "durationMs": 999, "label": "+0:00"}
+        ],
+        "excludedTargetIds": [],
+        "keptMs": 1000,
+        "skippedMs": 1999,
+        "durationMs": 2999
+      }
+    },
+    {
+      "op": "plan",
+      "name": "a clip override for a target not in the plan is ignored",
+      "targets": [{"targetId": "y", "startMs": 1000, "endMs": 2000}],
+      "rolls": {"preRollMs": 0, "postRollMs": 0, "clips": [{"targetId": "gone", "excluded": true}]},
+      "durationMs": 2000,
+      "expected": {
+        "ranges": [{"range": {"fromMs": 1000, "toMs": 2000}, "durationMs": 1000, "targetIds": ["y"]}],
+        "gaps": [{"range": {"fromMs": 0, "toMs": 1000}, "durationMs": 1000, "label": "+0:01"}],
+        "excludedTargetIds": [],
+        "keptMs": 1000,
+        "skippedMs": 1000,
+        "durationMs": 2000
+      }
+    },
+    {
+      "op": "plan",
+      "name": "nothing to play: one gap over the whole recording",
+      "targets": [],
+      "rolls": null,
+      "durationMs": 60000,
+      "expected": {
+        "ranges": [],
+        "gaps": [{"range": {"fromMs": 0, "toMs": 60000}, "durationMs": 60000, "label": "+1:00"}],
+        "excludedTargetIds": [],
+        "keptMs": 0,
+        "skippedMs": 60000,
+        "durationMs": 60000
+      }
+    },
+    {
+      "op": "plan",
+      "name": "every clip deselected",
+      "targets": [{"targetId": "a", "startMs": 1000, "endMs": 2000}],
+      "rolls": {"preRollMs": 1500, "postRollMs": 2500, "clips": [{"targetId": "a", "excluded": true}]},
+      "durationMs": 60000,
+      "expected": {
+        "ranges": [],
+        "gaps": [{"range": {"fromMs": 0, "toMs": 60000}, "durationMs": 60000, "label": "+1:00"}],
+        "excludedTargetIds": ["a"],
+        "keptMs": 0,
+        "skippedMs": 60000,
+        "durationMs": 60000
+      }
+    },
+    {
+      "op": "plan",
+      "name": "refused: a target that runs backwards",
+      "targets": [{"targetId": "a", "startMs": 5000, "endMs": 4000}],
+      "rolls": null,
+      "durationMs": 60000,
+      "expectedError": "rangeBackwards"
+    },
+    {
+      "op": "plan",
+      "name": "refused: a target past the end",
+      "targets": [{"targetId": "a", "startMs": 5000, "endMs": 60001}],
+      "rolls": null,
+      "durationMs": 60000,
+      "expectedError": "timeOutsideRecording"
+    },
+    {
+      "op": "plan",
+      "name": "refused: the same target twice",
+      "targets": [
+        {"targetId": "a", "startMs": 1000, "endMs": 1000},
+        {"targetId": "a", "startMs": 2000, "endMs": 2000}
+      ],
+      "rolls": null,
+      "durationMs": 60000,
+      "expectedError": "duplicateId"
+    },
+    {
+      "op": "plan",
+      "name": "refused: a clip post-roll above 10 s",
+      "targets": [{"targetId": "a", "startMs": 1000, "endMs": 1000}],
+      "rolls": {"preRollMs": 1500, "postRollMs": 2500, "clips": [{"targetId": "a", "postRollMs": 10001}]},
+      "durationMs": 60000,
+      "expectedError": "rollOutOfRange"
+    }
+  ]
+}

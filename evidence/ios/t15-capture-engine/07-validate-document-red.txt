@@ -1,0 +1,41 @@
+FFFF
+======================================================================
+FAIL: test_a_gap_reason_outside_the_contract_fails (scripts.spec.test_validate_document.ValidateDocumentTests.test_a_gap_reason_outside_the_contract_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/jv/.claude/worktrees/t15-capture-engine/scripts/spec/test_validate_document.py", line 63, in test_a_gap_reason_outside_the_contract_fails
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_a_missing_document_fails_without_a_traceback (scripts.spec.test_validate_document.ValidateDocumentTests.test_a_missing_document_fails_without_a_traceback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/jv/.claude/worktrees/t15-capture-engine/scripts/spec/test_validate_document.py", line 76, in test_a_missing_document_fails_without_a_traceback
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_a_reference_integrity_problem_in_the_external_document_fails (scripts.spec.test_validate_document.ValidateDocumentTests.test_a_reference_integrity_problem_in_the_external_document_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/jv/.claude/worktrees/t15-capture-engine/scripts/spec/test_validate_document.py", line 71, in test_a_reference_integrity_problem_in_the_external_document_fails
+    self.assertNotEqual(result.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_a_valid_external_session_passes_and_is_counted (scripts.spec.test_validate_document.ValidateDocumentTests.test_a_valid_external_session_passes_and_is_counted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/IDC2.5/jv/.claude/worktrees/t15-capture-engine/scripts/spec/test_validate_document.py", line 56, in test_a_valid_external_session_passes_and_is_counted
+    self.assertRegex(result.stdout, r"external documents\s+1")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: 'external documents\\s+1' not found in '---- spec validation summary ----\nbenchmark bindings                 1\nbenchmark records                  3\nclosed-object rejections           154\ncross-references                   1\ncsv byte-for-byte                  2\nfile hashes                        6\nhand assertions                    611\ninstances valid                    150\njovra.fixture.canonical checks     1\njovra.sampleMediaManifest checks   1\nkind-to-schema names               17\nmedia ground truth                 19\nmedia self-tests                   37\npct fixtures                       1\npct vectors                        32\nreference-integrity documents      150\nregistry checks                    1\nsample match (C1-C16)              1\nschema self-tests                  26\nschemas                            19\nscoring fixtures                   106\nstats fixtures                     3\nunits fixtures                     1\nunits vectors                      31\nRESULT: PASS\n'
+
+----------------------------------------------------------------------
+Ran 4 tests in 5.478s
+
+FAILED (failures=4)

@@ -1,0 +1,12 @@
+# Breaking one room fixture locally (fresh-boundary expect Fresh -> Delayed), then restoring it. 2026-11-08T09:08:55Z
+ spec/room/fixtures/vectors/freshness.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+$ python3 scripts/spec/validate_room.py
+FAIL vectors/freshness.json#fresh-boundary: expected "Delayed", got "Fresh"
+FAIL determinism: vectors/freshness.json differs from a fresh generation
+cases passed: 231, failed: 1
+FAILED: 2 problem(s)
+exit=1
+$ swift test --filter VectorConformanceTests/test_freshnessVectors
+Tests/Part1/VectorConformanceTests.swift:15: error: -[JovraRoomTests.VectorConformanceTests test_freshnessVectors] : XCTAssertEqual failed: ("["vectors/freshness.json#fresh-boundary: got \"Fresh\", expected \"Delayed\""]") is not equal to ("[]") - freshness
+restored: 0 changed lines

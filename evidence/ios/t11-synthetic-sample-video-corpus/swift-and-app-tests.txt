@@ -1,0 +1,13 @@
+$ swift test --package-path ios/Packages/JovraMedia --no-parallel
+✔ Suite "AVFoundation decodes every supported fixture to its committed signature hash" passed after 162.225 seconds.
+✔ Test run with 56 tests in 10 suites passed after 193.095 seconds.
+✔ Suite "Registry consistency: no capability claims more than its benchmark records back" passed after 0.407 seconds.
+✔ Test run with 45 tests in 8 suites passed after 1.448 seconds.
+
+$ xcodebuild test -scheme Jovra -only-testing:JovraTests (simulator JOVRA-T11, iPhone 17 Pro, iOS 27.2)
+ Executed 16 tests, with 0 failures (0 unexpected) in 3.693 (3.709) seconds
+ Executed 16 tests, with 0 failures (0 unexpected) in 3.693 (3.710) seconds
+** TEST SUCCEEDED **
+Bundled 11 sample media files, 43.17 MB of the 60 MB budget
+Test Case '-[JovraTests.SampleMediaBundleTests testEveryManifestMediaFileIsBundledAndPlaysForItsStatedDuration]' passed (0.043 seconds).
+Test Suite 'SampleMediaBundleTests' passed at 2026-11-08 03:28:08.808.
