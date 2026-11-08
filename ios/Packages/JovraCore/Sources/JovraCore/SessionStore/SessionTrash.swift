@@ -99,7 +99,7 @@ extension SessionStore {
 
     /// One rename takes the whole folder out of `sessions/`, so a crash never leaves a half-deleted
     /// session to be quarantined. Leftovers in `purging/` were already confirmed for deletion.
-    private func removeSessionFolder(_ id: String) throws {
+    func removeSessionFolder(_ id: String) throws {
         let source = try folder(id)
         let purging = try auxiliaryFolder("purging")
         for leftover in try FileManager.default.contentsOfDirectory(at: purging, includingPropertiesForKeys: nil) {

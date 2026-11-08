@@ -72,6 +72,12 @@ jobs:
             psql "$db_url" -X -q -t -A -v ON_ERROR_STOP=1 -f "$f" 2>&1 | grep -E '^(not )?ok |^1\.\.|ERROR'
           done
 
+      # pgTAP runs in one session; T-DB-71 needs two real concurrent transactions, so it runs as its own psql script.
+      - name: Two concurrent accept_quote calls at the ceiling (T-DB-71)
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase-t71.env"
+          python3 supabase/scripts/concurrent_accept_smoke.py "$RUNNER_TEMP/supabase-t71.env"
+
       - name: OTP sign-in through Auth and Mailpit; unknown emails refused
         run: |
           supabase status -o env > "$RUNNER_TEMP/supabase-status.env"
