@@ -177,7 +177,8 @@ Implementation notes for the ports:
 
 ## Fixture inventory
 
-- **Scoring, 64 cases + 10 rejections**: love/4-2 holds, deuce chains, break via ad-out, No-Ad deciding point (both
+- **Scoring, 71 cases + 10 rejections** (`S01`–`S71`, `E01`–`E10`; `cases/order_cases.py` and `cases/log_safety_cases.py` add the 22 reviewed-order
+  `O` cases and rejections `E11`–`E18`, ADR0030): love/4-2 holds, deuce chains, break via ad-out, No-Ad deciding point (both
   outcomes, side recorded and not), service alternation across sets, end changes for odd and even sets, 7-5,
   tie-break 7-4 serve order and next-set first server, extended tie-breaks, best-of-1 tie-break loss, advantage set,
   advantage final set, match tie-break [10-8] and [12-10], Grand Slam final-set 10-point tie-break, pro set 9-8(5),
@@ -194,7 +195,8 @@ Implementation notes for the ports:
   point, retirement before play, a let in a No-Let format, voiding the original of a corrected point, re-entered doubles receivers reported as
   recalculated, the Fast4 sudden-death point keeping side parity (a recorded side flagged), a short-set tie-break whose
   4-4 point is the receiver's choice, a newer-version suggestion refused against a reviewed point (S67), undo and
-  redo of a correction (S68), a walkover logged after play (S69), a standalone 7-point tie-break (S70); rejections for non-increasing seq, missing supersede target, missing doubles
+  redo of a correction (S68), a walkover logged after play (S69), a standalone 7-point tie-break (S70), a point served from the wrong half
+  and a correction that makes a recorded half wrong (`sideMismatch`, S71); rejections for non-increasing seq, missing supersede target, missing doubles
   order, missing void target, a doubles receiver from the wrong team, an order invalid for a set not yet reached, and
   unknown player ids (penalty, doubles receiver, toss first server, a voided retirement).
 - **Stats**: 24 integer-percentage vectors (incl. the §7 table, `1/8 → 13`, `199/200 → 100`, `1/201 → 0`, `0/0 → —`),
@@ -312,11 +314,17 @@ These are encoded in the engine and pinned by fixtures; change them only through
     version has a `reviewed` block it is kept in the log and changes nothing, whether it names the original candidate
     or the reviewed version; later references to it resolve to that reviewed point (S67). Voiding a supersede
     restores the version before it and voiding that void redoes it (S68).
+25. **Served from the wrong half** (rules §3, Rule 27a; session 1.2.0): a point may record `servedFromSide`, the
+    half the server actually served from (observed, never derived). When it differs from the rules-derived
+    `courtSide`, the fold raises `sideMismatch` (`recorded` = the half served from, `derived` = the half the rules
+    required). The point stands, a fault served before discovery stands, the timeline keeps the derived half and the
+    next point goes to the correct half. Nothing is compared while the derived half is unknown (a receiver's choice
+    not yet recorded), on provisional points or after the match ends. A correction that moves a point to the other
+    half flags its recorded half too (S71). Wrong ends (Rule 27b, the open fault is voided) remain uncovered.
 
 ## Not yet covered (needs fixtures before either app relies on it)
 
-Suspensions, wrong-ends and wrong-half
-corrections, checkpoint auto-fill, Canadian/Australian doubles, mixed-doubles No-Ad receiver rule, practice sets
+Suspensions, wrong-ends corrections (Rule 27b), checkpoint auto-fill, Canadian/Australian doubles, mixed-doubles No-Ad receiver rule, practice sets
 without a match end, the manual-assisted serve-speed formula and the court homography. The capability registry lists
 the analysis capabilities; none is `validated`, and the audio, rally and camera-moved detectors stay `disabled` until
 their benchmark gates pass.

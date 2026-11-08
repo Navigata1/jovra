@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA session document (session.json / session.jovra.json)",
   "description": "One session folder's document (ADR-0002). The same JSON is the Drive sidecar and the export format. Scores are never stored: the match log is folded by the scoring engine (ADR-0003).",
-  "$comment": "Schema 1.2.0 (ADR0030): reviewed server/receiver overrides and optional match.resolutionMode. Earlier versions forbid them. Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, sample.mediaIds (sample media manifest ids), analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt, derivedValues[].range (an estimate's range), original (the original facet). Bookmark notes reuse marks[].note. A document stamped 1.0.x may carry none of them ($defs/v1_0). Ids these fields hold must resolve inside the document, and their times fall inside the recording (jovra_ref/references.py).",
+  "$comment": "Schema 1.2.0 (ADR0030): reviewed server/receiver overrides, optional match.resolutionMode and the point servedFromSide (T04, Rule 27a). Earlier versions forbid them. Schema 1.1.0 (T02): every v1 field is now present. 1.1 added, all optional: rallyPlayback (pre/post-roll per session and per clip), analysis.excludedSide, swings (serve and stroke key moments, review checks), serveMarks, shots[].shotIndex (per-shot stroke tags use the existing shots[].stroke), exports (event-log version per export), consent.juniorPlayerIds / writtenConsents / withdrawnAt, calibrations[].staleFromMs and .camera, recording.captureEvents and .recovery, comparisons[].note, logEvent point parentIds, derivedValues[].scope.serveMarkId, sample.mediaIds (sample media manifest ids), analysis paused / unavailable with a reason, archive waitingForWiFi / copy / restoredAt, derivedValues[].range (an estimate's range), original (the original facet). Bookmark notes reuse marks[].note. A document stamped 1.0.x may carry none of them ($defs/v1_0). Ids these fields hold must resolve inside the document, and their times fall inside the recording (jovra_ref/references.py).",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "sport", "createdAt", "updatedAt", "title", "sessionKind", "players", "recording", "storage", "archive"],
   "additionalProperties": false,
@@ -53,7 +53,7 @@
     }
   ],
   "$defs": {
-    "pre_v1_2": {"properties": {"match": {"properties": {"resolutionMode": false, "log": {"items": {"not": {"properties": {"type": {"enum": ["serverOverride", "receiverOverride"]}}}}}}}}},
+    "pre_v1_2": {"properties": {"match": {"properties": {"resolutionMode": false, "log": {"items": {"allOf": [{"not": {"properties": {"type": {"enum": ["serverOverride", "receiverOverride"]}}}}, {"not": {"required": ["servedFromSide"]}}]}}}}}},
     "sampleInfo": {
       "description": "Present only on demo/sample content. The UI must badge it 'Sample' (CLAUDE.md hard rule 1).",
       "type": "object",
@@ -219,6 +219,7 @@
         "insertBefore": {"$ref": "common.schema.json#/$defs/id"},
         "recordedServer": {"$ref": "common.schema.json#/$defs/id", "description": "Observed server (tag or video). A mismatch with the rules-derived server raises serverMismatch."},
         "decidingPointSide": {"enum": ["deuce", "ad"], "description": "No-Ad deciding point (or a receiverChooses sudden-death tie-break point): the side the receiver(s) chose. Observed, never derived. Recorded on any other point it is ignored and raises decidingPointSideIgnored."},
+        "servedFromSide": {"enum": ["deuce", "ad"], "description": "Since 1.2.0. The half the server actually served from (Rule 27a), observed, never derived. When it differs from the rules-derived courtSide the fold raises sideMismatch; the point and any fault served before discovery stand, the derived half is kept, and the next point is served from the correct half (spec/README.md decision 25). Nothing is compared while the derived half is unknown."},
         "tStartMs": {"$ref": "common.schema.json#/$defs/timeMs"},
         "tEndMs": {"$ref": "common.schema.json#/$defs/timeMs"},
         "detected": {"$ref": "#/$defs/outcome"},

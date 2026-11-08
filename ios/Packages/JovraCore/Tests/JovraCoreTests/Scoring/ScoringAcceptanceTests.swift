@@ -59,7 +59,7 @@ private func flippingWinner(of input: ScoringInput, atPoint position: Int) throw
     }
     let sample = try sampleInput()
     #expect(try CanonicalJSON.encode(ScoringEngine.fold(sample)) == CanonicalJSON.encode(ScoringEngine.fold(sample)))
-    #expect(folds == 92)
+    #expect(folds == 93)
     print("Scoring determinism: \(folds) fixture folds and the sample fold byte-identical on refold")
 }
 
@@ -76,10 +76,9 @@ private func flippingWinner(of input: ScoringInput, atPoint position: Int) throw
             }
         }
     }
-    // ios-v1-spec "Conflicts". sideMismatch (wrong-half corrections) has no contract field yet; spec/README.md lists
-    // it under "Not yet covered", so it is not asserted here.
+    // ios-v1-spec "Conflicts", every kind it names; sideMismatch comes from S71 (Rule 27a, decision 25).
     let specKinds: Set = ["serverMismatch", "tiebreakAppeared", "tiebreakVanished", "pointsAfterMatchEnd",
-                          "matchIncomplete", "checkpointConflict", "doublesOrderConflict"]
+                          "matchIncomplete", "checkpointConflict", "doublesOrderConflict", "sideMismatch"]
     #expect(specKinds.isSubset(of: produced), "missing \(specKinds.subtracting(produced).sorted())")
     #expect(Set(TimelineConflictType.allCases.map(\.rawValue)).isSubset(of: produced))
 }

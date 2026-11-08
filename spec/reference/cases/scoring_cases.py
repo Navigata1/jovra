@@ -20,8 +20,9 @@ def case(fn):
     return fn
 
 
-def make(cid, title, covers, setup, lb, checkpoints, assertions, expect_error=None):
+def make(cid, title, covers, setup, lb, checkpoints, assertions, expect_error=None, version=None):
     return {
+        "version": version,
         "id": cid,
         "title": title,
         "covers": covers,
@@ -1474,6 +1475,40 @@ def s68():
 # ----- invalid logs: platforms must reject them with the same code -----------------------------
 
 @case
+def s71():
+    lb = LogBuilder()
+    lb.point("A")
+    wrong = lb.point("A", "winner", servedFromSide="deuce",
+                     serves=[{"result": "fault", "faultType": "net"}, {"result": "in"}], strokeCount=3)
+    third = lb.point("B", servedFromSide="deuce")
+    fourth = lb.point("A", servedFromSide="ad")
+    before = lb.last_seq
+    lb.point("B", insertBefore=third)
+    mismatch = {"type": "sideMismatch", "pointId": wrong, "recorded": "deuce", "derived": "ad"}
+    a = [
+        (0, "fold.points[1].courtSide", "ad"),
+        (0, "fold.points[1].serveNumber", 2),
+        (0, "fold.points[1].after.gameWon", False),
+        (0, "fold.points[2].call", pts("30", "0")),
+        (0, "fold.points[2].courtSide", "deuce"),
+        (0, "fold.conflicts", [mismatch]),
+        (0, "fold.next.call", pts("40", "15")),
+        (1, "fold.points[3].id", third),
+        (1, "fold.points[3].courtSide", "ad"),
+        (1, "fold.points[4].courtSide", "deuce"),
+        (1, "fold.conflicts", [mismatch,
+                               {"type": "sideMismatch", "pointId": third, "recorded": "deuce", "derived": "ad"},
+                               {"type": "sideMismatch", "pointId": fourth, "recorded": "ad", "derived": "deuce"}]),
+        (1, "fold.next.call", pts("40", "30")),
+    ]
+    return make("S71-served-from-wrong-half",
+                "Served from the wrong half (Rule 27a): the point and its first-serve fault stand, the derived half is "
+                "kept, the next point goes to the correct half, and a recorded half that a correction makes wrong is "
+                "flagged too",
+                ["§3 Rule 27a", "decision 25"], singles(CLUB_BO3), lb, [before, lb.last_seq], a, version="1.2.0")
+
+
+@case
 def e01():
     lb = LogBuilder()
     lb.points("AA")
@@ -1578,7 +1613,7 @@ def generate(ctx) -> int:
         fixture_input["log"] = c["log"]
         assertions = [{"checkpoint": cp, "path": path, "equals": value} for cp, path, value in c["assertions"]]
         doc = {
-            "schemaVersion": ctx.version,
+            "schemaVersion": c["version"] or ctx.version,
             "kind": "jovra.fixture.scoring",
             "id": c["id"],
             "title": c["title"],
