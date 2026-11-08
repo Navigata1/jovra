@@ -1,0 +1,49 @@
+backend-db	UNKNOWN STEP	2026-10-11T22:54:14.0811628Z Applying migration 20261008000000_tester_signup_lock.sql...
+backend-db	UNKNOWN STEP	2026-10-11T22:54:14.0858202Z Applying migration 20261008010000_identity_membership_rls.sql...
+backend-db	UNKNOWN STEP	2026-10-11T22:54:36.6487121Z Applying migration 20261008000000_tester_signup_lock.sql...
+backend-db	UNKNOWN STEP	2026-10-11T22:54:36.6542153Z Applying migration 20261008010000_identity_membership_rls.sql...
+backend-db	UNKNOWN STEP	2026-10-11T22:54:37.1149654Z No issues found
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.5496833Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.5675956Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .............. ok
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.5923961Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ..... ok
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.6273519Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ... ok
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.6786161Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ...... ok
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.7515025Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .. ok
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.7996149Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ....... ok
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8244631Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql:40: ERROR:  operator is not unique: text || "char"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8249547Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql ......... 
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8251309Z # Failed test 1: "camera_sources exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8251857Z # Failed test 2: "source_manifests exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8252254Z # Failed test 3: "sync_maps exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8252530Z # Failed test 4: "calibration_versions exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8253483Z # Failed test 5: "point_event_revisions exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8253940Z # Failed test 6: "observations exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8254258Z # Failed test 7: "lessons exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8254505Z # Failed test 8: "lesson_clips exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8254748Z # Failed test 9: "story_plans exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8255012Z # Failed test 10: "story_plan_versions exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8255432Z # Failed test 11: "artifacts exists (lesson_clips.excerpt_artifact_id and stale marking need it)"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8256164Z # Failed test 12: "access_grants exists (lesson_access and clip sharing need it)"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8256544Z # Failed test 13: "app_ops.quota_limits exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8256831Z # Failed test 14: "app_ops.quota_counters exists"
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8263821Z Failed 42/42 subtests 
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8465027Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql:42: ERROR:  relation "public.camera_sources" does not exist
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8469656Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql .. 
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8470396Z Failed 45/45 subtests 
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8672272Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql:36: ERROR:  relation "public.camera_sources" does not exist
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8696750Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql ... 
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8697524Z Failed 71/71 subtests 
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8844833Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql:14: ERROR:  relation "app_ops.quota_limits" does not exist
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8869978Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql .......... 
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8871163Z Failed 25/25 subtests 
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8871952Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql       (Wstat: 768 (exited 3) Tests: 14 Failed: 14)
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8872297Z   Failed tests:  1-14
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8872992Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql (Wstat: 768 (exited 3) Tests: 0 Failed: 0)
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8873851Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql (Wstat: 768 (exited 3) Tests: 0 Failed: 0)
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8874687Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql        (Wstat: 768 (exited 3) Tests: 0 Failed: 0)
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8875666Z Files=10, Tests=193,  0 wallclock secs ( 0.03 usr  0.02 sys +  0.06 cusr  0.03 csys =  0.14 CPU)
+backend-db	UNKNOWN STEP	2026-10-11T22:54:39.8875927Z Result: FAIL
+backend-db	UNKNOWN STEP	2026-10-11T22:54:40.2457310Z 172.18.0.7 2026-10-11 22:54:39.822 UTC [232] postgres@postgres ERROR:  operator is not unique: text || "char" at character 349
+backend-db	UNKNOWN STEP	2026-10-11T22:54:40.2462379Z 172.18.0.7 2026-10-11 22:54:39.844 UTC [233] postgres@postgres ERROR:  relation "public.camera_sources" does not exist at character 13
+backend-db	UNKNOWN STEP	2026-10-11T22:54:40.2467116Z 172.18.0.7 2026-10-11 22:54:39.866 UTC [234] postgres@postgres ERROR:  relation "public.camera_sources" does not exist at character 13
+backend-db	UNKNOWN STEP	2026-10-11T22:54:40.2469815Z 172.18.0.7 2026-10-11 22:54:39.884 UTC [235] postgres@postgres ERROR:  relation "app_ops.quota_limits" does not exist at character 8

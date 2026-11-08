@@ -53,6 +53,11 @@ jobs:
       - name: supabase db advisors (security, fail on warn)
         run: supabase db advisors --local --type security --fail-on warn
 
+      # Performance advisors (unindexed FKs, per-row auth calls, duplicate permissive policies) are reported in the
+      # log as evidence at info level; the security run above is the gate.
+      - name: supabase db advisors (performance, report)
+        run: supabase db advisors --local --type performance --level info
+
       - name: supabase test db
         run: supabase test db
 
