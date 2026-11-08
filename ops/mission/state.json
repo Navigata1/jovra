@@ -187,7 +187,7 @@
         {
           "id": "P4-G2",
           "title": "Dedicated simulator core flow and export evidence",
-          "command": "scripts/ios/core-flow-test.sh",
+          "command": "xcodebuild test (CoreFlowUITests, FilesImportUITests, ScrollViewportAuditTests, FilesImportTests and StartupRecoveryTests) and independent JSON/CSV/FFmpeg artifact checks",
           "status": "passed",
           "evidence": "ops/mission/evidence/2026-11-08-coreflow-actual.json",
           "lastRun": "2026-11-08T10:24:54Z",
@@ -200,7 +200,7 @@
           "status": "passed",
           "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
           "lastRun": "2026-11-08T10:34:53+00:00",
-          "notes": "Current implementation receipts retain exact reviewed heads. Fresh required checks passed before each recorded merge. Manual iOS check skipped and excluded from hosted gate claims."
+          "notes": "Current implementation receipts retain exact reviewed heads. Fresh required checks passed before each recorded merge. Manual iOS check skipped and excluded from hosted gate claims. lastRun is the receipt observation time."
         },
         {
           "id": "P4-G4",
@@ -210,6 +210,15 @@
           "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
           "lastRun": "2026-11-08T10:29:56Z",
           "notes": "Combined iOS tree 7ca1f93b78194d39baca390ef200d42db43779a2. Signed iPhone 15 Pro Max run passed 6. An earlier test failed with storageUnavailable from a device path alias, fixed in #395. Tests used synthetic media. Live camera, provider picker, and full hardware acceptance remain open."
+        },
+        {
+          "id": "P4-G5",
+          "title": "Physical live capture, interruption and provider selection",
+          "command": "Run the connected iPhone acceptance steps in the continuation handoff",
+          "status": "pending",
+          "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
+          "lastRun": null,
+          "notes": "Successful Files selection through the system UI, live-camera start/stop, controlled interruptions, and unfinished or torn recordings still need separate receipts."
         }
       ],
       "tasks": [
@@ -269,7 +278,7 @@
             "T03"
           ],
           "pr": null,
-          "notes": "Capture334/335/337/338/340, directory350, fragmented-layout/atomic-adoption354 and finished-stale scanner358 merged. Actual marked/unmarked adopted sessions independently schema/canonical validated; receipt canonical bytes and decoded media/hash evidence passed; integrated85Media tests PASS serially. Parallel decoder-pool stall retained as failed/incomplete; native Media harness now serial. Unfinished/torn-prefix/termination-loss/startup and physical/endurance/power-loss remain unverified; fullT16 open. Finished startup adoption landed in #392. The connected device exposed a path alias failure fixed in #395. Torn/unfinished recovery, real interruptions and endurance remain open."
+          "notes": "Capture334/335/337/338/340, directory350, fragmented-layout/atomic-adoption354 and finished-stale scanner358 merged. Actual marked/unmarked adopted sessions independently schema/canonical validated; receipt canonical bytes and decoded media/hash evidence passed; integrated85Media tests PASS serially. Parallel decoder-pool stall retained as failed/incomplete; native Media harness now serial. Unfinished or torn startup recovery, termination loss, live physical capture, endurance and power loss remain unverified; full T16 open. Finished startup adoption landed in #392. The connected device exposed a path alias failure fixed in #395. Torn/unfinished recovery, real interruptions and endurance remain open."
         },
         {
           "id": "T14",
