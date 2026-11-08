@@ -1,9 +1,63 @@
+import JovraMedia
 import SwiftUI
+import UniformTypeIdentifiers
 
-/// Placeholder for the import from Photos and Files (S07), handed to T26. T26 replaces this file and keeps
-/// `ImportScreen()`, so the router (App/Destinations.swift) never changes.
 struct ImportScreen: View {
+    @Environment(AppRouter.self) private var router
+    @Environment(\.localCaptureLibrary) private var library
+    @State private var playerName = ""
+    @State private var showPicker = false
+    @State private var selection: URL?
+    @State private var imported: SessionID?
+    @State private var issue: String?
+
     var body: some View {
-        RoutePlaceholder(.push(.sessions(.importVideos)))
+        JovraScreen(title: String(localized: "Import videos", table: "App"),
+                    subtitle: String(localized: "Save a local practice video from Files.", table: "Sessions.Import")) {
+            Text("Choose one H.264 or HEVC video in MOV or MP4 format. JOVRA keeps your selected file unchanged.", tableName: "Sessions.Import")
+                .fixedSize(horizontal: false, vertical: true)
+            TextField(String(localized: "Player name", table: "Sessions.Import"), text: $playerName)
+                .textFieldStyle(.roundedBorder).frame(minHeight: 44)
+                .disabled(selection != nil).accessibilityIdentifier("import.player")
+            Button(String(localized: "Choose video from Files", table: "Sessions.Import")) { showPicker = true }
+                .buttonStyle(.jovraAccent).disabled(!canChoose).accessibilityIdentifier("import.choose")
+            if selection != nil {
+                ProgressView(String(localized: "Copying and checking the video…", table: "Sessions.Import"))
+                Button(String(localized: "Cancel import", table: "Sessions.Import")) { selection = nil }
+                    .buttonStyle(.jovraSecondary)
+            }
+            if let issue { Text(issue).fixedSize(horizontal: false, vertical: true).accessibilityIdentifier("import.issue") }
+            if let imported {
+                Text("Video saved in your library", tableName: "Sessions.Import").accessibilityIdentifier("import.saved")
+                Button(String(localized: "Open video", table: "Sessions.Import")) {
+                    router.present(.replay(.init(session: imported, point: nil, filter: .all)))
+                }.buttonStyle(.jovraSecondary)
+            }
+        }
+        .fileImporter(isPresented: $showPicker, allowedContentTypes: [.movie]) { result in
+            if case .success(let url) = result {
+                issue = nil; imported = nil; selection = url
+            } else if case .failure(let error) = result, (error as? CocoaError)?.code != .userCancelled {
+                issue = String(localized: "Could not open that file.", table: "Sessions.Import")
+            }
+        }
+        .task(id: selection) {
+            guard let selection, case .ready(let library) = library else { return }
+            do {
+                let id = try await library.importFile(selection, playerName: playerName)
+                guard !Task.isCancelled else { return }
+                imported = id
+            } catch {
+                guard !Task.isCancelled else { return }
+                issue = String(localized: "Import could not be confirmed. Check your library before trying again. Your selected file was not changed.", table: "Sessions.Import")
+            }
+            self.selection = nil
+        }
+    }
+
+    private var canChoose: Bool {
+        guard case .ready = library, selection == nil else { return false }
+        let name = playerName.trimmingCharacters(in: .whitespacesAndNewlines)
+        return !name.isEmpty && name.unicodeScalars.count <= 60
     }
 }
