@@ -78,6 +78,7 @@ final class ReviewedPointModel {
 
     private func refresh(library: LocalCaptureLibrary, session: SessionID, selected: String?, token: UUID) async throws {
         let loaded = try await library.load(session)
+        guard loaded.match != nil else { return }
         let folded = try ScoringEngine.fold(ScoringInput(session: loaded))
         let won = try StatsEngine.stat(.pointsWon(.a), in: folded, sample: loaded.sample != nil)
         let serves = try StatsEngine.stat(.firstServeIn(.a), in: folded, sample: loaded.sample != nil)
