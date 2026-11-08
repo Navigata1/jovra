@@ -31,7 +31,8 @@ class LogBuilder:
         outcome["provenance"] = provenance
         outcome["source"] = extra.pop("source", "user")
         event = {"type": "point"}
-        for key in ("supersedes", "insertBefore", "recordedServer", "decidingPointSide", "tStartMs", "tEndMs"):
+        for key in ("supersedes", "insertBefore", "recordedServer", "decidingPointSide", "servedFromSide", "tStartMs",
+                    "tEndMs"):
             if key in extra:
                 event[key] = extra.pop(key)
         detected = extra.pop("detected", None)

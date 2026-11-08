@@ -1,0 +1,148 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 384000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "bounces": [
+    {
+      "courtMm": {
+        "x": -3151,
+        "y": 17804
+      },
+      "frame": 202,
+      "inCourt": true,
+      "time": {
+        "timescale": 30,
+        "value": 101
+      }
+    }
+  ],
+  "camera": {
+    "angle": "behindBaseline"
+  },
+  "description": "Sample video (synthetic): Compare: the 'Previous · Sep 28' serve clip.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 180,
+      "sample": 144000,
+      "time": {
+        "timescale": 1,
+        "value": 3
+      },
+      "type": "hit"
+    }
+  ],
+  "frameCode": null,
+  "id": "sample/2026-09-28-serve-clip",
+  "kind": "jovra.groundTruth",
+  "label": {
+    "background": {
+      "y": 28
+    },
+    "ink": {
+      "y": 230
+    },
+    "region": {
+      "height": 40,
+      "width": 576,
+      "x": 0,
+      "y": 0
+    },
+    "text": "Sample video (synthetic)"
+  },
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/sample-12ab9717548a9735/sample-2026-09-28-serve-clip.mp4"
+  },
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "12ab9717548a973589818bc568f30bad043b341db30a2252849fd41e1aa067e2"
+  },
+  "sampleMedia": {
+    "mediaId": "sample-media.2026-09-28-serve-clip",
+    "thumbnailFrame": 210
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 1006,
+  "serves": [
+    {
+      "averageSpeedKmh": "182.9",
+      "bounce": {
+        "courtMm": {
+          "x": -3151,
+          "y": 17804,
+          "z": 0
+        },
+        "frame": 202,
+        "pixel": {
+          "x": 514,
+          "y": 255
+        },
+        "time": {
+          "timescale": 30,
+          "value": 101
+        }
+      },
+      "contact": {
+        "courtMm": {
+          "x": 505,
+          "y": -250,
+          "z": 2750
+        },
+        "frame": 180,
+        "pixel": {
+          "x": 684,
+          "y": 372
+        },
+        "time": {
+          "timescale": 1,
+          "value": 3
+        }
+      },
+      "contactSpeedKmh": "182.0",
+      "end": "near",
+      "fault": false,
+      "flightFrames": 22,
+      "index": 0,
+      "side": "deuce"
+    }
+  ],
+  "set": "sample",
+  "signature": {
+    "columns": 8,
+    "decodedFramesSha256": "ed7ce35ab4cff17325eb70d2be55565644e3b10f483861a43a91deacf2b87b1e",
+    "frameCount": 480,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 18,
+    "rows": 4,
+    "sourceFramesSha256": "75dc54647d190bfcebe0e9bc733c7062472030a711b008bba3c9f5b1af3dbfb8"
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 720,
+    "codedWidth": 1280,
+    "displayHeight": 720,
+    "displayWidth": 1280,
+    "duration": {
+      "timescale": 1,
+      "value": 8
+    },
+    "fourCC": "avc1",
+    "frameCount": 480,
+    "frameRate": {
+      "den": 1,
+      "num": 60
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true,
+    "variableFrameRate": false
+  }
+}
