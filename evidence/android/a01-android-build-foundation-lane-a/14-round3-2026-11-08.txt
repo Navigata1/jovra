@@ -49,3 +49,13 @@ native-data-export SUCCESS
 
 ## 4. Disk
 /dev/disk3s5   926Gi   804Gi    87Gi    91%    9.8M  912M    1%   /System/Volumes/Data
+
+## 5. CI on d749e45 (this round's first push): android-core failed 4 times before any task ran (infrastructure, not code)
+Run https://github.com/Navigata1/jovra/actions/runs/42464849939 (attempts 1-4). The wrapper could not download the distribution:
+  attempt 1: java.io.IOException: Server returned HTTP response code: 504 for URL: https://services.gradle.org/distributions/gradle-9.3.1-bin.zip
+  attempts 2-4: Downloading from https://services.gradle.org/distributions/gradle-9.3.1-bin.zip failed: timeout (10000ms)
+                (java.net.SocketTimeoutException: Read timed out)
+The other six checks on d749e45 passed. From this Mac the same URL returned 200 (137037885 bytes in 4.4 s) at the same time.
+Fix: android/gradle/wrapper/gradle-wrapper.properties networkTimeout 10000 -> 60000 (the wrapper's read timeout only;
+distributionUrl and distributionSha256Sum are unchanged, so the pinned Gradle 9.3.1 and its checksum check are unchanged).
+Local check after the change: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test checkModuleBoundaries -> BUILD SUCCESSFUL.
