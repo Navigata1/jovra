@@ -1,0 +1,110 @@
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[0/1] Planning build
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/11] Write sources
+[2/11] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Emitting module JovraCore
+[5/8] Compiling JovraCore SessionStore.swift
+[6/8] Compiling JovraCore SessionTrash.swift
+[7/9] Compiling JovraCore ReviewedPointStore.swift
+[8/49] Compiling JovraCoreTests PctRunner.swift
+[9/49] Compiling JovraCoreTests PracticePlanRunner.swift
+[10/51] Compiling JovraCoreTests PercentTests.swift
+[11/51] Compiling JovraCoreTests RegistryContractTests.swift
+[12/51] Compiling JovraCoreTests ArchiveRunner.swift
+[13/51] Emitting module JovraCoreTests
+[14/51] Compiling JovraCoreTests FixtureManifest.swift
+[15/51] Compiling JovraCoreTests ManifestTests.swift
+[16/51] Compiling JovraCoreTests MediaRecordContractTests.swift
+[17/51] Compiling JovraCoreTests CaptureHandoffTests.swift
+[18/51] Compiling JovraCoreTests DirectoryCreationDurabilityTests.swift
+[19/51] Compiling JovraCoreTests SessionContractTests.swift
+[20/51] Compiling JovraCoreTests UnitsTests.swift
+[21/51] Compiling JovraCoreTests ExportRunner.swift
+[22/51] Compiling JovraCoreTests GroundTruthRunner.swift
+[23/51] Compiling JovraCoreTests DataExporterTests.swift
+[24/51] Compiling JovraCoreTests FrameRateTests.swift
+[25/51] Compiling JovraCoreTests ContrastTests.swift
+[26/51] Compiling JovraCoreTests DurationLabelTests.swift
+[27/51] Compiling JovraCoreTests ScoringRunner.swift
+[28/51] Compiling JovraCoreTests SessionRunner.swift
+[29/51] Compiling JovraCoreTests StatsRunner.swift
+[30/51] Compiling JovraCoreTests UnitsRunner.swift
+[31/51] Compiling JovraCoreTests ScoringContractTests.swift
+[32/51] Compiling JovraCoreTests ScoringTests.swift
+[33/51] Compiling JovraCoreTests SampleMediaRunner.swift
+[34/51] Compiling JovraCoreTests SampleRunner.swift
+[35/51] Compiling JovraCoreTests CaptureJournalTests.swift
+[36/51] Compiling JovraCoreTests CanonicalJSONTests.swift
+[37/51] Compiling JovraCoreTests ContractSafetyTests.swift
+[38/51] Compiling JovraCoreTests ProvenanceTests.swift
+[39/51] Compiling JovraCoreTests ReviewedPointStoreTests.swift
+[40/51] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[41/51] Compiling JovraCoreTests BenchmarkRunner.swift
+[42/51] Compiling JovraCoreTests CSVContractRunner.swift
+[43/51] Compiling JovraCoreTests CanonicalRunner.swift
+[44/51] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[45/51] Compiling JovraCoreTests EquipmentRunner.swift
+[46/51] Compiling JovraCoreTests RecoveredCaptureTests.swift
+[47/51] Compiling JovraCoreTests SessionTrashTests.swift
+[48/51] Compiling JovraCoreTests SessionStoreTests.swift
+[49/51] Compiling JovraCoreTests StatsTests.swift
+[50/53] Compiling JovraCorePackageTests runner.swift
+[51/53] Emitting module JovraCorePackageTests
+[51/53] Write Objects.LinkFileList
+[52/53] Linking JovraCorePackageTests
+Build complete! (6.35s)
+Test Suite 'Selected tests' started at 2026-10-11 23:21:02.371.
+Test Suite 'JovraCorePackageTests.xctest' started at 2026-10-11 23:21:02.372.
+Test Suite 'SessionStoreTests' started at 2026-10-11 23:21:02.372.
+Test Case '-[JovraCoreTests.SessionStoreTests testAppendBatchSurvivesInterruptionAsNoneOrAllAndConcurrentFacetsDoNotLoseEvents]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testAppendBatchSurvivesInterruptionAsNoneOrAllAndConcurrentFacetsDoNotLoseEvents]' passed (211.509 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testCreateSurvivesStoreRelaunchAndInterruptedWriteKeepsPreviousDocument]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testCreateSurvivesStoreRelaunchAndInterruptedWriteKeepsPreviousDocument]' passed (0.176 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' passed (0.132 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFiltersAndOpponentQueriesDistinguishTeamsAndExcludeSamples]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFiltersAndOpponentQueriesDistinguishTeamsAndExcludeSamples]' passed (0.189 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession]' passed (0.165 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureMutationRefusalLeavesDocumentBytesUnchanged]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureMutationRefusalLeavesDocumentBytesUnchanged]' passed (0.085 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testIndexRebuildAndCorruptSessionQuarantinePreserveHealthySessions]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testIndexRebuildAndCorruptSessionQuarantinePreserveHealthySessions]' passed (0.348 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testNewOriginalFacetUpgradesLegacyDocumentWithoutChangingMatch]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testNewOriginalFacetUpgradesLegacyDocumentWithoutChangingMatch]' passed (0.134 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testOlderDocumentMigratesAndOpponentQueriesExcludeSamples]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testOlderDocumentMigratesAndOpponentQueriesExcludeSamples]' passed (0.427 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testPointWithoutDetectedOrReviewedOutcomeIsRefused]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testPointWithoutDetectedOrReviewedOutcomeIsRefused]' passed (0.047 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testSymlinkEscapeIsRefusedWithoutHidingHealthySessionOrTouchingExternalMedia]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testSymlinkEscapeIsRefusedWithoutHidingHealthySessionOrTouchingExternalMedia]' passed (0.123 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testZeroNegativeAndDuplicateSequenceRefusalLeavesLogUnchanged]' started.
+Test Case '-[JovraCoreTests.SessionStoreTests testZeroNegativeAndDuplicateSequenceRefusalLeavesLogUnchanged]' passed (0.061 seconds).
+Test Suite 'SessionStoreTests' passed at 2026-10-11 23:24:35.769.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 213.396 (213.397) seconds
+Test Suite 'JovraCorePackageTests.xctest' passed at 2026-10-11 23:24:35.769.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 213.396 (213.397) seconds
+Test Suite 'Selected tests' passed at 2026-10-11 23:24:35.769.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 213.396 (213.398) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test trashHidesSessionFromLibraryAndRestoreRoundTripsTheDocument() started.
+◇ Test restoringASessionInvalidatesItsPurgeToken() started.
+◇ Test crashBetweenTempWriteAndRenameKeepsPreviousDocumentAndIgnoresTheTempFile() started.
+◇ Test purgeIsRefusedWithoutAStoreIssuedConfirmationToken() started.
+◇ Test interruptedTrashLeavesSessionInTheLibrary() started.
+◇ Test restoreSurvivesRelaunchBetweenTrashAndUndo() started.
+◇ Test trashNeverAutoEmptiesOriginalsUnlessTheRetentionFlagIsSet() started.
+✔ Test interruptedTrashLeavesSessionInTheLibrary() passed after 0.306 seconds.
+✔ Test restoreSurvivesRelaunchBetweenTrashAndUndo() passed after 0.330 seconds.
+✔ Test crashBetweenTempWriteAndRenameKeepsPreviousDocumentAndIgnoresTheTempFile() passed after 0.355 seconds.
+✔ Test restoringASessionInvalidatesItsPurgeToken() passed after 0.463 seconds.
+✔ Test purgeIsRefusedWithoutAStoreIssuedConfirmationToken() passed after 0.599 seconds.
+✔ Test trashNeverAutoEmptiesOriginalsUnlessTheRetentionFlagIsSet() passed after 0.799 seconds.
+✔ Test trashHidesSessionFromLibraryAndRestoreRoundTripsTheDocument() passed after 0.848 seconds.
+✔ Test run with 7 tests in 0 suites passed after 0.848 seconds.

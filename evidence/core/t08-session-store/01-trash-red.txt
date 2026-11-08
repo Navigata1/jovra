@@ -1,0 +1,762 @@
+[0/6] Write sources
+[1/6] Write FixtureRunnerGenerator-tool-entitlement.plist
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling FixtureRunnerGenerator main.swift
+[5/8] Emitting module FixtureRunnerGenerator
+[5/8] Write Objects.LinkFileList
+[6/8] Linking FixtureRunnerGenerator-tool
+[7/8] Applying FixtureRunnerGenerator-tool
+warning: 'jovracore': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+[1/1] Compiling plugin FixtureDiscoveryPlugin
+Building for debugging...
+[1/21] /Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/.build/arm64-apple-macosx/debug/JovraCorePackageTests.derived/runner.swift
+[2/21] Write sources
+[3/21] Copying points.v1.json
+[3/21] Write FixtureRunnerGenerator-tool-entitlement.plist
+[4/21] Write sources
+[6/21] Write FixtureRunnerGenerator-entitlement.plist
+[6/21] Write sources
+[8/21] Copying stats.v1.json
+[9/21] Write sources
+[10/21] Write swift-version--58304C5D6DBC2206.txt
+[11/23] Write Objects.LinkFileList
+[12/54] Linking FixtureRunnerGenerator-tool
+[14/54] Compiling FixtureRunnerGenerator main.swift
+[15/54] Emitting module FixtureRunnerGenerator
+[15/54] Write Objects.LinkFileList
+[16/54] Applying FixtureRunnerGenerator-tool
+[17/54] Linking FixtureRunnerGenerator
+[18/54] Applying FixtureRunnerGenerator
+[19/54] Discover conformance runners by kind
+[20/54] Write sources
+[22/54] Compiling JovraCore StatsEngine.swift
+[23/55] Compiling JovraCore ScoringEngine.swift
+[24/55] Compiling JovraCore ScoringInput.swift
+[25/55] Compiling JovraCore Units.swift
+[26/55] Compiling JovraCore SessionStore.swift
+[27/55] Compiling JovraCore DerivedStat.swift
+[28/55] Compiling JovraCore resource_bundle_accessor.swift
+[29/55] Compiling JovraCore LogResolver.swift
+[30/55] Compiling JovraCore MatchState.swift
+[31/55] Compiling JovraCore StatsModels.swift
+[32/55] Compiling JovraCore DurableDirectory.swift
+[33/55] Compiling JovraCore FrameRate.swift
+[34/55] Compiling JovraCore TimelineDiff.swift
+[35/55] Compiling JovraCore TimelineModels.swift
+[36/55] Emitting module JovraCore
+[37/55] Compiling JovraCore CanonicalJSON.swift
+[38/55] Compiling JovraCore ContractPrimitives.swift
+[39/55] Compiling JovraCore CapabilityRegistryLoader.swift
+[40/55] Compiling JovraCore CaptureJournal.swift
+[41/55] Compiling JovraCore OrderOverrides.swift
+[42/55] Compiling JovraCore OutcomeInterpreter.swift
+[43/55] Compiling JovraCore Percent.swift
+[44/55] Compiling JovraCore Provenance.swift
+[45/55] Compiling JovraCore DurationLabel.swift
+[46/55] Compiling JovraCore DataExporter.swift
+[47/55] Compiling JovraCore ReviewedPointStore.swift
+[48/55] Compiling JovraCore SRGBColor.swift
+[49/55] Compiling JovraCore ExportStats.swift
+[50/55] Compiling JovraCore PointCSV.swift
+[51/55] Compiling JovraCore StatsMomentumPair.swift
+[52/55] Compiling JovraCore DocumentModels.swift
+[53/55] Compiling JovraCore ContrastRequirement.swift
+[54/96] Compiling JovraCoreTests UnitsRunner.swift
+[55/96] Compiling JovraCoreTests SessionContractTests.swift
+[56/98] Compiling JovraCoreTests DirectoryCreationDurabilityTests.swift
+[57/98] Compiling JovraCoreTests RecoveredCaptureTests.swift
+[58/98] Compiling JovraCoreTests BenchmarkBindingsRunner.swift
+[59/98] Compiling JovraCoreTests BenchmarkRunner.swift
+[60/98] Compiling JovraCoreTests CSVContractRunner.swift
+[61/98] Compiling JovraCoreTests CanonicalRunner.swift
+[62/98] Compiling JovraCoreTests CapabilityRegistryRunner.swift
+[63/98] Compiling JovraCoreTests EquipmentRunner.swift
+[64/98] Compiling JovraCoreTests PercentTests.swift
+[65/98] Compiling JovraCoreTests RegistryContractTests.swift
+[66/98] Compiling JovraCoreTests ArchiveRunner.swift
+[67/98] Compiling JovraCoreTests FixtureManifest.swift
+[68/98] Compiling JovraCoreTests ManifestTests.swift
+[69/98] Compiling JovraCoreTests MediaRecordContractTests.swift
+[70/98] Compiling JovraCoreTests SampleRunner.swift
+[71/98] Compiling JovraCoreTests ScoringRunner.swift
+[72/98] Compiling JovraCoreTests ScoringTests.swift
+[73/98] Compiling JovraCoreTests CaptureHandoffTests.swift
+[74/98] Compiling JovraCoreTests ExportRunner.swift
+[75/98] Compiling JovraCoreTests GroundTruthRunner.swift
+[76/98] Compiling JovraCoreTests PctRunner.swift
+[77/98] Compiling JovraCoreTests PracticePlanRunner.swift
+[78/98] Compiling JovraCoreTests SampleMediaRunner.swift
+[79/98] Compiling JovraCoreTests SessionTrashTests.swift
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:36:21: error: value of type 'SessionStore' has no member 'trash'
+ 34 |     try original.write(to: media.appendingPathComponent("segment-0.mov"))
+ 35 | 
+ 36 |     try await store.trash("binned", at: day("2026-10-05T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+ 37 | 
+ 38 |     let trashed = try await store.load("binned")
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:43:56: error: extra argument 'includeTrashed' in call
+ 41 |     #expect(try await store.list().map(\.id) == ["kept"])
+ 42 |     #expect(try await store.list(.init(original: .trashed)).map(\.id) == ["binned"])
+ 43 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id).sorted() == ["binned", "kept"])
+    |                                                        `- error: extra argument 'includeTrashed' in call
+ 44 |     #expect(try Data(contentsOf: media.appendingPathComponent("segment-0.mov")) == original)
+ 45 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:46:21: error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 44 |     #expect(try Data(contentsOf: media.appendingPathComponent("segment-0.mov")) == original)
+ 45 | 
+ 46 |     try await store.restoreFromTrash("binned")
+    |                     `- error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 47 | 
+ 48 |     #expect(try await store.load("binned") == binned)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:50:45: error: type 'SessionStoreError' has no member 'notInTrash'
+ 48 |     #expect(try await store.load("binned") == binned)
+ 49 |     #expect(try await store.list().map(\.id).sorted() == ["binned", "kept"])
+ 50 |     await #expect(throws: SessionStoreError.notInTrash) { try await store.restoreFromTrash("binned") }
+    |                                             `- error: type 'SessionStoreError' has no member 'notInTrash'
+ 51 | }
+ 52 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:50:75: error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 48 |     #expect(try await store.load("binned") == binned)
+ 49 |     #expect(try await store.list().map(\.id).sorted() == ["binned", "kept"])
+ 50 |     await #expect(throws: SessionStoreError.notInTrash) { try await store.restoreFromTrash("binned") }
+    |                                                                           `- error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 51 | }
+ 52 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:50:5: warning: no 'async' operations occur within 'await' expression
+ 48 |     #expect(try await store.load("binned") == binned)
+ 49 |     #expect(try await store.list().map(\.id).sorted() == ["binned", "kept"])
+ 50 |     await #expect(throws: SessionStoreError.notInTrash) { try await store.restoreFromTrash("binned") }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 51 | }
+ 52 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:57:40: error: value of type 'SessionStore' has no member 'trash'
+ 55 |     let document = try fixture(id: "relaunch", original: .init(state: .partial, reason: "Recording contains unconfirmed media"))
+ 56 |     try await SessionStore(root: root).create(document)
+ 57 |     try await SessionStore(root: root).trash("relaunch", at: day("2026-10-05T12:00:00Z"))
+    |                                        `- error: value of type 'SessionStore' has no member 'trash'
+ 58 |     let relaunched = try SessionStore(root: root)
+ 59 |     try await relaunched.restoreFromTrash("relaunch")
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:59:26: error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 57 |     try await SessionStore(root: root).trash("relaunch", at: day("2026-10-05T12:00:00Z"))
+ 58 |     let relaunched = try SessionStore(root: root)
+ 59 |     try await relaunched.restoreFromTrash("relaunch")
+    |                          `- error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 60 |     #expect(try await relaunched.load("relaunch") == document)
+ 61 | }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:70:65: error: value of type 'SessionStore' has no member 'trash'
+ 68 |         if case .temporaryFileFlushed(let url) = checkpoint, url.lastPathComponent.hasPrefix(".session-") { throw CocoaError(.fileWriteUnknown) }
+ 69 |     })
+ 70 |     await #expect(throws: CocoaError.self) { try await crashing.trash("interrupted", at: day("2026-10-05T12:00:00Z")) }
+    |                                                                 `- error: value of type 'SessionStore' has no member 'trash'
+ 71 |     let store = try SessionStore(root: root)
+ 72 |     #expect(try await store.load("interrupted") == document)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:70:5: warning: no 'async' operations occur within 'await' expression
+ 68 |         if case .temporaryFileFlushed(let url) = checkpoint, url.lastPathComponent.hasPrefix(".session-") { throw CocoaError(.fileWriteUnknown) }
+ 69 |     })
+ 70 |     await #expect(throws: CocoaError.self) { try await crashing.trash("interrupted", at: day("2026-10-05T12:00:00Z")) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 71 |     let store = try SessionStore(root: root)
+ 72 |     #expect(try await store.load("interrupted") == document)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:82:45: error: type 'SessionStoreError' has no member 'notInTrash'
+ 80 |     let folder = root.appendingPathComponent("sessions/doomed", isDirectory: true)
+ 81 | 
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+    |                                             `- error: type 'SessionStoreError' has no member 'notInTrash'
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:82:79: error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 80 |     let folder = root.appendingPathComponent("sessions/doomed", isDirectory: true)
+ 81 | 
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+    |                                                                               `- error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:83:21: error: value of type 'SessionStore' has no member 'trash'
+ 81 | 
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+ 85 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:84:21: error: value of type 'SessionStore' has no member 'trash'
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:86:85: error: value of type 'SessionStore' has no member 'purge'
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+    |                                                                                     `- error: value of type 'SessionStore' has no member 'purge'
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:86:115: error: 'nil' requires a contextual type
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+    |                                                                                                                   `- error: 'nil' requires a contextual type
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:87:38: error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+    |                                      `- error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+ 89 |     #expect(FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:88:85: error: value of type 'SessionStore' has no member 'purge'
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+    |                                                                                     `- error: value of type 'SessionStore' has no member 'purge'
+ 89 |     #expect(FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path))
+ 90 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:91:33: error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 89 |     #expect(FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path))
+ 90 | 
+ 91 |     let token = try await store.purgeConfirmation(for: "doomed")
+    |                                 `- error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 92 |     try await store.purge("doomed", confirmation: token)
+ 93 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:92:21: error: value of type 'SessionStore' has no member 'purge'
+ 90 | 
+ 91 |     let token = try await store.purgeConfirmation(for: "doomed")
+ 92 |     try await store.purge("doomed", confirmation: token)
+    |                     `- error: value of type 'SessionStore' has no member 'purge'
+ 93 | 
+ 94 |     #expect(!FileManager.default.fileExists(atPath: folder.path))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:96:56: error: extra argument 'includeTrashed' in call
+ 94 |     #expect(!FileManager.default.fileExists(atPath: folder.path))
+ 95 |     await #expect(throws: SessionStoreError.notFound) { _ = try await store.load("doomed") }
+ 96 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id) == ["other"])
+    |                                                        `- error: extra argument 'includeTrashed' in call
+ 97 |     #expect(try await store.quarantinedSessions().isEmpty)
+ 98 |     await #expect(throws: SessionStoreError.self) { try await store.purge("doomed", confirmation: token) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:98:69: error: value of type 'SessionStore' has no member 'purge'
+ 96 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id) == ["other"])
+ 97 |     #expect(try await store.quarantinedSessions().isEmpty)
+ 98 |     await #expect(throws: SessionStoreError.self) { try await store.purge("doomed", confirmation: token) }
+    |                                                                     `- error: value of type 'SessionStore' has no member 'purge'
+ 99 | }
+100 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:82:5: warning: no 'async' operations occur within 'await' expression
+ 80 |     let folder = root.appendingPathComponent("sessions/doomed", isDirectory: true)
+ 81 | 
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:86:5: warning: no 'async' operations occur within 'await' expression
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:88:5: warning: no 'async' operations occur within 'await' expression
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 89 |     #expect(FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path))
+ 90 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:98:5: warning: no 'async' operations occur within 'await' expression
+ 96 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id) == ["other"])
+ 97 |     #expect(try await store.quarantinedSessions().isEmpty)
+ 98 |     await #expect(throws: SessionStoreError.self) { try await store.purge("doomed", confirmation: token) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 99 | }
+100 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:105:21: error: value of type 'SessionStore' has no member 'trash'
+103 |     let store = try SessionStore(root: root)
+104 |     try await store.create(try fixture(id: "undone"))
+105 |     try await store.trash("undone", at: day("2026-10-05T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+106 |     let token = try await store.purgeConfirmation(for: "undone")
+107 |     try await store.restoreFromTrash("undone")
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:106:33: error: value of type 'SessionStore' has no member 'purgeConfirmation'
+104 |     try await store.create(try fixture(id: "undone"))
+105 |     try await store.trash("undone", at: day("2026-10-05T12:00:00Z"))
+106 |     let token = try await store.purgeConfirmation(for: "undone")
+    |                                 `- error: value of type 'SessionStore' has no member 'purgeConfirmation'
+107 |     try await store.restoreFromTrash("undone")
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:107:21: error: value of type 'SessionStore' has no member 'restoreFromTrash'
+105 |     try await store.trash("undone", at: day("2026-10-05T12:00:00Z"))
+106 |     let token = try await store.purgeConfirmation(for: "undone")
+107 |     try await store.restoreFromTrash("undone")
+    |                     `- error: value of type 'SessionStore' has no member 'restoreFromTrash'
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+109 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("undone", confirmation: token) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:108:21: error: value of type 'SessionStore' has no member 'trash'
+106 |     let token = try await store.purgeConfirmation(for: "undone")
+107 |     try await store.restoreFromTrash("undone")
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+109 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("undone", confirmation: token) }
+110 |     #expect(try await store.load("undone").original?.state == .trashed)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:109:85: error: value of type 'SessionStore' has no member 'purge'
+107 |     try await store.restoreFromTrash("undone")
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+109 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("undone", confirmation: token) }
+    |                                                                                     `- error: value of type 'SessionStore' has no member 'purge'
+110 |     #expect(try await store.load("undone").original?.state == .trashed)
+111 | }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:109:5: warning: no 'async' operations occur within 'await' expression
+107 |     try await store.restoreFromTrash("undone")
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+109 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("undone", confirmation: token) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+110 |     #expect(try await store.load("undone").original?.state == .trashed)
+111 | }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:120:21: error: value of type 'SessionStore' has no member 'trash'
+118 |     try FileManager.default.createDirectory(at: original.deletingLastPathComponent(), withIntermediateDirectories: true)
+119 |     try Data("irreplaceable".utf8).write(to: original)
+120 |     try await store.trash("old-trash", at: day("2025-01-01T00:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+121 |     try await store.trash("recent-trash", at: day("2026-10-01T00:00:00Z"))
+122 |     let now = day("2026-10-11T00:00:00Z")
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:121:21: error: value of type 'SessionStore' has no member 'trash'
+119 |     try Data("irreplaceable".utf8).write(to: original)
+120 |     try await store.trash("old-trash", at: day("2025-01-01T00:00:00Z"))
+121 |     try await store.trash("recent-trash", at: day("2026-10-01T00:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+122 |     let now = day("2026-10-11T00:00:00Z")
+123 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:124:13: error: cannot find 'TrashRetention' in scope
+122 |     let now = day("2026-10-11T00:00:00Z")
+123 | 
+124 |     #expect(TrashRetention.default.autoEmpty == false)
+    |             `- error: cannot find 'TrashRetention' in scope
+125 |     #expect(try await store.emptyTrash(retention: .default, now: now).isEmpty)
+126 |     #expect(try Data(contentsOf: original) == Data("irreplaceable".utf8))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:125:29: error: value of type 'SessionStore' has no member 'emptyTrash'
+123 | 
+124 |     #expect(TrashRetention.default.autoEmpty == false)
+125 |     #expect(try await store.emptyTrash(retention: .default, now: now).isEmpty)
+    |                             `- error: value of type 'SessionStore' has no member 'emptyTrash'
+126 |     #expect(try Data(contentsOf: original) == Data("irreplaceable".utf8))
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:125:52: error: cannot infer contextual base in reference to member 'default'
+123 | 
+124 |     #expect(TrashRetention.default.autoEmpty == false)
+125 |     #expect(try await store.emptyTrash(retention: .default, now: now).isEmpty)
+    |                                                    `- error: cannot infer contextual base in reference to member 'default'
+126 |     #expect(try Data(contentsOf: original) == Data("irreplaceable".utf8))
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:127:56: error: extra argument 'includeTrashed' in call
+125 |     #expect(try await store.emptyTrash(retention: .default, now: now).isEmpty)
+126 |     #expect(try Data(contentsOf: original) == Data("irreplaceable".utf8))
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+    |                                                        `- error: extra argument 'includeTrashed' in call
+128 | 
+129 |     let purged = try await store.emptyTrash(retention: .init(autoEmpty: true, afterDays: 30), now: now)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:129:34: error: value of type 'SessionStore' has no member 'emptyTrash'
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+128 | 
+129 |     let purged = try await store.emptyTrash(retention: .init(autoEmpty: true, afterDays: 30), now: now)
+    |                                  `- error: value of type 'SessionStore' has no member 'emptyTrash'
+130 | 
+131 |     #expect(purged == ["old-trash"])
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:129:57: error: cannot infer contextual base in reference to member 'init'
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+128 | 
+129 |     let purged = try await store.emptyTrash(retention: .init(autoEmpty: true, afterDays: 30), now: now)
+    |                                                         `- error: cannot infer contextual base in reference to member 'init'
+130 | 
+131 |     #expect(purged == ["old-trash"])
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:133:56: error: extra argument 'includeTrashed' in call
+131 |     #expect(purged == ["old-trash"])
+132 |     #expect(!FileManager.default.fileExists(atPath: original.path))
+133 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id).sorted() == ["old-live", "recent-trash"])
+    |                                                        `- error: extra argument 'includeTrashed' in call
+134 | }
+135 | 
+[80/98] Compiling JovraCoreTests SessionStoreTests.swift
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:36:21: error: value of type 'SessionStore' has no member 'trash'
+ 34 |     try original.write(to: media.appendingPathComponent("segment-0.mov"))
+ 35 | 
+ 36 |     try await store.trash("binned", at: day("2026-10-05T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+ 37 | 
+ 38 |     let trashed = try await store.load("binned")
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:43:56: error: extra argument 'includeTrashed' in call
+ 41 |     #expect(try await store.list().map(\.id) == ["kept"])
+ 42 |     #expect(try await store.list(.init(original: .trashed)).map(\.id) == ["binned"])
+ 43 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id).sorted() == ["binned", "kept"])
+    |                                                        `- error: extra argument 'includeTrashed' in call
+ 44 |     #expect(try Data(contentsOf: media.appendingPathComponent("segment-0.mov")) == original)
+ 45 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:46:21: error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 44 |     #expect(try Data(contentsOf: media.appendingPathComponent("segment-0.mov")) == original)
+ 45 | 
+ 46 |     try await store.restoreFromTrash("binned")
+    |                     `- error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 47 | 
+ 48 |     #expect(try await store.load("binned") == binned)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:50:45: error: type 'SessionStoreError' has no member 'notInTrash'
+ 48 |     #expect(try await store.load("binned") == binned)
+ 49 |     #expect(try await store.list().map(\.id).sorted() == ["binned", "kept"])
+ 50 |     await #expect(throws: SessionStoreError.notInTrash) { try await store.restoreFromTrash("binned") }
+    |                                             `- error: type 'SessionStoreError' has no member 'notInTrash'
+ 51 | }
+ 52 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:50:75: error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 48 |     #expect(try await store.load("binned") == binned)
+ 49 |     #expect(try await store.list().map(\.id).sorted() == ["binned", "kept"])
+ 50 |     await #expect(throws: SessionStoreError.notInTrash) { try await store.restoreFromTrash("binned") }
+    |                                                                           `- error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 51 | }
+ 52 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:50:5: warning: no 'async' operations occur within 'await' expression
+ 48 |     #expect(try await store.load("binned") == binned)
+ 49 |     #expect(try await store.list().map(\.id).sorted() == ["binned", "kept"])
+ 50 |     await #expect(throws: SessionStoreError.notInTrash) { try await store.restoreFromTrash("binned") }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 51 | }
+ 52 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:57:40: error: value of type 'SessionStore' has no member 'trash'
+ 55 |     let document = try fixture(id: "relaunch", original: .init(state: .partial, reason: "Recording contains unconfirmed media"))
+ 56 |     try await SessionStore(root: root).create(document)
+ 57 |     try await SessionStore(root: root).trash("relaunch", at: day("2026-10-05T12:00:00Z"))
+    |                                        `- error: value of type 'SessionStore' has no member 'trash'
+ 58 |     let relaunched = try SessionStore(root: root)
+ 59 |     try await relaunched.restoreFromTrash("relaunch")
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:59:26: error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 57 |     try await SessionStore(root: root).trash("relaunch", at: day("2026-10-05T12:00:00Z"))
+ 58 |     let relaunched = try SessionStore(root: root)
+ 59 |     try await relaunched.restoreFromTrash("relaunch")
+    |                          `- error: value of type 'SessionStore' has no member 'restoreFromTrash'
+ 60 |     #expect(try await relaunched.load("relaunch") == document)
+ 61 | }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:70:65: error: value of type 'SessionStore' has no member 'trash'
+ 68 |         if case .temporaryFileFlushed(let url) = checkpoint, url.lastPathComponent.hasPrefix(".session-") { throw CocoaError(.fileWriteUnknown) }
+ 69 |     })
+ 70 |     await #expect(throws: CocoaError.self) { try await crashing.trash("interrupted", at: day("2026-10-05T12:00:00Z")) }
+    |                                                                 `- error: value of type 'SessionStore' has no member 'trash'
+ 71 |     let store = try SessionStore(root: root)
+ 72 |     #expect(try await store.load("interrupted") == document)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:70:5: warning: no 'async' operations occur within 'await' expression
+ 68 |         if case .temporaryFileFlushed(let url) = checkpoint, url.lastPathComponent.hasPrefix(".session-") { throw CocoaError(.fileWriteUnknown) }
+ 69 |     })
+ 70 |     await #expect(throws: CocoaError.self) { try await crashing.trash("interrupted", at: day("2026-10-05T12:00:00Z")) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 71 |     let store = try SessionStore(root: root)
+ 72 |     #expect(try await store.load("interrupted") == document)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:82:45: error: type 'SessionStoreError' has no member 'notInTrash'
+ 80 |     let folder = root.appendingPathComponent("sessions/doomed", isDirectory: true)
+ 81 | 
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+    |                                             `- error: type 'SessionStoreError' has no member 'notInTrash'
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:82:79: error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 80 |     let folder = root.appendingPathComponent("sessions/doomed", isDirectory: true)
+ 81 | 
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+    |                                                                               `- error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:83:21: error: value of type 'SessionStore' has no member 'trash'
+ 81 | 
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+ 85 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:84:21: error: value of type 'SessionStore' has no member 'trash'
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:86:85: error: value of type 'SessionStore' has no member 'purge'
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+    |                                                                                     `- error: value of type 'SessionStore' has no member 'purge'
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:86:115: error: 'nil' requires a contextual type
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+    |                                                                                                                   `- error: 'nil' requires a contextual type
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:87:38: error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+    |                                      `- error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+ 89 |     #expect(FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:88:85: error: value of type 'SessionStore' has no member 'purge'
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+    |                                                                                     `- error: value of type 'SessionStore' has no member 'purge'
+ 89 |     #expect(FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path))
+ 90 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:91:33: error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 89 |     #expect(FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path))
+ 90 | 
+ 91 |     let token = try await store.purgeConfirmation(for: "doomed")
+    |                                 `- error: value of type 'SessionStore' has no member 'purgeConfirmation'
+ 92 |     try await store.purge("doomed", confirmation: token)
+ 93 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:92:21: error: value of type 'SessionStore' has no member 'purge'
+ 90 | 
+ 91 |     let token = try await store.purgeConfirmation(for: "doomed")
+ 92 |     try await store.purge("doomed", confirmation: token)
+    |                     `- error: value of type 'SessionStore' has no member 'purge'
+ 93 | 
+ 94 |     #expect(!FileManager.default.fileExists(atPath: folder.path))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:96:56: error: extra argument 'includeTrashed' in call
+ 94 |     #expect(!FileManager.default.fileExists(atPath: folder.path))
+ 95 |     await #expect(throws: SessionStoreError.notFound) { _ = try await store.load("doomed") }
+ 96 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id) == ["other"])
+    |                                                        `- error: extra argument 'includeTrashed' in call
+ 97 |     #expect(try await store.quarantinedSessions().isEmpty)
+ 98 |     await #expect(throws: SessionStoreError.self) { try await store.purge("doomed", confirmation: token) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:98:69: error: value of type 'SessionStore' has no member 'purge'
+ 96 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id) == ["other"])
+ 97 |     #expect(try await store.quarantinedSessions().isEmpty)
+ 98 |     await #expect(throws: SessionStoreError.self) { try await store.purge("doomed", confirmation: token) }
+    |                                                                     `- error: value of type 'SessionStore' has no member 'purge'
+ 99 | }
+100 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:82:5: warning: no 'async' operations occur within 'await' expression
+ 80 |     let folder = root.appendingPathComponent("sessions/doomed", isDirectory: true)
+ 81 | 
+ 82 |     await #expect(throws: SessionStoreError.notInTrash) { _ = try await store.purgeConfirmation(for: "doomed") }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 83 |     try await store.trash("doomed", at: day("2026-10-05T12:00:00Z"))
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:86:5: warning: no 'async' operations occur within 'await' expression
+ 84 |     try await store.trash("other", at: day("2026-10-05T12:00:00Z"))
+ 85 | 
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:88:5: warning: no 'async' operations occur within 'await' expression
+ 86 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: nil) }
+ 87 |     let otherToken = try await store.purgeConfirmation(for: "other")
+ 88 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("doomed", confirmation: otherToken) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 89 |     #expect(FileManager.default.fileExists(atPath: folder.appendingPathComponent("session.json").path))
+ 90 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:98:5: warning: no 'async' operations occur within 'await' expression
+ 96 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id) == ["other"])
+ 97 |     #expect(try await store.quarantinedSessions().isEmpty)
+ 98 |     await #expect(throws: SessionStoreError.self) { try await store.purge("doomed", confirmation: token) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+ 99 | }
+100 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:105:21: error: value of type 'SessionStore' has no member 'trash'
+103 |     let store = try SessionStore(root: root)
+104 |     try await store.create(try fixture(id: "undone"))
+105 |     try await store.trash("undone", at: day("2026-10-05T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+106 |     let token = try await store.purgeConfirmation(for: "undone")
+107 |     try await store.restoreFromTrash("undone")
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:106:33: error: value of type 'SessionStore' has no member 'purgeConfirmation'
+104 |     try await store.create(try fixture(id: "undone"))
+105 |     try await store.trash("undone", at: day("2026-10-05T12:00:00Z"))
+106 |     let token = try await store.purgeConfirmation(for: "undone")
+    |                                 `- error: value of type 'SessionStore' has no member 'purgeConfirmation'
+107 |     try await store.restoreFromTrash("undone")
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:107:21: error: value of type 'SessionStore' has no member 'restoreFromTrash'
+105 |     try await store.trash("undone", at: day("2026-10-05T12:00:00Z"))
+106 |     let token = try await store.purgeConfirmation(for: "undone")
+107 |     try await store.restoreFromTrash("undone")
+    |                     `- error: value of type 'SessionStore' has no member 'restoreFromTrash'
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+109 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("undone", confirmation: token) }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:108:21: error: value of type 'SessionStore' has no member 'trash'
+106 |     let token = try await store.purgeConfirmation(for: "undone")
+107 |     try await store.restoreFromTrash("undone")
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+109 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("undone", confirmation: token) }
+110 |     #expect(try await store.load("undone").original?.state == .trashed)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:109:85: error: value of type 'SessionStore' has no member 'purge'
+107 |     try await store.restoreFromTrash("undone")
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+109 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("undone", confirmation: token) }
+    |                                                                                     `- error: value of type 'SessionStore' has no member 'purge'
+110 |     #expect(try await store.load("undone").original?.state == .trashed)
+111 | }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:109:5: warning: no 'async' operations occur within 'await' expression
+107 |     try await store.restoreFromTrash("undone")
+108 |     try await store.trash("undone", at: day("2026-10-06T12:00:00Z"))
+109 |     await #expect(throws: SessionStoreError.confirmationRequired) { try await store.purge("undone", confirmation: token) }
+    |     `- warning: no 'async' operations occur within 'await' expression
+110 |     #expect(try await store.load("undone").original?.state == .trashed)
+111 | }
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:120:21: error: value of type 'SessionStore' has no member 'trash'
+118 |     try FileManager.default.createDirectory(at: original.deletingLastPathComponent(), withIntermediateDirectories: true)
+119 |     try Data("irreplaceable".utf8).write(to: original)
+120 |     try await store.trash("old-trash", at: day("2025-01-01T00:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+121 |     try await store.trash("recent-trash", at: day("2026-10-01T00:00:00Z"))
+122 |     let now = day("2026-10-11T00:00:00Z")
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:121:21: error: value of type 'SessionStore' has no member 'trash'
+119 |     try Data("irreplaceable".utf8).write(to: original)
+120 |     try await store.trash("old-trash", at: day("2025-01-01T00:00:00Z"))
+121 |     try await store.trash("recent-trash", at: day("2026-10-01T00:00:00Z"))
+    |                     `- error: value of type 'SessionStore' has no member 'trash'
+122 |     let now = day("2026-10-11T00:00:00Z")
+123 | 
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:124:13: error: cannot find 'TrashRetention' in scope
+122 |     let now = day("2026-10-11T00:00:00Z")
+123 | 
+124 |     #expect(TrashRetention.default.autoEmpty == false)
+    |             `- error: cannot find 'TrashRetention' in scope
+125 |     #expect(try await store.emptyTrash(retention: .default, now: now).isEmpty)
+126 |     #expect(try Data(contentsOf: original) == Data("irreplaceable".utf8))
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:125:29: error: value of type 'SessionStore' has no member 'emptyTrash'
+123 | 
+124 |     #expect(TrashRetention.default.autoEmpty == false)
+125 |     #expect(try await store.emptyTrash(retention: .default, now: now).isEmpty)
+    |                             `- error: value of type 'SessionStore' has no member 'emptyTrash'
+126 |     #expect(try Data(contentsOf: original) == Data("irreplaceable".utf8))
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:125:52: error: cannot infer contextual base in reference to member 'default'
+123 | 
+124 |     #expect(TrashRetention.default.autoEmpty == false)
+125 |     #expect(try await store.emptyTrash(retention: .default, now: now).isEmpty)
+    |                                                    `- error: cannot infer contextual base in reference to member 'default'
+126 |     #expect(try Data(contentsOf: original) == Data("irreplaceable".utf8))
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:127:56: error: extra argument 'includeTrashed' in call
+125 |     #expect(try await store.emptyTrash(retention: .default, now: now).isEmpty)
+126 |     #expect(try Data(contentsOf: original) == Data("irreplaceable".utf8))
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+    |                                                        `- error: extra argument 'includeTrashed' in call
+128 | 
+129 |     let purged = try await store.emptyTrash(retention: .init(autoEmpty: true, afterDays: 30), now: now)
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:129:34: error: value of type 'SessionStore' has no member 'emptyTrash'
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+128 | 
+129 |     let purged = try await store.emptyTrash(retention: .init(autoEmpty: true, afterDays: 30), now: now)
+    |                                  `- error: value of type 'SessionStore' has no member 'emptyTrash'
+130 | 
+131 |     #expect(purged == ["old-trash"])
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:129:57: error: cannot infer contextual base in reference to member 'init'
+127 |     #expect(try await store.list(.init(includeTrashed: true)).count == 3)
+128 | 
+129 |     let purged = try await store.emptyTrash(retention: .init(autoEmpty: true, afterDays: 30), now: now)
+    |                                                         `- error: cannot infer contextual base in reference to member 'init'
+130 | 
+131 |     #expect(purged == ["old-trash"])
+
+/Users/IDC2.5/jv/.claude/worktrees/t08-session-store/ios/Packages/JovraCore/Tests/JovraCoreTests/SessionStore/SessionTrashTests.swift:133:56: error: extra argument 'includeTrashed' in call
+131 |     #expect(purged == ["old-trash"])
+132 |     #expect(!FileManager.default.fileExists(atPath: original.path))
+133 |     #expect(try await store.list(.init(includeTrashed: true)).map(\.id).sorted() == ["old-live", "recent-trash"])
+    |                                                        `- error: extra argument 'includeTrashed' in call
+134 | }
+135 | 
+[81/98] Compiling JovraCoreTests DurationLabelTests.swift
+[82/98] Compiling JovraCoreTests DataExporterTests.swift
+[83/98] Emitting module JovraCoreTests
+[84/98] Compiling JovraCoreTests UnitsTests.swift
+[85/98] Compiling JovraCoreTests ContrastTests.swift
+[86/98] Compiling JovraCoreTests SessionRunner.swift
+[87/98] Compiling JovraCoreTests StatsRunner.swift
+[88/98] Compiling JovraCoreTests FrameRateTests.swift
+[89/98] Compiling JovraCoreTests ProvenanceTests.swift
+[90/98] Compiling JovraCoreTests ReviewedPointStoreTests.swift
+[91/98] Compiling JovraCoreTests ScoringContractTests.swift
+[92/98] Compiling JovraCoreTests CaptureJournalTests.swift
+[93/98] Compiling JovraCoreTests CanonicalJSONTests.swift
+[94/98] Compiling JovraCoreTests ContractSafetyTests.swift
+[95/98] Compiling JovraCoreTests StatsTests.swift
+[96/98] Compiling JovraCoreTests GeneratedFixtureRunners.swift
+error: fatalError
