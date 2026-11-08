@@ -38,6 +38,8 @@ targets:
       - package: JovraMedia
       - package: JovraStudioCore
       - package: JovraStudioMedia
+      # T60 SPIKE (throwaway branch only): the Live Activity widget extension.
+      - target: JovraLiveActivity
     # T11: copy the rendered synthetic sample media into the bundle (SampleMedia/); fails with the command to
     # run when it is not rendered. Debug builds may set JOVRA_SKIP_SAMPLE_MEDIA=YES (see the script).
     postCompileScripts:
@@ -122,6 +124,8 @@ targets:
         NSBonjourServices:
           - _jovra-room._tcp
         JovraStudioEnvironment: $(STUDIO_ENVIRONMENT)
+        # T60 SPIKE (throwaway branch only).
+        NSSupportsLiveActivities: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra
@@ -131,6 +135,29 @@ targets:
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_IDENTITY: "-"
+  # T60 SPIKE (throwaway branch only): never merged; a 'ship' decision files the follow-up ticket that may add it.
+  JovraLiveActivity:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: JovraLiveActivity
+      - path: Jovra/Platform/LiveActivity/RecordingActivityAttributes.swift
+    info:
+      path: JovraLiveActivity/Info.plist
+      properties:
+        CFBundleDisplayName: JOVRA
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra.liveactivity
+        PRODUCT_NAME: JovraLiveActivity
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+        SKIP_INSTALL: YES
   JovraTests:
     type: bundle.unit-test
     platform: iOS

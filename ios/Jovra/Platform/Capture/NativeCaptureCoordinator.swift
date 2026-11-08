@@ -20,6 +20,7 @@ final class NativeCaptureCoordinator {
     private var engine: CaptureEngine?
     private let subscription = CaptureStatusSubscription()
     private var folder: URL?
+    private var liveActivity: RecordingLiveActivityMirror?
     private(set) var sessionID: SessionID?
     private(set) var status: CaptureStatus?
     private(set) var preflight: PreflightReport?
@@ -44,10 +45,13 @@ final class NativeCaptureCoordinator {
             let location = try await library.recordingFolder(id)
             sessionID = id; folder = location; engine = candidate; preflight = report
             status = candidate.status
+            let mirror = RecordingLiveActivityMirror(isSample: source.mode == .simulatorFixture)
+            liveActivity = mirror
             subscription.task = Task { [weak self, candidate] in
                 for await status in candidate.statuses {
                     guard !Task.isCancelled, let self else { break }
                     self.status = status
+                    mirror.observe(status)
                 }
             }
         } catch {
