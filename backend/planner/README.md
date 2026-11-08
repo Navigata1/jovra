@@ -10,6 +10,12 @@ It is pure and deterministic: no network, clock, randomness or file access, and 
 plain data built from stored records; outputs are canonical JSON (sorted keys, no floats) whose SHA-256 is the hash a
 render receipt binds. Nothing here is provisioned and no key, URL or account appears in it.
 
+The byte contract here is the existing Studio Python reference: keys sorted by Unicode scalar value,
+compact UTF-8 with standard JSON escaping, and safe integer numbers only. Lone surrogates are refused,
+as they are by the reference's strict UTF-8 encoder. This is not general RFC 8785 canonicalization:
+that standard orders arbitrary keys by UTF-16 code units. The existing Studio vectors and hashes
+are unchanged; cross-system consumers must use the agreed byte contract before comparing hashes.
+
 ## Layout
 
 ```
@@ -58,7 +64,9 @@ expectation. On top of that:
   from the plan the port's own planner makes for the case's `planFrom`;
 - moving one keeper window in a case's input changes its output hash, and altering one stored expectation fails that
   case only (`binding.test.ts`);
-- ids that name `Object.prototype` members (`constructor`, `toString`, ...) resolve to nothing (`adversarial.test.ts`).
+- ids that name `Object.prototype` members (`constructor`, `toString`, ...) resolve to nothing (`adversarial.test.ts`);
+- the test-only fixture loader refuses traversal and symbolic links, and fixture patches cannot mutate prototypes
+  or follow inherited properties (`fixture-safety.test.ts`).
 
 The base contexts are the vector files' own `context` cases. That they equal today's Sample records is proved by the
 Python validator (`python3 scripts/spec/validate_studio.py`), not here. When a reference ticket regenerates the vectors

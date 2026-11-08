@@ -7,8 +7,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import * as compiler from "../../src/heuristic/compile.ts";
-import { applyPatch, canonicalSha256, deepClone, type J } from "../../src/heuristic/core.ts";
+import { canonicalSha256, deepClone, type J } from "../../src/heuristic/core.ts";
 import * as planner from "../../src/heuristic/planner.ts";
+import { applyPatch } from "./fixture-patch.ts";
 import {
   CONTEXT_CASE, compileBases, compileContext, loadProfiles, loadVectors, resolvePlanning, runCompile, runPlanner,
 } from "./vectors.ts";

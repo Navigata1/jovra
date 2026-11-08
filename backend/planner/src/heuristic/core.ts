@@ -1,6 +1,6 @@
 /**
  * Port of spec/reference/studio/core.py: exact fractions, the one half-up rounding, time <-> frame, integer pct,
- * canonical JSON and its SHA-256, typed rejections and the fixture patch subset. Plus the few Python semantics the
+ * canonical JSON and its SHA-256 and typed rejections. Plus the few Python semantics the
  * reference relies on and JavaScript does not give for free (deep equality, tuple ordering, floor division).
  *
  * No floating point reaches a decision: times are integer microseconds or exact fractions (BigInt numerator and
@@ -310,6 +310,12 @@ export function deltaPpDisplay(before: number | null, after: number | null): str
 
 // ----- canonical JSON and hashing -----------------------------------------------------------------------------------
 
+function canonicalString(value: string, where: string): string {
+  // In Unicode mode a valid surrogate pair is one scalar and does not match this range.
+  if (/[\uD800-\uDFFF]/u.test(value)) throw new Reject("badUnicode", `${where}: unpaired Unicode surrogate`);
+  return JSON.stringify(value);
+}
+
 function canonical(value: unknown, where: string): string {
   if (value === null) return "null";
   if (value === true) return "true";
@@ -321,16 +327,16 @@ function canonical(value: unknown, where: string): string {
     if (!Number.isSafeInteger(value)) throw new Reject("floatInContract", `${where}: ${value} is not an exact integer`);
     return Object.is(value, -0) ? "0" : String(value);
   }
-  if (typeof value === "string") return JSON.stringify(value);
+  if (typeof value === "string") return canonicalString(value, where);
   if (Array.isArray(value)) return `[${value.map((v, i) => canonical(v, `${where}[${i}]`)).join(",")}]`;
   if (isDict(value)) {
     const keys = sortedStrings(Object.keys(value));
-    return `{${keys.map((k) => `${JSON.stringify(k)}:${canonical(value[k], `${where}.${k}`)}`).join(",")}}`;
+    return `{${keys.map((k) => `${canonicalString(k, where)}:${canonical(value[k], `${where}.${k}`)}`).join(",")}}`;
   }
   throw new TypeError(`${where}: ${typeof value} is not JSON`);
 }
 
-/** Sorted keys, no insignificant whitespace, UTF-8 text; equal to RFC 8785 for documents without floats. */
+/** Studio reference bytes: Unicode scalar key order, compact UTF-8, safe integers, no lone surrogates. */
 export function canonicalJson(value: unknown): string {
   return canonical(value, "$");
 }
@@ -341,44 +347,4 @@ export function canonicalBytes(value: unknown): Buffer {
 
 export function canonicalSha256(value: unknown): string {
   return createHash("sha256").update(canonicalBytes(value)).digest("hex");
-}
-
-// ----- fixture patches (a small subset of RFC 6902) -----------------------------------------------------------------
-
-function pointer(path: string): (string | number)[] {
-  if (path === "") return [];
-  if (!path.startsWith("/")) throw new Error(`bad pointer ${path}`);
-  return path.slice(1).split("/").map((t) => {
-    const token = t.replaceAll("~1", "/").replaceAll("~0", "~");
-    return /^[0-9]+$/.test(token) ? Number(token) : token;
-  });
-}
-
-/** A patched deep copy. Ops: replace, add (object key or list index / "-"), remove. */
-export function applyPatch(document: J, operations: J[]): J {
-  const doc = deepClone(document);
-  for (const op of operations) {
-    const tokens = pointer(op.path);
-    if (!tokens.length) throw new Error("cannot patch the document root");
-    let parent = doc;
-    for (const token of tokens.slice(0, -1)) parent = parent[token];
-    const last = tokens[tokens.length - 1];
-    if (op.op === "replace") {
-      if (!Array.isArray(parent) && !Object.hasOwn(parent, last)) throw new Error(`replace of missing key ${op.path}`);
-      parent[last] = deepClone(op.value);
-    } else if (op.op === "add") {
-      if (Array.isArray(parent)) {
-        if (last === "-") parent.push(deepClone(op.value));
-        else parent.splice(last as number, 0, deepClone(op.value));
-      } else {
-        parent[last] = deepClone(op.value);
-      }
-    } else if (op.op === "remove") {
-      if (Array.isArray(parent)) parent.splice(last as number, 1);
-      else delete parent[last];
-    } else {
-      throw new Error(`unsupported patch op ${op.op}`);
-    }
-  }
-  return doc;
 }

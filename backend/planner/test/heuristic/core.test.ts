@@ -7,9 +7,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
-  F, Reject, applyPatch, canonicalJson, canonicalSha256, deltaPpDisplay, frameAtUs, pct, pyCompare, pyEq,
+  F, Reject, canonicalJson, canonicalSha256, deltaPpDisplay, frameAtUs, pct, pyCompare, pyEq,
   roundHalfUp,
 } from "../../src/heuristic/core.ts";
+import { applyPatch } from "./fixture-patch.ts";
 
 const DOC = { b: [1, null, true], a: "Coach’s \"cut\"\n\u0001", "é": { z: 0, y: -3 } };
 

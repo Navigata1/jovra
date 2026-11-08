@@ -12,15 +12,16 @@
  * its stored sha256, compile twice to the same bytes, and come from the plan the port's planner makes for `planFrom`.
  */
 
-import { readFileSync } from "node:fs";
+import { lstatSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import * as compiler from "../../src/heuristic/compile.ts";
-import { applyPatch, canonicalJson, canonicalSha256, deepClone, type J } from "../../src/heuristic/core.ts";
+import { canonicalJson, canonicalSha256, deepClone, type J } from "../../src/heuristic/core.ts";
 import * as director from "../../src/heuristic/director.ts";
 import { validate } from "../../src/heuristic/edl.ts";
 import * as planner from "../../src/heuristic/planner.ts";
+import { applyPatch } from "./fixture-patch.ts";
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
 export const FIXTURES = "spec/studio/fixtures";
@@ -48,7 +49,18 @@ export interface Outcome {
 }
 
 export function loadJson(rel: string): J {
-  return JSON.parse(readFileSync(join(ROOT, rel), "utf8"));
+  const parts = rel.split("/");
+  const unsafe = () => new Error(`Unsafe fixture path: ${rel}`);
+  if (!rel.endsWith(".json") || parts.some((part) => part === "." || part === ".." || !/^[A-Za-z0-9._-]+$/.test(part))) {
+    throw unsafe();
+  }
+  let path = ROOT;
+  for (const [index, part] of parts.entries()) {
+    path = join(path, part);
+    const info = lstatSync(path);
+    if (index === parts.length - 1 ? !info.isFile() : !info.isDirectory()) throw unsafe();
+  }
+  return JSON.parse(readFileSync(path, "utf8"));
 }
 
 export function loadProfiles(): Record<string, J> {
@@ -64,6 +76,7 @@ export function loadVectors(): Record<VectorKind, J> {
 }
 
 function record(rel: string): J {
+  if (typeof rel !== "string" || !rel.startsWith("records/")) throw new Error("Unsafe fixture path: expected a record");
   return loadJson(`${FIXTURES}/${rel}`);
 }
 

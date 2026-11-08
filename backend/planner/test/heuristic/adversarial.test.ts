@@ -8,9 +8,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import * as compiler from "../../src/heuristic/compile.ts";
-import { Reject, applyPatch, deepClone, type J } from "../../src/heuristic/core.ts";
+import { Reject, deepClone, type J } from "../../src/heuristic/core.ts";
 import { validate } from "../../src/heuristic/edl.ts";
 import * as planner from "../../src/heuristic/planner.ts";
+import { applyPatch } from "./fixture-patch.ts";
 import { CONTEXT_CASE, compileBases, compileContext, loadProfiles, loadVectors } from "./vectors.ts";
 
 const profiles = loadProfiles();
