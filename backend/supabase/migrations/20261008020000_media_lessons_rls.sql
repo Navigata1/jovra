@@ -202,7 +202,7 @@ create table public.artifacts (
 );
 alter table public.artifacts add foreign key (project_id, parent_artifact_id)
   references public.artifacts (project_id, id) on delete cascade;
-create index artifacts_parent_artifact_id_idx on public.artifacts (parent_artifact_id);
+create index artifacts_parent_artifact_id_idx on public.artifacts (project_id, parent_artifact_id);   -- covers the FK
 create index artifacts_lesson_clip_id_idx on public.artifacts (lesson_clip_id);
 create index artifacts_project_source_idx on public.artifacts (project_id, source_id);
 
@@ -249,6 +249,7 @@ create index access_grants_project_artifact_idx on public.access_grants (project
 -- project_members.grant_id: the redeemed project_coach grant (migration 1 left this FK for the grants table).
 alter table public.project_members add foreign key (grant_id) references public.access_grants (id) on delete cascade;
 create index project_members_grant_id_idx on public.project_members (grant_id);
+create index project_members_granted_by_idx on public.project_members (granted_by);   -- covers the S76 FK
 
 create table public.observations (
   id                     uuid primary key default gen_random_uuid(),
@@ -329,6 +330,20 @@ create table public.story_plan_versions (
   foreign key (project_id, story_plan_id) references public.story_plans (project_id, id) on delete cascade
 );
 create index story_plan_versions_project_id_idx on public.story_plan_versions (project_id, bound_event_revision);
+create index story_plan_versions_project_plan_idx on public.story_plan_versions (project_id, story_plan_id);
+
+-- Covering indexes for the remaining foreign keys (performance advisor unindexed_foreign_keys): a project's sync maps
+-- by manifest revision, and every author/reviewer column, which a profile deletion's ON DELETE SET NULL scans.
+create index sync_maps_project_manifest_idx on public.sync_maps (project_id, source_manifest_revision);
+create index sync_maps_created_by_idx on public.sync_maps (created_by);
+create index sync_maps_reviewed_by_idx on public.sync_maps (reviewed_by);
+create index calibration_versions_created_by_idx on public.calibration_versions (created_by);
+create index calibration_versions_reviewed_by_idx on public.calibration_versions (reviewed_by);
+create index point_event_revisions_created_by_idx on public.point_event_revisions (created_by);
+create index observations_created_by_idx on public.observations (created_by);
+create index observations_reviewed_by_idx on public.observations (reviewed_by);
+create index story_plans_created_by_idx on public.story_plans (created_by);
+create index story_plan_versions_created_by_idx on public.story_plan_versions (created_by);
 
 -- Quotas (security-model §13.10): one counter row per (table, subject, UTC day) plus a lifetime row
 -- (day = 'infinity'), and the same pair for the per-user aggregate ('*user_total').
@@ -1407,14 +1422,14 @@ create policy story_plan_versions_insert on public.story_plan_versions for inser
   with check (app_private.can_insert_story_plan_versions(story_plan_id, planner_kind));
 
 -- artifacts: members read client-visible kinds (owners also the project bundle); viewers read only what a grant or
--- a shareable clip reaches. No client writes.
-create policy artifacts_select_members on public.artifacts for select to authenticated
-  using (deleted_at is null
-         and ((kind in ('preview', 'film', 'thumbnail', 'captions', 'chapters', 'edit_manifest', 'clip_excerpt')
-               and app_private.has_project_role(project_id, '{owner,coach}'))
-              or (kind = 'project_bundle' and app_private.has_project_role(project_id, '{owner}'))));
-create policy artifacts_select_viewers on public.artifacts for select to authenticated
-  using (app_private.viewer_can_see_artifact(id));
+-- a shareable clip reaches. No client writes. One permissive policy (not one per audience), so the planner evaluates
+-- a single OR per row (performance advisor multiple_permissive_policies).
+create policy artifacts_select on public.artifacts for select to authenticated
+  using ((deleted_at is null
+          and ((kind in ('preview', 'film', 'thumbnail', 'captions', 'chapters', 'edit_manifest', 'clip_excerpt')
+                and app_private.has_project_role(project_id, '{owner,coach}'))
+               or (kind = 'project_bundle' and app_private.has_project_role(project_id, '{owner}'))))
+         or app_private.viewer_can_see_artifact(id));
 
 create policy access_grants_select on public.access_grants for select to authenticated
   using (created_by = (select auth.uid()) or grantee_user_id = (select auth.uid()));
