@@ -1,0 +1,22 @@
+✘ Test oneEstimatedContributorMakesTheStatEstimatedWithOneUnreviewedPoint() recorded an issue at StatLinesTests.swift:92:5: Expectation failed: won.evidence.provenance == .estimated
+✘ Test everyStatsCSVRowIsAFractionWithTraceableContributors() recorded an issue at StatLinesTests.swift:46:5: Expectation failed: won.stat.evidence.unreviewedCount == 8 && won.stat.evidence.provenance == .manual
+✘ Test zeroDenominatorSessionsNeverShowAFakeZeroPercent() recorded an issue at TrendPoolTests.swift:31:5: Expectation failed: series.buckets[3].hidden
+✘ Test flippingSamplePoint42ListsOnlyTheStatsWhoseFractionsChanged() recorded an issue at StatLinesTests.swift:124:9: Expectation failed: listed.contains(old.key) == (old.stat.value != new.stat.value)
+✘ Test flippingSamplePoint42ListsOnlyTheStatsWhoseFractionsChanged() recorded an issue at StatLinesTests.swift:124:9: Expectation failed: listed.contains(old.key) == (old.stat.value != new.stat.value)
+✘ Test flippingSamplePoint42ListsOnlyTheStatsWhoseFractionsChanged() recorded an issue at StatLinesTests.swift:133:5: Expectation failed: Set(oldLines.map(\.key)).subtracting(listed) == unchanged
+✘ Test oneEstimatedContributorMakesTheStatEstimatedWithOneUnreviewedPoint() failed after 0.544 seconds with 1 issue.
+✘ Test everyStatsCSVRowIsAFractionWithTraceableContributors() failed after 0.545 seconds with 1 issue.
+✘ Test zeroDenominatorSessionsNeverShowAFakeZeroPercent() failed after 0.545 seconds with 1 issue.
+✘ Test flippingSamplePoint42ListsOnlyTheStatsWhoseFractionsChanged() failed after 0.545 seconds with 3 issues.
+✘ Test estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() recorded an issue at StatsTests.swift:25:5: Expectation failed: stat.evidence.provenance == .estimated
+✘ Test estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() recorded an issue at StatsTests.swift:33:5: Expectation failed: singleUnreviewed.evidence.provenance == .estimated && singleUnreviewed.evidence.unreviewedCount == 1
+✘ Test estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() failed after 0.565 seconds with 2 issues.
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at TrendRunner.swift:36:13: Expectation failed: actual == c.expected
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at TrendRunner.swift:36:13: Expectation failed: actual == c.expected
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at TrendRunner.swift:36:13: Expectation failed: actual == c.expected
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at TrendRunner.swift:36:13: Expectation failed: actual == c.expected
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at TrendRunner.swift:36:13: Expectation failed: actual == c.expected
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at TrendRunner.swift:36:13: Expectation failed: actual == c.expected
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at TrendRunner.swift:36:13: Expectation failed: actual == c.expected
+✘ Test allDiscoveredRunnerFixturesPass() failed after 1.159 seconds with 7 issues.
+✘ Test run with 83 tests in 5 suites failed after 3.938 seconds with 15 issues.

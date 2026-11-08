@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA trend conformance fixture",
+  "description": "Pooled cross-session trends (T05, rules §6.10). For each case, bucket the comparable sessions of the chosen scope over the progress window ending at asOf, pool numerators and denominators per bucket, hide buckets below the minimum denominator and compare the latest two shown buckets by their displayed integers. The result must deep-equal 'expected'; 'assertions' are the hand-derived subset.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "covers", "defaultMinimums", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.trend"},
+    "id": {"type": "string", "pattern": "^TR[0-9]{2}-[a-z0-9-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "covers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "defaultMinimums": {"$ref": "#/$defs/minimums"},
+    "cases": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/case"}}
+  },
+  "$defs": {
+    "minimums": {
+      "type": "object",
+      "required": ["bucketDenominator", "pooledDenominator", "bucketsWithData"],
+      "additionalProperties": false,
+      "properties": {
+        "bucketDenominator": {"type": "integer", "minimum": 0, "description": "A bucket whose pooled denominator is below this is hidden."},
+        "pooledDenominator": {"type": "integer", "minimum": 0, "description": "A comparison needs at least this pooled denominator over the window."},
+        "bucketsWithData": {"type": "integer", "minimum": 2, "description": "A comparison needs at least this many shown buckets."}
+      }
+    },
+    "session": {
+      "type": "object",
+      "required": ["id", "date", "comparableKind", "sample", "n", "d"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "common.schema.json#/$defs/id"},
+        "date": {"$ref": "common.schema.json#/$defs/date", "description": "The session's local calendar date."},
+        "comparableKind": {"type": "string", "minLength": 1, "description": "Opaque comparable-session key, e.g. singlesMatch."},
+        "sample": {"type": "boolean"},
+        "n": {"type": "integer", "minimum": 0},
+        "d": {"type": "integer", "minimum": 0}
+      }
+    },
+    "input": {
+      "type": "object",
+      "required": ["range", "asOf", "comparableKind", "scope", "sessions"],
+      "additionalProperties": false,
+      "properties": {
+        "range": {"enum": ["4W", "3M", "Year"]},
+        "asOf": {"$ref": "common.schema.json#/$defs/date"},
+        "comparableKind": {"type": "string", "minLength": 1},
+        "scope": {"enum": ["real", "sample"]},
+        "minimums": {"$ref": "#/$defs/minimums"},
+        "sessions": {"type": "array", "items": {"$ref": "#/$defs/session"}}
+      }
+    },
+    "bucket": {
+      "type": "object",
+      "required": ["index", "from", "to", "sessionIds", "ratio", "hidden"],
+      "additionalProperties": false,
+      "properties": {
+        "index": {"type": "integer", "minimum": 0},
+        "from": {"$ref": "common.schema.json#/$defs/date"},
+        "to": {"$ref": "common.schema.json#/$defs/date"},
+        "sessionIds": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}},
+        "ratio": {"$ref": "common.schema.json#/$defs/ratio"},
+        "hidden": {"type": "boolean"}
+      }
+    },
+    "headline": {
+      "type": "object",
+      "required": ["currentIndex", "priorIndex", "current", "prior", "deltaPoints", "deltaText"],
+      "additionalProperties": false,
+      "properties": {
+        "currentIndex": {"type": "integer", "minimum": 0},
+        "priorIndex": {"type": "integer", "minimum": 0},
+        "current": {"$ref": "common.schema.json#/$defs/ratio"},
+        "prior": {"$ref": "common.schema.json#/$defs/ratio"},
+        "deltaPoints": {"type": "integer", "minimum": -100, "maximum": 100},
+        "deltaText": {"type": "string", "minLength": 1}
+      }
+    },
+    "series": {
+      "type": "object",
+      "required": ["state", "buckets", "pooled", "sessionCount", "excluded", "headline"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["ok", "tooFewComparable", "noData"]},
+        "buckets": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/bucket"}},
+        "pooled": {"$ref": "common.schema.json#/$defs/ratio"},
+        "sessionCount": {"type": "integer", "minimum": 0},
+        "excluded": {
+          "type": "object",
+          "required": ["otherScope", "otherKind", "outsideWindow"],
+          "additionalProperties": false,
+          "properties": {
+            "otherScope": {"type": "integer", "minimum": 0},
+            "otherKind": {"type": "integer", "minimum": 0},
+            "outsideWindow": {"type": "integer", "minimum": 0}
+          }
+        },
+        "headline": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/headline"}]}
+      }
+    },
+    "case": {
+      "type": "object",
+      "required": ["name", "title", "input", "assertions", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "title": {"type": "string", "minLength": 1},
+        "input": {"$ref": "#/$defs/input"},
+        "assertions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["path", "equals"],
+            "additionalProperties": false,
+            "properties": {"path": {"type": "string", "minLength": 1}, "equals": true}
+          }
+        },
+        "expected": {"$ref": "#/$defs/series"}
+      }
+    }
+  }
+}

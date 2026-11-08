@@ -1,0 +1,6 @@
+$ cmp "$OUT/bundle/export-my-data/sessions/2026-10-06 Jon vs Alex/points.csv" spec/fixtures/sample/jon-vs-alex.points.csv
+identical: 19629 bytes, sha256 f2558c528bb714c187d05bdadf99dcc2b215e03bf0b38f96747c7af7322f0245
+$ cmp "$OUT/bundle/export-my-data/sessions/2026-10-06 Jon vs Alex/stats.csv" spec/fixtures/sample/jon-vs-alex.stats.csv
+identical: 1761 bytes, sha256 e6a55f73d7e67fec83169bb3b904b7d6cd48cece8cd649b06f86f7b7530dcf2a
+$ cmp $OUT/bundle/share-pack/points.csv spec/fixtures/sample/jon-vs-alex.points.csv
+identical

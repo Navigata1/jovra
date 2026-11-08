@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Source-level mutation check for ios/Packages/JovraRoom (ticket W01, #267): each mutation reverts one rule in the
+# Source-level mutation check for ios/Packages/JovraRoom (tickets W01 #267 and W02 #271): each mutation reverts one rule in the
 # package sources, runs `swift test`, and must turn the suite red. Sources are restored after every mutation (and on
 # exit). Prints a transcript; exits 1 if any mutation survives.
 # Usage: scripts/ios/room-mutations.sh [--scratch-path DIR]
@@ -25,6 +25,22 @@ MUTATIONS=(
   "remote elapsed extrapolated by age|Status/StatusRow.swift|elapsedMs: report.lastReportedElapsedMs, elapsedSource: .lastReported|elapsedMs: report.lastReportedElapsedMs + (ageMs ?? 0), elapsedSource: .lastReported"
   "unknown properties accepted|Records/RoomDecoding.swift|if let extra = all.allKeys|if false, let extra = all.allKeys"
   "command shape not checked|Records/RoomCommand.swift|try Self.checkShape(payload.type, target, baseEventRevision, c)|_ = c"
+  # W02 (#271): invitations, ledger, outbox, bridge, health and alerts.
+  "forged issuer: member not bound to the peer|Ledger/CommandLedger.swift|guard issuer.memberId == memberId else { return .failure(.issuerNotAuthenticated) }|_ = issuer.memberId"
+  "unregistered watch accepted|Ledger/CommandLedger.swift|issuer.bridgeDeviceId == peer.deviceId && member.watchDeviceIds.contains(issuer.deviceId)|issuer.bridgeDeviceId == peer.deviceId"
+  "watch may control capture|Ledger/CommandLedger.swift|if c.issuer.surface == .watch && type.isCaptureRequest|if c.issuer.surface == .phone && false"
+  "send age in the fingerprint|Ledger/LedgerTypes.swift|expiry.removeValue(forKey: \"ageAtSendMs\") != nil|expiry[\"ageAtSendMs\"] != nil"
+  "delivery fails open|Ledger/LedgerTypes.swift|guard transitBounded == true,|guard transitBounded != false,"
+  "frozen send age|Outbox/Outbox.swift|command.expiry.ageAtSendMs = age|_ = age"
+  "draft chain not held|Outbox/Outbox.swift|if chainBroken && type.isScoreCommand {|if false && type.isScoreCommand {"
+  "replayed bridge payload accepted|Bridge/BridgeReceiver.swift|b.bridgeSeq <= bridgeSeq|b.bridgeSeq < bridgeSeq"
+  "bridge marks lost on restart|Bridge/BridgeReceiver.swift|instance = state.instance|instance = nil"
+  "enrolled counted from rows|Health/HealthSummary.swift|enrolled: bridge.roster.cameraDeviceIds|enrolled: bridge.devices.map(\\.deviceId)"
+  "commitment not checked|Invitation/HostInvitations.swift|if !roomConstantTimeEquals(commitment, p.request.guestCommitment) {|if false {"
+  "no attempt limit|Invitation/HostInvitations.swift|public static let maxJoinAttempts = 3|public static let maxJoinAttempts = 99"
+  "non-canonical QR accepted|Invitation/InvitationQR.swift|guard canonical == Data(raw) else { throw .nonCanonicalPayload }|_ = raw"
+  "alert raised after 2 s|Alerts/AlertPolicy.swift|public static let raiseAfterMs = 3000|public static let raiseAfterMs = 2000"
+  "alert deferral 60 s|Alerts/AlertPolicy.swift|public static let deferMaxMs = 45_000|public static let deferMaxMs = 60_000"
 )
 
 survived=0
