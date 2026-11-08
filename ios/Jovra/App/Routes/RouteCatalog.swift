@@ -197,11 +197,11 @@ private extension FullScreenRoute {
         case .capture:
             cover("capture", "T17", String(localized: "Capture", table: "App", comment: "Screen name"),
                   String(localized: "Close capture", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Capture/CaptureScreen.swift")
+                  "Features/Capture/CaptureScreen.swift", placeholder: CaptureScreen.isPlaceholder)
         case .replay:
             cover("replay", "T28", String(localized: "Smart replay", table: "App", comment: "Screen name"),
                   String(localized: "Close replay", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Replay/ReplayScreen.swift")
+                  "Features/Replay/ReplayScreen.swift", placeholder: ReplayScreen.isPlaceholder)
         case .compare:
             cover("compare", "T45", String(localized: "Compare", table: "App", comment: "Screen name"),
                   String(localized: "Close compare", table: "App", comment: "VoiceOver label of the Close control"),
@@ -237,7 +237,7 @@ private extension SheetRoute {
         case .clipExport:
             sheet("clipExport", "T36", String(localized: "Clip export", table: "App", comment: "Sheet name"),
                   String(localized: "Close clip export", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Export/ClipExportSheet.swift")
+                  "Features/Export/ClipExportSheet.swift", placeholder: ClipExportSheet.isPlaceholder)
         case .sharePack:
             sheet("sharePack", "T38", String(localized: "Share Pack", table: "App", comment: "Sheet name"),
                   String(localized: "Close Share Pack", table: "App", comment: "VoiceOver label of the Close control"),
@@ -311,10 +311,10 @@ private func push(_ name: String, _ ticket: String, _ title: String, _ file: Str
     RouteInfo(kind: .push, launchName: name, ticket: ticket, title: title, file: file)
 }
 
-private func cover(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String) -> RouteInfo {
-    RouteInfo(kind: .fullScreen, launchName: name, ticket: ticket, title: title, closeLabel: close, file: file)
+private func cover(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String, placeholder: Bool = true) -> RouteInfo {
+    RouteInfo(kind: .fullScreen, launchName: name, ticket: ticket, title: title, closeLabel: close, file: file, isPlaceholder: placeholder)
 }
 
-private func sheet(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String) -> RouteInfo {
-    RouteInfo(kind: .sheet, launchName: "sheet.\(name)", ticket: ticket, title: title, closeLabel: close, file: file)
+private func sheet(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String, placeholder: Bool = true) -> RouteInfo {
+    RouteInfo(kind: .sheet, launchName: "sheet.\(name)", ticket: ticket, title: title, closeLabel: close, file: file, isPlaceholder: placeholder)
 }

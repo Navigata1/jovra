@@ -1,0 +1,17 @@
+# SPEC review — bounded native reviewed-point model
+
+ACCEPT exacta7e53e8967cb81bb07095c6ece2e11f37f13fc84. Read91-line model,8-line authoritative library delegates and62-line public native test; independently recomputed all3 source/test hashes matching custody. Read actual04 valid hosted Passed3/0/0 in2classes on dedicated4265: reviewed model1 plus existing actual replay transport2. No reviewer compiler/simulator.
+
+Mutations await one accepted SessionStore actor transaction, followed by a fresh authoritative document/full fold/DerivedStat computation. Active displayed point IDs come from effective point records, not original history; correction selection follows returned replacement ID. Before-point call uses server-first typed call, correctly distinguishing ordinary points/tiebreak/deuce/deciding-point/advantage with unknown fallback. A points-won fraction/provenance/Sample come from the derived result; unknown serve/stroke observations remain nil. Generation guards prevent stale asynchronous completion rendering another session, and unconfirmed-write errors do not claim definite rollback.
+
+Actual fresh two-second capture4 reviewed decisions A,A,A,B produce3/4; first→B preserves five original/history entries and refolds second pre-score0–15, fraction2/4 Reviewed/Sample. Reopened local actor retains results; negative time refuses without changing four active/five historical events. Existing original replay tests remain green.
+
+No review UI/live-playhead scoring, insert/split/merge/delete/conflict editing, automatic analysis, fullT29/T28/CoreFlow/hardware or step5 acceptance. Before-selected-point label must remain explicit in subsequent UI. No SPEC findings in bounded model; changed publication head needs explicit rebind.
+
+### Separate Standards HOLD acknowledged
+
+T02 independently identified unlocalized English score/error presentation and direct numeric display bypassing named catalogs/JovraFormat. Numeric/persistence SPEC acceptance above remains historical for exacta7; publication requires that separate Standards finding to close. Typed score-call/rate/error model outputs for localized UI are appropriate without changing fold/stat semantics or canonical ASCII data exports. Corrective model/test API head needs explicit SPEC rebind. Before-selected-point wording and nil no-data requirements remain.
+
+## Localized corrective publication rebind
+
+SPEC ACCEPT f740e2e1a5dfc72c3bdb61df1eb7ab0bf330eb1c, binding localized tested source 6f4d9b2ef36a1372038d7dcd8b9cfd9833f33027. Inspected ReviewedPointModel, ReplayPlaybackModel, the 11-key owned Replay catalog, existing JovraFormat.count and unchanged public correction test. Locale formatting and catalog-backed errors/deuce copy preserve the fold, active replacement selection, pre-point call, raw evidence/provenance and unknown observations. Persisted/exported bytes remain governed by core APIs; no score patching or invented data introduced. Independently verified all five source-custody hashes and byte identity with tested source; git diff 6f4d..f740 --ios is empty. Read fresh native08 receipt: Passed 3/0/0 on dedicated iPhone17Pro/iOS26.5 simulator; one reviewed correction and two existing playback controls. Catalog ownership/literal/copy receipt reports zero problems; English only, no translation claim. Earlier a7 numeric acceptance remains historical; separate Standards naming/localization acceptance is owned by T02. No reviewer compilation. Full T28/T29, screen integration, final CoreFlow, physical device and step5 remain pending.

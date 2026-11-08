@@ -1,0 +1,171 @@
+{
+  "summary": "At main 6e46a576, JOVRA has a bounded native iOS recording/review/export flow and substantial executable Python Studio/Room contracts. Premium film production, native multi-camera coordination, Android, watches and hosted processing remain roadmap work. Open foundation PRs378/379 do not refute those usability gaps.",
+  "targets": {
+    "main": "6e46a576",
+    "checkout": "/Users/IDC2.5/.codex/worktrees/jovra-sotu-2026-11-02/",
+    "androidPR378": {
+      "state": "OPEN",
+      "head": "d8dcd542a59f5633cf2528342e6985f173bf9c77"
+    },
+    "studioPR379": {
+      "state": "OPEN",
+      "head": "1ff9cafdd0f3e124d306408b5b5b1676d3477a1c"
+    }
+  },
+  "strengths": [
+    {
+      "title": "Executable Studio intelligence",
+      "detail": "Actual Python keeper/progress rules, RulesPlanner, EDL compiler and exact PTS normalization exist; do not describe Studio as zero code or merely images.",
+      "file": "spec/reference/studio/planner.py:1; spec/reference/studio/compile.py:1; spec/reference/studio/normalization.py:1"
+    },
+    {
+      "title": "Concrete Room trust and watch freshness contracts",
+      "detail": "Schemas/reference state machines/fixtures cover approval, replay protection, freshness and receipts; docs distinguish rule validation from actual transport/watch behavior.",
+      "file": "spec/room/README.md:3; spec/room/reference/jovra_room/bridge.py:1"
+    },
+    {
+      "title": "Security-aware backend groundwork",
+      "detail": "Local Supabase tester restrictions, identity/membership RLS and role tests exist; gateway contracts cover41 routes. Hosted activation is separate.",
+      "file": "backend/README.md:19; backend/README.md:67; backend/contracts/README.md:3"
+    },
+    {
+      "title": "Honest watch scope",
+      "detail": "Design mirrors acknowledged phone state, freezes remote elapsed values, and keeps commands pending until receipts; no live serve speed or watch In/Out decisions.",
+      "file": "docs/adr/0026-watch-companions-mirror-the-phone.md:32; docs/adr/0026-watch-companions-mirror-the-phone.md:48; docs/adr/0026-watch-companions-mirror-the-phone.md:69"
+    }
+  ],
+  "findings": [
+    {
+      "title": "Premium Studio remains an implementation frontier",
+      "severity": "high",
+      "detail": "CONFIRMED after refutation. Main contains no Studio Swift packages/features or native film-production UI; project links Core/Media only. Python emits plans, not customer films. Open379 adds package wiring, schema headers and source-clock arithmetic; actual media source explicitly leaves ingest, renderer and verifier to later work. This is a readiness gap, not a claim Python is fake.",
+      "file": "ios/project.yml:20; docs/spec/studio-tickets.md:15; spec/reference/studio/compile.py:6; PR379 ios/Packages/JovraStudioMedia/Sources/JovraStudioMedia/JovraStudioMedia.swift:5",
+      "fix": "Integrate reviewed foundation379; implement native contract ports, project/store/UI, verified ingest/proxies, deterministic renderer and FilmVerifier."
+    },
+    {
+      "title": "Benchmark scaffold is not automatic tennis analysis",
+      "severity": "high",
+      "detail": "CONFIRMED. EstimatorRegistry contains oracle.eventTimes/null.eventTimes self-tests only. Benchmark tooling is not app-linked. Audio hit detection and rally segmentation disabled/no lastBenchmark; trajectory/automatic placement/outcomes/line calling unsupported. Estimated pose/serve registry labels describe permitted methods, not native implementation proof. Processing/ServeLab remain route placeholders.",
+      "file": "ios/Packages/JovraMedia/Sources/JovraBenchmark/Harness/EstimatorRegistry.swift:35; ios/Packages/JovraMedia/Package.swift:15; spec/contracts/capability-registry.v1.json:48; spec/contracts/capability-registry.v1.json:70; spec/contracts/capability-registry.v1.json:218; ios/Jovra/Features/Processing/ProcessingScreen.swift:3; ios/Jovra/Features/Insights/ServeLab/ServeLabScreen.swift:3",
+      "fix": "Implement candidate estimators and analysis UI, benchmark synthetic plus independently labelled real footage, promote capabilities only through recorded gates."
+    },
+    {
+      "title": "Six-camera/watch experience remains protocol work",
+      "severity": "high",
+      "detail": "CONFIRMED. No native Room carrier, WCSession bridge, watch target or Wear app on main; Room README explicitly disclaims those implementations. Open foundation PRs do not implement them. QR pairing, recording acknowledgements/reconnect and watch health remain unverified product work.",
+      "file": "spec/room/README.md:3; ios/project.yml:25; docs/spec/studio-tickets.md:106; docs/spec/studio-tickets.md:112; docs/adr/0026-watch-companions-mirror-the-phone.md:20",
+      "fix": "Implement S69-S73/native bridges/UI against contracts; pass two-phone/paired-watch gates before six-device endurance."
+    },
+    {
+      "title": "Android foundation is not a functioning Android app",
+      "severity": "medium",
+      "detail": "Main has no android directory/Kotlin/Gradle project. Open378 is genuine groundwork but manifest application is empty and delegates activity/theme to A02. All99 Android issues remain open. iPad target-family support does not establish adaptive/foldable state preservation.",
+      "file": "docs/adr/0024-android-stack-and-module-layout.md:3; docs/spec/android-watch-tickets.md:40; ios/project.yml:98; PR378 android/app/src/main/AndroidManifest.xml:2",
+      "fix": "Finish/review foundation, shell, Kotlin parity/store/media, then adaptive matrices and independent physical capture."
+    },
+    {
+      "title": "Hosted account/storage customer flows unfinished",
+      "severity": "medium",
+      "detail": "Local backend exists; no gateway/render implementation or hosted execution evidence in audited tree. Account/Drive management are native placeholders; Drive configuration reports not configured without operator config. External user-owned Supabase/Cloudflare accounts were not inspected and are not classified absent.",
+      "file": "backend/README.md:3; backend/README.md:14; ios/Jovra/Features/Settings/AccountSheet.swift:3; ios/Jovra/Features/Storage/Account/DriveAccountSheet.swift:3; ios/Jovra/Platform/LaunchConfiguration/DriveClientConfiguration.swift:5; docs/backend/architecture.md:1424",
+      "fix": "Complete migrations/gateway/uploads/orchestration/render/account/deletion/providers, then separately capture G1-G9 evidence with operator authorization."
+    },
+    {
+      "title": "Mission resume state contradicts later authorization",
+      "severity": "medium",
+      "detail": "PLAN records2026-10-11 step5 green light, merged PRs and public repo transition; state.json still says restore billing/merge those PRs/holdstep5. Live repo PUBLIC. Current chat boundary still applies, but October9 state is not current repository-wide truth.",
+      "file": "ops/mission/PLAN.md:14; ops/mission/state.json:638",
+      "fix": "Reconcile heartbeat from fresh remote evidence; retain history and distinguish later Claude authorization from current chat scope."
+    },
+    {
+      "title": "Backend status table understates contract work",
+      "severity": "low",
+      "detail": "README labels contracts Not started but backend/contracts contains S81 implementation and mapped issue closed.",
+      "file": "backend/README.md:17; backend/contracts/README.md:3",
+      "fix": "Update contract status separately from unimplemented gateway/render."
+    }
+  ],
+  "remaining": [
+    "Native Studio foundation, typed Swift parity, project persistence and actual screens, verified single-camera films before multi-angle output.",
+    "Candidate hit/rally/pose/manual-assisted estimators, processing/UI and independent real-footage gates.",
+    "Native authenticated Room transport, QR approval, receipts/reconnect/freshness, two-phone proof and six-phone endurance.",
+    "Remaining database/gateway/upload/quote/spend/planner/render/cancel/retry/delivery/deletion work and G1-G9 activation.",
+    "Actual account, optional Drive/restore/providers without making capture depend on account/network.",
+    "Android build/shell/domain/store/media/adaptive and separate physical capture.",
+    "Native watch ports/bridges/surfaces/acknowledged commands and real pairing/background gates.",
+    "Human gates open: S54 scored original footage, S67 two-phone footage, S74 six-phone field session, S104 hosted activation."
+  ],
+  "evidence": [
+    {
+      "kind": "live ticket mapping",
+      "method": "gh issue list --state all --limit1000 joined to committed ticket-issue maps",
+      "issuesFetched": 314,
+      "counts": {
+        "T": {
+          "mapped": 63,
+          "closed": 6,
+          "open": 57
+        },
+        "S": {
+          "mapped": 107,
+          "closed": 11,
+          "open": 96
+        },
+        "A": {
+          "mapped": 99,
+          "closed": 0,
+          "open": 99
+        },
+        "W": {
+          "mapped": 26,
+          "closed": 0,
+          "open": 26
+        }
+      },
+      "qualification": "All mapped tickets resolved; T includesT01 while tickets.json listsT02-T63; W includes22 watch+4 iOS-adaptive. Workflow counts are not implementation percentages; dependencies overlap."
+    },
+    {
+      "kind": "closed identities",
+      "T": [
+        "T01",
+        "T02",
+        "T03",
+        "T06",
+        "T07",
+        "T10"
+      ],
+      "S": [
+        "S01",
+        "S02",
+        "S03",
+        "S05",
+        "S06",
+        "S07",
+        "S56",
+        "S68",
+        "S75",
+        "S76",
+        "S81"
+      ],
+      "file": "docs/spec/ticket-issues.json:2; docs/spec/studio-ticket-issues.json:2; docs/spec/android-watch-ticket-issues.json:2"
+    },
+    {
+      "kind": "placeholder inventory",
+      "method": "rg -l 'RoutePlaceholder\\(' ios/Jovra/Features",
+      "result": "38 feature source files call RoutePlaceholder; component discloses unfinished screens. Navigation success is not feature implementation.",
+      "file": "ios/Jovra/App/Placeholders/RoutePlaceholder.swift:3; ios/Jovra/App/Placeholders/RoutePlaceholder.swift:45"
+    },
+    {
+      "kind": "adversarial refutation",
+      "result": "Read exact open378 manifest(empty application, shell deferred) and379 production packages(schema/header helpers and nominalEnd only; renderer/verifier deferred) through GitHub API. Main source inventory found only Core/Media packages, no Studio/Android/watch native implementation. Python Studio compiler/planner and Room reference explicitly preserved as actual code, not dismissed."
+    },
+    {
+      "kind": "ML refutation",
+      "result": "Only oracle/null registered; benchmark product explicitly tooling-only/not app-linked. Disabled statuses and absent benchmark separate from estimated pose/serve labels; no runtime/model-accuracy claim."
+    },
+    {
+      "kind": "limits",
+      "result": "Read-only source/live issue audit; no repo edits/GitHub mutations/compiler/decoder/simulator/hosted tests; existing receipts not rerun."
+    }
+  ]
+}

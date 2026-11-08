@@ -60,33 +60,54 @@ enum AccessibilityAudit {
 extension XCTestCase {
     /// Audits every part of the current screen for `types` (all audits by default).
     @MainActor
-    func auditScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType = .all) throws {
+    func auditScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType = .all, scrollIdentifier: String? = nil) throws {
         // On a tab screen the lockup is the first row, Space.x1 (8 pt) below the status-bar backdrop.
         let lockup = app.descendants(matching: .any).matching(identifier: "brand.lockup").firstMatch
-        let onTabScreen = app.otherElements["tabBar"].exists && lockup.exists
+        let onTabScreen = scrollIdentifier == nil && app.otherElements["tabBar"].exists && lockup.exists
         let visibleTop = onTabScreen ? lockup.frame.minY - 8 : 0
-        let title = app.staticTexts.matching(identifier: "screen.title").firstMatch
-        let scrollView = app.scrollViews.firstMatch
-        try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title)
+        let scrollView = scrollIdentifier.map { app.scrollViews[$0] } ?? app.scrollViews.firstMatch
+        if let scrollIdentifier, !scrollView.exists {
+            XCTFail("Requested foreground scroll view is missing: " + scrollIdentifier); return
+        }
+        let title = scrollIdentifier == nil ? app.staticTexts.matching(identifier: "screen.title").firstMatch
+            : scrollView.staticTexts.matching(identifier: "screen.title").firstMatch
+        if scrollIdentifier != nil, !title.exists {
+            XCTFail("Requested foreground scroll title is missing"); return
+        }
+        try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title, scrollView: scrollView, foregroundModal: scrollIdentifier != nil)
         guard scrollView.exists, title.exists else { return }
         // The audit itself may move the scroll position, so each step starts again from the top and
         // scrolls `step` slow swipes down; it stops once another swipe no longer moves the page.
         var previousTitleY = title.frame.minY
         for step in 1...AccessibilityAudit.maximumSteps {
-            scrollToTop(scrollView)
+            scrollToTop(scrollView, foregroundTitle: scrollIdentifier == nil ? nil : title)
             for _ in 0..<step { scrollView.swipeUp(velocity: .slow) }
             waitForScrollingToSettle(title)
             let titleY = title.frame.minY
             guard abs(titleY - previousTitleY) > 1 else { break }
             previousTitleY = titleY
-            try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title)
+            try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title, scrollView: scrollView, foregroundModal: scrollIdentifier != nil)
         }
-        scrollToTop(scrollView)
+        scrollToTop(scrollView, foregroundTitle: scrollIdentifier == nil ? nil : title)
     }
 
     @MainActor
-    private func scrollToTop(_ scrollView: XCUIElement) {
-        for _ in 0..<3 { scrollView.swipeDown(velocity: .fast) }
+    private func scrollToTop(_ scrollView: XCUIElement, foregroundTitle: XCUIElement? = nil) {
+        guard let foregroundTitle else {
+            for _ in 0..<3 { scrollView.swipeDown(velocity: .fast) }
+            return
+        }
+        for _ in 0..<12 {
+            // A short allowance starts the pan recognizer; stop before a second pull at the top.
+            let remaining = scrollView.frame.minY - foregroundTitle.frame.minY
+            if remaining <= 1 { return }
+            let distance = min(remaining + 16, scrollView.frame.height * 0.45)
+            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.2))
+            start.press(forDuration: 0.01, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)),
+                        withVelocity: .slow, thenHoldForDuration: 0.1)
+            waitForScrollingToSettle(foregroundTitle)
+        }
+        XCTFail("Foreground scroll did not reach its top boundary")
     }
 
     /// A swipe returns while the page may still be decelerating; an audit taken then samples pixels
@@ -110,10 +131,11 @@ extension XCTestCase {
     /// repeat's result is the one that counts.
     @MainActor
     private func auditVisibleScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType, visibleTop: CGFloat,
-                                    marker: XCUIElement, isRepeat: Bool = false) throws {
+                                    marker: XCUIElement, scrollView: XCUIElement, foregroundModal: Bool, isRepeat: Bool = false) throws {
         let tabBar = app.otherElements["tabBar"]
-        let visibleBottom = tabBar.exists ? tabBar.frame.minY : app.frame.maxY
-        let tabBarFrame = tabBar.exists ? tabBar.frame : .null
+        let hasForegroundTabBar = !foregroundModal && tabBar.exists
+        let visibleBottom = hasForegroundTabBar ? tabBar.frame.minY : app.frame.maxY
+        let tabBarFrame = hasForegroundTabBar ? tabBar.frame : .null
         let markerY = marker.exists ? marker.frame.minY : nil
         var setAside: [String] = []
         try app.performAccessibilityAudit(for: types) { issue in
@@ -132,7 +154,6 @@ extension XCTestCase {
                 setAside.append(element.label)
                 return true
             }
-            let scrollView = app.scrollViews.firstMatch
             if isRendered, scrollView.exists {
                 let viewport = scrollView.frame.intersection(app.frame)
                 let matches = scrollView.descendants(matching: element.elementType).matching(
@@ -157,6 +178,6 @@ extension XCTestCase {
         guard !setAside.isEmpty else { return }
         waitForScrollingToSettle(marker)
         print("audit: repeating the audit at the settled position for \(setAside)")
-        try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: marker, isRepeat: true)
+        try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: marker, scrollView: scrollView, foregroundModal: foregroundModal, isRepeat: true)
     }
 }

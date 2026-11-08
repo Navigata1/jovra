@@ -15,8 +15,8 @@ final class SceneContinuityUITests: XCTestCase {
         // Reset the route through a known system deep link regardless of any earlier scene state.
         app.open(try XCTUnwrap(URL(string: "jovra://record/doubles")))
         XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 8))
-        let payload = app.descendants(matching: .any).matching(identifier: "placeholder.payload").firstMatch
-        XCTAssertTrue(payload.label.contains("Session kind: Doubles match"))
+        let payload = app.staticTexts["capture.kind"]
+        XCTAssertEqual(payload.label, "Doubles match")
         attachScreenshot(app, name: "t07-scene-continuity-before-background")
 
         XCUIDevice.shared.press(.home)
@@ -27,7 +27,7 @@ final class SceneContinuityUITests: XCTestCase {
         app.activate()
 
         XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 8), "the full-screen route survives backgrounding")
-        XCTAssertTrue(payload.label.contains("Session kind: Doubles match"), "the typed payload survives backgrounding")
+        XCTAssertEqual(payload.label, "Doubles match", "the actual mode survives backgrounding")
         XCTAssertFalse(app.otherElements["tabBar"].exists)
         attachScreenshot(app, name: "t07-scene-continuity-after-foreground")
         app.buttons["capture.close"].tap()

@@ -16,7 +16,7 @@ imagery, and never sent to a model API. Only the hashes and descriptions below l
 
 | File | Source | Duration | Video | Audio | SHA-256 |
 |---|---|---|---|---|---|
-| `S1-3.5-Feb-28-2024-youtube-zZtqeG7J_kA.mp4` | Jon's YouTube upload "S1 3.5 Feb 28 2024" (primary) | 71:17.7 | H.264 1920×1080, 29.589 fps | AAC 44.1 kHz stereo | `07fbd86e2dc963fa047643a661c2cad91c2671d8ea2070a130051e2ff907f8ac` |
+| `S1-3.5-Feb-28-2024-youtube-<video-id>.mp4` (video ID withheld; the repo is public) | Jon's YouTube upload "S1 3.5 Feb 28 2024" (primary) | 71:17.7 | H.264 1920×1080, 29.589 fps | AAC 44.1 kHz stereo | `07fbd86e2dc963fa047643a661c2cad91c2671d8ea2070a130051e2ff907f8ac` |
 | `20260929_170141.mp4` | Jon's Drive (supplementary) | 15:26.5 | HEVC 1280×720, ~30 fps **VFR** (avg 29.98), Android 13 | AAC 48 kHz stereo | `156cf7568cf1e92d9fdba161c933c101dac20d14f8f6baf2218abd9c4cc267ac` |
 | `20261004_125549.mp4` | Jon's Drive (supplementary) | 5:02.6 | HEVC 1280×720, ~30 fps **VFR** (avg 29.98), Android 13 | AAC 48 kHz stereo | `1682e5934c40dde2a5760261e6342356866483538cc5437546a078751d1dd03e` |
 

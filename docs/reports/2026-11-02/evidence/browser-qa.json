@@ -1,0 +1,114 @@
+{
+  "checkedAtUTC": "2026-11-02T13:13:20.640398+00:00",
+  "tool": "cua_repl in-app browser",
+  "report": "JOVRA-State-of-the-Union-v1-2026-11-02.html",
+  "layouts": [
+    {
+      "width": 375,
+      "mode": "light",
+      "documentWidth": 375,
+      "overflowPixels": 0,
+      "sections": 8,
+      "externalAssetTags": 0
+    },
+    {
+      "width": 375,
+      "mode": "dark",
+      "documentWidth": 375,
+      "overflowPixels": 0,
+      "sections": 8,
+      "externalAssetTags": 0
+    },
+    {
+      "width": 768,
+      "mode": "light",
+      "documentWidth": 768,
+      "overflowPixels": 0,
+      "sections": 8,
+      "externalAssetTags": 0
+    },
+    {
+      "width": 768,
+      "mode": "dark",
+      "documentWidth": 768,
+      "overflowPixels": 0,
+      "sections": 8,
+      "externalAssetTags": 0
+    },
+    {
+      "width": 1440,
+      "mode": "light",
+      "documentWidth": 1440,
+      "overflowPixels": 0,
+      "sections": 8,
+      "externalAssetTags": 0
+    },
+    {
+      "width": 1440,
+      "mode": "dark",
+      "documentWidth": 1440,
+      "overflowPixels": 0,
+      "sections": 8,
+      "externalAssetTags": 0
+    }
+  ],
+  "cleanFinalTabConsoleErrors": 0,
+  "cleanFinalTabConsoleWarnings": 0,
+  "modePersistsAcrossReload": true,
+  "pauseButtonBecomesPlay": true,
+  "fallbacks": [
+    {
+      "name": "No-JavaScript mirror (script elements removed)",
+      "sections": 8,
+      "promptCharacters": 1152,
+      "verdictPresent": true,
+      "hiddenMainHeadings": false,
+      "width": 1440,
+      "documentWidth": 1440
+    },
+    {
+      "name": "Print-style mirror (@media print forced to all)",
+      "sections": 8,
+      "promptCharacters": 1152,
+      "verdictPresent": true,
+      "hiddenMainHeadings": false,
+      "width": 1440,
+      "documentWidth": 1440
+    },
+    {
+      "name": "Forced reduced-motion code path",
+      "sections": 8,
+      "promptCharacters": 1152,
+      "verdictPresent": true,
+      "hiddenMainHeadings": false,
+      "width": 1440,
+      "documentWidth": 1440
+    },
+    {
+      "name": "Original #noanim",
+      "sections": 8,
+      "promptCharacters": 1152,
+      "verdictPresent": true,
+      "hiddenMainHeadings": false,
+      "width": 1440,
+      "documentWidth": 1440
+    }
+  ],
+  "limitations": [
+    "No browser JavaScript-disable or OS reduced-motion emulation capability was exposed; local mirrors exercise the same static/document and code paths.",
+    "Print CSS was inspected and exercised with a print-style mirror; no native print-to-PDF output produced.",
+    "Network containment comes from both static validators plus zero external runtime asset tags; browser performance-resource API was unavailable in read-only scope.",
+    "Clipboard copy was not invoked to preserve existing user clipboard."
+  ],
+  "earlierFailuresRetained": [
+    {
+      "issue": "375px document overflow28px",
+      "fix": "Long SHA wraps and chart grid/labels have bounded responsive layout."
+    },
+    {
+      "issue": "Animation timestamp undefined in browser callback caused NaN stage lookup",
+      "fix": "Use guarded wall-clock delta; final clean tab reports zero console errors."
+    }
+  ],
+  "scope": "Presentation QA only, not native product, hardware, or model accuracy acceptance."
+}
