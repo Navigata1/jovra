@@ -40,6 +40,21 @@ class Event:
 class AudioSpec:
     events: tuple[Event, ...] = ()
     channels: int = 1
+    # Clicks that are heard but are not ground-truth events (a neighbouring court's hits): quieter and duller.
+    distractors: tuple[Event, ...] = ()
+    # Long clips: the noise floor repeats a one-second seeded block and the WAV is written in one-second
+    # chunks, so an hour of audio needs neither an hour of PRNG calls nor an hour of samples in memory.
+    tiled_noise: bool = False
+
+
+@dataclass(frozen=True)
+class EncodeOptions:
+    """Per-clip encoder settings. The defaults are the T10 fixture settings; long demo clips trade
+    quality for size (a higher CRF, a fixed GOP for seeking and a low audio bitrate for clicks)."""
+    crf: int = 16
+    preset: str = "medium"
+    keyint: int | None = None
+    audio_bitrate: str = "96k"
 
 
 @dataclass(frozen=True)
@@ -60,6 +75,8 @@ class ClipSpec:
     audio: AudioSpec | None = None
     supported: bool = True       # False: a codec the app must reject with a reason
     seed: int | None = None
+    frame_code: bool = True      # False: demo media with no burned-in frame code (ground truth frameCode null)
+    encode: EncodeOptions = EncodeOptions()
     split: str | None = None     # "tuning" | "heldOut" for benchmark clips
     duplicate_of: str | None = None   # id of a clip in the same set whose bytes this file copies
     # Variable frame rate, as phone originals have it: frame durations cycle through ``vfr_cycle`` ticks of
