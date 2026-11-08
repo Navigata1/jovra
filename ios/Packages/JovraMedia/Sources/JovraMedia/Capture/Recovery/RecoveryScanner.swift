@@ -25,7 +25,7 @@ public actor RecoveryScanner {
     public private(set) var refusals: [RecoveryRefusal] = []
     public init(root: URL) { self.root = root.standardizedFileURL }
 
-    public func scan() async throws -> [RecoveredSession] {
+    public func scan(eligible: @Sendable (String) async throws -> Bool = { _ in true }) async throws -> [RecoveredSession] {
         refusals = []
         try RecoveryFiles.refuseLink(root)
         let sessions = root.appendingPathComponent("sessions", isDirectory: true)
@@ -37,7 +37,8 @@ public actor RecoveryScanner {
             let journal = folder.appendingPathComponent("capture-journal.json")
             do {
                 try RecoveryFiles.refuseLink(folder); try RecoveryFiles.refuseLink(journal)
-                guard FileManager.default.fileExists(atPath: journal.path) else { continue }
+                guard FileManager.default.fileExists(atPath: journal.path),
+                      try await eligible(folder.lastPathComponent) else { continue }
                 results.append(try await recover(folder))
             } catch {
                 refusals.append(.init(sessionID: folder.lastPathComponent, reason: String(describing: error)))

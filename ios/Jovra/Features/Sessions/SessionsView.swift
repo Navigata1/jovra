@@ -35,6 +35,7 @@ struct SessionsView: View {
     @Environment(\.localCaptureLibrary) private var library
     @State private var filter = Filter.all
     @State private var state = LoadState.loading
+    @State private var recovery = StartupRecoverySummary()
     @State private var reloadToken = UUID()
 
     var body: some View {
@@ -45,6 +46,7 @@ struct SessionsView: View {
                     .font(.jovraLabel).foregroundStyle(.jovra(.textSecondary))
                     .fixedSize(horizontal: false, vertical: true)
             }
+            CaptureRecoveryNotice(summary: recovery)
             libraryContent
         }
         .task(id: filter) { await reload() }
@@ -87,8 +89,10 @@ struct SessionsView: View {
         state = .loading
         let selectedFilter = filter
         do {
+            let summary = await library.reconcileAtStartup()
             let sessions = try await library.sessions()
             guard !Task.isCancelled, reloadToken == token else { return }
+            recovery = summary
             state = .loaded(sessions.filter { selectedFilter.includes($0.kind) })
         } catch {
             guard !Task.isCancelled, reloadToken == token else { return }
