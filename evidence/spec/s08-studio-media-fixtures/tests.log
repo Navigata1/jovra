@@ -1,0 +1,47 @@
+test_a_frame_without_a_barcode_is_refused (test_barcode_and_clicks.BarcodeTests.test_a_frame_without_a_barcode_is_refused) ... ok
+test_flipping_any_single_bit_is_reported_as_a_mismatch (test_barcode_and_clicks.BarcodeTests.test_flipping_any_single_bit_is_reported_as_a_mismatch) ... ok
+test_payload_fields_are_range_checked (test_barcode_and_clicks.BarcodeTests.test_payload_fields_are_range_checked) ... ok
+test_reads_a_scaled_and_letterboxed_copy_through_the_mapped_rectangle (test_barcode_and_clicks.BarcodeTests.test_reads_a_scaled_and_letterboxed_copy_through_the_mapped_rectangle) ... ok
+test_reads_back_the_payload_it_drew (test_barcode_and_clicks.BarcodeTests.test_reads_back_the_payload_it_drew) ... ok
+test_the_bit_layout_is_start_source_segment_frame_crc_stop (test_barcode_and_clicks.BarcodeTests.test_the_bit_layout_is_start_source_segment_frame_crc_stop) ... ok
+test_click_is_a_one_kilohertz_burst (test_barcode_and_clicks.ClickTests.test_click_is_a_one_kilohertz_burst) ... ok
+test_detects_every_click_at_its_onset_and_nothing_else (test_barcode_and_clicks.ClickTests.test_detects_every_click_at_its_onset_and_nothing_else) ... ok
+test_noise_floor_alone_has_no_clicks (test_barcode_and_clicks.ClickTests.test_noise_floor_alone_has_no_clicks) ... ok
+test_streaming_detection_across_chunk_boundaries_finds_the_same_clicks (test_barcode_and_clicks.ClickTests.test_streaming_detection_across_chunk_boundaries_finds_the_same_clicks) ... ok
+test_written_track_is_the_same_pcm_streamed_or_whole (test_barcode_and_clicks.ClickTests.test_written_track_is_the_same_pcm_streamed_or_whole) ... ok
+test_crc8_matches_the_published_check_value (test_barcode_and_clicks.CrcTests.test_crc8_matches_the_published_check_value) ... ok
+test_media_outside_the_bundle_folder_fails_and_images_pass (test_studio_media.AddedBinaryCheckTests.test_media_outside_the_bundle_folder_fails_and_images_pass) ... ok
+test_a_plan_one_frame_off_mismatches_every_frame (test_studio_media.BarcodeReaderTests.test_a_plan_one_frame_off_mismatches_every_frame) ... ok
+test_flipping_one_barcode_bit_in_a_scratch_copy_is_reported_as_a_mismatch (test_studio_media.BarcodeReaderTests.test_flipping_one_barcode_bit_in_a_scratch_copy_is_reported_as_a_mismatch)
+Decode bc-030, flip bit 20 of frame 100's barcode in a scratch copy, re-encode it, read it back: exactly ... ok
+test_match_and_broll_barcodes_read_on_every_frame (test_studio_media.BarcodeReaderTests.test_match_and_broll_barcodes_read_on_every_frame) ... ok
+test_reader_recovers_every_frame_id_of_the_24_30_and_60_fps_sources (test_studio_media.BarcodeReaderTests.test_reader_recovers_every_frame_id_of_the_24_30_and_60_fps_sources) ... ok
+test_the_restarted_segment_reads_session_frame_ids_after_the_gap (test_studio_media.BarcodeReaderTests.test_the_restarted_segment_reads_session_frame_ids_after_the_gap) ... ok
+test_every_click_is_found_within_one_frame_of_its_truth_and_no_extra (test_studio_media.ClickDetectionTests.test_every_click_is_found_within_one_frame_of_its_truth_and_no_extra) ... ok
+test_the_silent_variant_has_no_audio_track (test_studio_media.ClickDetectionTests.test_the_silent_variant_has_no_audio_track) ... ok
+test_the_demo_subset_installs_within_its_budget (test_studio_media.DemoSubsetTests.test_the_demo_subset_installs_within_its_budget) ... ok
+test_two_forced_runs_write_byte_identical_media_and_reproduce_the_manifests (test_studio_media.DeterminismTests.test_two_forced_runs_write_byte_identical_media_and_reproduce_the_manifests)
+The short sets, re-encoded from scratch twice into fresh caches with --check (which never writes the ... ok
+test_a_frame_without_the_label_fails_the_check (test_studio_media.LabelTests.test_a_frame_without_the_label_fails_the_check) ... ok
+test_every_sampled_frame_of_the_angle_renders_and_broll_carries_its_labels (test_studio_media.LabelTests.test_every_sampled_frame_of_the_angle_renders_and_broll_carries_its_labels) ... ok
+test_the_coherent_match_point_events_fold_to_six_four_six_three (test_studio_media.MatchFoldTests.test_the_coherent_match_point_events_fold_to_six_four_six_three) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 97.630s
+
+OK
+added binary files (1) relative to c5a69ad59860e9cc61298a2414cbb377567ccefd:
+  evidence/x/screen.png  [not media]
+PASS: no media file added outside the bundled demo subset
+added binary files (1) relative to 668ed9e889d3629bf9122cbe52f7739fa196361a:
+  ios/Jovra/Resources/StudioSampleMedia/a.mp4  [.mp4]
+PASS: no media file added outside the bundled demo subset
+added binary files (1) relative to 668ed9e889d3629bf9122cbe52f7739fa196361a:
+  evidence/x/clip.mp4  [.mp4, NOT ALLOWED]
+FAIL: 1 media file(s) added outside ios/Jovra/Resources/StudioSampleMedia/. Studio media is generated into .cache/media/studio by scripts/media/studio/render_studio.py; commit only its manifests.
+added binary files (1) relative to 668ed9e889d3629bf9122cbe52f7739fa196361a:
+  spec/studio/fixtures/media/renamed.bin  [ISO-BMFF (mp4/mov), NOT ALLOWED]
+FAIL: 1 media file(s) added outside ios/Jovra/Resources/StudioSampleMedia/. Studio media is generated into .cache/media/studio by scripts/media/studio/render_studio.py; commit only its manifests.
+
+demo subset: 21,005,897 bytes, du -sk 20532 KiB, budget 25,000,000 bytes
+python3 -m unittest discover -s scripts/media/studio -p 'test_*.py' -v  162.29s user 28.45s system 194% cpu 1:37.83 total

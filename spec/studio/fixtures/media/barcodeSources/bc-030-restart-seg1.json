@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "jovra.studio-media-truth/1",
+  "id": "barcodeSources/bc-030-restart-seg1",
+  "set": "barcodeSources",
+  "role": "barcodeSource",
+  "description": "Barcode source, 30 fps capture restarted once: segment 1 holds session frames 195-344.",
+  "sample": true,
+  "band": "synthetic",
+  "generator": {
+    "script": "scripts/media/studio/render_studio.py",
+    "version": "1.0.0",
+    "sourceHash": "f26ae914a4f4464d660bae1e95f378c38532356a694de127e9c307b8b8ea411d"
+  },
+  "media": {
+    "path": ".cache/media/studio/barcodeSources-f26ae914a4f4464d/bc-030-restart-seg1.mp4",
+    "fileName": "bc-030-restart-seg1.mp4",
+    "container": "mp4",
+    "bundled": false
+  },
+  "video": {
+    "codec": "h264",
+    "width": 1280,
+    "height": 720,
+    "frameRate": {
+      "num": 30,
+      "den": 1
+    },
+    "frameCount": 150,
+    "duration": {
+      "value": 5,
+      "timescale": 1
+    }
+  },
+  "audio": {
+    "codec": "aac",
+    "sampleRate": 48000,
+    "channels": 1,
+    "sampleCount": 240000
+  },
+  "barcode": {
+    "method": "jovra.frame-barcode/1",
+    "bits": 40,
+    "rect": {
+      "x": 0,
+      "y": 640,
+      "width": 1280,
+      "height": 80
+    },
+    "fields": {
+      "start": 1,
+      "source": 7,
+      "segment": 3,
+      "frame": 20,
+      "crc8": 8,
+      "stop": 1
+    },
+    "one": {
+      "y": 235
+    },
+    "zero": {
+      "y": 16
+    },
+    "threshold": {
+      "y": 128
+    },
+    "sourceId": 4,
+    "segment": 1,
+    "frameMap": [
+      {
+        "frame": 0,
+        "frameId": 195,
+        "count": 150
+      }
+    ],
+    "frameMapSha256": "c6ae7bb14597f5e661b9fc1da018bdb30d612dc2f13276926cdaa4a4490d1174"
+  },
+  "clicks": {
+    "hz": 1000,
+    "durationSamples": 480,
+    "peak": 16000,
+    "toleranceFrames": 1,
+    "events": [
+      {
+        "sample": 139248,
+        "time": {
+          "value": 2901,
+          "timescale": 1000
+        },
+        "frame": 87
+      },
+      {
+        "sample": 184048,
+        "time": {
+          "value": 11503,
+          "timescale": 3000
+        },
+        "frame": 115
+      },
+      {
+        "sample": 212848,
+        "time": {
+          "value": 13303,
+          "timescale": 3000
+        },
+        "frame": 133
+      }
+    ]
+  },
+  "labels": [],
+  "restart": {
+    "group": "bc-030-restart",
+    "segment": 1,
+    "sessionStartFrame": 195,
+    "sessionFrameCount": 345,
+    "gaps": [
+      {
+        "fromFrame": 150,
+        "toFrame": 195
+      }
+    ],
+    "clicksInGapFrames": [
+      166,
+      170,
+      185
+    ]
+  },
+  "hashes": {
+    "renderedWithSourceHash": "f26ae914a4f4464d660bae1e95f378c38532356a694de127e9c307b8b8ea411d",
+    "sourceFramesSha256": "c29b26e3a3772b9240fd46208b8ba51d85984879c4de76b8388522d5f33bb5da",
+    "decodedSignature": {
+      "method": "jovra.cellLuma.v1",
+      "sha256": "8806cc062c9bc87593532a31c383bde54a54fd7b46ce8cf3accddf9360c817a7"
+    },
+    "pcmSha256": "08d9a55f8289f96d88489097fdbbffa0a01e7f55c2e521a67e579ed4d2c50800"
+  }
+}
