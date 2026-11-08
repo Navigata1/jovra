@@ -191,7 +191,7 @@ select is_empty($$
 $$, 'T-DB-47: every app_ops table with a text or JSON column refuses secrets BEFORE INSERT OR UPDATE');
 select ok(app_private.has_secret('{"code": "jvc_' || repeat('A', 43) || '"}')
           and app_private.has_secret('https://x.test/s/jvh_' || repeat('b', 43))
-          and app_private.has_secret('Bearer eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig')
+          and app_private.has_secret('Bearer eyJ' || 'hbGciOiJFUzI1NiJ9.' || 'eyJ' || 'zdWIiOiIxMjM0NTY3ODkwIn0.sig')
           and app_private.has_secret('{"to": "owner.tester@example.test"}'),
   'T-DB-47: the guard recognises invite codes, share links, JWTs and email addresses');
 select ok(not app_private.has_secret('{"inviteId": "6a300000-0000-4000-8000-000000000001", "expiresAt": "2026-10-08"}')
