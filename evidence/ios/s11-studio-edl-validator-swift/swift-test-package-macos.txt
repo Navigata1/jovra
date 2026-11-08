@@ -1,0 +1,50 @@
+# swift test (whole JovraStudioCore package, macOS), 2026-11-08T22:14:05Z
+◇ Test run started.
+◇ Suite "EDL validator: parity with edl.py" started.
+◇ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" started.
+◇ Test "every valid edit-plan record passes as stored" started.
+◇ Test "every finding code except the stage gate is a code edl.py raises" started.
+  valid edit-plan.coach-cut-serve: 7 segments, 192 s, motion false, needsCleanAlternate false
+  valid edit-plan.court-memories-final: 5 segments, 258 s, motion true, needsCleanAlternate true
+  valid edit-plan.court-memories-storyboard.clean: 6 segments, 258 s, motion false, needsCleanAlternate false
+  valid edit-plan.court-memories-storyboard: 6 segments, 258 s, motion true, needsCleanAlternate true
+  valid edit-plan.match-broadcast-set-1: 4 segments, 300 s, motion true, needsCleanAlternate true
+  valid edit-plan.rally-pulse-portrait.clean: 4 segments, 45 s, motion false, needsCleanAlternate false
+  valid edit-plan.rally-pulse-portrait: 4 segments, 45 s, motion true, needsCleanAlternate true
+✔ Test "every finding code except the stage gate is a code edl.py raises" passed after 1.371 seconds.
+✔ Test "every valid edit-plan record passes as stored" passed after 1.371 seconds.
+✔ Suite "EDL exact arithmetic" passed after 1.373 seconds.
+✔ Suite "Studio record header" passed after 1.373 seconds.
+✔ Suite "EDL stage allowlist (SD6b)" passed after 1.373 seconds.
+✔ Suite "Studio contracts: time" passed after 1.373 seconds.
+✔ Suite "Studio fixture locator" passed after 1.373 seconds.
+✔ Suite "Studio contracts: schema set" passed after 1.373 seconds.
+✔ Suite "Studio contracts: strict decoding" passed after 1.931 seconds.
+EDL parity: 79 edit-plan invalid cases, 79 match, 0 mismatch(es)
+✔ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" passed after 2.245 seconds.
+✔ Suite "EDL validator: parity with edl.py" passed after 2.246 seconds.
+  refused edit-plan.coach-cut-serve.invalid.json#free-text-card: schema: $.segments[0]: matches 0 of oneOf (exactly 1 required); closest: $.segments[0].templateId: "Your goal: win" does not match ^[a-z][a-z0-9-]{0,31}(\.[a-z0
+  refused edit-plan.court-memories-storyboard.invalid.json#executable-command: schema: $.command: unknown property "command" (additionalProperties is false)
+  refused edit-plan.court-memories-storyboard.invalid.json#approval-in-plan: schema: $.approved: unknown property "approved" (additionalProperties is false)
+  refused edit-plan.court-memories-storyboard.invalid.json#signed-url-source: schema: $.sources[0].url: unknown property "url" (additionalProperties is false)
+  refused edit-plan.court-memories-storyboard.invalid.json#unlabelled-speed: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].speed.num: expected 1, got 5
+  refused edit-plan.court-memories-storyboard.invalid.json#wipe-transition: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].transitionIn.type: "wipe" is not one of the allowed values
+  edl-context restart-first-frame: valid-plan
+  refused edit-plan.court-memories-storyboard.invalid.json#copied-score-digits: schema: $.segments[2]: matches 0 of oneOf (exactly 1 required); closest: $.segments[2].overlayRefs[0].value: unknown property "value" (additionalProperties is f
+  refused edit-plan.court-memories-storyboard.invalid.json#aspect-21-9: schema: $.output.aspect: "21:9" is not one of the allowed values
+  refused edit-plan.court-memories-storyboard.invalid.json#model-guessed-reframe: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].framing: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].
+✔ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" passed after 2.986 seconds.
+  edl-context restart-extrapolated-session: sessionTimeMismatch: segment c05: sessionInUs must be 2000000000 from the sync map
+  edl-context window-ends-at-restart: valid-plan
+  edl-context dissolve-across-restart: transitionHandle: transition needs source handles [107996,108004) inside the same coverage (never across a gap)
+  jovra.edit-plan/2: 7
+✔ Suite "Studio contracts: record round-trips" passed after 3.784 seconds.
+Studio fixture manifest: 39 kinds; consumers: ["ContractsConsumer", "EDLConsumer"]
+  edl-context page=edl swift=consumed consumed=true files=1
+  jovra.edit-plan/2 page=edl swift=consumed consumed=true files=7
+✔ Suite "Studio contracts: fixture manifest" passed after 4.330 seconds.
+Studio vector cases run by Swift checkers: [(key: "edl-context", value: 4)]
+✔ Suite "Studio contracts: vector consumers" passed after 4.535 seconds.
+Studio invalid cases (reference layer): 154 decode (their rules belong to the module tickets); refused as integral floats: ["edit-plan.court-memories-storyboard.invalid.json#integral-float-frame"]
+✔ Suite "Studio contracts: invalid cases" passed after 8.510 seconds.
+✔ Test run with 60 tests in 13 suites passed after 8.512 seconds.
