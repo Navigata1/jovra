@@ -88,6 +88,7 @@ actor LocalCaptureLibrary: RecordingSink {
     private func runStartupRecovery() async -> StartupRecoverySummary {
         let scanner = RecoveryScanner(root: root)
         var summary = StartupRecoverySummary()
+        do { try await store.discardAbandonedFilesImports() } catch { summary.scanFailed = true }
         do {
             let candidates = try await scanner.scan { id in try await self.isStartupRecoveryCandidate(id) }
             summary.refused = await scanner.refusals.count

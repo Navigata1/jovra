@@ -23,14 +23,15 @@ public struct FilesImportService: Sendable {
         let id = UUID()
         let staging = try await store.beginFilesImport(id)
         do {
+            let stagingIdentity = try DurableDirectory.identity(of: staging)
             let relative = "originals/source.\(ext)"
             let original = staging.appendingPathComponent(relative)
             let originals = original.deletingLastPathComponent()
             try excludeFromBackup(staging.deletingLastPathComponent())
             try DurableDirectory.create(at: originals)
             try excludeFromBackup(originals)
-            let file = try copy(source, to: original, relativePath: relative)
-            try excludeFromBackup(original)
+            let (file, identity) = try copy(source, to: original, relativePath: relative)
+            let witness = MediaAdoptionWitness(directory: stagingIdentity, files: [relative: identity])
             let info = try await MediaProbe.probe(original)
             guard let video = info.video, video.isDecodable, let rate = video.frameRate,
                   video.codedWidth > 0, video.codedHeight > 0 else { throw FilesImportError.unsupportedVideo }
@@ -61,7 +62,7 @@ public struct FilesImportService: Sendable {
                 analysis: .init(state: .notRequested, runs: []), review: .init(state: .notStarted),
                 archive: .init(state: .localOnly), storage: .init(originals: .onDevice, includeInDeviceBackup: false),
                 original: .init(state: .saved))
-            try await store.commitFilesImport(document, id: id)
+            try await store.commitFilesImport(document, id: id, verifyOriginal: witness.verify)
             return id.uuidString
         } catch {
             try? await store.discardFilesImport(id)
@@ -75,7 +76,7 @@ public struct FilesImportService: Sendable {
         try item.setResourceValues(values)
     }
 
-    private func copy(_ source: URL, to destination: URL, relativePath: String) throws -> RecordFileReference {
+    private func copy(_ source: URL, to destination: URL, relativePath: String) throws -> (RecordFileReference, MediaFileIdentity) {
         let scoped = source.startAccessingSecurityScopedResource()
         defer { if scoped { source.stopAccessingSecurityScopedResource() } }
         var selected = stat()
@@ -83,7 +84,7 @@ public struct FilesImportService: Sendable {
             throw FilesImportError.unreadableSource
         }
         var coordinationError: NSError?
-        var copied: Result<RecordFileReference, Error>?
+        var copied: Result<(RecordFileReference, MediaFileIdentity), Error>?
         NSFileCoordinator().coordinate(readingItemAt: source, options: [], error: &coordinationError) { coordinated in
             copied = Result { try streamCopy(coordinated, to: destination, relativePath: relativePath) }
         }
@@ -92,12 +93,12 @@ public struct FilesImportService: Sendable {
         return try copied.get()
     }
 
-    private func streamCopy(_ source: URL, to destination: URL, relativePath: String) throws -> RecordFileReference {
+    private func streamCopy(_ source: URL, to destination: URL, relativePath: String) throws -> (RecordFileReference, MediaFileIdentity) {
         let inputFD = open(source.path, O_RDONLY | O_NOFOLLOW | O_NONBLOCK)
         guard inputFD >= 0 else { throw FilesImportError.unreadableSource }
         let input = FileHandle(fileDescriptor: inputFD, closeOnDealloc: true)
         defer { try? input.close() }
-        var before = stat(), after = stat()
+        var before = stat(), after = stat(), declared = stat(), retained = stat()
         guard fstat(inputFD, &before) == 0, before.st_mode & S_IFMT == S_IFREG, before.st_size > 0 else {
             throw FilesImportError.unreadableSource
         }
@@ -105,6 +106,7 @@ public struct FilesImportService: Sendable {
         guard outputFD >= 0 else { throw CocoaError(.fileWriteUnknown) }
         let output = FileHandle(fileDescriptor: outputFD, closeOnDealloc: true)
         defer { try? output.close() }
+        try excludeFromBackup(destination)
         var hash = SHA256(), bytes = 0
         while let chunk = try input.read(upToCount: 1_048_576), !chunk.isEmpty {
             try Task.checkCancellation()
@@ -112,13 +114,18 @@ public struct FilesImportService: Sendable {
             hash.update(data: chunk)
             bytes += chunk.count
         }
-        guard fstat(inputFD, &after) == 0, after.st_size == before.st_size, Int64(bytes) == before.st_size,
-              after.st_mtimespec.tv_sec == before.st_mtimespec.tv_sec, after.st_mtimespec.tv_nsec == before.st_mtimespec.tv_nsec,
-              after.st_ctimespec.tv_sec == before.st_ctimespec.tv_sec, after.st_ctimespec.tv_nsec == before.st_ctimespec.tv_nsec else {
+        guard fstat(inputFD, &after) == 0, lstat(source.path, &declared) == 0,
+              MediaFileIdentity(before) == MediaFileIdentity(after),
+              MediaFileIdentity(before) == MediaFileIdentity(declared), Int64(bytes) == before.st_size else {
             throw FilesImportError.unreadableSource
         }
         try output.synchronize()
+        guard fstat(outputFD, &retained) == 0, retained.st_size == Int64(bytes) else {
+            throw CocoaError(.fileWriteUnknown)
+        }
         try output.close()
-        return .init(path: relativePath, bytes: bytes, sha256: hash.finalize().map { String(format: "%02x", $0) }.joined())
+        let reference = RecordFileReference(path: relativePath, bytes: bytes,
+            sha256: hash.finalize().map { String(format: "%02x", $0) }.joined())
+        return (reference, MediaFileIdentity(retained))
     }
 }

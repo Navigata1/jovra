@@ -22,11 +22,11 @@ private struct RecoveryReceipt: Codable {
 /// adoption is a separate atomic SessionStore operation. Torn-prefix recovery is a later slice.
 public actor RecoveryScanner {
     private let root: URL
-    private var witnesses: [String: RecoveryAdoptionWitness] = [:]
+    private var witnesses: [String: MediaAdoptionWitness] = [:]
     public private(set) var refusals: [RecoveryRefusal] = []
     public init(root: URL) { self.root = root.standardizedFileURL }
 
-    public func adoptionWitness(for id: String) -> RecoveryAdoptionWitness? { witnesses[id] }
+    public func adoptionWitness(for id: String) -> MediaAdoptionWitness? { witnesses[id] }
 
     public func scan(eligible: @Sendable (String) async throws -> Bool = { _ in true }) async throws -> [RecoveredSession] {
         refusals = []
@@ -124,7 +124,7 @@ public actor RecoveryScanner {
         let receipt = RecoveryReceipt(formatVersion: 1, inputs: hashes, result: result)
         let encoded = try CanonicalJSON.encode(receipt)
         if previous?.formatVersion != 1 || previous?.inputs != hashes || previous?.result != result { try files.writeReceipt(encoded) }
-        let witness = RecoveryAdoptionWitness(directory: identity, files: identities)
+        let witness = MediaAdoptionWitness(directory: identity, files: identities)
         try witness.verify(in: folder)
         witnesses[result.sessionID] = witness
         return result
