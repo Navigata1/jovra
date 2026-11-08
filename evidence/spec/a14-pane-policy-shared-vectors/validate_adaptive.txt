@@ -1,4 +1,4 @@
-# A14 evidence, captured 2026-10-11T22:26Z on the build Mac, Python 3.14.7
+# A14 evidence, re-captured 2026-11-08T08:36Z on the build Mac, Python 3.14.7, at the merge of origin/main a7361c9
 
 $ python3 scripts/spec/validate_adaptive.py -v
   breakpoints match ADR-0025 §2
@@ -27,13 +27,8 @@ mutation [font-scale vector below one pane]: caught (exit 1)
 MUTATIONS: all 8 caught
 exit=0
 
-# Manual scratch mutation: font-scale rule removed from a copy of the reference (sed), validator run against it
-$ diff spec/adaptive/reference/pane_policy.py <scratch copy>
-103c103
-<     if text_scale_band == "accessibility":
----
->     if False:
-$ python3 scripts/spec/validate_adaptive.py --reference <scratch>/pane_policy_no_font.py
+$ # scratch copy of the reference with the font-scale rule (panes = max(1, panes - 1)) replaced by pass
+$ python3 scripts/spec/validate_adaptive.py --reference <scratch>/pane_policy_nofont.py
 FAIL font-scale-large-workspace: reference disagrees (expected, got): {'panes': (2, 3)}
 FAIL font-scale-expanded-listDetail: reference disagrees (expected, got): {'arrangement': ('single', 'columns'), 'panes': (1, 2)}
 FAIL font-scale-medium-listDetail: reference disagrees (expected, got): {'arrangement': ('single', 'columns'), 'panes': (1, 2)}
@@ -43,3 +38,17 @@ FAIL posture-occluding-vertical-font-scale: reference disagrees (expected, got):
 FAIL posture-tabletop-player-font-scale: reference disagrees (expected, got): {'arrangement': ('single', 'tabletop'), 'panes': (1, 2)}
 pane-policy: FAILED with 7 problem(s); 112/119 cases agree
 exit=1
+
+$ # no existing spec/ file changes
+$ git diff --name-status origin/main...HEAD -- spec/
+A	spec/adaptive/README.md
+A	spec/adaptive/pane-policy.vectors.json
+A	spec/adaptive/reference/pane_policy.py
+
+$ # regression: existing validators and spec unit tests
+scripts/spec/validate.py exit=0
+scripts/spec/validate_studio.py exit=0
+scripts/spec/validate_room.py exit=0
+Ran 99 tests in 116.613s
+
+OK

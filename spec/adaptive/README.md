@@ -103,8 +103,11 @@ These follow ADR-0025 but resolve wording the ADR leaves open; each is pinned by
    `hingeBounds` becomes `noContent`, the tabletop branch in `reference/pane_policy.py` follows, and the validator is
    re-run.
 5. **Navigation at compact height.** ADR-0025 §3 puts a rail on any compact-height window, including compact width
-   (`compact-height-compact-width-supporting`). Material's default navigation-suite type for compact height and for
-   tabletop may differ (recalled, UNVERIFIED here); A15 must set the type from this policy rather than the default.
+   (`compact-height-compact-width-supporting`). Material's default may differ. The androidx reference for
+   `NavigationSuiteScaffoldDefaults.navigationSuiteType` / `calculateFromAdaptiveInfo` does not document its
+   size-class mapping, and the official `NavigationSuiteScaffold` sample picks a short navigation bar (not a rail) at
+   compact height (checked 2026-11-08 in the androidx reference docs; the library's own mapping is still UNVERIFIED
+   here). A15 must pass `navigationSuiteType` from this policy and never rely on the default.
 
 ## Recording the review
 
