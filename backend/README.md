@@ -11,7 +11,7 @@ Design: `docs/backend/architecture.md` (layout §1.2, local test strategy §12, 
 
 | Folder | What | Test command | CI workflow | Status |
 |---|---|---|---|---|
-| `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migrations 1 (S76 / B-03) and 2 (S77 / B-04) |
+| `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migrations 1 (S76 / B-03), 2 (S77 / B-04) and 3 (S78 / B-05) |
 | `gateway/` | Cloudflare signing gateway Worker | — | — | Not started (B-07) |
 | `render/` | Render-host image | — | — | Not started (B-13) |
 | `contracts/` | Gateway and queue JSON Schemas | See `contracts/README.md` | `.github/workflows/backend-contracts.yml` | Implemented contract/checker foundation (S81 / B-01); gateway/render runtime remains separate |
@@ -165,3 +165,55 @@ and `quotes.cap_cost_micro_usd` columns of T-DB-17 (S78 creates those tables); t
 T-DB-46/62 (gateway routes, S83 onward); `lesson_embeddings` in T-DB-49 (B-20); audit rows for the clip-share
 commands and the outbox row that deletes an unlinked excerpt's object (`app_ops.audit_events`, `app_ops.job_outbox`,
 S78); `create_grant`'s creator checks (S79).
+
+## Migration 3 (S78 / B-05)
+
+`migrations/20261008030000_money_jobs_rls.sql` (architecture §4.1, §4.3, §7, §10; security-model §5.6, §5.7, §6,
+§8.1, §13.5–13.7, §13.9, §13.15–13.17):
+
+- Tables `quotes` (the `consent` object of contract `jovra.quote/1`: `modelProvider`, `textClasses`, `retentionDays`,
+  `consentTextVersion`; `planner_choice`), `usage_reservations` (`initial_quote_id`), `render_jobs`,
+  `render_attempts` (leases, `input_refs`, `output_plan` with a byte cap per output, `output_refs`, `measurements`,
+  `planner_budget`), `artifact_sources`, `provider_connections` (status rows only) and `deletion_requests`; in
+  `app_ops`: `upload_sessions`, `upload_parts`, `job_outbox`, `idempotency_records`, `spend_limits`,
+  `spend_commitments` and `audit_events` (the quota tables are migration 2's).
+- No client writes money, jobs, attempts, artifacts, artifact sources, grants or deletion requests: no INSERT, UPDATE
+  or DELETE grant exists for `authenticated` or `anon` (T-DB-26). Owners read quotes and holds as credits only; the
+  micro-USD columns, the plan key and the requester are not granted. Coaches read jobs and attempts but no money and
+  no `measurements`, `planner_budget`, leases or refs (finding 32, T-DB-25).
+- One hold and one live job per `(project, plan, plan version, output)` with `NULLS NOT DISTINCT`, so plan-by-job work
+  (version null) cannot open a second hold or job (finding 18, §13.6); an accepted quote funds exactly one hold and a
+  hold bounds exactly one job.
+- Composite foreign keys bind every plan, version, quote, hold, job, attempt and artifact source to its own project,
+  and the excerpt links in both directions (`artifacts.lesson_clip_id`, `lesson_clips.excerpt_artifact_id`) replace
+  migration 2's single-column ones (findings 17, 31; T-DB-59 FK half). `artifacts.job_id`/`attempt_id` get their FKs.
+- `ready` needs a verified, delivered film of the job (`b10_check_job_state`, `P0409 artifact_not_verified`): the
+  table half of T-DB-53, which `set_job_state` (S80) inherits. A hold is never unbounded (positive micro-USD cap,
+  reserved ≤ cap, consumed + released ≤ reserved), output caps stay inside a per-kind ceiling, and planner budgets
+  exist only on the `plan` stage, all as coded `P0422` errors before any CHECK.
+- `provider_connections` has no token, secret, key, URL, endpoint or email column (T-DB-29); scopes are names, never
+  URLs, and `account_label` never holds an email. It is client-insertable for the row's own user, so it has
+  `a00_rls_guard`, `a10_validate`, a quota row and `a20_enforce_quota` like every such table.
+- `app_ops` is server-only. `a05_refuse_secrets` on every `app_ops` table with a text or JSON column refuses any
+  `jv[igslhc]_` token, JWT or email address (`P0422 secret_not_storable`, T-DB-47 table half); the outbox holds ids
+  only, one shape per kind; `spend_limits` fails closed: NOT NULL limits, one seeded default owner row and no
+  environment row until the operator sets it (§13.7, finding 19); the spend ledger and audit log are append-only
+  (the audit log may only be purged after 400 days).
+- `approve_clip_share` and `revoke_clip_share` now write audit rows; a withdrawal also unlinks and hides the excerpt.
+  Every unlinked excerpt (withdrawal or moved window) gets a `delete_object` outbox row. Grant rows disappear for
+  creators and grantees as soon as their project's deletion starts (T-DB-50). `lesson_deletion_artifacts` lists a
+  lesson's excerpts and their children so the deletion step removes objects before the row cascade (T-DB-48).
+
+Tests: `money_01_catalog` (tables, composite FKs and delete actions, the two `NULLS NOT DISTINCT` keys, hidden columns,
+T-DB-26 grants, T-DB-29 `hasnt_column`, app_ops privileges and the T-DB-47 trigger lint, spend-limit seeding, T-DB-01
+for the new tables), `money_02_roles` (T-DB-25, 26, 27, 28, 29, 31, 50 and T-DB-06 for the new tables, as owner, coach,
+viewer, clip viewer, unrelated and anonymous users) and `money_03_integrity` (finding 18 unique-index test, one live
+job, T-DB-53 table half, T-DB-59 FK half as `jovra_owner`, consent, output caps and planner budgets, finding 31
+excerpts and artifact sources, clip-share audit and outbox rows, T-DB-48, T-DB-47 table half with a scan that is shown
+to fail on a planted secret, upload sessions, append-only ledgers). `identity_01` and `media_01` lint the new objects
+too (owner, search_path, RLS, quotas, FK covering indexes, one permissive policy per role and command).
+
+Not covered here (later tickets): the command halves. T-DB-47's "run every secret-minting command" and T-DB-59's
+`create_quote`/`review_job` `P0404` are S79 (gateway commands); T-DB-53's `set_job_state`, `reserve_stage`,
+`finish_attempt` and `mark_artifact_verified` role checks are S80 (orchestrator commands); T-DB-48's deletion
+Workflow is S94. Denial audit rows (`audit_denial`) are S79.

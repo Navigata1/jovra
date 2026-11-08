@@ -1,0 +1,28 @@
+Building for debugging...
+[Using on-disk description]
+[1 / 5]
+[2 / 6] JovraMedia
+[3 / 7] JovraMedia
+[10 / 13] JovraMedia
+/Users/IDC2.5/jv/.claude/worktrees/t15-capture-engine/ios/Packages/JovraMedia/Sources/JovraMedia/Capture/CameraSource.swift:100:17: [1;33mwarning: [1;39mwill never be executed[0;0m
+ [0;36m97 |[0;0m             didReset = false
+ [0;36m98 |[0;0m             #endif
+ [0;36m99 |[0;0m             if didReset {
+    [0;36m|[0;0m                `- [1;39mnote: [1;39mcondition always evaluates to false[0;0m
+[0;36m100 |[0;0m                 self.control.async { self.resetRequired = true }
+    [0;36m|[0;0m                 `- [1;33mwarning: [1;39mwill never be executed[0;0m
+[0;36m101 |[0;0m                 self.lock.withLock { self.onFailure }?(CaptureSourceFailure.mediaServicesReset)
+[0;36m102 |[0;0m             } else { self.lock.withLock { self.onFailure }?(error ?? CaptureError.sourceFailed("Camera runtime failure")) }
+[12 / 15] JovraMedia
+[15 / 16] JovraBenchmarkTests-product
+[18 / 21] JovraMediaTests-product
+[35 / 38] JovraMediaTests-product
+[37 / 38] JovraMediaTests-product
+[44 / 45] jovra-benchmark-product
+Build complete! (3.98 sec)
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test criticalHeatAbove30fpsJournalsTheFrameRateChangeAndContinuesAt30fpsInTheSameSession() started.
+✔ Test criticalHeatAbove30fpsJournalsTheFrameRateChangeAndContinuesAt30fpsInTheSameSession() passed after 0.667 seconds.
+✔ Test run with 1 test in 0 suites passed after 0.667 seconds.
