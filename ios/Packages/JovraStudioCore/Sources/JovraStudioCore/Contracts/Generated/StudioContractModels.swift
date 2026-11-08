@@ -5,7 +5,7 @@ import JovraCore
 
 /// The schema bytes these models were generated from (StudioSchemaSource.digest(of:)).
 public enum StudioContractModels {
-    public static let schemaDigest = "9c19ee7c374f18f1"
+    public static let schemaDigest = "e8fa1378aefefe03"
 }
 
 public struct BrollCatalog: Codable, Equatable, Sendable {
