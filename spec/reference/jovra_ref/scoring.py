@@ -584,6 +584,12 @@ def fold(setup: dict, log: list[dict], mode: str | None = None) -> dict:
                     "derived": side,
                 }
             )
+        if "servedFromSide" in event and side is not None and event["servedFromSide"] != side:
+            # Rule 27a: served from the wrong half. The point and any fault before discovery stand; the
+            # derived half is kept and the next point is served from the correct half (decision 25).
+            conflicts.append(
+                {"type": "sideMismatch", "pointId": event["id"], "recorded": event["servedFromSide"], "derived": side}
+            )
         if event["id"] not in overrides.servers and "recordedServer" in event and event["recordedServer"] != server:
             conflicts.append(
                 {

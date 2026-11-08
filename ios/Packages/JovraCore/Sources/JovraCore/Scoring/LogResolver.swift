@@ -24,7 +24,8 @@ enum LogResolver {
         }
         var order: [String] = [], replaced: [String: String] = [:], byID: [String: SessionLogEvent] = [:]
         var doubles: [Int: SessionDoublesOrderEvent] = [:], inert = voided, tombstones = Set<String>()
-        func current(_ value: String) -> String { var id = value; while let next = replaced[id] { id = next }; return id }
+        var refused: [String: String] = [:] // a suggestion that may not overwrite a reviewed point -> that point
+        func current(_ value: String) -> String { var id = value; while let next = replaced[id] ?? refused[id] { id = next }; return id }
         func slot(_ value: String) -> String {
             var id = current(value), visited = Set<String>()
             while !order.contains(id), let target = seen[id]?.supersedes {
@@ -45,6 +46,7 @@ enum LogResolver {
                 if inert.contains(target) { inert.insert(event.id); continue }
                 guard let index = order.firstIndex(of: target) else { throw ScoringError(.supersedeTargetMissing, event.id) }
                 guard byID[target]?.typeString == event.typeString else { throw ScoringError(.supersedeTypeMismatch, event.id) }
+                if isSuggestion(event), let reviewed = byID[target], isReviewed(reviewed) { refused[event.id] = target; continue }
                 order[index] = event.id; replaced[target] = event.id
             } else if let insert = event.insertBefore {
                 let target = slot(insert)
@@ -59,5 +61,15 @@ enum LogResolver {
         }
         return ResolvedLog(placed: order.filter { !tombstones.contains($0) }.compactMap { byID[$0] }, orders: doubles,
             history: TimelineHistory(voided: voided.sorted(), superseded: replaced.keys.sorted().map { .init(id: $0, by: replaced[$0]!) }))
+    }
+    /// Re-analysis (spec decision 24): an automatic suggestion carries a detected block only. It may replace an
+    /// unreviewed candidate but never a reviewed point; a refused suggestion stays in the log and changes nothing.
+    private static func isSuggestion(_ event: SessionLogEvent) -> Bool {
+        if case .point(let point) = event { return point.reviewed == nil }
+        return false
+    }
+    private static func isReviewed(_ event: SessionLogEvent) -> Bool {
+        if case .point(let point) = event { return point.reviewed != nil }
+        return false
     }
 }

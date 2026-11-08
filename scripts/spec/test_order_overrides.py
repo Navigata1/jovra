@@ -224,5 +224,34 @@ class ReviewedOrderPairs(unittest.TestCase):
         event["discoveryAfterPointId"] = first["id"]
         self.assertTrue(schemas.validate(doc, "session.schema.json"))
 
+    def test_served_from_side_is_a_1_2_field(self):
+        """Rule 27a servedFromSide (T04, decision 25): a 1.2.0 point may carry it; earlier stamps may not."""
+        schemas = SchemaSet(ROOT / "spec/schemas")
+        doc = json.loads((ROOT / "spec/fixtures/sample/jon-vs-alex.session.json").read_text())
+        point = next(e for e in doc["match"]["log"] if e["type"] == "point")
+        point["servedFromSide"] = "ad"
+        doc["schemaVersion"] = "1.2.0"
+        self.assertEqual(schemas.validate(doc, "session.schema.json"), [])
+        for version in ("1.0.0", "1.1.0", "01.01.000"):
+            doc["schemaVersion"] = version
+            self.assertTrue(schemas.validate(doc, "session.schema.json"), version)
+        doc["schemaVersion"] = "1.2.0"
+        point["servedFromSide"] = "middle"
+        self.assertTrue(schemas.validate(doc, "session.schema.json"))
+
+    def test_served_from_wrong_half_stands_and_is_flagged(self):
+        """The fold keeps the derived half, lets the point stand and raises sideMismatch (Rule 27a)."""
+        setup = singles(CLUB_BO3)
+        log = [{"id": f"e{n}", "seq": n, "type": "point",
+                "reviewed": {"winner": "A", "endType": "unknown", "provenance": "manual", "source": "user"}}
+               for n in (1, 2)]
+        log[1]["servedFromSide"] = "deuce"
+        fold = scoring.fold(setup, log)
+        self.assertEqual(fold["points"][1]["courtSide"], "ad")
+        self.assertEqual(fold["conflicts"], [{"type": "sideMismatch", "pointId": "e2", "recorded": "deuce",
+                                              "derived": "ad"}])
+        log[1]["servedFromSide"] = "ad"
+        self.assertEqual(scoring.fold(setup, log)["conflicts"], [])
+
 
 if __name__ == "__main__": unittest.main()
