@@ -1,0 +1,12 @@
+A01 (#179) merge gate, round 2. Unchanged since round 1 (10-merge-gate-status.txt): both A01 gates are still open.
+## Merge gate status (round 2), captured 2026-11-08T08:40:01Z
+#375 OPEN ADR: record the Android start and the verified Lane A toolchain pins (story 351, A01 merge gate)
+#376 OPEN ADR-0001 header note: amended by ADR-0024, Android start condition only (F-ADR-0001, A01 merge gate)
+#377 OPEN ADR-0008 Android amendment: Drive authorization through Play services AuthorizationClient (F-ADR-0008, A49 merge gate)
+$ gh pr list --state all --search "ADR-0001 in:title" ; gh pr list --state all --search "Lane A pins in:title"
+(empty = no PR, open or merged, exists for #376 or #375)
+$ git show origin/main:docs/adr/0001-native-per-platform-shared-contracts.md | grep -ci "ADR-0024"
+0   (ADR-0001 on main still has no "amended by ADR-0024" note)
+
+A01 cannot clear these itself: they are ADR-owner (ready-for-human) changes and no Android ticket edits docs/adr/.
+PR #378 stays a draft and unmerged until #376 and #375 merge to main.

@@ -1,0 +1,167 @@
+# Module-boundary check, round 2 (2026-11-08): five deliberate violations on a local scratch branch
+# Base: ticket/a01-android-build-foundation-lane-a at 990e299 (origin/main a7361c9 merged).
+# Each violation is its own commit on scratch/a01-boundary-negatives-2026-11-08b, followed by a revert commit. The branch is local and never pushed.
+# JDK openjdk version "17.0.19" 2026-04-21, Gradle 9.3.1, ANDROID_HOME unset.
+
+================================================================
+## Baseline: the A01 tree as committed (expect pass)
+## scratch branch scratch/a01-boundary-negatives-2026-11-08b at 990e299
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'core/build.gradle.kts' has changed.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin UP-TO-DATE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+> Task :checkModuleBoundaries
+Checked 20 modules: 0 violation(s).
+BUILD SUCCESSFUL in 836ms
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 0
+
+================================================================
+## Violation 1: JVM module depends on an Android module (expect FAIL)
+## scratch branch scratch/a01-boundary-negatives-2026-11-08b at 81db0ac
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'core/build.gradle.kts' has changed.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin UP-TO-DATE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :core JVM_DEPENDS_ON_ANDROID: depends on Android module :designsystem (JVM modules never depend on Android modules)
+BUILD FAILED in 716ms
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 1
+
+================================================================
+## Violation 2: feature module depends on another feature module (expect FAIL)
+## scratch branch scratch/a01-boundary-negatives-2026-11-08b at 305d47f
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'core/build.gradle.kts' has changed.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin UP-TO-DATE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :feature:record FEATURE_DEPENDS_ON_FEATURE: depends on feature module :feature:sessions (feature modules never depend on each other)
+BUILD FAILED in 804ms
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 1
+
+================================================================
+## Violation 3: java.net.Socket outside :room-transport (expect FAIL)
+## scratch branch scratch/a01-boundary-negatives-2026-11-08b at 3f95619
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'feature/record/build.gradle.kts' has changed.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin UP-TO-DATE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :feature:sessions NETWORK_OUTSIDE_ROOM_TRANSPORT: src/main/kotlin/com/islanddevcrew/jovra/feature/sessions/Peer.kt references Socket (only :room-transport may use sockets, NSD or Wi-Fi)
+BUILD FAILED in 848ms
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 1
+
+================================================================
+## Violation 4: CameraX outside :media (expect FAIL)
+## scratch branch scratch/a01-boundary-negatives-2026-11-08b at 75b9dfd
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Reusing configuration cache.
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :feature:record MEDIA_OUTSIDE_MEDIA: src/main/kotlin/com/islanddevcrew/jovra/feature/record/Framing.kt references androidx.camera (only :media may use CameraX, Media3 or MediaCodec)
+BUILD FAILED in 351ms
+1 actionable task: 1 executed
+Configuration cache entry reused.
+exit status: 1
+
+================================================================
+## Violation 5: Media3 outside :media (expect FAIL)
+## scratch branch scratch/a01-boundary-negatives-2026-11-08b at 3d38c28
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'studio/editor/build.gradle.kts' has changed.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin UP-TO-DATE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :studio:editor MEDIA_OUTSIDE_MEDIA: declares dependency androidx.media3:media3-exoplayer (only :media may use CameraX, Media3 or MediaCodec)
+BUILD FAILED in 1s
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 1
+
+================================================================
+## After the five revert commits (tree equal to base) (expect pass)
+## scratch branch scratch/a01-boundary-negatives-2026-11-08b at b13f615
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'studio/editor/build.gradle.kts' has changed.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin UP-TO-DATE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors UP-TO-DATE
+> Task :build-logic:convention:processResources UP-TO-DATE
+> Task :build-logic:convention:classes UP-TO-DATE
+> Task :build-logic:convention:jar UP-TO-DATE
+> Task :checkModuleBoundaries
+Checked 20 modules: 0 violation(s).
+BUILD SUCCESSFUL in 1s
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 0
+
+## git diff --stat 990e299ede78dc60714fe74317d3ad26c4f96881 HEAD (expect empty):
+## scratch branch log:
+b13f615 revert: undo scratch violation 5
+3d38c28 test(scratch): :studio:editor declares media3-exoplayer
+ef382a2 revert: undo scratch violation 4
+75b9dfd test(scratch): CameraX Preview in :feature:record
+cf75d55 revert: undo scratch violation 3
+3f95619 test(scratch): java.net.Socket in :feature:sessions
+2ab5838 revert: undo scratch violation 2
+305d47f test(scratch): :feature:record depends on :feature:sessions
+41b9db7 revert: undo scratch violation 1
+81db0ac test(scratch): JVM :core depends on Android :designsystem
+
+# Note: an earlier attempt the same morning used an invalid 'git revert -q' flag, so its reverts did not happen and the violations
+# accumulated (each later run reported the earlier violations as well; every run still failed). It was discarded; the run above is the clean one.
+# Both scratch branches (scratch/a01-boundary-negatives-2026-11-08 and ...-08b) are local only and were never pushed.
