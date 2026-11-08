@@ -1,7 +1,15 @@
-S77 T-DB index: pgTAP assertions from backend-db run 38201040080 (commit 1880fcb), step 'pgTAP assertions by id'.
-Every line below is an 'ok' assertion; the run had 363 assertions across 10 files and Result: PASS.
-media_* assertions: 184, not ok: 0
+S77 T-DB index: pgTAP assertions from backend-db run 42464482282 (commit ec71c8f), step 'pgTAP assertions by id'.
+The run had 365 assertions across 10 files, 0 not ok, and pg_prove Result: PASS.
+media_* assertions: 186, not ok: 0
 
+T-DB-1: 4 assertion(s)
+  media_01_catalog.test.sql: ok 41 - T-DB-01: unauthenticated select on camera_sources is denied
+  media_01_catalog.test.sql: ok 42 - T-DB-01: unauthenticated select on point_event_revisions
+  media_01_catalog.test.sql: ok 43 - T-DB-01: unauthenticated select on lessons is denied
+  media_01_catalog.test.sql: ok 44 - T-DB-01: unauthenticated insert into lessons is denied
+T-DB-6: 2 assertion(s)
+  media_02_sources_events.test.sql: ok 40 - T-DB-06: an unrelated user sees 0 rows of A's events, sync maps, sources, manifests, versions, calibrations
+  media_03_lessons_clips.test.sql: ok 69 - T-DB-06: an unrelated user sees 0 lessons, clips, observations, plans, artifacts and grants
 T-DB-12: 2 assertion(s)
   media_02_sources_events.test.sql: ok 2 - T-DB-12: coach inserting an event revision is an RLS violation
   media_02_sources_events.test.sql: ok 3 - T-DB-12: nothing was appended
@@ -66,6 +74,8 @@ T-DB-24: 6 assertion(s)
   media_02_sources_events.test.sql: ok 29 - T-DB-24: a user draft is accepted unvalidated; the trigger sets version 2 and the plan's project
   media_02_sources_events.test.sql: ok 32 - T-DB-24: a coach may add a heuristic draft
   media_02_sources_events.test.sql: ok 33 - T-DB-24: a coach inserting a model-planned version is an RLS violation
+T-DB-26: 1 assertion(s)
+  media_03_lessons_clips.test.sql: ok 23 - T-DB-26 (grants): owner cannot write a grant directly
 T-DB-41: 1 assertion(s)
   media_03_lessons_clips.test.sql: ok 6 - T-DB-41: owner attaching a clip of B's match is an RLS violation
 T-DB-42: 1 assertion(s)
@@ -85,6 +95,8 @@ T-DB-46: 7 assertion(s)
   media_03_lessons_clips.test.sql: ok 46 - T-DB-46: after approval the viewer sees the coach's clip
   media_03_lessons_clips.test.sql: ok 47 - T-DB-46: and its excerpt, nothing else of the match
   media_03_lessons_clips.test.sql: ok 48 - T-DB-46: once the owner revokes the coach, the downstream viewer gets 0 rows at once
+T-DB-48: 1 assertion(s)
+  media_03_lessons_clips.test.sql: ok 5 - T-DB-48 (grant half): owner cannot delete a lesson directly
 T-DB-49: 3 assertion(s)
   media_03_lessons_clips.test.sql: ok 27 - T-DB-49 (lesson side): a lesson coach sees no observation that also belongs to a project they cannot access
   media_03_lessons_clips.test.sql: ok 34 - T-DB-49: a project coach sees A's own observations
@@ -131,78 +143,4 @@ T-DB-70: 5 assertion(s)
   media_04_quotas.test.sql: ok 24 - T-DB-70: the refused insert left the aggregate unchanged
   media_04_quotas.test.sql: ok 25 - T-DB-70: with no *user_total row a table under its own limit is P0429 too
 
-Other media_* assertions (findings, stories, invariants): 74
-  media_01_catalog.test.sql: ok 1 - camera_sources exists
-  media_01_catalog.test.sql: ok 2 - source_manifests exists
-  media_01_catalog.test.sql: ok 3 - sync_maps exists
-  media_01_catalog.test.sql: ok 4 - calibration_versions exists
-  media_01_catalog.test.sql: ok 5 - point_event_revisions exists
-  media_01_catalog.test.sql: ok 6 - observations exists
-  media_01_catalog.test.sql: ok 7 - lessons exists
-  media_01_catalog.test.sql: ok 8 - lesson_clips exists
-  media_01_catalog.test.sql: ok 9 - story_plans exists
-  media_01_catalog.test.sql: ok 10 - story_plan_versions exists
-  media_01_catalog.test.sql: ok 11 - artifacts exists (lesson_clips.excerpt_artifact_id and stale marking need it)
-  media_01_catalog.test.sql: ok 12 - access_grants exists (lesson_access and clip sharing need it)
-  media_01_catalog.test.sql: ok 13 - app_ops.quota_limits exists
-  media_01_catalog.test.sql: ok 14 - app_ops.quota_counters exists
-  media_01_catalog.test.sql: ok 15 - finding 31/22a: lesson_clips (project_id, source_id) -> camera_sources(project_id, id), SET NULL (source_id) only
-  media_01_catalog.test.sql: ok 16 - finding 31/22a: observations (project_id, source_id) -> camera_sources(project_id, id), SET NULL (source_id) only
-  media_01_catalog.test.sql: ok 17 - finding 31: calibration_versions (project_id, source_id) -> camera_sources(project_id, id), cascade
-  media_01_catalog.test.sql: ok 18 - finding 31: artifacts (project_id, source_id) -> camera_sources(project_id, id)
-  media_01_catalog.test.sql: ok 19 - finding 31: artifacts (project_id, parent_artifact_id) -> artifacts(project_id, id)
-  media_01_catalog.test.sql: ok 20 - finding 31: access_grants (project_id, artifact_id) -> artifacts(project_id, id)
-  media_01_catalog.test.sql: ok 21 - finding 17: story_plan_versions (project_id, story_plan_id) -> story_plans(project_id, id)
-  media_01_catalog.test.sql: ok 22 - sync_maps name a manifest revision of their own project
-  media_01_catalog.test.sql: ok 23 - finding 22a: deleting a source (and its calibrations) never stalls on an observation that used the calibration
-  media_01_catalog.test.sql: ok 24 - finding 17: the composite targets render_jobs, quotes and usage_reservations will reference exist
-  media_01_catalog.test.sql: ok 26 - no client deletes: lessons, clips and media go through deletion_requests (objects first)
-  media_01_catalog.test.sql: ok 27 - camera_sources, source_manifests, artifacts and access_grants are written only through app_gateway
-  media_01_catalog.test.sql: ok 31 - finding 20: share approval, the excerpt link and the clip's project and source are not client-writable
-  media_01_catalog.test.sql: ok 32 - finding 23: every client-insertable table has the BEFORE INSERT a20_enforce_quota trigger
-  media_01_catalog.test.sql: ok 33 - finding 23: every client-insertable table has an app_ops.quota_limits row
-  media_01_catalog.test.sql: ok 34 - finding 23: the per-user aggregate limit row exists
-  media_01_catalog.test.sql: ok 35 - quota tables are server-only
-  media_01_catalog.test.sql: ok 36 - finding 20: jovra_gateway may call approve_clip_share and revoke_clip_share
-  media_01_catalog.test.sql: ok 37 - finding 20: neither the orchestrator nor a client may call the clip-share commands
-  media_01_catalog.test.sql: ok 38 - finding 20: deletion_scope has lesson_clip
-  media_02_sources_events.test.sql: ok 1 - a server-written manifest gets revision 1 and becomes the project's current manifest
-  media_02_sources_events.test.sql: ok 7 - created_by is not client-writable
-  media_02_sources_events.test.sql: ok 19 - an estimated sync map has no reviewer; the next revision is 2
-  media_02_sources_events.test.sql: ok 20 - a client cannot insert a sync map in review state rejected
-  media_02_sources_events.test.sql: ok 21 - a sync map must name an existing manifest revision of its own project
-  media_02_sources_events.test.sql: ok 23 - owner adds a manual calibration as version 1
-  media_02_sources_events.test.sql: ok 24 - the next calibration of the same source is version 2
-  media_02_sources_events.test.sql: ok 25 - a client cannot claim a validated calibration
-  media_02_sources_events.test.sql: ok 30 - owner A adding a version to B's plan is an RLS violation (the guard resolves the plan's own project)
-  media_02_sources_events.test.sql: ok 31 - the plan's current_version follows its newest version
-  media_02_sources_events.test.sql: ok 35 - coach sees the project's two sources
-  media_02_sources_events.test.sql: ok 38 - the helper restored the session role
-  media_03_lessons_clips.test.sql: ok 1 - owner creates a lesson; owner_id defaults to the caller
-  media_03_lessons_clips.test.sql: ok 2 - story 179: the first device's edit at revision 1 lands as revision 2
-  media_03_lessons_clips.test.sql: ok 3 - story 179: the second device, still at revision 1, changes 0 rows (a conflict to show, not an overwrite)
-  media_03_lessons_clips.test.sql: ok 4 - lessons.owner_id is immutable
-  media_03_lessons_clips.test.sql: ok 10 - owner attaches a clip of their own match (same-project source)
-  media_03_lessons_clips.test.sql: ok 11 - a clip longer than 10 minutes is P0422 (no CHECK DETAIL)
-  media_03_lessons_clips.test.sql: ok 13 - owner binds their own lesson into a plan of their own project
-  media_03_lessons_clips.test.sql: ok 22 - owner sees every member-visible artifact of A
-  media_03_lessons_clips.test.sql: ok 26 - a lesson coach sees the lesson
-  media_03_lessons_clips.test.sql: ok 32 - a lesson viewer cannot add an observation
-  media_03_lessons_clips.test.sql: ok 36 - only the author may change an observation's text
-  media_03_lessons_clips.test.sql: ok 38 - the coach sees their own clip, not the owner's lesson clips
-  media_03_lessons_clips.test.sql: ok 39 - a client cannot choose a clip's id
-  media_03_lessons_clips.test.sql: ok 40 - finding 31: a clip cannot link another clip's excerpt
-  media_03_lessons_clips.test.sql: ok 43 - an unrelated actor gets P0404
-  media_03_lessons_clips.test.sql: ok 45 - finding 20: the approval is pinned to the clip's fingerprint
-  media_03_lessons_clips.test.sql: ok 54 - finding 20: the coach cannot withdraw the owner's approval either
-  media_03_lessons_clips.test.sql: ok 55 - finding 20: the project owner withdraws the approval with revoke_clip_share
-  media_03_lessons_clips.test.sql: ok 57 - the coach still sees their own clip after the withdrawal
-  media_03_lessons_clips.test.sql: ok 63 - the grantee sees their own grant row
-  media_03_lessons_clips.test.sql: ok 70 - story 173: the clip survives its source's deletion with source_id null and its project kept
-  media_03_lessons_clips.test.sql: ok 71 - finding 22a: the observation survives too (no stalled deletion)
-  media_03_lessons_clips.test.sql: ok 72 - the source's calibrations go with it
-  media_04_quotas.test.sql: ok 8 - lessons are counted against the user
-  media_04_quotas.test.sql: ok 9 - the per-user aggregate counted all 12 accepted rows and none of the 4 refused
-  media_04_quotas.test.sql: ok 10 - one lifetime row per (table, subject): events, sync maps, versions, lessons and the aggregate
-  media_04_quotas.test.sql: ok 18 - exactly 7 revisions landed across 5 projects
-  media_04_quotas.test.sql: ok 21 - the third project of the day is P0429
+Other media_* assertions (findings, stories, invariants, performance hygiene): 76

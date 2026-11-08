@@ -47,6 +47,7 @@ supabase/scripts/gen-signing-key.sh          # once per checkout; the CLI will n
 supabase start
 supabase db reset                            # migrations + seed from scratch
 supabase db advisors --local --type security --fail-on warn
+supabase db advisors --local --type performance --level info --fail-on warn
 supabase test db
 supabase status -o env > /tmp/jovra-status.env && python3 supabase/scripts/otp_smoke.py /tmp/jovra-status.env
 python3 supabase/scripts/postgrest_identity_smoke.py /tmp/jovra-status.env
@@ -61,7 +62,9 @@ helpers in the local database; `supabase db reset` removes them.
 ### What CI proves
 
 `backend-db` runs on every pull request touching `backend/supabase/**` or the workflow: the identifier check, then
-`supabase start`, `supabase db reset`, the security advisors (fail on warn), `supabase test db`, the OTP smoke
+`supabase start`, `supabase db reset`, the security and performance advisors (each fails on warn; the performance
+run also prints its info-level findings, where `unused_index` is expected on a fresh database), `supabase test db`,
+the OTP smoke
 test and the PostgREST identity smoke test. A failing pgTAP assertion or smoke check turns it red.
 
 ## Migration 1 (S76 / B-03)
@@ -145,11 +148,14 @@ the owner/unrelated paths through PostgREST with real ES256 session tokens minte
   per user, plus the per-user aggregate `*user_total`, in `app_ops.quota_limits` / `quota_counters`. A missing
   limits row refuses, a lesson-only observation counts against the writing user, a refusal rolls its increments
   back (`P0429 quota_exceeded`).
+- Performance hygiene: one permissive policy per table, role and command (`artifacts_select` covers members and
+  viewers), and every foreign key in `public` has a covering index, author and reviewer columns included, so a
+  profile deletion's `SET NULL` never scans a table. `media_01_catalog` asserts both.
 - Every client-insertable table has `a00_rls_guard` (one function, `app_private.rls_guard()`, calling the same
   `can_insert_<table>` predicate as the INSERT policy) and coded `P0422` validation before constraints.
 
 Tests: `media_01_catalog` (tables, composite FKs and delete actions, append-only grants, hidden columns, quota
-lints, command privileges, T-DB-01 for the new tables), `media_02_sources_events` (T-DB-12, 13, 14, 15, 16, 24, 43,
+lints, command privileges, FK covering indexes and policy overlap, T-DB-01 for the new tables), `media_02_sources_events` (T-DB-12, 13, 14, 15, 16, 24, 43,
 59 FK half, the `parent_revision` variant of T-DB-65), `media_03_lessons_clips` (T-DB-17, 18–23, 41, 42, 45, 46, 49,
 52, 62, 69; stories 173 and 179) and `media_04_quotas` (T-DB-64, 70).
 
