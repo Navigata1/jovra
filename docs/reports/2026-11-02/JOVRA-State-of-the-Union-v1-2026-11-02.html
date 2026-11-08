@@ -1,0 +1,489 @@
+<!doctype html><html lang="en" data-mode="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="signal-kind" content="sotu"><title>JOVRA State of the Union</title><meta name="description" content="Evidence-led JOVRA assessment and executable Codex handoff, November 2, 2026."><script>(function(){var DEFAULT_MODE="light",m=DEFAULT_MODE;try{var v=localStorage.getItem("signal-mode:"+location.pathname);if(v==="dark"||v==="light")m=v;}catch(e){}document.documentElement.setAttribute("data-mode",m);})();</script><style>
+
+:root{
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --display:"SF Pro Display","Helvetica Neue","Arial Black",Arial,system-ui,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+:root[data-mode="dark"]{color-scheme:dark;--bg:#070f0c;--panel:#0e211b;--panel-2:#183027;--border:#355246;--border-soft:#263e33;--grid:#172b21;--tick:#748b7b;--text:#f4f1e8;--muted:#c0ccc3;--dim:#9fb3a5;--a1:#d7f56a;--a2:#e3ad8d;--good:#a4d7ae;--warn:#e6bd66;--bad:#f4a19a;--info:#9ed8cf;--neutral:#778b80;--cell-off:#293e33;--dot-off:#344d3c;--hue-1:#d7f56a;--hue-2:#e3ad8d;--hue-3:#72c6b8;--hue-4:#cbcf8f;--hue-5:#94b8cf;--hue-6:#a4d7ae;--hue-7:#e6bd66;--tip-bg:#183027;--shadow:#000000;}
+:root,:root[data-mode="light"]{color-scheme:light;--bg:#f4f1e8;--panel:#fffdf7;--panel-2:#e7e9dc;--border:#b8c2af;--border-soft:#d1d7c7;--grid:#dce1d2;--tick:#627563;--text:#182f29;--muted:#40584b;--dim:#496150;--a1:#092a25;--a2:#8b3e1c;--good:#236537;--warn:#85510b;--bad:#a22c27;--info:#205f62;--neutral:#7a887b;--cell-off:#d8dfd0;--dot-off:#bec9b3;--hue-1:#4c6610;--hue-2:#96411f;--hue-3:#27675b;--hue-4:#626a25;--hue-5:#385970;--hue-6:#236537;--hue-7:#85510b;--tip-bg:#fffdf7;--shadow:#c4cebd;}
+
+.terminal{--term-bg:#0c0d11;--term-text:#d6d9e0;--term-accent:#7fb0ff;--term-good:#3ccf95;--term-dim:#7d828f}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background-color .35s,color .35s}
+
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(var(--grid) 1px,transparent 1px);background-size:4px 4px}
+::selection{background:color-mix(in srgb,var(--a1) 30%,transparent)}
+a{color:var(--a1);text-decoration:none}
+a:hover{color:var(--a2)}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--a1);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:28px;position:relative;z-index:1}
+code,.mono{font-family:var(--mono);font-size:.86em}
+code{color:var(--text);background:color-mix(in srgb,var(--text) 6%,transparent);border:1px solid var(--border-soft);border-radius:5px;padding:1px 6px}
+.skip-link{position:fixed;z-index:70;left:16px;top:16px;transform:translateY(-160%);background:var(--panel);color:var(--text);border:1px solid var(--a1);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em}
+.skip-link:focus{transform:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+
+#progress{position:fixed;top:0;left:0;height:3px;width:100%;transform:scaleX(0);transform-origin:left;z-index:60;background:linear-gradient(90deg,var(--a1),var(--a2))}
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;gap:20px}
+.brand{font-family:var(--mono);font-size:13px;letter-spacing:.22em;color:var(--text);font-weight:700;white-space:nowrap}
+.brand b{color:var(--a1)}
+.brand span{color:var(--dim);letter-spacing:.1em;font-weight:500}
+.nav-links{display:flex;flex-wrap:wrap;gap:2px;min-width:0;flex:1}
+.nav-links a{font-family:var(--mono);font-size:11px;color:var(--muted);padding:5px 8px;border-radius:6px;letter-spacing:.04em;white-space:nowrap;transition:color .2s,background .2s}
+.nav-links a:hover{color:var(--a1);background:color-mix(in srgb,var(--a1) 9%,transparent)}
+.nav-links a.active{color:var(--a1);background:color-mix(in srgb,var(--a1) 13%,transparent)}
+.mode-toggle{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:6px 12px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.mode-toggle:hover{border-color:var(--a1);color:var(--a1)}
+.mode-toggle i{width:10px;height:10px;border-radius:50%;background:linear-gradient(90deg,var(--text) 50%,transparent 50%);border:1px solid var(--text);display:inline-block}
+
+
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;z-index:1}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero-fade{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 46% 40% at 50% 50%,color-mix(in srgb,var(--bg) 88%,transparent),color-mix(in srgb,var(--bg) 35%,transparent) 62%,color-mix(in srgb,var(--bg) 18%,transparent) 78%,color-mix(in srgb,var(--bg) 92%,transparent) 100%)}
+.hero-content{position:relative;z-index:2;padding:96px 24px 120px;max-width:980px}
+.hero-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;color:var(--a1);text-transform:uppercase;margin-bottom:22px}
+.hero h1{font-family:var(--display);font-size:clamp(40px,7.4vw,94px);font-weight:900;letter-spacing:-.025em;line-height:1.0;text-wrap:balance;color:var(--text)}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{margin:24px auto 0;font-size:clamp(15px,2.1vw,20px);color:var(--muted);max-width:760px;text-wrap:balance}
+.hero-sub b{color:var(--text);font-weight:600}
+.hero-meta{margin-top:34px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.hero-chip{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:7px 15px;background:color-mix(in srgb,var(--panel) 82%,transparent);letter-spacing:.06em}
+.hero-chip em{font-style:normal;color:var(--a1)}
+.hero-legend{position:absolute;left:28px;bottom:30px;z-index:2;font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.08em;text-align:left;line-height:1.9;max-width:320px}
+.hero-legend b{color:var(--muted);font-weight:600}
+.hero-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle;font-style:normal}
+.scroll-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--dim);font-family:var(--mono);font-size:10.5px;letter-spacing:.3em}
+.scroll-cue .line{width:1px;height:44px;background:linear-gradient(180deg,var(--a1),transparent);animation:cue 2.2s ease-in-out infinite;transform-origin:top}
+@keyframes cue{0%{transform:scaleY(0)}45%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.motion-toggle{position:absolute;right:28px;bottom:30px;z-index:3;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--muted);background:color-mix(in srgb,var(--panel) 85%,transparent);border:1px solid var(--border);border-radius:999px;padding:7px 14px;cursor:pointer}
+.motion-toggle:hover{color:var(--a1);border-color:var(--a1)}
+
+
+main{position:relative;z-index:1}
+section{padding-block:96px 72px;border-top:1px solid var(--border-soft);position:relative}
+.sec-num{font-family:var(--mono);font-size:13px;letter-spacing:.3em;color:var(--a1);margin-bottom:14px}
+.sec-num::before{content:"";display:inline-block;width:34px;height:1px;background:var(--a1);vertical-align:middle;margin-right:12px;opacity:.7}
+h2{font-family:var(--display);font-size:clamp(30px,4.4vw,50px);font-weight:900;letter-spacing:-.02em;line-height:1.06;margin-bottom:14px;text-wrap:balance}
+h2 .accent{color:var(--a1)}
+.sec-lede{color:var(--muted);font-size:17px;max-width:820px;margin-bottom:44px}
+.sec-lede b{color:var(--text)}
+h3{font-size:20px;font-weight:700;margin:48px 0 18px;letter-spacing:-.005em;text-wrap:balance}
+h3 .tag{font-family:var(--mono);font-size:11px;color:var(--a1);letter-spacing:.15em;vertical-align:middle;margin-right:10px;font-weight:600}
+.note{font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:14px;line-height:1.7}
+.reading{font-size:13px;color:var(--muted);margin-top:12px;border-top:1px dashed var(--border);padding-top:10px}
+.reading b{color:var(--text)}
+
+.reveal{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+body.armed .reveal:not(.in){opacity:0;transform:translateY(26px)}
+
+.card,.stat,.verdict-banner,.strike,.task,.rung,.layer{background:var(--panel)}
+.card{border:1px solid var(--border);border-radius:14px;padding:24px 26px;min-width:0;transition:transform .35s var(--ease),border-color .35s}
+.card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--a1) 35%,transparent)}
+.card p{font-size:14.5px;color:var(--muted)}
+.card p b{color:var(--text)}
+.card h3{margin-top:0}
+.grid{display:grid;gap:18px}
+.grid.c2{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+.grid.c3{grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))}
+
+
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(165px,100%),1fr));gap:14px;margin:48px 0 8px}
+.stat{border:1px solid var(--border);border-radius:12px;padding:22px 18px;text-align:center;position:relative;overflow:hidden}
+.stat::after{content:"";position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--c,var(--a1))}
+.stat .val{font-family:var(--mono);font-size:clamp(24px,3vw,32px);font-weight:700;color:var(--text);letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat .lbl{font-size:12.5px;color:var(--muted);margin-top:9px;line-height:1.45}
+.verdict-banner{margin-top:40px;border:1px solid color-mix(in srgb,var(--a1) 35%,transparent);border-left:3px solid var(--a1);border-radius:14px;padding:28px 32px}
+.verdict-banner p{font-size:17px;color:var(--text)}
+.verdict-banner p b{color:var(--a1)}
+
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:680px}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-align:left;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--panel-2);white-space:nowrap}
+td{padding:14px 18px;border-bottom:1px solid var(--border-soft);vertical-align:top;color:var(--muted)}
+td:first-child{color:var(--text)}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:background .2s}
+tbody tr:nth-child(even){background:color-mix(in srgb,var(--text) 2%,transparent)}
+tbody tr:hover{background:color-mix(in srgb,var(--a1) 6%,transparent)}
+td .mono{color:var(--text)}
+tr.verdict-row td{background:color-mix(in srgb,var(--a1) 9%,transparent);color:var(--text);border-top:1px solid color-mix(in srgb,var(--a1) 35%,transparent)}
+.pill{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;padding:4px 11px;border-radius:999px;white-space:nowrap;border:1px solid}
+.pill.ok{color:var(--good);background:color-mix(in srgb,var(--good) 11%,transparent);border-color:color-mix(in srgb,var(--good) 38%,transparent)}
+.pill.warn{color:var(--warn);background:color-mix(in srgb,var(--warn) 11%,transparent);border-color:color-mix(in srgb,var(--warn) 38%,transparent)}
+.pill.bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 11%,transparent);border-color:color-mix(in srgb,var(--bad) 40%,transparent)}
+.pill.info{color:var(--info);background:color-mix(in srgb,var(--info) 9%,transparent);border-color:color-mix(in srgb,var(--info) 32%,transparent)}
+.pill.gray{color:var(--muted);background:color-mix(in srgb,var(--text) 5%,transparent);border-color:var(--border)}
+
+
+.mx td,.mx th{text-align:center;padding:12px 10px}
+.mx td:first-child,.mx th:first-child{text-align:left;padding-left:18px;white-space:nowrap}
+.mx td:first-child i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:9px;background:var(--c);vertical-align:0}
+.mk{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:64px;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:4px 8px;border-radius:7px}
+.mk.y{color:var(--good);background:color-mix(in srgb,var(--good) 13%,transparent)}
+.mk.p{color:var(--warn);background:color-mix(in srgb,var(--warn) 13%,transparent)}
+.mk.n{color:var(--bad);background:color-mix(in srgb,var(--bad) 11%,transparent)}
+tr.dimrow td{opacity:.8}
+
+
+.chart{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px 24px 18px;min-width:0}
+.chart-title{font-weight:700;font-size:15px}
+.chart-sub{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.06em;margin:2px 0 16px}
+.bars{display:grid;grid-template-columns:minmax(92px,auto) 1fr;column-gap:14px;row-gap:9px;align-items:center}
+.bar-lbl{font-family:var(--mono);font-size:12px;color:var(--text);white-space:nowrap}
+.bar-lbl.muted{color:var(--dim)}
+.bar-track{position:relative;height:22px;background-image:linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:calc(100% / var(--ticks,5)) 100%;background-position:-1px 0;border-left:1px solid var(--tick)}
+.bar{position:absolute;left:0;top:5px;height:12px;width:var(--v);border-radius:0 4px 4px 0;background:var(--c,var(--a1));transform-origin:left;transition:transform 1.2s var(--ease);outline:none}
+.bar.neutral{background:var(--neutral)}
+.bar.range{opacity:.4}
+.bar:hover,.bar:focus-visible{filter:brightness(1.12);box-shadow:0 0 0 2px var(--panel),0 0 0 3px var(--c,var(--a1))}
+body.armed .chart:not(.in) .bar{transform:scaleX(0)}
+.bar-val{position:absolute;top:1px;left:calc(var(--v) + 8px);font-family:var(--mono);font-size:11.5px;color:var(--text);white-space:nowrap;font-variant-numeric:tabular-nums}
+.axis{display:grid;grid-template-columns:minmax(92px,auto) 1fr;column-gap:14px;margin-top:6px}
+.axis-ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim);font-variant-numeric:tabular-nums}
+.budget{position:absolute;top:0;bottom:0;width:2px;left:var(--b);background:var(--info)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+
+
+.waffle{display:grid;grid-template-columns:repeat(16,1fr);gap:5px;max-width:520px}
+.cell{aspect-ratio:1;border-radius:4px;max-width:100%}
+.cell.w{background:var(--good)}
+.cell.o{background:var(--bad)}
+.cell.t{background:var(--info);opacity:.6}
+.cell.r{background:var(--cell-off)}
+.cell.m{border:1px dashed var(--neutral)}
+
+
+.strikes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(270px,100%),1fr));gap:14px;margin-top:8px}
+.strike{border:1px solid var(--border);border-left:3px solid var(--bad);border-radius:10px;padding:18px 20px;min-width:0;transition:transform .3s}
+.strike.med{border-left-color:var(--warn)}
+.strike:hover{transform:translateX(5px)}
+.strike .sn{font-family:var(--mono);font-size:12px;color:var(--bad);font-weight:700;letter-spacing:.14em}
+.strike.med .sn{color:var(--warn)}
+.strike h4{font-size:15px;margin:6px 0 6px}
+.strike p{font-size:13px;color:var(--muted);line-height:1.55}
+.strike .fix{margin-top:10px;font-size:12.5px;color:var(--text);border-top:1px dashed var(--border);padding-top:10px}
+.strike .fix b{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--good);margin-right:6px}
+
+
+.dots{font-family:var(--mono);letter-spacing:2px;color:var(--a1);white-space:nowrap}
+.dots .off{color:var(--dot-off)}
+.why{display:block;font-size:12px;color:var(--dim);margin-top:4px;line-height:1.45}
+
+
+.stack{display:flex;flex-direction:column;gap:0;margin-top:8px}
+.layer{display:grid;grid-template-columns:150px 1fr auto;gap:18px;align-items:center;border:1px solid var(--border);border-radius:14px;padding:18px 22px;position:relative;min-width:0}
+.layer.hot{border-color:color-mix(in srgb,var(--a1) 50%,transparent)}
+.layer .ln{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--a1);text-transform:uppercase}
+.layer .lt{font-weight:700;font-size:15px;margin-top:2px;color:var(--text)}
+.layer .chips{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.lc{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:7px;padding:4px 9px;background:var(--panel-2)}
+.lc.app{color:var(--text);border-color:color-mix(in srgb,var(--c) 55%,transparent);box-shadow:inset 3px 0 var(--c)}
+.own{font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:4px 10px;border-radius:999px;white-space:nowrap;border:1px solid}
+.own.open{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,transparent)}
+.own.paid{color:var(--a1);border-color:color-mix(in srgb,var(--a1) 45%,transparent)}
+.own.up{color:var(--muted);border-color:var(--border)}
+.link{height:34px;position:relative;margin-left:96px;width:2px;background:color-mix(in srgb,var(--a1) 25%,transparent)}
+.link::after{content:"";position:absolute;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--a1);animation:rise 2.4s linear infinite}
+@keyframes rise{0%{top:100%;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:0;opacity:0}}
+
+
+.terminal{background:var(--term-bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:36px 0 0}
+.term-bar{display:flex;align-items:center;gap:8px;padding:12px 18px;background:#14161c;border-bottom:1px solid rgba(255,255,255,.07)}
+.term-bar .dot{width:11px;height:11px;border-radius:50%;background:#3a3d4a}
+.term-bar .ttl{font-family:var(--mono);font-size:11px;color:var(--term-dim);margin-left:10px;letter-spacing:.1em}
+.terminal pre{padding:22px 24px;overflow-x:auto;font-family:var(--mono);font-size:12.6px;line-height:1.75;color:var(--term-text)}
+.terminal pre .am{color:var(--term-accent)}
+.terminal pre .gd{color:var(--term-good)}
+.terminal pre .dm{color:var(--term-dim)}
+
+
+.tier .t-num{font-family:var(--mono);font-size:11px;color:var(--a2);letter-spacing:.2em;display:block;margin-bottom:8px}
+.tier h4{font-size:16px}
+.tier p{font-size:13.5px;color:var(--muted);margin-top:8px}
+.tier .price{margin-top:14px;font-family:var(--mono);font-size:14px;color:var(--good);font-weight:700}
+.callout{border-left:3px solid var(--a1);background:color-mix(in srgb,var(--a1) 6%,transparent);border-radius:0 10px 10px 0;padding:16px 22px;margin-top:18px;font-size:14px;color:var(--muted)}
+.callout b{color:var(--text)}
+.callout.red{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 6%,transparent)}
+
+
+.pipe{position:relative;display:flex;align-items:stretch;margin:40px 0 12px;overflow-x:auto;padding-bottom:8px}
+.pipe-stage{flex:1;min-width:178px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 16px;position:relative;z-index:2;margin-right:38px}
+.pipe-stage:last-child{margin-right:0}
+.pipe-stage .num{font-family:var(--mono);font-size:11px;color:var(--a2);letter-spacing:.2em;margin-bottom:8px}
+.pipe-stage h4{font-size:14.5px;margin-bottom:6px}
+.pipe-stage p{font-size:12.5px;color:var(--muted);line-height:1.55}
+.pipe-arrow{position:absolute;right:-29px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:17px}
+.pipe-track{position:absolute;top:50%;left:1%;right:1%;height:2px;background:color-mix(in srgb,var(--a1) 22%,transparent);z-index:1}
+.pipe-dot{position:absolute;top:50%;left:0;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--a1);z-index:3;animation:flow 7s linear infinite}
+@keyframes flow{0%{left:0%;opacity:0}6%{opacity:1}94%{opacity:1}100%{left:calc(100% - 10px);opacity:0}}
+.pipe-loop{font-family:var(--mono);font-size:11.5px;color:var(--dim);text-align:right;margin-top:6px}
+
+
+.ladder{margin-top:36px;display:flex;flex-direction:column;gap:16px}
+.rung{border:1px solid var(--border);border-radius:14px;padding:22px 26px;position:relative;transition:transform .35s}
+.rung:hover{transform:translateX(6px)}
+.rung .rn{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--a1);text-transform:uppercase;margin-bottom:6px}
+.rung h4{font-size:18px;margin-bottom:6px}
+.rung h4 .when{font-family:var(--mono);font-size:11.5px;color:var(--dim);font-weight:400;letter-spacing:.08em;margin-left:10px}
+.rung p{font-size:14px;color:var(--muted);max-width:840px}
+.rung p b{color:var(--text)}
+.rung .cost{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 35%,transparent);border-radius:7px;padding:4px 12px}
+.rung.r1{border-color:color-mix(in srgb,var(--a1) 55%,transparent);margin-left:clamp(0px,4vw,56px)}
+.rung.r2{margin-left:clamp(0px,8vw,112px)}
+.rung.r3{margin-left:clamp(0px,12vw,168px)}
+.rung.r4{margin-left:clamp(0px,16vw,224px)}
+.rung .star{position:absolute;top:-13px;right:22px;background:var(--a1);color:var(--bg);font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;padding:5px 14px;border-radius:999px}
+.rung.rx{border-color:color-mix(in srgb,var(--bad) 50%,transparent);margin-left:clamp(0px,20vw,280px)}
+.rung.rx .rn{color:var(--bad)}
+.rung.rx .cost{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,transparent)}
+
+
+.v-timeline{position:relative;margin:36px 0 0;padding-left:44px}
+.v-timeline::before{content:"";position:absolute;left:14px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.v-fill{position:absolute;left:14px;top:8px;width:2px;height:calc(100% - 16px);transform:scaleY(0);transform-origin:top;background:linear-gradient(180deg,var(--a1),var(--a2));transition:transform 2.6s var(--ease)}
+.v-timeline.in .v-fill{transform:scaleY(1)}
+.phase{position:relative;padding:0 0 36px}
+.phase:last-child{padding-bottom:0}
+.phase::before{content:"";position:absolute;left:-36px;top:6px;width:13px;height:13px;border-radius:50%;border:2px solid var(--a1);background:var(--bg);transition:background .4s .3s}
+.v-timeline.in .phase::before{background:var(--a1)}
+.phase .ph{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--a1);text-transform:uppercase}
+.phase h4{font-size:19px;margin:5px 0 7px}
+.phase p{font-size:14px;color:var(--muted);max-width:820px}
+.exit-chip{display:inline-block;font-family:var(--mono);font-size:11px;color:var(--good);background:color-mix(in srgb,var(--good) 8%,transparent);border:1px solid color-mix(in srgb,var(--good) 32%,transparent);border-radius:7px;padding:4px 11px;margin:10px 8px 0 0}
+.tasks{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:14px;margin-top:22px}
+.task{border:1px solid var(--border);border-radius:12px;padding:16px 18px;min-width:0}
+.task h5{font-size:14.5px;margin:8px 0 4px}
+.task p{font-size:13px;color:var(--muted)}
+
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:18px}
+.split ul{list-style:none;margin-top:12px}
+.split li{padding:6px 0 6px 24px;position:relative;font-size:14px;color:var(--muted);border-bottom:1px solid var(--border-soft)}
+.split li:last-child{border-bottom:none}
+.split li::before{position:absolute;left:0;font-family:var(--mono);font-weight:700}
+.split .open li::before{content:"↗";color:var(--good)}
+.split .paid li::before{content:"$";color:var(--a1)}
+.split li b{color:var(--text)}
+
+footer{border-top:1px solid var(--border-soft);padding-block:60px 50px;text-align:center;position:relative;z-index:1}
+footer .f-line{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.06em;line-height:2}
+footer .f-line em{font-style:normal;color:var(--a1)}
+footer .f-mark{font-family:var(--display);font-size:26px;font-weight:900;letter-spacing:.3em;margin-bottom:16px;color:var(--text)}
+.sources{columns:2 320px;column-gap:28px;margin-top:18px}
+.sources li{break-inside:avoid;font-size:13px;color:var(--muted);margin:0 0 8px 18px}
+
+
+#tip{position:fixed;z-index:80;pointer-events:none;background:var(--tip-bg);border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-family:var(--mono);font-size:11.5px;color:var(--text);max-width:280px;box-shadow:0 10px 30px var(--shadow);opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s}
+#tip.on{opacity:1;transform:none}
+
+@media (max-width:820px){
+  .wrap,.nav-inner{padding-inline:16px}
+  .nav-inner{gap:12px}
+  .brand span{display:none}
+  .nav-links{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .nav-links::-webkit-scrollbar{display:none}
+  .stat-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .pipe{flex-direction:column}
+  .pipe-stage{margin-right:0;margin-bottom:30px;min-width:0}
+  .pipe-arrow{right:auto;left:50%;top:auto;bottom:-27px;transform:translateX(-50%) rotate(90deg)}
+  .pipe-track,.pipe-dot{display:none}
+  .rung.r1,.rung.r2,.rung.r3,.rung.r4,.rung.rx{margin-left:0}
+  .layer{grid-template-columns:1fr;gap:10px}
+  .link{margin-left:24px}
+  section{padding-block:64px 52px}
+    .hero-legend,.motion-toggle{display:none}
+  .bars,.axis{grid-template-columns:minmax(78px,auto) 1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+  html{scroll-behavior:auto}
+}
+@media print{
+  body.armed .reveal:not(.in){opacity:1;transform:none}
+  body.armed .chart:not(.in) .bar{transform:none}
+  .v-fill{transform:none}
+  .skip-link,nav.top,#progress,.scroll-cue,.motion-toggle,.mode-toggle,#hero-canvas{display:none!important}
+  .hero{min-height:auto}
+  .card,.stat,.verdict-banner,.strike,.task,.rung,.layer{box-shadow:none}
+}
+
+body{overflow-x:visible}body::before{background-image:linear-gradient(var(--grid) 1px,transparent 1px);background-size:100% 48px;opacity:.25}.hero{min-height:760px;display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,1fr);align-items:center;text-align:left;padding:40px max(28px,calc((100vw - 1200px)/2));gap:35px}.hero-content{padding:50px 0 150px;max-width:650px}.hero h1{font-size:clamp(48px,5.8vw,84px);line-height:1.02;letter-spacing:-.05em}.hero-sub{margin-left:0;font-size:18px;text-wrap:pretty}.hero-meta{justify-content:flex-start;gap:8px}.hero-chip{font-size:10px;padding:6px 10px}.court-plate{position:relative;min-height:490px;align-self:stretch;display:flex;align-items:center;z-index:1}.court-svg{width:100%;overflow:visible}.court-svg text{fill:var(--text);font-family:var(--mono);font-size:12px}.court-svg .court-line{stroke:var(--tick);stroke-width:1;fill:none}.court-svg .flow-line{stroke:var(--hue-1);stroke-width:3;fill:none}.court-svg .flow-node{fill:var(--panel);stroke:var(--hue-1);stroke-width:2}.court-svg .frontier-line{stroke:var(--hue-2);stroke-dasharray:4 5;stroke-width:2;fill:none}.court-svg .caption{fill:var(--muted);font-size:11px}.hero-legend{bottom:30px;max-width:650px;font-size:11px;left:max(28px,calc((100vw - 1200px)/2))}.motion-toggle{bottom:36px;right:max(28px,calc((100vw - 1200px)/2))}#hero-canvas{z-index:2;pointer-events:none}.hero-content{z-index:3}.motion-toggle{z-index:4}.nav-inner{gap:14px}.nav-links{flex-wrap:nowrap;overflow-x:auto}.nav-links a{min-height:44px;display:flex;align-items:center}.mode-toggle,.motion-toggle,.copy-btn{min-height:44px}.brand{letter-spacing:.12em}.brand span{display:none}.overview-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:22px 0;display:flex;gap:25px;flex-wrap:wrap;color:var(--muted)}.overview-strip strong{color:var(--a1)}.big-note{font-size:22px;line-height:1.5;max-width:880px;margin:0 0 30px}.tbl-wrap{max-width:100%}table{min-width:680px}td,th{vertical-align:top}td code{white-space:normal;overflow-wrap:anywhere}.pill{white-space:normal}.terminal{--term-accent:#d7f56a;--term-good:#a4d7ae}.terminal pre{white-space:pre-wrap;overflow-wrap:anywhere}.copy-btn{font-family:var(--mono);color:var(--a1);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 16px;cursor:pointer;margin:16px 0}.source-list{counter-reset:src;list-style:none;padding:0}.source-list li{padding:16px 0;border-top:1px solid var(--border-soft);font-size:14px;overflow-wrap:anywhere}.source-list b{font-family:var(--mono);color:var(--a1)}.road-table td:first-child{white-space:nowrap}.bar-lbl{font-size:12px}.audit-note{padding:16px 20px;border-left:3px solid var(--warn);background:var(--panel-2);font-size:14px;color:var(--muted);margin:20px 0}.finding-source{font-family:var(--mono);font-size:11px;display:block;color:var(--dim);margin-top:12px;overflow-wrap:anywhere}.lane-badge{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--a1)}footer a{overflow-wrap:anywhere}#copy-state{font-size:13px;color:var(--muted);display:block}a{overflow-wrap:anywhere}.wrap{min-width:0}.card p+p{margin-top:12px}.v-timeline .phase h3{margin-top:0}.card h3{font-size:21px}.sec-lede{max-width:920px}.chart{overflow:hidden}.pill.ok::before{content:'✓ ';font-style:normal}.pill.warn::before{content:'◷ ';font-style:normal}.pill.bad::before{content:'! ';font-style:normal}
+@media(max-width:800px){.hero{display:block;padding:35px 24px 140px;min-height:0}.hero-content{padding:18px 0 20px}.hero h1{font-size:clamp(48px,8vw,70px)}.court-plate{min-height:280px;max-width:560px;margin:auto}.court-svg{max-height:370px}.hero-legend{left:24px;bottom:78px;font-size:10px;max-width:calc(100% - 48px)}.motion-toggle{right:24px;bottom:20px}.hero-meta{margin-top:20px}.nav-inner{padding:8px 16px;gap:10px;flex-wrap:wrap}.brand{font-size:12px}.nav-links{order:3;width:100%;flex-basis:100%}.mode-toggle{margin-left:auto}.wrap{padding-inline:22px}.hero-sub{font-size:16px}.stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}section{padding-block:65px 50px}.big-note{font-size:19px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{body{background:white!important;color:#182f29!important}.hero{min-height:0;padding:25px;display:block}.hero-content{padding:0}.court-plate{min-height:0;width:70%;margin:auto}.hero-legend{position:static}.hero h1{font-size:40px}section{padding-block:25px}.tbl-wrap{overflow:visible}table{min-width:0;font-size:10px}.card,.stat,.strike,.phase{break-inside:avoid;background:white!important}.hero-chip{color:#182f29}.sec-lede,.note,.reading{color:#40584b}.reveal{opacity:1!important;transform:none!important}.hero-legend,#copy-state{color:#40584b}.motion-toggle,.mode-toggle,.copy-btn{display:none!important}}
+p{overflow-wrap:anywhere}.bars{display:block;margin-top:22px;padding-right:35px}.bar-row{display:grid;grid-template-columns:minmax(100px,170px) minmax(0,1fr);gap:14px;align-items:center;margin-bottom:14px}.bar-track{min-width:0}.bar-lbl{overflow-wrap:anywhere}@media(max-width:600px){.bar-row{grid-template-columns:1fr;gap:5px;margin-bottom:20px}.chart{padding:20px 18px}} </style></head><body class="enhanced-report" data-enhanced-score="19" data-palette-id="jovra-court-ledger-ivory-forest"><a class="skip-link" href="#report">Skip to report</a><div id="progress" aria-hidden="true"></div><nav class="top" aria-label="Report chapters"><div class="nav-inner"><div class="brand">JOVRA / SIGNAL</div><div class="nav-links"><a href="#s0">00 Verdict</a><a href="#s1">01 Evidence</a><a href="#s2">02 Remaining</a><a href="#s3">03 Architecture</a><a href="#s4">04 Plan</a><a href="#s5">05 Handoff</a><a href="#s6">06 Truth</a><a href="#s7">07 Method</a></div><button class="mode-toggle" id="mode-toggle" aria-pressed="false" type="button"><i aria-hidden="true"></i> LIGHT</button></div></nav>
+<header class="hero" id="top"><canvas id="hero-canvas" role="img" aria-label="A tennis court connects six demonstrated native stages: record, save, library, replay, correct and export. The dashed premium frontier is separate, not a completed film pipeline." data-visual-thesis="The solid six-stage court path represents the merged manual recording-to-export flow; a dashed path beyond the service line represents unbuilt premium, Android and watch experiences."></canvas><div class="hero-content"><div class="hero-eyebrow">State of the Union · 02 November 2026</div><h1>One playable flow.<br>A whole court<br><em>still to build.</em></h1><p class="hero-sub"><b>Finish safe, everyday iOS use before treating JOVRA as an automatic analysis or premium production app.</b> The manual core is merged. Studio intelligence has reference code. The surrounding product, native film engine and other platforms remain substantial work.</p><div class="hero-meta"><span class="hero-chip">MAIN <em>6e46a576</em></span><span class="hero-chip">AUDIT <em>3 independent passes</em></span><span class="hero-chip">FORMAT <em>Signal enhanced</em></span></div></div>
+<div class="court-plate"><svg class="court-svg" viewBox="0 0 460 590" role="img" aria-label="Six native stages form the solid path inside the tennis court; premium film, Android and watches sit beyond a dashed frontier."><path class="court-line" d="M40 85H420V500H40Z M80 85V500 M380 85V500 M80 225H380 M80 360H380 M230 225V360 M40 292H420"/><path class="flow-line" d="M120 435L330 435L120 385L330 325L120 265L330 185"/><path class="frontier-line" d="M330 185V45H100"/><text x="40" y="26" style="font-size:13px;font-weight:bold">PREMIUM FRONTIER</text><text x="40" y="56" class="caption">Film · Android · watches</text><circle class="flow-node" cx="120" cy="435" r="7"/><text x="120" y="417" text-anchor="middle">01 Record</text><circle class="flow-node" cx="330" cy="435" r="7"/><text x="330" y="417" text-anchor="middle">02 Save</text><circle class="flow-node" cx="120" cy="385" r="7"/><text x="120" y="367" text-anchor="middle">03 Library</text><circle class="flow-node" cx="330" cy="325" r="7"/><text x="330" y="307" text-anchor="middle">04 Replay</text><circle class="flow-node" cx="120" cy="265" r="7"/><text x="120" y="247" text-anchor="middle">05 Correct</text><circle class="flow-node" cx="330" cy="185" r="7"/><text x="330" y="167" text-anchor="middle">06 Export</text><text x="230" y="535" text-anchor="middle">HISTORICAL NATIVE FLOW · 4 PASS</text><text x="230" y="557" text-anchor="middle" class="caption">Synthetic footage · manual reviewed scoring</text></svg></div><div class="hero-legend"><div><i style="background:var(--hue-1)"></i><b>Solid court path:</b> six native stages demonstrated on the retained source.</div><div><i style="background:var(--hue-2)"></i><b>Dashed frontier:</b> specified expansion, without usable native implementations.</div></div><button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">PAUSE MOTION</button></header><script type="application/json" id="hero-data">{"stages": [{"name": "Record", "x": 120, "y": 435}, {"name": "Save", "x": 330, "y": 435}, {"name": "Library", "x": 120, "y": 385}, {"name": "Replay", "x": 330, "y": 325}, {"name": "Correct", "x": 120, "y": 265}, {"name": "Export", "x": 330, "y": 185}], "historicalNativePass": 4, "tracks": 4, "mappedTickets": 295, "openTickets": 278, "closedTickets": 17, "cycleSeconds": 8}</script><script type="application/json" id="theme-spec">{"name": "Court Ledger", "ethos": "JOVRA forest and warm ivory meet court boundary rules: preserve the playable local core and make the unfinished frontier visible.", "defaultMode": "light", "modeReason": "The source screen references and ivory/forest brand live in daylight on a tennis court; a warm readable light plane suits a founder decision document. Dark uses the same court identity at night.", "personality": {"warm_cool": 0.35, "quiet_loud": 0.28, "organic_engineered": 0.72, "luminous_grounded": 0.32}, "sources": [{"kind": "repo", "ref": "ios/Jovra/DesignSystem/Tokens/ColorRole.swift:5-12", "note": "Forest, ivory, chartreuse and clay derive from the implemented brand palette."}, {"kind": "repo", "ref": "design-reference/brief/brand-decision.md", "note": "Court Arc geometry and premium restrained editorial framing inform the court plate and chapter typography."}, {"kind": "subject", "ref": "Tennis court service boxes and record-to-export flow", "note": "Court lines become scope boundaries; the rally path names actual native stages rather than decorative particles."}, {"kind": "validation", "ref": "evidence/signal-validation.txt and browser-qa.json", "note": "Both modes have computed contrast gates and explicit responsive/browser checks."}], "modes": {"dark": {"bg": "#070f0c", "text": "#f4f1e8", "a1": "#d7f56a"}, "light": {"bg": "#f4f1e8", "text": "#182f29", "a1": "#092a25"}}}</script><main id="report"><section id="s0" aria-labelledby="h-s0"><div class="wrap"><div class="sec-num">CHAPTER 00</div><h2 id="h-s0">A real core. <span class="accent">An unfinished product.</span></h2><p class="sec-lede">The last report is superseded for current status: its billing block and waiting-PR list no longer describe the repository. The old receipts remain valuable historical evidence. [E1–E3]</p><p class="big-note">You can record a session, keep its original locally, open it, step decoded frames, enter reviewed points, correct the score and export a clip with data. That is a meaningful manual MVP. It does not yet deliver the complete tennis-analysis and premium multi-camera vision.</p><div class="overview-strip"><span><strong>MERGED</strong> PRs 365–371</span><span><strong>EXECUTED GREEN</strong> latest main CI</span><span><strong>NOT VERIFIED</strong> physical release</span></div><div class="grid c2" style="margin-top:28px"><article class="card"><h3>Near-term finish line</h3><p><b>A trustworthy native iOS tester app:</b> safe recovery, manageable storage, import of your existing footage, efficient review, real session dashboards, functioning export destinations and device evidence.</p></article><article class="card"><h3>Full-vision finish line</h3><p><b>Automatic analysis plus premium production:</b> validated estimators, native Studio rendering, multi-camera Room, cloud delivery, Android/adaptive and watch companions. These are separate gated workstreams.</p></article></div><div class="stat-row"><div class="stat"><div class="val">4</div><div class="lbl">product ticket tracks</div></div><div class="stat"><div class="val">295</div><div class="lbl">mapped full tickets</div></div><div class="stat"><div class="val">278</div><div class="lbl">full tickets still open</div></div><div class="stat"><div class="val">17</div><div class="lbl">full tickets closed</div></div></div><p class="note">There are also 19 pre-existing open issues outside the ticket maps: 16 follow-up/ADR items and 3 umbrella specs. The complete index includes them. These are issue-workflow counts, not a completion percentage. Large partial implementations are merged under still-open full tickets; track sizes and dependencies differ. [E4]</p><div class="verdict-banner"><p><b>Recommended next slice:</b> wire startup reconciliation for already-finished capture journals through the existing scanner/store APIs. Keep unfinished/torn-recording recovery as explicit residual work. Then add a safe Files-only import path. [E5]</p></div></div></section><section id="s1" aria-labelledby="h-s1"><div class="wrap"><div class="sec-num">CHAPTER 01</div><h2 id="h-s1">Measure the <span class="accent">right kind of progress.</span></h2><p class="sec-lede">Source existence, reference correctness, runtime behavior and release readiness are different evidence levels. Do not combine them into one score.</p><div class="chart evidence-visualization" data-evidence-source="evidence/ticket-status.json; committed ticket-to-issue maps" data-visual-kind="ticket-inventory-bars"><div class="chart-title">FULL TICKETS BY TRACK</div><p class="note">Bar length = total scoped tickets, on a common maximum of 107. Labels carry closed and open counts.</p><div class="bars"><div class="bar-row"><span class="bar-lbl">T · Core iOS</span><div class="bar-track"><span class="bar" style="--v:58.88%;--c:var(--hue-1)" tabindex="0" data-tip="Core iOS: 63 mapped tickets; 6 closed, 57 open"></span><span class="bar-val" style="--v:58.88%">63</span></div></div><div class="bar-row"><span class="bar-lbl">S · Studio/backend</span><div class="bar-track"><span class="bar" style="--v:100.0%;--c:var(--hue-2)" tabindex="0" data-tip="Studio/backend: 107 mapped tickets; 11 closed, 96 open"></span><span class="bar-val" style="--v:100.0%">107</span></div></div><div class="bar-row"><span class="bar-lbl">A · Android</span><div class="bar-track"><span class="bar" style="--v:92.52%;--c:var(--hue-3)" tabindex="0" data-tip="Android: 99 mapped tickets; 0 closed, 99 open"></span><span class="bar-val" style="--v:92.52%">99</span></div></div><div class="bar-row"><span class="bar-lbl">W · Room/watch/adaptive</span><div class="bar-track"><span class="bar" style="--v:24.3%;--c:var(--hue-4)" tabindex="0" data-tip="Room/watch/adaptive: 26 mapped tickets; 0 closed, 26 open"></span><span class="bar-val" style="--v:24.3%">26</span></div></div></div><p class="reading">Core <b>6 closed / 57 open</b>; Studio <b>11 / 96</b>; Android <b>0 / 99</b>; Room/watch/adaptive <b>0 / 26</b>. W includes 22 watch/Room and 4 iOS-adaptive tickets. Partial source work is not erased by an open issue.</p></div><div class="tbl-wrap evidence-visualization" data-evidence-source="evidence/native-audit.json; evidence/breadth-audit.json" data-visual-kind="implementation-maturity-matrix"><table><thead><tr><th scope="col">Surface</th><th scope="col">Current level</th><th scope="col">Evidence</th><th scope="col">Boundary</th></tr></thead><tbody><tr><td>Capture → local save → library</td><td>Native implemented</td><td>Historical synthetic flow + exact iOS tree identity</td><td>Audio choice and interruption/recovery remain</td></tr><tr><td>Replay → reviewed correction → data export</td><td>Native implemented</td><td>4 historical native tests; independent actual files</td><td>Advanced timeline, import/VFR and destination tests remain</td></tr><tr><td>Studio planner / EDL / Room rules</td><td>Executable reference code</td><td>Fresh Python validators pass</td><td>Not native film rendering or phone/watch transport</td></tr><tr><td>Native Studio</td><td>Foundation PR open</td><td>PR 379 package wiring</td><td>No usable film creation UI or engine on main</td></tr><tr><td>Android / watches</td><td>Specified; foundations in review</td><td>PR 378 skeleton; shared vectors / Room fixtures</td><td>No Android activity or watch app on main</td></tr><tr><td>Hosted production</td><td>Local DB/contracts foundation</td><td>Existing RLS/contracts and CI checks</td><td>Gateway/render/paid activation not established</td></tr></tbody></table></div><div class="audit-note"><b>Fresh checks in this assessment:</b> 69 Swift Core tests (12 XCTest + 57 Swift Testing), 99 Python tooling tests, core contracts, Studio contracts, Room contracts (232 cases), and localization checks pass. The Core build used Swift 6.3.3. No new simulator, full AVFoundation Media or physical-device run was performed. Historical Media 90 and native 4-pass receipts remain separately attributed. [E3, E6]</div><p class="note">The main iOS subtree is exactly <code>9a925bbca83a7545b40e8053ac0c2b4e8cc62243</code>, identical to tested <code>73ce5c2</code>. This proves byte continuity, not a new current-main runtime run.</p></div></section><section id="s2" aria-labelledby="h-s2"><div class="wrap"><div class="sec-num">CHAPTER 02</div><h2 id="h-s2">What remains, <span class="accent">by customer outcome.</span></h2><p class="sec-lede">These are verified acceptance gaps, not a request to rebuild functioning foundations. Existing full tickets remain authoritative; the <a href="REMAINING-TICKETS.md">remaining-ticket index</a> lists every open mapped item.</p><div class="strikes"><article class="strike"><div class="lane-badge">P0 · Reliability</div><h3>Startup recovery and interrupted capture</h3><p><b>Now:</b> The app does not invoke RecoveryScanner; the scanner handles finalized, finished snapshots and refuses unfinished ones. Audio is always requested as notRequested.</p><div class="fix"><b>Finish:</b> Launch scanning/adoption + honest refusal states; torn-prefix/media-reset tests; optional mic with silent fallback; real-camera interruption, low-space and heat evidence.</div><span class="finding-source">T16 / T17 / T25 · evidence/native-audit.json</span></article><article class="strike"><div class="lane-badge">P0 · Ownership</div><h3>Storage, Trash, deletion and privacy</h3><p><b>Now:</b> Storage, Trash and Delete-all-data destinations remain placeholders; the session store is not registered with the data eraser.</p><div class="fix"><b>Finish:</b> Search/filter and storage visibility; Trash/restore/purge with explicit ownership; deletion-failure and relaunch evidence.</div><span class="finding-source">T20 / T56 / T57 · evidence/native-audit.json</span></article><article class="strike"><div class="lane-badge">P1 · Your footage</div><h3>Safe import and usable review</h3><p><b>Now:</b> Photos/Files import is a placeholder. Reviewed point marking currently requires manually typed millisecond boundaries.</p><div class="fix"><b>Finish:</b> Files then Photos/batch/duplicates/iCloud/cancellation; playable preserved originals; efficient point navigation; long/VFR clips tested.</div><span class="finding-source">T26 / T14 / T28 / T29 / T30 · evidence/native-audit.json</span></article><article class="strike"><div class="lane-badge">P1 · Everyday app</div><h3>Onboarding, real dashboard, overview and sharing</h3><p><b>Now:</b> Welcome is bypassed; Home retains Sample tiles; Insights says Coming later. Export covers one finalized segment and four local files.</p><div class="fix"><b>Finish:</b> Bind actual sessions and supported match modes; native first-run/settings; verify save/share recipients rather than only a ShareLink.</div><span class="finding-source">T18 / T19 / T21 / T22 / T36 · evidence/native-audit.json</span></article><article class="strike"><div class="lane-badge">P2 · Tennis intelligence</div><h3>Processing, suggestions, labs and progress</h3><p><b>Now:</b> The benchmark registry supplies oracle/null harness estimators. Audio hit detection and rally segmentation are disabled; analysis/lab screens are placeholders.</p><div class="fix"><b>Finish:</b> Real estimators + scheduler/UI + independently labelled footage; benchmark-gated capability promotion. No unsupported speed, spin or officiating claims.</div><span class="finding-source">T13 / T23 / T27 / T32–T35 / T41–T50 · evidence/breadth-audit.json</span></article><article class="strike"><div class="lane-badge">P2 · Premium moat</div><h3>Native Studio and multi-camera Room</h3><p><b>Now:</b> Python planning/EDL and Room rules exist. There is no native film engine or camera coordination experience on main.</p><div class="fix"><b>Finish:</b> Swift parity, project/media custody, modes, proxies, deterministic render/verifier; then QR approval, receipts, sync and two-/six-phone trials.</div><span class="finding-source">S04 → S0/S1 → S2/S3 · evidence/breadth-audit.json</span></article><article class="strike"><div class="lane-badge">P3 · Optional cloud</div><h3>Accounts, archives, paid processing and delivery</h3><p><b>Now:</b> Local DB/RLS and contracts exist; native account/Drive controls remain placeholders. Hosted service operation was not inspected.</p><div class="fix"><b>Finish:</b> Finish DB, gateway, upload integrity, bounded spend, orchestration/render/cancel/retry, download/retention/deletion and separate hosted activation gates.</div><span class="finding-source">S77 onward / S4 / S104 · evidence/breadth-audit.json</span></article><article class="strike"><div class="lane-badge">P3 · Other devices</div><h3>Native Android, foldables/tablets and watches</h3><p><b>Now:</b> No Kotlin/Gradle app is merged on main; open Android PR is a skeleton. No watch target or native transport is merged.</p><div class="fix"><b>Finish:</b> Native shell/domain/media parity; pane/state restoration matrices; paired-watch score/mark receipts and camera-health freshness. No watch line-call/live-speed claim.</div><span class="finding-source">A01–A99 / W01–W26 · evidence/breadth-audit.json</span></article><article class="strike"><div class="lane-badge">Release gate</div><h3>Compatibility, real footage and stores</h3><p><b>Now:</b> iOS 18 is the target; historical native runtime is iOS 26.5. Physical capture, endurance, signing and store evidence are outstanding.</p><div class="fix"><b>Finish:</b> Fresh current-main native proof, iOS 18 fallback evidence, original footage and real cameras, accessibility/privacy/performance, signed device build and release review.</div><span class="finding-source">T62 / T63 / S54 / S67 / S74 / S104 · evidence/native-audit.json</span></article></div><p class="note">Static inventory: 38 of 56 Feature Swift files directly call RoutePlaceholder. This counts files, not unique screens or completeness. The placeholder component discloses unavailable behavior; successful navigation alone is not feature completion. [E5]</p></div></section><section id="s3" aria-labelledby="h-s3"><div class="wrap"><div class="sec-num">CHAPTER 03</div><h2 id="h-s3">Keep the local core.<br><span class="accent">Attach the premium engine.</span></h2><p class="sec-lede">The architecture is already specified well enough to continue. The hard work is implementing and validating the boundaries, not renaming the stack. [E5, E7]</p><div class="stack plan-visualization" data-plan-source="CLAUDE.md; docs/adr/0001; docs/adr/0015; docs/adr/0018; evidence/breadth-audit.json" data-visual-kind="local-first-architecture"><div class="layer"><span class="pill ok">Implemented</span><h3>Native iOS · local original + event log</h3><p>Record → save → Library → replay → correct → export. One authoritative store; originals remain local; scores and stats refold after corrections.</p></div><div class="layer"><span class="pill warn">Reference → native work</span><h3>Studio project, sources and deterministic plan</h3><p>Ingest verified media → sync/calibration → moments → story profile → StoryPlan → validated EDL. Python reference code anchors parity; model output never bypasses validation.</p></div><div class="layer"><span class="pill warn">Not operationally demonstrated</span><h3>Render, verify, download</h3><p>Local renderer first; optional bounded cloud job later. Verify frame/time coverage, overlays, audio, output integrity and retention before a customer download is called complete.</p></div><div class="layer"><span class="pill gray">Independent native clients</span><h3>Android · Room · Apple Watch / Wear OS</h3><p>Share schemas, fixtures and acknowledged state. Each platform needs its own capture, lifecycle, pairing, background and hardware evidence.</p></div></div><div class="grid c2" style="margin-top:26px"><article class="card"><h3>Preserve</h3><p>Local-first originals; event-sourced corrections; provenance and unknown states; synthetic Sample labels; directory durability and canonical/CSV contracts; disabled capabilities until validated; accessible native design tokens.</p></article><article class="card"><h3>Do not shortcut</h3><p>Google Drive is an archive adapter, not the database. A schema test is not a phone transport. A StoryPlan is not a rendered film. A green shared CI job is not a hardware or App Store pass.</p></article></div></div></section><section id="s4" aria-labelledby="h-s4"><div class="wrap"><div class="sec-num">CHAPTER 04</div><h2 id="h-s4">Finish in <span class="accent">risk-reducing order.</span></h2><p class="sec-lede">No honest single “percent complete” is available. Choose a release scope and close it with evidence. The sequence below is a recommendation; estimates are planning ranges, not delivery commitments.</p><div class="tbl-wrap " ><table><thead><tr><th scope="col">Lane</th><th scope="col">Order / ownership</th><th scope="col">Measured baseline</th><th scope="col">Checkable exit</th></tr></thead><tbody><tr><td>P0 · Reconcile & baseline</td><td>This report branch; next session runs native proof</td><td>Latest main CI green; iOS source equal historical receipt; mission state stale at audit start</td><td>Current truth committed; current-main CoreFlow + independent actual artifacts; existing PR owners/heads reconciled</td></tr><tr><td>P1 · Trustworthy iOS tester</td><td>T16/T17 → T20/T56/T57 → T26</td><td>Recovery not wired; storage/delete/import placeholders</td><td>Startup and interruption recovery; data ownership controls; import your footage through public UI</td></tr><tr><td>P2 · Complete selected iOS v1</td><td>Review/timeline/overview/analysis/export tickets</td><td>Manual review works; automatic estimators unavailable</td><td>Useful everyday flows; benchmark-gated metrics; real export destinations; complete chosen acceptance criteria</td></tr><tr><td>P3 · Deliver premium Studio</td><td>S04 foundation then local film vertical slice</td><td>EDL/planner reference implemented; native film path absent</td><td>One original → verified film → playable output; then multi-angle pairing/sync → verified cut</td></tr><tr><td>P4 · Cloud and platform lanes</td><td>S4/backend + A/W DAGs</td><td>Four pre-existing open PRs; none is a complete platform</td><td>Secure gated cloud activation; native Android/adaptive/watch parity with device evidence</td></tr><tr><td>Release · prove the promise</td><td>T63 and founder footage/field/hosted gates</td><td>No physical/store acceptance in this assessment</td><td>iOS18/device/endurance/privacy/accessibility/signing/store evidence appropriate to the chosen release</td></tr></tbody></table></div><div class="v-timeline plan-visualization" data-plan-source="evidence/native-audit.json; dependency-frontier.json; docs/spec/tickets.json" data-visual-kind="gated-roadmap"><article class="phase"><h3>Next bounded PR · startup reconciliation</h3><p>Use the existing RecoveryScanner and SessionStore adoption seam. Show recovered/refused outcomes. Tests must prove idempotence, custody, no replacement of existing originals and preserved edits. Keep full T16 open for unfinished/torn journals and actual interruption cases.</p><span class="exit-chip">Estimate: 1–2 focused implementation/review sessions</span></article><article class="phase"><h3>Then · Files-only safe import</h3><p>Preserve the original, validate media and create a real library session; cancellation and refusal leave no false success. Photos, batches, duplicates and iCloud can be later bounded slices under T26. Do not treat partial prerequisites as fully closed tickets.</p><span class="exit-chip">Estimate: several small slices; baseline first</span></article><article class="phase"><h3>Premium path · one camera before six</h3><p>Review open S04 package wiring and implement one deterministic native film end to end before expanding to multi-camera sync, LAN receipts, cloud production and polished story modes. Foundation PRs are not finished apps.</p><span class="exit-chip">Exit: verified, playable customer film</span></article></div><h3>Open PR decisions at the audit snapshot</h3><div class="tbl-wrap " ><table><thead><tr><th scope="col">PR</th><th scope="col">State</th><th scope="col">Recommendation</th></tr></thead><tbody><tr><td><a href="https://github.com/Navigata1/jovra/pull/374">#374 · pane vectors</a></td><td>Open; successful checks</td><td>Review vector contract independently; integration ≠ implemented responsive layouts</td></tr><tr><td><a href="https://github.com/Navigata1/jovra/pull/378">#378 · Android foundation</a></td><td>Draft; successful automatic checks</td><td>Resolve ADR gates #375/#376, finish/review foundation and first activity separately; not a tennis app</td></tr><tr><td><a href="https://github.com/Navigata1/jovra/pull/379">#379 · Studio package wiring</a></td><td>Open; successful automatic checks</td><td>Review wiring/parity boundaries before feature dependencies; nominal arithmetic ≠ film rendering</td></tr><tr><td><a href="https://github.com/Navigata1/jovra/pull/380">#380 · media/lesson RLS migration</a></td><td>Draft; backend-db red</td><td>Explicit test-first RED state. Complete migration and negative role/quota tests; no red merge</td></tr></tbody></table></div><p class="note">These are the four pre-existing open PRs; the report publication PR is separate. Requery exact heads/checks before any merge. The issue-only dependency frontier includes T04/T08/T11/T12/T15/T32, S04/S77/S88, A01/A14 and W01. It describes full-ticket blockers, not permission to take over already-owned branches.</p></div></section><section id="s5" aria-labelledby="h-s5"><div class="wrap"><div class="sec-num">CHAPTER 05</div><h2 id="h-s5">A handoff another session<br><span class="accent">can execute.</span></h2><p class="sec-lede">The durable entrypoint is <a href="../../handoff/CODEX-NEXT-SESSION.md">docs/handoff/CODEX-NEXT-SESSION.md</a>. It contains startup commands, evidence limits, the recommended smallest next slice, stop conditions and links to the existing ticket DAGs.</p><div class="terminal"><pre id="resume-prompt">Read docs/handoff/CODEX-NEXT-SESSION.md first, then docs/reports/2026-11-02/README.md and ops/mission/state.json.
+
+Assessed main: 6e46a576240c587511f2f87a15d95507b7280158. Requery GitHub before acting. PRs365–371 are MERGED; do not repeat those merges or treat the October9 billing annotation as current. Current iOS tree equals tested73ce5c2, but preserve that runtime attribution.
+
+Preserve /Users/IDC2.5/jv and its untracked Android/watch planning files, every Claude worktree, originals and failed receipts. Use a fresh codex/ worktree. Check active PR ownership before changing any open branch.
+
+Recommended next implementation: bounded T16/T17 startup reconciliation through existing scanner/adoption APIs; independently verify custody/idempotence and keep unfinished/torn recovery residuals explicit. Then Files-only safe import under T26. Full tickets close only when all acceptance criteria pass.
+
+PLAN records a later October11 step5 green light; this assessment adds no paid/live activation authorization. Respect the active session scope, hosted activation gates, physical-device/signing/store boundaries and exact-head green review policy.</pre></div><button class="copy-btn" type="button" id="copy-handoff">COPY RESUME PROMPT</button><span id="copy-state" role="status" aria-live="polite">The prompt remains selectable with JavaScript disabled.</span><div class="grid c2" style="margin-top:30px"><article class="card"><h3>Session acceptance</h3><p>One owned worktree, a named bounded slice, independent review, source-bound tests and fresh required CI. Report what was proved, what remains open and where the next session starts.</p></article><article class="card"><h3>Stop conditions</h3><p>Unowned worktree changes, inadequate disk, test failure, ambiguous media custody, a pending owner decision or missing activation authorization. Never clean someone else’s cache, reuse a shared simulator, waive red CI or invent a metric to fill a screen.</p></article></div></div></section><section id="s6" aria-labelledby="h-s6"><div class="wrap"><div class="sec-num">CHAPTER 06</div><h2 id="h-s6">Retire stale claims.<br><span class="accent">Keep the evidence.</span></h2><p class="sec-lede">Serious findings were independently challenged. Confirmed source gaps drive the roadmap; historical failures remain historical.</p><div class="tbl-wrap evidence-visualization" data-evidence-source="evidence/ci-audit.json; evidence/native-audit.json; evidence/breadth-audit.json; evidence/step5-record.json" data-visual-kind="claim-refutation-ledger"><table><thead><tr><th scope="col">Claim challenged</th><th scope="col">Disposition</th><th scope="col">Reason</th></tr></thead><tbody><tr><td>“The seven Codex PRs are still waiting.”</td><td><span class="pill ok">Refuted</span></td><td>GitHub says365–371 MERGED; merge commits are in assessed main.</td></tr><tr><td>“Billing is still preventing checks.”</td><td><span class="pill ok">Refuted as current blocker</span></td><td>Latest recorded main CI38196643491 executed five required automatic jobs successfully. Account billing settings themselves were not inspected.</td></tr><tr><td>“Step5 has never been authorized.”</td><td><span class="pill info">Later authorization recorded</span></td><td>PLAN14–23 and merged372 record founder green light on Oct11. This assessment does not start expansion or activate paid services.</td></tr><tr><td>“Studio has no code.”</td><td><span class="pill ok">Refuted</span></td><td>Python planner/compiler/normalization and Room reference are real executable foundations.</td></tr><tr><td>“The full app or premium engine is done.”</td><td><span class="pill bad">Refuted</span></td><td>Placeholders, absent native Studio/Android/watch implementations and missing device/production gates.</td></tr><tr><td>“A recovery package means startup protection exists.”</td><td><span class="pill warn">Confirmed gap</span></td><td>App has no scanner/adoption invocation; scanner refuses unfinished journals. No actual data loss reproduced.</td></tr><tr><td>“Current main has a new native4PASS receipt.”</td><td><span class="pill warn">Not established</span></td><td>Same complete iOS tree as tested73; historical receipt retained. No native simulator rerun in this assessment.</td></tr></tbody></table></div><div class="audit-note"><b>Unverified external state:</b> this audit did not inspect your Supabase, Cloudflare, Google Drive, signing accounts or hardware. Their connections are not declared absent. No new film was rendered, no original match uploaded, no customer account provisioned and no paid job activated.</div></div></section><section id="s7" aria-labelledby="h-s7"><div class="wrap"><div class="sec-num">CHAPTER 07</div><h2 id="h-s7">Method, provenance<br><span class="accent">and limits.</span></h2><p class="sec-lede">Assessment date: November 2, 2026, America/Chicago. Assessed main: 6e46a576240c587511f2f87a15d95507b7280158; last main commit October12 UTC. Three independent audit passes plus explicit refutation and fresh bounded validation. No full native UI walkthrough was performed.</p><div class="grid c2"><article class="card"><h3>Court Ledger theme</h3><p>Forest, ivory, chartreuse and clay derive from JOVRA’s implemented brand tokens and Court Arc reference. Court service lines express scope. Daylight ivory is the default; the dark reading mode is a forest night surface. No external fonts, scripts, images or analytics.</p></article><article class="card"><h3>Static meaning first</h3><p>The SVG court, labels, evidence, roadmap and handoff exist without JavaScript. Pause, reduced motion and #noanim preserve the same facts. The eight-second ball cycle is presentation tempo, not a performance measurement.</p></article></div><div class="tbl-wrap " ><table><thead><tr><th scope="col">Enhanced acceptance rubric</th><th scope="col">Editorial score / 2</th></tr></thead><tbody><tr><td>Evidence integrity</td><td>2</td></tr><tr><td>Subject-native visual thesis</td><td>2</td></tr><tr><td>Court hero composition</td><td>2</td></tr><tr><td>Two sourced evidence grammars</td><td>2</td></tr><tr><td>Gated system/plan view</td><td>2</td></tr><tr><td>Theme derivation and both modes</td><td>2</td></tr><tr><td>Visual-cue density</td><td>2</td></tr><tr><td>Editorial pacing/readability</td><td>2</td></tr><tr><td>Interaction and performance</td><td>1</td></tr><tr><td>Static parity</td><td>2</td></tr></tbody></table></div><p class="note">Self-assessed rubric:19/20. Interaction receives1 for deliberately modest controls. Validators and responsive visual inspection are separate gates; a rubric score cannot waive a factual or browser failure.</p><ol class="source-list"><li id="e1"><b>E1 · Live GitHub snapshot</b><br>evidence/ci-audit.json; evidence/github-issues.json<br>Fresh status of repository visibility, main head, merged365–371, pre-existing open374/378/379/380, executed CI and draft backend RED.</li><li id="e2"><b>E2 · Authorization and historical mission</b><br>ops/mission/PLAN.md:14–23; evidence/step5-record.json<br>Later founder authorization is recorded; old mission state is preserved before reconciliation.</li><li id="e3"><b>E3 · Runtime/source custody</b><br>evidence/source-inventory.json; ops/mission/evidence/final-core-flow/<br>Current and tested73 complete iOS trees match. Native4 and Media90 are historical source-bound proofs, not fresh main simulator runs.</li><li id="e4"><b>E4 · Full ticket state</b><br>evidence/ticket-status.json; REMAINING-TICKETS.md<br>All295 mapped feature issues resolved against live state;278 remain open. All-open index is included; no overall completion percent.</li><li id="e5"><b>E5 · Independent native audit</b><br>evidence/native-audit.json<br>File/line-backed recovery, import, ownership, manual review, shell and release findings; serious gaps refuted independently.</li><li id="e6"><b>E6 · Fresh runnable checks</b><br>evidence/swift-core-tests.txt; spec-tests.txt; *-validation.txt<br>Core69, Python99, core/Studio/Room and l10n results. Room232 contract cases are not232 device tests.</li><li id="e7"><b>E7 · Independent breadth audit</b><br>evidence/breadth-audit.json; docs/spec/; docs/adr/<br>Actual reference code versus native/hosted/platform frontier. Foundation PR contents were inspected, not inferred from titles.</li><li id="e8"><b>E8 · Report QA and manifest</b><br>evidence/enhanced-validation.txt; signal-validation.txt; browser-qa.json<br>Report validators and browser evidence distinguish presentation quality from product testing.</li></ol></div></section></main><footer><div class="wrap"><p><b>JOVRA · See your game.</b> Enhanced State of the Union · v1 · 2026-11-02</p><p>This assessment supersedes the October9 status claims for current repository state. Historical runtime and failed receipts are preserved. The ordinary mission heartbeat is reconciled separately; it is not this enhanced report.</p><p>Source repository: <a href="https://github.com/Navigata1/jovra">Navigata1/jovra</a> · Contact: hello@islanddevcrew.com</p></div></footer><div id="tip" role="tooltip"></div><script>
+/* fail-safe: if anything below throws, never leave content hidden */
+window.addEventListener("error", function(){
+  document.body.classList.remove("armed");
+  document.querySelectorAll(".reveal,.chart,.v-timeline").forEach(function(e){ e.classList.add("in"); });
+});
+</script>
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement, body = document.body;
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var noanim = location.hash === "#noanim";
+  var still = reduced || noanim;
+  var clamp = function(v, a, b){ return Math.max(a, Math.min(b, v)); };
+
+  /* ---- theme tokens: every canvas color is read from CSS, never hard-coded ---- */
+  var cssv = getComputedStyle(root);
+  function tok(name){ return cssv.getPropertyValue(name).trim(); }
+  function rgbOf(hex){
+    var h = String(hex).replace("#", "");
+    if(h.length === 3) h = h.split("").map(function(c){ return c + c; }).join("");
+    var n = parseInt(h, 16); if(!isFinite(n)) return "128,128,128";
+    return ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255);
+  }
+  var palette = {};
+  function readPalette(){
+    cssv = getComputedStyle(root);
+    palette = { a1: rgbOf(tok("--a1")), a2: rgbOf(tok("--a2")), text: rgbOf(tok("--text")), muted: rgbOf(tok("--muted")),
+      dim: rgbOf(tok("--dim")), bg: rgbOf(tok("--bg")), apps: [1,2,3,4,5,6,7].map(function(i){ return rgbOf(tok("--hue-" + i)); }) };
+  }
+  readPalette();
+
+  /* ---- dark / light switch: default comes from #theme-spec, a viewer's choice wins ---- */
+  var modeBtn = document.getElementById("mode-toggle");
+  function paintModeButton(){
+    if(!modeBtn) return;
+    var dark = root.getAttribute("data-mode") !== "light";
+    modeBtn.setAttribute("aria-pressed", String(dark));
+    modeBtn.setAttribute("aria-label", dark ? "Dark mode on. Switch to light mode" : "Light mode on. Switch to dark mode");
+    modeBtn.lastChild.textContent = dark ? " DARK" : " LIGHT";
+  }
+  paintModeButton();
+  if(modeBtn) modeBtn.addEventListener("click", function(){
+    var next = root.getAttribute("data-mode") === "light" ? "dark" : "light";
+    root.setAttribute("data-mode", next);
+    try { localStorage.setItem("signal-mode:" + location.pathname, next); } catch(e) {}
+    paintModeButton(); readPalette();
+    window.dispatchEvent(new CustomEvent("signal-mode", {detail:{mode: next}}));
+  });
+
+  /* ---- shared motion pause (hero, story, reel all listen) ---- */
+  var paused = still;
+  var motionBtn = document.getElementById("motion-toggle");
+  if(motionBtn){
+    if(still) motionBtn.hidden = true;
+    motionBtn.addEventListener("click", function(){
+      paused = !paused;
+      motionBtn.setAttribute("aria-pressed", String(paused));
+      motionBtn.textContent = paused ? "PLAY MOTION" : "PAUSE MOTION";
+      window.dispatchEvent(new CustomEvent("enhanced-report-motion", {detail:{paused: paused}}));
+    });
+  }
+
+  /* ---- waffle (counts from #waffle data attribute) ---- */
+  var waffle = document.getElementById("waffle");
+  if(waffle){
+    var frag = document.createDocumentFragment();
+    (waffle.getAttribute("data-mix") || "").split(",").forEach(function(pair){
+      var p = pair.split(":"); for(var i = 0; i < Number(p[1] || 0); i++){ var c = document.createElement("span"); c.className = "cell " + p[0]; frag.appendChild(c); }
+    });
+    waffle.appendChild(frag);
+  }
+
+  /* ---- reveals: anything on screen at load is never hidden ---- */
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+  var parents = new Map();
+  revealEls.forEach(function(el){ var p = el.parentNode, i = parents.get(p) || 0; parents.set(p, i + 1); el.style.transitionDelay = (i % 8) * 70 + "ms"; });
+  var watched = revealEls.concat(Array.prototype.slice.call(document.querySelectorAll(".chart,.v-timeline")));
+  if("IntersectionObserver" in window && !still){
+    var vh = window.innerHeight || 800;
+    watched.forEach(function(el){ if(el.getBoundingClientRect().top < vh) el.classList.add("in"); });
+    body.classList.add("armed");
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, {threshold:0, rootMargin:"0px 0px -10% 0px"});
+    watched.forEach(function(el){ if(!el.classList.contains("in")) io.observe(el); });
+  } else {
+    watched.forEach(function(el){ el.classList.add("in"); });
+  }
+
+  /* ---- counters: markup holds the true value; animation only replays it ---- */
+  function fmt(v, el){
+    var dec = parseInt(el.getAttribute("data-decimals") || "0", 10), s = v.toFixed(dec);
+    if(el.getAttribute("data-group")) s = Number(s).toLocaleString("en-US");
+    return (el.getAttribute("data-prefix") || "") + s + (el.getAttribute("data-suffix") || "");
+  }
+  if("IntersectionObserver" in window && !still){
+    var cio = new IntersectionObserver(function(en){ en.forEach(function(e){
+      if(!e.isIntersecting) return; cio.unobserve(e.target);
+      var el = e.target, target = parseFloat(el.getAttribute("data-target")) || 0, t0 = null;
+      (function frame(t){ if(!t0) t0 = t; var k = Math.min((t - t0) / 1400, 1); el.textContent = fmt(target * (1 - Math.pow(1 - k, 3)), el); if(k < 1) requestAnimationFrame(frame); })(performance.now());
+    }); }, {threshold:.4});
+    document.querySelectorAll(".count").forEach(function(c){ cio.observe(c); });
+  }
+
+  /* ---- scrollspy ---- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll(".nav-links a"));
+  var secs = navLinks.map(function(a){ return document.querySelector(a.getAttribute("href")); }).filter(Boolean);
+  if("IntersectionObserver" in window && secs.length){
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        navLinks.forEach(function(a){
+          var on = a.getAttribute("href") === "#" + e.target.id;
+          a.classList.toggle("active", on);
+          if(on && a.parentNode.scrollWidth > a.parentNode.clientWidth){ a.parentNode.scrollLeft = a.offsetLeft - a.parentNode.offsetLeft - 40; }
+        });
+      });
+    }, {rootMargin:"-30% 0px -60% 0px"});
+    secs.forEach(function(s){ spy.observe(s); });
+  }
+
+  /* ---- tooltip for every [data-tip] mark ---- */
+  var tip = document.getElementById("tip");
+  function showTip(el){ var r = el.getBoundingClientRect(); tip.textContent = el.getAttribute("data-tip"); tip.classList.add("on");
+    var x = Math.min(Math.max(8, r.left + r.width / 2 - tip.offsetWidth / 2), window.innerWidth - tip.offsetWidth - 8);
+    var y = r.top - tip.offsetHeight - 10; if(y < 8) y = r.bottom + 10; tip.style.left = x + "px"; tip.style.top = y + "px"; }
+  function hideTip(){ tip.classList.remove("on"); }
+  document.querySelectorAll("[data-tip]").forEach(function(el){
+    el.addEventListener("pointerenter", function(){ showTip(el); });
+    el.addEventListener("pointerleave", hideTip);
+    el.addEventListener("focus", function(){ showTip(el); });
+    el.addEventListener("blur", hideTip);
+  });
+
+  /* ---- reading progress: one passive listener, one rAF; the hero reads the same value ---- */
+  var prog = document.getElementById("progress"), scrollP = 0, pending = 0;
+  function readScroll(){ pending = 0; var max = Math.max(1, root.scrollHeight - window.innerHeight); scrollP = clamp(window.scrollY / max, 0, 1); if(prog) prog.style.transform = "scaleX(" + scrollP + ")"; }
+  window.addEventListener("scroll", function(){ if(!pending) pending = requestAnimationFrame(readScroll); }, {passive:true});
+  readScroll();
+
+
+  var copyBtn=document.getElementById("copy-handoff");
+  if(copyBtn)copyBtn.addEventListener("click",async function(){var status=document.getElementById("copy-state");try{await navigator.clipboard.writeText(document.getElementById("resume-prompt").textContent);status.textContent="Resume prompt copied.";}catch(e){status.textContent="Select and copy the visible prompt above.";}});
+  var canvas=document.getElementById("hero-canvas"),data;
+  try{data=JSON.parse(document.getElementById("hero-data").textContent);}catch(e){return;}
+  if(!canvas||!canvas.getContext||!data)return;
+  var ctx=canvas.getContext("2d"),W=0,H=0,dpr=1,box={x:0,y:0,w:0,h:0},heroVisible=true,t=0;
+  function resize(){W=canvas.clientWidth;H=canvas.clientHeight;dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);var c=canvas.getBoundingClientRect(),s=document.querySelector(".court-svg").getBoundingClientRect();var scale=Math.min(s.width/460,s.height/590);box={x:s.left-c.left+(s.width-scale*460)/2,y:s.top-c.top+(s.height-scale*590)/2,w:scale,h:scale};draw(true);}
+  function draw(rest){ctx.clearRect(0,0,W,H);var n=data.stages.length,u=rest ? .48 : ((t/data.cycleSeconds)%1),k=Math.min(n-2,Math.floor(u*(n-1))),p=u*(n-1)-k,a=data.stages[k],b=data.stages[k+1],x=a.x+(b.x-a.x)*p,y=a.y+(b.y-a.y)*p;ctx.fillStyle=tok("--a1");ctx.beginPath();ctx.arc(box.x+x*box.w,box.y+y*box.h,5,0,Math.PI*2);ctx.fill();}
+  window.addEventListener("resize",resize);window.addEventListener("signal-mode",function(){readPalette();draw(still||paused);});
+  window.addEventListener("enhanced-report-motion",function(){draw(still||paused);});
+  if("IntersectionObserver"in window)new IntersectionObserver(function(en){heroVisible=en[0].isIntersecting;},{threshold:0}).observe(document.querySelector(".hero"));
+  resize();draw(true);var last=Date.now();
+  function loop(){var now=Date.now(),dt=Math.max(0,Math.min(.05,(now-last)/1000));last=now;if(heroVisible&&!paused&&!still&&!document.hidden){t+=dt;draw(false);}requestAnimationFrame(loop);}requestAnimationFrame(loop);
+})();</script></body></html>
