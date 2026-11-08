@@ -1,0 +1,12 @@
+# Negative control: library.expected.json totalMinutes 402 -> 401 (restored afterwards)
+$ python3 scripts/spec/validate.py | grep -i "library\|RESULT"
+FAIL spec/fixtures/sample/library/library.expected.json: library summary differs from the reference generator
+jovra.fixture.sampleLibrary checks 1
+RESULT: FAIL (1 failure(s))
+$ (cd ios/Packages/JovraCore && swift test --skip XCTest --filter "installedLibrarySummaryEqualsTheReferenceLibraryOracle|allDiscoveredRunnerFixturesPass")
+◇ Test run started.
+✘ Test installedLibrarySummaryEqualsTheReferenceLibraryOracle() recorded an issue at SampleContentTests.swift:167:5: Expectation failed: summary == (try oracle())
+✘ Test installedLibrarySummaryEqualsTheReferenceLibraryOracle() failed after 1.078 seconds with 1 issue.
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at SampleLibraryRunner.swift:15:9: Expectation failed: summary == fixture.expected
+✘ Test allDiscoveredRunnerFixturesPass() failed after 4.751 seconds with 1 issue.
+✘ Test run with 2 tests in 0 suites failed after 4.751 seconds with 2 issues.

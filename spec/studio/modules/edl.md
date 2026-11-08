@@ -4,7 +4,7 @@ reference: [spec/reference/studio/edl.py]
 cases: [spec/reference/studio/cases/edl_cases.py]
 kinds: [jovra.edit-plan/2, edl-context]
 coverage: covered
-swift: pending
+swift: consumed
 kotlin: pending
 ---
 
