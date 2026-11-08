@@ -1,12 +1,10 @@
-$ scripts/ios/generate.sh && xcodebuild build-for-testing (scheme Jovra, JOVRA-S04, iOS 26.5 simulator)
-$ plutil -p .derivedData/Build/Products/Debug-iphonesimulator/Jovra.app/Info.plist
 {
   "BGTaskSchedulerPermittedIdentifiers" => [
     0 => "com.islanddevcrew.jovra.processing.overnight"
     1 => "com.islanddevcrew.jovra.continued.*"
     2 => "com.islanddevcrew.jovra.continued.studio-render"
   ]
-  "BuildMachineOSBuild" => "25G83"
+  "BuildMachineOSBuild" => "26B123"
   "CFBundleDevelopmentRegion" => "en"
   "CFBundleDisplayName" => "JOVRA"
   "CFBundleExecutable" => "Jovra"
@@ -53,13 +51,13 @@ $ plutil -p .derivedData/Build/Products/Debug-iphonesimulator/Jovra.app/Info.pli
   ]
   "CFBundleVersion" => "1"
   "DTCompiler" => "com.apple.compilers.llvm.clang.1_0"
-  "DTPlatformBuild" => "23F81a"
+  "DTPlatformBuild" => "24B8118"
   "DTPlatformName" => "iphonesimulator"
-  "DTPlatformVersion" => "26.5"
-  "DTSDKBuild" => "23F81a"
-  "DTSDKName" => "iphonesimulator26.5"
-  "DTXcode" => "2660"
-  "DTXcodeBuild" => "17F113"
+  "DTPlatformVersion" => "27.2"
+  "DTSDKBuild" => "24B8118"
+  "DTSDKName" => "iphonesimulator27.2"
+  "DTXcode" => "2720"
+  "DTXcodeBuild" => "27B52"
   "ITSAppUsesNonExemptEncryption" => false
   "JovraAppleSignInEnabled" => "YES"
   "JovraDriveClientID" => ""

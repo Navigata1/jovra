@@ -1,6 +1,13 @@
+# 2026-11-08T09:00:10Z after merging origin/main a7361c9, Xcode 27.2 (27B52)
+# First run on the merged head: 5 passed, 1 failed (testFullScreenRouteHidesTabsAndReturns: heading 'Capture' never appeared).
+# Cause: main's T17 (#366) disables 'Frame your court' (record.previewCapture) until the setup has a title and both players;
+# the smoke test still tapped it on an empty form. S04 touches no Record/Capture code. The test now fills the setup first,
+# as NavigationRoutesUITests and CaptureFlowUITests already do on main, and asserts the button is enabled before tapping.
+$ SIMULATOR_ID=531B6FFB-E22C-4757-A711-151394147C67 scripts/ios/ui-test.sh -only-testing JovraUITests/JovraSmokeUITests studio/s04-studio-packages-ci
 ==> Summary
 Test class                      passed  failed  skipped  expected
 JovraUITests/JovraSmokeUITests       6       0        0         0
 Total: 6 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 6 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-S04 531B6FFB-E22C-4757-A711-151394147C67 (iPhone 17 Pro, iOS Simulator 26.5)
-Result bundle: .derivedData/ui-tests-20261011-172728.xcresult
+Result bundle: /Users/IDC2.5/jv/.claude/worktrees/s04-studio-packages-ci/.derivedData/ui-tests-20261108-024933.xcresult
+
