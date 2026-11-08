@@ -582,13 +582,13 @@ grant select (id, project_id, job_id, source_id, parent_artifact_id, kind, bytes
               verification, edl_sha256, event_revision, sync_map_revision, source_manifest_revision,
               profile_id, profile_revision, renderer_version, stale, retention_until, display_title, sample,
               created_at, verified_at) on public.artifacts to authenticated;
-create policy artifacts_select_members on public.artifacts for select to authenticated
-  using (deleted_at is null
-         and ((kind in ('preview', 'film', 'thumbnail', 'captions', 'chapters', 'edit_manifest', 'clip_excerpt')
-               and app_private.has_project_role(project_id, '{owner,coach}'))
-              or (kind = 'project_bundle' and app_private.has_project_role(project_id, '{owner}'))));
-create policy artifacts_select_viewers on public.artifacts for select to authenticated
-  using (app_private.viewer_can_see_artifact(id));
+-- one permissive SELECT policy: members' kinds OR what a viewer's grant reaches
+create policy artifacts_select on public.artifacts for select to authenticated
+  using ((deleted_at is null
+          and ((kind in ('preview', 'film', 'thumbnail', 'captions', 'chapters', 'edit_manifest', 'clip_excerpt')
+                and app_private.has_project_role(project_id, '{owner,coach}'))
+               or (kind = 'project_bundle' and app_private.has_project_role(project_id, '{owner}'))))
+         or app_private.viewer_can_see_artifact(id));
 
 -- access_grants: creator and grantee read; token_hash hidden; writes via app_gateway
 grant select (id, kind, project_id, lesson_id, artifact_id, lesson_clip_id, grantee_user_id, created_by,

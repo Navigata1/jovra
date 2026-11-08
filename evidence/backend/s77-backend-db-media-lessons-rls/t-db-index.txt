@@ -1,0 +1,146 @@
+S77 T-DB index: pgTAP assertions from backend-db run 42464482282 (commit ec71c8f), step 'pgTAP assertions by id'.
+The run had 365 assertions across 10 files, 0 not ok, and pg_prove Result: PASS.
+media_* assertions: 186, not ok: 0
+
+T-DB-1: 4 assertion(s)
+  media_01_catalog.test.sql: ok 41 - T-DB-01: unauthenticated select on camera_sources is denied
+  media_01_catalog.test.sql: ok 42 - T-DB-01: unauthenticated select on point_event_revisions
+  media_01_catalog.test.sql: ok 43 - T-DB-01: unauthenticated select on lessons is denied
+  media_01_catalog.test.sql: ok 44 - T-DB-01: unauthenticated insert into lessons is denied
+T-DB-6: 2 assertion(s)
+  media_02_sources_events.test.sql: ok 40 - T-DB-06: an unrelated user sees 0 rows of A's events, sync maps, sources, manifests, versions, calibrations
+  media_03_lessons_clips.test.sql: ok 69 - T-DB-06: an unrelated user sees 0 lessons, clips, observations, plans, artifacts and grants
+T-DB-12: 2 assertion(s)
+  media_02_sources_events.test.sql: ok 2 - T-DB-12: coach inserting an event revision is an RLS violation
+  media_02_sources_events.test.sql: ok 3 - T-DB-12: nothing was appended
+T-DB-13: 5 assertion(s)
+  media_02_sources_events.test.sql: ok 4 - T-DB-13: the first revision is 1, created_by is the caller, the log hash is computed by the server
+  media_02_sources_events.test.sql: ok 5 - T-DB-13: a second device still on parent null gets P0409 revision_conflict
+  media_02_sources_events.test.sql: ok 6 - T-DB-13: a parent ahead of the current revision is P0409 too
+  media_02_sources_events.test.sql: ok 8 - T-DB-13: with the current parent the insert succeeds as revision + 1
+  media_02_sources_events.test.sql: ok 9 - T-DB-13: the project's current_event_revision follows
+T-DB-14: 9 assertion(s)
+  media_01_catalog.test.sql: ok 25 - T-DB-14: no client role may update, delete or truncate an append-only table
+  media_02_sources_events.test.sql: ok 12 - T-DB-14: owner cannot update an event revision
+  media_02_sources_events.test.sql: ok 13 - T-DB-14: owner cannot delete an event revision
+  media_02_sources_events.test.sql: ok 14 - T-DB-14: owner cannot update a source manifest
+  media_02_sources_events.test.sql: ok 15 - T-DB-14: owner cannot delete a plan version
+  media_02_sources_events.test.sql: ok 16 - T-DB-14: owner cannot clear stale on a plan version
+  media_02_sources_events.test.sql: ok 22 - T-DB-14: owner cannot update a sync map
+  media_02_sources_events.test.sql: ok 26 - T-DB-14: owner cannot delete a calibration
+  media_02_sources_events.test.sql: ok 34 - T-DB-14: coach cannot update an event revision
+T-DB-15: 2 assertion(s)
+  media_02_sources_events.test.sql: ok 10 - T-DB-15: the new revision marks the older film, preview and clip excerpt stale (not the thumbnail)
+  media_02_sources_events.test.sql: ok 11 - T-DB-15: and the plan version bound to the older revision
+T-DB-16: 3 assertion(s)
+  media_02_sources_events.test.sql: ok 42 - T-DB-16: the camera sees only its own source
+  media_02_sources_events.test.sql: ok 43 - T-DB-16: and 0 rows of projects, manifests, artifacts and events
+  media_02_sources_events.test.sql: ok 45 - T-DB-16: after the invite is revoked, 0 rows at once
+T-DB-17: 5 assertion(s)
+  media_01_catalog.test.sql: ok 28 - T-DB-17: r2 keys, etags, sessions, client probes, token hashes and invitee HMACs are not granted
+  media_02_sources_events.test.sql: ok 44 - T-DB-17: camera_sources.r2_key is not selectable
+  media_03_lessons_clips.test.sql: ok 19 - T-DB-17: artifacts.r2_key is not selectable
+  media_03_lessons_clips.test.sql: ok 20 - T-DB-17: artifacts.bucket_class is not selectable
+  media_03_lessons_clips.test.sql: ok 21 - T-DB-17: access_grants.token_hash is not selectable
+T-DB-18: 2 assertion(s)
+  media_03_lessons_clips.test.sql: ok 61 - T-DB-18: the film, its thumbnail and captions; not the preview, edit manifest, other film or excerpts
+  media_03_lessons_clips.test.sql: ok 62 - T-DB-18: no project and no clip
+T-DB-19: 2 assertion(s)
+  media_03_lessons_clips.test.sql: ok 64 - T-DB-19: after revoke, 0 rows (no token refresh)
+  media_03_lessons_clips.test.sql: ok 65 - T-DB-19: after expires_at, 0 rows
+T-DB-20: 3 assertion(s)
+  media_03_lessons_clips.test.sql: ok 66 - T-DB-20: the clip grantee sees that clip only
+  media_03_lessons_clips.test.sql: ok 67 - T-DB-20: and its excerpt only (not the match film)
+  media_03_lessons_clips.test.sql: ok 68 - T-DB-20: the lesson, the project and its observations: 0 rows
+T-DB-21: 4 assertion(s)
+  media_03_lessons_clips.test.sql: ok 28 - T-DB-21: a lesson viewer sees the lesson
+  media_03_lessons_clips.test.sql: ok 29 - T-DB-21: a lesson viewer sees 0 observations
+  media_03_lessons_clips.test.sql: ok 30 - T-DB-21: a lesson viewer sees 0 projects
+  media_03_lessons_clips.test.sql: ok 31 - T-DB-21: and 0 plans or sources
+T-DB-22: 2 assertion(s)
+  media_03_lessons_clips.test.sql: ok 24 - T-DB-22: a lesson coach adds a lesson-only observation
+  media_03_lessons_clips.test.sql: ok 25 - T-DB-22: with a project_id they do not coach, the insert is an RLS violation
+T-DB-23: 6 assertion(s)
+  media_01_catalog.test.sql: ok 30 - T-DB-23: observations.provenance is never written by a client
+  media_03_lessons_clips.test.sql: ok 14 - T-DB-23: owner cannot insert an estimated observation
+  media_03_lessons_clips.test.sql: ok 15 - T-DB-23: owner cannot insert a validated observation
+  media_03_lessons_clips.test.sql: ok 16 - T-DB-23: owner cannot update provenance
+  media_03_lessons_clips.test.sql: ok 17 - T-DB-23: a client observation is manual, authored by the caller
+  media_03_lessons_clips.test.sql: ok 18 - T-DB-23: reviewing an estimated cue sets provenance reviewed and reviewed_by = the caller
+T-DB-24: 6 assertion(s)
+  media_01_catalog.test.sql: ok 29 - T-DB-24: validation_state, planner_model_id, edl_sha256 and project_id are server-set on plan versions
+  media_02_sources_events.test.sql: ok 27 - T-DB-24: owner inserting a model-planned version is an RLS violation
+  media_02_sources_events.test.sql: ok 28 - T-DB-24: owner cannot set validation_state
+  media_02_sources_events.test.sql: ok 29 - T-DB-24: a user draft is accepted unvalidated; the trigger sets version 2 and the plan's project
+  media_02_sources_events.test.sql: ok 32 - T-DB-24: a coach may add a heuristic draft
+  media_02_sources_events.test.sql: ok 33 - T-DB-24: a coach inserting a model-planned version is an RLS violation
+T-DB-26: 1 assertion(s)
+  media_03_lessons_clips.test.sql: ok 23 - T-DB-26 (grants): owner cannot write a grant directly
+T-DB-41: 1 assertion(s)
+  media_03_lessons_clips.test.sql: ok 6 - T-DB-41: owner attaching a clip of B's match is an RLS violation
+T-DB-42: 1 assertion(s)
+  media_03_lessons_clips.test.sql: ok 12 - T-DB-42: owner binding the coach's lesson into a plan is refused
+T-DB-43: 2 assertion(s)
+  media_02_sources_events.test.sql: ok 17 - T-DB-43: reviewed_by cannot be supplied by a client
+  media_02_sources_events.test.sql: ok 18 - T-DB-43: a reviewed sync map records the caller as reviewer and author, revision 1
+T-DB-45: 3 assertion(s)
+  media_03_lessons_clips.test.sql: ok 7 - T-DB-45: a clip of A naming A2's source is an FK violation
+  media_03_lessons_clips.test.sql: ok 8 - T-DB-45: an observation of A naming A2's source is an FK violation
+  media_03_lessons_clips.test.sql: ok 9 - T-DB-45: a calibration of A naming A2's source is an FK violation
+T-DB-46: 7 assertion(s)
+  media_03_lessons_clips.test.sql: ok 37 - T-DB-46: the coach attaches a clip of the owner's match to their own lesson
+  media_03_lessons_clips.test.sql: ok 41 - T-DB-46: a grant on the coach's clip is refused until approved
+  media_03_lessons_clips.test.sql: ok 42 - T-DB-46: the coach cannot approve sharing the owner's footage (P0404, like a missing clip)
+  media_03_lessons_clips.test.sql: ok 44 - T-DB-46: the project owner approves sharing exactly this window
+  media_03_lessons_clips.test.sql: ok 46 - T-DB-46: after approval the viewer sees the coach's clip
+  media_03_lessons_clips.test.sql: ok 47 - T-DB-46: and its excerpt, nothing else of the match
+  media_03_lessons_clips.test.sql: ok 48 - T-DB-46: once the owner revokes the coach, the downstream viewer gets 0 rows at once
+T-DB-48: 1 assertion(s)
+  media_03_lessons_clips.test.sql: ok 5 - T-DB-48 (grant half): owner cannot delete a lesson directly
+T-DB-49: 3 assertion(s)
+  media_03_lessons_clips.test.sql: ok 27 - T-DB-49 (lesson side): a lesson coach sees no observation that also belongs to a project they cannot access
+  media_03_lessons_clips.test.sql: ok 34 - T-DB-49: a project coach sees A's own observations
+  media_03_lessons_clips.test.sql: ok 35 - T-DB-49: but none that also carries a lesson the coach cannot access (A + LO, LO only)
+T-DB-52: 1 assertion(s)
+  media_03_lessons_clips.test.sql: ok 33 - T-DB-52: a lesson_view grantee cannot bind that lesson into a plan
+T-DB-59: 2 assertion(s)
+  media_02_sources_events.test.sql: ok 36 - T-DB-59 (FK half): as jovra_owner, a version pairing project A with B's plan is an FK violation
+  media_02_sources_events.test.sql: ok 37 - T-DB-59 (FK half): the same insert with B's own project passes (the check is the FK, not the role)
+T-DB-62: 6 assertion(s)
+  media_03_lessons_clips.test.sql: ok 49 - T-DB-62: moving the window clears share_approved_at and unlinks the excerpt
+  media_03_lessons_clips.test.sql: ok 50 - T-DB-62: the unlinked excerpt is hidden at once (deleted_at set; the object goes with the deletion job)
+  media_03_lessons_clips.test.sql: ok 51 - T-DB-62: the viewer sees 0 rows until re-approved
+  media_03_lessons_clips.test.sql: ok 52 - T-DB-62: the owner re-approves
+  media_03_lessons_clips.test.sql: ok 53 - T-DB-62: after re-approval the clip is visible again
+  media_03_lessons_clips.test.sql: ok 56 - T-DB-62: revoke_clip_share has the same effect: 0 rows
+T-DB-64: 15 assertion(s)
+  media_04_quotas.test.sql: ok 1 - T-DB-64: event revision 1 of 3 allowed
+  media_04_quotas.test.sql: ok 2 - T-DB-64: the third event revision (the limit) is allowed
+  media_04_quotas.test.sql: ok 3 - T-DB-64: the fourth event revision of the day is P0429
+  media_04_quotas.test.sql: ok 4 - T-DB-64: the fourth sync map of the day is P0429
+  media_04_quotas.test.sql: ok 5 - T-DB-64: the fourth plan version of the day is P0429
+  media_04_quotas.test.sql: ok 6 - T-DB-64: the fourth lesson of the day is P0429 (a per-user limit)
+  media_04_quotas.test.sql: ok 11 - T-DB-64: project 1: 2 rows (total 2)
+  media_04_quotas.test.sql: ok 12 - T-DB-64: project 2: 2 rows (total 4)
+  media_04_quotas.test.sql: ok 13 - T-DB-64: project 3: 2 rows (total 6)
+  media_04_quotas.test.sql: ok 14 - T-DB-64: project 4, first row: the seventh of the day is allowed (one below the aggregate)
+  media_04_quotas.test.sql: ok 15 - T-DB-64: project 4, second row: refused at the *user_total limit though the project is under its own
+  media_04_quotas.test.sql: ok 16 - T-DB-64: a fresh project 5 is refused too: the aggregate is per user, never N x the per-project limit
+  media_04_quotas.test.sql: ok 17 - T-DB-64: one aggregate row for the user and day, holding 7
+  media_04_quotas.test.sql: ok 19 - T-DB-64: a lesson coach's lesson-only observation (project_id null) is allowed
+  media_04_quotas.test.sql: ok 20 - T-DB-64: and counted against the coach's user subject
+T-DB-65: 2 assertion(s)
+  media_02_sources_events.test.sql: ok 39 - T-DB-65: every parent_revision value gets the identical 42501 (the current one, 2, included)
+  media_02_sources_events.test.sql: ok 41 - T-DB-65: A's current_event_revision is untouched
+T-DB-69: 3 assertion(s)
+  media_03_lessons_clips.test.sql: ok 58 - T-DB-69: approved again
+  media_03_lessons_clips.test.sql: ok 59 - T-DB-69: with the trigger disabled the approval timestamp survived the move
+  media_03_lessons_clips.test.sql: ok 60 - T-DB-69: the viewer still sees 0 rows: share_approved_sha256 no longer equals the fingerprint
+T-DB-70: 5 assertion(s)
+  media_04_quotas.test.sql: ok 7 - T-DB-70: the day row and the lifetime row both hold 3: the refused insert rolled back
+  media_04_quotas.test.sql: ok 22 - T-DB-70: with no quota_limits row for story_plans the insert is P0429 (fail closed)
+  media_04_quotas.test.sql: ok 23 - T-DB-70: no counter row was left behind
+  media_04_quotas.test.sql: ok 24 - T-DB-70: the refused insert left the aggregate unchanged
+  media_04_quotas.test.sql: ok 25 - T-DB-70: with no *user_total row a table under its own limit is P0429 too
+
+Other media_* assertions (findings, stories, invariants, performance hygiene): 76

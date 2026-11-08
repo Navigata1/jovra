@@ -67,6 +67,9 @@ public final class CaptureEngine: @unchecked Sendable {
                                estimatedStorageRange: estimate / 2 ... estimate + estimate / 5, warnings: warnings)
     }
     public func start(sessionID: String, folder: URL) async throws {
+        // iOS can resolve an existing /var folder to /private/var while leaving a new
+        // filename under the original alias. Build all journal/media paths from one root.
+        let folder = folder.resolvingSymlinksInPath().standardizedFileURL
         try queue.sync {
             guard phase == .ready else { throw CaptureError.invalidState }
             guard (lastBudget?.freeBytes ?? 0) >= 32 * 1024 * 1024 else { throw CaptureError.storageUnavailable }

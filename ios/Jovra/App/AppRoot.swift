@@ -13,6 +13,7 @@ struct AppRoot: View {
     @State private var router: AppRouter = AppRoot.initialRouter(launch: .current)
     @State private var hasRestored = false
     @SceneStorage("jovra.router.state") private var savedState: Data?
+    @Environment(\.localCaptureLibrary) private var captureLibrary
     @Environment(\.sessionLookup) private var sessions
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @Environment(\.launchConfiguration) private var launch
@@ -34,6 +35,9 @@ struct AppRoot: View {
         .environment(router)
         .onOpenURL { url in
             Task { await router.open(url, sessions: sessions) }
+        }
+        .task {
+            if case .ready(let library) = captureLibrary { _ = await library.reconcileAtStartup() }
         }
         .onAppear(perform: restoreOnce)
         .onChange(of: router.state) { _, state in
