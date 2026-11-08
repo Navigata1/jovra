@@ -670,15 +670,17 @@ def check_determinism(rep: Report) -> None:
 def main(argv) -> int:
     rep = Report("-v" in argv)
     ctx = Ctx()
-    check_schemas(ctx, rep)
-    check_drift(ctx, rep)
-    check_records(ctx, rep)
-    check_invalid(ctx, rep)
-    check_vectors(ctx, rep)
-    check_legacy(ctx, rep)
-    check_acceptance(ctx, rep)
-    check_secrets(ctx, rep)
-    check_determinism(rep)
+    checks = (("schemas", check_schemas), ("drift", check_drift), ("records", check_records),
+              ("invalid", check_invalid), ("vectors", check_vectors), ("legacy", check_legacy),
+              ("acceptance", check_acceptance), ("secrets", check_secrets),
+              ("determinism", lambda _ctx, r: check_determinism(r)))
+    for name, check in checks:
+        # A missing or malformed fixture must be reported as a failure, not end the run early: later checks
+        # (determinism in particular) name the file that is missing or hand-edited.
+        try:
+            check(ctx, rep)
+        except Exception as exc:  # noqa: BLE001 - every crash becomes a reported failure
+            rep.fail(name, f"check crashed: {type(exc).__name__}: {exc}")
     for f in rep.failures:
         print(f)
     for what, n in rep.counts.items():
