@@ -31,7 +31,7 @@ begin
      or p_amount is null or p_amount <= 0 or p_owner is null or p_reservation is null then
     raise exception using errcode = 'P0422', message = 'invalid_value:spend';
   end if;
-  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtext('jovra:spend'));
+  -- MUTATION (S79 evidence, reverted next commit): advisory lock removed
   select l.* into v_owner from app_ops.spend_limits l
    where l.scope = 'owner' and (l.owner_id = p_owner or l.owner_id is null)
    order by l.owner_id nulls last limit 1;                         -- the owner's own row first, else the default row
