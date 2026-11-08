@@ -1,0 +1,45 @@
+A01 (#179) round 4, 2026-11-08. Blocker: the merge gate (#375 Lane A pins ADR, #376 ADR-0001 header note).
+Branch ticket/a01-android-build-foundation-lane-a at 0bfba02: merge of origin/main f9db4c8 (#384 T08, #380 S77) into d73671b.
+The merge touches no android/ file and not .github/workflows/android.yml (git diff --name-only d73671b 0bfba02 -- android .github/workflows/android.yml -> 0 files).
+No AVD created, no simulator booted, no physical device used. Nothing installed.
+
+## 1. Merge gate, captured 2026-11-08T09:20:38Z
+#375 OPEN ADR: record the Android start and the verified Lane A toolchain pins (story 351, A01 merge gate)
+#376 OPEN ADR-0001 header note: amended by ADR-0024, Android start condition only (F-ADR-0001, A01 merge gate)
+#377 OPEN ADR-0008 Android amendment: Drive authorization through Play services AuthorizationClient (F-ADR-0008, A49 merge gate)
+$ gh pr list --state all --search "ADR-0001 in:title"   -> []
+$ gh pr list --state all --search "Lane A pins in:title" -> []
+$ git show origin/main:docs/adr/0001-native-per-platform-shared-contracts.md | grep -ci ADR-0024 -> 0   (origin/main f9db4c8)
+Result: unchanged since round 3. Clearing it needs the ADR owner (ready-for-human) to merge both to main.
+A01 does not edit docs/adr/ (#376: 'not edited by any Android ticket'), and this agent may push only its own branch.
+PR #378 stays a draft and unmerged.
+
+## 2. Full Lane A suites, forced (--rerun-tasks), JDK 17, Gradle 9.3.1 wrapper
+$ android/gradlew -p android/build-logic :convention:test --rerun-tasks
+BUILD SUCCESSFUL in 2s
+7 actionable tasks: 7 executed
+exit 0
+-> 11 tests in 1 suite, 0 failures, 0 errors, 0 skipped (ModuleBoundariesTest XML)
+$ env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test checkModuleBoundaries --rerun-tasks
+Checked 20 modules: 0 violation(s).
+BUILD SUCCESSFUL in 1s
+13 actionable tasks: 13 executed
+exit 0
+-> 8 tests (core 2, studio-core 2, room-protocol 2, testing 2), 0 failures
+$ ANDROID_HOME=$HOME/Library/Android/sdk android/gradlew -p android help :app:dependencies :app:checkDebugAarMetadata :wear:checkDebugAarMetadata
+BUILD SUCCESSFUL in 841ms
+18 actionable tasks: 18 executed
+exit 0
+FAILED lines: 0
++--- androidx.navigation3:navigation3-runtime:1.1.7
+|    +--- com.squareup.okhttp3:okhttp:5.4.0
+\--- org.jetbrains.kotlin:kotlin-stdlib:2.4.20 (n)
+$ ANDROID_HOME=$HOME/Library/Android/sdk android/gradlew -p android assembleDebug :wear:assembleDebug testDebugUnitTest --rerun-tasks
+BUILD SUCCESSFUL in 8s
+663 actionable tasks: 663 executed
+exit 0
+-> 16 Android smoke tests in 16 suites, 0 failures, 0 errors (testDebugUnitTest XML)
+Totals unchanged from rounds 2 and 3: 11 + 8 + 16 = 35 tests, 0 failures; boundary check 20 modules, 0 violations.
+
+## 3. Disk
+/dev/disk3s5   926Gi   811Gi    67Gi    93%    9.9M  700M    1%   /System/Volumes/Data
