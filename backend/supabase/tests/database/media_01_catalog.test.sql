@@ -6,7 +6,7 @@
 -- identity_01 holds every table, function and trigger in public/app_* to the T-DB-02/03/05/66/67 lints, so the new
 -- objects are linted there too. The file rolls back.
 begin;
-select plan(42);
+select plan(44);
 
 -- Tables -----------------------------------------------------------------------------------------------------------
 select has_table('public', 'camera_sources', 'camera_sources exists');
@@ -144,6 +144,27 @@ select ok(not has_function_privilege('jovra_orchestrator', 'app_gateway.approve_
   'finding 20: neither the orchestrator nor a client may call the clip-share commands');
 select ok('lesson_clip' = any (enum_range(null::public.deletion_scope)::text[]),
   'finding 20: deletion_scope has lesson_clip');
+
+-- Performance hygiene (advisors 0001 unindexed_foreign_keys, 0006 multiple_permissive_policies) -------------------
+-- Every foreign key in public has an index whose leading columns are the key's columns (any order), so a parent
+-- delete or a project-scoped join never seq-scans a child; and no table gives one role two permissive policies for
+-- the same command.
+select is_empty($$
+  select c.conrelid::regclass::text || ' ' || c.conname
+    from pg_constraint c join pg_namespace n on n.oid = c.connamespace
+   where c.contype = 'f' and n.nspname = 'public'
+     and not exists (
+       select 1 from pg_index i
+        where i.indrelid = c.conrelid
+          and (select array_agg(k order by k) from unnest((i.indkey::int2[])[0:cardinality(c.conkey) - 1]) k)
+              = (select array_agg(k order by k) from unnest(c.conkey) k))
+$$, 'every public foreign key has a covering index');
+select is_empty($$
+  select p.tablename || ' ' || r.role || ' ' || p.cmd
+    from pg_policies p cross join lateral unnest(p.roles) r(role)
+   where p.schemaname = 'public' and p.permissive = 'PERMISSIVE'
+   group by p.tablename, r.role, p.cmd having count(*) > 1
+$$, 'no public table has two permissive policies for one role and command');
 
 -- T-DB-01 for the new tables: unauthenticated requests fail before RLS ------------------------------------------------
 select tests.clear_authentication();
