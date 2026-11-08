@@ -1,0 +1,26 @@
+## mutation: requireFree never refuses an occupied slot
+✘ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" recorded an issue at ProjectSourcesAndRevisionsTests.swift:29:15: Expectation failed: an error was expected but none was thrown and "StudioProject(schemaVersion: "jovra.studio-project/1", projectId: "2442e3a5-bf6d-4dc9-b935-9cc0bbe30be4", kind: JovraStudioCore.StudioProjectKind.match, sample: false, createdAt: "2026-10-07T22:30:00Z", environment: JovraStudioCore.StudioEnvironment.demo, primarySourceId: Optional("camera-1"), sources: [JovraStudioCore.StudioProjectSource(sourceId: "camera-1", sessionId: Optional("session-a"), segmentIds: [], slot: Optional(JovraStudioCore.StudioPlacementSlot.nearBaseline), role: JovraStudioCore.SourceManifestSourceRole.match, ownerParticipantId: nil), JovraStudioCore.StudioProjectSource(sourceId: "camera-2", sessionId: Optional("session-b"), segmentIds: [], slot: Optional(JovraStudioCore.StudioPlacementSlot.nearBaseline), role: JovraStudioCore.SourceManifestSourceRole.match, ownerParticipantId: nil)], participants: [], privacy: JovraStudioCore.ProjectLockPrivacy(venueVisible: false, locationHidden: true), revisions: JovraStudioCore.StudioProjectRevisions(sourceManifestRevision: 3, syncRevision: 0, keeperRevision: 0, eventLogVersion: 0), lockRevision: 0)" was returned
+✘ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" recorded an issue at ProjectSourcesAndRevisionsTests.swift:32:15: Expectation failed: an error was expected but none was thrown and "StudioProjectSource(sourceId: "camera-3", sessionId: Optional("session-c"), segmentIds: [], slot: Optional(JovraStudioCore.StudioPlacementSlot.farBaseline), role: JovraStudioCore.SourceManifestSourceRole.match, ownerParticipantId: nil)" was returned
+✘ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" recorded an issue at ProjectSourcesAndRevisionsTests.swift:35:9: Expectation failed: try await store.project(project.projectId) == before
+✘ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" failed after 0.155 seconds with 3 issues.
+✘ Test run with 7 tests in 1 suite failed after 0.792 seconds with 3 issues.
+
+## mutation: studio.json written in place before the rename
+✘ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" recorded an issue at ProjectStoreDurabilityTests.swift:41:9: Expectation failed: try Data(contentsOf: file) == before
+✘ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" recorded an issue at ProjectStoreDurabilityTests.swift:43:9: Expectation failed: reloaded == project
+✘ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" recorded an issue at ProjectStoreDurabilityTests.swift:44:9: Expectation failed: reloaded.revisions.sourceManifestRevision == 0
+✘ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" failed after 0.061 seconds with 3 issues.
+✘ Test run with 6 tests in 1 suite failed after 0.095 seconds with 3 issues.
+
+## mutation: delete(.derived) rewrites an original
+✘ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" recorded an issue with 1 argument scope → .derived at ProjectDeleteScopeTests.swift:60:9: Expectation failed: try fixture.hashes() == hashesBefore
+✘ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" recorded an issue with 1 argument scope → .derived at ProjectDeleteScopeTests.swift:61:9: Expectation failed: try fixture.sizes() == sizesBefore
+✘ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" recorded an issue with 1 argument scope → .derived at ProjectDeleteScopeTests.swift:62:9: Expectation failed: try fixture.originals.map { try Data(contentsOf: $0) } == bytesBefore
+✘ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" with 3 test cases failed after 1.299 seconds with 3 issues.
+✘ Test run with 3 tests in 1 suite failed after 1.300 seconds with 3 issues.
+
+## mutation: stale index trusted
+✘ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" recorded an issue at ProjectStoreDurabilityTests.swift:102:9: Expectation failed: try await scratch.store().projects().map(\.projectId) == [a.projectId]
+✘ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" failed after 0.040 seconds with 1 issue.
+✘ Test run with 6 tests in 1 suite failed after 0.044 seconds with 1 issue.
+

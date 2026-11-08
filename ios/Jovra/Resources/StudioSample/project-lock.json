@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "jovra.project-lock/1",
+  "projectId": "sample-court-day",
+  "revision": 1,
+  "sample": true,
+  "environment": "demo",
+  "identity": {
+    "mode": "demo-profile",
+    "accountRef": null
+  },
+  "createdAt": "2026-10-07T22:30:00Z",
+  "sourceManifest": {
+    "revision": 1,
+    "sha256": "09229dc97139261f36893fcf788fc514626091e0a7ab5d4af074cc496fcee271"
+  },
+  "eventRevision": 3,
+  "syncRevision": 2,
+  "profile": {
+    "id": "court-memories",
+    "revision": 1
+  },
+  "output": {
+    "aspect": "16:9",
+    "height": 1080,
+    "durationTargetSeconds": 258
+  },
+  "participants": [
+    {
+      "participantId": "jon",
+      "displayName": "Jon",
+      "role": "player",
+      "recordingAcknowledged": true,
+      "appearance": "show"
+    },
+    {
+      "participantId": "alex",
+      "displayName": "Alex",
+      "role": "player",
+      "recordingAcknowledged": true,
+      "appearance": "show"
+    }
+  ],
+  "sourceRights": [
+    {
+      "sourceId": "camera-1",
+      "ownerParticipantId": "jon",
+      "cloudConsent": false,
+      "consentRecordId": null
+    },
+    {
+      "sourceId": "camera-2",
+      "ownerParticipantId": "alex",
+      "cloudConsent": false,
+      "consentRecordId": null
+    },
+    {
+      "sourceId": "camera-3",
+      "ownerParticipantId": "jon",
+      "cloudConsent": false,
+      "consentRecordId": null
+    }
+  ],
+  "privacy": {
+    "venueVisible": false,
+    "locationHidden": true
+  },
+  "quoteAuthorization": null,
+  "brand": {
+    "wordmark": "JOVRA",
+    "mark": "court-arc",
+    "ivory": "#F4F1E8",
+    "forest": "#092A25",
+    "panel": "#123C33",
+    "chartreuse": "#D7F56A",
+    "clay": "#C47752"
+  }
+}

@@ -1,0 +1,145 @@
+# Scratch build with localStudio = false: swift test --scratch-path .build-localstudio-off -Xswiftc -DJOVRA_STUDIO_LOCAL_OFF --filter 'Project|SampleContent'
+[Computing dependencies]
+[Pre-planning 1 / 211]
+[Planning deferred tasks]
+[29 / 95] StudioConsumerGenerator-product
+[55 / 95] JovraCore_JovraCore
+[56 / 95]
+[58 / 97] StudioConsumerGenerator-product
+[67 / 133] JovraCore
+[68 / 152]
+[70 / 152]
+[73 / 152]
+[75 / 152]
+[76 / 152]
+[77 / 152]
+[80 / 152]
+[81 / 152]
+[83 / 152]
+[84 / 152]
+[86 / 152]
+[89 / 152]
+[90 / 152]
+[91 / 152]
+[92 / 152]
+[111 / 152] JovraCore
+[112 / 152] StudioConsumerGenerator-product
+[114 / 152] JovraCore
+[116 / 152] JovraCore
+[118 / 152] StudioConsumerGenerator-product
+[118 / 152] JovraCore
+[125 / 153] JovraStudioCore
+[143 / 172] JovraStudioCore
+[144 / 172] JovraStudioCore
+[152 / 172] JovraStudioCore
+[153 / 172] JovraCore
+[155 / 172] JovraCore
+[157 / 172] JovraStudioCoreTests-product
+[162 / 173] JovraStudioCoreTests-product
+[163 / 194]
+[183 / 194] JovraStudioCoreTests-product
+[188 / 194] AllIncludingTests
+[188 / 194] JovraStudioCoreTests-product
+[189 / 194] JovraStudioCoreTests-product
+[190 / 194] JovraStudioCoreTests-product
+[192 / 194] JovraStudioCoreTests-product
+Build complete! (35.69 sec)
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" started.
+◇ Suite "Studio sample content" started.
+◇ Suite "Studio project store: delete scopes and films" started.
+◇ Suite "Studio sample content: the sample-scope rule" started.
+◇ Suite "Studio sample content: bundled resources" started.
+◇ Suite "Studio project store: durability and the index" started.
+◇ Suite "Studio project store: sources, slots and revisions" started.
+◇ Suite "Studio fixture locator" started.
+◇ Suite "Studio project store: the localStudio entitlement" started.
+◇ Test "finding 8: a plan naming another project is refused against this project's records" started.
+◇ Test "the match project's revisions, slots and owners come from the stored sample records" started.
+◇ Test "a record that is not flagged Sample is refused, and so is a missing one" started.
+◇ Test "every installed project and every installed record is flagged Sample, byte for byte as shipped" started.
+◇ Test "installing twice keeps the installed sample; a real project holding a sample id is never overwritten" started.
+◇ Test "removing deletes every Sample project in one call and leaves real projects untouched" started.
+◇ Test "installing yields a match project whose score from the core fold reads Jon 6 6 / Alex 4 3, Final" started.
+◇ Test "each identity is made of records of the sample project, and the identities do not share a record" started.
+◇ Test "locking the installed sample reproduces the shipped lock as revision 2, with the reference's manifest hash" started.
+◇ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" started.
+◇ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" started.
+◇ Test "with only real sessions, installing and removing the Studio sample adds no session and changes no number" started.
+◇ Test "with real and core sample sessions in the library, installing the Studio sample leaves stats and trends unchanged" started.
+◇ Test "changing one byte in a scratch copy of the bundled records fails the check, naming the file" started.
+◇ Test "the SHA-256 here agrees with the published test vectors and with the system tool" started.
+◇ Test "the bundled sample records are byte-identical to spec/studio/fixtures/records (sha256 equality)" started.
+◇ Test "a missing or an extra file in the bundled copy fails the check" started.
+◇ Test "a process killed after the rename has committed the new studio.json" started.
+◇ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" started.
+◇ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" started.
+◇ Test "a created project reloads from its folder in a new store with the same kind and no sources" started.
+◇ Test "a corrupted index is rebuilt from the project folders with the same project list" started.
+◇ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" started.
+◇ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" started.
+◇ Test "with the core session store attached, a source must be an existing session, and the event-log version is read from it" started.
+◇ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" started.
+◇ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" started.
+◇ Test "a source is a reference: no file of the original appears in the project folder" started.
+◇ Test "one phone is a complete project: create with a primary session holds it as the primary camera-1" started.
+◇ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" started.
+◇ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" started.
+◇ Test "with localStudio off, creating a Studio film project is refused with the stated reason" started.
+◇ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" started.
+◇ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" started.
+◇ Test "with localStudio off, a film already made, the original, its export and the core library stay available" started.
+◇ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" started.
+◇ Test case passing 1 argument scope → .project to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test case passing 1 argument scope → .cloudCopies to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test case passing 1 argument scope → .derived to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+✔ Test "the SHA-256 here agrees with the published test vectors and with the system tool" passed after 1.189 seconds.
+✔ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" passed after 1.189 seconds.
+✔ Test "each identity is made of records of the sample project, and the identities do not share a record" passed after 1.189 seconds.
+✔ Test "a process killed after the rename has committed the new studio.json" passed after 1.189 seconds.
+✔ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" passed after 1.189 seconds.
+✔ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" passed after 1.189 seconds.
+✔ Test "a created project reloads from its folder in a new store with the same kind and no sources" passed after 1.189 seconds.
+✔ Test "a record that is not flagged Sample is refused, and so is a missing one" passed after 1.189 seconds.
+✔ Test "a corrupted index is rebuilt from the project folders with the same project list" passed after 1.189 seconds.
+✔ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" passed after 1.189 seconds.
+✔ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" passed after 1.189 seconds.
+✔ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" passed after 1.189 seconds.
+✔ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" passed after 1.189 seconds.
+✔ Test "finding 8: a plan naming another project is refused against this project's records" passed after 1.190 seconds.
+✔ Test "one phone is a complete project: create with a primary session holds it as the primary camera-1" passed after 1.189 seconds.
+✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 1.189 seconds.
+✔ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" passed after 1.189 seconds.
+✔ Test "with localStudio off, creating a Studio film project is refused with the stated reason" passed after 1.189 seconds.
+✔ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" passed after 1.189 seconds.
+✔ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" passed after 1.189 seconds.
+✔ Test "the match project's revisions, slots and owners come from the stored sample records" passed after 1.190 seconds.
+✔ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" passed after 1.190 seconds.
+✔ Suite "Studio project store: durability and the index" passed after 1.190 seconds.
+✔ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" passed after 1.190 seconds.
+✔ Suite "Studio fixture locator" passed after 1.190 seconds.
+✔ Test "changing one byte in a scratch copy of the bundled records fails the check, naming the file" passed after 1.228 seconds.
+✔ Test "every installed project and every installed record is flagged Sample, byte for byte as shipped" passed after 1.344 seconds.
+✔ Test "a missing or an extra file in the bundled copy fails the check" passed after 1.377 seconds.
+✔ Test "removing deletes every Sample project in one call and leaves real projects untouched" passed after 1.399 seconds.
+✔ Test "locking the installed sample reproduces the shipped lock as revision 2, with the reference's manifest hash" passed after 1.466 seconds.
+✔ Test "the bundled sample records are byte-identical to spec/studio/fixtures/records (sha256 equality)" passed after 1.468 seconds.
+✔ Suite "Studio sample content: bundled resources" passed after 1.469 seconds.
+✔ Test "installing twice keeps the installed sample; a real project holding a sample id is never overwritten" passed after 1.552 seconds.
+✔ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" passed after 2.180 seconds.
+✔ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" with 3 test cases passed after 2.367 seconds.
+✔ Suite "Studio project store: delete scopes and films" passed after 2.367 seconds.
+✔ Test "a source is a reference: no file of the original appears in the project folder" passed after 2.457 seconds.
+✔ Test "installing yields a match project whose score from the core fold reads Jon 6 6 / Alex 4 3, Final" passed after 2.464 seconds.
+✔ Suite "Studio sample content" passed after 2.464 seconds.
+✔ Test "with the core session store attached, a source must be an existing session, and the event-log version is read from it" passed after 2.539 seconds.
+✔ Suite "Studio project store: sources, slots and revisions" passed after 2.539 seconds.
+✔ Test "with localStudio off, a film already made, the original, its export and the core library stay available" passed after 3.160 seconds.
+✔ Suite "Studio project store: the localStudio entitlement" passed after 3.161 seconds.
+✔ Test "with only real sessions, installing and removing the Studio sample adds no session and changes no number" passed after 4.542 seconds.
+✔ Test "with real and core sample sessions in the library, installing the Studio sample leaves stats and trends unchanged" passed after 5.320 seconds.
+✔ Suite "Studio sample content: the sample-scope rule" passed after 5.321 seconds.
+✔ Test run with 37 tests in 9 suites passed after 5.321 seconds.

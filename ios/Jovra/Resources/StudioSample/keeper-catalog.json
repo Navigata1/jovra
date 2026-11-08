@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "jovra.keeper-catalog/1",
+  "projectId": "sample-court-day",
+  "revision": 1,
+  "sample": true,
+  "eventRevision": 3,
+  "syncRevision": 2,
+  "keepers": [
+    {
+      "keeperId": "k-01",
+      "eventRefs": [
+        "p-003"
+      ],
+      "session": {
+        "startUs": 12000000,
+        "endUs": 19500000
+      },
+      "views": [
+        {
+          "sourceId": "camera-1",
+          "window": {
+            "inFrame": 720,
+            "outFrame": 1180
+          },
+          "primary": true
+        },
+        {
+          "sourceId": "camera-2",
+          "window": {
+            "inFrame": 700,
+            "outFrame": 1160
+          },
+          "primary": false
+        }
+      ],
+      "contacts": [
+        {
+          "sourceId": "camera-2",
+          "frame": 900
+        },
+        {
+          "sourceId": "camera-1",
+          "frame": 905
+        }
+      ],
+      "selection": "manual",
+      "provenance": "manual"
+    },
+    {
+      "keeperId": "k-02",
+      "eventRefs": [
+        "p-041"
+      ],
+      "session": {
+        "startUs": 1196000000,
+        "endUs": 1264000000
+      },
+      "views": [
+        {
+          "sourceId": "camera-1",
+          "window": {
+            "inFrame": 71800,
+            "outFrame": 75800
+          },
+          "primary": true
+        }
+      ],
+      "contacts": [
+        {
+          "sourceId": "camera-1",
+          "frame": 72500
+        },
+        {
+          "sourceId": "camera-1",
+          "frame": 73100
+        },
+        {
+          "sourceId": "camera-1",
+          "frame": 73700
+        }
+      ],
+      "selection": "manual",
+      "provenance": "reviewed"
+    },
+    {
+      "keeperId": "k-03",
+      "eventRefs": [
+        "p-067",
+        "p-068"
+      ],
+      "session": {
+        "startUs": 1998000000,
+        "endUs": 2085000000
+      },
+      "views": [
+        {
+          "sourceId": "camera-1",
+          "window": {
+            "inFrame": 119900,
+            "outFrame": 125000
+          },
+          "primary": true
+        }
+      ],
+      "contacts": [
+        {
+          "sourceId": "camera-1",
+          "frame": 121000
+        },
+        {
+          "sourceId": "camera-1",
+          "frame": 122400
+        }
+      ],
+      "selection": "manual",
+      "provenance": "manual"
+    },
+    {
+      "keeperId": "k-04",
+      "eventRefs": [
+        "p-090"
+      ],
+      "session": {
+        "startUs": 2498000000,
+        "endUs": 2620000000
+      },
+      "views": [
+        {
+          "sourceId": "camera-1",
+          "window": {
+            "inFrame": 149950,
+            "outFrame": 157200
+          },
+          "primary": true
+        },
+        {
+          "sourceId": "camera-2",
+          "window": {
+            "inFrame": 149900,
+            "outFrame": 157100
+          },
+          "primary": false
+        }
+      ],
+      "contacts": [
+        {
+          "sourceId": "camera-2",
+          "frame": 151000
+        },
+        {
+          "sourceId": "camera-2",
+          "frame": 152200
+        }
+      ],
+      "selection": "heuristic",
+      "provenance": "estimated"
+    }
+  ]
+}

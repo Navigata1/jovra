@@ -1,0 +1,60 @@
+# S13 evidence: scripts/studio/sync-sample-resources.sh (2026-11-08T23:25:41Z, base 9831e2b)
+
+$ rm -rf ios/Jovra/Resources/StudioSample && scripts/studio/sync-sample-resources.sh --check
+FAIL: ios/Jovra/Resources/StudioSample differs from spec/studio/fixtures/records; run scripts/studio/sync-sample-resources.sh
+missing  broll-catalog.json
+missing  camera-invite.json
+  ... (36 missing lines in all)
+exit=1
+
+$ scripts/studio/sync-sample-resources.sh
+30ebf5ee7a1e82a8ca23cabda108f360a3846f34db2c228a44f3b38805c6384f  broll-catalog.json
+883f8efb5d233135663f4850b844d13b6b8b05715f493c9e97909cfc05608869  camera-invite.json
+e4f8ca553541e1eaacadeb5ad5ae46ac71c9cd5b823009e0a6091824ec0f13a0  delivered-artifact.film.json
+4e5f7999b2ed25871659a11ea972325acf66358095fcbf47f0e4448dc5ec6060  edit-plan.coach-cut-serve.json
+1add9854ef77f53165fb1bc2c6711c04424e25904ea741bb897a69b58bffb48c  edit-plan.court-memories-final.json
+17e7f6c1736f6419760244bbb437fddd80db622af6fa692257629da3de5745d1  edit-plan.court-memories-storyboard.clean.json
+a148b53e0392a97a85ad0386fd113ecb07e44951332b4544894429a13192bdb6  edit-plan.court-memories-storyboard.json
+3128918208ffe05d060315cecbdaad71bdbdc94a914e5a6571ef8c19b397582d  edit-plan.match-broadcast-set-1.json
+5db40f84ba303c040b8f7dbb0e1c5bb222da009c4d8a8c9beafd94ccdf008479  edit-plan.rally-pulse-portrait.clean.json
+89eaef85ac4cb79158eeeba4141a23735999466a2ab905576f823ca6d7afc62d  edit-plan.rally-pulse-portrait.json
+2a54b6ea285f9f58b991c3650d23660760f12575413767e6a5754a5af69d91f5  keeper-catalog.json
+b61a5ddd9bb14d53fe8748f5e21aaff73f8a80341b0f94c824bbd301981eca24  lesson.2026-09-09.json
+d5c4c099e418b8733b635c9a3eff0d7601b9da3945bc24e674c172eda589ed5b  lesson.2026-09-23.json
+eb26df85b32f88dff12f9cde433697d63d814377c122e4d3ce79c8cd20cc4ff4  lesson.2026-10-07.json
+f107294030d6df9d872185abbeb680bc9cc2e0321d74dce3b03c3e793d07c33a  observation.calibrated-bounce.json
+65055e9c3fe52fcc8c56c1227b2f94e5cd4f02f0a92a43b0835953a4fc3a689c  observation.estimated-cue.json
+a33895750ce5e0d02d992e34433f1764530f4c284dbdb9507e85f9ac2cb2cfc8  observation.reviewed-cue.json
+85f4dc07d0122e9cea40a43079074cd4b06ce18ad31dc811bad0aae3250f3174  project-lock.json
+f3cc30d4aebf3855a34caf89f637d2cf00933eee4540291e3323cc3e21b7fadf  pts-table.sample-corner.json
+9b02423a4b7922dcb634096d70fd17aaa3c59cf3909030f4de8dbfd23bfa31e1  quote.accepted-storyboard.json
+a0bd6c713e4e902a20a9b735e3248a226a71e68dba6b4770739a9ec67b3edaf9  quote.accepted.json
+54d477939210043bd469c74bd192d321684a784c508e6f7c3c17994eb964838d  quote.sample-illustrative.json
+5172a8a621f46d2aed8a8787910cc0f7d2dd71c965cbfeb09c593c84b5a54040  reference-catalog.json
+50a08993e96f1687ce60513bb84329fba11d7487ea8dc3d254ee4636379eece0  render-job.queue-sample.json
+ea1b35879b5e1bfe34656352d73e4d02736a8c6cd3d276e726d6af09b7499b36  render-job.ready.json
+9857db981c7f9b7e8708bedc209f166873de0d67d1177d4e91b3462717221ce0  room-transcript.st23-lobby.json
+27592cb434b3f541b9e6035adaec0796a6339bf11818ac8983b3c49a8cfd3236  room-transcript.st23-trust.json
+a29efbd2f8893c02880d94daa281b075c2bf80207b443fb81d4b0f2fbff490ea  room-transcript.st24-contact-lost.json
+9673cda627db011d8c4a6d1bf63b8742a9ad0ede9f6c3c89682a1e6ed588e82b  room-transcript.st24-director.json
+33ce27a0f6e44999c1e0dc166feccd8189497eba8fdbe9ef76758ba3379a4553  source-manifest.json
+91e9bcb772d5b15134611a6b349dc305aff6dfd415feefcf02a6d570b9eab257  storage-providers.json
+f7c2448bb533863776453dd9440cddda0241fb6821c9255e0d5c0d48aba17827  story-brief.court-memories.json
+250921baa386f8988c08c75b9b05e652d7a71cfc00cf66e8d8190b3f44e8ef2e  story-brief.progress.json
+56e04dbacb01bb17c95c4f7533247d87d2ec3d29f8cba03fd3e7fba29e02ea3a  sync-map.json
+5b46fe0c8f7c07c5cee462f7c93ba38b8b68fe42118d388c7da0fc4c7476f492  usage-reservation.held.json
+884121d317d96c57e8688c589dc2be39668f1704253c4c3ad994725c788251ac  usage-reservation.settled.json
+synced 36 records (36 added, 0 updated, 0 removed) into ios/Jovra/Resources/StudioSample
+exit=0
+
+$ printf x >> ios/Jovra/Resources/StudioSample/sync-map.json && scripts/studio/sync-sample-resources.sh --check
+FAIL: ios/Jovra/Resources/StudioSample differs from spec/studio/fixtures/records; run scripts/studio/sync-sample-resources.sh
+changed  sync-map.json
+exit=1
+
+$ scripts/studio/sync-sample-resources.sh   # repairs it
+synced 36 records (0 added, 1 updated, 0 removed) into ios/Jovra/Resources/StudioSample
+
+$ scripts/studio/sync-sample-resources.sh --check
+OK: 36 bundled sample records are byte-identical to spec/studio/fixtures/records
+exit=0
