@@ -105,8 +105,8 @@ create temp table t_ids as select
      array['5c930000-0000-4000-8000-000000000001'])) ->> 'quoteId')::uuid as quote2_id;
 alter table pg_temp.t_ids add column job_id uuid;
 update pg_temp.t_ids set job_id = (pg_temp.call(format(
-  'select app_gateway.accept_quote(%L, %L, (select inputs_sha256 from public.quotes where id = %L), %L::jsonb, %s, %L, gen_random_uuid())',
-  pg_temp.uid('owner'), quote_id, quote_id,
+  'select app_gateway.accept_quote(%L, %L, decode(%L, ''hex''), %L::jsonb, %s, %L, gen_random_uuid())',
+  pg_temp.uid('owner'), quote_id, (select encode(q.inputs_sha256, 'hex') from public.quotes q where q.id = quote_id),
   '{"at":"2026-11-08T10:00:00Z","consentRecordId":"c","consentTextVersion":"studio-cloud-consent@1.0.0",
     "modelProvider":false,"retentionDays":7,"textClasses":[],"uploadSelectedSources":true}',
   (select q.cap_credits from public.quotes q where q.id = quote_id), 'k')) ->> 'jobId')::uuid;
@@ -184,8 +184,9 @@ select is(pg_temp.denied('quote.create', 'project', 'a7930000-0000-4000-8000-000
     "audioCodec":"aac","audioSampleRate":48000,"durationTargetSec":120}',
   array['5c930000-0000-4000-8000-000000000001'])), 'P0404 not_found', 'T-DB-33: create_quote');
 select is(pg_temp.denied('quote.accept', 'quote', (select quote2_id from pg_temp.t_ids), format(
-  'select app_gateway.accept_quote(%L, %L, (select inputs_sha256 from public.quotes where id = %L), %L::jsonb, 4, %L, gen_random_uuid())',
-  pg_temp.uid('unrelated'), (select quote2_id from pg_temp.t_ids), (select quote2_id from pg_temp.t_ids),
+  'select app_gateway.accept_quote(%L, %L, decode(%L, ''hex''), %L::jsonb, 4, %L, gen_random_uuid())',
+  pg_temp.uid('unrelated'), (select quote2_id from pg_temp.t_ids),
+  (select encode(q.inputs_sha256, 'hex') from public.quotes q where q.id = (select quote2_id from pg_temp.t_ids)),
   '{"at":"2026-11-08T10:00:00Z","consentRecordId":"c","consentTextVersion":"studio-cloud-consent@1.0.0",
     "modelProvider":false,"retentionDays":7,"textClasses":[],"uploadSelectedSources":true}', 'k2')),
   'P0404 not_found', 'T-DB-33: accept_quote');
