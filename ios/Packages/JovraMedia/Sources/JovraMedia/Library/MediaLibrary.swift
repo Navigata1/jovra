@@ -38,7 +38,38 @@ public actor MediaLibrary {
         let url = try confined(relativePath, folder: folder)
         guard !FileManager.default.fileExists(atPath: url.path) else { throw MediaLibraryError.alreadyExists }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let excluded = try await !store.load(sessionID).storage.includeInDeviceBackup
+        for directory in try originalAncestors(of: url, folder: folder) { try backupFlag(excluded, url: directory) }
         return url
+    }
+
+    /// Takes custody of an original once its writer has closed it: the file and every folder under
+    /// `originals/` that holds it follow the session's backup policy, excluded by default (ADR-0009).
+    /// The session document is never flagged, so marks and review stay in the device backup.
+    @discardableResult
+    public func adoptOriginal(sessionID: String, relativePath: String) async throws -> URL {
+        guard relativePath.hasPrefix("originals/") else { throw MediaLibraryError.unsafePath }
+        let folder = try await recordingFolder(sessionID: sessionID)
+        let url = try confined(relativePath, folder: folder)
+        guard let type = try? FileManager.default.attributesOfItem(atPath: url.path)[.type] as? FileAttributeType else {
+            throw MediaLibraryError.notFound
+        }
+        guard type == .typeRegular else { throw MediaLibraryError.unsafePath }
+        let excluded = try await !store.load(sessionID).storage.includeInDeviceBackup
+        for item in try originalAncestors(of: url, folder: folder) + [url] { try backupFlag(excluded, url: item) }
+        return url
+    }
+
+    /// Folders strictly between `originals/` and `url`; `originals/` itself is set by `recordingFolder`.
+    private func originalAncestors(of url: URL, folder: URL) throws -> [URL] {
+        let originals = folder.appendingPathComponent("originals", isDirectory: true).standardizedFileURL.path
+        var result: [URL] = []
+        var parent = url.deletingLastPathComponent().standardizedFileURL
+        while parent.path.count > originals.count, parent.path.hasPrefix(originals + "/") {
+            result.insert(parent, at: 0)
+            parent = parent.deletingLastPathComponent().standardizedFileURL
+        }
+        return result
     }
 
     public func fileURL(sessionID: String, relativePath: String) async throws -> URL {

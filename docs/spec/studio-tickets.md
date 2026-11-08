@@ -2716,7 +2716,7 @@ OPEN FOR THE LEAD: the package split; the 25 MB budget for bundled demo media (S
 **Acceptance criteria**
 
 - [ ] pgTAP T-DB-12..24, 41..43, 45, 46, 49, 52, 62, 64, 69 and 70 pass.
-- [ ] T-DB-59 (FK half): pairing project A with project B's story plan in render_jobs or quotes as jovra_owner is an FK violation.
+- [ ] T-DB-59 (FK half, migration 2 part): story_plans (project_id, id) and story_plan_versions (story_plan_id, id) exist as the composite FK targets, and as jovra_owner a story_plan_versions row pairing project A with project B's story plan is an FK violation (23503). The render_jobs, quotes and usage_reservations part is S78's.
 - [ ] T-DB-62/69: moving an approved coach clip's window clears approval and the viewer sees 0 rows until re-approved.
 - [ ] T-DB-64: writes past a per-project quota and past the per-user aggregate across N projects are refused P0429 and counters roll back.
 - [ ] Advisors clean.
@@ -2749,6 +2749,7 @@ OPEN FOR THE LEAD: the package split; the 25 MB budget for bundled demo media (S
 - [ ] A coach selecting render_attempts sees no measurements column values (finding 32) and 0 rows of quotes and reservations (T-DB-25).
 - [ ] `hasnt_column` for any token or secret column on provider_connections (T-DB-29).
 - [ ] A unique-index test inserts two held reservations with story_plan_version_id null for the same project and output and the second fails.
+- [ ] T-DB-59 FK half: render_jobs/quotes/usage_reservations pairing A with B's plan or version is 23503 as jovra_owner.
 - [ ] Advisors clean.
 
 **Evidence required**
