@@ -1,0 +1,618 @@
+# supabase/tests/database/000_harness.test.sql
+1..1
+ok 1 - harness: tests schema installed
+# supabase/tests/database/001_harness_selftest.test.sql
+1..12
+ok 1 - two test users get distinct ids
+ok 2 - create_supabase_user keeps an explicit email
+ok 3 - test users have a confirmed email
+ok 4 - an unknown identifier raises instead of returning null
+ok 5 - authenticate_as sets auth.uid()
+ok 6 - authenticate_as switches to the authenticated role
+ok 7 - the claims carry the user's email
+ok 8 - the claims say the user is not anonymous
+ok 9 - authenticate_as can switch to another user
+ok 10 - clear_authentication leaves no user
+ok 11 - clear_authentication switches to the anon role
+ok 12 - authenticate_as_service_role switches to service_role
+# supabase/tests/database/010_tester_signup_lock.test.sql
+1..30
+ok 1 - the before_user_created hook exists
+ok 2 - the hook is security definer
+ok 3 - the hook pins an empty search_path
+ok 4 - email_hmac pins an empty search_path
+ok 5 - supabase_auth_admin can run the hook
+ok 6 - anon cannot run the hook
+ok 7 - authenticated cannot run the hook
+ok 8 - service_role cannot run the hook
+ok 9 - PUBLIC has no EXECUTE on the hook
+ok 10 - anon cannot run email_hmac
+ok 11 - authenticated cannot run email_hmac
+ok 12 - supabase_auth_admin cannot run email_hmac directly
+ok 13 - PUBLIC has no EXECUTE on email_hmac
+ok 14 - anon cannot use app_private or app_ops; authenticated cannot use app_ops
+ok 15 - no client or API role can read or write the allow-list
+ok 16 - every table in schema app_ops has row level security enabled
+ok 17 - the allow-list stores only an HMAC, never the address
+ok 18 - an allow-listed tester may be created
+ok 19 - an allow-listed address that has no account yet may be created
+ok 20 - the address is trimmed and lower-cased before it is checked
+ok 21 - an address that is not on the allow-list is refused with 403 signup_not_allowed
+ok 22 - a sign-up without an email (phone) is refused
+ok 23 - an anonymous sign-up is refused
+ok 24 - an event without a user is refused
+ok 25 - the seed creates five testers
+ok 26 - every seeded address is at example.test
+ok 27 - every seeded tester has a confirmed email and no password
+ok 28 - every seeded tester is on the allow-list
+ok 29 - with no HMAC key email_hmac returns null
+ok 30 - with no HMAC key even an allow-listed tester is refused
+# supabase/tests/database/identity_01_catalog.test.sql
+1..32
+ok 1 - schema app_private exists
+ok 2 - schema app_gateway exists
+ok 3 - schema app_ops exists
+ok 4 - jovra_owner exists and cannot log in, inherit, bypass RLS or act as superuser
+ok 5 - jovra_gateway: login, noinherit, nobypassrls, connection limit 20
+ok 6 - jovra_orchestrator: login, noinherit, nobypassrls, connection limit 10
+ok 7 - no client, gateway or orchestrator role holds the privileges of jovra_owner
+ok 8 - policies may call app_private helpers as authenticated (security-model §3); anon may not reach them
+ok 9 - app_ops is unreachable for client roles
+ok 10 - every table in schema public has row level security enabled
+ok 11 - T-DB-02: public holds the migration 1 tables (the checks below are not vacuous)
+ok 12 - T-DB-02: every public table has the restrictive <table>_real_users_only policy for authenticated
+ok 13 - T-DB-03: no security definer function in public
+ok 14 - T-DB-03: every function in public and app_* pins search_path=''
+ok 15 - T-DB-03: no function pins search_path to public
+ok 16 - T-DB-03: no function in public, app_private or app_gateway is executable by PUBLIC or anon
+ok 17 - T-DB-03: every app_gateway function is volatile (the backstop against Hyperdrive result caching)
+ok 18 - T-DB-03: no trigger function is executable by authenticated
+ok 19 - T-DB-04: authenticated and anon have no USAGE on app_gateway
+ok 20 - T-DB-04: no app_gateway function is executable by authenticated or anon
+ok 21 - T-DB-04: the gateway and orchestrator roles may use app_gateway
+ok 22 - T-DB-05: jovra_gateway and jovra_orchestrator have no privilege on any table in public, app_private or app_ops
+ok 23 - T-DB-05: the command roles cannot use app_private or app_ops
+ok 24 - T-DB-66: every table in public and app_ops is owned by jovra_owner
+ok 25 - T-DB-66: every enum in public is owned by jovra_owner
+ok 26 - T-DB-66: every helper, trigger and command function is owned by jovra_owner
+ok 27 - T-DB-66: proowner = relowner for every definer helper and every public table
+ok 28 - T-DB-66: no table is FORCE ROW LEVEL SECURITY, so definer helpers read rows as the owner
+ok 29 - T-DB-67: at least one client-insertable table exists (the lint below is not vacuous)
+ok 30 - T-DB-67: every client-insertable table has a row-level BEFORE INSERT trigger a00_rls_guard
+ok 31 - T-DB-67: no BEFORE INSERT trigger sorts before a00_rls_guard
+ok 32 - T-DB-67: the INSERT policy and a00_rls_guard call the same app_private.can_insert_<table> predicate
+# supabase/tests/database/identity_02_role_matrix.test.sql
+1..74
+ok 1 - a profile is created for every new auth user, with no display name and is_tester false
+ok 2 - creating a project creates exactly one owner membership for its owner
+ok 3 - T-DB-01: unauthenticated select on profiles is denied
+ok 4 - T-DB-01: unauthenticated select on projects is denied
+ok 5 - T-DB-01: unauthenticated select on project_members is denied
+ok 6 - T-DB-01: unauthenticated select on camera_invites is denied
+ok 7 - T-DB-01: unauthenticated insert into projects is denied
+ok 8 - T-DB-01: unauthenticated callers cannot reach the app_private helpers
+ok 9 - T-DB-01: anon holds no privilege on any table in public
+ok 10 - owner sees their live project only (not B, not the deleted D)
+ok 11 - owner sees every membership row of their project (owner, coach, pending, revoked, expired)
+ok 12 - owner sees the camera invites of their live project
+ok 13 - owner cannot select camera_invites.code_hash
+ok 14 - owner cannot select the guest device thumbprint
+ok 15 - owner creates a project through the client path; owner_id defaults to auth.uid()
+ok 16 - the new project's owner membership is visible to the owner
+ok 17 - owner updates the title of their project; revision is bumped
+ok 18 - owner cannot write camera_invites directly
+ok 19 - owner cannot delete a project (deletion goes through deletion_requests)
+ok 20 - T-DB-08: owner cannot update projects.owner_id
+ok 21 - T-DB-08: owner cannot clear deleted_at
+ok 22 - T-DB-09: owner updating another owner's project title changes 0 rows
+ok 23 - T-DB-10: owner cannot insert a membership directly
+ok 24 - T-DB-10: owner cannot approve a coach by writing project_members (approve_member only)
+ok 25 - T-DB-31: owner sees no membership rows of a project with deleted_at set
+ok 26 - T-DB-31: owner sees no camera invites of a project with deleted_at set
+ok 27 - T-DB-31: owner cannot update a project with deleted_at set
+ok 28 - T-DB-63: owner sees self and the approved coach; not the pending, revoked or expired coaches
+ok 29 - T-DB-30: is_tester is not selectable
+ok 30 - T-DB-30: only id, display_name and created_at are selectable
+ok 31 - T-DB-30: a user updates their own display name
+ok 32 - T-DB-30: a user cannot set is_tester
+ok 33 - T-DB-30: profiles cannot be inserted by a client
+ok 34 - T-DB-06: unrelated user sees 0 projects of other owners
+ok 35 - T-DB-06: unrelated user sees 0 membership rows
+ok 36 - T-DB-06: unrelated user sees 0 camera invites
+ok 37 - T-DB-30: unrelated user sees only their own profile
+ok 38 - T-DB-30: updating another user's profile changes 0 rows
+ok 39 - T-DB-07: inserting a project for another owner is denied
+ok 40 - T-DB-06: unrelated user cannot update another owner's project
+ok 41 - T-DB-06: has_project_role is false for an unrelated user
+ok 42 - T-DB-06: shares_project_with is false for an unrelated user
+ok 43 - coach sees the project they coach (not the deleted D, not B)
+ok 44 - coach sees only their own membership row
+ok 45 - coach sees self and the project owner (co-member); not the pending coach
+ok 46 - coach sees no camera invites
+ok 47 - project_role is coach for an approved coach
+ok 48 - T-DB-11: coach updating the project title changes 0 rows
+ok 49 - T-DB-10: coach cannot grant themselves owner
+ok 50 - T-DB-10: coach cannot escalate their role
+ok 51 - T-DB-31: a coach row on a deleted project grants nothing
+ok 52 - T-DB-63: a pending coach sees only their own profile
+ok 53 - T-DB-63: a pending coach sees 0 membership rows
+ok 54 - T-DB-63: a pending coach sees 0 projects
+ok 55 - T-DB-63: shares_project_with is false while the coach is pending
+ok 56 - viewer without a grant sees no project, membership or invite
+ok 57 - viewer sees only their own profile
+ok 58 - camera sees the invite it redeemed after approval, and not the unapproved one
+ok 59 - camera sees no project and no membership
+ok 60 - camera sees only its own profile
+ok 61 - T-DB-28: acting as an anonymous-authenticated user
+ok 62 - T-DB-28: anonymous user sees 0 profiles, not even its own
+ok 63 - T-DB-28: anonymous user sees 0 projects
+ok 64 - T-DB-28: anonymous user sees 0 memberships
+ok 65 - T-DB-28: anonymous user sees 0 camera invites
+ok 66 - T-DB-28: anonymous user cannot insert a project (RLS violation)
+ok 67 - T-DB-28: anonymous user cannot update even its own profile
+ok 68 - T-DB-32: a revoked coach sees 0 projects and 0 memberships
+ok 69 - T-DB-32: an expired coach sees 0 projects and 0 memberships
+ok 70 - T-DB-32: revoking the coach removes the project at once
+ok 71 - T-DB-32: the revoked coach no longer sees the owner's profile
+ok 72 - B's title and revision are untouched
+ok 73 - A's owner is unchanged
+ok 74 - owner_a's display name is the one they set
+# supabase/tests/database/identity_03_guards.test.sql
+1..30
+ok 1 - current_actor() equals auth.uid() for a signed-in user
+ok 2 - is_real_user() is true for a signed-in, non-anonymous user
+ok 3 - current_actor() follows auth.uid() for the legacy claim setting
+ok 4 - current_actor() is null when no claim is set
+ok 5 - T-DB-67: postgres (operator, migrations) is not the client path
+ok 6 - T-DB-67: the projects predicate refuses a row owned by someone else
+ok 7 - T-DB-67: a server command run by jovra_gateway inserts past the guard (is_client_path() false)
+ok 8 - T-DB-67: the same definer insert called through the client role is refused by the guard
+ok 9 - T-DB-67: exactly the server-created project was added for the victim
+ok 10 - T-DB-65: anonymous user, valid row: 42501 RLS error, no DETAIL
+ok 11 - T-DB-65: anonymous user, over-long title: the same 42501, not the length error
+ok 12 - T-DB-65: anonymous user, invalid kind: the same 42501
+ok 13 - T-DB-65: anonymous user naming the victim's local project id: the same 42501
+ok 14 - T-DB-65: an unrelated user reusing the victim's local project id learns nothing (own row, no conflict)
+ok 15 - T-DB-65: the victim's project and revision are untouched
+ok 16 - a 121-character title: P0422 field_too_long:title
+ok 17 - a 120-character title is accepted
+ok 18 - an unknown kind: P0422 invalid_value:kind (no CHECK DETAIL)
+ok 19 - a missing local project id: P0422 required:local_project_id
+ok 20 - a null title: P0422 required:title (no NOT NULL DETAIL)
+ok 21 - an over-long title on update: P0422
+ok 22 - an 81-character display name: P0422
+ok 23 - an 80-character display name is accepted
+ok 24 - camera_invites: a 61-character label is P0422
+ok 25 - camera_invites: a code hash that is not 32 bytes is P0422 without echoing it
+ok 26 - camera_invites: redeem_by more than 10 minutes out is P0422
+ok 27 - camera_invites: an invite created by someone other than the project owner is P0422
+ok 28 - a second owner row (not the project owner) is refused
+ok 29 - the project still has exactly one owner row
+ok 30 - an update bumps revision by one
+# supabase/tests/database/media_01_catalog.test.sql
+1..44
+ok 1 - camera_sources exists
+ok 2 - source_manifests exists
+ok 3 - sync_maps exists
+ok 4 - calibration_versions exists
+ok 5 - point_event_revisions exists
+ok 6 - observations exists
+ok 7 - lessons exists
+ok 8 - lesson_clips exists
+ok 9 - story_plans exists
+ok 10 - story_plan_versions exists
+ok 11 - artifacts exists (lesson_clips.excerpt_artifact_id and stale marking need it)
+ok 12 - access_grants exists (lesson_access and clip sharing need it)
+ok 13 - app_ops.quota_limits exists
+ok 14 - app_ops.quota_counters exists
+ok 15 - finding 31/22a: lesson_clips (project_id, source_id) -> camera_sources(project_id, id), SET NULL (source_id) only
+ok 16 - finding 31/22a: observations (project_id, source_id) -> camera_sources(project_id, id), SET NULL (source_id) only
+ok 17 - finding 31: calibration_versions (project_id, source_id) -> camera_sources(project_id, id), cascade
+ok 18 - finding 31: artifacts (project_id, source_id) -> camera_sources(project_id, id)
+ok 19 - finding 31: artifacts (project_id, parent_artifact_id) -> artifacts(project_id, id)
+ok 20 - finding 31: access_grants (project_id, artifact_id) -> artifacts(project_id, id)
+ok 21 - finding 17: story_plan_versions (project_id, story_plan_id) -> story_plans(project_id, id)
+ok 22 - sync_maps name a manifest revision of their own project
+ok 23 - finding 22a: deleting a source (and its calibrations) never stalls on an observation that used the calibration
+ok 24 - finding 17: the composite targets render_jobs, quotes and usage_reservations will reference exist
+ok 25 - T-DB-14: no client role may update, delete or truncate an append-only table
+ok 26 - no client deletes: lessons, clips and media go through deletion_requests (objects first)
+ok 27 - camera_sources, source_manifests, artifacts and access_grants are written only through app_gateway
+ok 28 - T-DB-17: r2 keys, etags, sessions, client probes, token hashes and invitee HMACs are not granted
+ok 29 - T-DB-24: validation_state, planner_model_id, edl_sha256 and project_id are server-set on plan versions
+ok 30 - T-DB-23: observations.provenance is never written by a client
+ok 31 - finding 20: share approval, the excerpt link and the clip's project and source are not client-writable
+ok 32 - finding 23: every client-insertable table has the BEFORE INSERT a20_enforce_quota trigger
+ok 33 - finding 23: every client-insertable table has an app_ops.quota_limits row
+ok 34 - finding 23: the per-user aggregate limit row exists
+ok 35 - quota tables are server-only
+ok 36 - finding 20: jovra_gateway may call approve_clip_share and revoke_clip_share
+ok 37 - finding 20: neither the orchestrator nor a client may call the clip-share commands
+ok 38 - finding 20: deletion_scope has lesson_clip
+ok 39 - every public foreign key has a covering index
+ok 40 - no public table has two permissive policies for one role and command
+ok 41 - T-DB-01: unauthenticated select on camera_sources is denied
+ok 42 - T-DB-01: unauthenticated select on point_event_revisions
+ok 43 - T-DB-01: unauthenticated select on lessons is denied
+ok 44 - T-DB-01: unauthenticated insert into lessons is denied
+# supabase/tests/database/media_02_sources_events.test.sql
+1..45
+ok 1 - a server-written manifest gets revision 1 and becomes the project's current manifest
+ok 2 - T-DB-12: coach inserting an event revision is an RLS violation
+ok 3 - T-DB-12: nothing was appended
+ok 4 - T-DB-13: the first revision is 1, created_by is the caller, the log hash is computed by the server
+ok 5 - T-DB-13: a second device still on parent null gets P0409 revision_conflict
+ok 6 - T-DB-13: a parent ahead of the current revision is P0409 too
+ok 7 - created_by is not client-writable
+ok 8 - T-DB-13: with the current parent the insert succeeds as revision + 1
+ok 9 - T-DB-13: the project's current_event_revision follows
+ok 10 - T-DB-15: the new revision marks the older film, preview and clip excerpt stale (not the thumbnail)
+ok 11 - T-DB-15: and the plan version bound to the older revision
+ok 12 - T-DB-14: owner cannot update an event revision
+ok 13 - T-DB-14: owner cannot delete an event revision
+ok 14 - T-DB-14: owner cannot update a source manifest
+ok 15 - T-DB-14: owner cannot delete a plan version
+ok 16 - T-DB-14: owner cannot clear stale on a plan version
+ok 17 - T-DB-43: reviewed_by cannot be supplied by a client
+ok 18 - T-DB-43: a reviewed sync map records the caller as reviewer and author, revision 1
+ok 19 - an estimated sync map has no reviewer; the next revision is 2
+ok 20 - a client cannot insert a sync map in review state rejected
+ok 21 - a sync map must name an existing manifest revision of its own project
+ok 22 - T-DB-14: owner cannot update a sync map
+ok 23 - owner adds a manual calibration as version 1
+ok 24 - the next calibration of the same source is version 2
+ok 25 - a client cannot claim a validated calibration
+ok 26 - T-DB-14: owner cannot delete a calibration
+ok 27 - T-DB-24: owner inserting a model-planned version is an RLS violation
+ok 28 - T-DB-24: owner cannot set validation_state
+ok 29 - T-DB-24: a user draft is accepted unvalidated; the trigger sets version 2 and the plan's project
+ok 30 - owner A adding a version to B's plan is an RLS violation (the guard resolves the plan's own project)
+ok 31 - the plan's current_version follows its newest version
+ok 32 - T-DB-24: a coach may add a heuristic draft
+ok 33 - T-DB-24: a coach inserting a model-planned version is an RLS violation
+ok 34 - T-DB-14: coach cannot update an event revision
+ok 35 - coach sees the project's two sources
+ok 36 - T-DB-59 (FK half): as jovra_owner, a version pairing project A with B's plan is an FK violation
+ok 37 - T-DB-59 (FK half): the same insert with B's own project passes (the check is the FK, not the role)
+ok 38 - the helper restored the session role
+ok 39 - T-DB-65: every parent_revision value gets the identical 42501 (the current one, 2, included)
+ok 40 - T-DB-06: an unrelated user sees 0 rows of A's events, sync maps, sources, manifests, versions, calibrations
+ok 41 - T-DB-65: A's current_event_revision is untouched
+ok 42 - T-DB-16: the camera sees only its own source
+ok 43 - T-DB-16: and 0 rows of projects, manifests, artifacts and events
+ok 44 - T-DB-17: camera_sources.r2_key is not selectable
+ok 45 - T-DB-16: after the invite is revoked, 0 rows at once
+# supabase/tests/database/media_03_lessons_clips.test.sql
+1..72
+ok 1 - owner creates a lesson; owner_id defaults to the caller
+ok 2 - story 179: the first device's edit at revision 1 lands as revision 2
+ok 3 - story 179: the second device, still at revision 1, changes 0 rows (a conflict to show, not an overwrite)
+ok 4 - lessons.owner_id is immutable
+ok 5 - T-DB-48 (grant half): owner cannot delete a lesson directly
+ok 6 - T-DB-41: owner attaching a clip of B's match is an RLS violation
+ok 7 - T-DB-45: a clip of A naming A2's source is an FK violation
+ok 8 - T-DB-45: an observation of A naming A2's source is an FK violation
+ok 9 - T-DB-45: a calibration of A naming A2's source is an FK violation
+ok 10 - owner attaches a clip of their own match (same-project source)
+ok 11 - a clip longer than 10 minutes is P0422 (no CHECK DETAIL)
+ok 12 - T-DB-42: owner binding the coach's lesson into a plan is refused
+ok 13 - owner binds their own lesson into a plan of their own project
+ok 14 - T-DB-23: owner cannot insert an estimated observation
+ok 15 - T-DB-23: owner cannot insert a validated observation
+ok 16 - T-DB-23: owner cannot update provenance
+ok 17 - T-DB-23: a client observation is manual, authored by the caller
+ok 18 - T-DB-23: reviewing an estimated cue sets provenance reviewed and reviewed_by = the caller
+ok 19 - T-DB-17: artifacts.r2_key is not selectable
+ok 20 - T-DB-17: artifacts.bucket_class is not selectable
+ok 21 - T-DB-17: access_grants.token_hash is not selectable
+ok 22 - owner sees every member-visible artifact of A
+ok 23 - T-DB-26 (grants): owner cannot write a grant directly
+ok 24 - T-DB-22: a lesson coach adds a lesson-only observation
+ok 25 - T-DB-22: with a project_id they do not coach, the insert is an RLS violation
+ok 26 - a lesson coach sees the lesson
+ok 27 - T-DB-49 (lesson side): a lesson coach sees no observation that also belongs to a project they cannot access
+ok 28 - T-DB-21: a lesson viewer sees the lesson
+ok 29 - T-DB-21: a lesson viewer sees 0 observations
+ok 30 - T-DB-21: a lesson viewer sees 0 projects
+ok 31 - T-DB-21: and 0 plans or sources
+ok 32 - a lesson viewer cannot add an observation
+ok 33 - T-DB-52: a lesson_view grantee cannot bind that lesson into a plan
+ok 34 - T-DB-49: a project coach sees A's own observations
+ok 35 - T-DB-49: but none that also carries a lesson the coach cannot access (A + LO, LO only)
+ok 36 - only the author may change an observation's text
+ok 37 - T-DB-46: the coach attaches a clip of the owner's match to their own lesson
+ok 38 - the coach sees their own clip, not the owner's lesson clips
+ok 39 - a client cannot choose a clip's id
+ok 40 - finding 31: a clip cannot link another clip's excerpt
+ok 41 - T-DB-46: a grant on the coach's clip is refused until approved
+ok 42 - T-DB-46: the coach cannot approve sharing the owner's footage (P0404, like a missing clip)
+ok 43 - an unrelated actor gets P0404
+ok 44 - T-DB-46: the project owner approves sharing exactly this window
+ok 45 - finding 20: the approval is pinned to the clip's fingerprint
+ok 46 - T-DB-46: after approval the viewer sees the coach's clip
+ok 47 - T-DB-46: and its excerpt, nothing else of the match
+ok 48 - T-DB-46: once the owner revokes the coach, the downstream viewer gets 0 rows at once
+ok 49 - T-DB-62: moving the window clears share_approved_at and unlinks the excerpt
+ok 50 - T-DB-62: the unlinked excerpt is hidden at once (deleted_at set; the object goes with the deletion job)
+ok 51 - T-DB-62: the viewer sees 0 rows until re-approved
+ok 52 - T-DB-62: the owner re-approves
+ok 53 - T-DB-62: after re-approval the clip is visible again
+ok 54 - finding 20: the coach cannot withdraw the owner's approval either
+ok 55 - finding 20: the project owner withdraws the approval with revoke_clip_share
+ok 56 - T-DB-62: revoke_clip_share has the same effect: 0 rows
+ok 57 - the coach still sees their own clip after the withdrawal
+ok 58 - T-DB-69: approved again
+ok 59 - T-DB-69: with the trigger disabled the approval timestamp survived the move
+ok 60 - T-DB-69: the viewer still sees 0 rows: share_approved_sha256 no longer equals the fingerprint
+ok 61 - T-DB-18: the film, its thumbnail and captions; not the preview, edit manifest, other film or excerpts
+ok 62 - T-DB-18: no project and no clip
+ok 63 - the grantee sees their own grant row
+ok 64 - T-DB-19: after revoke, 0 rows (no token refresh)
+ok 65 - T-DB-19: after expires_at, 0 rows
+ok 66 - T-DB-20: the clip grantee sees that clip only
+ok 67 - T-DB-20: and its excerpt only (not the match film)
+ok 68 - T-DB-20: the lesson, the project and its observations: 0 rows
+ok 69 - T-DB-06: an unrelated user sees 0 lessons, clips, observations, plans, artifacts and grants
+ok 70 - story 173: the clip survives its source's deletion with source_id null and its project kept
+ok 71 - finding 22a: the observation survives too (no stalled deletion)
+ok 72 - the source's calibrations go with it
+# supabase/tests/database/media_04_quotas.test.sql
+1..25
+ok 1 - T-DB-64: event revision 1 of 3 allowed
+ok 2 - T-DB-64: the third event revision (the limit) is allowed
+ok 3 - T-DB-64: the fourth event revision of the day is P0429
+ok 4 - T-DB-64: the fourth sync map of the day is P0429
+ok 5 - T-DB-64: the fourth plan version of the day is P0429
+ok 6 - T-DB-64: the fourth lesson of the day is P0429 (a per-user limit)
+ok 7 - T-DB-70: the day row and the lifetime row both hold 3: the refused insert rolled back
+ok 8 - lessons are counted against the user
+ok 9 - the per-user aggregate counted all 12 accepted rows and none of the 4 refused
+ok 10 - one lifetime row per (table, subject): events, sync maps, versions, lessons and the aggregate
+ok 11 - T-DB-64: project 1: 2 rows (total 2)
+ok 12 - T-DB-64: project 2: 2 rows (total 4)
+ok 13 - T-DB-64: project 3: 2 rows (total 6)
+ok 14 - T-DB-64: project 4, first row: the seventh of the day is allowed (one below the aggregate)
+ok 15 - T-DB-64: project 4, second row: refused at the *user_total limit though the project is under its own
+ok 16 - T-DB-64: a fresh project 5 is refused too: the aggregate is per user, never N x the per-project limit
+ok 17 - T-DB-64: one aggregate row for the user and day, holding 7
+ok 18 - exactly 7 revisions landed across 5 projects
+ok 19 - T-DB-64: a lesson coach's lesson-only observation (project_id null) is allowed
+ok 20 - T-DB-64: and counted against the coach's user subject
+ok 21 - the third project of the day is P0429
+ok 22 - T-DB-70: with no quota_limits row for story_plans the insert is P0429 (fail closed)
+ok 23 - T-DB-70: no counter row was left behind
+ok 24 - T-DB-70: the refused insert left the aggregate unchanged
+ok 25 - T-DB-70: with no *user_total row a table under its own limit is P0429 too
+# supabase/tests/database/money_01_catalog.test.sql
+1..76
+ok 1 - quotes exists
+ok 2 - usage_reservations exists
+ok 3 - render_jobs exists
+ok 4 - render_attempts exists
+ok 5 - artifact_sources exists
+ok 6 - provider_connections exists
+ok 7 - deletion_requests exists
+ok 8 - app_ops.upload_sessions exists
+ok 9 - app_ops.upload_parts exists
+ok 10 - app_ops.job_outbox exists
+ok 11 - app_ops.idempotency_records exists
+ok 12 - app_ops.spend_limits exists
+ok 13 - app_ops.spend_commitments exists
+ok 14 - app_ops.audit_events exists
+ok 15 - quotes.consent holds the jovra.quote/1 consent object
+ok 16 - quotes.planner_choice exists
+ok 17 - usage_reservations.initial_quote_id exists
+ok 18 - render_attempts.planner_budget exists
+ok 19 - render_attempts.output_plan (byte caps) exists
+ok 20 - T-DB-59: quotes (project_id, story_plan_id) -> story_plans(project_id, id)
+ok 21 - T-DB-59: quotes (story_plan_id, story_plan_version_id) -> story_plan_versions(story_plan_id, id)
+ok 22 - T-DB-59: usage_reservations (project_id, story_plan_id) -> story_plans
+ok 23 - T-DB-59: usage_reservations (story_plan_id, story_plan_version_id) -> story_plan_versions
+ok 24 - T-DB-59: render_jobs (project_id, story_plan_id) -> story_plans(project_id, id)
+ok 25 - T-DB-59: render_jobs (story_plan_id, story_plan_version_id) -> story_plan_versions(story_plan_id, id)
+ok 26 - a hold is funded by a quote of its own project
+ok 27 - a job is bounded by a hold of its own project
+ok 28 - a job is accepted from a quote of its own project
+ok 29 - a hold names a job of its own project
+ok 30 - finding 31: artifacts (project_id, job_id) -> render_jobs(project_id, id), SET NULL (job_id)
+ok 31 - finding 31: artifacts (job_id, attempt_id) -> render_attempts(job_id, id), SET NULL (attempt_id)
+ok 32 - finding 31 (excerpt): artifacts (project_id, lesson_clip_id) -> lesson_clips(project_id, id)
+ok 33 - finding 31 (excerpt): lesson_clips (project_id, excerpt_artifact_id) -> artifacts(project_id, id)
+ok 34 - finding 31 (excerpt): the single-column excerpt FKs of migration 2 are gone
+ok 35 - artifact_sources name an artifact of their own project
+ok 36 - artifact_sources name a source of their own project (§13.9 (a))
+ok 37 - an upload session targets a source of its own project
+ok 38 - finding 18: one held reservation per (project, plan, version, output), NULLS NOT DISTINCT
+ok 39 - finding 18: one non-terminal job per (project, plan, version, output), NULLS NOT DISTINCT
+ok 40 - an accepted quote funds exactly one hold, and a hold bounds exactly one job
+ok 41 - T-DB-17 / finding 32: cost, lease, ref, measurement and requester columns are not granted to clients
+ok 42 - credits and attempt states stay readable (the hidden-column check is not vacuous)
+ok 43 - T-DB-26: no client role may insert, update, delete or truncate money, jobs, artifacts, grants or deletions
+ok 44 - artifact_sources is not readable by clients at all
+ok 45 - T-DB-29: no token column
+ok 46 - T-DB-29: no access_token column
+ok 47 - T-DB-29: no refresh_token column
+ok 48 - T-DB-29: no id_token column
+ok 49 - T-DB-29: no token_hash column
+ok 50 - T-DB-29: no secret column
+ok 51 - T-DB-29: no client_secret column
+ok 52 - T-DB-29: no api_key column
+ok 53 - §13.17: no url column
+ok 54 - §13.17: no endpoint column
+ok 55 - T-DB-29: no provider_connections column is named like a token, secret, key, credential, URL or email
+ok 56 - provider_kind has no youtube value (its own ADR first)
+ok 57 - no client role and not service_role holds any privilege on an app_ops table
+ok 58 - every table in schema app_ops has row level security enabled
+ok 59 - T-DB-47: the app_ops tables with text or JSON columns exist (the lint below is not vacuous)
+ok 60 - T-DB-47: every app_ops table with a text or JSON column refuses secrets BEFORE INSERT OR UPDATE
+ok 61 - T-DB-47: the guard recognises invite codes, share links, JWTs and email addresses
+ok 62 - T-DB-47: ids, R2 keys and a token-like run inside a longer base64url string are not flagged
+ok 63 - §13.7: exactly one default owner spend-limit row is seeded
+ok 64 - §13.7 / finding 19: no environment row is seeded, so spend fails closed until the operator sets it
+ok 65 - §13.7: at most one environment row, one default owner row and one row per owner
+ok 66 - the spend ledger and the audit log are append-only
+ok 67 - finding 23: provider_connections has a quota limits row
+ok 68 - policies may call can_read_job, grant_target_live and can_insert_provider_connections
+ok 69 - audit, excerpt retirement and deletion enumeration run only inside definer commands
+ok 70 - T-DB-01: unauthenticated select on quotes is denied
+ok 71 - T-DB-01: unauthenticated select on usage_reservations
+ok 72 - T-DB-01: unauthenticated select on render_jobs is denied
+ok 73 - T-DB-01: unauthenticated select on render_attempts is denied
+ok 74 - T-DB-01: unauthenticated select on provider_connections
+ok 75 - T-DB-01: unauthenticated insert into provider_connections
+ok 76 - T-DB-01: unauthenticated select on deletion_requests
+# supabase/tests/database/money_02_roles.test.sql
+1..67
+ok 1 - story 201: the owner reads their own quote (credits, state), not B's
+ok 2 - story 201: the owner reads the hold that bounds the job (credits only)
+ok 3 - the owner reads the job's state, stage and stage progress
+ok 4 - T-DB-17: quotes.cap_cost_micro_usd is not selectable, even by the owner
+ok 5 - T-DB-17: reservation micro-USD columns are not selectable
+ok 6 - T-DB-17: render_attempts.lease_token_hash is not selectable
+ok 7 - finding 32: the owner reads usage through the gateway, not rows
+ok 8 - render_jobs.reservation_id is not selectable
+ok 9 - T-DB-26: owner cannot create a quote
+ok 10 - T-DB-26: owner cannot accept or re-price a quote directly
+ok 11 - T-DB-26: owner cannot create an unbounded reservation
+ok 12 - T-DB-26: owner cannot raise a hold's cap
+ok 13 - T-DB-26: owner cannot create a job
+ok 14 - T-DB-26: owner cannot move a job to ready
+ok 15 - T-DB-26: owner cannot create an attempt
+ok 16 - T-DB-26: owner cannot create a ready artifact
+ok 17 - T-DB-26: owner cannot mark an artifact ready
+ok 18 - T-DB-26: owner cannot extend or un-revoke a grant directly
+ok 19 - T-DB-26: deletion requests go through the gateway
+ok 20 - T-DB-26: owner cannot mark a deletion done
+ok 21 - artifact_sources is server-written
+ok 22 - the requester reads their own deletion request
+ok 23 - T-DB-27: the creator reads both grants they created
+ok 24 - T-DB-29: a user records a provider status row as themself
+ok 25 - T-DB-29: user_id is never client-chosen
+ok 26 - one row per (user, provider), with a coded error
+ok 27 - no email address is copied into account_label
+ok 28 - §13.17: a scope can never carry a URL
+ok 29 - T-DB-29: the user updates their status row; the revision is bumped
+ok 30 - T-DB-25: a coach sees 0 quotes
+ok 31 - T-DB-25: a coach sees 0 reservations
+ok 32 - a coach reads the project's job
+ok 33 - a coach reads the job's attempts (granted columns)
+ok 34 - T-DB-25 / finding 32: a coach selecting render_attempts.measurements is denied (no cost is derivable)
+ok 35 - finding 32: select * cannot reach measurements either
+ok 36 - finding 32: planner_budget (derived from cost) is hidden
+ok 37 - a coach sees no grants they neither made nor hold
+ok 38 - T-DB-29: a coach sees 0 of the owner's providers
+ok 39 - T-DB-27: the grantee reads their own grant row
+ok 40 - T-DB-17: the grantee cannot read the token hash
+ok 41 - the film viewer sees the film and its thumbnail
+ok 42 - a viewer sees no job, attempt or quote
+ok 43 - T-DB-27: the clip viewer reads their own grant row
+ok 44 - the clip viewer sees the clip
+ok 45 - T-DB-06: unrelated user sees 0 quotes
+ok 46 - T-DB-06: unrelated user sees 0 reservations
+ok 47 - T-DB-06: unrelated user sees 0 jobs
+ok 48 - T-DB-06: unrelated user sees 0 attempts
+ok 49 - T-DB-06: unrelated user sees 0 artifacts
+ok 50 - T-DB-27: unrelated user sees 0 grants
+ok 51 - unrelated user sees 0 deletion requests
+ok 52 - T-DB-29: unrelated user sees 0 of another user's provider rows
+ok 53 - T-DB-29: unrelated user updates 0 provider rows
+ok 54 - T-DB-29: unrelated user deletes 0 provider rows
+ok 55 - T-DB-28: an anonymous user sees 0 provider rows, jobs and deletion requests
+ok 56 - T-DB-28: an anonymous user cannot record a provider row (RLS violation)
+ok 57 - T-DB-29: the user deletes their own provider status row
+ok 58 - T-DB-50: the film viewer sees 0 artifacts
+ok 59 - T-DB-50: the film viewer sees 0 grant rows
+ok 60 - T-DB-50: the clip viewer sees 0 clips
+ok 61 - T-DB-50: the clip viewer sees 0 excerpts
+ok 62 - T-DB-50: the clip viewer sees 0 grant rows
+ok 63 - T-DB-31: a coach sees 0 jobs and attempts of a project being deleted
+ok 64 - T-DB-31: the owner sees 0 quotes, holds, jobs and attempts of a project being deleted
+ok 65 - T-DB-31: the creator no longer sees the grants of a project being deleted
+ok 66 - the deletion request itself stays visible to its requester
+ok 67 - B's owner still reads B's own quote (the deletion of A changes nothing for B)
+# supabase/tests/database/money_03_integrity.test.sql
+1..84
+ok 1 - finding 18: a plan-by-job hold (story_plan_version_id null) is accepted
+ok 2 - finding 18: a second held reservation with story_plan_version_id null for the same project, plan and output fails
+ok 3 - §13.6: plan-by-job work for a different plan of the project is a different key
+ok 4 - §13.6: the same plan with a different output is a different key
+ok 5 - §13.6: once the hold is released, identical work may be held again
+ok 6 - an accepted quote funds exactly one hold (quote_id unique)
+ok 7 - a hold always has a positive micro-USD cap
+ok 8 - stage reservations never exceed the hold's cap
+ok 9 - consumed plus released never exceed reserved
+ok 10 - a hold belongs to the project's owner
+ok 11 - modelProvider consent on a heuristic quote is refused
+ok 12 - §13.14: no note text class without model consent
+ok 13 - the consented retention must equal the quote's retention_days
+ok 14 - consent without its consentTextVersion is refused
+ok 15 - an accepted quote always carries its consent
+ok 16 - §13.14: a model quote accepted with modelProvider consent and owner text classes is stored
+ok 17 - text classes are unique
+ok 18 - story 199: the accepted plan-by-job work runs as one job
+ok 19 - story 199 / §13.6: identical work never runs as a second live job, also with version null
+ok 20 - a job created by acceptance starts at consented
+ok 21 - stage progress is per mille, coded before the CHECK
+ok 22 - a second job for different work of the plan is allowed
+ok 23 - T-DB-53: jovra_gateway cannot move a job by writing the table
+ok 24 - T-DB-53: jovra_orchestrator moves jobs only through its commands (S80), never the table
+ok 25 - T-DB-53: verifying -> ready without a verified artifact is P0409
+ok 26 - T-DB-53: a film still verifying is not enough
+ok 27 - T-DB-53: a verified preview is not a delivered film
+ok 28 - T-DB-53: with a verified film the job reaches ready and is stamped finished
+ok 29 - T-DB-59: as jovra_owner, a quote pairing project A with B's plan is an FK violation
+ok 30 - T-DB-59: as jovra_owner, a quote naming A's plan with B's plan version is an FK violation
+ok 31 - T-DB-59: as jovra_owner, a reservation pairing project A with B's plan is an FK violation
+ok 32 - T-DB-59: as jovra_owner, a reservation naming B's plan version is an FK violation
+ok 33 - T-DB-59: as jovra_owner, a job pairing project A with B's plan is an FK violation
+ok 34 - T-DB-59: as jovra_owner, a job naming B's plan version is an FK violation
+ok 35 - T-DB-59: the same quote with A's own plan and version passes (the check is the FK, not the role)
+ok 36 - the role helper restored the session role
+ok 37 - finding 32: an output cap above the film ceiling (4 GiB) is refused
+ok 38 - finding 32: an output without a byte cap is refused
+ok 39 - an output must be an artifact kind
+ok 40 - finding 32: a film and a thumbnail at their ceilings are accepted
+ok 41 - input refs name a source or artifact id
+ok 42 - a planner budget only on the plan stage
+ok 43 - a planner budget has exactly its five fields
+ok 44 - T-DB-55 (table half): a zero stage reservation is impossible
+ok 45 - finding 32: an artifact larger than its kind's ceiling is refused
+ok 46 - finding 31: an excerpt of project B naming A's clip is an FK violation
+ok 47 - finding 31: an artifact of A listing B's source is an FK violation
+ok 48 - §13.9 (a): the film lists the source whose frames it holds
+ok 49 - the project owner approves sharing clip C2
+ok 50 - approve_clip_share writes one allowed audit row (ids only)
+ok 51 - the project owner withdraws the share
+ok 52 - T-DB-62: revoke_clip_share clears the approval, unlinks and hides the excerpt
+ok 53 - the withdrawn excerpt's object deletion is queued in the outbox (ids only)
+ok 54 - revoke_clip_share writes an audit row
+ok 55 - finding 20: a moved window also queues the unlinked excerpt's object deletion
+ok 56 - anyone but the project owner gets P0404, and nothing is written (the failed command rolls back)
+ok 57 - a refused command leaves no allowed audit row (denials are audited by audit_denial, S79)
+ok 58 - T-DB-48: the owner cannot delete a lesson clip directly
+ok 59 - T-DB-48: the owner cannot delete a lesson directly
+ok 60 - T-DB-48: the deletion step enumerates every excerpt of the lesson and the excerpts' children (objects first)
+ok 61 - story 199: a double tap never starts a second deletion of the same lesson
+ok 62 - an account deletion is always the requester's own account
+ok 63 - deletion counts are numbers only
+ok 64 - T-DB-48: the row step removes the lesson's clips and lesson-only observations
+ok 65 - T-DB-48: and the excerpt rows and their children
+ok 66 - T-DB-48: the match film is untouched
+ok 67 - the request reaches done with numeric counts
+ok 68 - T-DB-47: an idempotency body holding an invitation code is refused
+ok 69 - T-DB-47: the redacted body (ids and expiry) is stored
+ok 70 - T-DB-47: a lease token never lands in the outbox
+ok 71 - outbox payloads hold ids only, one shape per kind
+ok 72 - T-DB-47: an email address never lands in the audit log
+ok 73 - T-DB-47: a session capability never lands in an upload session row
+ok 74 - T-DB-47: the app_ops scan finds a planted secret
+ok 75 - T-DB-47: after every write in this file (holds, jobs, outbox, audit, idempotency), no jv[igslhc]_ value in app_ops
+ok 76 - an upload session for a source of the project is opened (3 parts of 32 MiB for 100 MB)
+ok 77 - one open session per source
+ok 78 - finding 31: a session of project B naming A's source is an FK violation
+ok 79 - the spend ledger cannot be rewritten
+ok 80 - the spend ledger cannot be trimmed
+ok 81 - recent audit rows cannot be deleted
+ok 82 - the 400-day audit purge is allowed
+ok 83 - at most one default owner spend-limit row
+ok 84 - a spend limit is never NULL
