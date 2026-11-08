@@ -25,6 +25,7 @@ struct MotionTests {
     }
 
     @Test("metric tokens match §5.3")
+    @MainActor
     func metrics() {
         #expect(HitTarget.capture == 64)
         #expect(HitTarget.stop == 76)

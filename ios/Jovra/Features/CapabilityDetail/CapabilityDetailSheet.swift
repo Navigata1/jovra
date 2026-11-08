@@ -35,6 +35,9 @@ struct CapabilityDetailSheet: View {
                 }
             }
             .scrollIndicators(.hidden)
+            // Content stops under the Close row instead of sliding behind it.
+            .clipped()
+            .accessibilityIdentifier("capability.scroll")
         }
         .background(Color.jovra(.background).ignoresSafeArea())
         .accessibilityElement(children: .contain)

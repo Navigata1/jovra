@@ -162,9 +162,15 @@ private struct CapabilityDetailContent: View {
                     Text("Only what you enter.", tableName: "DesignSystem.Components")
                         .font(.jovraBody).foregroundStyle(.jovra(.textPrimary))
                 }
-                ForEach(detail.needs + detail.buildsOn, id: \.self) { need in
+                ForEach(detail.needs, id: \.self) { need in
                     Label { Text(verbatim: need) } icon: { Image(systemName: "smallcircle.filled.circle").accessibilityHidden(true) }
                         .font(.jovraBody).foregroundStyle(.jovra(.textPrimary))
+                }
+                if !detail.buildsOn.isEmpty {
+                    // The capabilities whose results this one uses, named by their own titles.
+                    fact(String(localized: "Builds on", table: "DesignSystem.Components"),
+                         ListFormatter.localizedString(byJoining: detail.buildsOn), id: "capability.buildsOn")
+                        .padding(.top, Space.half)
                 }
             }
 

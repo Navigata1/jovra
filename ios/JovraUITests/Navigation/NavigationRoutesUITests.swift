@@ -105,7 +105,12 @@ final class NavigationRoutesUITests: XCTestCase {
             XCTAssertEqual(close.label, expected.closeLabel)
             XCTAssertGreaterThanOrEqual(close.frame.width, 44)
             XCTAssertGreaterThanOrEqual(close.frame.height, 44)
-            try auditSheet(app)
+            // The capability page (T12) is a long scrolling sheet, audited step by step down its scroll view.
+            if expected.launchName == "sheet.capabilityDetail" {
+                try auditScreen(app, scrollIdentifier: "capability.scroll")
+            } else {
+                try auditSheet(app)
+            }
 
             close.tap()
             XCTAssertTrue(app.heading(expected.title).waitForNonExistence(timeout: 5), "closing \(expected.launchName) dismisses it")

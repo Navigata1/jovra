@@ -5,6 +5,8 @@ import SwiftUI
 /// (user stories 138, 357). Built from the engine's `RateRatio`, so the percentage uses the one
 /// shared rounding rule (ADR-0011) and a zero denominator is an em dash, never "0%".
 struct FractionPresentation: Equatable {
+    /// What a rate with nothing to divide by shows: an em dash, never "0%".
+    static let noData = "—"
     /// "67%", or "—" when there is nothing to divide by.
     let value: String
     /// "40 of 60"; nil when there is no data.
@@ -18,7 +20,7 @@ struct FractionPresentation: Equatable {
         self.provenance = provenance
         self.isSample = isSample
         guard let percent = ratio.pct.value, ratio.d > 0 else {
-            value = "—"
+            value = Self.noData
             fraction = nil
             spokenValue = String(localized: "no data", table: "DesignSystem.Components",
                                  comment: "VoiceOver: a rate with a zero denominator")
@@ -61,7 +63,7 @@ struct FractionPopover: View {
     var fraction: FractionPresentation
     var definition: String
     var showPoints: (() -> Void)?
-    /// Inside a popover the content scrolls at accessibility sizes; inline (a gallery card) it grows.
+    /// Presented (a sheet at accessibility sizes) the content scrolls; inline (a gallery card) it grows.
     var scrollsAtAccessibilitySizes = true
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -120,12 +122,21 @@ struct FractionPopover: View {
 private struct FractionPopoverModifier: ViewModifier {
     @Binding var isPresented: Bool
     var popover: () -> FractionPopover
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     func body(content: Content) -> some View {
         content.popover(isPresented: $isPresented, arrowEdge: .top) {
-            // A popover on iPhone too, at every text size: its content scrolls, so the largest
-            // accessibility sizes are never clipped and the presentation never changes underfoot.
-            popover().presentationCompactAdaptation(.popover)
+            if dynamicTypeSize.isAccessibilitySize {
+                // At accessibility sizes a popover anchored mid-screen has no room; on iPhone it becomes
+                // a sheet whose content scrolls, so nothing is clipped and the action stays reachable.
+                popover()
+                    .presentationCompactAdaptation(.sheet)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
+                    .presentationBackground(Color.jovra(.surface))
+            } else {
+                popover().presentationCompactAdaptation(.popover)
+            }
         }
     }
 }

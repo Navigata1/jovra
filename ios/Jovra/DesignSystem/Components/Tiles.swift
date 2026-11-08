@@ -53,6 +53,9 @@ struct StatTile: View {
                 .foregroundStyle(.jovra(.textPrimary))
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)
+                // A lone em dash is "no data": the tile already says so in words (its value), and a
+                // dash read aloud is meaningless.
+                .accessibilityHidden(value == FractionPresentation.noData)
             if let fraction {
                 Text(verbatim: fraction)
                     .font(.footnote.monospacedDigit().weight(.medium))

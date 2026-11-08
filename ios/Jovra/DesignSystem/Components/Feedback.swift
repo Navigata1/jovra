@@ -13,6 +13,7 @@ struct BannerView: View {
     var message: String?
     var primaryAction: StateCard.Action?
     var secondaryAction: StateCard.Action?
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.x1 + Space.half) {
@@ -36,10 +37,12 @@ struct BannerView: View {
                 Spacer(minLength: 0)
             }
             if primaryAction != nil || secondaryAction != nil {
-                ViewThatFits(in: .horizontal) {
-                    HStack(spacing: Space.x1) { actions }
-                    VStack(alignment: .leading, spacing: Space.x1) { actions }
-                }
+                // One set of buttons whose layout changes at accessibility sizes. (ViewThatFits would
+                // swap in a second copy as text grows, so the first copy never scales.)
+                let layout = dynamicTypeSize.isAccessibilitySize
+                    ? AnyLayout(VStackLayout(alignment: .leading, spacing: Space.x1))
+                    : AnyLayout(HStackLayout(spacing: Space.x1))
+                layout { actions }
             }
         }
         .padding(Space.x2)

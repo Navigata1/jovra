@@ -37,8 +37,23 @@ struct CoreComponentsGallery: View {
     @State private var cellularOn = false
     @State private var columnWidth: CGFloat = 0
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
+        // As on JovraScreen: the page stops at the status bar, so nothing scrolls behind the clock;
+        // at the bottom it runs under the home indicator like any iOS page.
+        GeometryReader { proxy in
+            page
+                .contentMargins(.bottom, proxy.safeAreaInsets.bottom, for: .scrollContent)
+                .clipped()
+                .padding(.top, proxy.safeAreaInsets.top)
+                .ignoresSafeArea(.container, edges: .vertical)
+        }
+        .background(Color.jovra(.background).ignoresSafeArea())
+        .toastHost(toasts)
+    }
+
+    private var page: some View {
         ScrollView {
             ReadableColumn {
                 VStack(alignment: .leading, spacing: Space.x3) {
@@ -58,8 +73,6 @@ struct CoreComponentsGallery: View {
                 .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { columnWidth = $0 }
             }
         }
-        .background(Color.jovra(.background))
-        .toastHost(toasts)
     }
 
     @ViewBuilder private var scenario: some View {
@@ -129,7 +142,8 @@ struct CoreComponentsGallery: View {
 
     /// Values here are fixed illustrations for component checks, said so on screen (CLAUDE.md rule 1).
     private var illustrationNote: some View {
-        HStack(spacing: Space.x1) {
+        let layout = stackingLayout(spacing: Space.x1, alignment: .center)
+        return layout {
             SampleBadge(size: .small)
             Text("Illustrative values for component checks")
                 .font(.footnote)
@@ -202,11 +216,18 @@ struct CoreComponentsGallery: View {
         Binding(get: { popover == tile }, set: { if !$0 { popover = nil } })
     }
 
-    @ViewBuilder private func tileRow(@ViewBuilder _ content: () -> some View) -> some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(alignment: .top, spacing: Space.x1) { content() }.fixedSize(horizontal: false, vertical: true)
-            VStack(alignment: .leading, spacing: Space.x1) { content() }
-        }
+    /// Side by side, stacked at accessibility sizes. One set of views whose layout changes, so text
+    /// keeps scaling (ViewThatFits would swap in a second copy as the text grows).
+    private func tileRow(@ViewBuilder _ content: () -> some View) -> some View {
+        let layout = stackingLayout(spacing: Space.x1)
+        return layout { content() }
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func stackingLayout(spacing: CGFloat, alignment: VerticalAlignment = .top) -> AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: spacing))
+            : AnyLayout(HStackLayout(alignment: alignment, spacing: spacing))
     }
 
     // MARK: Controls
@@ -281,15 +302,18 @@ struct CoreComponentsGallery: View {
                 .accessibilityLabel("More")
             }
             .jovraCard(padding: 0)
-            Text("This page sits in a readable column: full width on iPhone, at most 720 points on iPad.")
-                .font(.jovraBody)
-                .foregroundStyle(.jovra(.textSecondary))
-                .fixedSize(horizontal: false, vertical: true)
-            // The measured width of this page's ReadableColumn, read by the layout UI test.
-            Text("Column width: \(Int(columnWidth.rounded())) pt")
-                .font(.jovraTimecode)
-                .foregroundStyle(.jovra(.textPrimary))
-                .accessibilityIdentifier("gallery.columnWidth")
+            VStack(alignment: .leading, spacing: Space.x1) {
+                Text("This page sits in a readable column: full width on iPhone, at most 720 points on iPad.")
+                    .font(.jovraBody)
+                    .foregroundStyle(.jovra(.textSecondary))
+                    .fixedSize(horizontal: false, vertical: true)
+                // The measured width of this page's ReadableColumn, read by the layout UI test.
+                Text("Column width: \(Int(columnWidth.rounded())) pt")
+                    .font(.jovraTimecode)
+                    .foregroundStyle(.jovra(.textPrimary))
+                    .accessibilityIdentifier("gallery.columnWidth")
+            }
+            .jovraCard()
         }
     }
 
@@ -305,7 +329,8 @@ struct CoreComponentsGallery: View {
     /// recorded benchmark. Proves the page reads the registry, not hard-coded text.
     private var injectedCapability: some View {
         VStack(alignment: .leading, spacing: Space.x2) {
-            Text("Injected test registry").font(.jovraLabel).foregroundStyle(.jovra(.attentionInk))
+            BannerView(tone: .info, title: "Injected test registry",
+                       message: "Serve speed shows as validated by a test benchmark, so the page is read from the registry.")
             CapabilityDetailView(capabilityID: "serveSpeed.manualAssisted")
                 .environment(\.capabilityRegistry, Self.injectedRegistry)
         }

@@ -6,9 +6,20 @@ import XCTest
 final class DesignSystemGalleryUITests: XCTestCase {
     /// The scenarios this ticket adds (CoreComponentsUITests covers the state cards and badges).
     static let scenarios = ["tiles", "popover", "controls", "feedback", "chrome", "capability", "capability-injected", "art"]
+    /// `TEST_RUNNER_JOVRA_GALLERY_SCENARIOS=tiles,feedback` narrows the audit loops while iterating.
+    static var auditedScenarios: [String] {
+        guard let only = ProcessInfo.processInfo.environment["JOVRA_GALLERY_SCENARIOS"], !only.isEmpty else { return scenarios }
+        return only.split(separator: ",").map(String.init)
+    }
     static let appearances: [(slug: String, appearance: LaunchConfiguration.Appearance, size: ContentSize)] = [
         ("light", .light, .large), ("dark", .dark, .large), ("ax5", .light, .accessibility5),
     ]
+
+    /// The gallery's page starts `Space.screenMargin` (20 pt) above its title, right under the status bar.
+    @MainActor
+    static func pageTop(of app: XCUIApplication) -> CGFloat {
+        app.screenTitle.frame.minY - 20
+    }
 
     @MainActor
     private func launchGallery(_ scenario: String, appearance: LaunchConfiguration.Appearance = .light,
@@ -23,10 +34,11 @@ final class DesignSystemGalleryUITests: XCTestCase {
     @MainActor
     func testEveryNewComponentScenarioPassesTheAuditInLightDarkAndAX5() throws {
         for (slug, appearance, size) in Self.appearances {
-            for scenario in Self.scenarios {
+            for scenario in Self.auditedScenarios {
                 let app = launchGallery(scenario, appearance: appearance, size: size)
-                assertHitTargets(in: app)
-                try auditScreen(app)
+                // The capability page is read-only; at AX5 a page's first screen may hold only text.
+                assertHitTargets(in: app, requiresControls: false)
+                try auditScreen(app, pageTop: Self.pageTop(of: app))
                 attachScreenshot(app, name: "t12-\(slug)-\(scenario)")
                 app.terminate()
             }
@@ -51,7 +63,16 @@ final class DesignSystemGalleryUITests: XCTestCase {
             attachScreenshot(app, name: "t12-\(slug)-fraction-popover")
             // XCUITest reports a presented popover with an empty visible frame, so its audit cannot attribute
             // the popover's text; the same content is audited inline in the "popover" gallery scenario.
-            app.buttons["Show points"].tap()
+            // At accessibility sizes the popover's content scrolls; bring its action into view as a
+            // player would, by scrolling the popover.
+            let showPoints = app.buttons["Show points"]
+            // XCUITest reports the popover itself with an empty frame, so the drag starts on its content.
+            for _ in 0..<6 where !showPoints.isHittable {
+                let start = value.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -240)))
+            }
+            XCTAssertTrue(showPoints.isHittable, "Show points is reachable at \(slug)")
+            showPoints.tap()
             XCTAssertTrue(app.staticTexts["Show points requested"].waitForExistence(timeout: 5))
             app.terminate()
         }
@@ -110,6 +131,35 @@ final class DesignSystemGalleryUITests: XCTestCase {
         XCTAssertEqual(injected.descendants(matching: .any)["capability.testedOn"].value as? String, "Test dataset: radar-paired serves")
     }
 
+    /// The real route (N12): "How this was measured" opens as a sheet, reads the bundled registry, passes
+    /// the audit in light, dark and AX5, and closes with its 44 pt Close control.
+    @MainActor
+    func testCapabilitySheetRouteRendersTheRegistryAndCloses() throws {
+        for (slug, appearance, size) in Self.appearances {
+            let app = XCUIApplication.launchJovra(contentSize: size) {
+                $0.appearance = appearance
+                $0.startRoute = "sheet.capabilityDetail"
+            }
+            XCTAssertTrue(app.heading("How this was measured").waitForExistence(timeout: 8))
+            let status = app.descendants(matching: .any)["capability.status"]
+            XCTAssertTrue(status.waitForExistence(timeout: 5))
+            XCTAssertEqual(status.value as? String, "Estimated")
+            XCTAssertEqual(app.descendants(matching: .any)["capability.methodVersion"].value as? String,
+                           "serveSpeed.manualAssisted@1.0.0")
+            XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
+            let close = app.buttons["sheet.close"]
+            XCTAssertEqual(close.label, "Close how this was measured")
+            XCTAssertGreaterThanOrEqual(close.frame.width, 44)
+            XCTAssertGreaterThanOrEqual(close.frame.height, 44)
+            // A long sheet that scrolls: audited as a foreground modal, step by step down its scroll view.
+            try auditScreen(app, scrollIdentifier: "capability.scroll")
+            attachScreenshot(app, name: "t12-\(slug)-capability-sheet")
+            close.tap()
+            XCTAssertTrue(app.heading("How this was measured").waitForNonExistence(timeout: 5), "Close dismisses the sheet")
+            app.terminate()
+        }
+    }
+
     @MainActor
     func testHeroArtIsHiddenFromVoiceOver() {
         let app = launchGallery("art")
@@ -148,10 +198,10 @@ final class DesignSystemGalleryUITests: XCTestCase {
         try XCTSkipUnless(ProcessInfo.processInfo.environment["JOVRA_EXPECT_INCREASED_CONTRAST"] == "1",
                           "needs the simulator in Increase Contrast")
         for appearance in [("light", LaunchConfiguration.Appearance.light), ("dark", .dark)] {
-            for scenario in ["empty", "error", "badges"] + Self.scenarios {
+            for scenario in ["empty", "error", "badges"] + Self.auditedScenarios {
                 let app = launchGallery(scenario, appearance: appearance.1)
                 XCTAssertEqual(app.screenTitle.value as? String, "Increased contrast", "the app sees Increase Contrast")
-                try auditScreen(app)
+                try auditScreen(app, pageTop: Self.pageTop(of: app))
                 attachScreenshot(app, name: "t12-hc-\(appearance.0)-\(scenario)")
                 app.terminate()
             }

@@ -253,7 +253,7 @@ once at the settled position, where every issue counts. Limitation: a set-aside 
 only where that repeat finds it; it may be clipped there (and so exempt), in which case its verdict comes
 from another step's audit.
 
-There are two documented audit exceptions, and the test logs every issue it ignores:
+There are three documented audit exceptions, and the test logs every issue it ignores:
 
 - **Dynamic Type on tab bar titles.** Like the system tab bar, `JovraTabBar` caps its titles at
   `xxxLarge` and offers the Large Content Viewer (touch and hold). The audit reports the cap as a Dynamic
@@ -273,6 +273,15 @@ There are two documented audit exceptions, and the test logs every issue it igno
   control or a fully visible scrolling element remains checked. Text clipping, touch targets and
   semantic findings remain failures even for an occluded scrolling element. `ScrollViewportAuditTests`
   includes visible-content, fixed-header, invalid-viewport and non-rendering negative controls.
+- **Contrast on a lone dash.** A value that is only "—" (a rate with no data, T12) covers too few pixels
+  for the renderer to measure. Only the contrast audit, and only on an element whose label is nothing but
+  a dash, is exempt; the tile also speaks "no data", and its colour role is proved by
+  `ColorRoleContrastTests`. `AuditExceptionTests` holds the negative controls.
+
+Two robustness rules sit beside them, and neither drops a finding. A rendered finding that has no
+element (text recognition) is set aside like the others when the audit moved the page, and counts on the
+repeat at the settled position. When XCTest reports "Audit failed to complete in time", the same audit is
+repeated one type at a time, and together those parts are exactly the types first asked for.
 
 Contrast for every colour role is also enforced independently by `ColorRoleContrastTests`: text roles
 ≥ 4.5:1 and graphic roles (markers, the REC dot, chart lines) ≥ 3:1, in light, dark and Increase Contrast,
