@@ -59,3 +59,16 @@ The other six checks on d749e45 passed. From this Mac the same URL returned 200 
 Fix: android/gradle/wrapper/gradle-wrapper.properties networkTimeout 10000 -> 60000 (the wrapper's read timeout only;
 distributionUrl and distributionSha256Sum are unchanged, so the pinned Gradle 9.3.1 and its checksum check are unchanged).
 Local check after the change: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test checkModuleBoundaries -> BUILD SUCCESSFUL.
+
+## 6. The timeout alone was not enough: 53fdc15 hit 504 again (run 42465480561, attempts 1-4, all HTTP 504 before any task ran)
+The same intermittent 504 shows from this Mac (sampled 2026-11-08 ~09:15Z, 4 tries each):
+  https://github.com/gradle/gradle-distributions/releases/download/v9.3.1/gradle-9.3.1-bin.zip -> 504, 504, 504, 200 (137037885 B)
+  https://services.gradle.org/distributions/gradle-9.3.1-bin.zip                              -> 504, 504, 504, 504
+status.gradle.com and githubstatus.com both reported "All Systems Operational" at the time.
+Why every run downloads: setup-gradle writes its cache only on the default branch, and main has no Android job yet, so a
+PR run never restores ~/.gradle/wrapper/dists.
+Fix: android.yml gets a "Fetch the pinned Gradle distribution" step before the first Gradle task. It runs
+`android/gradlew -p android --version` up to 8 times, 60 s apart (at most 7 minutes of waiting, inside the 20-minute job limit).
+Only the download is retried. Tests, the boundary check and the build-logic tests still run once and fail on the first failure.
+The wrapper still verifies distributionSha256Sum, so the bytes are the same pinned Gradle 9.3.1.
+Local check: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android --version -> Gradle 9.3.1, exit 0. YAML parses.

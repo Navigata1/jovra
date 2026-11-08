@@ -47,6 +47,18 @@ jobs:
           if command -v sdkmanager; then echo "sdkmanager is still on PATH"; exit 1; fi
           echo "No Android SDK: OK"
       - uses: gradle/actions/setup-gradle@v4
+      # The wrapper downloads the pinned distribution (checked against distributionSha256Sum) on first use. Its host
+      # sometimes answers 504 for many minutes (seen 2026-11-08), so fetch it once here with backoff. A real build or
+      # test failure is never retried: this step only runs `--version`.
+      - name: Fetch the pinned Gradle distribution (retries transient download errors)
+        run: |
+          for attempt in 1 2 3 4 5 6 7 8; do
+            if env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android --version --console=plain; then exit 0; fi
+            delay=60
+            echo "Gradle distribution download failed (attempt ${attempt}/8); retrying in ${delay} s"
+            sleep "${delay}"
+          done
+          exit 1
       - name: JVM module tests (:core, :studio-core, :room-protocol, :testing)
         run: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test --console=plain
       - name: Module-boundary check
