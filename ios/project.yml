@@ -22,6 +22,11 @@ packages:
     path: Packages/JovraCore
   JovraMedia:
     path: Packages/JovraMedia
+  # Studio (S04, docs/studio/DEVELOPING.md): the only Studio ticket that edits this file.
+  JovraStudioCore:
+    path: Packages/JovraStudioCore
+  JovraStudioMedia:
+    path: Packages/JovraStudioMedia
 targets:
   Jovra:
     type: application
@@ -31,6 +36,8 @@ targets:
     dependencies:
       - package: JovraCore
       - package: JovraMedia
+      - package: JovraStudioCore
+      - package: JovraStudioMedia
     # Drive OAuth client and feature switches; optionally includes the git-ignored Drive.xcconfig.
     configFiles:
       Debug: Config/Jovra.xcconfig
@@ -74,6 +81,8 @@ targets:
         BGTaskSchedulerPermittedIdentifiers:
           - com.islanddevcrew.jovra.processing.overnight
           - com.islanddevcrew.jovra.continued.*
+          # Studio film rendering (S04): a user-started continued-processing task on iOS 26; foreground on iOS 18.
+          - com.islanddevcrew.jovra.continued.studio-render
         UIBackgroundModes:
           - processing
         CFBundleURLTypes:
@@ -91,6 +100,12 @@ targets:
         JovraDriveRedirectScheme: $(JOVRA_DRIVE_REVERSED_CLIENT_ID)
         JovraDriveXcconfigLoaded: $(JOVRA_DRIVE_XCCONFIG_LOADED)
         JovraAppleSignInEnabled: $(JOVRA_APPLE_SIGN_IN_ENABLED)
+        # Studio (S04): JOVRA Room finds the other phones at the court over the local network (ADR-0027; the
+        # service carries only an opaque room hint). The Studio environment comes from Config/Studio.xcconfig.
+        NSLocalNetworkUsageDescription: "JOVRA Room uses your local network to find and connect the phones filming your match together."
+        NSBonjourServices:
+          - _jovra-room._tcp
+        JovraStudioEnvironment: $(STUDIO_ENVIRONMENT)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra
@@ -108,6 +123,7 @@ targets:
     dependencies:
       - target: Jovra
       - package: JovraCore
+      - package: JovraStudioCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra.tests
@@ -123,6 +139,8 @@ targets:
       - path: Jovra/Platform/LaunchConfiguration/LaunchConfiguration.swift
     dependencies:
       - target: Jovra
+      - package: JovraStudioCore
+      - package: JovraStudioMedia
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra.uitests

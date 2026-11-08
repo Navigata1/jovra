@@ -81,6 +81,8 @@ Every script takes `SIMULATOR_ID=<udid>` (use your own simulator; see "Simulator
 T06 landed every v1 Info.plist key and capability in `ios/project.yml`, so feature tickets never edit
 the project. **After T06, only the Live Activity follow-up ticket (if the T60 spike says ship) may touch
 `ios/project.yml`.** If a feature needs something the project lacks, raise it with the lead instead.
+JOVRA Studio's one project edit (its two packages and its Info.plist keys) was ticket S04; see
+[docs/studio/DEVELOPING.md](studio/DEVELOPING.md).
 
 | What | Value | For |
 |---|---|---|
