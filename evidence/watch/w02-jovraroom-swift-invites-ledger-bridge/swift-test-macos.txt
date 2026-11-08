@@ -1,0 +1,150 @@
+Building for debugging...
+[Using on-disk description]
+[2 / 12] JovraRoom
+[21 / 31] JovraRoom
+[27 / 35] JovraRoom
+[29 / 34] JovraRoomTests-product
+[32 / 37] JovraRoomTests-product
+[36 / 40] JovraRoomTests-product
+Build complete! (4.04 sec)
+Test Suite 'All tests' started at 2026-11-08 14:03:03.410.
+Test Suite 'JovraRoomTests.xctest' started at 2026-11-08 14:03:03.411.
+Test Suite 'FixtureManifestTests' started at 2026-11-08 14:03:03.411.
+Test Case '-[JovraRoomTests.FixtureManifestTests test_acceptanceMapReferencesResolveForPart1]' started.
+Test Case '-[JovraRoomTests.FixtureManifestTests test_acceptanceMapReferencesResolveForPart1]' passed (0.147 seconds).
+Test Case '-[JovraRoomTests.FixtureManifestTests test_everyFixtureFileIsConsumedAndEveryKindIsKnown]' started.
+Test Case '-[JovraRoomTests.FixtureManifestTests test_everyFixtureFileIsConsumedAndEveryKindIsKnown]' passed (0.093 seconds).
+Test Suite 'FixtureManifestTests' passed at 2026-11-08 14:03:03.652.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.240 (0.241) seconds
+Test Suite 'InvitationCryptoTests' started at 2026-11-08 14:03:03.652.
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_constantTimeEqualsComparesWholeStrings]' started.
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_constantTimeEqualsComparesWholeStrings]' passed (0.000 seconds).
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_guestSideMessagesReproduceTheSampleJoinRequest]' started.
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_guestSideMessagesReproduceTheSampleJoinRequest]' passed (0.015 seconds).
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_hmacSha256KnownAnswers_RFC4231]' started.
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_hmacSha256KnownAnswers_RFC4231]' passed (0.001 seconds).
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_qrErrorsNeverCarryTheScannedText]' started.
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_qrErrorsNeverCarryTheScannedText]' passed (0.000 seconds).
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_randomNoncesAndTokensMatchTheirPatternsAndDiffer]' started.
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_randomNoncesAndTokensMatchTheirPatternsAndDiffer]' passed (0.001 seconds).
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_sha256AgreesWithCryptoKitAcrossBlockBoundaries]' started.
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_sha256AgreesWithCryptoKitAcrossBlockBoundaries]' passed (0.007 seconds).
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_sha256KnownAnswers_FIPS180_4]' started.
+Test Case '-[JovraRoomTests.InvitationCryptoTests test_sha256KnownAnswers_FIPS180_4]' passed (0.279 seconds).
+Test Suite 'InvitationCryptoTests' passed at 2026-11-08 14:03:03.956.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.304 (0.304) seconds
+Test Suite 'MutationTests' started at 2026-11-08 14:03:03.956.
+Test Case '-[JovraRoomTests.MutationTests test_aClockThatStopsDuringSleepIsCaught]' started.
+Test Case '-[JovraRoomTests.MutationTests test_aClockThatStopsDuringSleepIsCaught]' passed (0.000 seconds).
+Test Case '-[JovraRoomTests.MutationTests test_freshThresholdOf6SecondsIsCaught]' started.
+Test Case '-[JovraRoomTests.MutationTests test_freshThresholdOf6SecondsIsCaught]' passed (0.002 seconds).
+Test Case '-[JovraRoomTests.MutationTests test_unboundedTransitTreatedAsBoundedIsCaught]' started.
+Test Case '-[JovraRoomTests.MutationTests test_unboundedTransitTreatedAsBoundedIsCaught]' passed (0.026 seconds).
+Test Suite 'MutationTests' passed at 2026-11-08 14:03:03.984.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.028 (0.028) seconds
+Test Suite 'PackageHygieneTests' started at 2026-11-08 14:03:03.984.
+Test Case '-[JovraRoomTests.PackageHygieneTests test_continuousClockIsMonotonicAndAdvances]' started.
+Test Case '-[JovraRoomTests.PackageHygieneTests test_continuousClockIsMonotonicAndAdvances]' passed (0.053 seconds).
+Test Case '-[JovraRoomTests.PackageHygieneTests test_freshnessUsesOnlyTheContinuousClock]' started.
+Test Case '-[JovraRoomTests.PackageHygieneTests test_freshnessUsesOnlyTheContinuousClock]' passed (0.001 seconds).
+Test Case '-[JovraRoomTests.PackageHygieneTests test_noUIOrWatchTransportFrameworkImports]' started.
+Test Case '-[JovraRoomTests.PackageHygieneTests test_noUIOrWatchTransportFrameworkImports]' passed (0.006 seconds).
+Test Case '-[JovraRoomTests.PackageHygieneTests test_processBaselineIsAValidRoomIdAndStableWithinTheProcess]' started.
+Test Case '-[JovraRoomTests.PackageHygieneTests test_processBaselineIsAValidRoomIdAndStableWithinTheProcess]' passed (0.000 seconds).
+Test Suite 'PackageHygieneTests' passed at 2026-11-08 14:03:04.045.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.060 (0.061) seconds
+Test Suite 'Part2BehaviourTests' started at 2026-11-08 14:03:04.045.
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_alertPolicyRefusesANonOwnCriticalKind]' started.
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_alertPolicyRefusesANonOwnCriticalKind]' passed (0.000 seconds).
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_healthSummaryOfAnUnstampedPayloadIsAllUnknown]' started.
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_healthSummaryOfAnUnstampedPayloadIsAllUnknown]' passed (0.006 seconds).
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_healthSummaryOnTheLiveClockTreatsAnotherProcessAsUnknown]' started.
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_healthSummaryOnTheLiveClockTreatsAnotherProcessAsUnknown]' passed (0.004 seconds).
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_healthSummaryRowsShowElapsedExactlyAsLastReported]' started.
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_healthSummaryRowsShowElapsedExactlyAsLastReported]' passed (0.005 seconds).
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_outboxStateSurvivesARestart]' started.
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_outboxStateSurvivesARestart]' passed (0.003 seconds).
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_qrDecodeRefusesACanonicalButInvalidRecord]' started.
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_qrDecodeRefusesACanonicalButInvalidRecord]' passed (0.005 seconds).
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_validateJoinDrawsAFreshHostNonce]' started.
+Test Case '-[JovraRoomTests.Part2BehaviourTests test_validateJoinDrawsAFreshHostNonce]' passed (0.012 seconds).
+Test Suite 'Part2BehaviourTests' passed at 2026-11-08 14:03:04.082.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.036 (0.036) seconds
+Test Suite 'Part2MutationTests' started at 2026-11-08 14:03:04.082.
+Test Case '-[JovraRoomTests.Part2MutationTests test_aLedgerCallWithoutThePeerFailsTheVectors]' started.
+Test Case '-[JovraRoomTests.Part2MutationTests test_aLedgerCallWithoutThePeerFailsTheVectors]' passed (0.137 seconds).
+Test Case '-[JovraRoomTests.Part2MutationTests test_forgedIssuerIsCaught]' started.
+Test Case '-[JovraRoomTests.Part2MutationTests test_forgedIssuerIsCaught]' passed (0.171 seconds).
+Test Case '-[JovraRoomTests.Part2MutationTests test_frozenSendAgeIsCaught]' started.
+Test Case '-[JovraRoomTests.Part2MutationTests test_frozenSendAgeIsCaught]' passed (0.050 seconds).
+Test Case '-[JovraRoomTests.Part2MutationTests test_replayedBridgePayloadAfterRestartIsCaught]' started.
+Test Case '-[JovraRoomTests.Part2MutationTests test_replayedBridgePayloadAfterRestartIsCaught]' passed (0.057 seconds).
+Test Case '-[JovraRoomTests.Part2MutationTests test_replayedBridgePayloadIsCaught]' started.
+Test Case '-[JovraRoomTests.Part2MutationTests test_replayedBridgePayloadIsCaught]' passed (0.061 seconds).
+Test Suite 'Part2MutationTests' passed at 2026-11-08 14:03:04.558.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.476 (0.476) seconds
+Test Suite 'Part2VectorConformanceTests' started at 2026-11-08 14:03:04.558.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_acceptanceMapReferencesResolveForPart2]' started.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_acceptanceMapReferencesResolveForPart2]' passed (0.135 seconds).
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_alertVectors]' started.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_alertVectors]' passed (0.004 seconds).
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_allVectorKindsTogetherAre129Cases]' started.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_allVectorKindsTogetherAre129Cases]' passed (0.000 seconds).
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_bridgeVectors]' started.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_bridgeVectors]' passed (0.056 seconds).
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_invitationVectors]' started.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_invitationVectors]' passed (0.114 seconds).
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_ledgerVectors]' started.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_ledgerVectors]' passed (0.153 seconds).
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_outboxVectors]' started.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_outboxVectors]' passed (0.046 seconds).
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_watchSampleVectors]' started.
+Test Case '-[JovraRoomTests.Part2VectorConformanceTests test_watchSampleVectors]' passed (0.031 seconds).
+Test Suite 'Part2VectorConformanceTests' passed at 2026-11-08 14:03:05.099.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.540 (0.541) seconds
+Test Suite 'RecordConformanceTests' started at 2026-11-08 14:03:05.099.
+Test Case '-[JovraRoomTests.RecordConformanceTests test_all103InvalidCasesAreRejectedByTheExpectedLayer]' started.
+Test Case '-[JovraRoomTests.RecordConformanceTests test_all103InvalidCasesAreRejectedByTheExpectedLayer]' passed (0.156 seconds).
+Test Case '-[JovraRoomTests.RecordConformanceTests test_all27RecordsDecodeStrictlyPassTheirRuleAndRoundTripCanonically]' started.
+Test Case '-[JovraRoomTests.RecordConformanceTests test_all27RecordsDecodeStrictlyPassTheirRuleAndRoundTripCanonically]' passed (0.046 seconds).
+Test Case '-[JovraRoomTests.RecordConformanceTests test_duplicateJSONKeysAreRefused]' started.
+Test Case '-[JovraRoomTests.RecordConformanceTests test_duplicateJSONKeysAreRefused]' passed (0.003 seconds).
+Test Case '-[JovraRoomTests.RecordConformanceTests test_typedDecodersRefuseUnknownPropertiesOnTheirOwn]' started.
+Test Case '-[JovraRoomTests.RecordConformanceTests test_typedDecodersRefuseUnknownPropertiesOnTheirOwn]' passed (0.005 seconds).
+Test Case '-[JovraRoomTests.RecordConformanceTests test_unknownSchemaVersionIsRefused]' started.
+Test Case '-[JovraRoomTests.RecordConformanceTests test_unknownSchemaVersionIsRefused]' passed (0.002 seconds).
+Test Suite 'RecordConformanceTests' passed at 2026-11-08 14:03:05.313.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.212 (0.213) seconds
+Test Suite 'VectorConformanceTests' started at 2026-11-08 14:03:05.313.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_aBackwardsClockIsUnknownNotACrash]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_aBackwardsClockIsUnknownNotACrash]' passed (0.000 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_analysisVectors]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_analysisVectors]' passed (0.011 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_countsComeFromTheRosterAndRefuseUnenrolledRows]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_countsComeFromTheRosterAndRefuseUnenrolledRows]' passed (0.000 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_disconnectVectors]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_disconnectVectors]' passed (0.001 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_displayVectors]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_displayVectors]' passed (0.001 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_freshnessVectors]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_freshnessVectors]' passed (0.002 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_phoneStatusVectors]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_phoneStatusVectors]' passed (0.023 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_snapshotRefusalLeavesStateUntouched]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_snapshotRefusalLeavesStateUntouched]' passed (0.008 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_snapshotVectors]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_snapshotVectors]' passed (0.196 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_statusRowsAreFrozenAndFormattedWithoutRoundingUp]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_statusRowsAreFrozenAndFormattedWithoutRoundingUp]' passed (0.000 seconds).
+Test Case '-[JovraRoomTests.VectorConformanceTests test_thresholdBoundaries_5000Fresh_5001Delayed_15000Delayed_15001Unknown]' started.
+Test Case '-[JovraRoomTests.VectorConformanceTests test_thresholdBoundaries_5000Fresh_5001Delayed_15000Delayed_15001Unknown]' passed (0.001 seconds).
+Test Suite 'VectorConformanceTests' passed at 2026-11-08 14:03:05.556.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.243 (0.244) seconds
+Test Suite 'JovraRoomTests.xctest' passed at 2026-11-08 14:03:05.556.
+	 Executed 52 tests, with 0 failures (0 unexpected) in 2.139 (2.145) seconds
+Test Suite 'All tests' passed at 2026-11-08 14:03:05.556.
+	 Executed 52 tests, with 0 failures (0 unexpected) in 2.139 (2.146) seconds
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

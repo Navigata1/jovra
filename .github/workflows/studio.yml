@@ -29,6 +29,39 @@ jobs:
       - name: Validate Studio contracts and fixtures
         run: python3 scripts/spec/validate_studio.py
 
+  # Studio media fixtures (S08, spec/studio/modules/media-fixtures.md): render every barcode source, the coherent
+  # match, the B-roll and the six demo angles with ffmpeg on Ubuntu (cached by the generator's source), decode each
+  # in full (every barcode, every click within one frame) and require the committed manifests to be reproduced, a
+  # second machine reproducing the Mac render. Then the reader, click, label, budget and determinism tests, and the
+  # check that the branch adds no media file outside the bundled demo subset. A cold render takes several minutes.
+  studio-media:
+    name: studio-media
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg
+          ffmpeg -hide_banner -version | head -1
+      - name: Restore rendered Studio media
+        uses: actions/cache@v4
+        with:
+          path: .cache/media/studio
+          key: studio-media-${{ runner.os }}-${{ hashFiles('scripts/media/**/*.py', 'spec/fixtures/sample/media-manifest.json', 'spec/fixtures/sample/jon-vs-alex.points.csv', 'spec/fixtures/sample/jon-vs-alex.session.json') }}
+      - name: Render Studio media and check every file against its committed manifest
+        run: python3 scripts/media/studio/render_studio.py --check
+      - name: Reader, clicks, labels, demo budget and determinism tests
+        run: python3 -m unittest discover -s scripts/media/studio -p 'test_*.py' -v
+      - name: No media file added outside the bundled demo subset
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/media/studio/check_added_binaries.py --base ${{ github.event.pull_request.base.sha }}
+
   # The Foundation-only Studio domain layer builds and passes its tests on Linux, so it can never depend on an
   # Apple-only framework (the same rule as the core jovra-core job, ADR-0006).
   jovra-studio-core:

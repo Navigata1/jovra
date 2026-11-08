@@ -144,8 +144,10 @@ fixture change immediately fails whichever platform has not caught up.
 | … with `expectError` | Folding must throw a typed error whose code equals `expectError.code`. | Code string |
 | `jovra.fixture.stats` | Fold the whole log, compute stats. | Deep equality with `expected` |
 | `jovra.fixture.pct` | `ratio`, `delta` (percentage points from the displayed integers) and `pool` (sum numerators and denominators) | Deep equality per case |
+| `jovra.fixture.trend` | For each case, `TrendPool.bucketed(sessions, range, asOf, comparableKind, scope)`: bucket the comparable sessions of the scope (real excludes sample sessions; sample uses only them) into weeks (4W) or calendar months (3M, Year) ending on `asOf`, pool n/d per bucket, hide buckets below `defaultMinimums.bucketDenominator`, and compare the latest two shown buckets by their displayed integers when there are enough buckets and pooled points | Deep equality per case with `expected`; `defaultMinimums` equals the platform's constants |
 | `jovra.fixture.units` | `convert` (exact, half-up at `places`), `display` (half-up once to the unit's step; same unit returns the stored text untouched), `gaugeHint` | Deep equality per case |
 | `jovra.fixture.sample` | Load `jon-vs-alex.session.json` with the app's real session decoder, build the engine input from it, fold, compute stats, export both CSVs. | Fold + stats deep-equal; **CSV byte-for-byte** with the golden files; `overview` holds the screen-9 numbers |
+| `jovra.fixture.sampleLibrary` | Load `sample/library` (8 sessions, `equipment.json`, `practice-plan.json`) with `SampleLibrary.load`, which refuses a document not flagged Sample or a media id missing from the manifest, then compute `LibrarySummary` under the sample-scope rule. | Deep equality with `expected`: 8 sessions, 402 min, Jon's first serves in pooled per week 24/50, 33/60, 38/60, 40/60 (matches only), the Sep 9 string job linked to all 8 (402 logged minutes). The generator also checks these against the brief's literals and that the library's Jon vs Alex keeps the shipped match log |
 | records (`equipment`, `practice plan`, `export`, `archive`, registry, sample media manifest) | Decode with the app's real model types and re-encode. | Must decode without loss; schema-valid |
 | `records/*.all-fields.json` | The 1.1 contract examples (session, practice plan, export, archive): every field added in 1.1 appears at least once. Decode and re-encode. | Must round-trip; the validator also checks that adding an unknown property to any object in them fails, and that every id they hold resolves (reference integrity above) |
 
@@ -172,10 +174,11 @@ Implementation notes for the ports:
 | `log.py` | Append-only log resolution: voids (undo; voiding a void is redo; voiding an event also undoes every later correction of it), `supersedes` (replace in place, original kept), `insertBefore` (add a missed point; a voided event keeps its slot as an anchor), doubles orders per set; structural errors with stable codes |
 | `scoring.py` | The fold: ad/No-Ad games, tie-break sets at any trigger (6-6, 4-4, 3-3, 8-8), advantage sets, match tie-break in lieu of the final set (recorded as a set), sudden-death tie-breaks, best of 1/3/5; singles and doubles server rotation; deuce/ad court and receiver; ends (odd game in set, every 6 tie-break points, Coman, short-set); rests; lets, faults, double faults, point and game penalties, retirement, default, walkover; unknown winners → provisional; as-called checkpoints vs derived; conflicts; hypothetical folding for game/break/set/match points; `validate_log` (player ids and doubles orders, before the fold); `diff` between checkpoints |
 | `stats.py` | Every stat in rules §6 with the shared integer `pct`, pooling and percentage-point deltas |
+| `trend.py` | Pooled cross-session trends (§6.10): progress-window buckets, minimum samples, headline delta from displayed integers, sample scope kept apart |
 | `units.py` | Exact factors (lb↔kg↔N, mph↔km/h↔m/s, mm/cm/m/in/ft, cm²/in², g/oz), display steps, gauge help ranges |
 | `csv_export.py` | `points.csv` and `stats.csv`, driven by the hand-written contracts |
 | `references.py` | Reference integrity of 1.1 records (ids resolve, ranges run forwards, log versions, sample media ids) and the contract example's serve speed from its mark |
-| `sample_match.py` | The Jon vs Alex generator (seeded SplitMix64, independent of Python's `random`) and the C1-C16 checker |
+| `sample_match.py` | The Jon vs Alex generator (seeded SplitMix64, independent of Python's `random`) and the C1-C16 checker; its library section (T09) writes `fixtures/sample/library`: the eight Sample sessions (three older singles matches folded from pinned seeds, every point reviewed), the sample equipment and practice plan, and the library oracle |
 
 ## Fixture inventory
 
@@ -204,6 +207,12 @@ Implementation notes for the ports:
 - **Stats**: 24 integer-percentage vectors (incl. the §7 table, `1/8 → 13`, `199/200 → 100`, `1/201 → 0`, `0/0 → —`),
   5 delta and 3 pooling cases; every end type (`unknown` included) in one log; doubles per-server stats; a 7-6 set
   whose tie-break is not a service game.
+- **Trend** (`TR01-pooled-trends`, T05): 9 cases, 67 hand assertions: 1/2 with 30/40 pools to 31/42 = 74% (not the
+  62.5% average); the Home/Progress weekly series 48, 55, 63, 67 with "+4 percentage points" from the displayed
+  integers (the raw 3.33 would round to 3); buckets below 20 points hidden and skipped by the headline; sample
+  sessions excluded from a real trend and alone in a sample trend; months for 3 months and Year; sessions outside the
+  window or of another comparable kind excluded; a fall reads "-4 percentage points"; under 100 pooled points or no
+  sessions, no comparison.
 - **Units**: 31 vectors.
 - **Sample**: `jon-vs-alex.session.json` (124 points, labelled Sample, synthetic) with expected fold, stats, the
   screen-9 overview, all sixteen constraints (C15 is `partial`: its timestamp clause is waived, decision 18), and golden

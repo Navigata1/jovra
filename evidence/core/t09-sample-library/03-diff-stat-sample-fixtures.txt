@@ -1,0 +1,16 @@
+$ git diff --stat origin/main -- spec/fixtures/sample   (tracked files: no byte changed)
+(empty: no existing byte changed)
+$ git status --porcelain -- spec/fixtures/sample
+?? spec/fixtures/sample/library/
+$ git ls-files --others --exclude-standard spec/fixtures/sample
+spec/fixtures/sample/library/equipment.json
+spec/fixtures/sample/library/library.expected.json
+spec/fixtures/sample/library/practice-plan.json
+spec/fixtures/sample/library/sessions/2026-09-09-match.session.json
+spec/fixtures/sample/library/sessions/2026-09-13-stroke-practice.session.json
+spec/fixtures/sample/library/sessions/2026-09-17-match.session.json
+spec/fixtures/sample/library/sessions/2026-09-21-serve-practice.session.json
+spec/fixtures/sample/library/sessions/2026-09-28-match.session.json
+spec/fixtures/sample/library/sessions/2026-10-02-forehand-session.session.json
+spec/fixtures/sample/library/sessions/2026-10-04-serve-practice.session.json
+spec/fixtures/sample/library/sessions/jon-vs-alex.session.json

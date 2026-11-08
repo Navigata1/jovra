@@ -53,14 +53,19 @@ enum RoomFixtures {
 }
 
 /// Vector kinds (spec/room/schemas/fixture.schema.json) and who runs them. Part 1 (W01) runs its own kinds; the rest
-/// are named here as W02's (#271) so an unknown kind, or a kind nobody owns, fails the manifest test.
+/// Part 2 (W02,
+/// #271) runs the rest, so an unknown kind, or a kind nobody owns, fails the manifest test.
 enum RoomVectorKinds {
     static let part1: [String: Int] = [
         "freshness": 14, "snapshot": 14, "phone-status": 5, "display": 6, "disconnect": 1, "analysis": 7,
     ]
-    /// W02 (#271) removes entries from this set as its runners land; when it is empty every file is consumed.
-    static let ownedByW02: Set<String> = ["watch-sample", "bridge", "alerts", "invitation", "ledger", "outbox"]
-    static let all: Set<String> = Set(part1.keys).union(ownedByW02)
+    /// W02 (#271): the Part 2 kinds and their case counts (Tests/Part2/Part2VectorConformanceTests).
+    static let part2: [String: Int] = [
+        "watch-sample": 9, "bridge": 6, "alerts": 9, "invitation": 28, "ledger": 22, "outbox": 8,
+    ]
+    /// Every kind with its case count: 129 cases in all.
+    static let counts: [String: Int] = part1.merging(part2) { _, _ in preconditionFailure("a kind has one owner") }
+    static let all: Set<String> = Set(counts.keys)
 }
 
 /// One test failure location for a fixture case, e.g. "vectors/snapshot.json#replay-and-order step 1".

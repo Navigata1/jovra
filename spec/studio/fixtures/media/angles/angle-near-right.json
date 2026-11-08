@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "jovra.studio-media-truth/1",
+  "id": "angles/angle-near-right",
+  "set": "angles",
+  "role": "angle",
+  "description": "Sample video (synthetic): the Jon vs Alex sample match seen from the Near right angle (slot 4 of 6), 54:00, picture only.",
+  "sample": true,
+  "band": "synthetic",
+  "generator": {
+    "script": "scripts/media/studio/render_studio.py",
+    "version": "1.0.0",
+    "sourceHash": "26e3b735a5678bf8011ff33b60f2b6997c57067f6ba9356575b281b310f43d41"
+  },
+  "media": {
+    "path": ".cache/media/studio/angles-26e3b735a5678bf8/studio-angle-near-right.mp4",
+    "fileName": "studio-angle-near-right.mp4",
+    "container": "mp4",
+    "bundled": true
+  },
+  "video": {
+    "codec": "h264",
+    "width": 640,
+    "height": 360,
+    "frameRate": {
+      "num": 12,
+      "den": 1
+    },
+    "frameCount": 38880,
+    "duration": {
+      "value": 3240,
+      "timescale": 1
+    }
+  },
+  "audio": null,
+  "barcode": null,
+  "clicks": null,
+  "labels": [
+    {
+      "text": "Sample video (synthetic)",
+      "region": {
+        "x": 0,
+        "y": 0,
+        "width": 288,
+        "height": 20
+      },
+      "ink": {
+        "y": 230
+      },
+      "background": {
+        "y": 28
+      },
+      "kind": "sample",
+      "cellHeight": 90
+    },
+    {
+      "kind": "angle",
+      "text": "Near right",
+      "region": {
+        "x": 516,
+        "y": 0,
+        "width": 124,
+        "height": 20
+      },
+      "cellHeight": 90,
+      "ink": {
+        "y": 230
+      },
+      "background": {
+        "y": 28
+      }
+    }
+  ],
+  "angle": {
+    "name": "Near right",
+    "slot": 4,
+    "camera": {
+      "eyeM": [
+        12.0,
+        -10.0,
+        6.5
+      ],
+      "targetM": [
+        0.0,
+        9.885,
+        0.0
+      ],
+      "focalPx": 608.0
+    },
+    "matchWindow": {
+      "fromMs": 0,
+      "toMs": 3240000
+    },
+    "basedOn": {
+      "mediaId": "sample-media.jon-vs-alex",
+      "points": "spec/fixtures/sample/jon-vs-alex.points.csv"
+    }
+  },
+  "hashes": {
+    "renderedWithSourceHash": "26e3b735a5678bf8011ff33b60f2b6997c57067f6ba9356575b281b310f43d41",
+    "sourceFramesSha256": "c9cb8efbeab77dcc020fef43bb1135bea1e019a65ad89fa80d1171caa0a02575",
+    "decodedSignature": {
+      "method": "jovra.cellLuma.v1",
+      "sha256": "0a610f7ac4fbbae3d3238a0c62df1de390de3cfdc18d173e587235cebc9ed160"
+    },
+    "pcmSha256": null
+  }
+}

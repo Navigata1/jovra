@@ -1,0 +1,24 @@
+$ python3 spec/reference/generate_fixtures.py
+scoring_cases 79, order_cases 30, rally_cases 2, log_safety_cases 1, stats_cases 4, units_cases 1, canonical_cases 1, sample_cases 12, records 5, sample_media 1, contract_examples 4
+$ git status --porcelain spec
+ M spec/README.md
+ M spec/reference/cases/sample_cases.py
+ M spec/reference/jovra_ref/sample_match.py
+?? spec/fixtures/sample/library/
+?? spec/schemas/fixture-sample-library.schema.json
+$ python3 -c (library oracle)
+sample True sessions 8 minutes 402 window {'from': '2026-09-09', 'to': '2026-10-06'} delta +4 percentage points
+ week 1 2026-09-09 2026-09-15 {'n': 24, 'd': 50, 'pct': 48, 'display': '48%'}
+ week 2 2026-09-16 2026-09-22 {'n': 33, 'd': 60, 'pct': 55, 'display': '55%'}
+ week 3 2026-09-23 2026-09-29 {'n': 38, 'd': 60, 'pct': 63, 'display': '63%'}
+ week 4 2026-09-30 2026-10-06 {'n': 40, 'd': 60, 'pct': 67, 'display': '67%'}
+ stringJob 2026-09-09 linked 8 loggedMinutes 402
+  2026-10-06 match 54 min Jon vs Alex 6-4 6-3 ['sample-media.jon-vs-alex']
+  2026-10-04 servePractice 22 min Serve practice None ['sample-media.2026-10-04-serve-practice', 'sample-media.2026-10-04-behind-baseline-12-serves']
+  2026-10-02 strokePractice 38 min Forehand session None ['sample-media.2026-10-02-forehand-session', 'sample-media.2026-10-02-side-on-forehands']
+  2026-09-28 match 63 min Jon vs Chris 6-4 7-5 ['sample-media.2026-09-28-match', 'sample-media.2026-09-28-serve-clip']
+  2026-09-21 servePractice 55 min Serve practice None ['sample-media.2026-09-21-serve-practice']
+  2026-09-17 match 58 min Jon vs Alex 6-4 6-3 ['sample-media.2026-09-17-match']
+  2026-09-13 strokePractice 60 min Stroke practice None ['sample-media.2026-09-13-stroke-practice']
+  2026-09-09 match 52 min Jon vs Sam 6-3 6-1 ['sample-media.2026-09-09-match']
+seeds {'jon-vs-alex': 20261006, '2026-09-28-match': 396, '2026-09-17-match': 42, '2026-09-09-match': 131}

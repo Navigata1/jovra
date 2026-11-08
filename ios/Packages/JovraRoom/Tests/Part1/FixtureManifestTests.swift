@@ -2,8 +2,9 @@ import Foundation
 import XCTest
 
 /// Every file under spec/room/fixtures is accounted for: records and invalid cases by RecordConformanceTests, Part 1
-/// vector kinds by VectorConformanceTests, the other kinds by W02 (#271), and the acceptance map here. An unknown
-/// kind, an unowned kind or an unconsumed file fails, so a fixture added to spec/room cannot be silently skipped.
+/// vector kinds by VectorConformanceTests, the Part 2 kinds by Part2VectorConformanceTests (W02, #271), and the
+/// acceptance map here. An unknown kind, an unowned kind, a changed case count or an unconsumed file fails, so a
+/// fixture added to spec/room cannot be silently skipped.
 final class FixtureManifestTests: XCTestCase {
     func test_everyFixtureFileIsConsumedAndEveryKindIsKnown() throws {
         var unconsumed: [String] = []
@@ -17,9 +18,7 @@ final class FixtureManifestTests: XCTestCase {
                 let kind = try XCTUnwrap(doc["kind"]?.string, file)
                 XCTAssertTrue(RoomVectorKinds.all.contains(kind), "\(file): unknown vector kind \(kind)")
                 XCTAssertNil(kinds.updateValue(file, forKey: kind), "\(file): kind \(kind) appears twice")
-                if let expected = RoomVectorKinds.part1[kind] {
-                    XCTAssertEqual(doc["cases"]?.array?.count, expected, "\(file) case count")
-                }
+                XCTAssertEqual(doc["cases"]?.array?.count, RoomVectorKinds.counts[kind], "\(file) case count")
             default:
                 unconsumed.append(file)
             }

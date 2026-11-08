@@ -22,7 +22,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-COPIED = ("scripts/spec", "spec", "design-reference/studio/brief")
+# scripts/media: the media-fixtures cases module recomputes its manifests from the Studio media generator (S08).
+COPIED = ("scripts/spec", "spec", "design-reference/studio/brief", "scripts/media")
 
 TEMP_CASES = '''\
 """A temporary cases module (test only)."""

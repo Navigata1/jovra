@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "jovra.studio-media-truth/1",
+  "id": "barcodeSources/bc-024",
+  "set": "barcodeSources",
+  "role": "barcodeSource",
+  "description": "Barcode source at 24 fps, 10 s: every frame carries its frame id; 8 clicks of 1 kHz at known frames.",
+  "sample": true,
+  "band": "synthetic",
+  "generator": {
+    "script": "scripts/media/studio/render_studio.py",
+    "version": "1.0.0",
+    "sourceHash": "f26ae914a4f4464d660bae1e95f378c38532356a694de127e9c307b8b8ea411d"
+  },
+  "media": {
+    "path": ".cache/media/studio/barcodeSources-f26ae914a4f4464d/bc-024.mp4",
+    "fileName": "bc-024.mp4",
+    "container": "mp4",
+    "bundled": false
+  },
+  "video": {
+    "codec": "h264",
+    "width": 1280,
+    "height": 720,
+    "frameRate": {
+      "num": 24,
+      "den": 1
+    },
+    "frameCount": 240,
+    "duration": {
+      "value": 10,
+      "timescale": 1
+    }
+  },
+  "audio": {
+    "codec": "aac",
+    "sampleRate": 48000,
+    "channels": 1,
+    "sampleCount": 480000
+  },
+  "barcode": {
+    "method": "jovra.frame-barcode/1",
+    "bits": 40,
+    "rect": {
+      "x": 0,
+      "y": 640,
+      "width": 1280,
+      "height": 80
+    },
+    "fields": {
+      "start": 1,
+      "source": 7,
+      "segment": 3,
+      "frame": 20,
+      "crc8": 8,
+      "stop": 1
+    },
+    "one": {
+      "y": 235
+    },
+    "zero": {
+      "y": 16
+    },
+    "threshold": {
+      "y": 128
+    },
+    "sourceId": 1,
+    "segment": 0,
+    "frameMap": [
+      {
+        "frame": 0,
+        "frameId": 0,
+        "count": 240
+      }
+    ],
+    "frameMapSha256": "8f9b4d515875c30995c8ec1b622cd788fc4e50411b66e713d48853f3beda8ff5"
+  },
+  "clicks": {
+    "hz": 1000,
+    "durationSamples": 480,
+    "peak": 16000,
+    "toleranceFrames": 1,
+    "events": [
+      {
+        "sample": 24048,
+        "time": {
+          "value": 501,
+          "timescale": 1000
+        },
+        "frame": 12
+      },
+      {
+        "sample": 52048,
+        "time": {
+          "value": 3253,
+          "timescale": 3000
+        },
+        "frame": 26
+      },
+      {
+        "sample": 124048,
+        "time": {
+          "value": 7753,
+          "timescale": 3000
+        },
+        "frame": 62
+      },
+      {
+        "sample": 220048,
+        "time": {
+          "value": 13753,
+          "timescale": 3000
+        },
+        "frame": 110
+      },
+      {
+        "sample": 246048,
+        "time": {
+          "value": 2563,
+          "timescale": 500
+        },
+        "frame": 123
+      },
+      {
+        "sample": 296048,
+        "time": {
+          "value": 18503,
+          "timescale": 3000
+        },
+        "frame": 148
+      },
+      {
+        "sample": 356048,
+        "time": {
+          "value": 22253,
+          "timescale": 3000
+        },
+        "frame": 178
+      },
+      {
+        "sample": 444048,
+        "time": {
+          "value": 9251,
+          "timescale": 1000
+        },
+        "frame": 222
+      }
+    ]
+  },
+  "labels": [],
+  "hashes": {
+    "renderedWithSourceHash": "f26ae914a4f4464d660bae1e95f378c38532356a694de127e9c307b8b8ea411d",
+    "sourceFramesSha256": "9dcbafdd6833069e41a89377abe0a11b803562062d372c7ca4c73cfca695e727",
+    "decodedSignature": {
+      "method": "jovra.cellLuma.v1",
+      "sha256": "944d106d7159a86975bb9c5834f086e78f3447c89be609625d7b642257a68e20"
+    },
+    "pcmSha256": "2e2e1bc444631943192311f7e2a705589f6cb4f4b7da3fd393a605e30371a477"
+  }
+}

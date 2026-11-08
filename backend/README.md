@@ -11,7 +11,7 @@ Design: `docs/backend/architecture.md` (layout §1.2, local test strategy §12, 
 
 | Folder | What | Test command | CI workflow | Status |
 |---|---|---|---|---|
-| `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migrations 1 (S76 / B-03), 2 (S77 / B-04) and 3 (S78 / B-05) |
+| `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migrations 1 (S76 / B-03), 2 (S77 / B-04) and 3 (S78 / B-05); gateway commands (S79 / B-06) |
 | `gateway/` | Cloudflare signing gateway Worker | — | — | Not started (B-07) |
 | `render/` | Render-host image | — | — | Not started (B-13) |
 | `contracts/` | Gateway and queue JSON Schemas | See `contracts/README.md` | `.github/workflows/backend-contracts.yml` | Implemented contract/checker foundation (S81 / B-01); gateway/render runtime remains separate |
@@ -217,3 +217,58 @@ Not covered here (later tickets): the command halves. T-DB-47's "run every secre
 `create_quote`/`review_job` `P0404` are S79 (gateway commands); T-DB-53's `set_job_state`, `reserve_stage`,
 `finish_attempt` and `mark_artifact_verified` role checks are S80 (orchestrator commands); T-DB-48's deletion
 Workflow is S94. Denial audit rows (`audit_denial`) are S79.
+
+## Gateway commands (S79 / B-06, gateway half)
+
+`migrations/20261008040000_gateway_commands_access.sql` and `migrations/20261008041000_gateway_commands_money.sql`
+(architecture §5.1, §6.2, §6.3, §7.1, §7.2, §10; security-model §4.1, §13.1-13.7; findings 18 and 19):
+
+- The user-route commands the gateway calls as `jovra_gateway`: `create_project`, `declare_source`,
+  `create_camera_invite`, `revoke_camera_invite`, `redeem_camera_invite`, `approve_camera_invite`,
+  `issue_guest_capability`, `guest_declare_source`, `authorize_upload`, `attach_upload_id`, `record_part`,
+  `complete_upload_check`, `mark_uploaded_unverified`, `abort_upload`, `create_grant`, `redeem_grant`,
+  `list_pending_members`, `approve_member`, `revoke_grant`, `revoke_member`, `create_share_link`,
+  `redeem_share_link`, `request_deletion`, `create_quote`, `accept_quote`, `review_job` and `audit_denial`. Each is
+  volatile, security definer, `search_path = ''`, owned by `jovra_owner` and executable by `jovra_gateway` only
+  (never by `jovra_orchestrator` or a client role). Results that carry several values are returned as jsonb with
+  the route's camelCase keys; internal micro-USD costs never leave the database.
+- Every command re-checks its actor against current rows. An unrelated or unknown actor is `P0404`, identical to a
+  missing object (T-DB-33); the gateway then records the refusal with `audit_denial`, an append-only second call
+  that writes one `denied` row with a coded reason and reads nothing else.
+- Uploads: per-session keys, one open session per source, exact part sizes, the streamed digest compared with the
+  client's, completion only from the stored parts of the source's current session in its own live project
+  (T-DB-38), and `uploaded_unverified` only after the head size matches.
+- Camera invites and invitations: 10-minute single-use camera codes, approval by the device code derived from the key
+  thumbprint, a device-bound guest capability (stored as a hash in `camera_invites.capability_hash`) (T-DB-39);
+  every coach, lesson, film and clip invitation bound to the invitee's email HMAC, redeemable only by that confirmed
+  email, else `P0404` like an unknown code (T-DB-58); a coach redemption stays pending until `approve_member`, whose
+  view shows the masked verified email, never `display_name`; `revoke_grant` revokes the membership it created
+  (T-DB-51).
+- Money: `create_quote` computes the inputs, the inputs hash, the contract's `output_spec_sha256` and the estimate
+  (rate card `rates-v0-inferred`, INFERRED values) from rows; sources resolve only through the project's current
+  verified manifest and plans only within the project (T-DB-59). `accept_quote` is idempotent by its key, refuses
+  expired quotes (`P0410`) and changed inputs or caps (`P0409`, also when a source changed since the quote), needs
+  the tester flag outside the local stack, checks the owner open cap and the environment daily ceiling through
+  `app_private.commit_spend` (fail closed, one advisory lock: T-DB-61, T-DB-71) and keeps one held reservation per
+  `(project, plan, version, output)` also for plan-by-job work, or tops up that hold when the quote supersedes its
+  quote after `budget_exceeded` (T-DB-56, T-DB-60). `review_job` approves, or revises within the remaining
+  reservation and moves the job's and the hold's key together, else `P0409 requote_required`.
+- `app_ops.settings` holds the environment name (`local` from `seed/01_settings.sql`; the operator writes `test` or
+  `live` at G1). No row reads as `test`, so a missing row fails closed.
+- `app_private.auth_user_facts` reads the auth schema (confirmed email, anonymous flag, Auth session creation time
+  for the 10-minute re-authentication of account deletion). `jovra_owner` cannot read `auth`, so this one helper
+  keeps the migration owner, is executable by `jovra_owner` only, and is the third named exception in T-DB-66.
+
+Tests: `commands_gateway_01_catalog` (T-DB-04, T-DB-05, T-DB-57, the §4.1 template), `commands_gateway_02_uploads_cameras`
+(T-DB-38, T-DB-39, T-DB-54 command half), `commands_gateway_03_grants_links_deletion` (T-DB-51, T-DB-58, share links,
+deletion, T-DB-47 command half), `commands_gateway_04_money` (T-DB-34, 56, 59 command half, 60, 61, the tester flag,
+output-hash vectors from `spec/reference/studio/core.py`) and `commands_gateway_05_actor_audit` (T-DB-33). T-DB-71 needs
+two real concurrent transactions, which one pgTAP session cannot open, so it is `scripts/concurrent_accept_smoke.py`,
+run by CI after the pgTAP suite.
+
+Not covered here (later tickets): the orchestrator commands (`set_job_state`, `reserve_stage`, `claim_attempt`,
+`finish_attempt`, the `*_for_attempt` upload variants, `audit_denial_for_attempt`) are S80; `cancel_job`,
+`pause_job`, `resume_job` and `retry` belong with the state machine there too. The gateway Worker that calls these
+commands, mints the bearer tokens, verifies device-key signatures and nonces and writes `idempotency_records` is
+S83 onward. The no-audio share-link variant waits for S80's `remux_no_audio` (until then such a link is
+`P0409 audio_variant_pending`). The rate card is INFERRED and refreshed at activation.
