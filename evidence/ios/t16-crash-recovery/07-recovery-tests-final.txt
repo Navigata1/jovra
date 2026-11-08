@@ -1,0 +1,25 @@
+Building for debugging...
+[Computing dependencies]
+[1 / 1]
+[2 / 8] JovraMediaTests-product
+[4 / 10] JovraMediaTests-product
+[7 / 11] JovraMediaTests-product
+[9 / 11] JovraMediaTests-product
+[11 / 11] JovraMediaTests-product
+Build complete! (6.06 sec)
+✔ Test processDeathLeavesAnUnfinishedJournalWhoseSavedThroughIsBackedBySynchronizedBytes() passed after 2.686 seconds.
+✔ Test recurringMediaServicesResetsStopBeingRebuiltAfterTheLimitAndLeaveTheRecordingPausedNotEnded() passed after 7.315 seconds.
+T16 forced termination: crashed at 7.0 s, heartbeat 6.0 s, recovered 6.0 s, measured seconds lost 1.0
+✔ Test forcedTerminationMidSegmentRecoversEveryCompleteFragmentWithAtMostThreeSecondsLost() passed after 2.791 seconds.
+✔ Test tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_:) with 2 test cases passed after 2.492 seconds.
+✔ Test unrecoverableSegmentIsReportedWithItsReasonWhileEveryPlayableSegmentIsKept() passed after 4.139 seconds.
+✔ Test runningTheScannerTwiceChangesNothingTheSecondTime() passed after 3.605 seconds.
+✔ Test mediaServicesResetRebuildsTheCaptureSessionAndResumesIntoANewSegmentWithARecordedGap() passed after 2.671 seconds.
+✔ Test fragmentLayoutKeepsOnlyCompletePairsAndRejectsUnboundedSizes() passed after 0.010 seconds.
+✔ Test fragmentLayoutRefusesLinksAndIncompleteHeaders() passed after 0.004 seconds.
+✔ Test fragmentLayoutRefusesNamedPipesWithoutWaitingForWriter() passed after 0.001 seconds.
+✔ Test finishedJournalWithFailedFinalHandoffRecoversVerifiedMediaWithoutChangingRawCustody() passed after 4.318 seconds.
+✔ Test brokenMediaPeersAreExplicitlyRefusedWithoutHidingHealthyCapture() passed after 3.498 seconds.
+✔ Test corruptLedgerTimesCannotBeAdoptedAsVerifiedCapture(fault:) with 11 test cases passed after 25.450 seconds.
+✔ Test capturedPointMarkPreservesSchemaProducerAndSampleLabelThroughRecovery() passed after 3.809 seconds.
+✔ Test run with 14 tests in 0 suites passed after 62.798 seconds.

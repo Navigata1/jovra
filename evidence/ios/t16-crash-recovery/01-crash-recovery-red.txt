@@ -1,0 +1,50 @@
+Building for debugging...
+Build complete! (4.38 sec)
+error: Process '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec/swift/pm/swiftpm-testing-helper --test-bundle-path <worktree>/ios/Packages/JovraMedia/.build/out/Products/Debug/JovraMediaTests.xctest/Contents/MacOS/JovraMediaTests --filter CrashRecoveryTests <worktree>/ios/Packages/JovraMedia/.build/out/Products/Debug/JovraMediaTests.xctest/Contents/MacOS/JovraMediaTests --testing-library swift-testing' exited with unexpected signal code 5
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test mediaServicesResetRebuildsTheCaptureSessionAndResumesIntoANewSegmentWithARecordedGap() started.
+◇ Test runningTheScannerTwiceChangesNothingTheSecondTime() started.
+◇ Test tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_:) started.
+◇ Test unrecoverableSegmentIsReportedWithItsReasonWhileEveryPlayableSegmentIsKept() started.
+◇ Test forcedTerminationMidSegmentRecoversEveryCompleteFragmentWithAtMostThreeSecondsLost() started.
+◇ Test case passing 1 argument tear → "torn-mid-fragment" to tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_:) started.
+◇ Test case passing 1 argument tear → "zero-filled-tail" to tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_:) started.
+✘ Test forcedTerminationMidSegmentRecoversEveryCompleteFragmentWithAtMostThreeSecondsLost() recorded an issue at CrashRecoveryTests.swift:140:22: Expectation failed: try await scanner.scan().first
+↳ try await scanner.scan().first → nil
+✘ Test forcedTerminationMidSegmentRecoversEveryCompleteFragmentWithAtMostThreeSecondsLost() failed after 4.600 seconds with 1 issue.
+✘ Test tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_:) recorded an issue with 1 argument tear → "torn-mid-fragment" at CrashRecoveryTests.swift:185:22: Expectation failed: try await scanner.scan().first
+↳ try await scanner.scan().first → nil
+✘ Test runningTheScannerTwiceChangesNothingTheSecondTime() recorded an issue at CrashRecoveryTests.swift:261:5: Expectation failed: first.first?.recording.recovery?.truncatedSegmentIds == ["segment-0"]
+↳ first.first?.recording.recovery?.truncatedSegmentIds == ["segment-0"] → false
+↳   first.first?.recording.recovery?.truncatedSegmentIds → nil
+↳     some → ["segment-0"]
+✘ Test runningTheScannerTwiceChangesNothingTheSecondTime() failed after 4.767 seconds with 1 issue.
+✘ Test tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_:) recorded an issue with 1 argument tear → "zero-filled-tail" at CrashRecoveryTests.swift:185:22: Expectation failed: try await scanner.scan().first
+↳ try await scanner.scan().first → nil
+✘ Test tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_:) with 2 test cases failed after 4.785 seconds with 2 issues.
+✘ Test unrecoverableSegmentIsReportedWithItsReasonWhileEveryPlayableSegmentIsKept() recorded an issue at CrashRecoveryTests.swift:223:22: Expectation failed: try await scanner.scan().first
+↳ try await scanner.scan().first → nil
+✘ Test unrecoverableSegmentIsReportedWithItsReasonWhileEveryPlayableSegmentIsKept() failed after 5.916 seconds with 1 issue.
+✘ Test mediaServicesResetRebuildsTheCaptureSessionAndResumesIntoANewSegmentWithARecordedGap() recorded an issue at CrashRecoveryTests.swift:83:17: Issue recorded
+↳ condition never held
+✘ Test mediaServicesResetRebuildsTheCaptureSessionAndResumesIntoANewSegmentWithARecordedGap() recorded an issue at CrashRecoveryTests.swift:287:5: Expectation failed: engine.status.phase == .recording
+↳ engine.status.phase == .recording → false
+↳   engine.status.phase → .paused
+✘ Test mediaServicesResetRebuildsTheCaptureSessionAndResumesIntoANewSegmentWithARecordedGap() recorded an issue at CrashRecoveryTests.swift:289:5: Expectation failed: camera.prepareCount == 2
+↳ camera.prepareCount == 2 → false
+↳   camera.prepareCount → 1
+✘ Test mediaServicesResetRebuildsTheCaptureSessionAndResumesIntoANewSegmentWithARecordedGap() recorded an issue at CrashRecoveryTests.swift:290:5: Expectation failed: record.segments.map(\.startMs) == [0, 1500]
+↳ record.segments.map(\.startMs) == [0, 1500] → false
+↳   record.segments.map(\.startMs) → [0]
+✘ Test mediaServicesResetRebuildsTheCaptureSessionAndResumesIntoANewSegmentWithARecordedGap() recorded an issue at CrashRecoveryTests.swift:291:5: Expectation failed: record.segments.map(\.durationMs) == [1000, 2000]
+↳ record.segments.map(\.durationMs) == [1000, 2000] → false
+↳   record.segments.map(\.durationMs) → [1000]
+✘ Test mediaServicesResetRebuildsTheCaptureSessionAndResumesIntoANewSegmentWithARecordedGap() recorded an issue at CrashRecoveryTests.swift:292:5: Expectation failed: record.gaps == [SessionGap(startMs: 1000, endMs: 1500, reason: .cameraError)]
+↳ record.gaps == [SessionGap(startMs: 1000, endMs: 1500, reason: .cameraError)] → false
+↳   record.gaps → [JovraCore.SessionGap(startMs: 1000, endMs: 1000, reason: JovraCore.SessionGapReason.cameraError)]
+↳   [SessionGap(startMs: 1000, endMs: 1500, reason: .cameraError)] → [JovraCore.SessionGap(startMs: 1000, endMs: 1500, reason: JovraCore.SessionGapReason.cameraError)]
+Swift/ContiguousArrayBuffer.swift:695: Fatal error: Index out of range
+Note: Some test targets reported failures:
+  - JovraMediaTests (Swift Testing)
