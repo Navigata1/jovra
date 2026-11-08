@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA synthetic benchmark corpus manifest (spec/benchmarks/corpus/manifest.json)",
+  "description": "Every clip of the rendered benchmark corpus (scripts/media/jovra_media/sets/corpus.py, T11) under its split. Tuning seeds tune estimators; held-out seeds are the only ones a gating run may use (ADR-0004). Written by scripts/media/render.py from the corpus ground truth and checked by scripts/spec/validate.py: every listed clip has committed ground truth with the same seed, split, kind and duration, no seed is in both splits, and the no-nudge footage (the denominator of camera-moved false alarms per hour) adds up to at least two hours.",
+  "$comment": "Schema 1.0.0, added by T11.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "band", "set", "renderer", "kinds", "splits", "totals", "minimumNoNudgeMs"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.benchmarkCorpus"},
+    "band": {"const": "synthetic", "description": "Synthetic results never promote a capability (ADR-0004, ADR-0012)."},
+    "set": {"const": "corpus"},
+    "renderer": {
+      "type": "object",
+      "required": ["script", "sourceHash"],
+      "additionalProperties": false,
+      "properties": {
+        "script": {"const": "scripts/media/render.py"},
+        "sourceHash": {"$ref": "common.schema.json#/$defs/sha256"}
+      }
+    },
+    "kinds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/corpusKind"}},
+    "splits": {
+      "type": "object",
+      "required": ["tuning", "heldOut"],
+      "additionalProperties": false,
+      "properties": {
+        "tuning": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/clip"}},
+        "heldOut": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/clip"}}
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": ["clips", "noNudgeMs"],
+      "additionalProperties": false,
+      "properties": {
+        "clips": {
+          "type": "object",
+          "required": ["tuning", "heldOut"],
+          "additionalProperties": false,
+          "properties": {"tuning": {"type": "integer", "minimum": 1}, "heldOut": {"type": "integer", "minimum": 1}}
+        },
+        "noNudgeMs": {
+          "type": "object",
+          "required": ["tuning", "heldOut", "all"],
+          "additionalProperties": false,
+          "properties": {
+            "tuning": {"type": "integer", "minimum": 0},
+            "heldOut": {"type": "integer", "minimum": 0},
+            "all": {"type": "integer", "minimum": 7200000}
+          }
+        }
+      }
+    },
+    "minimumNoNudgeMs": {"const": 7200000, "description": "At least 2 h of no-nudge footage (ticket T11)."}
+  },
+  "$defs": {
+    "corpusKind": {"enum": ["neighbourCourtClicks", "cameraNudges", "serves", "noNudge"]},
+    "clip": {
+      "type": "object",
+      "required": ["truthId", "seed", "kind", "durationMs", "width", "height", "frameRate", "events", "distractors", "cameraMoves", "serves"],
+      "additionalProperties": false,
+      "properties": {
+        "truthId": {"type": "string", "pattern": "^corpus/[a-z0-9][a-z0-9-]{0,63}$"},
+        "seed": {"type": "integer", "minimum": 0},
+        "kind": {"$ref": "#/$defs/corpusKind"},
+        "durationMs": {"type": "integer", "minimum": 1},
+        "width": {"type": "integer", "minimum": 16},
+        "height": {"type": "integer", "minimum": 16},
+        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate"},
+        "events": {"type": "integer", "minimum": 0, "description": "Own-court hits in the ground truth."},
+        "distractors": {"type": "integer", "minimum": 0},
+        "cameraMoves": {"type": "integer", "minimum": 0},
+        "serves": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

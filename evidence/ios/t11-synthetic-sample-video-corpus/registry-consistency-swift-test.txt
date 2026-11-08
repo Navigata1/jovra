@@ -1,0 +1,11 @@
+$ swift test --package-path ios/Packages/JovraMedia --filter RegistryConsistencyTests
+✔ Test "the shipped registry is consistent with the committed records" passed after 0.119 seconds.
+✔ Test "a 'validated' status without a record fails" passed after 0.119 seconds.
+✔ Test "the floor-gated capabilities are exactly hit detection, rally segmentation, camera-moved and line-snap" passed after 0.119 seconds.
+✔ Test "raising a gated capability above disabled without a passing record fails" with 4 test cases passed after 0.119 seconds.
+✔ Test "an ungated 'estimated' capability without a record passes and reads 'Not benchmarked'" with 3 test cases passed after 0.119 seconds.
+✔ Test "a lastBenchmark that claims a pass with no committed record behind it fails" passed after 0.119 seconds.
+✔ Test "a record for another capability does not back this one" passed after 0.120 seconds.
+✔ Test "a committed passing gate record lets a floor-gated capability leave disabled" passed after 0.120 seconds.
+✔ Suite "Registry consistency: no capability claims more than its benchmark records back" passed after 0.120 seconds.
+✔ Test run with 8 tests in 1 suite passed after 0.120 seconds.

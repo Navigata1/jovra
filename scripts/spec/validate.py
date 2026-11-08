@@ -361,8 +361,9 @@ def check_registry(doc: dict, docs: dict, rep: Report) -> None:
         for dep in c["requires"].get("capabilities", []):
             if dep not in ids:
                 rep.fail("capability registry", f"{c['id']} depends on unknown {dep}")
-        if c["status"] == "validated" and not (c["lastBenchmark"] and c["lastBenchmark"]["passed"]):
-            rep.fail("capability registry", f"{c['id']} is validated without a passing benchmark (ADR-0004)")
+        problem = registry_consistency_problem(c, docs)
+        if problem:
+            rep.fail("capability registry", problem)
     referenced = set()
 
     def walk(node):
@@ -380,6 +381,29 @@ def check_registry(doc: dict, docs: dict, rep: Report) -> None:
     for cid in sorted(referenced - set(ids)):
         rep.fail("capability registry", f"fixtures reference unknown capability {cid}")
     rep.ok("registry checks")
+
+
+def registry_consistency_problem(c: dict, docs: dict) -> str | None:
+    """The registry-consistency rule (T11; the Swift twin is JovraBenchmark.RegistryConsistency):
+    'validated' always needs a passing record; a capability whose gate promotes it to 'estimated' (a floor:
+    audio hit detection, rally segmentation, camera-moved detection, line-snap) needs a passing record for
+    any status other than disabled; an ungated 'estimated' capability may lack a record ('Not benchmarked').
+    A passing record is a lastBenchmark that passed and names a committed gating record for this
+    capability whose verdict passed."""
+    last = c["lastBenchmark"]
+    passing = False
+    if last and last["passed"]:
+        records = [d for d in docs.values() if d.get("kind") == "jovra.benchmarkRecord" and d["runId"] == last["runId"]]
+        passing = any(r["capabilityId"] == c["id"] and r["mode"] == "gate" and r["verdict"] and r["verdict"]["passed"]
+                      for r in records)
+        if not passing:
+            return f"{c['id']}: lastBenchmark {last['runId']} is not a committed passing gate record for it"
+    if c["status"] == "validated" and not passing:
+        return f"{c['id']} is validated without a passing benchmark (ADR-0004)"
+    floor = c["gate"] is not None and c["gate"]["promotesTo"] == "estimated"
+    if floor and c["status"] != "disabled" and not passing:
+        return f"{c['id']} is {c['status']} without a passing benchmark of its floor; it must stay disabled (ADR-0004)"
+    return None
 
 
 def check_references(docs: dict, rep: Report) -> None:
@@ -464,7 +488,8 @@ def ground_truth_problems(path: Path, doc: dict, docs: dict) -> list[str]:
         problems.append("duration is not frameCount / frameRate in lowest terms")
     if sig["frameCount"] != v["frameCount"]:
         problems.append("decoded frame count differs from the encoded frame count")
-    if v["codedWidth"] % sig["columns"] or v["codedHeight"] % sig["rows"] or sig["columns"] * sig["rows"] < doc["frameCode"]["cells"]:
+    cells = doc["frameCode"]["cells"] if doc["frameCode"] else 0
+    if v["codedWidth"] % sig["columns"] or v["codedHeight"] % sig["rows"] or sig["columns"] * sig["rows"] < cells:
         problems.append("signature grid does not divide the coded picture or cannot hold the frame code")
     if doc["audio"] is not None and doc["audio"]["sampleCount"] != duration * doc["audio"]["sampleRate"]:
         problems.append("audio sample count does not match the duration")
@@ -482,11 +507,161 @@ def ground_truth_problems(path: Path, doc: dict, docs: dict) -> list[str]:
         if doc["audio"] is None:
             problems.append("events need an audio track")
             break
+    problems += t11_truth_problems(doc, docs, rate, duration)
     if doc["duplicateOf"]:
         original = next((d for d in docs.values() if d.get("kind") == "jovra.groundTruth" and d["id"] == doc["duplicateOf"]), None)
         if original is None or original["set"] != doc["set"] or original["video"] != v \
                 or original["signature"]["decodedFramesSha256"] != sig["decodedFramesSha256"]:
             problems.append(f"duplicateOf {doc['duplicateOf']} is missing or not the same media")
+    return problems
+
+
+SAMPLE_MANIFEST = "jovra.sampleMediaManifest"
+DISTRACTOR_CLEARANCE = Fraction(100, 1000)   # a neighbouring-court click is never within 100 ms of a hit
+
+
+def t11_truth_problems(doc: dict, docs: dict, rate: Fraction, duration: Fraction) -> list[str]:
+    """Sample media and benchmark-corpus facts (T11): each one is re-derived from the others."""
+    problems = []
+    v = doc["video"]
+
+    def on_frame(moment: dict, what: str) -> Fraction:
+        t = benchmark.rt(moment["time"])
+        if t.denominator != moment["time"]["timescale"] or moment["frame"] != int(t * rate) or not (0 <= t < duration):
+            problems.append(f"{what}: time and frame disagree or fall outside the clip")
+        return t
+
+    label = doc.get("label")
+    if label:
+        r = label["region"]
+        if r["x"] + r["width"] > v["codedWidth"] or r["y"] + r["height"] > v["codedHeight"] \
+                or r["y"] + r["height"] > (v["codedHeight"] // doc["signature"]["rows"]) // 4:
+            problems.append("label region leaves the frame or enters a signature cell's central half")
+        if abs(label["ink"]["y"] - label["background"]["y"]) < 128:
+            problems.append("label ink and background are not legibly apart")
+    event_times = [benchmark.rt(e["time"]) for e in doc.get("events", [])]
+    event_frames = {e["frame"] for e in doc.get("events", [])}
+    previous = Fraction(-1)
+    for r in doc.get("rallies", []):
+        start, end = benchmark.rt(r["start"]), benchmark.rt(r["end"])
+        if not (previous <= start < end <= duration) or start not in event_times:
+            problems.append(f"rally {r['pointNumber']}: not ordered, outside the clip or not starting on a hit")
+        if sum(1 for t in event_times if start <= t <= end) != r["hits"]:
+            problems.append(f"rally {r['pointNumber']}: hit count is not the hits inside it")
+        previous = end
+    for i, b in enumerate(doc.get("bounces", [])):
+        on_frame(b, f"bounce {i}")
+    for s in doc.get("serves", []):
+        c, b = on_frame(s["contact"], f"serve {s['index']} contact"), on_frame(s["bounce"], f"serve {s['index']} bounce")
+        if s["flightFrames"] != s["bounce"]["frame"] - s["contact"]["frame"] or not c < b:
+            problems.append(f"serve {s['index']}: flight frames or order wrong")
+        if s["contact"]["frame"] not in event_frames:
+            problems.append(f"serve {s['index']}: contact is not a hit event")
+        d = [s["bounce"]["courtMm"].get(k, 0) - s["contact"]["courtMm"][k] for k in ("x", "y", "z")]
+        kmh = (sum(x * x for x in d) ** 0.5) / 1000 / float(b - c) * 3.6 if b > c else 0.0
+        if abs(kmh - float(s["averageSpeedKmh"])) > 0.25:
+            problems.append(f"serve {s['index']}: averageSpeedKmh {s['averageSpeedKmh']} is not distance / time ({kmh:.2f})")
+    for w in doc.get("swings", []):
+        frames = [w["keyMoments"][k]["frame"] for k in ("ready", "unitTurn", "racketDrop", "contact", "finish")]
+        if frames != sorted(set(frames)) or frames[-1] >= v["frameCount"] or w["keyMoments"]["contact"]["frame"] not in event_frames:
+            problems.append(f"swing {w['index']}: key moments out of order, outside the clip or contact is not a hit")
+    for d in doc.get("distractors", []):
+        t = benchmark.rt(d["time"])
+        if t != Fraction(d["sample"], 48000) or d["frame"] != int(t * rate) or not (0 <= t < duration):
+            problems.append(f"distractor at sample {d['sample']}: time, frame or position wrong")
+        if any(abs(t - e) < DISTRACTOR_CLEARANCE for e in event_times):
+            problems.append(f"distractor at sample {d['sample']}: within 100 ms of an own-court hit")
+    frames_moved = [m["frame"] for m in doc.get("cameraMoves", [])]
+    for m in doc.get("cameraMoves", []):
+        on_frame(m, f"camera move at frame {m['frame']}")
+        if abs(m["yawDegrees"]) + abs(m["pitchDegrees"]) != 1:
+            problems.append(f"camera move at frame {m['frame']}: not a single 1-degree nudge")
+    if frames_moved != sorted(set(frames_moved)):
+        problems.append("camera moves out of order")
+    corpus = doc.get("corpus")
+    if corpus:
+        if doc["set"] != "corpus" or doc["split"] is None:
+            problems.append("a corpus clip must be in the corpus set and on a split")
+        wants = {"neighbourCourtClicks": "distractors", "cameraNudges": "cameraMoves", "serves": "serves"}.get(corpus["kind"])
+        if wants and not doc.get(wants):
+            problems.append(f"a {corpus['kind']} clip has no {wants}")
+        if corpus["kind"] == "noNudge" and doc.get("cameraMoves") != []:
+            problems.append("a noNudge clip must say its camera never moves (cameraMoves: [])")
+    sample = doc.get("sampleMedia")
+    if sample:
+        manifest = next((d for d in docs.values() if d.get("kind") == SAMPLE_MANIFEST), None)
+        entry = next((m for m in (manifest or {}).get("media", []) if m["mediaId"] == sample["mediaId"]), None)
+        if entry is None:
+            problems.append(f"{sample['mediaId']} is not in the sample media manifest")
+        else:
+            fr = Fraction(entry["frameRate"]["num"], entry["frameRate"]["den"])
+            if (doc["media"]["path"].rsplit("/", 1)[1] != entry["fileName"] or rate != fr
+                    or duration * 1000 != entry["durationMs"] or (v["codedWidth"], v["codedHeight"]) != (entry["width"], entry["height"])
+                    or (doc["audio"] is not None) != entry["hasAudio"]):
+                problems.append(f"{sample['mediaId']}: file name, frame rate, duration, size or audio differ from the manifest")
+            if doc.get("camera", {}).get("angle") != entry["angle"]:
+                problems.append(f"{sample['mediaId']}: camera angle differs from the manifest")
+        if not label or doc["set"] != "sample":
+            problems.append("sample media must be in the sample set and carry the burned-in label")
+        if sample["thumbnailFrame"] >= v["frameCount"]:
+            problems.append("thumbnail frame outside the clip")
+    elif doc["set"] == "sample":
+        problems.append("a sample-set clip must name its sample media manifest entry")
+    return problems
+
+
+def check_sample_media_rendered(docs: dict, rep: Report) -> None:
+    """Every media id in the sample media manifest is rendered by exactly one ground truth (T11)."""
+    manifest = next((d for d in docs.values() if d.get("kind") == SAMPLE_MANIFEST), None)
+    if manifest is None:
+        return
+    rendered = [d["sampleMedia"]["mediaId"] for d in docs.values() if d.get("kind") == "jovra.groundTruth" and d.get("sampleMedia")]
+    for m in manifest["media"]:
+        if rendered.count(m["mediaId"]) != 1:
+            rep.fail("sample media", f"{m['mediaId']} is rendered by {rendered.count(m['mediaId'])} ground truth files, not 1")
+    rep.ok("sample media rendered")
+
+
+def check_corpus(path: Path, doc: dict, docs: dict, rep: Report) -> None:
+    where = str(path.relative_to(ROOT))
+    for p in corpus_problems(doc, docs):
+        rep.fail(where, p)
+    rep.ok("benchmark corpus")
+
+
+def corpus_problems(doc: dict, docs: dict) -> list[str]:
+    problems = []
+    truths = {d["id"]: d for d in docs.values() if d.get("kind") == "jovra.groundTruth" and d["set"] == doc["set"]}
+    listed, seeds, no_nudge = [], {"tuning": set(), "heldOut": set()}, {"tuning": 0, "heldOut": 0}
+    for split, clips in doc["splits"].items():
+        for c in clips:
+            listed.append(c["truthId"])
+            seeds[split].add(c["seed"])
+            t = truths.get(c["truthId"])
+            if t is None:
+                problems.append(f"{c['truthId']}: no committed ground truth")
+                continue
+            v = t["video"]
+            ms = v["frameCount"] * 1000 * v["frameRate"]["den"] // v["frameRate"]["num"]
+            if (t["seed"], t["split"], t["corpus"]["kind"], ms) != (c["seed"], split, c["kind"], c["durationMs"]):
+                problems.append(f"{c['truthId']}: seed, split, kind or duration differ from its ground truth")
+            if t["renderer"]["sourceHash"] != doc["renderer"]["sourceHash"]:
+                problems.append(f"{c['truthId']}: rendered by another renderer version than the manifest")
+            if c["kind"] == "noNudge":
+                no_nudge[split] += c["durationMs"]
+    if sorted(listed) != sorted(truths):
+        problems.append("the manifest does not list every corpus clip exactly once")
+    if seeds["tuning"] & seeds["heldOut"]:
+        problems.append(f"seeds in both splits: {sorted(seeds['tuning'] & seeds['heldOut'])}")
+    totals = doc["totals"]
+    if totals["noNudgeMs"] != {"tuning": no_nudge["tuning"], "heldOut": no_nudge["heldOut"], "all": sum(no_nudge.values())}:
+        problems.append("noNudgeMs totals are not the sum of the listed noNudge clips")
+    if totals["clips"] != {k: len(v) for k, v in doc["splits"].items()}:
+        problems.append("clip totals are not the clip counts")
+    if sum(no_nudge.values()) < doc["minimumNoNudgeMs"]:
+        problems.append("less than 2 h of no-nudge footage")
+    if not no_nudge["heldOut"]:
+        problems.append("no held-out no-nudge footage to measure false alarms on")
     return problems
 
 
@@ -797,6 +972,91 @@ def media_self_tests(schemas: SchemaSet, docs: dict, rep: Report) -> None:
             rep.ok("media self-tests")
 
 
+def t11_self_tests(docs: dict, rep: Report) -> None:
+    """Known-bad sample media, corpus and registry documents must fail (T11's checks are not vacuous)."""
+    def by_id(truth_id):
+        return next(((p, d) for p, d in docs.items() if d.get("kind") == "jovra.groundTruth" and d["id"] == truth_id), (None, None))
+    cases = []
+    match_path, match = by_id("sample/jon-vs-alex")
+    serves_path, serves = by_id("sample/2026-10-04-behind-baseline-12-serves")
+    swing_path, swings = by_id("sample/2026-10-02-side-on-forehands")
+    nudge_path, nudge = by_id("corpus/nudge-s211")
+    clicks_path, clicks = by_id("corpus/neighbour-s201")
+    static_path, static = by_id("corpus/static-s231")
+    if None in (match, serves, swings, nudge, clicks, static):
+        rep.fail("T11 self-test", "needs the sample and corpus ground truth")
+        return
+    bad = json.loads(canon(match)); bad["video"]["frameCount"] -= 60; bad["signature"]["frameCount"] -= 60
+    bad["video"]["duration"] = {"value": bad["video"]["frameCount"], "timescale": 60}
+    cases.append((match_path, bad, "a sample file shorter than its manifest entry"))
+    bad = json.loads(canon(match)); bad["sampleMedia"]["mediaId"] = "sample-media.not-in-the-manifest"
+    cases.append((match_path, bad, "a sample file for a media id the manifest does not have"))
+    bad = json.loads(canon(match)); del bad["label"]
+    cases.append((match_path, bad, "a sample file without its burned-in label"))
+    bad = json.loads(canon(match)); bad["label"]["region"]["height"] = 60
+    cases.append((match_path, bad, "a label that reaches into a signature cell's central half"))
+    bad = json.loads(canon(match)); bad["rallies"][41]["hits"] += 1
+    cases.append((match_path, bad, "a rally whose hit count is not the hits inside it"))
+    bad = json.loads(canon(serves)); bad["serves"][0]["averageSpeedKmh"] = "199.0"
+    cases.append((serves_path, bad, "a serve whose true speed is not distance / flight time"))
+    bad = json.loads(canon(serves)); bad["serves"][3]["flightFrames"] += 1
+    cases.append((serves_path, bad, "a serve whose flight frames are not bounce - contact"))
+    bad = json.loads(canon(swings)); km = bad["swings"][0]["keyMoments"]; km["ready"], km["finish"] = km["finish"], km["ready"]
+    cases.append((swing_path, bad, "swing key moments out of order"))
+    bad = json.loads(canon(clicks)); d = bad["distractors"][0]; e = bad["events"][0]
+    d.update(sample=e["sample"] + 960, frame=(e["sample"] + 960) * 30 // 48000)
+    d["time"] = {"value": Fraction(d["sample"], 48000).numerator, "timescale": Fraction(d["sample"], 48000).denominator}
+    cases.append((clicks_path, bad, "a neighbouring-court click 20 ms from an own-court hit"))
+    bad = json.loads(canon(nudge)); bad["cameraMoves"][0]["yawDegrees"] = bad["cameraMoves"][0]["pitchDegrees"] = 1
+    cases.append((nudge_path, bad, "a camera move of more than one degree"))
+    bad = json.loads(canon(static)); bad["cameraMoves"] = [json.loads(canon(nudge["cameraMoves"][0]))]
+    cases.append((static_path, bad, "a no-nudge clip whose camera moves"))
+    for path, instance, label in cases:
+        probe = Report(False)
+        try:
+            check_ground_truth(path, instance, docs, probe)
+        except Exception as e:  # noqa: BLE001 - a crash is itself the failure under test
+            rep.fail("T11 self-test", f"{label}: the ground-truth check crashed ({type(e).__name__}: {e})")
+            continue
+        rep.ok("T11 self-tests") if probe.failures else rep.fail("T11 self-test", f"{label}: expected a failure")
+    corpus = next((d for d in docs.values() if d.get("kind") == "jovra.benchmarkCorpus"), None)
+    if corpus is None:
+        rep.fail("T11 self-test", "needs spec/benchmarks/corpus/manifest.json")
+        return
+    corpus_cases = []
+    bad = json.loads(canon(corpus)); bad["splits"]["heldOut"][0]["seed"] = bad["splits"]["tuning"][0]["seed"]
+    corpus_cases.append((bad, "a seed in both splits"))
+    bad = json.loads(canon(corpus)); bad["splits"]["heldOut"] = [c for c in bad["splits"]["heldOut"] if c["kind"] != "noNudge"]
+    corpus_cases.append((bad, "held-out no-nudge clips dropped from the manifest"))
+    bad = json.loads(canon(corpus)); bad["minimumNoNudgeMs"] = bad["totals"]["noNudgeMs"]["all"] + 1
+    corpus_cases.append((bad, "less no-nudge footage than the minimum"))
+    bad = json.loads(canon(corpus)); bad["splits"]["tuning"][0]["split"] = "heldOut"; bad["splits"]["heldOut"].append(bad["splits"]["tuning"].pop(0))
+    del bad["splits"]["heldOut"][-1]["split"]
+    corpus_cases.append((bad, "a tuning clip listed as held out"))
+    for instance, label in corpus_cases:
+        problems = corpus_problems(instance, docs)
+        rep.ok("T11 self-tests") if problems else rep.fail("T11 self-test", f"{label}: expected a failure")
+    registry = next(d for d in docs.values() if d.get("kind") == "jovra.capabilityRegistry")
+    registry_cases = []
+    for cid in ("audio.hitDetection", "rally.segmentation", "camera.movedDetection", "lineSnap"):
+        bad = json.loads(canon(next(c for c in registry["capabilities"] if c["id"] == cid))); bad["status"] = "estimated"
+        registry_cases.append((bad, True, f"{cid} raised above disabled without a passing record"))
+    bad = json.loads(canon(next(c for c in registry["capabilities"] if c["id"] == "serveSpeed.manualAssisted")))
+    bad["status"] = "validated"
+    registry_cases.append((bad, True, "validated without a record"))
+    bad = json.loads(canon(next(c for c in registry["capabilities"] if c["id"] == "audio.hitDetection")))
+    bad["lastBenchmark"] = {"runId": "oracle.eventTimes-gate-20261008T021253Z", "at": "2026-11-08T00:00:00Z",
+                            "dataset": "harness", "passed": True, "results": []}
+    registry_cases.append((bad, True, "a lastBenchmark naming a record that backs no capability"))
+    for cid in ("checkpoint.autofill", "pose.overlay2d", "serveSpeed.manualAssisted"):
+        ok = json.loads(canon(next(c for c in registry["capabilities"] if c["id"] == cid)))
+        registry_cases.append((ok, False, f"ungated estimated {cid} without a record (Not benchmarked)"))
+    for capability, must_fail, label in registry_cases:
+        failed = registry_consistency_problem(capability, docs) is not None
+        rep.ok("T11 self-tests") if failed == must_fail else rep.fail(
+            "T11 self-test", f"{label}: expected the registry check to {'fail' if must_fail else 'pass'}")
+
+
 def validate_encoded_documents(directory: Path) -> int:
     """Validate native round trips and compare independent exact canonical bytes with source fixtures."""
     from canonical_json import canonicalize
@@ -857,6 +1117,7 @@ def main() -> int:
     docs = validate_instances(schemas, rep)
     extra_checks = conformance.discovered_checks()
     media_self_tests(schemas, docs, rep)
+    t11_self_tests(docs, rep)
     for path, doc in docs.items():
         kind = doc["kind"]
         if kind in extra_checks:
@@ -883,6 +1144,9 @@ def main() -> int:
             check_benchmark_record(path, doc, docs, rep)
         elif kind == "jovra.benchmarkBindings":
             check_bindings(path, doc, docs, rep)
+        elif kind == "jovra.benchmarkCorpus":
+            check_corpus(path, doc, docs, rep)
+    check_sample_media_rendered(docs, rep)
     check_references(docs, rep)
 
     for line in rep.failures:
