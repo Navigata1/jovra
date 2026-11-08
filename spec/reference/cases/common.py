@@ -49,6 +49,7 @@ FAST4 = fmt("fast4", 2, "noAd", set_rule=tb_set(4, 3, 5, sudden=4, end_change="a
 SHORT_SETS_TB5_RC = fmt("custom", 2, "noAd",
                         set_rule=tb_set(4, 3, 5, sudden=4, end_change="after4", sudden_side="receiverChooses"),
                         final=tb_set(4, 3, 5, sudden=4, end_change="after4", sudden_side="receiverChooses"))
+TB_ONLY_7 = fmt("tb_only_7", 1, set_rule=mtb(7))
 TB_ONLY_10 = fmt("tb_only_10", 1, set_rule=mtb(10))
 COMAN_BO3 = fmt("custom", 2, set_rule=tb_set(end_change="coman"))
 

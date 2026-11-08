@@ -7,7 +7,7 @@ from jovra_ref import conformance
 from jovra_ref.dsl import LogBuilder
 
 from .common import (ADV_FINAL_BO3, ADV_SET_BO1, BEST_OF_1, CLUB_BO3, COMAN_BO3, FAST4, NOAD_MTB, PRO_SET_8,
-                     SHORT_3_3_BO1, SHORT_SETS, SHORT_SETS_TB5_RC, SHORT_TB5_BO1, SLAM_BO3, SLAM_BO5, TB_ONLY_10,
+                     SHORT_3_3_BO1, SHORT_SETS, SHORT_SETS_TB5_RC, SHORT_TB5_BO1, SLAM_BO3, SLAM_BO5, TB_ONLY_7, TB_ONLY_10,
                      USTA_MTB,
                      doubles, holds, pressure, pts, ratio, singles, tbcall)
 
@@ -1344,6 +1344,131 @@ def s64():
                 "the receiving team chose (null until recorded), like the No-Ad deciding point",
                 ["§1.4 App VI.2", "§1.2 App VI No-Ad", "decision 22"], doubles(SHORT_SETS_TB5_RC), lb,
                 [before, lb.last_seq], a)
+
+
+def _candidate(winner: str, version: str, **extra) -> dict:
+    """An automatic point suggestion: a detected block only, never a reviewed one."""
+    event = {"type": "point"}
+    event.update(extra)
+    event["detected"] = {"winner": winner, "endType": "unknown", "provenance": "estimated",
+                         "source": f"model:pointOutcome@{version}", "capabilityId": "pointOutcome.auto",
+                         "confidence": 0.6}
+    event["reviewState"] = "needsReview"
+    return event
+
+
+@case
+def s67():
+    lb = LogBuilder()
+    first = lb._add(_candidate("A", "0.0.1"))
+    second = lb._add(_candidate("A", "0.0.1"))
+    review = lb._add({"type": "point", "supersedes": first,
+                      "detected": _candidate("A", "0.0.1")["detected"],
+                      "reviewed": {"winner": "B", "endType": "unforcedError", "strokeCount": 3,
+                                   "provenance": "reviewed", "source": "user"},
+                      "reviewState": "reviewed"})
+    reviewed = lb.last_seq
+    lb._add(_candidate("A", "0.0.2", supersedes=first))
+    lb._add(_candidate("A", "0.0.2", supersedes=review))
+    rerun = lb._add(_candidate("B", "0.0.2", supersedes=second))
+    a = [
+        (0, "fold.points[0].winner", "B"),
+        (0, "fold.points[0].provenance", "reviewed"),
+        (0, "fold.points[1].winner", "A"),
+        (1, "fold.points[0].id", review),
+        (1, "fold.points[0].winner", "B"),
+        (1, "fold.points[0].endType", "unforcedError"),
+        (1, "fold.points[0].provenance", "reviewed"),
+        (1, "fold.points[0].reviewState", "reviewed"),
+        (1, "fold.points[1].id", rerun),
+        (1, "fold.points[1].winner", "B"),
+        (1, "fold.points[1].provenance", "estimated"),
+        (1, "fold.points[1].reviewState", "needsReview"),
+        (1, "fold.match.pointsPlayed", 2),
+        (1, "fold.next.before.points", {"A": 0, "B": 2}),
+        (1, "fold.history.superseded", [{"id": first, "by": review}, {"id": second, "by": rerun}]),
+        (1, "fold.changes.recalculatedPointIds", []),
+        (1, "fold.conflicts", []),
+    ]
+    return make("S67-reanalysis-keeps-reviewed",
+                "Re-running analysis under a newer method version may only supersede an unreviewed candidate: "
+                "suggestions aimed at a reviewed point (by its original or its reviewed id) stay in the log and change "
+                "nothing; the unreviewed candidate is replaced",
+                ["ADR-0003 append-only log", "ADR-0004 provenance", "decision 24"], singles(CLUB_BO3), lb,
+                [reviewed, lb.last_seq], a)
+
+
+@case
+def s70():
+    lb = LogBuilder()
+    lb.points("ABABABABABAA")
+    a = [
+        (0, "fold.points[0].server", "jon"),
+        (0, "fold.points[1].server", "alex"),
+        (0, "fold.points[2].server", "alex"),
+        (0, "fold.points[3].server", "jon"),
+        (0, "fold.points[9].server", "alex"),
+        (0, "fold.points[9].call", tbcall(4, 5)),
+        (0, "fold.points[5].after.endChange", True),
+        (0, "fold.points[11].server", "jon"),
+        (0, "fold.sets[0].rule", "matchTiebreak"),
+        (0, "fold.sets[0].tiebreak", {"A": 7, "B": 5}),
+        (0, "fold.match.status", "completed"),
+        (0, "fold.match.winner", "A"),
+        (0, "fold.match.scoreline", "[7-5]"),
+    ]
+    return make("S70-standalone-tiebreak-7", "Standalone 7-point tie-break session: first to 7 by two, ends change "
+                "after every 6 points", ["§1.5 tb_only_7", "§1.3 tie-break"], singles(TB_ONLY_7), lb, [lb.last_seq], a)
+
+
+@case
+def s69():
+    lb = LogBuilder()
+    lb.points("AB")
+    late = lb.end("walkover", "alex")
+    a = [
+        (0, "fold.conflicts", [{"type": "walkoverAfterPlay", "eventId": late}]),
+        (0, "fold.match.status", "inProgress"),
+        (0, "fold.match.winner", None),
+        (0, "fold.match.pointsPlayed", 2),
+        (0, "fold.next.call", pts("15", "15")),
+    ]
+    return make("S69-walkover-after-play",
+                "A walkover logged after a point was played is refused as a walkover (flagged, never applied): the "
+                "match stays in progress; a retirement records an abandoned match",
+                ["§1.6 Wo", "ADR-0003 append-only log"], singles(CLUB_BO3), lb, [lb.last_seq], a)
+
+
+@case
+def s68():
+    lb = LogBuilder()
+    lb.points("AA")
+    original = "e002"
+    lb.point("A")
+    fix = lb.point("B", supersedes=original)
+    corrected = lb.last_seq
+    undo = lb.void(fix)
+    undone = lb.last_seq
+    lb.void(undo)
+    a = [
+        (0, "fold.points[1].winner", "B"),
+        (0, "fold.points[2].call", pts("15", "15")),
+        (0, "fold.history.superseded", [{"id": original, "by": fix}]),
+        (1, "fold.points[1].id", original),
+        (1, "fold.points[1].winner", "A"),
+        (1, "fold.points[2].call", pts("30", "0")),
+        (1, "fold.history.voided", [fix]),
+        (1, "fold.history.superseded", []),
+        (2, "fold.points[1].id", fix),
+        (2, "fold.points[1].winner", "B"),
+        (2, "fold.points[2].call", pts("15", "15")),
+        (2, "fold.history.voided", [undo]),
+        (2, "fold.history.superseded", [{"id": original, "by": fix}]),
+    ]
+    return make("S68-undo-correction-restores",
+                "Undoing a correction (voiding the supersede) restores the previous effective value; voiding that "
+                "void redoes the correction",
+                ["§4.3 undo", "ADR-0003 append-only log"], singles(CLUB_BO3), lb, [corrected, undone, lb.last_seq], a)
 
 
 # ----- invalid logs: platforms must reject them with the same code -----------------------------

@@ -193,7 +193,8 @@ Implementation notes for the ports:
   game penalties ending a tie-break against the leader and ending a match tie-break, a point penalty converting a break
   point, retirement before play, a let in a No-Let format, voiding the original of a corrected point, re-entered doubles receivers reported as
   recalculated, the Fast4 sudden-death point keeping side parity (a recorded side flagged), a short-set tie-break whose
-  4-4 point is the receiver's choice; rejections for non-increasing seq, missing supersede target, missing doubles
+  4-4 point is the receiver's choice, a newer-version suggestion refused against a reviewed point (S67), undo and
+  redo of a correction (S68), a walkover logged after play (S69), a standalone 7-point tie-break (S70); rejections for non-increasing seq, missing supersede target, missing doubles
   order, missing void target, a doubles receiver from the wrong team, an order invalid for a set not yet reached, and
   unknown player ids (penalty, doubles receiver, toss first server, a voided retirement).
 - **Stats**: 24 integer-percentage vectors (incl. the §7 table, `1/8 → 13`, `199/200 → 100`, `1/201 → 0`, `0/0 → —`),
@@ -306,6 +307,11 @@ These are encoded in the engine and pinned by fixtures; change them only through
     folds whose derived state differs in any field: determined, afterMatchEnd, set, game, gameInSet, tiebreak,
     pointInGame, server, receiver, serverSide, courtSide, ends, before, call, pressure, after (rules §4.4 "any flag or
     stat changed"). Re-entering doubles receivers changes only receivers and still marks every point (S62).
+24. **Re-analysis never overwrites a review** (ios-v1-spec correction semantics): a superseding `point` with no
+    `reviewed` block is an automatic suggestion. It may replace an unreviewed candidate, but when its target's current
+    version has a `reviewed` block it is kept in the log and changes nothing, whether it names the original candidate
+    or the reviewed version; later references to it resolve to that reviewed point (S67). Voiding a supersede
+    restores the version before it and voiding that void redoes it (S68).
 
 ## Not yet covered (needs fixtures before either app relies on it)
 

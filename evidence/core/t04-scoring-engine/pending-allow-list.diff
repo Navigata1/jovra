@@ -1,0 +1,47 @@
+commit 5d997ae71bbdab3476721c48bda4d9bd13fc2498
+Author: Jon Isaac <242020839+Navigata1@users.noreply.github.com>
+Date:   Fri Oct 9 10:45:02 2026 -0500
+
+    feat(core): expose native score fold and correction diff (#346)
+    
+    * feat(core): add concrete native scoring contracts and session bridge
+    
+    * feat(core): add pure match replay state and reviewed order policy
+    
+    * fix(contracts): bound cyclic future correction anchor traversal
+    
+    * docs(core): preserve fresh-main scoring model validation
+    
+    * fix(core): bound future correction anchors in replay state
+    
+    * feat(core): expose native scoring fold and correction diff
+    
+    * docs(core): verify guarded native fold split and source custody
+    
+    * docs(core): retain independent guarded scoring acceptance
+    
+    * docs(core): retain fresh-main replay-state validation
+    
+    * refactor(core): name serving and receiving sides consistently
+    
+    * docs(core): bind local rename custody to the accepted source
+    
+    * docs(core): bind fold source to accepted publication prerequisites
+    
+    ---------
+    
+    Co-authored-by: Island Development Crew <hello@islanddevcrew.com>
+
+diff --git a/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/FixtureManifest.swift b/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/FixtureManifest.swift
+index 678014d..3125d3a 100644
+--- a/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/FixtureManifest.swift
++++ b/ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/FixtureManifest.swift
+@@ -8,7 +8,7 @@ protocol FixtureRunner: Sendable {
+ }
+ enum FixtureManifestError: Error, Equatable { case repositoryMissing, duplicateRunner(String), unconsumedKind(String) }
+ enum FixtureManifest {
+-    static let pending: Set<String> = ["jovra.fixture.scoring", "jovra.fixture.stats", "jovra.fixture.sample"]
++    static let pending: Set<String> = ["jovra.fixture.stats", "jovra.fixture.sample"]
+     static func repository() throws -> URL {
+         var url = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+         while !FileManager.default.fileExists(atPath: url.appendingPathComponent("spec/schemas/session.schema.json").path) {
