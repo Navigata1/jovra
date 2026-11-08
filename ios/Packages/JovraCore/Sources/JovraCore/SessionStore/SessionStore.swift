@@ -185,10 +185,12 @@ public actor SessionStore {
     /// Recheck eligibility inside the write transaction: a stale scan must never replace a
     /// successful handoff or revive a recording the player already moved to Trash.
     public func reconcileFinishedCapture(_ recording: SessionRecording, marks: [SessionMark],
-                                         original: SessionOriginalState, for id: String) throws -> Bool {
+                                         original: SessionOriginalState, for id: String,
+                                         verifyOriginals: @Sendable (URL) throws -> Void) throws -> Bool {
         guard try needsFinishedCaptureRecovery(id) else { return false }
         guard try load(id).recording.mode == recording.mode,
               recording.recovery?.outcome == .complete else { throw SessionStoreError.invalidCapture }
+        try verifyOriginals(folder(id))
         try applyRecoveredCapture(recording, marks: marks, original: original, for: id)
         return true
     }

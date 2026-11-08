@@ -46,6 +46,22 @@ final class StartupRecoveryTests: XCTestCase {
         let before = try await library.load(id)
         XCTAssertFalse(before.recording.mediaAvailable, "The original process did not acknowledge a save")
 
+        let scanner = RecoveryScanner(root: root)
+        let scanned = try await scanner.scan()
+        let candidate = try XCTUnwrap(scanned.first)
+        let sourceWitness = await scanner.adoptionWitness(for: id.rawValue)
+        let witness = try XCTUnwrap(sourceWitness)
+        try movie.write(to: movieURL, options: .atomic) // Same bytes, different file after verification.
+        do {
+            _ = try await store.reconcileFinishedCapture(candidate.recording, marks: candidate.marks,
+                                                         original: candidate.original, for: id.rawValue,
+                                                         verifyOriginals: witness.verify)
+            XCTFail("Replacement after the scan must not be acknowledged")
+        } catch {
+            let after = try await store.load(id.rawValue)
+            XCTAssertEqual(after, before)
+        }
+
         let unfinishedID = try await library.createCapture(seed, mode: .camera)
         let unfinishedFolder = try await library.recordingFolder(unfinishedID)
         let unfinishedJournal = unfinishedFolder.appendingPathComponent("capture-journal.json")

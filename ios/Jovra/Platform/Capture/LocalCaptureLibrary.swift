@@ -93,8 +93,13 @@ actor LocalCaptureLibrary: RecordingSink {
             summary.refused = await scanner.refusals.count
             for candidate in candidates {
                 do {
+                    guard let witness = await scanner.adoptionWitness(for: candidate.sessionID) else {
+                        summary.refused += 1
+                        continue
+                    }
                     if try await store.reconcileFinishedCapture(candidate.recording, marks: candidate.marks,
-                                                                original: candidate.original, for: candidate.sessionID) {
+                                                                original: candidate.original, for: candidate.sessionID,
+                                                                verifyOriginals: witness.verify) {
                         summary.recovered += 1
                     }
                 } catch {

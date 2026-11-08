@@ -22,11 +22,15 @@ private struct RecoveryReceipt: Codable {
 /// adoption is a separate atomic SessionStore operation. Torn-prefix recovery is a later slice.
 public actor RecoveryScanner {
     private let root: URL
+    private var witnesses: [String: RecoveryAdoptionWitness] = [:]
     public private(set) var refusals: [RecoveryRefusal] = []
     public init(root: URL) { self.root = root.standardizedFileURL }
 
+    public func adoptionWitness(for id: String) -> RecoveryAdoptionWitness? { witnesses[id] }
+
     public func scan(eligible: @Sendable (String) async throws -> Bool = { _ in true }) async throws -> [RecoveredSession] {
         refusals = []
+        witnesses = [:]
         try RecoveryFiles.refuseLink(root)
         let sessions = root.appendingPathComponent("sessions", isDirectory: true)
         try RecoveryFiles.refuseLink(sessions)
@@ -48,7 +52,8 @@ public actor RecoveryScanner {
     }
     private func recover(_ folder: URL) async throws -> RecoveredSession {
         let files = RecoveryFiles(folder: folder)
-        let (journalHash, bytes) = try files.read("capture-journal.json", retainingUpTo: 16_777_216)
+        let identity = try DurableDirectory.identity(of: folder)
+        let (journalHash, bytes, journalIdentity) = try files.read("capture-journal.json", retainingUpTo: 16_777_216)
         let snapshot = try ContractCodec.decode(CaptureJournalSnapshot.self, from: bytes)
         guard snapshot.formatVersion == 1, snapshot.sessionID == folder.lastPathComponent,
               snapshot.mode == .camera || snapshot.mode == .simulatorFixture,
@@ -57,10 +62,11 @@ public actor RecoveryScanner {
         guard snapshot.finished, snapshot.segments.allSatisfy(\.finalized) else { throw RecoveryError.unfinishedRecording }
         guard !snapshot.segments.isEmpty else { throw RecoveryError.noVideo }
         var hashes = ["capture-journal.json": journalHash], segments: [SessionSegment] = [], savedThrough = 0
+        var identities = ["capture-journal.json": journalIdentity]
         for (index, original) in snapshot.segments.enumerated() {
             guard original.index == index, original.startMs >= savedThrough, original.durationMs >= 0,
                   original.file.path.hasPrefix("originals/") else { throw RecoveryError.invalidJournal }
-            let fingerprint = try files.read(original.file.path).0
+            let (fingerprint, _, originalIdentity) = try files.read(original.file.path)
             let media = try files.url(original.file.path)
             let decoded = try await decodeCaptureToEnd(media)
             let milliseconds = decoded.duration.convertScale(1000, method: .roundHalfAwayFromZero).value
@@ -72,7 +78,9 @@ public actor RecoveryScanner {
             guard let video = info.video, video.isDecodable,
                   video.codedWidth == original.width, video.codedHeight == original.height,
                   let rate = video.frameRate else { throw RecoveryError.invalidJournal }
-            guard try files.read(original.file.path).0 == fingerprint else { throw RecoveryError.changedFile }
+            let verified = try files.read(original.file.path)
+            guard verified.0 == fingerprint, verified.2 == originalIdentity else { throw RecoveryError.changedFile }
+            identities[original.file.path] = originalIdentity
             hashes[original.file.path] = fingerprint
             var segment = original
             segment.durationMs = Int(milliseconds); segment.file.bytes = fingerprint.bytes
@@ -116,6 +124,9 @@ public actor RecoveryScanner {
         let receipt = RecoveryReceipt(formatVersion: 1, inputs: hashes, result: result)
         let encoded = try CanonicalJSON.encode(receipt)
         if previous?.formatVersion != 1 || previous?.inputs != hashes || previous?.result != result { try files.writeReceipt(encoded) }
+        let witness = RecoveryAdoptionWitness(directory: identity, files: identities)
+        try witness.verify(in: folder)
+        witnesses[result.sessionID] = witness
         return result
     }
 }

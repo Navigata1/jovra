@@ -653,7 +653,7 @@
         "platform:ios",
         "area:capture"
       ],
-      "what_to_build": "At launch, RecoveryScanner reconciles the journal with the files on disk, validates each segment by decoding to the end, truncates torn segments rather than discarding them, records gaps with reasons, and produces a partial-recovery report naming anything unrecoverable while keeping every playable segment. A media-services reset or camera error rebuilds the capture session automatically and records the gap. Package code only; the relaunch UI belongs to T17. Why blocked: T15 (recovers the engine's segments and journal).",
+      "what_to_build": "At launch, RecoveryScanner reconciles the journal with the files on disk, validates each segment by decoding to the end, truncates torn segments rather than discarding them, records gaps with reasons, and produces a partial-recovery report naming anything unrecoverable while keeping every playable segment. A media-services reset or camera error rebuilds the capture session automatically and records the gap. Package recovery belongs to T16; relaunch UI belongs to T17. The bounded finished-journal startup integration may wire the shared startup and Sessions notice with both tickets referenced; remaining capture UI is unchanged. Why blocked: T15 (recovers the engine's segments and journal).",
       "acceptance_criteria": [
         "A forced termination mid-segment, then RecoveryScanner, recovers every complete fragment with at most 3 s lost, validates by decoding to the end, and marks the session savedWithGaps.",
         "A torn segment is truncated, not discarded; an unrecoverable segment is reported with its reason while the others are kept (original facet partial).",
