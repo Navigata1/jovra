@@ -1,0 +1,28 @@
+$ JOVRA_DATA_EXPORT_OUTPUT_DIR=<scratch>/native-export swift test --package-path ios/Packages/JovraCore --scratch-path .derivedData/core   (macOS 27.2, Xcode toolchain)
+	 Executed 12 tests, with 0 failures (0 unexpected) in 141.763 (141.765) seconds
+    /Users/IDC2.5/jv/.claude/worktrees/t32-rally-core/ios/Packages/JovraCore/Sources/JovraCore/Contracts/README.md
+Consumed jovra.archiveManifest: 2 fixtures
+Consumed jovra.benchmarkBindings: 1 fixtures
+Consumed jovra.benchmarkRecord: 3 fixtures
+Consumed jovra.capabilityRegistry: 1 fixtures
+Consumed jovra.csvContract: 2 fixtures
+Consumed jovra.equipment: 1 fixtures
+Consumed jovra.export: 2 fixtures
+Consumed jovra.fixture.canonical: 1 fixtures
+Consumed jovra.fixture.pct: 1 fixtures
+Consumed jovra.fixture.rally: 5 fixtures
+Consumed jovra.fixture.sample: 1 fixtures
+Consumed jovra.fixture.scoring: 111 fixtures
+Consumed jovra.fixture.stats: 3 fixtures
+Consumed jovra.fixture.units: 1 fixtures
+Consumed jovra.groundTruth: 19 fixtures
+Consumed jovra.practicePlan: 2 fixtures
+Consumed jovra.sampleMediaManifest: 1 fixtures
+Consumed jovra.session: 4 fixtures
+rally vectors R01-bookmarks-only: 6
+rally vectors R02-threshold-edges: 12
+rally vectors R03-excluded-side: 4
+rally vectors R04-hits-and-marks: 3
+rally vectors R05-plan-rolls: 12
+✔ Suite "Rally rolls are written into the session document" passed after 0.815 seconds.
+✔ Test run with 80 tests in 6 suites passed after 5.308 seconds.
