@@ -14,8 +14,8 @@ final class DeepLinkUITests: XCTestCase {
         app.open(try XCTUnwrap(URL(string: "jovra://record/singles")))
 
         XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 8), "the capture route is presented")
-        let payload = app.descendants(matching: .any).matching(identifier: "placeholder.payload").firstMatch
-        XCTAssertTrue(payload.label.contains("Session kind: Singles match"), "preset to singles (\(payload.label))")
+        let payload = app.staticTexts["capture.kind"]
+        XCTAssertEqual(payload.label, "Singles match", "the actual setup keeps the selected kind")
         XCTAssertFalse(app.otherElements["tabBar"].exists)
         attachScreenshot(app, name: "t07-light-deep-link-start-singles")
 

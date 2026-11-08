@@ -1,0 +1,45 @@
+[
+  {
+    "_type": {
+      "_name": "TestFailureIssueSummary",
+      "_supertype": {
+        "_name": "IssueSummary"
+      }
+    },
+    "documentLocationInCreatingWorkspace": {
+      "_type": {
+        "_name": "DocumentLocation"
+      },
+      "concreteTypeName": {
+        "_type": {
+          "_name": "String"
+        },
+        "_value": "DVTTextDocumentLocation"
+      },
+      "url": {
+        "_type": {
+          "_name": "String"
+        },
+        "_value": "file:///Users/IDC2.5/.codex/worktrees/jovra-t12-core-states/jv/ios/JovraUITests/Sessions/NativeLibraryUITests.swift#EndingLineNumber=42&StartingLineNumber=42"
+      }
+    },
+    "issueType": {
+      "_type": {
+        "_name": "String"
+      },
+      "_value": "Uncategorized"
+    },
+    "message": {
+      "_type": {
+        "_name": "String"
+      },
+      "_value": "Failed to get matching snapshot: Find single matching element. Multiple matching elements found for <XCUIElementQuery: 0x11501c050>.\nSparse tree of matches:\n\u2192Application, pid: 38389, label: 'JOVRA'\n  \u21b3Window (Main)\n    \u21b3Other\n    \u22c5 \u21b3Other\n    \u22c5   \u21b3Other\n    \u22c5     \u21b3ScrollView\n    \u22c5       \u21b3Other\n    \u22c5         \u21b3StaticText, identifier: 'screen.title', label: 'Smart replay'\n    \u21b3Other\n      \u21b3Other\n        \u21b3Other\n          \u21b3Other\n            \u21b3Other\n              \u21b3Other\n                \u21b3Other\n                  \u21b3Other\n                    \u21b3Other\n                      \u21b3Other\n                        \u21b3Other\n                          \u21b3Other\n                            \u21b3Other\n                              \u21b3Other\n                                \u21b3Other\n                                  \u21b3ScrollView\n                                    \u21b3Other\n                                      \u21b3StaticText, identifier: 'screen.title', label: 'Your sessions'"
+    },
+    "testCaseName": {
+      "_type": {
+        "_name": "String"
+      },
+      "_value": "NativeLibraryUITests.testSavedFixtureRemainsInLibraryAfterRelaunchAndOpensReplay()"
+    }
+  }
+]

@@ -1,0 +1,14 @@
+PASS  containment          no external requests
+PASS  theme-tokens         both modes defined; contrast dark [text 17.2, muted 11.7, dim 8.7, a1 15.8] · light [text 12.6, muted 6.8, dim 6.0, a1 13.6]
+PASS  hero-bound-to-data   hero-data has 7 top-level keys/items
+PASS  motion-contract      reduced-motion, pause, toggle, #noanim, fail-safe, print
+PASS  reveal-safety        on-screen content never hidden
+PASS  structure            8 labelled sections, nav anchors resolve
+PASS  visual-density       kind=sotu: charts=1 (≥1), tables=5 (≥1), plan/system visuals=2 (≥1), terminals=1 (≥0), prose-only sections=0 (≤1)
+PASS  charts               4 bars bounded, titled, hoverable
+PASS  counters-at-rest     0 counters carry their true value
+PASS  title                "JOVRA State of the Union" (5 words)
+PASS  no-residue           no placeholders left
+PASS  size                 74.9 KB (< 2 MB)
+
+all 12 checks passed
