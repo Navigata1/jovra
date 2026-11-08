@@ -1,0 +1,10 @@
+$ python3 scripts/spec/validate.py --encoded-dir $OUT/export
+Swift encoded schema-valid         1
+independent canonical bytes        1
+RESULT: PASS
+$ python3 scripts/spec/verify_native_stats.py $OUT/stats
+PASS: 119 native stat results independently schema-valid and byte-equal; schema negative controls refused
+$ python3 scripts/spec/verify_native_bundle.py $OUT/bundle
+PASS export-my-data: 4 files hashed and schema-checked; negative controls refused
+PASS share-pack: 3 files hashed and schema-checked; negative controls refused
+RESULT: PASS (2 bundles)
