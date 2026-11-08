@@ -170,7 +170,10 @@ class DemoSubsetTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             dest = Path(tmp) / "StudioSampleMedia"
             (dest).mkdir()
+            # A file a previous install wrote (it is in that install's index) is replaced or removed.
             (dest / "stale.mp4").write_bytes(b"old")
+            (dest / "studio-sample-media.json").write_text(json.dumps({"files": [{"fileName": "stale.mp4"}]}),
+                                                           encoding="utf-8")
             total, problems = install_demo.install(dest)
             self.assertEqual(problems, [])
             names = sorted(p.name for p in dest.iterdir())
@@ -179,6 +182,67 @@ class DemoSubsetTests(unittest.TestCase):
         self.assertLessEqual(total, 25_000_000)
         self.assertLessEqual(du_k * 1024, 25_000_000 + 64 * 1024)
         self.assertEqual(names, sorted([f["fileName"] for f in subset["files"]] + ["studio-sample-media.json"]))
+
+
+class InstallDestinationGuardTests(unittest.TestCase):
+    """The installer only ever deletes files it wrote itself. These need no media: the destination is checked
+    before anything is read from the render cache, and a refused install touches nothing."""
+
+    def assert_refused(self, dest: Path, reason: str) -> None:
+        before = sorted(str(p.relative_to(dest)) for p in dest.rglob("*")) if dest.exists() else []
+        total, problems = install_demo.install(dest)
+        self.assertTrue(problems, "the install should have been refused")
+        self.assertIn(reason, " ".join(problems))
+        after = sorted(str(p.relative_to(dest)) for p in dest.rglob("*")) if dest.exists() else []
+        self.assertEqual(after, before)
+
+    def test_a_destination_not_named_studio_sample_media_is_refused_and_left_untouched(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "Resources"
+            (dest / "Assets.xcassets").mkdir(parents=True)
+            (dest / "Assets.xcassets" / "Contents.json").write_text("{}", encoding="utf-8")
+            (dest / "Info.plist").write_text("<plist/>", encoding="utf-8")
+            self.assert_refused(dest, "StudioSampleMedia")
+            self.assertTrue((dest / "Info.plist").is_file())
+            self.assertTrue((dest / "Assets.xcassets" / "Contents.json").is_file())
+
+    def test_a_non_empty_folder_without_an_index_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "StudioSampleMedia"
+            dest.mkdir()
+            (dest / "Info.plist").write_text("<plist/>", encoding="utf-8")
+            self.assert_refused(dest, "studio-sample-media.json")
+            self.assertTrue((dest / "Info.plist").is_file())
+
+    def test_a_file_the_previous_index_does_not_list_survives(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "StudioSampleMedia"
+            (dest / "Nested").mkdir(parents=True)
+            (dest / "Nested" / "keep.txt").write_text("mine", encoding="utf-8")
+            (dest / "notes.txt").write_text("mine", encoding="utf-8")
+            (dest / "studio-sample-media.json").write_text(json.dumps({"files": [{"fileName": "old.mp4"}]}),
+                                                           encoding="utf-8")
+            self.assert_refused(dest, "notes.txt")
+            self.assertTrue((dest / "notes.txt").is_file())
+            self.assertTrue((dest / "Nested" / "keep.txt").is_file())
+
+    def test_an_index_that_names_a_path_outside_the_folder_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            outside = Path(tmp) / "outside.mp4"
+            outside.write_bytes(b"not yours")
+            dest = Path(tmp) / "StudioSampleMedia"
+            dest.mkdir()
+            (dest / "studio-sample-media.json").write_text(json.dumps({"files": [{"fileName": "../outside.mp4"}]}),
+                                                           encoding="utf-8")
+            self.assert_refused(dest, "../outside.mp4")
+            self.assertTrue(outside.is_file())
+
+    def test_an_unreadable_index_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "StudioSampleMedia"
+            dest.mkdir()
+            (dest / "studio-sample-media.json").write_text("not json", encoding="utf-8")
+            self.assert_refused(dest, "studio-sample-media.json")
 
 
 @unittest.skipUnless(HAVE_FFMPEG, "needs ffmpeg and ffprobe")

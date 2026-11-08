@@ -22,26 +22,31 @@ test_the_silent_variant_has_no_audio_track (test_studio_media.ClickDetectionTest
 test_the_demo_subset_installs_within_its_budget (test_studio_media.DemoSubsetTests.test_the_demo_subset_installs_within_its_budget) ... ok
 test_two_forced_runs_write_byte_identical_media_and_reproduce_the_manifests (test_studio_media.DeterminismTests.test_two_forced_runs_write_byte_identical_media_and_reproduce_the_manifests)
 The short sets, re-encoded from scratch twice into fresh caches with --check (which never writes the ... ok
+test_a_destination_not_named_studio_sample_media_is_refused_and_left_untouched (test_studio_media.InstallDestinationGuardTests.test_a_destination_not_named_studio_sample_media_is_refused_and_left_untouched) ... ok
+test_a_file_the_previous_index_does_not_list_survives (test_studio_media.InstallDestinationGuardTests.test_a_file_the_previous_index_does_not_list_survives) ... ok
+test_a_non_empty_folder_without_an_index_is_refused (test_studio_media.InstallDestinationGuardTests.test_a_non_empty_folder_without_an_index_is_refused) ... ok
+test_an_index_that_names_a_path_outside_the_folder_is_refused (test_studio_media.InstallDestinationGuardTests.test_an_index_that_names_a_path_outside_the_folder_is_refused) ... ok
+test_an_unreadable_index_is_refused (test_studio_media.InstallDestinationGuardTests.test_an_unreadable_index_is_refused) ... ok
 test_a_frame_without_the_label_fails_the_check (test_studio_media.LabelTests.test_a_frame_without_the_label_fails_the_check) ... ok
 test_every_sampled_frame_of_the_angle_renders_and_broll_carries_its_labels (test_studio_media.LabelTests.test_every_sampled_frame_of_the_angle_renders_and_broll_carries_its_labels) ... ok
 test_the_coherent_match_point_events_fold_to_six_four_six_three (test_studio_media.MatchFoldTests.test_the_coherent_match_point_events_fold_to_six_four_six_three) ... ok
 
 ----------------------------------------------------------------------
-Ran 25 tests in 97.630s
+Ran 30 tests in 128.224s
 
 OK
-added binary files (1) relative to c5a69ad59860e9cc61298a2414cbb377567ccefd:
+added binary files (1) relative to 119f4ed42af02f5d6a1e0734ced8cbadf8b5e6e9:
   evidence/x/screen.png  [not media]
 PASS: no media file added outside the bundled demo subset
-added binary files (1) relative to 668ed9e889d3629bf9122cbe52f7739fa196361a:
+added binary files (1) relative to a74b0cb05082e441e207a0167cb004c5d291c316:
   ios/Jovra/Resources/StudioSampleMedia/a.mp4  [.mp4]
 PASS: no media file added outside the bundled demo subset
-added binary files (1) relative to 668ed9e889d3629bf9122cbe52f7739fa196361a:
+added binary files (1) relative to a74b0cb05082e441e207a0167cb004c5d291c316:
   evidence/x/clip.mp4  [.mp4, NOT ALLOWED]
 FAIL: 1 media file(s) added outside ios/Jovra/Resources/StudioSampleMedia/. Studio media is generated into .cache/media/studio by scripts/media/studio/render_studio.py; commit only its manifests.
-added binary files (1) relative to 668ed9e889d3629bf9122cbe52f7739fa196361a:
+added binary files (1) relative to a74b0cb05082e441e207a0167cb004c5d291c316:
   spec/studio/fixtures/media/renamed.bin  [ISO-BMFF (mp4/mov), NOT ALLOWED]
 FAIL: 1 media file(s) added outside ios/Jovra/Resources/StudioSampleMedia/. Studio media is generated into .cache/media/studio by scripts/media/studio/render_studio.py; commit only its manifests.
 
 demo subset: 21,005,897 bytes, du -sk 20532 KiB, budget 25,000,000 bytes
-python3 -m unittest discover -s scripts/media/studio -p 'test_*.py' -v  162.29s user 28.45s system 194% cpu 1:37.83 total
+python3 -m unittest discover -s scripts/media/studio -p 'test_*.py' -v  164.81s user 31.83s system 153% cpu 2:08.49 total

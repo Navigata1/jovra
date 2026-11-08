@@ -83,6 +83,10 @@ machine that renders.
 `ios/Jovra/Resources/StudioSampleMedia` (git-ignored) and the 25 MB budget (`budgetBytes`; the figure the lead is to
 confirm). `install_demo.py` copies them from the cache with `studio-sample-media.json` beside them, fails when one is
 not rendered or the subset is over budget, and prints `du -sk`. The generator also fails over budget.
+The installer only deletes files it wrote: it refuses, touching nothing, a destination not named `StudioSampleMedia`,
+a non-empty one without a readable index, an index naming anything but a plain `*.mp4` name, symbolic links, and any
+file neither the previous index nor this install names. Only a file the previous index lists and the subset dropped
+is removed.
 `scripts/media/studio/check_added_binaries.py` lists every binary a branch adds and fails on any media file outside
 that folder (by extension or by its leading bytes); the Studio workflow runs it on every pull request.
 

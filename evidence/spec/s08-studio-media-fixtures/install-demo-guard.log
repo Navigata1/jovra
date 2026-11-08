@@ -1,0 +1,31 @@
+# S08 round 1: install_demo.py deletes only files it wrote (review item: High, install_demo.py:72)
+
+## The reviewer's reproduction, after the fix: a Resources folder holding Info.plist and Assets.xcassets passed as DEST
+$ find Resources -type f   (before)
+Resources/Assets.xcassets/Contents.json
+Resources/Info.plist
+$ python3 scripts/media/studio/install_demo.py <scratch>/Resources
+error: refusing <scratch>/Resources: the destination folder must be named StudioSampleMedia (the installer replaces that folder's contents)
+exit 1
+$ find Resources -type f   (after: unchanged)
+Resources/Assets.xcassets/Contents.json
+Resources/Info.plist
+
+## RED: the five guard tests against the unfixed installer (the install_demo.py of commit 848cfc6)
+test_a_destination_not_named_studio_sample_media_is_refused_and_left_untouched (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_a_destination_not_named_studio_sample_media_is_refused_and_left_untouched) ... FAIL
+test_a_file_the_previous_index_does_not_list_survives (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_a_file_the_previous_index_does_not_list_survives) ... FAIL
+test_a_non_empty_folder_without_an_index_is_refused (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_a_non_empty_folder_without_an_index_is_refused) ... FAIL
+test_an_index_that_names_a_path_outside_the_folder_is_refused (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_an_index_that_names_a_path_outside_the_folder_is_refused) ... FAIL
+test_an_unreadable_index_is_refused (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_an_unreadable_index_is_refused) ... FAIL
+Ran 5 tests in 0.088s
+FAILED (failures=5)
+
+## GREEN: the same tests and the demo-subset install test against the fixed installer
+test_the_demo_subset_installs_within_its_budget (scripts.media.studio.test_studio_media.DemoSubsetTests.test_the_demo_subset_installs_within_its_budget) ... ok
+test_a_destination_not_named_studio_sample_media_is_refused_and_left_untouched (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_a_destination_not_named_studio_sample_media_is_refused_and_left_untouched) ... ok
+test_a_file_the_previous_index_does_not_list_survives (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_a_file_the_previous_index_does_not_list_survives) ... ok
+test_a_non_empty_folder_without_an_index_is_refused (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_a_non_empty_folder_without_an_index_is_refused) ... ok
+test_an_index_that_names_a_path_outside_the_folder_is_refused (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_an_index_that_names_a_path_outside_the_folder_is_refused) ... ok
+test_an_unreadable_index_is_refused (scripts.media.studio.test_studio_media.InstallDestinationGuardTests.test_an_unreadable_index_is_refused) ... ok
+Ran 6 tests in 0.041s
+OK

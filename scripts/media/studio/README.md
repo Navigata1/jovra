@@ -25,7 +25,7 @@ folder is not a Python package, so the core `unittest discover -s scripts/media`
 |---|---|
 | `render_studio.py` | the generator CLI: render, verify (full decode: barcodes, clicks, decoded signature), write manifests |
 | `reader.py` | read frame ids from barcodes (also through a scaled or letterboxed picture) and check burned-in labels |
-| `install_demo.py` | copy the bundled demo subset into the app's resources within its 25 MB budget |
+| `install_demo.py` | copy the bundled demo subset into the app's resources within its 25 MB budget; refuses any destination that is not a `StudioSampleMedia` folder it wrote, and deletes only files its previous index lists |
 | `check_added_binaries.py` | list the binary files a branch adds; fail on media outside the bundled subset |
 | `jovra_studio_media/barcode.py`, `clicks.py`, `badge.py` | the barcode codec, the 1 kHz click codec, the angle-name banner |
 | `jovra_studio_media/model.py`, `manifest.py`, `pipeline.py` | Studio clips over core clips, the manifest plan and hashes, render and verify |
