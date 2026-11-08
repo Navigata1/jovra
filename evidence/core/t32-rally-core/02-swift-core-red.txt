@@ -1,0 +1,16 @@
+$ swift test --package-path ios/Packages/JovraCore --scratch-path .derivedData/core   # runner + writer tests, no Rally sources yet (red)
+   |                                                                                           `- error: generic parameter 'some StringProtocol' could not be inferred
+   |                                                                               `- error: cannot find 'RallySegmentation' in scope
+   |                                                                    `- error: cannot find 'RallyOnlyPlan' in scope
+   |                                                        `- error: cannot find type 'RallyError' in scope
+   |                                                     `- error: cannot find 'RallyOnlyPlan' in scope
+   |                                                     `- error: cannot find 'RallySegmenter' in scope
+   |                                                 `- error: cannot find 'RallyRolls' in scope
+   |                                                 `- error: cannot find 'RallySegmentParameters' in scope
+   |                                               `- error: cannot find 'RallyRolls' in scope
+   |                                               `- error: cannot find type 'RallyError' in scope
+   |                                              `- error: cannot find 'RallyTarget' in scope
+   |                                            `- error: cannot find 'RallyBookmark' in scope
+   |                                           `- error: cannot find 'HitCandidate' in scope
+   |                                        `- error: cannot find type 'RallyError' in scope
+   |                                   `- error: cannot find type 'RallySegmentation' in scope

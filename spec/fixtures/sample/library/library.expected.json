@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.sampleLibrary",
+  "id": "SAMPLE-library",
+  "title": "The sample library: eight Sample sessions (402 min), the Sep 9 string job and the practice plan",
+  "covers": [
+    "screens.md §0.6 sample library rows",
+    "screen 3 Home tiles",
+    "screen 8 Session library",
+    "screen 15 Practice plan",
+    "screen 16 Progress trends",
+    "screen 18 String journal",
+    "the sample-scope rule"
+  ],
+  "sessionFiles": [
+    "sessions/jon-vs-alex.session.json",
+    "sessions/2026-10-04-serve-practice.session.json",
+    "sessions/2026-10-02-forehand-session.session.json",
+    "sessions/2026-09-28-match.session.json",
+    "sessions/2026-09-21-serve-practice.session.json",
+    "sessions/2026-09-17-match.session.json",
+    "sessions/2026-09-13-stroke-practice.session.json",
+    "sessions/2026-09-09-match.session.json"
+  ],
+  "equipmentFile": "equipment.json",
+  "practicePlanFile": "practice-plan.json",
+  "mediaManifest": "../media-manifest.json",
+  "seeds": {"jon-vs-alex": 20261006, "2026-09-28-match": 396, "2026-09-17-match": 42, "2026-09-09-match": 131},
+  "expected": {
+    "sample": true,
+    "sessionCount": 8,
+    "totalMinutes": 402,
+    "window": {"from": "2026-09-09", "to": "2026-10-06"},
+    "weeklyFirstServeIn": [
+      {"week": 1, "from": "2026-09-09", "to": "2026-09-15", "sessionIds": ["591c33e0-889c-5daf-b36d-03f90029d213"], "value": {"n": 24, "d": 50, "pct": 48, "display": "48%"}},
+      {"week": 2, "from": "2026-09-16", "to": "2026-09-22", "sessionIds": ["e138e0e8-82f9-598a-a5c7-88495e6c93df"], "value": {"n": 33, "d": 60, "pct": 55, "display": "55%"}},
+      {"week": 3, "from": "2026-09-23", "to": "2026-09-29", "sessionIds": ["6b8ca17b-856b-5644-b9aa-f1254551cd2d"], "value": {"n": 38, "d": 60, "pct": 63, "display": "63%"}},
+      {"week": 4, "from": "2026-09-30", "to": "2026-10-06", "sessionIds": ["b75c57d3-04df-5b4d-b969-32ed5cbfd97a"], "value": {"n": 40, "d": 60, "pct": 67, "display": "67%"}}
+    ],
+    "firstServeInDelta": "+4 percentage points",
+    "stringJobs": [
+      {"id": "3bb29cb7-74fe-5c5c-9c43-99de8c2f076f", "strungOn": "2026-09-09", "linkedSessionIds": ["09e8015c-8706-5b72-83fb-ba078b9582d0", "591c33e0-889c-5daf-b36d-03f90029d213", "6b8ca17b-856b-5644-b9aa-f1254551cd2d", "b75c57d3-04df-5b4d-b969-32ed5cbfd97a", "c47f4d6a-6fb8-5a0f-b9da-65d10f8b7886", "c80aad59-ede9-5b4b-9672-57f157bd3a92", "e138e0e8-82f9-598a-a5c7-88495e6c93df", "fe8aa360-e770-53d1-8f0b-23161a620af3"], "loggedMinutes": 402}
+    ],
+    "sessions": [
+      {"id": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a", "title": "Jon vs Alex", "date": "2026-10-06", "kind": "match", "minutes": 54, "mediaIds": ["sample-media.jon-vs-alex"], "scoreline": "6-4 6-3"},
+      {"id": "c80aad59-ede9-5b4b-9672-57f157bd3a92", "title": "Serve practice", "date": "2026-10-04", "kind": "servePractice", "minutes": 22, "mediaIds": ["sample-media.2026-10-04-serve-practice", "sample-media.2026-10-04-behind-baseline-12-serves"], "scoreline": null},
+      {"id": "c47f4d6a-6fb8-5a0f-b9da-65d10f8b7886", "title": "Forehand session", "date": "2026-10-02", "kind": "strokePractice", "minutes": 38, "mediaIds": ["sample-media.2026-10-02-forehand-session", "sample-media.2026-10-02-side-on-forehands"], "scoreline": null},
+      {"id": "6b8ca17b-856b-5644-b9aa-f1254551cd2d", "title": "Jon vs Chris", "date": "2026-09-28", "kind": "match", "minutes": 63, "mediaIds": ["sample-media.2026-09-28-match", "sample-media.2026-09-28-serve-clip"], "scoreline": "6-4 7-5"},
+      {"id": "fe8aa360-e770-53d1-8f0b-23161a620af3", "title": "Serve practice", "date": "2026-09-21", "kind": "servePractice", "minutes": 55, "mediaIds": ["sample-media.2026-09-21-serve-practice"], "scoreline": null},
+      {"id": "e138e0e8-82f9-598a-a5c7-88495e6c93df", "title": "Jon vs Alex", "date": "2026-09-17", "kind": "match", "minutes": 58, "mediaIds": ["sample-media.2026-09-17-match"], "scoreline": "6-4 6-3"},
+      {"id": "09e8015c-8706-5b72-83fb-ba078b9582d0", "title": "Stroke practice", "date": "2026-09-13", "kind": "strokePractice", "minutes": 60, "mediaIds": ["sample-media.2026-09-13-stroke-practice"], "scoreline": null},
+      {"id": "591c33e0-889c-5daf-b36d-03f90029d213", "title": "Jon vs Sam", "date": "2026-09-09", "kind": "match", "minutes": 52, "mediaIds": ["sample-media.2026-09-09-match"], "scoreline": "6-3 6-1"}
+    ]
+  }
+}

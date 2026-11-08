@@ -1,0 +1,64 @@
+# PR #406, CI room / jovra-room (ubuntu-latest, container swift:6.1), run 42518913586 job 128847886077, commit 9033ed5, 2026-11-08.
+# 51 tests on Linux: the 52 macOS tests minus the CryptoKit cross-check (compiled only where CryptoKit exists).
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7808439Z Test Case 'FixtureManifestTests.test_acceptanceMapReferencesResolveForPart1' passed (0.06 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7810273Z Test Case 'FixtureManifestTests.test_everyFixtureFileIsConsumedAndEveryKindIsKnown' passed (0.146 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7811500Z 	 Executed 2 tests, with 0 failures (0 unexpected) in 0.206 (0.206) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7813585Z Test Case 'InvitationCryptoTests.test_constantTimeEqualsComparesWholeStrings' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7815717Z Test Case 'InvitationCryptoTests.test_guestSideMessagesReproduceTheSampleJoinRequest' passed (0.007 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7817644Z Test Case 'InvitationCryptoTests.test_hmacSha256KnownAnswers_RFC4231' passed (0.001 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7819218Z Test Case 'InvitationCryptoTests.test_qrErrorsNeverCarryTheScannedText' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7821033Z Test Case 'InvitationCryptoTests.test_randomNoncesAndTokensMatchTheirPatternsAndDiffer' passed (0.104 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7822629Z Test Case 'InvitationCryptoTests.test_sha256KnownAnswers_FIPS180_4' passed (0.214 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7823752Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.325 (0.325) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7825943Z Test Case 'MutationTests.test_aClockThatStopsDuringSleepIsCaught' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7827366Z Test Case 'MutationTests.test_freshThresholdOf6SecondsIsCaught' passed (0.003 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7829056Z Test Case 'MutationTests.test_unboundedTransitTreatedAsBoundedIsCaught' passed (0.044 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7830130Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.048 (0.048) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7832133Z Test Case 'PackageHygieneTests.test_continuousClockIsMonotonicAndAdvances' passed (0.05 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7833715Z Test Case 'PackageHygieneTests.test_freshnessUsesOnlyTheContinuousClock' passed (0.002 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7835578Z Test Case 'PackageHygieneTests.test_noUIOrWatchTransportFrameworkImports' passed (0.004 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7837484Z Test Case 'PackageHygieneTests.test_processBaselineIsAValidRoomIdAndStableWithinTheProcess' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:15.7838707Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.056 (0.056) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3005735Z Test Case 'Part2BehaviourTests.test_alertPolicyRefusesANonOwnCriticalKind' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3008718Z Test Case 'Part2BehaviourTests.test_healthSummaryOfAnUnstampedPayloadIsAllUnknown' passed (0.108 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3010593Z Test Case 'Part2BehaviourTests.test_healthSummaryOnTheLiveClockTreatsAnotherProcessAsUnknown' passed (0.008 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3012165Z Test Case 'Part2BehaviourTests.test_healthSummaryRowsShowElapsedExactlyAsLastReported' passed (0.006 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3013449Z Test Case 'Part2BehaviourTests.test_outboxStateSurvivesARestart' passed (0.005 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3015146Z Test Case 'Part2BehaviourTests.test_qrDecodeRefusesACanonicalButInvalidRecord' passed (0.005 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3016477Z Test Case 'Part2BehaviourTests.test_validateJoinDrawsAFreshHostNonce' passed (0.009 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3017449Z 	 Executed 7 tests, with 0 failures (0 unexpected) in 0.141 (0.141) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3019286Z Test Case 'Part2MutationTests.test_aLedgerCallWithoutThePeerFailsTheVectors' passed (0.373 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3020465Z Test Case 'Part2MutationTests.test_forgedIssuerIsCaught' passed (0.215 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3021549Z Test Case 'Part2MutationTests.test_frozenSendAgeIsCaught' passed (0.058 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3022867Z Test Case 'Part2MutationTests.test_replayedBridgePayloadAfterRestartIsCaught' passed (0.102 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3024354Z Test Case 'Part2MutationTests.test_replayedBridgePayloadIsCaught' passed (0.103 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3025283Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 0.851 (0.851) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3027126Z Test Case 'Part2VectorConformanceTests.test_acceptanceMapReferencesResolveForPart2' passed (0.073 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3028352Z Test Case 'Part2VectorConformanceTests.test_alertVectors' passed (0.002 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3029681Z Test Case 'Part2VectorConformanceTests.test_allVectorKindsTogetherAre129Cases' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3031726Z Test Case 'Part2VectorConformanceTests.test_bridgeVectors' passed (0.103 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:17.3033307Z Test Case 'Part2VectorConformanceTests.test_invitationVectors' passed (0.143 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1022169Z Test Case 'Part2VectorConformanceTests.test_ledgerVectors' passed (0.206 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1024141Z Test Case 'Part2VectorConformanceTests.test_outboxVectors' passed (0.057 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1025976Z Test Case 'Part2VectorConformanceTests.test_watchSampleVectors' passed (0.049 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1027564Z 	 Executed 8 tests, with 0 failures (0 unexpected) in 0.634 (0.634) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1029880Z Test Case 'RecordConformanceTests.test_all103InvalidCasesAreRejectedByTheExpectedLayer' passed (0.231 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1032211Z Test Case 'RecordConformanceTests.test_all27RecordsDecodeStrictlyPassTheirRuleAndRoundTripCanonically' passed (0.063 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1034217Z Test Case 'RecordConformanceTests.test_duplicateJSONKeysAreRefused' passed (0.002 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1035710Z Test Case 'RecordConformanceTests.test_typedDecodersRefuseUnknownPropertiesOnTheirOwn' passed (0.005 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1037064Z Test Case 'RecordConformanceTests.test_unknownSchemaVersionIsRefused' passed (0.001 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1038022Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 0.302 (0.302) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1039863Z Test Case 'VectorConformanceTests.test_aBackwardsClockIsUnknownNotACrash' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1041045Z Test Case 'VectorConformanceTests.test_analysisVectors' passed (0.012 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1042468Z Test Case 'VectorConformanceTests.test_countsComeFromTheRosterAndRefuseUnenrolledRows' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1044064Z Test Case 'VectorConformanceTests.test_disconnectVectors' passed (0.001 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1045137Z Test Case 'VectorConformanceTests.test_displayVectors' passed (0.001 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1046209Z Test Case 'VectorConformanceTests.test_freshnessVectors' passed (0.003 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1047303Z Test Case 'VectorConformanceTests.test_phoneStatusVectors' passed (0.037 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1048611Z Test Case 'VectorConformanceTests.test_snapshotRefusalLeavesStateUntouched' passed (0.009 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1049734Z Test Case 'VectorConformanceTests.test_snapshotVectors' passed (0.329 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1051164Z Test Case 'VectorConformanceTests.test_statusRowsAreFrozenAndFormattedWithoutRoundingUp' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1187269Z Test Case 'VectorConformanceTests.test_thresholdBoundaries_5000Fresh_5001Delayed_15000Delayed_15001Unknown' passed (0.0 seconds)
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1188566Z 	 Executed 11 tests, with 0 failures (0 unexpected) in 0.393 (0.393) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1189381Z 	 Executed 51 tests, with 0 failures (0 unexpected) in 2.957 (2.957) seconds
+jovra-room	swift test (JovraRoom, Linux)	2026-11-08T20:13:18.1190147Z 	 Executed 51 tests, with 0 failures (0 unexpected) in 2.957 (2.957) seconds

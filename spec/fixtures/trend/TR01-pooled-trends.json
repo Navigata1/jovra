@@ -1,0 +1,387 @@
+{
+  "schemaVersion": "1.2.0",
+  "kind": "jovra.fixture.trend",
+  "id": "TR01-pooled-trends",
+  "title": "Trends pool numerators and denominators per bucket, hide small buckets, take deltas from displayed integers and keep sample sessions apart",
+  "covers": ["§6.10", "§7 rule 4", "screens S03", "screens S16", "stories 32, 34, 280, 282"],
+  "defaultMinimums": {"bucketDenominator": 20, "pooledDenominator": 100, "bucketsWithData": 2},
+  "cases": [
+    {
+      "name": "pool-not-average",
+      "title": "Pooling 1/2 with 30/40 gives 31/42 = 74%, not the 62.5% average",
+      "input": {
+        "range": "4W",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "real",
+        "sessions": [
+          {"id": "a", "date": "2026-10-01", "comparableKind": "singlesMatch", "sample": false, "n": 1, "d": 2},
+          {"id": "b", "date": "2026-10-05", "comparableKind": "singlesMatch", "sample": false, "n": 30, "d": 40}
+        ]
+      },
+      "assertions": [
+        {"path": "buckets[3].ratio", "equals": {"n": 31, "d": 42, "pct": 74, "display": "74%"}},
+        {"path": "buckets[3].sessionIds", "equals": ["a", "b"]},
+        {"path": "buckets[3].hidden", "equals": false},
+        {"path": "buckets[0].ratio", "equals": {"n": 0, "d": 0, "pct": null, "display": "—"}},
+        {"path": "buckets[0].hidden", "equals": true},
+        {"path": "state", "equals": "tooFewComparable"},
+        {"path": "headline", "equals": null},
+        {"path": "sessionCount", "equals": 2}
+      ],
+      "expected": {
+        "state": "tooFewComparable",
+        "buckets": [
+          {"index": 0, "from": "2026-09-09", "to": "2026-09-15", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 1, "from": "2026-09-16", "to": "2026-09-22", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 2, "from": "2026-09-23", "to": "2026-09-29", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 3, "from": "2026-09-30", "to": "2026-10-06", "sessionIds": ["a", "b"], "ratio": {"n": 31, "d": 42, "pct": 74, "display": "74%"}, "hidden": false}
+        ],
+        "pooled": {"n": 31, "d": 42, "pct": 74, "display": "74%"},
+        "sessionCount": 2,
+        "excluded": {"otherScope": 0, "otherKind": 0, "outsideWindow": 0},
+        "headline": null
+      }
+    },
+    {
+      "name": "weekly-first-serves-in",
+      "title": "Weekly first serves in 48, 55, 63, 67 and +4 percentage points from displayed integers",
+      "input": {
+        "range": "4W",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "real",
+        "sessions": [
+          {"id": "w1", "date": "2026-09-12", "comparableKind": "singlesMatch", "sample": false, "n": 24, "d": 50},
+          {"id": "w2", "date": "2026-09-19", "comparableKind": "singlesMatch", "sample": false, "n": 33, "d": 60},
+          {"id": "w3", "date": "2026-09-26", "comparableKind": "singlesMatch", "sample": false, "n": 38, "d": 60},
+          {"id": "w4", "date": "2026-10-06", "comparableKind": "singlesMatch", "sample": false, "n": 40, "d": 60}
+        ]
+      },
+      "assertions": [
+        {"path": "buckets[0].from", "equals": "2026-09-09"},
+        {"path": "buckets[0].to", "equals": "2026-09-15"},
+        {"path": "buckets[3].from", "equals": "2026-09-30"},
+        {"path": "buckets[3].to", "equals": "2026-10-06"},
+        {"path": "buckets[0].ratio.pct", "equals": 48},
+        {"path": "buckets[1].ratio.pct", "equals": 55},
+        {"path": "buckets[2].ratio.pct", "equals": 63},
+        {"path": "buckets[3].ratio.pct", "equals": 67},
+        {"path": "headline.deltaPoints", "equals": 4},
+        {"path": "headline.deltaText", "equals": "+4 percentage points"},
+        {"path": "pooled", "equals": {"n": 135, "d": 230, "pct": 59, "display": "59%"}},
+        {"path": "state", "equals": "ok"}
+      ],
+      "expected": {
+        "state": "ok",
+        "buckets": [
+          {"index": 0, "from": "2026-09-09", "to": "2026-09-15", "sessionIds": ["w1"], "ratio": {"n": 24, "d": 50, "pct": 48, "display": "48%"}, "hidden": false},
+          {"index": 1, "from": "2026-09-16", "to": "2026-09-22", "sessionIds": ["w2"], "ratio": {"n": 33, "d": 60, "pct": 55, "display": "55%"}, "hidden": false},
+          {"index": 2, "from": "2026-09-23", "to": "2026-09-29", "sessionIds": ["w3"], "ratio": {"n": 38, "d": 60, "pct": 63, "display": "63%"}, "hidden": false},
+          {"index": 3, "from": "2026-09-30", "to": "2026-10-06", "sessionIds": ["w4"], "ratio": {"n": 40, "d": 60, "pct": 67, "display": "67%"}, "hidden": false}
+        ],
+        "pooled": {"n": 135, "d": 230, "pct": 59, "display": "59%"},
+        "sessionCount": 4,
+        "excluded": {"otherScope": 0, "otherKind": 0, "outsideWindow": 0},
+        "headline": {
+          "currentIndex": 3,
+          "priorIndex": 2,
+          "current": {"n": 40, "d": 60, "pct": 67, "display": "67%"},
+          "prior": {"n": 38, "d": 60, "pct": 63, "display": "63%"},
+          "deltaPoints": 4,
+          "deltaText": "+4 percentage points"
+        }
+      }
+    },
+    {
+      "name": "hidden-small-buckets",
+      "title": "Buckets below the minimum denominator are hidden and skipped by the headline",
+      "input": {
+        "range": "4W",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "real",
+        "sessions": [
+          {"id": "w1", "date": "2026-09-10", "comparableKind": "singlesMatch", "sample": false, "n": 30, "d": 50},
+          {"id": "w2", "date": "2026-09-17", "comparableKind": "singlesMatch", "sample": false, "n": 40, "d": 60},
+          {"id": "w3", "date": "2026-09-24", "comparableKind": "singlesMatch", "sample": false, "n": 5, "d": 10},
+          {"id": "w4", "date": "2026-10-02", "comparableKind": "singlesMatch", "sample": false, "n": 3, "d": 4}
+        ]
+      },
+      "assertions": [
+        {"path": "buckets[2].hidden", "equals": true},
+        {"path": "buckets[3].hidden", "equals": true},
+        {"path": "buckets[2].ratio", "equals": {"n": 5, "d": 10, "pct": 50, "display": "50%"}},
+        {"path": "headline.currentIndex", "equals": 1},
+        {"path": "headline.priorIndex", "equals": 0},
+        {"path": "headline.current", "equals": {"n": 40, "d": 60, "pct": 67, "display": "67%"}},
+        {"path": "headline.prior", "equals": {"n": 30, "d": 50, "pct": 60, "display": "60%"}},
+        {"path": "headline.deltaText", "equals": "+7 percentage points"},
+        {"path": "pooled", "equals": {"n": 78, "d": 124, "pct": 63, "display": "63%"}}
+      ],
+      "expected": {
+        "state": "ok",
+        "buckets": [
+          {"index": 0, "from": "2026-09-09", "to": "2026-09-15", "sessionIds": ["w1"], "ratio": {"n": 30, "d": 50, "pct": 60, "display": "60%"}, "hidden": false},
+          {"index": 1, "from": "2026-09-16", "to": "2026-09-22", "sessionIds": ["w2"], "ratio": {"n": 40, "d": 60, "pct": 67, "display": "67%"}, "hidden": false},
+          {"index": 2, "from": "2026-09-23", "to": "2026-09-29", "sessionIds": ["w3"], "ratio": {"n": 5, "d": 10, "pct": 50, "display": "50%"}, "hidden": true},
+          {"index": 3, "from": "2026-09-30", "to": "2026-10-06", "sessionIds": ["w4"], "ratio": {"n": 3, "d": 4, "pct": 75, "display": "75%"}, "hidden": true}
+        ],
+        "pooled": {"n": 78, "d": 124, "pct": 63, "display": "63%"},
+        "sessionCount": 4,
+        "excluded": {"otherScope": 0, "otherKind": 0, "outsideWindow": 0},
+        "headline": {
+          "currentIndex": 1,
+          "priorIndex": 0,
+          "current": {"n": 40, "d": 60, "pct": 67, "display": "67%"},
+          "prior": {"n": 30, "d": 50, "pct": 60, "display": "60%"},
+          "deltaPoints": 7,
+          "deltaText": "+7 percentage points"
+        }
+      }
+    },
+    {
+      "name": "sample-excluded",
+      "title": "Sample sessions never enter a real trend",
+      "input": {
+        "range": "4W",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "real",
+        "sessions": [
+          {"id": "r3", "date": "2026-09-25", "comparableKind": "singlesMatch", "sample": false, "n": 40, "d": 60},
+          {"id": "r4", "date": "2026-10-03", "comparableKind": "singlesMatch", "sample": false, "n": 45, "d": 60},
+          {"id": "demo", "date": "2026-10-04", "comparableKind": "singlesMatch", "sample": true, "n": 100, "d": 100}
+        ]
+      },
+      "assertions": [
+        {"path": "excluded.otherScope", "equals": 1},
+        {"path": "buckets[3].sessionIds", "equals": ["r4"]},
+        {"path": "buckets[3].ratio", "equals": {"n": 45, "d": 60, "pct": 75, "display": "75%"}},
+        {"path": "headline.deltaText", "equals": "+8 percentage points"},
+        {"path": "pooled", "equals": {"n": 85, "d": 120, "pct": 71, "display": "71%"}},
+        {"path": "sessionCount", "equals": 2}
+      ],
+      "expected": {
+        "state": "ok",
+        "buckets": [
+          {"index": 0, "from": "2026-09-09", "to": "2026-09-15", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 1, "from": "2026-09-16", "to": "2026-09-22", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 2, "from": "2026-09-23", "to": "2026-09-29", "sessionIds": ["r3"], "ratio": {"n": 40, "d": 60, "pct": 67, "display": "67%"}, "hidden": false},
+          {"index": 3, "from": "2026-09-30", "to": "2026-10-06", "sessionIds": ["r4"], "ratio": {"n": 45, "d": 60, "pct": 75, "display": "75%"}, "hidden": false}
+        ],
+        "pooled": {"n": 85, "d": 120, "pct": 71, "display": "71%"},
+        "sessionCount": 2,
+        "excluded": {"otherScope": 1, "otherKind": 0, "outsideWindow": 0},
+        "headline": {
+          "currentIndex": 3,
+          "priorIndex": 2,
+          "current": {"n": 45, "d": 60, "pct": 75, "display": "75%"},
+          "prior": {"n": 40, "d": 60, "pct": 67, "display": "67%"},
+          "deltaPoints": 8,
+          "deltaText": "+8 percentage points"
+        }
+      }
+    },
+    {
+      "name": "sample-scope-alone",
+      "title": "A sample trend uses only sample sessions",
+      "input": {
+        "range": "4W",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "sample",
+        "sessions": [
+          {"id": "r3", "date": "2026-09-25", "comparableKind": "singlesMatch", "sample": false, "n": 40, "d": 60},
+          {"id": "r4", "date": "2026-10-03", "comparableKind": "singlesMatch", "sample": false, "n": 45, "d": 60},
+          {"id": "demo", "date": "2026-10-04", "comparableKind": "singlesMatch", "sample": true, "n": 100, "d": 100}
+        ]
+      },
+      "assertions": [
+        {"path": "excluded.otherScope", "equals": 2},
+        {"path": "buckets[3].sessionIds", "equals": ["demo"]},
+        {"path": "pooled", "equals": {"n": 100, "d": 100, "pct": 100, "display": "100%"}},
+        {"path": "state", "equals": "tooFewComparable"},
+        {"path": "headline", "equals": null}
+      ],
+      "expected": {
+        "state": "tooFewComparable",
+        "buckets": [
+          {"index": 0, "from": "2026-09-09", "to": "2026-09-15", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 1, "from": "2026-09-16", "to": "2026-09-22", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 2, "from": "2026-09-23", "to": "2026-09-29", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 3, "from": "2026-09-30", "to": "2026-10-06", "sessionIds": ["demo"], "ratio": {"n": 100, "d": 100, "pct": 100, "display": "100%"}, "hidden": false}
+        ],
+        "pooled": {"n": 100, "d": 100, "pct": 100, "display": "100%"},
+        "sessionCount": 1,
+        "excluded": {"otherScope": 2, "otherKind": 0, "outsideWindow": 0},
+        "headline": null
+      }
+    },
+    {
+      "name": "months-and-comparable-kind",
+      "title": "Months for 3 months; only comparable sessions are pooled",
+      "input": {
+        "range": "3M",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "real",
+        "sessions": [
+          {"id": "aug", "date": "2026-08-20", "comparableKind": "singlesMatch", "sample": false, "n": 30, "d": 50},
+          {"id": "sep", "date": "2026-09-05", "comparableKind": "singlesMatch", "sample": false, "n": 33, "d": 60},
+          {"id": "dbl", "date": "2026-09-06", "comparableKind": "doublesMatch", "sample": false, "n": 60, "d": 60},
+          {"id": "oct", "date": "2026-10-02", "comparableKind": "singlesMatch", "sample": false, "n": 40, "d": 60}
+        ]
+      },
+      "assertions": [
+        {"path": "buckets[0].from", "equals": "2026-08-01"},
+        {"path": "buckets[0].to", "equals": "2026-08-31"},
+        {"path": "buckets[2].from", "equals": "2026-10-01"},
+        {"path": "buckets[2].to", "equals": "2026-10-06"},
+        {"path": "excluded.otherKind", "equals": 1},
+        {"path": "buckets[1].ratio", "equals": {"n": 33, "d": 60, "pct": 55, "display": "55%"}},
+        {"path": "headline.deltaText", "equals": "+12 percentage points"},
+        {"path": "pooled", "equals": {"n": 103, "d": 170, "pct": 61, "display": "61%"}}
+      ],
+      "expected": {
+        "state": "ok",
+        "buckets": [
+          {"index": 0, "from": "2026-08-01", "to": "2026-08-31", "sessionIds": ["aug"], "ratio": {"n": 30, "d": 50, "pct": 60, "display": "60%"}, "hidden": false},
+          {"index": 1, "from": "2026-09-01", "to": "2026-09-30", "sessionIds": ["sep"], "ratio": {"n": 33, "d": 60, "pct": 55, "display": "55%"}, "hidden": false},
+          {"index": 2, "from": "2026-10-01", "to": "2026-10-06", "sessionIds": ["oct"], "ratio": {"n": 40, "d": 60, "pct": 67, "display": "67%"}, "hidden": false}
+        ],
+        "pooled": {"n": 103, "d": 170, "pct": 61, "display": "61%"},
+        "sessionCount": 3,
+        "excluded": {"otherScope": 0, "otherKind": 1, "outsideWindow": 0},
+        "headline": {
+          "currentIndex": 2,
+          "priorIndex": 1,
+          "current": {"n": 40, "d": 60, "pct": 67, "display": "67%"},
+          "prior": {"n": 33, "d": 60, "pct": 55, "display": "55%"},
+          "deltaPoints": 12,
+          "deltaText": "+12 percentage points"
+        }
+      }
+    },
+    {
+      "name": "year-negative-delta",
+      "title": "Year buckets by month; sessions outside the window are excluded; a fall reads -4",
+      "input": {
+        "range": "Year",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "real",
+        "sessions": [
+          {"id": "old", "date": "2025-10-31", "comparableKind": "singlesMatch", "sample": false, "n": 60, "d": 60},
+          {"id": "aug", "date": "2026-08-15", "comparableKind": "singlesMatch", "sample": false, "n": 40, "d": 60},
+          {"id": "sep", "date": "2026-09-10", "comparableKind": "singlesMatch", "sample": false, "n": 38, "d": 60},
+          {"id": "late", "date": "2026-10-07", "comparableKind": "singlesMatch", "sample": false, "n": 60, "d": 60}
+        ]
+      },
+      "assertions": [
+        {"path": "buckets[0].from", "equals": "2025-11-01"},
+        {"path": "buckets[0].to", "equals": "2025-11-30"},
+        {"path": "buckets[11].to", "equals": "2026-10-06"},
+        {"path": "excluded.outsideWindow", "equals": 2},
+        {"path": "headline.currentIndex", "equals": 10},
+        {"path": "headline.priorIndex", "equals": 9},
+        {"path": "headline.deltaPoints", "equals": -4},
+        {"path": "headline.deltaText", "equals": "-4 percentage points"},
+        {"path": "pooled", "equals": {"n": 78, "d": 120, "pct": 65, "display": "65%"}}
+      ],
+      "expected": {
+        "state": "ok",
+        "buckets": [
+          {"index": 0, "from": "2025-11-01", "to": "2025-11-30", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 1, "from": "2025-12-01", "to": "2025-12-31", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 2, "from": "2026-01-01", "to": "2026-01-31", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 3, "from": "2026-02-01", "to": "2026-02-28", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 4, "from": "2026-03-01", "to": "2026-03-31", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 5, "from": "2026-04-01", "to": "2026-04-30", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 6, "from": "2026-05-01", "to": "2026-05-31", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 7, "from": "2026-06-01", "to": "2026-06-30", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 8, "from": "2026-07-01", "to": "2026-07-31", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 9, "from": "2026-08-01", "to": "2026-08-31", "sessionIds": ["aug"], "ratio": {"n": 40, "d": 60, "pct": 67, "display": "67%"}, "hidden": false},
+          {"index": 10, "from": "2026-09-01", "to": "2026-09-30", "sessionIds": ["sep"], "ratio": {"n": 38, "d": 60, "pct": 63, "display": "63%"}, "hidden": false},
+          {"index": 11, "from": "2026-10-01", "to": "2026-10-06", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true}
+        ],
+        "pooled": {"n": 78, "d": 120, "pct": 65, "display": "65%"},
+        "sessionCount": 2,
+        "excluded": {"otherScope": 0, "otherKind": 0, "outsideWindow": 2},
+        "headline": {
+          "currentIndex": 10,
+          "priorIndex": 9,
+          "current": {"n": 38, "d": 60, "pct": 63, "display": "63%"},
+          "prior": {"n": 40, "d": 60, "pct": 67, "display": "67%"},
+          "deltaPoints": -4,
+          "deltaText": "-4 percentage points"
+        }
+      }
+    },
+    {
+      "name": "below-pooled-minimum",
+      "title": "Two buckets but fewer than 100 pooled points: too few comparable sessions",
+      "input": {
+        "range": "4W",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "real",
+        "sessions": [
+          {"id": "w1", "date": "2026-09-10", "comparableKind": "singlesMatch", "sample": false, "n": 10, "d": 25},
+          {"id": "w4", "date": "2026-10-05", "comparableKind": "singlesMatch", "sample": false, "n": 20, "d": 25}
+        ]
+      },
+      "assertions": [
+        {"path": "buckets[0].hidden", "equals": false},
+        {"path": "buckets[3].hidden", "equals": false},
+        {"path": "pooled", "equals": {"n": 30, "d": 50, "pct": 60, "display": "60%"}},
+        {"path": "state", "equals": "tooFewComparable"},
+        {"path": "headline", "equals": null}
+      ],
+      "expected": {
+        "state": "tooFewComparable",
+        "buckets": [
+          {"index": 0, "from": "2026-09-09", "to": "2026-09-15", "sessionIds": ["w1"], "ratio": {"n": 10, "d": 25, "pct": 40, "display": "40%"}, "hidden": false},
+          {"index": 1, "from": "2026-09-16", "to": "2026-09-22", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 2, "from": "2026-09-23", "to": "2026-09-29", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 3, "from": "2026-09-30", "to": "2026-10-06", "sessionIds": ["w4"], "ratio": {"n": 20, "d": 25, "pct": 80, "display": "80%"}, "hidden": false}
+        ],
+        "pooled": {"n": 30, "d": 50, "pct": 60, "display": "60%"},
+        "sessionCount": 2,
+        "excluded": {"otherScope": 0, "otherKind": 0, "outsideWindow": 0},
+        "headline": null
+      }
+    },
+    {
+      "name": "no-data",
+      "title": "No sessions: every bucket is empty and shows an em dash",
+      "input": {
+        "range": "4W",
+        "asOf": "2026-10-06",
+        "comparableKind": "singlesMatch",
+        "scope": "real",
+        "sessions": []
+      },
+      "assertions": [
+        {"path": "state", "equals": "noData"},
+        {"path": "pooled", "equals": {"n": 0, "d": 0, "pct": null, "display": "—"}},
+        {"path": "buckets[1].ratio.display", "equals": "—"},
+        {"path": "sessionCount", "equals": 0},
+        {"path": "headline", "equals": null}
+      ],
+      "expected": {
+        "state": "noData",
+        "buckets": [
+          {"index": 0, "from": "2026-09-09", "to": "2026-09-15", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 1, "from": "2026-09-16", "to": "2026-09-22", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 2, "from": "2026-09-23", "to": "2026-09-29", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true},
+          {"index": 3, "from": "2026-09-30", "to": "2026-10-06", "sessionIds": [], "ratio": {"n": 0, "d": 0, "pct": null, "display": "—"}, "hidden": true}
+        ],
+        "pooled": {"n": 0, "d": 0, "pct": null, "display": "—"},
+        "sessionCount": 0,
+        "excluded": {"otherScope": 0, "otherKind": 0, "outsideWindow": 0},
+        "headline": null
+      }
+    }
+  ]
+}

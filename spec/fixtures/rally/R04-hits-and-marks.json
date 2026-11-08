@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.rally",
+  "id": "R04-hits-and-marks",
+  "title": "With audio a point mark joins the first hit candidate whose clip holds it",
+  "covers": ["T32", "ios-v1-spec RallySegmenter", "screens.md N7", "stories 192, 195, 200"],
+  "cases": [
+    {
+      "op": "segment",
+      "name": "marks inside the rolled clip attach; a mark outside stands alone",
+      "hits": [{"id": "h1", "tMs": 10000, "kind": "hit"}, {"id": "h2", "tMs": 12000, "kind": "hit"}],
+      "marks": [
+        {"id": "m1", "tMs": 14000, "kind": "point"},
+        {"id": "m2", "tMs": 30000, "kind": "point"},
+        {"id": "m3", "tMs": 8600, "kind": "point"}
+      ],
+      "params": {"durationMs": 60000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 12000, "clip": {"fromMs": 8500, "toMs": 14500}, "hitIds": ["h1", "h2"], "markIds": ["m3", "m1"], "rallies": [{"startMs": 10000, "endMs": 12000, "hitCount": 2}], "provenance": "estimated", "needsReview": true},
+          {"source": "mark", "startMs": 30000, "endMs": 30000, "clip": {"fromMs": 28500, "toMs": 32500}, "hitIds": [], "markIds": ["m2"], "rallies": [], "provenance": "manual", "needsReview": false}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "a mark where two clips overlap joins the earlier candidate",
+      "hits": [{"id": "h1", "tMs": 10000, "kind": "hit"}, {"id": "h2", "tMs": 16000, "kind": "hit"}],
+      "marks": [{"id": "m1", "tMs": 14800, "kind": "point"}],
+      "params": {"durationMs": 60000, "postRollMs": 5000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 10000, "clip": {"fromMs": 8500, "toMs": 15000}, "hitIds": ["h1"], "markIds": ["m1"], "rallies": [{"startMs": 10000, "endMs": 10000, "hitCount": 1}], "provenance": "estimated", "needsReview": true},
+          {"source": "hits", "startMs": 16000, "endMs": 16000, "clip": {"fromMs": 14500, "toMs": 21000}, "hitIds": ["h2"], "markIds": [], "rallies": [{"startMs": 16000, "endMs": 16000, "hitCount": 1}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "clips are half-open: a mark on the clip's last millisecond attaches, one at its end stands alone",
+      "hits": [{"id": "h1", "tMs": 10000, "kind": "hit"}],
+      "marks": [{"id": "m1", "tMs": 12499, "kind": "point"}, {"id": "m2", "tMs": 12500, "kind": "point"}],
+      "params": {"durationMs": 60000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 10000, "clip": {"fromMs": 8500, "toMs": 12500}, "hitIds": ["h1"], "markIds": ["m1"], "rallies": [{"startMs": 10000, "endMs": 10000, "hitCount": 1}], "provenance": "estimated", "needsReview": true},
+          {"source": "mark", "startMs": 12500, "endMs": 12500, "clip": {"fromMs": 11000, "toMs": 15000}, "hitIds": [], "markIds": ["m2"], "rallies": [], "provenance": "manual", "needsReview": false}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    }
+  ]
+}

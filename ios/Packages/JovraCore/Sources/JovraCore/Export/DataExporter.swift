@@ -10,6 +10,20 @@ public enum DataExportError: Error, Equatable, Sendable { case missingContract, 
 /// One fresh fold supplies all outputs. Exporting never mutates or stamps the source session.
 public enum DataExporter {
     public static func exportSession(_ document: SessionDocument) throws -> SessionDataExport {
+        try render(document).export
+    }
+
+    /// What one fold of a session renders: the three data files plus the values the Share Pack viewer shows.
+    struct Rendered {
+        let export: SessionDataExport
+        let timeline: MatchTimeline
+        let sideNames: [Side: String]
+        /// One points.csv data row (without line ending) per timeline point, keyed by point id.
+        let pointRows: [(id: String, cells: [String?])]
+        let pointsContract: CSVContract
+    }
+
+    static func render(_ document: SessionDocument) throws -> Rendered {
         let input = try ScoringInput(session: document)
         let timeline = try ScoringEngine.fold(input)
         let stats = try StatsEngine.compute(timeline)
@@ -40,8 +54,10 @@ public enum DataExporter {
                 })
             }
         }
-        return .init(sessionJSON: try CanonicalJSON.encode(document),
-                     pointsCSV: CSV.render(pointRows, contract: pointsContract), statsCSV: CSV.render(statRows, contract: statsContract))
+        let export = SessionDataExport(sessionJSON: try CanonicalJSON.encode(document),
+            pointsCSV: CSV.render(pointRows, contract: pointsContract), statsCSV: CSV.render(statRows, contract: statsContract))
+        return Rendered(export: export, timeline: timeline, sideNames: sideNames,
+                        pointRows: zip(timeline.points, pointRows).map { ($0.id, $1) }, pointsContract: pointsContract)
     }
 }
 

@@ -1,0 +1,8 @@
+$ python3 scripts/media/render.py --check   # decoded-frame hash check: PASS (19 clips)
+$ swift test --package-path ios/Packages/JovraMedia --scratch-path .derivedData/media --no-parallel
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+frameCounter/fc-060: composition 1100/1000 s, plan 1100 ms, one frame 0.016666666666666666 s
+frameCounter/fc-240: composition 1100/1000 s, plan 1100 ms, one frame 0.004166666666666667 s
+✔ Suite "Rally-only composition from a RallyOnlyPlan" passed after 0.258 seconds.
+✔ Test run with 37 tests in 7 suites passed after 1.048 seconds.
+✔ Test run with 61 tests in 10 suites passed after 29.902 seconds.

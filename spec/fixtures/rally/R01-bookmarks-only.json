@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.rally",
+  "id": "R01-bookmarks-only",
+  "title": "Without audio every point mark is a candidate on its own, rolled 1.5 s / 2.5 s",
+  "covers": ["T32", "ios-v1-spec RallySegmenter", "screens.md N7", "stories 192, 195, 200"],
+  "cases": [
+    {
+      "op": "segment",
+      "name": "no audio: point marks become candidates, sorted by time; other marks are left out",
+      "hits": null,
+      "marks": [
+        {"id": "m3", "tMs": 120000, "kind": "point"},
+        {"id": "m1", "tMs": 60000, "kind": "point"},
+        {"id": "m2", "tMs": 90000, "kind": "highlight"},
+        {"id": "m4", "tMs": 1000, "kind": "point"}
+      ],
+      "params": {"durationMs": 600000},
+      "expected": {
+        "candidates": [
+          {"source": "mark", "startMs": 1000, "endMs": 1000, "clip": {"fromMs": 0, "toMs": 3500}, "hitIds": [], "markIds": ["m4"], "rallies": [], "provenance": "manual", "needsReview": false},
+          {"source": "mark", "startMs": 60000, "endMs": 60000, "clip": {"fromMs": 58500, "toMs": 62500}, "hitIds": [], "markIds": ["m1"], "rallies": [], "provenance": "manual", "needsReview": false},
+          {"source": "mark", "startMs": 120000, "endMs": 120000, "clip": {"fromMs": 118500, "toMs": 122500}, "hitIds": [], "markIds": ["m3"], "rallies": [], "provenance": "manual", "needsReview": false}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": ["m2"]}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "audio with no hits: marks still stand on their own",
+      "hits": [],
+      "marks": [{"id": "m1", "tMs": 60000, "kind": "point"}],
+      "params": {"durationMs": 600000},
+      "expected": {
+        "candidates": [
+          {"source": "mark", "startMs": 60000, "endMs": 60000, "clip": {"fromMs": 58500, "toMs": 62500}, "hitIds": [], "markIds": ["m1"], "rallies": [], "provenance": "manual", "needsReview": false}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "a mark near the end is clamped to the recording",
+      "hits": null,
+      "marks": [{"id": "m1", "tMs": 60000, "kind": "point"}],
+      "params": {"durationMs": 61000},
+      "expected": {
+        "candidates": [
+          {"source": "mark", "startMs": 60000, "endMs": 60000, "clip": {"fromMs": 58500, "toMs": 61000}, "hitIds": [], "markIds": ["m1"], "rallies": [], "provenance": "manual", "needsReview": false}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "no marks and no audio: nothing to play",
+      "hits": null,
+      "marks": [],
+      "params": {"durationMs": 600000},
+      "expected": {"candidates": [], "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}}
+    },
+    {
+      "op": "plan",
+      "name": "plan from marks with the default rolls: leading, middle and trailing gaps",
+      "targets": [
+        {"targetId": "m1", "startMs": 60000, "endMs": 60000},
+        {"targetId": "m3", "startMs": 120000, "endMs": 120000},
+        {"targetId": "m4", "startMs": 1000, "endMs": 1000}
+      ],
+      "rolls": null,
+      "durationMs": 600000,
+      "expected": {
+        "ranges": [
+          {"range": {"fromMs": 0, "toMs": 3500}, "durationMs": 3500, "targetIds": ["m4"]},
+          {"range": {"fromMs": 58500, "toMs": 62500}, "durationMs": 4000, "targetIds": ["m1"]},
+          {"range": {"fromMs": 118500, "toMs": 122500}, "durationMs": 4000, "targetIds": ["m3"]}
+        ],
+        "gaps": [
+          {"range": {"fromMs": 3500, "toMs": 58500}, "durationMs": 55000, "label": "+0:55"},
+          {"range": {"fromMs": 62500, "toMs": 118500}, "durationMs": 56000, "label": "+0:56"},
+          {"range": {"fromMs": 122500, "toMs": 600000}, "durationMs": 477500, "label": "+7:57"}
+        ],
+        "excludedTargetIds": [],
+        "keptMs": 11500,
+        "skippedMs": 588500,
+        "durationMs": 600000
+      }
+    },
+    {
+      "op": "plan",
+      "name": "marks 3 s apart overlap once rolled and play as one range",
+      "targets": [
+        {"targetId": "m5", "startMs": 63000, "endMs": 63000},
+        {"targetId": "m1", "startMs": 60000, "endMs": 60000}
+      ],
+      "rolls": null,
+      "durationMs": 70000,
+      "expected": {
+        "ranges": [{"range": {"fromMs": 58500, "toMs": 65500}, "durationMs": 7000, "targetIds": ["m1", "m5"]}],
+        "gaps": [
+          {"range": {"fromMs": 0, "toMs": 58500}, "durationMs": 58500, "label": "+0:58"},
+          {"range": {"fromMs": 65500, "toMs": 70000}, "durationMs": 4500, "label": "+0:04"}
+        ],
+        "excludedTargetIds": [],
+        "keptMs": 7000,
+        "skippedMs": 63000,
+        "durationMs": 70000
+      }
+    }
+  ]
+}
