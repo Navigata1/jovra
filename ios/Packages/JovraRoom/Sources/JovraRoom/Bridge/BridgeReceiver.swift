@@ -15,7 +15,7 @@ public enum BridgeVerdict: String, Equatable, Sendable, CaseIterable {
 }
 
 /// Watch-side acceptance of `jovra.room.watch-bridge/1`. The watch is bound at pairing to one bridge, its own phone;
-/// the companion channel (WatchConnectivity) authenticates the pairing, so the threats are an OS queue redelivering an
+/// the companion channel (the paired-watch link) authenticates the pairing, so the threats are an OS queue redelivering an
 /// old payload, a late resend, or a payload from a previous bridge process. A new bridge instance or a new session
 /// starts new marks, and neither lets an old payload back in.
 ///
