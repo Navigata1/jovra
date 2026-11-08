@@ -10,10 +10,10 @@
     "northStar": "Complete a trustworthy native iOS tennis product; preserve the local core while advancing the recorded Studio and native-platform roadmap through explicit evidence gates.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-11-02T13:11:10.874209+00:00",
-    "sessionCount": 2,
+    "updated": "2026-11-08T10:34:53+00:00",
+    "sessionCount": 3,
     "assessmentReport": "docs/reports/2026-11-02/JOVRA-State-of-the-Union-v1-2026-11-02.html",
-    "nextSessionHandoff": "docs/handoff/CODEX-NEXT-SESSION.md"
+    "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md"
   },
   "policies": {
     "merge": "auto",
@@ -188,19 +188,28 @@
           "id": "P4-G2",
           "title": "Dedicated simulator core flow and export evidence",
           "command": "scripts/ios/core-flow-test.sh",
-          "status": "pending",
-          "evidence": "docs/reports/2026-11-02/evidence/source-inventory.json",
-          "lastRun": "2026-10-09T19:35:43Z",
-          "notes": "PR370 mergedc7e51bb and current main6e46a576 complete iOS subtree9a925bb equals historical tested73. Retained historical native4PASS and independent actual artifact validation remain valid source-bound history, not a fresh main runtime run. No new simulator/fullMedia/device run during November2 assessment: about3GiB free at start. Current-main native gate and actual-artifact recheck remain the next integration acceptance work."
+          "status": "passed",
+          "evidence": "ops/mission/evidence/2026-11-08-coreflow-actual.json",
+          "lastRun": "2026-11-08T10:24:54Z",
+          "notes": "Bounded CoreFlow on tested iOS source d3049a8. Combined simulator run passed 11 tests. Independently verified actual session JSON, corrected point and stats CSV bytes, and a decoded 30-frame one-second clip. No independently sampled pre-export hash for this rerun."
         },
         {
           "id": "P4-G3",
           "title": "Latest recorded required hosted checks and core dependency merges",
-          "command": "gh run view 38196643491 --repo Navigata1/jovra",
+          "command": "gh pr checks 392, 393 and 395 (separate exact-head check queries)",
           "status": "passed",
-          "evidence": "docs/reports/2026-11-02/evidence/ci-audit.json",
-          "lastRun": "2026-10-12T02:46:59Z",
-          "notes": "Live November2 query confirms oldPR365\u2013371 MERGED and assessed main6e46a576 recorded CI38196643491 executed all five required automatic jobs successfully. Manual ios-app skipped is not native proof. Old account payment annotation is historical, not current blocker. Requery fresh checks on any new head; no waiver."
+          "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
+          "lastRun": "2026-11-08T10:34:53+00:00",
+          "notes": "Current implementation receipts retain exact reviewed heads. Fresh required checks passed before each recorded merge. Manual iOS check skipped and excluded from hosted gate claims."
+        },
+        {
+          "id": "P4-G4",
+          "title": "Signed iPhone finished-recovery and Files import integration",
+          "command": "xcodebuild test with JovraTests/StartupRecoveryTests and JovraTests/FilesImportTests",
+          "status": "passed",
+          "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
+          "lastRun": "2026-11-08T10:29:56Z",
+          "notes": "Combined iOS tree 7ca1f93b78194d39baca390ef200d42db43779a2. Signed iPhone 15 Pro Max run passed 6. An earlier test failed with storageUnavailable from a device path alias, fixed in #395. Tests used synthetic media. Live camera, provider picker, and full hardware acceptance remain open."
         }
       ],
       "tasks": [
@@ -260,7 +269,7 @@
             "T03"
           ],
           "pr": null,
-          "notes": "Capture334/335/337/338/340, directory350, fragmented-layout/atomic-adoption354 and finished-stale scanner358 merged. Actual marked/unmarked adopted sessions independently schema/canonical validated; receipt canonical bytes and decoded media/hash evidence passed; integrated85Media tests PASS serially. Parallel decoder-pool stall retained as failed/incomplete; native Media harness now serial. Unfinished/torn-prefix/termination-loss/startup and physical/endurance/power-loss remain unverified; fullT16 open."
+          "notes": "Capture334/335/337/338/340, directory350, fragmented-layout/atomic-adoption354 and finished-stale scanner358 merged. Actual marked/unmarked adopted sessions independently schema/canonical validated; receipt canonical bytes and decoded media/hash evidence passed; integrated85Media tests PASS serially. Parallel decoder-pool stall retained as failed/incomplete; native Media harness now serial. Unfinished/torn-prefix/termination-loss/startup and physical/endurance/power-loss remain unverified; fullT16 open. Finished startup adoption landed in #392. The connected device exposed a path alias failure fixed in #395. Torn/unfinished recovery, real interruptions and endurance remain open."
         },
         {
           "id": "T14",
@@ -303,13 +312,56 @@
             "url": "https://github.com/Navigata1/jovra/pull/368"
           },
           "notes": "Bounded foreground single-segment NativeExport368 and CoreFlow370 are merged. Historical actual four-file JSON/CSV/clip package independently validated with unchanged original hash and30frame1sec/noaudio decoded clip; source tree remains equal. FullT36 acceptance, export destinations, current-main runtime and hardware remain pending."
+        },
+        {
+          "id": "P4-STARTUP-RECOVERY",
+          "title": "Reconcile verified finished captures at startup",
+          "status": "done",
+          "dependsOn": [
+            "T15-T16"
+          ],
+          "pr": {
+            "number": 392,
+            "url": "https://github.com/Navigata1/jovra/pull/392",
+            "mergedAt": "2026-11-08T10:21:28Z"
+          },
+          "notes": "Idempotent adoption preserves edits, journals and originals. Full torn or unfinished recovery remains T16. Accepted head 181f500. Squash 09e66a4."
+        },
+        {
+          "id": "P4-DEVICE-CAPTURE-PATH",
+          "title": "Normalize owned capture folder on physical iOS",
+          "status": "done",
+          "dependsOn": [
+            "P4-STARTUP-RECOVERY"
+          ],
+          "pr": {
+            "number": 395,
+            "url": "https://github.com/Navigata1/jovra/pull/395",
+            "mergedAt": "2026-11-08T10:31:14Z"
+          },
+          "notes": "Fixed the actual device alias mismatch without changing the production budget or containment rule. Accepted head 2a09b3f. Squash 7673f2b."
+        },
+        {
+          "id": "P4-FILES-IMPORT",
+          "title": "Safely import one verified practice video from Files",
+          "status": "done",
+          "dependsOn": [
+            "T08",
+            "P4-STARTUP-RECOVERY"
+          ],
+          "pr": {
+            "number": 393,
+            "url": "https://github.com/Navigata1/jovra/pull/393",
+            "mergedAt": "2026-11-08T10:34:30Z"
+          },
+          "notes": "T26 is split into bounded Files ingest and follow-ups for Photos/batches/duplicates/provider UX. This slice includes refusal and staging cleanup controls. Full T26 remains open. Accepted head bf18141. Squash 70aad22."
         }
       ]
     }
   ],
   "metrics": [
     {
-      "label": "Mapped full tickets (workflow inventory, not product completion)",
+      "label": "November 2 mapped full tickets (historical workflow inventory)",
       "baseline": "295 scoped",
       "current": "17 closed / 278 open",
       "target": "Close only with full acceptance evidence",
@@ -330,7 +382,7 @@
     {
       "title": "Required checks and current ownership",
       "severity": "medium",
-      "note": "Old billing blocker refuted by executed green main CI and merged365\u2013371. Requery every new head; draft380 backend-db is genuinely RED and open374/378/379 retain owners."
+      "note": "Historical billing failure and draft #380 red are superseded. #380 merged with backend-db passing. Requery current exact heads and coordinate on overlapping work."
     }
   ],
   "prLog": [
@@ -655,20 +707,41 @@
       "url": "https://github.com/Navigata1/jovra/pull/373",
       "phase": "Roadmap",
       "notes": "Merged source; see live evidence and PLAN for exact scope."
+    },
+    {
+      "number": 392,
+      "url": "https://github.com/Navigata1/jovra/pull/392",
+      "mergedAt": "2026-11-08T10:21:28Z",
+      "title": "Reconcile verified finished captures at startup",
+      "phase": "P4"
+    },
+    {
+      "number": 395,
+      "url": "https://github.com/Navigata1/jovra/pull/395",
+      "mergedAt": "2026-11-08T10:31:14Z",
+      "title": "Normalize owned capture folder on physical iOS",
+      "phase": "P4"
+    },
+    {
+      "number": 393,
+      "url": "https://github.com/Navigata1/jovra/pull/393",
+      "mergedAt": "2026-11-08T10:34:30Z",
+      "title": "Safely import one verified practice video from Files",
+      "phase": "P4"
     }
   ],
   "resume": {
     "activePhase": "P4",
     "nextActions": [
-      "Read the November2 enhanced SOTU and handoff; requery latest main and pre-existing open374/378/379/380. Do not recreate merged365\u2013371 or treat historical billing evidence as a present block.",
-      "After acquiring sufficient owned disk and a dedicated simulator, rerun current-main native CoreFlow and independent actual-artifact checks, preserving testedSHA/runtime custody.",
-      "Recommended next implementation is bounded T16/T17 startup reconciliation for finished journals; preserve fullT16 unfinished/torn-recovery residuals. Then Files-only safe import underT26. Read full ticket blocker/acceptance criteria and coordinate ownership first.",
-      "Later PLAN records October11 step5 green light. Prioritize native Studio/local film, Room, Android/adaptive/watch through their existing DAGs only within current user scope; hosted/paid/device/store gates remain separate."
+      "Read the November 8 continuation and refresh live main, PR ownership and exact check status.",
+      "Exercise a real Files selection on iPhone, then provider selection. Continue remaining T26 imports in bounded slices.",
+      "Exercise live camera, interruptions and torn recovery under T16/T17. Then continue Trash and deletion under T20/T56/T57.",
+      "Coordinate S88 #389 versus draft #394. Keep Android #378 behind its ADRs. Preserve separate Studio, hosted, watch and release gates."
     ],
     "blockers": [
-      "Current-main native simulator, real-footage, physical-device, iOS18 fallback, signing and store evidence remain unverified. Low owned disk constrains native/Docker workloads; do not delete other projects caches or originals.",
-      "DraftPR380 deliberately has backend-db RED tests pending migration implementation; never merge red. Existing open PRs retain their owners.",
-      "No new hosted/paid activation authority is created by this assessment. Founder/pricing and G1\u2013G9 activation decisions remain governed by their explicit requirements."
+      "Native synthetic simulator and signed iPhone receipts are current for these bounded slices. Real media, physical UI, live camera, iOS 18 fallback and store evidence are pending.",
+      "Android build foundation #378 remains a draft with #375/#376 gates. No installable Android app was available on main.",
+      "Paid or hosted activation, founder pricing and G1\u2013G9 remain governed by their explicit requirements."
     ],
     "conventions": [
       "Use source-bound current evidence; keep historical receipts and failures distinct.",
@@ -676,7 +749,7 @@
       "All GitHub CLI uses Navigata1-scoped GH_TOKEN without changing global active account.",
       "See PLAN for historical authorization: October9hold then recorded October11green light; this assessment performs no product expansion."
     ],
-    "handoff": "docs/handoff/CODEX-NEXT-SESSION.md",
+    "handoff": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
     "assessment": "docs/reports/2026-11-02/README.md"
   }
 }
