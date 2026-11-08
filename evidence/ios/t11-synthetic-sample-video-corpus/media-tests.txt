@@ -1,0 +1,20 @@
+$ python3 -m unittest discover -s scripts/media -p 'test_*.py' -v
+test_a_one_degree_nudge_moves_the_court_by_the_expected_pixels (test_sample_media.CorpusTests.test_a_one_degree_nudge_moves_the_court_by_the_expected_pixels)
+1 degree of yaw at focal length f moves the centre of the picture by f * tan(1 deg) pixels. ... ok
+test_manifest_lists_tuning_and_held_out_seeds_separately_with_two_hours_of_no_nudge_footage (test_sample_media.CorpusTests.test_manifest_lists_tuning_and_held_out_seeds_separately_with_two_hours_of_no_nudge_footage) ... ok
+test_nudges_are_one_degree_and_neighbour_clicks_stay_clear_of_hits (test_sample_media.CorpusTests.test_nudges_are_one_degree_and_neighbour_clicks_stay_clear_of_hits) ... ok
+test_bundled_sample_media_is_within_the_60_mb_budget (test_sample_media.SampleMediaTests.test_bundled_sample_media_is_within_the_60_mb_budget) ... ok
+test_every_manifest_media_id_has_a_rendered_file_of_its_duration_and_frame_rate (test_sample_media.SampleMediaTests.test_every_manifest_media_id_has_a_rendered_file_of_its_duration_and_frame_rate) ... ok
+test_every_sampled_frame_carries_the_visible_synthetic_label (test_sample_media.SampleMediaTests.test_every_sampled_frame_carries_the_visible_synthetic_label)
+Every lit pixel of the label decodes as ink and the banner around the glyphs as background, on ... ok
+test_the_renderer_draws_primitives_only (test_sample_media.SampleMediaTests.test_the_renderer_draws_primitives_only)
+No image, font, photograph or network input: the scene modules import nothing that could load ... ok
+test_two_runs_render_identical_ground_truth_and_hashes (test_sample_media.SampleMediaTests.test_two_runs_render_identical_ground_truth_and_hashes)
+The same clip rendered twice from scratch into two caches yields byte-identical ground truth ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 18.199s
+
+OK
+
+bundled sample media: 43,169,127 bytes = 43.17 MB of 60 MB

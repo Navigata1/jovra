@@ -4,7 +4,7 @@ reference: [spec/reference/studio/records.py, spec/reference/studio/generate_stu
 cases: [spec/reference/studio/cases/records_cases.py]
 kinds: [jovra.project-lock/1, jovra.source-manifest/1, jovra.observation/1, jovra.keeper-catalog/1, jovra.broll-catalog/1, jovra.story-profile-catalog/1, jovra.story-brief/1, jovra.reference-catalog/1, jovra.delivered-artifact/1, jovra.lesson/1, jovra.camera-invite/1, jovra.storage-providers/1]
 coverage: covered
-swift: pending
+swift: consumed
 kotlin: pending
 ---
 

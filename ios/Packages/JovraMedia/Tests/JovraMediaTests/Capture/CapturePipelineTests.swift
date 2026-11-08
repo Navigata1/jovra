@@ -57,16 +57,7 @@ private actor CapturedRecordSink: RecordingSink {
             if FileManager.default.fileExists(atPath: target.path) { try FileManager.default.removeItem(at: target) }
             try FileManager.default.copyItem(at: media, to: target)
         }
-        var session = try ContractCodec.decode(SessionDocument.self, from: Data(contentsOf: catalog.root.appendingPathComponent("spec/fixtures/records/session.all-fields.json")))
-        session.id = "capture-test"; session.title = "Sample fixture recording"; session.recording = record
-        session.archive = SessionArchiveState(state: .localOnly); session.original = SessionOriginalState(state: .saved)
-        session.capturePurpose = nil
-        session.match = nil; session.sessionKind = .servePractice; session.sides = nil
-        session.marks = nil; session.shots = nil; session.calibrations = nil; session.annotations = nil
-        session.voiceNotes = nil; session.comparisons = nil; session.derivedValues = nil; session.equipmentUse = nil
-        session.rallyPlayback = nil; session.serveMarks = nil; session.swings = nil; session.exports = nil
-        session.analysis = nil; session.review = nil; session.consent = nil
-        session.sample = SessionSampleInfo(synthetic: true, generator: "JOVRA FixtureCamera")
+        let session = try sampleCaptureSession(id: "capture-test", title: "Sample fixture recording", recording: record, marks: nil)
         try CanonicalJSON.encode(session).write(to: directory.appendingPathComponent("sample-session.json"))
     }
 }

@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.rally",
+  "id": "R02-threshold-edges",
+  "title": "Same rally below 3 s, same point up to 5 s, new point above 5 s",
+  "covers": ["T32", "ios-v1-spec RallySegmenter", "screens.md N7", "stories 192, 195, 200"],
+  "cases": [
+    {
+      "op": "segment",
+      "name": "2999 ms between hits: one rally",
+      "hits": [{"id": "h1", "tMs": 10000, "kind": "hit"}, {"id": "h2", "tMs": 12999, "kind": "hit"}],
+      "marks": [],
+      "params": {"durationMs": 60000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 12999, "clip": {"fromMs": 8500, "toMs": 15499}, "hitIds": ["h1", "h2"], "markIds": [], "rallies": [{"startMs": 10000, "endMs": 12999, "hitCount": 2}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "exactly 3000 ms: the rally ends, the point does not",
+      "hits": [{"id": "h1", "tMs": 10000, "kind": "hit"}, {"id": "h2", "tMs": 13000, "kind": "hit"}],
+      "marks": [],
+      "params": {"durationMs": 60000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 13000, "clip": {"fromMs": 8500, "toMs": 15500}, "hitIds": ["h1", "h2"], "markIds": [], "rallies": [{"startMs": 10000, "endMs": 10000, "hitCount": 1}, {"startMs": 13000, "endMs": 13000, "hitCount": 1}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "exactly 5000 ms: still the same point",
+      "hits": [{"id": "h1", "tMs": 10000, "kind": "hit"}, {"id": "h2", "tMs": 15000, "kind": "hit"}],
+      "marks": [],
+      "params": {"durationMs": 60000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 15000, "clip": {"fromMs": 8500, "toMs": 17500}, "hitIds": ["h1", "h2"], "markIds": [], "rallies": [{"startMs": 10000, "endMs": 10000, "hitCount": 1}, {"startMs": 15000, "endMs": 15000, "hitCount": 1}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "5001 ms: a new point",
+      "hits": [{"id": "h1", "tMs": 10000, "kind": "hit"}, {"id": "h2", "tMs": 15001, "kind": "hit"}],
+      "marks": [],
+      "params": {"durationMs": 60000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 10000, "endMs": 10000, "clip": {"fromMs": 8500, "toMs": 12500}, "hitIds": ["h1"], "markIds": [], "rallies": [{"startMs": 10000, "endMs": 10000, "hitCount": 1}], "provenance": "estimated", "needsReview": true},
+          {"source": "hits", "startMs": 15001, "endMs": 15001, "clip": {"fromMs": 13501, "toMs": 17501}, "hitIds": ["h2"], "markIds": [], "rallies": [{"startMs": 15001, "endMs": 15001, "hitCount": 1}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "custom thresholds and rolls",
+      "hits": [
+        {"id": "h1", "tMs": 1000, "kind": "hit"},
+        {"id": "h2", "tMs": 2500, "kind": "hit"},
+        {"id": "h3", "tMs": 5000, "kind": "hit"},
+        {"id": "h4", "tMs": 9001, "kind": "hit"},
+        {"id": "h5", "tMs": 9500, "kind": "hit"}
+      ],
+      "marks": [],
+      "params": {"durationMs": 10000, "rallyGapMs": 2000, "pointGapMs": 4000, "preRollMs": 500, "postRollMs": 1000},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 1000, "endMs": 5000, "clip": {"fromMs": 500, "toMs": 6000}, "hitIds": ["h1", "h2", "h3"], "markIds": [], "rallies": [{"startMs": 1000, "endMs": 2500, "hitCount": 2}, {"startMs": 5000, "endMs": 5000, "hitCount": 1}], "provenance": "estimated", "needsReview": true},
+          {"source": "hits", "startMs": 9001, "endMs": 9500, "clip": {"fromMs": 8501, "toMs": 10000}, "hitIds": ["h4", "h5"], "markIds": [], "rallies": [{"startMs": 9001, "endMs": 9500, "hitCount": 2}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "unsorted input; simultaneous hits order by id",
+      "hits": [
+        {"id": "hc", "tMs": 21000, "kind": "hit"},
+        {"id": "ha", "tMs": 20000, "kind": "hit"},
+        {"id": "hb", "tMs": 21000, "kind": "hit"}
+      ],
+      "marks": [],
+      "params": {"durationMs": 60000, "excludedSide": null},
+      "expected": {
+        "candidates": [
+          {"source": "hits", "startMs": 20000, "endMs": 21000, "clip": {"fromMs": 18500, "toMs": 23500}, "hitIds": ["ha", "hb", "hc"], "markIds": [], "rallies": [{"startMs": 20000, "endMs": 21000, "hitCount": 3}], "provenance": "estimated", "needsReview": true}
+        ],
+        "dropped": {"excludedSide": [], "notHit": [], "notPointMark": []}
+      }
+    },
+    {
+      "op": "segment",
+      "name": "refused: rally gap must be positive",
+      "hits": [{"id": "h1", "tMs": 0, "kind": "hit"}],
+      "marks": [],
+      "params": {"durationMs": 10, "rallyGapMs": 0},
+      "expectedError": "rallyGapNotPositive"
+    },
+    {
+      "op": "segment",
+      "name": "refused: point gap below rally gap",
+      "hits": [{"id": "h1", "tMs": 0, "kind": "hit"}],
+      "marks": [],
+      "params": {"durationMs": 10, "rallyGapMs": 4000, "pointGapMs": 3000},
+      "expectedError": "pointGapBelowRallyGap"
+    },
+    {
+      "op": "segment",
+      "name": "refused: pre-roll above 10 s",
+      "hits": [],
+      "marks": [],
+      "params": {"durationMs": 10, "preRollMs": 10001},
+      "expectedError": "rollOutOfRange"
+    },
+    {
+      "op": "segment",
+      "name": "refused: hit after the recording ends",
+      "hits": [{"id": "h1", "tMs": 10001, "kind": "hit"}],
+      "marks": [],
+      "params": {"durationMs": 10000},
+      "expectedError": "timeOutsideRecording"
+    },
+    {
+      "op": "segment",
+      "name": "refused: a negative mark time",
+      "hits": null,
+      "marks": [{"id": "m1", "tMs": -1, "kind": "point"}],
+      "params": {"durationMs": 10000},
+      "expectedError": "timeOutsideRecording"
+    },
+    {
+      "op": "segment",
+      "name": "refused: a hit and a mark share an id",
+      "hits": [{"id": "x", "tMs": 1000, "kind": "hit"}],
+      "marks": [{"id": "x", "tMs": 2000, "kind": "point"}],
+      "params": {"durationMs": 10000},
+      "expectedError": "duplicateId"
+    }
+  ]
+}

@@ -10,7 +10,8 @@ spec/
   schemas/      JSON Schema 2020-12, schemaVersion "1.x.y" on every record
   contracts/    shipped data both apps read: capability-registry.v1.json, csv/points.v1.json, csv/stats.v1.json
   reference/    Python 3 standard-library reference engine + fixture generator (cases/ = one module per source)
-  fixtures/     golden cases: scoring/ (S01-S64, E01-E10), stats/ (T01-T04), units/ (U01), sample/, records/
+  fixtures/     golden cases: scoring/ (S01-S64, E01-E10), stats/ (T01-T04), units/ (U01), sample/, records/,
+                rally/ (R01-R05 segmentation and rally-only plan vectors, session.rolls.json; T32)
 scripts/spec/validate.py          validates everything and re-runs the engine; non-zero exit on any mismatch
 scripts/spec/test_contracts.py    tests of the contract tooling itself (plumbing by convention, closed objects, T02)
 ```
@@ -92,6 +93,7 @@ The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) a
 | `csv-contract.schema.json` | `contracts/csv/*.v1.json` | column order, nullability, quoting, line endings |
 | `engine-output.schema.json` | fold and stats outputs | the exact shape both platforms must produce |
 | `fixture-*.schema.json` | the fixtures themselves | |
+| `fixture-rally.schema.json` | `fixtures/rally/R*.json` (T32) | RallySegmenter `segment` and `RallyOnlyPlan.build` vectors with shared error codes; reference `jovra_ref/rally.py`, re-run by the `CHECKS` in `cases/rally_cases.py`. Gaps keep their duration and their GapChip label (`+0:42`, whole seconds truncated) |
 
 No schema has an `$id`: references are relative file references (`common.schema.json#/$defs/id`), so any 2020-12
 validator resolves them when loading from disk, and no URL appears before it resolves (IDC domain rule 1).

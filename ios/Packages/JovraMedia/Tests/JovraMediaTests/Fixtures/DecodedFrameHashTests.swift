@@ -21,7 +21,11 @@ struct DecodedFrameHashTests {
         #expect(decoded.sha256 == truth.signature.decodedFramesSha256)
     }
 
-    @Test("every clip burns in its own frame index", arguments: supportedIDs)
+    static var frameCodedIDs: [String] {
+        ((try? catalog.allTruths()) ?? []).filter { $0.video.supported && $0.frameCode != nil }.map(\.id)
+    }
+
+    @Test("every frame-coded clip burns in its own frame index", arguments: frameCodedIDs)
     func frameCodesCount(id: String) async throws {
         let truth = try Self.catalog.truth(id: id)
         let frames = try await DecodedFrameReader.frames(of: try Self.catalog.mediaURL(for: truth), truth: truth)
@@ -31,6 +35,6 @@ struct DecodedFrameHashTests {
     @Test("the fixture set covers capture, playback, import and the harness")
     func setsPresent() throws {
         let sets = Set(try Self.catalog.allTruths().map(\.set))
-        #expect(sets.isSuperset(of: ["fixtureCamera", "frameCounter", "harness", "import"]))
+        #expect(sets.isSuperset(of: ["corpus", "fixtureCamera", "frameCounter", "harness", "import", "sample"]))
     }
 }

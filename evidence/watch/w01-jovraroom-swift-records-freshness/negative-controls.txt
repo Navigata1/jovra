@@ -1,0 +1,27 @@
+# room-contracts negative controls, 2026-11-08T09:24:41Z, HEAD 5a7f4c8+working tree
+$ python3 scripts/spec/test_validate_room.py -v
+test_clean_copy_is_green (__main__.RoomContractsNegativeControls.test_clean_copy_is_green) ... ok
+test_deleted_fixture_is_red (__main__.RoomContractsNegativeControls.test_deleted_fixture_is_red) ... ok
+test_flipped_freshness_vector_is_red (__main__.RoomContractsNegativeControls.test_flipped_freshness_vector_is_red)
+The break named in issue #267: fresh-boundary expect Fresh -> Delayed. ... ok
+test_hand_edited_record_is_red (__main__.RoomContractsNegativeControls.test_hand_edited_record_is_red)
+A record edited by hand instead of regenerated from the reference. ... ok
+test_record_missing_required_field_is_red (__main__.RoomContractsNegativeControls.test_record_missing_required_field_is_red)
+A record that no longer satisfies its schema. ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.782s
+
+OK
+exit=0
+
+# Deleted-fixture break on a temporary copy (records/device-status.json removed). Before this commit the validator
+# stopped with a KeyError traceback; it now reports the crash as a failure and still runs the determinism check.
+$ python3 scripts/spec/validate_room.py   (in the temporary copy; first and last failure lines shown)
+FAIL invalid: check crashed: KeyError: 'device-status'
+FAIL acceptance-map: row 4: invalid/invitation.invalid.json#long-invite was not executed
+FAIL acceptance-map: row 4: invalid/invitation.invalid.json#multi-use was not executed
+...
+FAIL determinism: records/device-status.json differs from a fresh generation
+FAILED: 66 problem(s)
+exit=1

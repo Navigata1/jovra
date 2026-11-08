@@ -1,0 +1,41 @@
+# SOF-R4-02 core-owner issue (S10 acceptance criterion 5), captured 2026-11-08
+# origin/main at capture: 76c10e1
+
+$ gh issue list --state all --search "SOF-R4-02"   (after opening)
+#404 OPEN SOF-R4-02: core schema gate, add the trailing-newline invalid fixture and close the finding (ECMA-262 $ in jsonschema_subset.py)
+#79 OPEN S10: JovraStudioCore contracts: Codable models for every jovra.* Studio schema, canonical JSON and a manifest test that fails on an unconsumed fixture
+#144 CLOSED S75: Backend scaffold: local Supabase project, server-enforced tester sign-up, fictional seed testers and the backend-db GitHub Actions workflow
+
+$ grep -n "SOF-R4-02" docs/spec/studio-open-findings.md | cut -c1-160   (row still open, unchanged by S10)
+19:| SOF-R4-02 | LOW (core-owned) | Core schema gate (`scripts/spec/jsonschema_subset.py:131-134`) | `pattern` is compiled with Python `re` and matched with `se
+
+$ git diff --stat origin/main -- docs/spec/studio-open-findings.md   (empty: S10 does not touch the register)
+
+# Core gate state on main, recorded in #404
+$ grep -n "ecma_pattern" scripts/spec/jsonschema_subset.py
+8:rules. ``ecma_pattern`` rewrites ``$`` as ``\Z`` (end of input), and ``check_schema`` refuses those class escapes.
+34:def ecma_pattern(pattern: str) -> str:
+142:                re.compile(ecma_pattern(pattern))
+179:            self._patterns[pattern] = re.compile(ecma_pattern(pattern))
+
+$ git log --format="%h %ad %s" --date=short -S ecma_pattern -- scripts/spec/jsonschema_subset.py
+d36e170 2026-10-09 T02: Contract completion: every v1 session field, registry entries, sample media manifest and convention-based fixture plumbing (#66)
+
+$ python3 -m unittest scripts.spec.test_contracts.PatternAnchorTests -v
+test_a_schema_using_a_class_escape_whose_meaning_differs_from_ecma_is_refused (scripts.spec.test_contracts.PatternAnchorTests.test_a_schema_using_a_class_escape_whose_meaning_differs_from_ecma_is_refused) ... ok
+test_a_session_id_or_timestamp_ending_in_a_newline_is_rejected (scripts.spec.test_contracts.PatternAnchorTests.test_a_session_id_or_timestamp_ending_in_a_newline_is_rejected) ... ok
+test_dollar_becomes_end_of_input_except_when_escaped_or_inside_a_class (scripts.spec.test_contracts.PatternAnchorTests.test_dollar_becomes_end_of_input_except_when_escaped_or_inside_a_class) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.021s
+
+OK
+
+$ python3 -c (plain re vs ecma_pattern on a 64-hex hash + newline)
+plain re.search accepts: True
+ecma_pattern search accepts: False
+
+$ find spec/fixtures -path spec/fixtures/studio -prune -o -type d -iname "*invalid*" -print   (empty: no core invalid fixtures, the gap #404 asks the core owner to fill)
+
+$ python3 scripts/spec/validate.py | tail -1
+RESULT: PASS
