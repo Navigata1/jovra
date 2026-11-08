@@ -159,7 +159,8 @@ lints, command privileges, FK covering indexes and policy overlap, T-DB-01 for t
 59 FK half, the `parent_revision` variant of T-DB-65), `media_03_lessons_clips` (T-DB-17, 18–23, 41, 42, 45, 46, 49,
 52, 62, 69; stories 173 and 179) and `media_04_quotas` (T-DB-64, 70).
 
-Not covered here (later tickets): the render_jobs/quotes half of T-DB-59 and the `render_attempts.lease_token_hash`
+Not covered here (later tickets): the render_jobs/quotes/usage_reservations half of T-DB-59 (an S78 acceptance
+criterion; this migration ships its targets, asserted in `media_01` test 24) and the `render_attempts.lease_token_hash`
 and `quotes.cap_cost_micro_usd` columns of T-DB-17 (S78 creates those tables); the gateway `404` halves of
 T-DB-46/62 (gateway routes, S83 onward); `lesson_embeddings` in T-DB-49 (B-20); audit rows for the clip-share
 commands and the outbox row that deletes an unlinked excerpt's object (`app_ops.audit_events`, `app_ops.job_outbox`,
