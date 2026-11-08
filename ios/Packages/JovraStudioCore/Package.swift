@@ -5,7 +5,8 @@
 // JovraStudioMedia.
 //
 // Studio tickets add folders under Sources/JovraStudioCore/<Module> and Tests/JovraStudioCoreTests/<Module>; none of
-// that needs a manifest change.
+// that needs a manifest change. A module that consumes shared fixtures adds a `<Name>Consumer.swift` test file, which
+// the test-only StudioConsumerDiscoveryPlugin registers (S10; Sources/JovraStudioCore/Contracts/README.md).
 import PackageDescription
 
 let package = Package(
@@ -18,10 +19,17 @@ let package = Package(
         .package(path: "../JovraCore"),
     ],
     targets: [
-        .target(name: "JovraStudioCore", dependencies: [.product(name: "JovraCore", package: "JovraCore")]),
+        .target(
+            name: "JovraStudioCore",
+            dependencies: [.product(name: "JovraCore", package: "JovraCore")],
+            exclude: ["Contracts/README.md"]
+        ),
         .testTarget(
             name: "JovraStudioCoreTests",
-            dependencies: ["JovraStudioCore", .product(name: "JovraCore", package: "JovraCore")]
+            dependencies: ["JovraStudioCore", .product(name: "JovraCore", package: "JovraCore")],
+            plugins: ["StudioConsumerDiscoveryPlugin"]
         ),
+        .executableTarget(name: "StudioConsumerGenerator", path: "Tools/StudioConsumerGenerator"),
+        .plugin(name: "StudioConsumerDiscoveryPlugin", capability: .buildTool(), dependencies: ["StudioConsumerGenerator"]),
     ]
 )
