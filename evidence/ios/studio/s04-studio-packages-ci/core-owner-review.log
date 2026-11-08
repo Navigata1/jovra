@@ -1,0 +1,58 @@
+# S04 core-owner review checks (2026-10-11), base origin/main 6e46a57, head 5f46a00
+
+## (a) project.yml: every added line (git diff origin/main...HEAD -- ios/project.yml | grep '^+')
++  # Studio (S04, docs/studio/DEVELOPING.md): the only Studio ticket that edits this file.
++  JovraStudioCore:
++    path: Packages/JovraStudioCore
++  JovraStudioMedia:
++    path: Packages/JovraStudioMedia
++      - package: JovraStudioCore
++      - package: JovraStudioMedia
++          # Studio film rendering (S04): a user-started continued-processing task on iOS 26; foreground on iOS 18.
++          - com.islanddevcrew.jovra.continued.studio-render
++        # Studio (S04): JOVRA Room finds the other phones at the court over the local network (ADR-0027; the
++        # service carries only an opaque room hint). The Studio environment comes from Config/Studio.xcconfig.
++        NSLocalNetworkUsageDescription: "JOVRA Room uses your local network to find and connect the phones filming your match together."
++        NSBonjourServices:
++          - _jovra-room._tcp
++        JovraStudioEnvironment: $(STUDIO_ENVIRONMENT)
++      - package: JovraStudioCore
++      - package: JovraStudioCore
++      - package: JovraStudioMedia
+
+## core-owned files touched by this branch (ios/Config, project.yml, Info.plist, *.xcodeproj)
+ios/Config/Jovra.xcconfig
+ios/Config/Studio.xcconfig
+ios/Jovra/Resources/Info.plist
+ios/project.yml
+
+## (b) Jovra.xcconfig diff
++
++// JOVRA Studio settings (S04; docs/studio/DEVELOPING.md). Committed, and holds no URL, key or secret.
++#include? "Studio.xcconfig"
+git check-ignore ios/Config/Studio.xcconfig -> exit 1 (1 = not ignored, committed)
+grep -nEi 'https?://|key *=|token' ios/Config/Studio.xcconfig -> 0 matches
+
+## (c) deviation: JovraStudioMedia on JovraTests
+experiment: add '- package: JovraStudioMedia' to JovraTests, scripts/ios/generate.sh, then
+  xcodebuild build-for-testing -scheme Jovra -destination 'generic/platform=iOS Simulator' -only-testing:JovraTests CODE_SIGNING_ALLOWED=NO
+result: exit 65, ** TEST BUILD FAILED **
+Undefined symbols for architecture arm64:
+  "nominal type descriptor for JovraMedia.MediaInfo.Audio", referenced from:
+      _symbolic _____ 10JovraMedia0B4InfoV5AudioV in NativeCaptureCoordinatorTests.o
+  "type metadata for JovraMedia.MediaInfo.Audio", referenced from:
+      implicit closure #20 () throws -> Any? in JovraTests.NativeCaptureCoordinatorTests.testFixtureCaptureSavesFreshDecodableOriginalThroughTheSharedLibrary() async throws -> () in NativeCaptureCoordinatorTests.o
+  "static JovraMedia.MediaProbe.probe(Foundation.URL) async throws -> JovraMedia.MediaInfo", referenced from:
+      (9) await resume partial function for JovraTests.NativeCaptureCoordinatorTests.testFixtureCaptureSavesFreshDecodableOriginalThroughTheSharedLibrary() async throws -> () in NativeCaptureCoordinatorTests.o
+  "async function pointer to static JovraMedia.MediaProbe.probe(Foundation.URL) async throws -> JovraMedia.MediaInfo", referenced from:
+      (9) await resume partial function for JovraTests.NativeCaptureCoordinatorTests.testFixtureCaptureSavesFreshDecodableOriginalThroughTheSharedLibrary() async throws -> () in NativeCaptureCoordinatorTests.o
+control: committed project.yml (JovraTests declares only JovraStudioCore), same command: exit 0, ** TEST BUILD SUCCEEDED **
+project.yml restored after the experiment; git status clean for ios/project.yml.
+
+## (d) JovraStudioEnvironment key
+  "JovraStudioEnvironment" => "demo"
+  "LSRequiresIPhoneOS" => true
+
+## suites re-run on this head
+swift test JovraStudioCore: 7 tests in 2 suites passed; JovraStudioMedia: 4 tests in 2 suites passed; validate_studio.py: PASS
+git merge-tree HEAD origin/main: clean (main has not touched project.yml, ios/Config or Info.plist since the branch point)
