@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA media fixture ground truth",
-  "description": "Exact facts about one rendered media fixture (scripts/media/render.py): what was encoded, what a probe must report, the expected decoded-frame signature hash, and any events with their exact times. The media itself is not committed; it renders into the git-ignored cache path named here, keyed by the renderer's source hash.",
+  "description": "Exact facts about one rendered media fixture (scripts/media/render.py): what was encoded, what a probe must report, the expected decoded-frame signature hash, and any events with their exact times. The media itself is not committed; it renders into the git-ignored cache path named here, keyed by the renderer's source hash. Sample media (set 'sample') and the benchmark corpus (set 'corpus', T11) add the facts their consumers need: the burned-in label, rallies, bounces, serves with true speeds, side-on swings, a neighbouring court's clicks and camera nudges.",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "set", "description", "band", "renderer", "media", "seed", "split", "duplicateOf", "video", "audio", "frameCode", "signature"],
   "additionalProperties": false,
@@ -92,18 +92,23 @@
       ]
     },
     "frameCode": {
-      "type": "object",
-      "required": ["cells", "encodes"],
-      "additionalProperties": false,
-      "description": "Every frame burns in its own index: the first `cells` signature cells in row-major order, most significant bit first, white for 1.",
-      "properties": {
-        "cells": {"const": 16},
-        "encodes": {"const": "frameIndex"}
-      }
+      "oneOf": [
+        {"type": "null", "description": "Demo and corpus media (T11) burn in no frame code; their decoded-frame hash still pins every frame."},
+        {
+          "type": "object",
+          "required": ["cells", "encodes"],
+          "additionalProperties": false,
+          "description": "Every frame burns in its own index: the first `cells` signature cells in row-major order, most significant bit first, white for 1.",
+          "properties": {
+            "cells": {"const": 16},
+            "encodes": {"const": "frameIndex"}
+          }
+        }
+      ]
     },
     "signature": {
       "type": "object",
-      "required": ["method", "columns", "rows", "minimumMargin", "frameCount", "decodedFramesSha256"],
+      "required": ["method", "columns", "rows", "minimumMargin", "frameCount", "decodedFramesSha256", "sourceFramesSha256"],
       "additionalProperties": false,
       "description": "jovra.cellLuma.v1 (scripts/media/jovra_media/signature.py): per cell of the coded picture, the mean luma of its central half reduced to 8 bits and quantized to mean // 64; SHA-256 over every decoded frame's levels in presentation order.",
       "properties": {
@@ -112,7 +117,8 @@
         "rows": {"type": "integer", "minimum": 1, "maximum": 64},
         "minimumMargin": {"type": "integer", "minimum": 12, "description": "Smallest distance, in 8-bit code values, between any source cell mean and a quantization boundary."},
         "frameCount": {"type": "integer", "minimum": 1},
-        "decodedFramesSha256": {"$ref": "common.schema.json#/$defs/sha256"}
+        "decodedFramesSha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "sourceFramesSha256": {"$ref": "common.schema.json#/$defs/sha256", "description": "SHA-256 of every source frame exactly as drawn (raw planar Y'CbCr, presentation order), before encoding: two renders on any machine paint the same pixels. Encoders differ across machines, so this is the drawing's hash, not the file's."}
       }
     },
     "events": {
@@ -156,7 +162,17 @@
       "additionalProperties": false,
       "description": "Signature cell that turns white on the frame of each event onset and the frame after it.",
       "properties": {"column": {"type": "integer", "minimum": 0}, "row": {"type": "integer", "minimum": 0}}
-    }
+    },
+    "sampleMedia": {"type": "object", "required": ["mediaId", "thumbnailFrame"], "additionalProperties": false, "description": "The sample media manifest entry (spec/fixtures/sample/media-manifest.json) this file renders, and the frame its library thumbnail shows.", "properties": {"mediaId": {"type": "string", "pattern": "^sample-media\\.[a-z0-9-]+$"}, "thumbnailFrame": {"type": "integer", "minimum": 0}}},
+    "label": {"type": "object", "required": ["text", "region", "ink", "background"], "additionalProperties": false, "description": "The label burned into every frame, in coded pixels; the region stays outside every signature cell's central half.", "properties": {"text": {"const": "Sample video (synthetic)"}, "region": {"type": "object", "required": ["x", "y", "width", "height"], "additionalProperties": false, "properties": {"x": {"type": "integer", "minimum": 0}, "y": {"type": "integer", "minimum": 0}, "width": {"type": "integer", "minimum": 0}, "height": {"type": "integer", "minimum": 0}}}, "ink": {"type": "object", "required": ["y"], "additionalProperties": false, "properties": {"y": {"type": "integer", "minimum": 16, "maximum": 235}}}, "background": {"type": "object", "required": ["y"], "additionalProperties": false, "properties": {"y": {"type": "integer", "minimum": 16, "maximum": 235}}}}},
+    "camera": {"type": "object", "required": ["angle"], "additionalProperties": false, "properties": {"angle": {"enum": ["behindBaseline", "sideOn"]}}},
+    "corpus": {"type": "object", "required": ["kind"], "additionalProperties": false, "properties": {"kind": {"enum": ["neighbourCourtClicks", "cameraNudges", "serves", "noNudge"]}}},
+    "rallies": {"type": "array", "minItems": 1, "description": "Rally boundaries: from the first hit (serve contact) to the moment the ball is dead.", "items": {"type": "object", "required": ["pointNumber", "start", "end", "hits"], "additionalProperties": false, "properties": {"pointNumber": {"type": "integer", "minimum": 1}, "start": {"$ref": "#/$defs/rationalTime"}, "end": {"$ref": "#/$defs/rationalTime"}, "hits": {"type": "integer", "minimum": 1}}}},
+    "bounces": {"type": "array", "minItems": 1, "description": "Every bounce of the ball, court position in millimetres (x across from the centre line, y from the near baseline).", "items": {"type": "object", "required": ["time", "frame", "courtMm", "inCourt"], "additionalProperties": false, "properties": {"time": {"$ref": "#/$defs/rationalTime"}, "frame": {"type": "integer", "minimum": 0}, "courtMm": {"type": "object", "required": ["x", "y"], "additionalProperties": false, "properties": {"x": {"type": "integer"}, "y": {"type": "integer"}}}, "inCourt": {"type": "boolean", "description": "Inside the singles court (lines included)."}}}},
+    "serves": {"type": "array", "minItems": 1, "description": "Serves with exact contact and bounce frames. averageSpeedKmh is the true contact-to-bounce average (straight-line distance / flight time), what serveSpeed.manualAssisted estimates; contactSpeedKmh is the speed off the racket.", "items": {"type": "object", "required": ["index", "end", "side", "fault", "contact", "bounce", "flightFrames", "averageSpeedKmh", "contactSpeedKmh"], "additionalProperties": false, "properties": {"index": {"type": "integer", "minimum": 0}, "end": {"enum": ["near", "far"]}, "side": {"enum": ["deuce", "ad"]}, "fault": {"type": "boolean"}, "contact": {"$ref": "#/$defs/moment"}, "bounce": {"$ref": "#/$defs/moment"}, "flightFrames": {"type": "integer", "minimum": 1}, "averageSpeedKmh": {"type": "string", "pattern": "^[0-9]{1,3}\\.[0-9]$"}, "contactSpeedKmh": {"type": "string", "pattern": "^[0-9]{1,3}\\.[0-9]$"}}}},
+    "swings": {"type": "array", "minItems": 1, "description": "Side-on forehands and their key moments (Stroke Lab).", "items": {"type": "object", "required": ["index", "keyMoments"], "additionalProperties": false, "properties": {"index": {"type": "integer", "minimum": 0}, "keyMoments": {"type": "object", "required": ["ready", "unitTurn", "racketDrop", "contact", "finish"], "additionalProperties": false, "properties": {"ready": {"type": "object", "required": ["frame"], "additionalProperties": false, "properties": {"frame": {"type": "integer", "minimum": 0}}}, "unitTurn": {"type": "object", "required": ["frame"], "additionalProperties": false, "properties": {"frame": {"type": "integer", "minimum": 0}}}, "racketDrop": {"type": "object", "required": ["frame"], "additionalProperties": false, "properties": {"frame": {"type": "integer", "minimum": 0}}}, "contact": {"type": "object", "required": ["frame"], "additionalProperties": false, "properties": {"frame": {"type": "integer", "minimum": 0}}}, "finish": {"type": "object", "required": ["frame"], "additionalProperties": false, "properties": {"frame": {"type": "integer", "minimum": 0}}}}}}}},
+    "distractors": {"type": "array", "minItems": 1, "description": "Clicks in the audio that are not own-court hits (a neighbouring court). Never events: a hit detector that fires on one loses precision.", "items": {"type": "object", "required": ["type", "time", "sample", "frame"], "additionalProperties": false, "properties": {"type": {"enum": ["neighbourCourtHit"]}, "time": {"$ref": "#/$defs/rationalTime"}, "sample": {"type": "integer", "minimum": 0}, "frame": {"type": "integer", "minimum": 0}}}},
+    "cameraMoves": {"type": "array", "description": "Camera moves from this frame on (a knocked tripod). Empty: the camera never moves.", "items": {"type": "object", "required": ["frame", "time", "kind", "yawDegrees", "pitchDegrees"], "additionalProperties": false, "properties": {"frame": {"type": "integer", "minimum": 1}, "time": {"$ref": "#/$defs/rationalTime"}, "kind": {"enum": ["nudge"]}, "yawDegrees": {"type": "integer", "minimum": -1, "maximum": 1}, "pitchDegrees": {"type": "integer", "minimum": -1, "maximum": 1}}}}
   },
   "allOf": [
     {"if": {"properties": {"split": {"enum": ["tuning", "heldOut"]}}}, "then": {"properties": {"seed": {"type": "integer"}}, "required": ["events"]}}
@@ -164,6 +180,7 @@
   "$defs": {
     "truthId": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*/[a-z0-9][a-z0-9-]{0,63}$"},
     "setName": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$"},
+    "moment": {"type": "object", "required": ["frame", "time", "courtMm"], "additionalProperties": false, "properties": {"frame": {"type": "integer", "minimum": 0}, "time": {"$ref": "#/$defs/rationalTime"}, "courtMm": {"type": "object", "required": ["x", "y", "z"], "additionalProperties": false, "properties": {"x": {"type": "integer"}, "y": {"type": "integer"}, "z": {"type": "integer", "minimum": 0}}}, "pixel": {"type": "object", "required": ["x", "y"], "additionalProperties": false, "properties": {"x": {"type": "integer"}, "y": {"type": "integer"}}}}},
     "rationalTime": {
       "description": "A media time as value/timescale seconds, reduced (ADR: media times are stored as rationals).",
       "type": "object",
