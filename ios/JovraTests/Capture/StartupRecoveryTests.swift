@@ -27,7 +27,10 @@ final class StartupRecoveryTests: XCTestCase {
         let source = try XCTUnwrap(Bundle.main.url(forResource: "fixture-camera-720p30", withExtension: "mp4"))
         let clock = VirtualCaptureClock()
         let camera = FixtureCamera(url: source, duration: CMTime(value: 2, timescale: 1), clock: clock)
-        let engine = CaptureEngine(source: camera, clock: clock, sink: RefusingHandoff())
+        // The synthetic failed-handoff fixture tests recovery, independently of live capture admission.
+        let budget = FakeDeviceBudget(.init(freeBytes: 64 * 1024 * 1024, batteryFraction: nil,
+                                             lowPowerMode: false, thermalState: .nominal))
+        let engine = CaptureEngine(source: camera, clock: clock, sink: RefusingHandoff(), budget: budget)
         _ = try await engine.prepare(.init(width: 1280, height: 720), microphone: .denied)
         try await engine.start(sessionID: id.rawValue, folder: folder)
         try await camera.waitUntilFinished()
