@@ -103,7 +103,7 @@ create table public.usage_reservations (
 -- version is still to be produced by the job (NULLS NOT DISTINCT, finding 18, §13.6). The quote id is not part of
 -- it, so re-quoting identical work can never open a second hold.
 create unique index usage_reservations_one_hold on public.usage_reservations
-  (project_id, story_plan_id, story_plan_version_id, output_spec_sha256)
+  (project_id, story_plan_id, story_plan_version_id, output_spec_sha256) nulls not distinct
   where state = 'held';
 create index usage_reservations_owner_id_idx on public.usage_reservations (owner_id, state);
 create index usage_reservations_project_quote_idx on public.usage_reservations (project_id, quote_id);
