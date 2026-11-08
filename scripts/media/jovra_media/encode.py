@@ -27,9 +27,11 @@ def ffmpeg_version() -> str:
 def _video_args(clip: ClipSpec) -> list[str]:
     common = ["-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact"]
     if clip.codec == "h264":
-        return common + ["-c:v", "libx264", "-preset", "medium", "-crf", "16", "-threads", "1",
+        opts = clip.encode
+        gop = ["-g", str(opts.keyint), "-keyint_min", str(opts.keyint)] if opts.keyint else []
+        return common + ["-c:v", "libx264", "-preset", opts.preset, "-crf", str(opts.crf), "-threads", "1",
                          "-pix_fmt", "yuv420p", "-profile:v", "high", "-color_range", "tv",
-                         "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709"]
+                         "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709"] + gop
     if clip.codec == "hevc":
         params = "log-level=error:pools=1:frame-threads=1:wpp=0"
         if clip.hdr == "hlg":
@@ -79,7 +81,8 @@ def encode(clip: ClipSpec, out: Path, check_frame) -> None:
             wav = Path(tmp) / "audio.wav"
             audio.write_wav(wav, clip.audio, clip.audio_samples, clip.seed or 0)
             cmd += ["-i", str(wav)]
-            maps += ["-map", "1:a:0", "-c:a", "aac", "-b:a", "96k", "-ar", "48000", "-flags:a", "+bitexact"]
+            maps += ["-map", "1:a:0", "-c:a", "aac", "-b:a", clip.encode.audio_bitrate, "-ar", "48000",
+                     "-flags:a", "+bitexact"]
         partial = out.with_name(out.name + ".partial" + out.suffix)
         cmd += maps + _video_args(clip) + _timing_args(clip) + ["-frames:v", str(clip.frame_count), "-f",
                                                                "mov" if clip.container == "mov" else "mp4", str(partial)]

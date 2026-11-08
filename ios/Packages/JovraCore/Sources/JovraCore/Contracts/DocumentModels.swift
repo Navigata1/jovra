@@ -1577,6 +1577,42 @@ public enum ExportManifestSharePackSource: String, Codable, CaseIterable, Hashab
     case original = "original"
 }
 
+public struct GroundTruthMoment: Codable, Equatable, Sendable {
+    public var frame: Int
+    public var time: GroundTruthRationalTime
+    public var courtMm: GroundTruthMomentCourtMm
+    public var pixel: GroundTruthMomentPixel?
+
+    public init(frame: Int, time: GroundTruthRationalTime, courtMm: GroundTruthMomentCourtMm, pixel: GroundTruthMomentPixel? = nil) {
+        self.frame = frame
+        self.time = time
+        self.courtMm = courtMm
+        self.pixel = pixel
+    }
+}
+
+public struct GroundTruthMomentCourtMm: Codable, Equatable, Sendable {
+    public var x: Int
+    public var y: Int
+    public var z: Int
+
+    public init(x: Int, y: Int, z: Int) {
+        self.x = x
+        self.y = y
+        self.z = z
+    }
+}
+
+public struct GroundTruthMomentPixel: Codable, Equatable, Sendable {
+    public var x: Int
+    public var y: Int
+
+    public init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+}
+
 public struct GroundTruthRationalTime: Codable, Equatable, Sendable {
     public var value: Int
     public var timescale: Int
@@ -1601,13 +1637,23 @@ public struct GroundTruthRecord: Codable, Equatable, Sendable {
     public var duplicateOf: ContractNullable<String>
     public var video: GroundTruthRecordVideo
     public var audio: ContractNullable<GroundTruthRecordAudio>
-    public var frameCode: GroundTruthRecordFrameCode
+    public var frameCode: ContractNullable<GroundTruthRecordFrameCode>
     public var signature: GroundTruthRecordSignature
     public var events: [GroundTruthRecordEventsItem]?
     public var court: GroundTruthRecordCourt?
     public var flashCell: GroundTruthRecordFlashCell?
+    public var sampleMedia: GroundTruthRecordSampleMedia?
+    public var label: GroundTruthRecordLabel?
+    public var camera: GroundTruthRecordCamera?
+    public var corpus: GroundTruthRecordCorpus?
+    public var rallies: [GroundTruthRecordRalliesItem]?
+    public var bounces: [GroundTruthRecordBouncesItem]?
+    public var serves: [GroundTruthRecordServesItem]?
+    public var swings: [GroundTruthRecordSwingsItem]?
+    public var distractors: [GroundTruthRecordDistractorsItem]?
+    public var cameraMoves: [GroundTruthRecordCameraMovesItem]?
 
-    public init(schemaVersion: SchemaVersion = .v1, kind: GroundTruthRecordKind = .value, id: String, set: String, description: String, band: GroundTruthRecordBand, renderer: GroundTruthRecordRenderer, media: GroundTruthRecordMedia, seed: ContractNullable<Int>, split: ContractNullable<GroundTruthRecordSplit>, duplicateOf: ContractNullable<String>, video: GroundTruthRecordVideo, audio: ContractNullable<GroundTruthRecordAudio>, frameCode: GroundTruthRecordFrameCode, signature: GroundTruthRecordSignature, events: [GroundTruthRecordEventsItem]? = nil, court: GroundTruthRecordCourt? = nil, flashCell: GroundTruthRecordFlashCell? = nil) {
+    public init(schemaVersion: SchemaVersion = .v1, kind: GroundTruthRecordKind = .value, id: String, set: String, description: String, band: GroundTruthRecordBand, renderer: GroundTruthRecordRenderer, media: GroundTruthRecordMedia, seed: ContractNullable<Int>, split: ContractNullable<GroundTruthRecordSplit>, duplicateOf: ContractNullable<String>, video: GroundTruthRecordVideo, audio: ContractNullable<GroundTruthRecordAudio>, frameCode: ContractNullable<GroundTruthRecordFrameCode>, signature: GroundTruthRecordSignature, events: [GroundTruthRecordEventsItem]? = nil, court: GroundTruthRecordCourt? = nil, flashCell: GroundTruthRecordFlashCell? = nil, sampleMedia: GroundTruthRecordSampleMedia? = nil, label: GroundTruthRecordLabel? = nil, camera: GroundTruthRecordCamera? = nil, corpus: GroundTruthRecordCorpus? = nil, rallies: [GroundTruthRecordRalliesItem]? = nil, bounces: [GroundTruthRecordBouncesItem]? = nil, serves: [GroundTruthRecordServesItem]? = nil, swings: [GroundTruthRecordSwingsItem]? = nil, distractors: [GroundTruthRecordDistractorsItem]? = nil, cameraMoves: [GroundTruthRecordCameraMovesItem]? = nil) {
         self.schemaVersion = schemaVersion
         self.kind = kind
         self.id = id
@@ -1626,6 +1672,16 @@ public struct GroundTruthRecord: Codable, Equatable, Sendable {
         self.events = events
         self.court = court
         self.flashCell = flashCell
+        self.sampleMedia = sampleMedia
+        self.label = label
+        self.camera = camera
+        self.corpus = corpus
+        self.rallies = rallies
+        self.bounces = bounces
+        self.serves = serves
+        self.swings = swings
+        self.distractors = distractors
+        self.cameraMoves = cameraMoves
     }
 }
 
@@ -1660,6 +1716,78 @@ public enum GroundTruthRecordBand: String, Codable, CaseIterable, Hashable, Send
     case value = "synthetic"
 }
 
+public struct GroundTruthRecordBouncesItem: Codable, Equatable, Sendable {
+    public var time: GroundTruthRationalTime
+    public var frame: Int
+    public var courtMm: GroundTruthRecordBouncesItemCourtMm
+    public var inCourt: Bool
+
+    public init(time: GroundTruthRationalTime, frame: Int, courtMm: GroundTruthRecordBouncesItemCourtMm, inCourt: Bool) {
+        self.time = time
+        self.frame = frame
+        self.courtMm = courtMm
+        self.inCourt = inCourt
+    }
+}
+
+public struct GroundTruthRecordBouncesItemCourtMm: Codable, Equatable, Sendable {
+    public var x: Int
+    public var y: Int
+
+    public init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+}
+
+public struct GroundTruthRecordCamera: Codable, Equatable, Sendable {
+    public var angle: GroundTruthRecordCameraAngle
+
+    public init(angle: GroundTruthRecordCameraAngle) {
+        self.angle = angle
+    }
+}
+
+public enum GroundTruthRecordCameraAngle: String, Codable, CaseIterable, Hashable, Sendable {
+    case behindBaseline = "behindBaseline"
+    case sideOn = "sideOn"
+}
+
+public struct GroundTruthRecordCameraMovesItem: Codable, Equatable, Sendable {
+    public var frame: Int
+    public var time: GroundTruthRationalTime
+    public var kind: GroundTruthRecordCameraMovesItemKind
+    public var yawDegrees: Int
+    public var pitchDegrees: Int
+
+    public init(frame: Int, time: GroundTruthRationalTime, kind: GroundTruthRecordCameraMovesItemKind, yawDegrees: Int, pitchDegrees: Int) {
+        self.frame = frame
+        self.time = time
+        self.kind = kind
+        self.yawDegrees = yawDegrees
+        self.pitchDegrees = pitchDegrees
+    }
+}
+
+public enum GroundTruthRecordCameraMovesItemKind: String, Codable, CaseIterable, Hashable, Sendable {
+    case value = "nudge"
+}
+
+public struct GroundTruthRecordCorpus: Codable, Equatable, Sendable {
+    public var kind: GroundTruthRecordCorpusKind
+
+    public init(kind: GroundTruthRecordCorpusKind) {
+        self.kind = kind
+    }
+}
+
+public enum GroundTruthRecordCorpusKind: String, Codable, CaseIterable, Hashable, Sendable {
+    case neighbourCourtClicks = "neighbourCourtClicks"
+    case cameraNudges = "cameraNudges"
+    case serves = "serves"
+    case noNudge = "noNudge"
+}
+
 public struct GroundTruthRecordCourt: Codable, Equatable, Sendable {
     public var space: GroundTruthRecordCourtSpace
     public var order: GroundTruthRecordCourtOrder
@@ -1688,6 +1816,24 @@ public struct GroundTruthRecordCourtPointsItem: Codable, Equatable, Sendable {
 
 public enum GroundTruthRecordCourtSpace: String, Codable, CaseIterable, Hashable, Sendable {
     case value = "displayPixels"
+}
+
+public struct GroundTruthRecordDistractorsItem: Codable, Equatable, Sendable {
+    public var type: GroundTruthRecordDistractorsItemType
+    public var time: GroundTruthRationalTime
+    public var sample: Int
+    public var frame: Int
+
+    public init(type: GroundTruthRecordDistractorsItemType, time: GroundTruthRationalTime, sample: Int, frame: Int) {
+        self.type = type
+        self.time = time
+        self.sample = sample
+        self.frame = frame
+    }
+}
+
+public enum GroundTruthRecordDistractorsItemType: String, Codable, CaseIterable, Hashable, Sendable {
+    case value = "neighbourCourtHit"
 }
 
 public struct GroundTruthRecordEventsItem: Codable, Equatable, Sendable {
@@ -1740,6 +1886,54 @@ public enum GroundTruthRecordKind: String, Codable, CaseIterable, Hashable, Send
     case value = "jovra.groundTruth"
 }
 
+public struct GroundTruthRecordLabel: Codable, Equatable, Sendable {
+    public var text: GroundTruthRecordLabelText
+    public var region: GroundTruthRecordLabelRegion
+    public var ink: GroundTruthRecordLabelInk
+    public var background: GroundTruthRecordLabelBackground
+
+    public init(text: GroundTruthRecordLabelText = .value, region: GroundTruthRecordLabelRegion, ink: GroundTruthRecordLabelInk, background: GroundTruthRecordLabelBackground) {
+        self.text = text
+        self.region = region
+        self.ink = ink
+        self.background = background
+    }
+}
+
+public struct GroundTruthRecordLabelBackground: Codable, Equatable, Sendable {
+    public var y: Int
+
+    public init(y: Int) {
+        self.y = y
+    }
+}
+
+public struct GroundTruthRecordLabelInk: Codable, Equatable, Sendable {
+    public var y: Int
+
+    public init(y: Int) {
+        self.y = y
+    }
+}
+
+public struct GroundTruthRecordLabelRegion: Codable, Equatable, Sendable {
+    public var x: Int
+    public var y: Int
+    public var width: Int
+    public var height: Int
+
+    public init(x: Int, y: Int, width: Int, height: Int) {
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+    }
+}
+
+public enum GroundTruthRecordLabelText: String, Codable, CaseIterable, Hashable, Sendable {
+    case value = "Sample video (synthetic)"
+}
+
 public struct GroundTruthRecordMedia: Codable, Equatable, Sendable {
     public var path: String
     public var container: GroundTruthRecordMediaContainer
@@ -1753,6 +1947,20 @@ public struct GroundTruthRecordMedia: Codable, Equatable, Sendable {
 public enum GroundTruthRecordMediaContainer: String, Codable, CaseIterable, Hashable, Sendable {
     case mp4 = "mp4"
     case mov = "mov"
+}
+
+public struct GroundTruthRecordRalliesItem: Codable, Equatable, Sendable {
+    public var pointNumber: Int
+    public var start: GroundTruthRationalTime
+    public var end: GroundTruthRationalTime
+    public var hits: Int
+
+    public init(pointNumber: Int, start: GroundTruthRationalTime, end: GroundTruthRationalTime, hits: Int) {
+        self.pointNumber = pointNumber
+        self.start = start
+        self.end = end
+        self.hits = hits
+    }
 }
 
 public struct GroundTruthRecordRenderer: Codable, Equatable, Sendable {
@@ -1769,6 +1977,50 @@ public enum GroundTruthRecordRendererScript: String, Codable, CaseIterable, Hash
     case value = "scripts/media/render.py"
 }
 
+public struct GroundTruthRecordSampleMedia: Codable, Equatable, Sendable {
+    public var mediaId: String
+    public var thumbnailFrame: Int
+
+    public init(mediaId: String, thumbnailFrame: Int) {
+        self.mediaId = mediaId
+        self.thumbnailFrame = thumbnailFrame
+    }
+}
+
+public struct GroundTruthRecordServesItem: Codable, Equatable, Sendable {
+    public var index: Int
+    public var end: GroundTruthRecordServesItemEnd
+    public var side: GroundTruthRecordServesItemSide
+    public var fault: Bool
+    public var contact: GroundTruthMoment
+    public var bounce: GroundTruthMoment
+    public var flightFrames: Int
+    public var averageSpeedKmh: String
+    public var contactSpeedKmh: String
+
+    public init(index: Int, end: GroundTruthRecordServesItemEnd, side: GroundTruthRecordServesItemSide, fault: Bool, contact: GroundTruthMoment, bounce: GroundTruthMoment, flightFrames: Int, averageSpeedKmh: String, contactSpeedKmh: String) {
+        self.index = index
+        self.end = end
+        self.side = side
+        self.fault = fault
+        self.contact = contact
+        self.bounce = bounce
+        self.flightFrames = flightFrames
+        self.averageSpeedKmh = averageSpeedKmh
+        self.contactSpeedKmh = contactSpeedKmh
+    }
+}
+
+public enum GroundTruthRecordServesItemEnd: String, Codable, CaseIterable, Hashable, Sendable {
+    case near = "near"
+    case far = "far"
+}
+
+public enum GroundTruthRecordServesItemSide: String, Codable, CaseIterable, Hashable, Sendable {
+    case deuce = "deuce"
+    case ad = "ad"
+}
+
 public struct GroundTruthRecordSignature: Codable, Equatable, Sendable {
     public var method: GroundTruthRecordSignatureMethod
     public var columns: Int
@@ -1776,14 +2028,16 @@ public struct GroundTruthRecordSignature: Codable, Equatable, Sendable {
     public var minimumMargin: Int
     public var frameCount: Int
     public var decodedFramesSha256: String
+    public var sourceFramesSha256: String
 
-    public init(method: GroundTruthRecordSignatureMethod = .value, columns: Int, rows: Int, minimumMargin: Int, frameCount: Int, decodedFramesSha256: String) {
+    public init(method: GroundTruthRecordSignatureMethod = .value, columns: Int, rows: Int, minimumMargin: Int, frameCount: Int, decodedFramesSha256: String, sourceFramesSha256: String) {
         self.method = method
         self.columns = columns
         self.rows = rows
         self.minimumMargin = minimumMargin
         self.frameCount = frameCount
         self.decodedFramesSha256 = decodedFramesSha256
+        self.sourceFramesSha256 = sourceFramesSha256
     }
 }
 
@@ -1794,6 +2048,72 @@ public enum GroundTruthRecordSignatureMethod: String, Codable, CaseIterable, Has
 public enum GroundTruthRecordSplit: String, Codable, CaseIterable, Hashable, Sendable {
     case tuning = "tuning"
     case heldOut = "heldOut"
+}
+
+public struct GroundTruthRecordSwingsItem: Codable, Equatable, Sendable {
+    public var index: Int
+    public var keyMoments: GroundTruthRecordSwingsItemKeyMoments
+
+    public init(index: Int, keyMoments: GroundTruthRecordSwingsItemKeyMoments) {
+        self.index = index
+        self.keyMoments = keyMoments
+    }
+}
+
+public struct GroundTruthRecordSwingsItemKeyMoments: Codable, Equatable, Sendable {
+    public var ready: GroundTruthRecordSwingsItemKeyMomentsReady
+    public var unitTurn: GroundTruthRecordSwingsItemKeyMomentsUnitTurn
+    public var racketDrop: GroundTruthRecordSwingsItemKeyMomentsRacketDrop
+    public var contact: GroundTruthRecordSwingsItemKeyMomentsContact
+    public var finish: GroundTruthRecordSwingsItemKeyMomentsFinish
+
+    public init(ready: GroundTruthRecordSwingsItemKeyMomentsReady, unitTurn: GroundTruthRecordSwingsItemKeyMomentsUnitTurn, racketDrop: GroundTruthRecordSwingsItemKeyMomentsRacketDrop, contact: GroundTruthRecordSwingsItemKeyMomentsContact, finish: GroundTruthRecordSwingsItemKeyMomentsFinish) {
+        self.ready = ready
+        self.unitTurn = unitTurn
+        self.racketDrop = racketDrop
+        self.contact = contact
+        self.finish = finish
+    }
+}
+
+public struct GroundTruthRecordSwingsItemKeyMomentsContact: Codable, Equatable, Sendable {
+    public var frame: Int
+
+    public init(frame: Int) {
+        self.frame = frame
+    }
+}
+
+public struct GroundTruthRecordSwingsItemKeyMomentsFinish: Codable, Equatable, Sendable {
+    public var frame: Int
+
+    public init(frame: Int) {
+        self.frame = frame
+    }
+}
+
+public struct GroundTruthRecordSwingsItemKeyMomentsRacketDrop: Codable, Equatable, Sendable {
+    public var frame: Int
+
+    public init(frame: Int) {
+        self.frame = frame
+    }
+}
+
+public struct GroundTruthRecordSwingsItemKeyMomentsReady: Codable, Equatable, Sendable {
+    public var frame: Int
+
+    public init(frame: Int) {
+        self.frame = frame
+    }
+}
+
+public struct GroundTruthRecordSwingsItemKeyMomentsUnitTurn: Codable, Equatable, Sendable {
+    public var frame: Int
+
+    public init(frame: Int) {
+        self.frame = frame
+    }
 }
 
 public struct GroundTruthRecordVideo: Codable, Equatable, Sendable {

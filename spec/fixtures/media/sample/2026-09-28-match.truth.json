@@ -1,0 +1,278 @@
+{
+  "audio": {
+    "channels": 1,
+    "codec": "aac",
+    "sampleCount": 960000,
+    "sampleRate": 48000
+  },
+  "band": "synthetic",
+  "bounces": [
+    {
+      "courtMm": {
+        "x": -660,
+        "y": 17701
+      },
+      "frame": 115,
+      "inCourt": true,
+      "time": {
+        "timescale": 192,
+        "value": 371
+      }
+    },
+    {
+      "courtMm": {
+        "x": 701,
+        "y": 5890
+      },
+      "frame": 199,
+      "inCourt": true,
+      "time": {
+        "timescale": 48000,
+        "value": 159257
+      }
+    },
+    {
+      "courtMm": {
+        "x": -67,
+        "y": 18750
+      },
+      "frame": 281,
+      "inCourt": true,
+      "time": {
+        "timescale": 48000,
+        "value": 225103
+      }
+    },
+    {
+      "courtMm": {
+        "x": -2049,
+        "y": 4425
+      },
+      "frame": 358,
+      "inCourt": true,
+      "time": {
+        "timescale": 48000,
+        "value": 286771
+      }
+    },
+    {
+      "courtMm": {
+        "x": -3313,
+        "y": 18290
+      },
+      "frame": 434,
+      "inCourt": true,
+      "time": {
+        "timescale": 1500,
+        "value": 10867
+      }
+    },
+    {
+      "courtMm": {
+        "x": -3582,
+        "y": 5790
+      },
+      "frame": 715,
+      "inCourt": true,
+      "time": {
+        "timescale": 8000,
+        "value": 95461
+      }
+    },
+    {
+      "courtMm": {
+        "x": -2541,
+        "y": 18025
+      },
+      "frame": 797,
+      "inCourt": true,
+      "time": {
+        "timescale": 16000,
+        "value": 212723
+      }
+    },
+    {
+      "courtMm": {
+        "x": 459,
+        "y": 6095
+      },
+      "frame": 874,
+      "inCourt": true,
+      "time": {
+        "timescale": 48000,
+        "value": 699359
+      }
+    }
+  ],
+  "camera": {
+    "angle": "behindBaseline"
+  },
+  "description": "Sample video (synthetic): Week-3 singles match: thumbnail clip.",
+  "duplicateOf": null,
+  "events": [
+    {
+      "frame": 90,
+      "sample": 72000,
+      "time": {
+        "timescale": 2,
+        "value": 3
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 148,
+      "sample": 119198,
+      "time": {
+        "timescale": 24000,
+        "value": 59599
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 229,
+      "sample": 183810,
+      "time": {
+        "timescale": 1600,
+        "value": 6127
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 313,
+      "sample": 250411,
+      "time": {
+        "timescale": 48000,
+        "value": 250411
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 386,
+      "sample": 309056,
+      "time": {
+        "timescale": 750,
+        "value": 4829
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 690,
+      "sample": 552000,
+      "time": {
+        "timescale": 2,
+        "value": 23
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 751,
+      "sample": 601456,
+      "time": {
+        "timescale": 3000,
+        "value": 37591
+      },
+      "type": "hit"
+    },
+    {
+      "frame": 825,
+      "sample": 660671,
+      "time": {
+        "timescale": 48000,
+        "value": 660671
+      },
+      "type": "hit"
+    }
+  ],
+  "frameCode": null,
+  "id": "sample/2026-09-28-match",
+  "kind": "jovra.groundTruth",
+  "label": {
+    "background": {
+      "y": 28
+    },
+    "ink": {
+      "y": 230
+    },
+    "region": {
+      "height": 20,
+      "width": 288,
+      "x": 0,
+      "y": 0
+    },
+    "text": "Sample video (synthetic)"
+  },
+  "media": {
+    "container": "mp4",
+    "path": ".cache/media/sample-12ab9717548a9735/sample-2026-09-28-match.mp4"
+  },
+  "rallies": [
+    {
+      "end": {
+        "timescale": 750,
+        "value": 5729
+      },
+      "hits": 5,
+      "pointNumber": 1,
+      "start": {
+        "timescale": 2,
+        "value": 3
+      }
+    },
+    {
+      "end": {
+        "timescale": 48000,
+        "value": 718271
+      },
+      "hits": 3,
+      "pointNumber": 2,
+      "start": {
+        "timescale": 2,
+        "value": 23
+      }
+    }
+  ],
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "12ab9717548a973589818bc568f30bad043b341db30a2252849fd41e1aa067e2"
+  },
+  "sampleMedia": {
+    "mediaId": "sample-media.2026-09-28-match",
+    "thumbnailFrame": 178
+  },
+  "schemaVersion": "1.0.0",
+  "seed": 1006,
+  "set": "sample",
+  "signature": {
+    "columns": 8,
+    "decodedFramesSha256": "64daf5419d658ff737cd76ffdba1c2b51935461eb11b7e662ebe7b7e5f92d943",
+    "frameCount": 1200,
+    "method": "jovra.cellLuma.v1",
+    "minimumMargin": 18,
+    "rows": 4,
+    "sourceFramesSha256": "188bc0966013da01190033dd6c72350c1381c629eaa3de4174c58fb89071093c"
+  },
+  "split": null,
+  "video": {
+    "bitDepth": 8,
+    "codec": "h264",
+    "codedHeight": 360,
+    "codedWidth": 640,
+    "displayHeight": 360,
+    "displayWidth": 640,
+    "duration": {
+      "timescale": 1,
+      "value": 20
+    },
+    "fourCC": "avc1",
+    "frameCount": 1200,
+    "frameRate": {
+      "den": 1,
+      "num": 60
+    },
+    "hdr": null,
+    "orientation": "landscape",
+    "rotationDegrees": 0,
+    "supported": true,
+    "variableFrameRate": false
+  }
+}

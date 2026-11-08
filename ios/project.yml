@@ -31,6 +31,22 @@ targets:
     dependencies:
       - package: JovraCore
       - package: JovraMedia
+    # T11: copy the rendered synthetic sample media into the bundle (SampleMedia/); fails with the command to
+    # run when it is not rendered. Debug builds may set JOVRA_SKIP_SAMPLE_MEDIA=YES (see the script).
+    postCompileScripts:
+      - name: Bundle sample media
+        script: '"${SRCROOT}/../scripts/ios/bundle-sample-media.sh"'
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $(SRCROOT)/../scripts/ios/bundle-sample-media.sh
+          - $(SRCROOT)/../scripts/ios/sample-media-outputs.xcfilelist
+          - $(SRCROOT)/../spec/fixtures/sample/media-manifest.json
+          - $(SRCROOT)/../spec/fixtures/media/sample
+          - $(SRCROOT)/../.cache/media
+        # Script sandboxing allows writes to declared files only: one line per manifest file (the script
+        # fails when this list and the manifest disagree).
+        outputFileLists:
+          - $(SRCROOT)/../scripts/ios/sample-media-outputs.xcfilelist
     # Drive OAuth client and feature switches; optionally includes the git-ignored Drive.xcconfig.
     configFiles:
       Debug: Config/Jovra.xcconfig

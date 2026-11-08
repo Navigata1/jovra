@@ -1,0 +1,354 @@
+{
+  "band": "synthetic",
+  "kind": "jovra.benchmarkCorpus",
+  "kinds": [
+    "cameraNudges",
+    "neighbourCourtClicks",
+    "noNudge",
+    "serves"
+  ],
+  "minimumNoNudgeMs": 7200000,
+  "renderer": {
+    "script": "scripts/media/render.py",
+    "sourceHash": "2811f465811e97797fc8109e30380b47db353c6f17c521fcda040e64984409d0"
+  },
+  "schemaVersion": "1.0.0",
+  "set": "corpus",
+  "splits": {
+    "heldOut": [
+      {
+        "cameraMoves": 0,
+        "distractors": 32,
+        "durationMs": 60000,
+        "events": 16,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 360,
+        "kind": "neighbourCourtClicks",
+        "seed": 201,
+        "serves": 0,
+        "truthId": "corpus/neighbour-s201",
+        "width": 640
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 26,
+        "durationMs": 60000,
+        "events": 15,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 360,
+        "kind": "neighbourCourtClicks",
+        "seed": 202,
+        "serves": 0,
+        "truthId": "corpus/neighbour-s202",
+        "width": 640
+      },
+      {
+        "cameraMoves": 3,
+        "distractors": 0,
+        "durationMs": 60000,
+        "events": 19,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 360,
+        "kind": "cameraNudges",
+        "seed": 211,
+        "serves": 0,
+        "truthId": "corpus/nudge-s211",
+        "width": 640
+      },
+      {
+        "cameraMoves": 3,
+        "distractors": 0,
+        "durationMs": 60000,
+        "events": 16,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 360,
+        "kind": "cameraNudges",
+        "seed": 212,
+        "serves": 0,
+        "truthId": "corpus/nudge-s212",
+        "width": 640
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 60000,
+        "events": 12,
+        "frameRate": {
+          "den": 1,
+          "num": 60
+        },
+        "height": 360,
+        "kind": "serves",
+        "seed": 221,
+        "serves": 12,
+        "truthId": "corpus/serves-s221",
+        "width": 640
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 60000,
+        "events": 12,
+        "frameRate": {
+          "den": 1,
+          "num": 60
+        },
+        "height": 360,
+        "kind": "serves",
+        "seed": 222,
+        "serves": 12,
+        "truthId": "corpus/serves-s222",
+        "width": 640
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 900000,
+        "events": 272,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 180,
+        "kind": "noNudge",
+        "seed": 231,
+        "serves": 0,
+        "truthId": "corpus/static-s231",
+        "width": 320
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 900000,
+        "events": 273,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 180,
+        "kind": "noNudge",
+        "seed": 232,
+        "serves": 0,
+        "truthId": "corpus/static-s232",
+        "width": 320
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 900000,
+        "events": 252,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 180,
+        "kind": "noNudge",
+        "seed": 233,
+        "serves": 0,
+        "truthId": "corpus/static-s233",
+        "width": 320
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 900000,
+        "events": 273,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 180,
+        "kind": "noNudge",
+        "seed": 234,
+        "serves": 0,
+        "truthId": "corpus/static-s234",
+        "width": 320
+      }
+    ],
+    "tuning": [
+      {
+        "cameraMoves": 0,
+        "distractors": 31,
+        "durationMs": 60000,
+        "events": 16,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 360,
+        "kind": "neighbourCourtClicks",
+        "seed": 101,
+        "serves": 0,
+        "truthId": "corpus/neighbour-s101",
+        "width": 640
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 33,
+        "durationMs": 60000,
+        "events": 17,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 360,
+        "kind": "neighbourCourtClicks",
+        "seed": 102,
+        "serves": 0,
+        "truthId": "corpus/neighbour-s102",
+        "width": 640
+      },
+      {
+        "cameraMoves": 3,
+        "distractors": 0,
+        "durationMs": 60000,
+        "events": 21,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 360,
+        "kind": "cameraNudges",
+        "seed": 111,
+        "serves": 0,
+        "truthId": "corpus/nudge-s111",
+        "width": 640
+      },
+      {
+        "cameraMoves": 3,
+        "distractors": 0,
+        "durationMs": 60000,
+        "events": 23,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 360,
+        "kind": "cameraNudges",
+        "seed": 112,
+        "serves": 0,
+        "truthId": "corpus/nudge-s112",
+        "width": 640
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 60000,
+        "events": 12,
+        "frameRate": {
+          "den": 1,
+          "num": 60
+        },
+        "height": 360,
+        "kind": "serves",
+        "seed": 121,
+        "serves": 12,
+        "truthId": "corpus/serves-s121",
+        "width": 640
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 60000,
+        "events": 12,
+        "frameRate": {
+          "den": 1,
+          "num": 60
+        },
+        "height": 360,
+        "kind": "serves",
+        "seed": 122,
+        "serves": 12,
+        "truthId": "corpus/serves-s122",
+        "width": 640
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 900000,
+        "events": 270,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 180,
+        "kind": "noNudge",
+        "seed": 131,
+        "serves": 0,
+        "truthId": "corpus/static-s131",
+        "width": 320
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 900000,
+        "events": 261,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 180,
+        "kind": "noNudge",
+        "seed": 132,
+        "serves": 0,
+        "truthId": "corpus/static-s132",
+        "width": 320
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 900000,
+        "events": 272,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 180,
+        "kind": "noNudge",
+        "seed": 133,
+        "serves": 0,
+        "truthId": "corpus/static-s133",
+        "width": 320
+      },
+      {
+        "cameraMoves": 0,
+        "distractors": 0,
+        "durationMs": 900000,
+        "events": 262,
+        "frameRate": {
+          "den": 1,
+          "num": 30
+        },
+        "height": 180,
+        "kind": "noNudge",
+        "seed": 134,
+        "serves": 0,
+        "truthId": "corpus/static-s134",
+        "width": 320
+      }
+    ]
+  },
+  "totals": {
+    "clips": {
+      "heldOut": 10,
+      "tuning": 10
+    },
+    "noNudgeMs": {
+      "all": 7200000,
+      "heldOut": 3600000,
+      "tuning": 3600000
+    }
+  }
+}

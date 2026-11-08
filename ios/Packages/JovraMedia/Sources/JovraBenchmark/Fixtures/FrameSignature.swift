@@ -54,7 +54,7 @@ public struct ClipSignatureHasher {
 public enum FrameCode {
     public static func read(from plane: LumaPlane, truth: GroundTruth) throws -> Int {
         read(means: FrameSignature.cellMeans(of: plane, columns: truth.signature.columns, rows: truth.signature.rows),
-             bitDepth: plane.bitDepth, cells: truth.frameCode.cells)
+             bitDepth: plane.bitDepth, cells: truth.frameCode?.cells ?? 0)
     }
 
     public static func read(means: [Int], bitDepth: Int, cells: Int) -> Int {

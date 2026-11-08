@@ -24,11 +24,12 @@ def core_files(root: Path) -> list[Path]:
     return sorted([root / MEDIA_DIR / "render.py", *pkg.glob("*.py"), pkg / "sets" / "__init__.py"])
 
 
-def source_hash(root: Path, set_module: Path) -> str:
-    """SHA-256 over the renderer core plus one set module: the cache key and ``renderer.sourceHash``.
-    Each entry is ``<repo-relative path>\\0<sha256 of bytes>\\n``, sorted by path."""
+def source_hash(root: Path, set_module: Path, inputs: tuple[str, ...] = ()) -> str:
+    """SHA-256 over the renderer core plus one set module (and any repository files the set reads, its
+    ``INPUTS``): the cache key and ``renderer.sourceHash``. Each entry is
+    ``<repo-relative path>\\0<sha256 of bytes>\\n``, sorted by path."""
     sha = hashlib.sha256()
-    for path in sorted(set(core_files(root)) | {set_module}):
+    for path in sorted(set(core_files(root)) | {set_module} | {root / p for p in inputs}):
         rel = path.relative_to(root).as_posix()
         sha.update(f"{rel}\0{hashlib.sha256(path.read_bytes()).hexdigest()}\n".encode())
     return sha.hexdigest()
@@ -40,7 +41,7 @@ def rational(value: int, timescale: int) -> dict:
 
 
 def document(set_name: str, clip: ClipSpec, src_hash: str, media_path: str, margin: int,
-             decoded_hash: str, decoded_frames: int) -> dict:
+             decoded_hash: str, decoded_frames: int, source_frames_hash: str) -> dict:
     rotated = clip.rotation in (90, 270)
     display_w, display_h = (clip.height, clip.width) if rotated else (clip.width, clip.height)
     orientation = "portrait" if display_h > display_w else "landscape" if display_w > display_h else "square"
@@ -78,7 +79,7 @@ def document(set_name: str, clip: ClipSpec, src_hash: str, media_path: str, marg
             "codec": "aac", "sampleRate": AUDIO_RATE, "channels": clip.audio.channels,
             "sampleCount": clip.audio_samples,
         },
-        "frameCode": {"cells": 16, "encodes": "frameIndex"},
+        "frameCode": {"cells": 16, "encodes": "frameIndex"} if clip.frame_code else None,
         "signature": {
             "method": signature.METHOD,
             "columns": clip.grid[0],
@@ -86,6 +87,7 @@ def document(set_name: str, clip: ClipSpec, src_hash: str, media_path: str, marg
             "minimumMargin": margin,
             "frameCount": decoded_frames,
             "decodedFramesSha256": decoded_hash,
+            "sourceFramesSha256": source_frames_hash,
         },
     }
     if clip.audio is not None and clip.audio.events:
