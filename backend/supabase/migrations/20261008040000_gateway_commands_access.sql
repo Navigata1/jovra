@@ -750,13 +750,14 @@ begin
   if p_kind is null or p_kind = 'share_link' then
     raise exception using errcode = 'P0422', message = 'invalid_value:kind';
   end if;
-  if case p_kind
-       when 'project_coach' then p_project is null or num_nonnulls(p_lesson, p_artifact, p_clip) > 0
-       when 'lesson_coach' then p_lesson is null or num_nonnulls(p_project, p_artifact, p_clip) > 0
-       when 'lesson_view' then p_lesson is null or num_nonnulls(p_project, p_artifact, p_clip) > 0
-       when 'film_view' then p_artifact is null or num_nonnulls(p_lesson, p_clip) > 0
-       when 'lesson_clip_view' then p_clip is null or num_nonnulls(p_project, p_lesson, p_artifact) > 0
-     end then
+  -- parenthesized: plpgsql reads an IF condition up to its first THEN, which would be the CASE's own
+  if (case p_kind
+        when 'project_coach' then p_project is null or num_nonnulls(p_lesson, p_artifact, p_clip) > 0
+        when 'lesson_coach' then p_lesson is null or num_nonnulls(p_project, p_artifact, p_clip) > 0
+        when 'lesson_view' then p_lesson is null or num_nonnulls(p_project, p_artifact, p_clip) > 0
+        when 'film_view' then p_artifact is null or num_nonnulls(p_lesson, p_clip) > 0
+        when 'lesson_clip_view' then p_clip is null or num_nonnulls(p_project, p_lesson, p_artifact) > 0
+      end) then
     raise exception using errcode = 'P0422', message = 'invalid_value:target';
   end if;
   -- the creator owns the target, now
