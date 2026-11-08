@@ -21,7 +21,12 @@
    against the registry gates and the reference scorers). Malformed numbers are reported as failures, never
    crashes.
 
-Exit status is non-zero on any failure.  Usage:  python3 scripts/spec/validate.py [-v] [--encoded-dir native-output-directory]
+Exit status is non-zero on any failure.
+Usage:  python3 scripts/spec/validate.py [-v] [--encoded-dir native-output-directory] [--document path]...
+
+--document (repeatable) adds a natively emitted document (for example the capture engine's recording handed to
+RecordingSink, embedded in a session) to the validated set, so it meets every check a committed fixture meets,
+alongside the repository fixtures. Nothing is written into spec/.
 """
 
 from __future__ import annotations
@@ -211,26 +216,44 @@ def kind_schema_checks(schemas: SchemaSet, rep: Report) -> None:
 
 # ----- 3: instances ------------------------------------------------------------------------------
 
-def validate_instances(schemas: SchemaSet, rep: Report) -> dict[Path, dict]:
+def display(path: Path) -> str:
+    """Repository-relative where possible; an external --document keeps its own path."""
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def validate_instances(schemas: SchemaSet, rep: Report, external: list[Path] = ()) -> dict[Path, dict]:
     docs = {}
-    for path in sorted(list((SPEC / "fixtures").rglob("*.json")) + list((SPEC / "contracts").rglob("*.json"))
-                       + list((SPEC / "benchmarks").rglob("*.json"))):
-        rel = path.relative_to(ROOT)
-        doc = json.loads(path.read_text(encoding="utf-8"))
+    repository = sorted(list((SPEC / "fixtures").rglob("*.json")) + list((SPEC / "contracts").rglob("*.json"))
+                        + list((SPEC / "benchmarks").rglob("*.json")))
+    for path in repository + list(external):
+        rel = display(path)
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            rep.fail(rel, f"unreadable document: {exc}")
+            continue
+        if not isinstance(doc, dict):
+            rep.fail(rel, "document is not a JSON object")
+            continue
         kind = doc.get("kind")
         try:
             schema = conformance.schema_file_for_kind(kind)
         except ValueError:
-            rep.fail(str(rel), f"malformed kind {kind!r}")
+            rep.fail(rel, f"malformed kind {kind!r}")
             continue
         if schema not in schemas.files:
-            rep.fail(str(rel), f"no schema {schema} for kind {kind!r}")
+            rep.fail(rel, f"no schema {schema} for kind {kind!r}")
             continue
         errors = schemas.validate(doc, schema)
         if errors:
-            rep.fail(str(rel), f"schema {schema}: " + "; ".join(errors[:5]))
+            rep.fail(rel, f"schema {schema}: " + "; ".join(errors[:5]))
             continue
         rep.ok("instances valid")
+        if path in external:
+            rep.ok("external documents")
         docs[path] = doc
     return docs
 
@@ -238,7 +261,7 @@ def validate_instances(schemas: SchemaSet, rep: Report) -> dict[Path, dict]:
 # ----- 4: engine re-run --------------------------------------------------------------------------
 
 def check_scoring(path: Path, doc: dict, rep: Report) -> None:
-    where = str(path.relative_to(ROOT))
+    where = display(path)
     if "expectError" in doc:
         code = conformance.run_scoring_error(doc["input"])
         if code != doc["expectError"]["code"]:
@@ -258,7 +281,7 @@ def check_scoring(path: Path, doc: dict, rep: Report) -> None:
 
 
 def check_stats(path: Path, doc: dict, rep: Report) -> None:
-    where = str(path.relative_to(ROOT))
+    where = display(path)
     result = stats.compute(scoring.fold(doc["input"], doc["input"]["log"]))
     good = same(result, doc["expected"], rep, where)
     bad = 0
@@ -272,7 +295,7 @@ def check_stats(path: Path, doc: dict, rep: Report) -> None:
 
 
 def check_vectors(path: Path, doc: dict, run, label: str, rep: Report) -> None:
-    where = str(path.relative_to(ROOT))
+    where = display(path)
     bad = 0
     for i, case in enumerate(doc["cases"]):
         actual = run(case)
@@ -291,7 +314,7 @@ def engine_input_from_session(session: dict) -> dict:
 
 
 def check_sample(path: Path, doc: dict, docs: dict, rep: Report) -> None:
-    where = str(path.relative_to(ROOT))
+    where = display(path)
     session_path = path.parent / doc["sessionFile"]
     session = docs.get(session_path)
     if session is None:
@@ -335,7 +358,7 @@ def check_sample(path: Path, doc: dict, docs: dict, rep: Report) -> None:
 
 
 def check_file_facts(path: Path, doc: dict, rep: Report) -> None:
-    where = str(path.relative_to(ROOT))
+    where = display(path)
     entries = doc["files"]
     for entry in entries:
         if "md5" not in entry and "sha256" not in entry:
@@ -412,7 +435,7 @@ def check_references(docs: dict, rep: Report) -> None:
         rule = per_kind.get(d["kind"], references.time_range_problems)
         problems = rule(d)
         for problem in problems:
-            rep.fail(str(path.relative_to(ROOT)), problem)
+            rep.fail(display(path), problem)
         if not problems:
             rep.ok("reference-integrity documents")
     for path, plan in by_kind.get("jovra.practicePlan", []):
@@ -420,22 +443,22 @@ def check_references(docs: dict, rep: Report) -> None:
             for ev in item["evidence"]:
                 session = sessions.get(ev["sessionId"])
                 if session is None:
-                    rep.fail(str(path.relative_to(ROOT)), "evidence names an unknown session")
+                    rep.fail(display(path), "evidence names an unknown session")
                     continue
                 inp = engine_input_from_session(session)
                 st = stats.compute(scoring.fold(inp, inp["log"]))
                 if canon(st["sides"][ev["side"]][ev["stat"]]) != canon(ev["value"]):
-                    rep.fail(str(path.relative_to(ROOT)), f"evidence {ev['stat']} does not match the engine")
+                    rep.fail(display(path), f"evidence {ev['stat']} does not match the engine")
                 log_ids = {e["id"] for e in session["match"]["log"]}
                 if not set(ev.get("pointIds", [])) <= log_ids:
-                    rep.fail(str(path.relative_to(ROOT)), "evidence points are not in the session log")
+                    rep.fail(display(path), "evidence points are not in the session log")
     rep.ok("cross-references")
 
 
 # ----- 5: media ground truth and benchmark records ------------------------------------------------
 
 def check_ground_truth(path: Path, doc: dict, docs: dict, rep: Report) -> None:
-    where = str(path.relative_to(ROOT))
+    where = display(path)
     try:
         problems = ground_truth_problems(path, doc, docs)
     except (ArithmeticError, ValueError, KeyError, TypeError) as e:   # malformed input is a failure, not a crash
@@ -846,6 +869,13 @@ def main() -> int:
             print("FAIL --encoded-dir requires a directory")
             return 1
         return validate_encoded_documents(Path(sys.argv[index + 1]).resolve())
+    external = []
+    for index, arg in enumerate(sys.argv):
+        if arg == "--document":
+            if index + 1 >= len(sys.argv):
+                print("FAIL --document requires a path")
+                return 1
+            external.append(Path(sys.argv[index + 1]).resolve())
     rep = Report("-v" in sys.argv)
     schemas = SchemaSet(SPEC / "schemas")
     for problem in schemas.check_all():
@@ -854,14 +884,14 @@ def main() -> int:
     kind_schema_checks(schemas, rep)
     schema_self_tests(schemas, rep)
     closed_object_self_tests(schemas, rep)
-    docs = validate_instances(schemas, rep)
+    docs = validate_instances(schemas, rep, external)
     extra_checks = conformance.discovered_checks()
     media_self_tests(schemas, docs, rep)
     for path, doc in docs.items():
         kind = doc["kind"]
         if kind in extra_checks:
             for problem in extra_checks[kind](path, doc, docs):
-                rep.fail(str(path.relative_to(ROOT)), problem)
+                rep.fail(display(path), problem)
             rep.ok(f"{kind} checks")
         if kind == "jovra.fixture.scoring":
             check_scoring(path, doc, rep)
