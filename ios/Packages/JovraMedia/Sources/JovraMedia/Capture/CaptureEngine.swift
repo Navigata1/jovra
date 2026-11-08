@@ -17,7 +17,8 @@ public struct CaptureStatus: Sendable {
 /// Serial capture state; sample-buffer appends and transitions share one queue. Analysis, networking,
 /// account and SessionStore are absent. The sole store handoff is the typed sink after stop/verification.
 public final class CaptureEngine: @unchecked Sendable {
-    public let activity = CaptureActivity()
+    /// One app-lifetime signal may be shared by every engine, so processing and upload workers subscribe once.
+    public let activity: CaptureActivity
     private let source: any CaptureSource
     private let clock: any CaptureClock
     private let sink: any RecordingSink
@@ -38,8 +39,9 @@ public final class CaptureEngine: @unchecked Sendable {
     private var pendingGap: (startMs: Int, reason: SessionGapReason)?
     private var continuations: [UUID: AsyncStream<CaptureStatus>.Continuation] = [:]
 
-    public init(source: any CaptureSource, clock: any CaptureClock = RealtimeCaptureClock(), sink: any RecordingSink, budget: any DeviceBudget = LiveDeviceBudget()) {
-        self.source = source; self.clock = clock; self.sink = sink; self.budget = budget
+    public init(source: any CaptureSource, clock: any CaptureClock = RealtimeCaptureClock(), sink: any RecordingSink,
+                budget: any DeviceBudget = LiveDeviceBudget(), activity: CaptureActivity = CaptureActivity()) {
+        self.source = source; self.clock = clock; self.sink = sink; self.budget = budget; self.activity = activity
     }
     public var status: CaptureStatus { queue.sync { makeStatus() } }
     public var recordedMarks: [SessionMark] { queue.sync { journal?.snapshot().marks ?? [] } }
@@ -150,6 +152,17 @@ public final class CaptureEngine: @unchecked Sendable {
             try await sink.saveRecording(sessionID: handoff.0, recording: record, marks: handoff.1)
             return record
         } catch { queue.sync { phase = .stopped; emitStatus() }; activity.setActive(false); throw error }
+    }
+    /// Crash hook for fixture tests (internal; reached through @testable): the engine stops as a killed process would. The open segment is
+    /// neither closed nor finalized, the journal is not finished and the sink is never called; what remains on
+    /// disk is exactly what T16's RecoveryScanner must reconcile at the next launch.
+    func simulateProcessDeath() async {
+        let abandoned = queue.sync { () -> CaptureSegmentWriter? in
+            let open = writer; writer = nil; segment = nil; pendingGap = nil; phase = .stopped; return open
+        }
+        await source.stop()
+        abandoned?.abandon()
+        activity.setActive(false)
     }
     @discardableResult public func refreshBudget() async throws -> SessionRecording? {
         let reading = try await budget.snapshot()

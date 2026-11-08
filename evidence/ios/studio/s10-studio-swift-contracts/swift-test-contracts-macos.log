@@ -1,0 +1,144 @@
+# swift test --package-path ios/Packages/JovraStudioCore --filter Contracts (macOS 27.2, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1))
+Building for debugging...
+[1 / 5] JovraCore
+Build complete! (0.22 sec)
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test "it is the same rule as the core percentage (Percent.pct is half-up of 100n/d)" passed after 0.011 seconds.
+✔ Test "a rational media time converts to exact microseconds" passed after 0.011 seconds.
+✔ Test "zero denominators and overflow are errors, never wrong numbers" passed after 0.012 seconds.
+✔ Test "half-up rounds .5 away from minus infinity, for both signs" with 10 test cases passed after 0.012 seconds.
+✔ Test "ECMA-262 anchors: $ is rewritten outside character classes only" with 4 test cases passed after 0.012 seconds.
+✔ Test "the loader reports an unsupported keyword, a dangling $ref and a non-portable escape" passed after 0.012 seconds.
+✔ Test "an id pattern refuses a trailing newline and accepts the id" passed after 0.012 seconds.
+✔ Test "malformed JSON is unreadable, never partially decoded" with 5 test cases passed after 0.012 seconds.
+✔ Test "NTSC frames: 30000/1001 fps maps microseconds to frames exactly" passed after 0.011 seconds.
+✔ Test "oneOf needs exactly one match, if/then applies only when the condition holds" passed after 0.013 seconds.
+✔ Suite "Studio contracts: time" passed after 0.126 seconds.
+✔ Test "the embedded schemas equal spec/schemas/studio byte for byte, and the models were generated from them" passed after 0.126 seconds.
+✔ Test "every keyword the Studio schemas use is implemented, every $ref resolves, every pattern is portable" passed after 0.126 seconds.
+✔ Test "a document of another contract is refused by name" passed after 0.126 seconds.
+✔ Test "a duplicate member name is refused before any schema check" passed after 0.126 seconds.
+✔ Test "an unknown property is refused, at the root and nested" passed after 0.126 seconds.
+✔ Suite "Studio contracts: schema set" passed after 0.126 seconds.
+✔ Test "explicit null and absence stay distinct: a required nullable field must be present" passed after 0.126 seconds.
+✔ Test "an exponent integer (7.44e2) is not an integer either" passed after 0.126 seconds.
+✔ Test "decimals survive exactly: an observation's confidence 0.62 round-trips as 0.62" passed after 0.128 seconds.
+✔ Test "the writer refuses a value that breaks its schema (an id ending in a newline)" passed after 0.128 seconds.
+✔ Test "a decoded record re-encodes through the codec and decodes to the same value" passed after 0.134 seconds.
+✔ Test "the typed model carries the fixture's values, not just its bytes" passed after 0.163 seconds.
+✔ Test "an integral float (744.0) in a frame field is refused; 744 is accepted" passed after 0.186 seconds.
+✔ Suite "Studio contracts: strict decoding" passed after 0.186 seconds.
+  refused camera-invite.invalid.json#coach-invite: schema: $.invites[1].role: expected "camera", got "coach"
+  refused delivered-artifact.film.invalid.json#auto-published: schema: $.youtubePrep.published: expected false, got true
+  refused delivered-artifact.film.invalid.json#public-film: schema: $.delivery.visibility: expected "private", got "public"
+  refused delivered-artifact.film.invalid.json#plan-hash-trailing-newline: schema: $.bindings.editPlanSha256: "8888888888888888888888888888888888888888888888888888888888888888\n" does not match ^[0-9a-f]{64}$
+  refused edit-plan.coach-cut-serve.invalid.json#free-text-card: schema: $.segments[0]: matches 0 of oneOf (exactly 1 required); closest: $.segments[0].templateId: "Your goal: win" does not match ^[a-z][a-z0-9-]{0,31}(\.[a-z0
+  refused trailing newline: delivered-artifact.film.invalid.json#plan-hash-trailing-newline
+  refused trailing newline: lesson.2026-10-07.invalid.json#id-trailing-newline
+  refused trailing newline: quote.accepted.invalid.json#hash-trailing-newline
+✔ Test "the trailing-newline id and hash cases are refused, although Python's re.search accepts them (finding 6)" passed after 0.466 seconds.
+  refused edit-plan.court-memories-storyboard.invalid.json#executable-command: schema: $.command: unknown property "command" (additionalProperties is false)
+  refused edit-plan.court-memories-storyboard.invalid.json#approval-in-plan: schema: $.approved: unknown property "approved" (additionalProperties is false)
+  refused edit-plan.court-memories-storyboard.invalid.json#signed-url-source: schema: $.sources[0].url: unknown property "url" (additionalProperties is false)
+  refused edit-plan.court-memories-storyboard.invalid.json#unlabelled-speed: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].speed.num: expected 1, got 5
+  refused edit-plan.court-memories-storyboard.invalid.json#wipe-transition: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].transitionIn.type: "wipe" is not one of the allowed values
+  refused edit-plan.court-memories-storyboard.invalid.json#copied-score-digits: schema: $.segments[2]: matches 0 of oneOf (exactly 1 required); closest: $.segments[2].overlayRefs[0].value: unknown property "value" (additionalProperties is f
+  refused edit-plan.court-memories-storyboard.invalid.json#aspect-21-9: schema: $.output.aspect: "21:9" is not one of the allowed values
+  refused edit-plan.court-memories-storyboard.invalid.json#model-guessed-reframe: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].framing: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].
+  refused lesson.2026-10-07.invalid.json#id-trailing-newline: schema: $.lessonId: "lesson-1007\n" does not match ^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$
+  refused observation.estimated-cue.invalid.json#certainty-over-one: schema: $.provenance.confidence: 1.5 > maximum 1
+  refused project-lock.invalid.json#recoloured-brand: schema: $.brand.chartreuse: expected "#D7F56A", got "#00FF00"
+  refused quote.accepted.invalid.json#unbound-quote: schema: $: missing required property "outputSpecSha256"
+  refused quote.accepted.invalid.json#retention-not-offered: schema: $.retentionDays: 14 is not one of the allowed values
+  refused quote.accepted.invalid.json#consent-without-model-field: schema: $.consent: matches 0 of oneOf (exactly 1 required); closest: $.consent: expected type ["null"], got object
+  refused quote.accepted.invalid.json#hash-trailing-newline: schema: $.outputSpecSha256: "8888888888888888888888888888888888888888888888888888888888888888\n" does not match ^[0-9a-f]{64}$
+  refused reference-catalog.invalid.json#value-in-catalog: schema: $.references[0].value: unknown property "value" (additionalProperties is false)
+  refused render-job.ready.invalid.json#resume-to-ready: schema: $.resumeStage: matches 0 of oneOf (exactly 1 required); closest: $.resumeStage: expected type ["null"], got string
+  refused source-manifest.invalid.json#file-path: schema: $.sources[0].original.path: unknown property "path" (additionalProperties is false)
+  refused storage-providers.invalid.json#provider-as-compute: schema: $.providers[0].processing: expected false, got true
+  refused story-brief.progress.invalid.json#score-text-in-brief: schema: $.beats[1].scoreText: unknown property "scoreText" (additionalProperties is false)
+  refused sync-map.invalid.json#validated-map: schema: $.provenance.status: "validated" is not one of the allowed values
+  refused sync-map.invalid.json#certainty-field: schema: $.sources[1].pieces[0].anchors[0].confidencePct: unknown property "confidencePct" (additionalProperties is false)
+  refused sync-map.invalid.json#fit-without-inliers: schema: $.sources[1].pieces[0].fit: matches 0 of oneOf (exactly 1 required); closest: $.sources[1].pieces[0].fit: expected type ["null"], got object
+  refused sync-map.invalid.json#failed-piece-claims-coverage: schema: $.sources[2].pieces[1].matchCoverage: expected type ["null"], got object
+  refused sync-map.invalid.json#no-overlap-state: schema: $.sources[2].pieces[0].state: "no-overlap" is not one of the allowed values
+Studio invalid cases (schema layer): 30 refused; unregistered schemas skipped: [(key: "jovra.pts-table/1", value: 5), (key: "jovra.room-transcript/1", value: 4)]
+✔ Test "every schema-layer invalid case of a registered schema is refused" passed after 0.973 seconds.
+Studio vector cases run by Swift checkers: []
+✔ Test "every registered vector checker runs on at least one case of its kind" passed after 1.173 seconds.
+✔ Suite "Studio contracts: vector consumers" passed after 1.173 seconds.
+Studio round-trips: 34 records byte-identical across 19 schemas
+  jovra.broll-catalog/1: 1
+  jovra.camera-invite/1: 1
+  jovra.credit-classes/1: 1
+  jovra.delivered-artifact/1: 1
+  jovra.edit-plan/2: 7
+  jovra.keeper-catalog/1: 1
+  jovra.lesson/1: 3
+  jovra.observation/1: 3
+  jovra.project-lock/1: 1
+  jovra.quote/1: 3
+  jovra.reference-catalog/1: 1
+  jovra.render-job-transitions/1: 1
+  jovra.render-job/1: 2
+  jovra.source-manifest/1: 1
+  jovra.storage-providers/1: 1
+  jovra.story-brief/1: 2
+  jovra.story-profile-catalog/1: 1
+  jovra.sync-map/1: 1
+  jovra.usage-reservation/1: 2
+Studio records without a registered Swift decoder (their pages stay pending): records/pts-table.sample-corner.json (jovra.pts-table/1), records/room-transcript.st23-lobby.json (jovra.room-transcript/1), records/room-transcript.st23-trust.json (jovra.room-transcript/1), records/room-transcript.st24-contact-lost.json (jovra.room-transcript/1), records/room-transcript.st24-director.json (jovra.room-transcript/1)
+✔ Test "every record with a registered decoder decodes and re-encodes byte-identically" passed after 1.379 seconds.
+✔ Suite "Studio contracts: record round-trips" passed after 1.380 seconds.
+✔ Test "the records page is consumed only while its decoders stay registered" passed after 1.373 seconds.
+✔ Test "a page that says swift: consumed with no Swift consumer fails" passed after 1.378 seconds.
+✔ Test "a new kind whose page says swift: pending passes unconsumed" passed after 1.405 seconds.
+Studio fixture manifest: 39 kinds; consumers: ["ContractsConsumer"]
+  compile page=compile swift=pending consumed=false files=1
+  director page=planner swift=pending consumed=false files=1
+  edl-context page=edl swift=pending consumed=false files=1
+  job-transitions page=jobstate swift=pending consumed=false files=1
+  jovra.broll-catalog/1 page=records swift=consumed consumed=true files=1
+  jovra.camera-invite/1 page=records swift=consumed consumed=true files=1
+  jovra.credit-classes/1 page=ledger swift=pending consumed=true files=1
+  jovra.delivered-artifact/1 page=records swift=consumed consumed=true files=1
+  jovra.edit-plan/2 page=edl swift=pending consumed=true files=7
+  jovra.keeper-catalog/1 page=records swift=consumed consumed=true files=1
+  jovra.lesson/1 page=records swift=consumed consumed=true files=3
+  jovra.observation/1 page=records swift=consumed consumed=true files=3
+  jovra.project-lock/1 page=records swift=consumed consumed=true files=1
+  jovra.pts-table/1 page=normalization swift=pending consumed=false files=1
+  jovra.quote/1 page=ledger swift=pending consumed=true files=3
+  jovra.reference-catalog/1 page=records swift=consumed consumed=true files=1
+  jovra.render-job-transitions/1 page=jobstate swift=pending consumed=true files=1
+  jovra.render-job/1 page=jobstate swift=pending consumed=true files=2
+  jovra.room-transcript/1 page=room swift=pending consumed=false files=4
+  jovra.room/1 page=room swift=pending consumed=false files=0
+  jovra.source-manifest/1 page=records swift=consumed consumed=true files=1
+  jovra.storage-providers/1 page=records swift=consumed consumed=true files=1
+  jovra.story-brief/1 page=records swift=consumed consumed=true files=2
+  jovra.story-profile-catalog/1 page=records swift=consumed consumed=true files=1
+  jovra.studio-fixture.invalid-cases/1 page=core swift=pending consumed=false files=30
+  jovra.studio-fixture.vectors/1 page=core swift=pending consumed=false files=15
+  jovra.sync-map/1 page=sync swift=pending consumed=true files=1
+  jovra.usage-reservation/1 page=ledger swift=pending consumed=true files=2
+  keepers page=keepers swift=pending consumed=false files=1
+  ledger page=ledger swift=pending consumed=false files=1
+  normalization page=normalization swift=pending consumed=false files=1
+  planner page=planner swift=pending consumed=false files=1
+  progress-comparison page=progress swift=pending consumed=false files=1
+  quote-credits page=ledger swift=pending consumed=false files=1
+  room page=room swift=pending consumed=false files=1
+  sample-truth page=bundle swift=pending consumed=false files=1
+  sound-delay page=sync swift=pending consumed=false files=1
+  staleness page=keepers swift=pending consumed=false files=1
+  sync-fit page=sync swift=pending consumed=false files=1
+✔ Test "the repository's fixtures, module pages and Swift consumers agree" passed after 1.440 seconds.
+✔ Test "a new fixture kind with no module page fails" passed after 1.489 seconds.
+✔ Suite "Studio contracts: fixture manifest" passed after 1.502 seconds.
+Studio invalid cases (reference layer): 154 decode (their rules belong to the module tickets); refused as integral floats: ["edit-plan.court-memories-storyboard.invalid.json#integral-float-frame"]
+✔ Test "reference-layer cases pass the Swift decoder unless they carry an integral float" passed after 3.689 seconds.
+✔ Suite "Studio contracts: invalid cases" passed after 3.689 seconds.
+✔ Test run with 32 tests in 7 suites passed after 3.689 seconds.
+exit=0

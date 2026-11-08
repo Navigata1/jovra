@@ -14,19 +14,29 @@ public final class FixtureCamera: CaptureSource, @unchecked Sendable {
     private var includeAudio = false
     private var running: Task<Void, any Error>?
     private var injectedFailure: (CMTime, CaptureSourceFailure)?
+    /// Every `step`-th source frame is streamed, each lasting `frameDuration`, so a lower requested rate (the
+    /// thermal downgrade) is a real lower-rate stream rather than the source rate relabelled.
+    private var decimation = (step: 1, frameDuration: CMTime.invalid)
     public init(url: URL, duration: CMTime = CMTime(value: 60, timescale: 1), clock: any CaptureClock) {
         self.url = url; self.duration = duration; self.clock = clock
     }
     public func prepare(preset: CapturePreset, microphone: SessionRecordingMicrophone) async throws -> CaptureSourceFormat {
         let info = try await MediaProbe.probe(url)
         guard let video = info.video, video.codedWidth == preset.width, video.codedHeight == preset.height,
-              let fps = video.frameRate, fps.frames == preset.frameRate.num, fps.perSeconds == preset.frameRate.den else {
+              let fps = video.frameRate, let step = Self.decimation(source: fps, requested: preset.frameRate) else {
             throw CaptureError.unsupportedPreset
         }
         let audio = microphone == .granted && info.audio != nil
-        lock.withLock { includeAudio = audio }
+        let frameDuration = CMTime(value: Int64(preset.frameRate.den), timescale: Int32(preset.frameRate.num))
+        lock.withLock { includeAudio = audio; decimation = (step, frameDuration) }
         return CaptureSourceFormat(width: video.codedWidth, height: video.codedHeight, frameRate: preset.frameRate,
                                    hasAudio: audio, sampleRate: info.audio?.sampleRate ?? 48_000, channels: info.audio?.channels ?? 1)
+    }
+    /// A source rate that is a whole multiple of the requested rate is decimated; anything else is refused.
+    static func decimation(source: FrameRate, requested: RecordedFrameRate) -> Int? {
+        let sourceNum = Int64(source.frames) * Int64(requested.den), requestedNum = Int64(requested.num) * Int64(source.perSeconds)
+        guard sourceNum > 0, requestedNum > 0, sourceNum % requestedNum == 0 else { return nil }
+        return Int(sourceNum / requestedNum)
     }
     public func injectFailure(at mediaTime: CMTime, failure: CaptureSourceFailure) { lock.withLock { injectedFailure = (mediaTime, failure) } }
     private func takeFailure(at time: CMTime) -> CaptureSourceFailure? {
@@ -37,7 +47,7 @@ public final class FixtureCamera: CaptureSource, @unchecked Sendable {
     }
     public func start(at sessionTime: CMTime, onSample: @escaping @Sendable (CaptureSample) throws -> Void,
                       onFailure: @escaping @Sendable (any Error) -> Void) async throws {
-        let audio = lock.withLock { includeAudio }
+        let (audio, decimation) = lock.withLock { (includeAudio, decimation) }
         let task = Task.detached { [self, url, duration, clock] in
             do {
                 let clockStart = clock.now()
@@ -62,15 +72,19 @@ public final class FixtureCamera: CaptureSource, @unchecked Sendable {
                     }
                     guard reader.startReading() else { throw CaptureError.sourceFailed(reader.error?.localizedDescription ?? "reader") }
                     var nextVideo = video.copyNextSampleBuffer(), nextAudio = audioOutput?.copyNextSampleBuffer()
+                    var videoIndex = 0
                     while nextVideo != nil || nextAudio != nil {
                         try Task.checkCancellation()
                         let isVideo = nextAudio == nil || (nextVideo != nil && CMTimeCompare(CMSampleBufferGetPresentationTimeStamp(nextVideo!), CMSampleBufferGetPresentationTimeStamp(nextAudio!)) <= 0)
                         let buffer = isVideo ? nextVideo! : nextAudio!
                         let localTime = CMTimeAdd(loopOffset, CMSampleBufferGetPresentationTimeStamp(buffer))
                         if let failure = self.takeFailure(at: localTime) { throw failure }
-                        if CMTimeCompare(localTime, duration) < 0 {
+                        let streamed = !isVideo || videoIndex % decimation.step == 0
+                        if isVideo { videoIndex += 1 }
+                        if streamed, CMTimeCompare(localTime, duration) < 0 {
                             try await clock.wait(until: CMTimeAdd(clockStart, localTime))
-                            let retimed = try retimeCaptureSample(buffer, offset: CMTimeAdd(sessionTime, loopOffset))
+                            let retimed = try retimeCaptureSample(buffer, offset: CMTimeAdd(sessionTime, loopOffset),
+                                                                  duration: isVideo && decimation.step > 1 ? decimation.frameDuration : nil)
                             try onSample(CaptureSample(buffer: retimed, mediaType: isVideo ? .video : .audio))
                         }
                         if isVideo { nextVideo = video.copyNextSampleBuffer() } else { nextAudio = audioOutput?.copyNextSampleBuffer() }

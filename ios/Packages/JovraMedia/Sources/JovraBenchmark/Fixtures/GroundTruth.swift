@@ -147,6 +147,49 @@ public struct GroundTruth: Codable, Hashable, Sendable {
         public let row: Int
     }
 
+    /// The sample media manifest entry a sample-set file renders (T11).
+    public struct SampleMedia: Codable, Hashable, Sendable {
+        public let mediaId: String
+        public let thumbnailFrame: Int
+    }
+
+    /// The "Sample video (synthetic)" label burned into every frame of sample media, in coded pixels.
+    public struct Label: Codable, Hashable, Sendable {
+        public struct Region: Codable, Hashable, Sendable {
+            public let x: Int, y: Int, width: Int, height: Int
+        }
+        public struct Luma: Codable, Hashable, Sendable {
+            public let y: Int
+        }
+        public let text: String
+        public let region: Region
+        public let ink: Luma
+        public let background: Luma
+    }
+
+    /// A knocked tripod in a benchmark-corpus clip: from `frame` on, the view is turned by 1 degree.
+    public struct CameraMove: Codable, Hashable, Sendable {
+        public let frame: Int
+        public let time: RationalTime
+        public let kind: String
+        public let yawDegrees: Int
+        public let pitchDegrees: Int
+    }
+
+    /// A serve with exact contact and bounce frames and its true average contact-to-bounce speed.
+    public struct Serve: Codable, Hashable, Sendable {
+        public struct Moment: Codable, Hashable, Sendable {
+            public let frame: Int
+            public let time: RationalTime
+        }
+        public let index: Int
+        public let side: String
+        public let contact: Moment
+        public let bounce: Moment
+        public let flightFrames: Int
+        public let averageSpeedKmh: String
+    }
+
     public let id: String
     public let set: String
     public let description: String
@@ -158,9 +201,16 @@ public struct GroundTruth: Codable, Hashable, Sendable {
     public let duplicateOf: String?
     public let video: Video
     public let audio: Audio?
-    public let frameCode: FrameCodeSpec
+    /// Nil for demo and corpus media, which burn in no frame code (T11).
+    public let frameCode: FrameCodeSpec?
     public let signature: Signature
     public let events: [Event]?
     public let court: Court?
     public let flashCell: Cell?
+    public let sampleMedia: SampleMedia?
+    public let label: Label?
+    public let cameraMoves: [CameraMove]?
+    public let serves: [Serve]?
+    /// A neighbouring court's clicks: audible, never own-court hit events.
+    public let distractors: [Event]?
 }
