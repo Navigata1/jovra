@@ -35,16 +35,20 @@ struct SessionsView: View {
     @Environment(\.localCaptureLibrary) private var library
     @State private var filter = Filter.all
     @State private var state = LoadState.loading
+    @State private var recovery = StartupRecoverySummary()
     @State private var reloadToken = UUID()
 
     var body: some View {
         JovraScreen(title: String(localized: "Your sessions", table: "Sessions"), subtitle: String(localized: "Review. Improve. Keep going.", table: "Sessions")) {
+            Button(String(localized: "Import a video", table: "Sessions.Import")) { router.show(.push(.sessions(.importVideos))) }
+                .buttonStyle(.jovraSecondary).accessibilityIdentifier("library.import")
             FilterPills(options: Filter.allCases, selection: $filter) { $0.title }
             if filter == .matches {
                 Text("Matches includes scored practice sets.", tableName: "Sessions.Library")
                     .font(.jovraLabel).foregroundStyle(.jovra(.textSecondary))
                     .fixedSize(horizontal: false, vertical: true)
             }
+            CaptureRecoveryNotice(summary: recovery)
             libraryContent
         }
         .task(id: filter) { await reload() }
@@ -87,8 +91,10 @@ struct SessionsView: View {
         state = .loading
         let selectedFilter = filter
         do {
+            let summary = await library.reconcileAtStartup()
             let sessions = try await library.sessions()
             guard !Task.isCancelled, reloadToken == token else { return }
+            recovery = summary
             state = .loaded(sessions.filter { selectedFilter.includes($0.kind) })
         } catch {
             guard !Task.isCancelled, reloadToken == token else { return }

@@ -1,0 +1,1056 @@
+backend-db	UNKNOWN STEP	﻿2026-10-12T04:16:34.5639701Z Current runner version: '2.337.0'
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5665162Z ##[group]Runner Image Provisioner
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5666092Z Hosted Compute Agent
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5666736Z Version: 20261002.596
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5667843Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5668822Z Build Date: 2026-10-02T22:28:27Z
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5669601Z Worker ID: {82e5f126-716f-4a2e-afaf-003076f18c97}
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5670366Z Region: westus
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5670961Z Cloud: Azure
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5671565Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5673075Z ##[group]Operating System
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5673729Z Ubuntu
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5674431Z 24.04.5
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5675081Z LTS
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5675661Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5676298Z ##[group]Runner Image
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5676918Z Image: ubuntu-24.04
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5677795Z Version: 20261004.327.1
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5679129Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5680808Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5681779Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5682993Z ##[group]GITHUB_TOKEN Permissions
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5684935Z Contents: read
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5685680Z Metadata: read
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5686270Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5688703Z Secret source: Actions
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5689751Z Cache mode: write
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.5690494Z Prepare workflow directory
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.6148276Z Prepare all required actions
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.6194555Z Getting action download info
+backend-db	UNKNOWN STEP	2026-10-12T04:16:34.9468343Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.0556137Z Download action repository 'supabase/setup-cli@v1' (SHA:1dedf2c611547ede7232d26866dd3c56ab903bbb)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.5794007Z Complete job name: backend-db
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6650545Z ##[group]Run actions/checkout@v4
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6651532Z with:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6652066Z   repository: Navigata1/jovra
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6656376Z   token: ***
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6656864Z   ssh-strict: true
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6657389Z   ssh-user: git
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6658101Z   persist-credentials: true
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6658650Z   clean: true
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6659147Z   sparse-checkout-cone-mode: true
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6659729Z   fetch-depth: 1
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6660207Z   fetch-tags: false
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6660710Z   show-progress: true
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6661205Z   lfs: false
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6661730Z   submodules: false
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6662293Z   set-safe-directory: true
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6662871Z   allow-unsafe-pr-checkout: false
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.6663759Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7709269Z Syncing repository: Navigata1/jovra
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7712397Z ##[group]Getting Git version info
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7713930Z Working directory is '/home/runner/work/jovra/jovra'
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7716081Z [command]/usr/bin/git version
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7798504Z git version 2.55.0
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7831103Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7859782Z Temporarily overriding HOME='/home/runner/work/_temp/5d3a7588-dec7-432c-87a0-6648f1fb3855' before making global git config changes
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7862870Z Adding repository directory to the temporary git global config as a safe directory
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7865117Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jovra/jovra
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7920273Z Deleting the contents of '/home/runner/work/jovra/jovra'
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7925459Z ##[group]Initializing the repository
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.7930829Z [command]/usr/bin/git init /home/runner/work/jovra/jovra
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8055478Z hint: Using 'master' as the name for the initial branch. This default branch name
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8056978Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8059730Z hint: to use in all of your new repositories, which will suppress this warning,
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8061860Z hint: call:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8062775Z hint:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8063922Z hint: 	git config --global init.defaultBranch <name>
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8065210Z hint:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8066469Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8068713Z hint: 'development'. The just-created branch can be renamed via this command:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8070217Z hint:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8071128Z hint: 	git branch -m <name>
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8072170Z hint:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8073569Z hint: Disable this message with "git config set advice.defaultBranchName false"
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8075640Z Initialized empty Git repository in /home/runner/work/jovra/jovra/.git/
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8079021Z [command]/usr/bin/git remote add origin https://github.com/Navigata1/jovra
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8126986Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8128948Z ##[group]Disabling automatic garbage collection
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8132464Z [command]/usr/bin/git config --local gc.auto 0
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8166843Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8168929Z ##[group]Setting up auth
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8175866Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8213352Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8613848Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8653467Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8883096Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.8921381Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.9146494Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.9188478Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.9189870Z ##[group]Fetching the repository
+backend-db	UNKNOWN STEP	2026-10-12T04:16:35.9198829Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b431bbbbb79f545eb0c0dde7536a4a15224b6d07:refs/remotes/pull/380/merge
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7466827Z From https://github.com/Navigata1/jovra
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7467910Z  * [new ref]         b431bbbbb79f545eb0c0dde7536a4a15224b6d07 -> pull/380/merge
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7471529Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7472156Z ##[group]Determining the checkout info
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7474365Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7481407Z [command]/usr/bin/git sparse-checkout disable
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7561501Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7594459Z ##[group]Checking out the ref
+backend-db	UNKNOWN STEP	2026-10-12T04:16:43.7598903Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/380/merge
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.7711924Z Updating files:  40% (933/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.7786815Z Updating files:  41% (947/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.7899566Z Updating files:  42% (970/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8015839Z Updating files:  43% (993/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8181682Z Updating files:  44% (1016/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8334712Z Updating files:  45% (1040/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8346498Z Updating files:  46% (1063/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8356849Z Updating files:  47% (1086/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8420615Z Updating files:  48% (1109/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8523132Z Updating files:  49% (1132/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8536602Z Updating files:  50% (1155/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8548711Z Updating files:  51% (1178/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8558170Z Updating files:  52% (1201/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8581736Z Updating files:  53% (1224/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8592142Z Updating files:  54% (1247/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8603940Z Updating files:  55% (1270/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8614867Z Updating files:  56% (1294/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8625290Z Updating files:  57% (1317/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8647461Z Updating files:  58% (1340/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8657434Z Updating files:  59% (1363/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8670443Z Updating files:  60% (1386/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8682776Z Updating files:  61% (1409/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8711600Z Updating files:  62% (1432/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8726560Z Updating files:  63% (1455/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8740999Z Updating files:  64% (1478/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8754848Z Updating files:  65% (1501/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8770478Z Updating files:  66% (1524/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8785046Z Updating files:  67% (1548/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8802188Z Updating files:  68% (1571/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8823995Z Updating files:  69% (1594/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8839897Z Updating files:  70% (1617/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8859833Z Updating files:  71% (1640/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8875048Z Updating files:  72% (1663/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8886359Z Updating files:  73% (1686/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8901351Z Updating files:  74% (1709/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8915660Z Updating files:  75% (1732/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8933382Z Updating files:  76% (1755/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8946832Z Updating files:  77% (1778/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8964193Z Updating files:  78% (1802/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8977214Z Updating files:  79% (1825/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.8997774Z Updating files:  80% (1848/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9008053Z Updating files:  81% (1871/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9025357Z Updating files:  82% (1894/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9036988Z Updating files:  83% (1917/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9063510Z Updating files:  84% (1940/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9083281Z Updating files:  85% (1963/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9106123Z Updating files:  86% (1986/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9121900Z Updating files:  87% (2009/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9143802Z Updating files:  88% (2032/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9175284Z Updating files:  89% (2056/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9185471Z Updating files:  90% (2079/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9194037Z Updating files:  91% (2102/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9214004Z Updating files:  92% (2125/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9228343Z Updating files:  93% (2148/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9241828Z Updating files:  94% (2171/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9256608Z Updating files:  95% (2194/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9267461Z Updating files:  96% (2217/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9278302Z Updating files:  97% (2240/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9314361Z Updating files:  98% (2263/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9334299Z Updating files:  99% (2286/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9402637Z Updating files: 100% (2309/2309)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9403337Z Updating files: 100% (2309/2309), done.
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9423546Z Note: switching to 'refs/remotes/pull/380/merge'.
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9424400Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9425042Z You are in 'detached HEAD' state. You can look around, make experimental
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9426058Z changes and commit them, and you can discard any commits you make in this
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9427024Z state without impacting any branches by switching back to a branch.
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9427821Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9428186Z If you want to create a new branch to retain commits you create, you may
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9428996Z do so (now or later) by using -c with the switch command. Example:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9429468Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9429650Z   git switch -c <new-branch-name>
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9429967Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9430142Z Or undo this operation with:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9430435Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9430629Z   git switch -
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9430912Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9431377Z Turn off this advice by setting config variable advice.detachedHead to false
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9431738Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9432417Z HEAD is now at b431bbb Merge 3de4a4f3da216f5acb8da6ef38d85937e20338e8 into 6e46a576240c587511f2f87a15d95507b7280158
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9433883Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9466967Z [command]/usr/bin/git log -1 --format=%H
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9503581Z b431bbbbb79f545eb0c0dde7536a4a15224b6d07
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9735447Z ##[group]Run supabase/scripts/check-hosted-identifiers.sh
+backend-db	UNKNOWN STEP	2026-10-12T04:16:44.9735962Z ^[[36;1msupabase/scripts/check-hosted-identifiers.sh^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:16:45.0010636Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:16:45.0011024Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:45.0579896Z OK  262 files: no supabase.co host, API key, JWT or email outside example.test
+backend-db	UNKNOWN STEP	2026-10-12T04:16:45.0656386Z ##[group]Run supabase/setup-cli@v1
+backend-db	UNKNOWN STEP	2026-10-12T04:16:45.0656693Z with:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:45.0656892Z   version: 2.100.1
+backend-db	UNKNOWN STEP	2026-10-12T04:16:45.0657102Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:46.3436271Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/5ae72f67-f5a1-4808-99fd-4f576854a1bd -f /home/runner/work/_temp/282ce387-deb9-4624-b3a1-840de1a883f1
+backend-db	UNKNOWN STEP	2026-10-12T04:16:47.8784528Z ##[group]Run supabase/scripts/gen-signing-key.sh
+backend-db	UNKNOWN STEP	2026-10-12T04:16:47.8784955Z ^[[36;1msupabase/scripts/gen-signing-key.sh^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:16:47.8850634Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:16:47.8850927Z env:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:47.8851168Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	UNKNOWN STEP	2026-10-12T04:16:47.8851485Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.1878682Z Do you want to overwrite the existing supabase/signing_keys.json file? [Y/n] y
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.1879648Z JWT signing key appended to: supabase/signing_keys.json (now contains 1 keys)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.2097420Z IMPORTANT: Add your signing key path to .gitignore to prevent committing to version control.
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.2774468Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.2789105Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.2956314Z generated ES256 signing key: backend/supabase/signing_keys.json
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.2994483Z ##[group]Run supabase start
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.2994785Z ^[[36;1msupabase start^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.3060550Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.3060841Z env:
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.3061097Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.3061442Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.6205853Z  mailpit Pulling 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.6211635Z  postgres Pulling 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.6212038Z  kong Pulling 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.6212486Z  postgrest Pulling 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:48.6212895Z  gotrue Pulling 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2980856Z  589002ba0eae Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2986221Z  7cf4d048777d Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2987041Z  95fbbca7ef2e Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2987528Z  5592d1f29924 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2988185Z  a07822e4fc9b Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2988650Z  3e380916456e Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2989119Z  ddaed5f486f2 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2989638Z  194561821b3d Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2989939Z  dfba0188557a Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2990292Z  68e4396c0821 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2990723Z  064d9e7b3a4b Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2991062Z  86f2886dbf71 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2991509Z  a91a59e564b5 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2991960Z  1300f58250f6 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2992458Z  96f9b92ec58c Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2992968Z  841b608dbbf6 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2993437Z  b4dd7711ed13 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2993903Z  5592d1f29924 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2994323Z  316321ad3727 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2994768Z  a07822e4fc9b Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2995168Z  c183a9e089d3 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2995401Z  3e380916456e Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2995790Z  6a45b04bec46 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2996767Z  ddaed5f486f2 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2997176Z  b22e88ff0788 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2997909Z  135ae91cd954 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2998160Z  950abda5b1ff Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2998397Z  413e72da565c Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2998642Z  194561821b3d Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2998855Z  f954702d0125 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2999086Z  dfba0188557a Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2999298Z  b88c5e12ea9e Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2999581Z  68e4396c0821 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.2999899Z  41aabdb0883b Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3000317Z  549fa782358f Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3000795Z  551d34fec852 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3001128Z  316321ad3727 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3001337Z  064d9e7b3a4b Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3001745Z  c183a9e089d3 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3002135Z  86f2886dbf71 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3002434Z  6a45b04bec46 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3002786Z  a91a59e564b5 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3003180Z  b22e88ff0788 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3003569Z  1300f58250f6 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3003939Z  135ae91cd954 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3004322Z  96f9b92ec58c Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3004717Z  950abda5b1ff Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3005053Z  841b608dbbf6 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3005253Z  413e72da565c Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3005501Z  b4dd7711ed13 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3005838Z  f954702d0125 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3006041Z  b88c5e12ea9e Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3006238Z  41aabdb0883b Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3006431Z  549fa782358f Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3006624Z  551d34fec852 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3006848Z  213ec9aee27d Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3007094Z  a70653f7a2d5 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3007332Z  531e3bd93090 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3007912Z  814dd06d26c7 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3008383Z  213ec9aee27d Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3008737Z  531e3bd93090 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3009059Z  a70653f7a2d5 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3009577Z  814dd06d26c7 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3078200Z  f18232174bc9 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3078684Z  fe2636d02863 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3079119Z  900bac0c57cc Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3079565Z  f18232174bc9 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3079915Z  900bac0c57cc Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3080150Z  fe2636d02863 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3246196Z  301909fb7a8f Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3246687Z  301909fb7a8f Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3378714Z  589002ba0eae Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3379474Z  a6d41d3f7e67 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3380149Z  e04b88aaecea Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3380747Z  5142a157d445 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3381766Z  008ba72743b6 Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3382267Z  5a127130762f Pulling fs layer 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3382741Z  a6d41d3f7e67 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3383206Z  e04b88aaecea Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3383635Z  5142a157d445 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3384097Z  008ba72743b6 Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.3384521Z  5a127130762f Waiting 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4367739Z  589002ba0eae Downloading [>                                                  ]  39.01kB/3.862MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4368790Z  589002ba0eae Downloading [>                                                  ]  39.01kB/3.862MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4369699Z  95fbbca7ef2e Downloading [==================================================>]  1.022kB/1.022kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4370477Z  95fbbca7ef2e Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4370866Z  95fbbca7ef2e Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4515424Z  589002ba0eae Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4515784Z  589002ba0eae Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4516443Z  589002ba0eae Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4526712Z  589002ba0eae Extracting [>                                                  ]  65.54kB/3.862MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.4528364Z  589002ba0eae Extracting [>                                                  ]  65.54kB/3.862MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5125895Z  7cf4d048777d Downloading [>                                                  ]  49.15kB/4.463MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5497240Z  589002ba0eae Extracting [==================================================>]  3.862MB/3.862MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5498483Z  589002ba0eae Extracting [==================================================>]  3.862MB/3.862MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5499259Z  589002ba0eae Extracting [==================================================>]  3.862MB/3.862MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5499784Z  589002ba0eae Extracting [==================================================>]  3.862MB/3.862MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5682361Z  589002ba0eae Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5682971Z  589002ba0eae Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5760851Z  5592d1f29924 Downloading [>                                                  ]  540.7kB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5909418Z  7cf4d048777d Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5910562Z  7cf4d048777d Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.5923223Z  7cf4d048777d Extracting [>                                                  ]  65.54kB/4.463MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.6056496Z  a07822e4fc9b Downloading [>                                                  ]  1.378kB/77.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.6082979Z  a07822e4fc9b Downloading [==================================================>]  77.89kB/77.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.6092096Z  a07822e4fc9b Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.6093026Z  a07822e4fc9b Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.6766870Z  5592d1f29924 Downloading [===>                                               ]  27.25MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.6934726Z  7cf4d048777d Extracting [=================================>                 ]  2.949MB/4.463MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.7314541Z  3e380916456e Downloading [>                                                  ]  8.268kB/814.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.7588878Z  3e380916456e Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.7599021Z  3e380916456e Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.7780799Z  5592d1f29924 Downloading [========>                                          ]   57.2MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.7865113Z  7cf4d048777d Extracting [==================================================>]  4.463MB/4.463MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.8279860Z  ddaed5f486f2 Downloading [==================================================>]     293B/293B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.8281137Z  ddaed5f486f2 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.8281653Z  ddaed5f486f2 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.8788912Z  5592d1f29924 Downloading [============>                                      ]  84.95MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.9009157Z  194561821b3d Downloading [=====================>                             ]  1.378kB/3.204kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.9010189Z  194561821b3d Downloading [==================================================>]  3.204kB/3.204kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.9010917Z  194561821b3d Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.9013998Z  194561821b3d Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.9640529Z  dfba0188557a Downloading [==================================================>]  1.032kB/1.032kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.9641354Z  dfba0188557a Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.9641816Z  dfba0188557a Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:49.9796732Z  5592d1f29924 Downloading [===============>                                   ]  108.5MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.0424049Z  68e4396c0821 Downloading [=============================>                     ]  1.378kB/2.359kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.0425015Z  68e4396c0821 Downloading [==================================================>]  2.359kB/2.359kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.0426471Z  68e4396c0821 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.0427341Z  68e4396c0821 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.0802449Z  5592d1f29924 Downloading [===================>                               ]  134.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.1134522Z  064d9e7b3a4b Downloading [========>                                          ]  1.378kB/8.535kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.1138727Z  064d9e7b3a4b Downloading [==================================================>]  8.535kB/8.535kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.1139718Z  064d9e7b3a4b Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.1140641Z  064d9e7b3a4b Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.1811856Z  5592d1f29924 Downloading [======================>                            ]  156.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.1829985Z  86f2886dbf71 Downloading [====================================>              ]  1.378kB/1.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.1832144Z  86f2886dbf71 Downloading [==================================================>]   1.89kB/1.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.1833318Z  86f2886dbf71 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.2509247Z  a91a59e564b5 Downloading [==================================================>]  1.016kB/1.016kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.2943349Z  a91a59e564b5 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.2952720Z  5592d1f29924 Downloading [======================>                            ]  160.9MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.3428886Z  1300f58250f6 Downloading [==================================================>]     341B/341B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.3431914Z  1300f58250f6 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.3957190Z  5592d1f29924 Downloading [==========================>                        ]  190.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.4295488Z  96f9b92ec58c Downloading [==================================================>]     280B/280B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.4298238Z  96f9b92ec58c Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.4298759Z  96f9b92ec58c Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.4870778Z  841b608dbbf6 Downloading [=============================================>     ]  1.378kB/1.524kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.4872150Z  841b608dbbf6 Downloading [==================================================>]  1.524kB/1.524kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.4873384Z  841b608dbbf6 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.4874190Z  841b608dbbf6 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.4973214Z  5592d1f29924 Downloading [===============================>                   ]  222.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.5739882Z  b4dd7711ed13 Downloading [=================>                                 ]  1.378kB/3.858kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.5741359Z  b4dd7711ed13 Downloading [==================================================>]  3.858kB/3.858kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.5742503Z  b4dd7711ed13 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.5743207Z  b4dd7711ed13 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.5974366Z  5592d1f29924 Downloading [===================================>               ]  253.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.6296188Z  316321ad3727 Downloading [==================================================>]     358B/358B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.6296997Z  316321ad3727 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.6297291Z  316321ad3727 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.6984881Z  5592d1f29924 Downloading [=======================================>           ]  282.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.7101662Z  c183a9e089d3 Downloading [==================================================>]     393B/393B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.7102765Z  c183a9e089d3 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.7103576Z  c183a9e089d3 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.7703291Z  6a45b04bec46 Downloading [==================================================>]     338B/338B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.7705024Z  6a45b04bec46 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.7705833Z  6a45b04bec46 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.7999789Z  5592d1f29924 Downloading [===========================================>       ]  308.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.8499146Z  b22e88ff0788 Downloading [==================================================>]     398B/398B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.8499998Z  b22e88ff0788 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.8500470Z  b22e88ff0788 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.9014386Z  5592d1f29924 Downloading [===============================================>   ]    335MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.9663107Z  135ae91cd954 Downloading [==================================================>]     638B/638B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.9664192Z  135ae91cd954 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.9664667Z  135ae91cd954 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.9890849Z  950abda5b1ff Downloading [========>                                          ]  1.378kB/8.578kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.9892801Z  950abda5b1ff Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.9994635Z  5592d1f29924 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:50.9997975Z  5592d1f29924 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1412394Z  b88c5e12ea9e Downloading [==================================================>]     525B/525B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1413213Z  b88c5e12ea9e Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1413720Z  b88c5e12ea9e Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1773819Z  413e72da565c Downloading [=======>                                           ]  1.378kB/9.789kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1775023Z  413e72da565c Downloading [==================================================>]  9.789kB/9.789kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1775747Z  413e72da565c Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1973253Z  f954702d0125 Downloading [=====>                                             ]  1.378kB/12.86kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1974654Z  f954702d0125 Downloading [==================================================>]  12.86kB/12.86kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1975829Z  f954702d0125 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.1976448Z  f954702d0125 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.2771755Z  41aabdb0883b Downloading [==================================================>]     272B/272B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.2772814Z  41aabdb0883b Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.3335778Z  551d34fec852 Downloading [==================================================>]     314B/314B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.3338201Z  551d34fec852 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.3338851Z  551d34fec852 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.3790127Z  549fa782358f Downloading [=============>                                     ]  1.378kB/5.284kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.3791411Z  549fa782358f Downloading [==================================================>]  5.284kB/5.284kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.3792699Z  549fa782358f Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.3793583Z  549fa782358f Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.4311490Z  213ec9aee27d Downloading [>                                                  ]  32.77kB/2.806MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.4430422Z  213ec9aee27d Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.4432222Z  213ec9aee27d Extracting [>                                                  ]  32.77kB/2.806MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.4723404Z  a70653f7a2d5 Downloading [==================================================>]     132B/132B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.4953968Z  a70653f7a2d5 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.4954949Z  a70653f7a2d5 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.5292660Z  531e3bd93090 Downloading [>                                                  ]  473.1kB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.5441398Z  213ec9aee27d Extracting [=========================>                         ]  1.442MB/2.806MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.5740984Z  213ec9aee27d Extracting [==================================================>]  2.806MB/2.806MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.5843410Z  814dd06d26c7 Downloading [==================================================>]     881B/881B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.5852346Z  814dd06d26c7 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.5852828Z  814dd06d26c7 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.6298358Z  531e3bd93090 Downloading [==================================>                ]   31.7MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.6492475Z  f18232174bc9 Downloading [>                                                  ]  49.15kB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.6652572Z  f18232174bc9 Downloading [==================================================>]  3.642MB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.6653485Z  f18232174bc9 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.6655312Z  f18232174bc9 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.6666727Z  f18232174bc9 Extracting [>                                                  ]  65.54kB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.6758001Z  531e3bd93090 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.6759005Z  531e3bd93090 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.7214818Z  fe2636d02863 Downloading [>                                                  ]   98.3kB/8.45MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.7484460Z  fe2636d02863 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.7485385Z  fe2636d02863 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8008546Z  900bac0c57cc Downloading [====>                                              ]  16.38kB/171.6kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8884691Z  301909fb7a8f Downloading [>                                                  ]  65.54kB/6.295MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8907113Z  900bac0c57cc Downloading [==================================================>]  171.6kB/171.6kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8912386Z  900bac0c57cc Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8956469Z  a6d41d3f7e67 Downloading [==================================================>]     939B/939B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8957816Z  a6d41d3f7e67 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8958573Z  a6d41d3f7e67 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8967018Z  a6d41d3f7e67 Extracting [==================================================>]     939B/939B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8969227Z  a6d41d3f7e67 Extracting [==================================================>]     939B/939B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.8983219Z  f18232174bc9 Extracting [===>                                               ]  262.1kB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:51.9899630Z  301909fb7a8f Downloading [=========================================>         ]  5.284MB/6.295MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.0509261Z  301909fb7a8f Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.0510920Z  213ec9aee27d Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.0512278Z  301909fb7a8f Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.0609530Z  e04b88aaecea Downloading [>                                                  ]  4.134kB/296.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.0612539Z  5142a157d445 Downloading [>                                                  ]  229.4kB/21.54MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.0613799Z  301909fb7a8f Extracting [>                                                  ]  65.54kB/6.295MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1210849Z  e04b88aaecea Downloading [==================================================>]  296.1kB/296.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1212424Z  e04b88aaecea Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1213146Z  e04b88aaecea Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1246700Z  5142a157d445 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1247037Z  5142a157d445 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1480809Z  f18232174bc9 Extracting [==================>                                ]  1.376MB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1909433Z  a70653f7a2d5 Extracting [==================================================>]     132B/132B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1910411Z  a70653f7a2d5 Extracting [==================================================>]     132B/132B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1947201Z  008ba72743b6 Downloading [=====>                                             ]  1.378kB/13.41kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1950850Z  008ba72743b6 Downloading [==================================================>]  13.41kB/13.41kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1951819Z  008ba72743b6 Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1952350Z  008ba72743b6 Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.1990710Z  301909fb7a8f Extracting [==>                                                ]  262.1kB/6.295MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.2824158Z  301909fb7a8f Extracting [==================================================>]  6.295MB/6.295MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.3460699Z  5a127130762f Downloading [==================================================>]     172B/172B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.3461411Z  5a127130762f Verifying Checksum 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.3461852Z  5a127130762f Download complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.3988165Z  f18232174bc9 Extracting [====================>                              ]  1.507MB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.4989632Z  f18232174bc9 Extracting [===========================>                       ]  2.032MB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.5462594Z  f18232174bc9 Extracting [==================================================>]  3.642MB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.5474894Z  f18232174bc9 Extracting [==================================================>]  3.642MB/3.642MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.6991800Z  a6d41d3f7e67 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:52.6992730Z  301909fb7a8f Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.0451458Z  f18232174bc9 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.0454608Z  e04b88aaecea Extracting [=====>                                             ]  32.77kB/296.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.0967968Z  fe2636d02863 Extracting [>                                                  ]   98.3kB/8.45MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.2326332Z  postgrest Pulled 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.2416087Z  fe2636d02863 Extracting [=>                                                 ]  294.9kB/8.45MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.3386157Z  fe2636d02863 Extracting [==================================================>]   8.45MB/8.45MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.3401073Z  fe2636d02863 Extracting [==================================================>]   8.45MB/8.45MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.3522294Z  e04b88aaecea Extracting [=================================>                 ]  196.6kB/296.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:53.6956709Z  e04b88aaecea Extracting [==================================================>]  296.1kB/296.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0451546Z  a70653f7a2d5 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0452533Z  fe2636d02863 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0453241Z  7cf4d048777d Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0458040Z  e04b88aaecea Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0477804Z  900bac0c57cc Extracting [=========>                                         ]  32.77kB/171.6kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0497849Z  900bac0c57cc Extracting [==================================================>]  171.6kB/171.6kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0526088Z  5142a157d445 Extracting [>                                                  ]  229.4kB/21.54MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0536458Z  95fbbca7ef2e Extracting [==================================================>]  1.022kB/1.022kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0543266Z  95fbbca7ef2e Extracting [==================================================>]  1.022kB/1.022kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0697814Z  531e3bd93090 Extracting [>                                                  ]  491.5kB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.0872013Z  95fbbca7ef2e Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.1063245Z  900bac0c57cc Extracting [==================================================>]  171.6kB/171.6kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.1374132Z  5592d1f29924 Extracting [>                                                  ]  557.1kB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.1576886Z  5142a157d445 Extracting [==========>                                        ]  4.588MB/21.54MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.1992689Z  531e3bd93090 Extracting [=>                                                 ]    983kB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.2419158Z  5592d1f29924 Extracting [>                                                  ]  3.342MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.2605207Z  5142a157d445 Extracting [===================>                               ]  8.258MB/21.54MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.3119652Z  531e3bd93090 Extracting [=====>                                             ]  4.915MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.3573587Z  5592d1f29924 Extracting [>                                                  ]  6.685MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.3606624Z  900bac0c57cc Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.3607330Z  5142a157d445 Extracting [=====================================>             ]  16.29MB/21.54MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.3709262Z  mailpit Pulled 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4163530Z  5142a157d445 Extracting [==================================================>]  21.54MB/21.54MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4422346Z  5142a157d445 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4441780Z  008ba72743b6 Extracting [==================================================>]  13.41kB/13.41kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4443998Z  008ba72743b6 Extracting [==================================================>]  13.41kB/13.41kB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4584708Z  5592d1f29924 Extracting [=>                                                 ]  10.03MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4673137Z  531e3bd93090 Extracting [========>                                          ]  7.864MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4980716Z  008ba72743b6 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4985036Z  5a127130762f Extracting [==================================================>]     172B/172B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.4988068Z  5a127130762f Extracting [==================================================>]     172B/172B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.5124282Z  5a127130762f Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.5198955Z  gotrue Pulled 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.5628345Z  5592d1f29924 Extracting [==>                                                ]  16.71MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.5822564Z  531e3bd93090 Extracting [============>                                      ]   11.3MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.6654942Z  5592d1f29924 Extracting [==>                                                ]  20.61MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.6962723Z  531e3bd93090 Extracting [================>                                  ]  15.73MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.7917117Z  5592d1f29924 Extracting [===>                                               ]   23.4MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.7984178Z  531e3bd93090 Extracting [========================>                          ]   23.1MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.9101230Z  531e3bd93090 Extracting [================================>                  ]  29.98MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:54.9366797Z  5592d1f29924 Extracting [===>                                               ]  24.51MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.0369240Z  5592d1f29924 Extracting [====>                                              ]  31.75MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.0465632Z  531e3bd93090 Extracting [================================>                  ]  30.47MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.1378722Z  5592d1f29924 Extracting [=====>                                             ]  38.99MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.1618453Z  531e3bd93090 Extracting [=====================================>             ]   34.9MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.2456941Z  5592d1f29924 Extracting [======>                                            ]  46.24MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.2635924Z  531e3bd93090 Extracting [===========================================>       ]   40.3MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.3508403Z  5592d1f29924 Extracting [=======>                                           ]  54.03MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.4052643Z  531e3bd93090 Extracting [============================================>      ]  41.29MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.4619101Z  5592d1f29924 Extracting [========>                                          ]  62.39MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.5510529Z  531e3bd93090 Extracting [============================================>      ]  41.78MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.5752152Z  5592d1f29924 Extracting [=========>                                         ]  65.18MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.6544020Z  531e3bd93090 Extracting [=============================================>     ]  42.27MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.6810919Z  5592d1f29924 Extracting [=========>                                         ]  68.52MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.7669119Z  531e3bd93090 Extracting [==============================================>    ]  43.25MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.7887887Z  5592d1f29924 Extracting [==========>                                        ]  71.86MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.8927296Z  531e3bd93090 Extracting [================================================>  ]  44.73MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:55.8982963Z  5592d1f29924 Extracting [==========>                                        ]  74.65MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:56.0146051Z  531e3bd93090 Extracting [=================================================> ]   46.2MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:56.0313517Z  5592d1f29924 Extracting [===========>                                       ]  77.99MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:56.2934576Z  531e3bd93090 Extracting [==================================================>]  46.53MB/46.53MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:56.5591323Z  5592d1f29924 Extracting [===========>                                       ]   79.1MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:56.6741447Z  5592d1f29924 Extracting [===========>                                       ]  80.77MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:56.7758379Z  5592d1f29924 Extracting [============>                                      ]  89.13MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:56.8777026Z  5592d1f29924 Extracting [=============>                                     ]  96.93MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.0252267Z  5592d1f29924 Extracting [==============>                                    ]  99.71MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.0893003Z  531e3bd93090 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.0905665Z  814dd06d26c7 Extracting [==================================================>]     881B/881B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.0906987Z  814dd06d26c7 Extracting [==================================================>]     881B/881B
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.1330041Z  5592d1f29924 Extracting [==============>                                    ]  103.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.2689677Z  5592d1f29924 Extracting [==============>                                    ]  104.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.2949630Z  814dd06d26c7 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.3011039Z  kong Pulled 
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.3751189Z  5592d1f29924 Extracting [===============>                                   ]  106.4MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.4932625Z  5592d1f29924 Extracting [===============>                                   ]  109.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.6108559Z  5592d1f29924 Extracting [===============>                                   ]  113.1MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.7286817Z  5592d1f29924 Extracting [================>                                  ]  116.4MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.8395884Z  5592d1f29924 Extracting [=================>                                 ]  121.4MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:57.9541082Z  5592d1f29924 Extracting [=================>                                 ]  124.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.0554888Z  5592d1f29924 Extracting [==================>                                ]    132MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.1944176Z  5592d1f29924 Extracting [==================>                                ]  133.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.3089833Z  5592d1f29924 Extracting [===================>                               ]  137.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.4111513Z  5592d1f29924 Extracting [====================>                              ]  144.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.5137580Z  5592d1f29924 Extracting [=====================>                             ]  154.9MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.6166954Z  5592d1f29924 Extracting [=======================>                           ]  164.9MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.7198554Z  5592d1f29924 Extracting [========================>                          ]  171.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.8552575Z  5592d1f29924 Extracting [========================>                          ]  175.5MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:58.9663123Z  5592d1f29924 Extracting [=========================>                         ]  177.1MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:59.1172296Z  5592d1f29924 Extracting [=========================>                         ]  178.3MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:59.2209868Z  5592d1f29924 Extracting [=========================>                         ]  181.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:59.3256464Z  5592d1f29924 Extracting [==========================>                        ]  187.2MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:59.4522790Z  5592d1f29924 Extracting [==========================>                        ]    190MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:59.5905075Z  5592d1f29924 Extracting [===========================>                       ]  191.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:59.6928758Z  5592d1f29924 Extracting [===========================>                       ]  194.4MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:16:59.9180710Z  5592d1f29924 Extracting [===========================>                       ]  197.2MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:00.0210581Z  5592d1f29924 Extracting [============================>                      ]  201.1MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:00.1256655Z  5592d1f29924 Extracting [=============================>                     ]  207.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:00.2570499Z  5592d1f29924 Extracting [=============================>                     ]  211.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:00.4042912Z  5592d1f29924 Extracting [==============================>                    ]  212.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:00.5151136Z  5592d1f29924 Extracting [==============================>                    ]  214.5MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:01.1754795Z  5592d1f29924 Extracting [==============================>                    ]  216.1MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:01.2824247Z  5592d1f29924 Extracting [===============================>                   ]    220MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:01.3911756Z  5592d1f29924 Extracting [===============================>                   ]  224.5MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:01.7266341Z  5592d1f29924 Extracting [================================>                  ]  226.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:01.8370145Z  5592d1f29924 Extracting [================================>                  ]    229MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:01.9398588Z  5592d1f29924 Extracting [=================================>                 ]  237.9MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:02.1107734Z  5592d1f29924 Extracting [==================================>                ]  242.3MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:02.2126360Z  5592d1f29924 Extracting [==================================>                ]  247.3MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:02.3145756Z  5592d1f29924 Extracting [===================================>               ]    249MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:02.4308591Z  5592d1f29924 Extracting [===================================>               ]  252.9MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:02.5386736Z  5592d1f29924 Extracting [====================================>              ]  257.9MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:02.6443895Z  5592d1f29924 Extracting [====================================>              ]  260.7MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:02.8063678Z  5592d1f29924 Extracting [=====================================>             ]  262.4MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:02.9172431Z  5592d1f29924 Extracting [=====================================>             ]  265.2MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:03.0188785Z  5592d1f29924 Extracting [======================================>            ]  270.2MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:03.1446155Z  5592d1f29924 Extracting [======================================>            ]    273MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:03.2586284Z  5592d1f29924 Extracting [======================================>            ]  274.1MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:03.3612062Z  5592d1f29924 Extracting [=======================================>           ]  276.3MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:03.5813846Z  5592d1f29924 Extracting [=======================================>           ]  279.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:03.7428530Z  5592d1f29924 Extracting [=======================================>           ]  282.4MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:03.8551480Z  5592d1f29924 Extracting [========================================>          ]  286.3MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:04.0074544Z  5592d1f29924 Extracting [=========================================>         ]  293.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:04.4890688Z  5592d1f29924 Extracting [==========================================>        ]  298.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:04.5906011Z  5592d1f29924 Extracting [==========================================>        ]  301.9MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:04.8716797Z  5592d1f29924 Extracting [==========================================>        ]  302.5MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:04.9734828Z  5592d1f29924 Extracting [===========================================>       ]  305.3MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.0760661Z  5592d1f29924 Extracting [============================================>      ]  313.6MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.2005605Z  5592d1f29924 Extracting [============================================>      ]  317.5MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.3372710Z  5592d1f29924 Extracting [=============================================>     ]    322MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.4393544Z  5592d1f29924 Extracting [==============================================>    ]  327.5MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.5429038Z  5592d1f29924 Extracting [===============================================>   ]    337MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.6493794Z  5592d1f29924 Extracting [================================================>  ]  339.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.7652986Z  5592d1f29924 Extracting [================================================>  ]  341.5MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.8700535Z  5592d1f29924 Extracting [================================================>  ]  344.3MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:05.9856702Z  5592d1f29924 Extracting [=================================================> ]  349.3MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:06.0907087Z  5592d1f29924 Extracting [=================================================> ]  350.4MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:06.1942374Z  5592d1f29924 Extracting [=================================================> ]  352.1MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:06.2119562Z  5592d1f29924 Extracting [==================================================>]  353.8MB/353.8MB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4022605Z  5592d1f29924 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4032921Z  a07822e4fc9b Extracting [=====================>                             ]  32.77kB/77.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4039296Z  a07822e4fc9b Extracting [==================================================>]  77.89kB/77.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4047319Z  a07822e4fc9b Extracting [==================================================>]  77.89kB/77.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4176974Z  a07822e4fc9b Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4186505Z  3e380916456e Extracting [==>                                                ]  32.77kB/814.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4299089Z  3e380916456e Extracting [==================================================>]  814.1kB/814.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4302416Z  3e380916456e Extracting [==================================================>]  814.1kB/814.1kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4371162Z  3e380916456e Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4382716Z  ddaed5f486f2 Extracting [==================================================>]     293B/293B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4385070Z  ddaed5f486f2 Extracting [==================================================>]     293B/293B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4490837Z  ddaed5f486f2 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4501355Z  194561821b3d Extracting [==================================================>]  3.204kB/3.204kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4503951Z  194561821b3d Extracting [==================================================>]  3.204kB/3.204kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4789357Z  194561821b3d Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4802965Z  dfba0188557a Extracting [==================================================>]  1.032kB/1.032kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4808565Z  dfba0188557a Extracting [==================================================>]  1.032kB/1.032kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4949338Z  dfba0188557a Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4959861Z  68e4396c0821 Extracting [==================================================>]  2.359kB/2.359kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.4962319Z  68e4396c0821 Extracting [==================================================>]  2.359kB/2.359kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5226910Z  68e4396c0821 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5237178Z  064d9e7b3a4b Extracting [==================================================>]  8.535kB/8.535kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5242489Z  064d9e7b3a4b Extracting [==================================================>]  8.535kB/8.535kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5299373Z  064d9e7b3a4b Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5309601Z  86f2886dbf71 Extracting [==================================================>]   1.89kB/1.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5313305Z  86f2886dbf71 Extracting [==================================================>]   1.89kB/1.89kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5411529Z  86f2886dbf71 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5420773Z  a91a59e564b5 Extracting [==================================================>]  1.016kB/1.016kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5424154Z  a91a59e564b5 Extracting [==================================================>]  1.016kB/1.016kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5485446Z  a91a59e564b5 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5498457Z  1300f58250f6 Extracting [==================================================>]     341B/341B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5499128Z  1300f58250f6 Extracting [==================================================>]     341B/341B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5567387Z  1300f58250f6 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5578155Z  96f9b92ec58c Extracting [==================================================>]     280B/280B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5580011Z  96f9b92ec58c Extracting [==================================================>]     280B/280B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5658510Z  96f9b92ec58c Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5669780Z  841b608dbbf6 Extracting [==================================================>]  1.524kB/1.524kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5671819Z  841b608dbbf6 Extracting [==================================================>]  1.524kB/1.524kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5731714Z  841b608dbbf6 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5741161Z  b4dd7711ed13 Extracting [==================================================>]  3.858kB/3.858kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5749414Z  b4dd7711ed13 Extracting [==================================================>]  3.858kB/3.858kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5855168Z  b4dd7711ed13 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5863794Z  316321ad3727 Extracting [==================================================>]     358B/358B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5866376Z  316321ad3727 Extracting [==================================================>]     358B/358B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5935900Z  316321ad3727 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5946100Z  c183a9e089d3 Extracting [==================================================>]     393B/393B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.5948412Z  c183a9e089d3 Extracting [==================================================>]     393B/393B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6022317Z  c183a9e089d3 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6032516Z  6a45b04bec46 Extracting [==================================================>]     338B/338B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6034688Z  6a45b04bec46 Extracting [==================================================>]     338B/338B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6097338Z  6a45b04bec46 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6109418Z  b22e88ff0788 Extracting [==================================================>]     398B/398B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6111382Z  b22e88ff0788 Extracting [==================================================>]     398B/398B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6169865Z  b22e88ff0788 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6179902Z  135ae91cd954 Extracting [==================================================>]     638B/638B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6182787Z  135ae91cd954 Extracting [==================================================>]     638B/638B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6250570Z  135ae91cd954 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6259899Z  950abda5b1ff Extracting [==================================================>]  8.578kB/8.578kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6268424Z  950abda5b1ff Extracting [==================================================>]  8.578kB/8.578kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6332811Z  950abda5b1ff Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6342284Z  413e72da565c Extracting [==================================================>]  9.789kB/9.789kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6345355Z  413e72da565c Extracting [==================================================>]  9.789kB/9.789kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6419802Z  413e72da565c Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6430656Z  f954702d0125 Extracting [==================================================>]  12.86kB/12.86kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6432549Z  f954702d0125 Extracting [==================================================>]  12.86kB/12.86kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6647003Z  f954702d0125 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6656375Z  b88c5e12ea9e Extracting [==================================================>]     525B/525B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6661711Z  b88c5e12ea9e Extracting [==================================================>]     525B/525B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6721938Z  b88c5e12ea9e Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6733480Z  41aabdb0883b Extracting [==================================================>]     272B/272B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6738382Z  41aabdb0883b Extracting [==================================================>]     272B/272B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6801682Z  41aabdb0883b Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6819100Z  549fa782358f Extracting [==================================================>]  5.284kB/5.284kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6819800Z  549fa782358f Extracting [==================================================>]  5.284kB/5.284kB
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6882365Z  549fa782358f Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6892416Z  551d34fec852 Extracting [==================================================>]     314B/314B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6895352Z  551d34fec852 Extracting [==================================================>]     314B/314B
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.6990577Z  551d34fec852 Pull complete 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.7046022Z  postgres Pulled 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:08.7060598Z Starting database...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.0962950Z Initialising schema...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.5018718Z Seeding globals from roles.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.5064939Z Applying migration 20261008000000_tester_signup_lock.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.5136730Z Applying migration 20261008010000_identity_membership_rls.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.5148389Z NOTICE (42P06): schema "app_private" already exists, skipping
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.5153589Z NOTICE (42P06): schema "app_ops" already exists, skipping
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.5601637Z Applying migration 20261008020000_media_lessons_rls.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.7055265Z Seeding data from supabase/seed/00_testers.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:20.7126047Z Starting containers...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:21.3736745Z Waiting for health checks...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4300268Z Started supabase local development setup.
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4300615Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4305311Z ╭──────────────────────────────────╮
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4306007Z │ 🔧 Development Tools             │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4306631Z ├─────────┬────────────────────────┤
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4307240Z │ Mailpit │ http://127.0.0.1:54324 │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4308124Z ╰─────────┴────────────────────────╯
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4308500Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4308847Z ╭─────────────────────────────────────────────────╮
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4309860Z │ 🌐 APIs                                         │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4310586Z ├─────────────┬───────────────────────────────────┤
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4311236Z │ Project URL │ http://127.0.0.1:54321            │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4311620Z │ REST        │ http://127.0.0.1:54321/rest/v1    │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4311979Z │ GraphQL     │ http://127.0.0.1:54321/graphql/v1 │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4312366Z ╰─────────────┴───────────────────────────────────╯
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4312564Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4312677Z Local dev security notice
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4313017Z All services bind to 0.0.0.0 (network-accessible, not just localhost)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4313492Z API keys and JWT secrets are shared defaults. Do not use in production
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4313924Z Studio, pgMeta (/pg/*), and analytics have no authentication
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4314178Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4314410Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4315168Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4315915Z ╭───────────────────────────────────────────────────────────────╮
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4316316Z │ ⛁ Database                                                    │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4316735Z ├─────┬─────────────────────────────────────────────────────────┤
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4317973Z │ URL │ ***127.0.0.1:54322/postgres │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4318680Z ╰─────┴─────────────────────────────────────────────────────────╯
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4319062Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4319426Z ╭──────────────────────────────────────────────────────────────╮
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4320157Z │ 🔑 Authentication Keys                                       │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4320922Z ├─────────────┬────────────────────────────────────────────────┤
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4322042Z │ Publishable │ [REDACTED local CLI default key] │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4322900Z │ Secret      │ [REDACTED local CLI default key]      │
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4323678Z ╰─────────────┴────────────────────────────────────────────────╯
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4324139Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4324145Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4517227Z ##[group]Run supabase db reset
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4517533Z ^[[36;1msupabase db reset^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4581666Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4581973Z env:
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4582194Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.4582480Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:17:31.7609029Z Resetting local database...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:32.0101722Z Recreating database...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.1869175Z Initialising schema...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.5868116Z Seeding globals from roles.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.5928853Z Applying migration 20261008000000_tester_signup_lock.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.6024093Z Applying migration 20261008010000_identity_membership_rls.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.6044930Z NOTICE (42P06): schema "app_private" already exists, skipping
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.6048297Z NOTICE (42P06): schema "app_ops" already exists, skipping
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.6532397Z Applying migration 20261008020000_media_lessons_rls.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.7960690Z Seeding data from supabase/seed/00_testers.sql...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:43.8027855Z Restarting containers...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0080543Z Finished supabase db reset on branch ticket/s77-backend-db-media-lessons-rls.
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0081610Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0083006Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0347501Z ##[group]Run supabase db advisors --local --type security --fail-on warn
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0349271Z ^[[36;1msupabase db advisors --local --type security --fail-on warn^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0428537Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0428946Z env:
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0429308Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.0429789Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.3564230Z Connecting to local database...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4631014Z No issues found
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4632360Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4633631Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4840570Z ##[group]Run supabase test db
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4840888Z ^[[36;1msupabase test db^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4903171Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4903419Z env:
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4903637Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.4903920Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:17:44.7791945Z Connecting to local database...
+backend-db	UNKNOWN STEP	2026-10-12T04:17:45.7648470Z 3.36: Pulling from supabase/pg_prove
+backend-db	UNKNOWN STEP	2026-10-12T04:17:45.8987715Z dcccee43ad5d: Pulling fs layer
+backend-db	UNKNOWN STEP	2026-10-12T04:17:45.8988511Z 06d62d0de6d7: Pulling fs layer
+backend-db	UNKNOWN STEP	2026-10-12T04:17:45.8989135Z a22cb17b3b93: Pulling fs layer
+backend-db	UNKNOWN STEP	2026-10-12T04:17:45.8989818Z 4f4fb700ef54: Pulling fs layer
+backend-db	UNKNOWN STEP	2026-10-12T04:17:45.8990268Z 4f4fb700ef54: Waiting
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.0512377Z dcccee43ad5d: Verifying Checksum
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.0512990Z dcccee43ad5d: Download complete
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.1180668Z a22cb17b3b93: Verifying Checksum
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.1181289Z a22cb17b3b93: Download complete
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.1620546Z dcccee43ad5d: Pull complete
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.1923336Z 4f4fb700ef54: Verifying Checksum
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.1923946Z 4f4fb700ef54: Download complete
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.4677642Z 06d62d0de6d7: Verifying Checksum
+backend-db	UNKNOWN STEP	2026-10-12T04:17:46.4678431Z 06d62d0de6d7: Download complete
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.0603584Z 06d62d0de6d7: Pull complete
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.0862766Z a22cb17b3b93: Pull complete
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.0953849Z 4f4fb700ef54: Pull complete
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.0994264Z Digest: sha256:eda7c5e68719e9c8287e78c017118407b48df904a51c935f5ab6098b8c0bc6bc
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.1004770Z Status: Downloaded newer image for ghcr.io/supabase/pg_prove:3.36
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.3290936Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.3516230Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .............. ok
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.3873747Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ..... ok
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.4422594Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ... ok
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.5199257Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ...... ok
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.6541402Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .. ok
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.7332656Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ....... ok
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8000322Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql ......... ok
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8592575Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql:112: ERROR:  new row for relation "point_event_revisions" violates check constraint "point_event_revisions_check"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8593883Z CONTEXT:  PL/pgSQL function results_eq(refcursor,refcursor,text) line 12 at FETCH
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8594835Z PL/pgSQL function results_eq(text,text,text) line 9 at assignment
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8614350Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql .. 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8615545Z # Failed test 5: "T-DB-13: a second device still on parent null gets P0409 revision_conflict"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8616314Z #       caught: no exception
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8616750Z #       wanted: P0409
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8617328Z # Failed test 6: "T-DB-13: a parent ahead of the current revision is P0409 too"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8618394Z #       caught: 23514: new row for relation "point_event_revisions" violates check constraint "point_event_revisions_check"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8618936Z #       wanted: P0409: revision_conflict
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8619238Z Dubious, test returned 3 (wstat 768, 0x300)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:47.8619514Z Failed 40/45 subtests 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.0940061Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql ... 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.0941396Z # Failed test 60: "T-DB-69: the viewer still sees 0 rows: share_approved_sha256 no longer equals the fingerprint"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.0942235Z #         have: 1
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.0942562Z #         want: 0
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.0942921Z # Looks like you failed 1 test of 72
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.0943361Z Failed 1/72 subtests 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2083464Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql .......... 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2085775Z # Failed test 15: "T-DB-64: project 4, second row: refused at the *user_total limit though the project is under its own"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2087152Z #       caught: no exception
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2088692Z #       wanted: P0429
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2089818Z # Failed test 16: "T-DB-64: a fresh project 5 is refused too: the aggregate is per user, never N x the per-project limit"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2091543Z #         have: ok
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2092255Z #         want: P0429
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2093014Z # Failed test 17: "T-DB-64: one aggregate row for the user and day, holding 7"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2093886Z #     Results differ beginning at row 1:
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2094506Z #         have: (1,10)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2095012Z #         want: (1,7)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2095663Z # Failed test 18: "exactly 7 revisions landed across 5 projects"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2096367Z #         have: 10
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2096851Z #         want: 7
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2097379Z # Looks like you failed 4 tests of 25
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2098227Z Failed 4/25 subtests 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2098672Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2098990Z Test Summary Report
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2099471Z -------------------
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2100643Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql (Wstat: 768 (exited 3) Tests: 7 Failed: 2)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2101784Z   Failed tests:  5-6
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2102158Z   Non-zero exit status: 3
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2102609Z   Parse errors: Bad plan.  You planned 45 tests but ran 7.
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2103372Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql (Wstat: 0 Tests: 72 Failed: 1)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2104085Z   Failed test:  60
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2104725Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql        (Wstat: 0 Tests: 25 Failed: 4)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2105440Z   Failed tests:  15-18
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2105952Z Files=10, Tests=325,  1 wallclock secs ( 0.06 usr  0.03 sys +  0.09 cusr  0.05 csys =  0.23 CPU)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.2106511Z Result: FAIL
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3205507Z github.com/supabase/cli/internal/utils/docker.go:410 (0x12a58d8)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3206352Z github.com/supabase/cli/internal/utils/docker.go:374 (0x12a52c5)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3207057Z github.com/supabase/cli/internal/db/test/test.go:89 (0x1664770)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3207799Z github.com/supabase/cli/cmd/db.go:265 (0x2cd658b)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3208385Z github.com/spf13/cobra@v1.10.2/command.go:1015 (0x61b8c2)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3208844Z github.com/spf13/cobra@v1.10.2/command.go:1148 (0x61c205)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3209275Z github.com/supabase/cli/cmd/root.go:173 (0x2ce8f26)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3209680Z github.com/supabase/cli/main.go:11 (0x2cee08f)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3210075Z internal/runtime/atomic/types.go:194 (0x44953d)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3210434Z runtime/asm_amd64.s:1693 (0x485ce1)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3210654Z 
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3210769Z error running container: exit 1
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3211193Z Try rerunning the command with --debug to troubleshoot the error.
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3373563Z ##[error]Process completed with exit code 1.
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3473533Z ##[group]Run docker logs "$(docker ps --filter name=supabase_auth --format '{{.Names}}' | head -1)" 2>&1 | tail -80
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3474998Z ^[[36;1mdocker logs "$(docker ps --filter name=supabase_auth --format '{{.Names}}' | head -1)" 2>&1 | tail -80^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3563818Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3564239Z env:
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3564609Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.3565108Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4763451Z {"level":"info","msg":"Go runtime metrics collection started","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4764982Z {"component":"pop","level":"info","msg":"Migrations already up to date, nothing to apply","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4766778Z {"args":[0.026099913],"component":"pop","level":"info","msg":"%.4f seconds","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4768381Z {"count":0,"level":"info","msg":"GoTrue migrations applied successfully","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4769567Z {"component":"api","level":"warning","msg":"DEPRECATION NOTICE: GOTRUE_JWT_ADMIN_GROUP_NAME not supported by Supabase's GoTrue, will be removed soon","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4770730Z {"component":"api","level":"warning","msg":"DEPRECATION NOTICE: GOTRUE_JWT_DEFAULT_GROUP_NAME not supported by Supabase's GoTrue, will be removed soon","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4771624Z {"level":"info","msg":"GoTrue API started on: 0.0.0.0:9999","time":"2026-10-12T04:17:21Z","version":"v2.188.1"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4772447Z {"component":"apiworker","level":"info","msg":"apiworker: index worker started","time":"2026-10-12T04:17:21Z","worker_type":"apiworker_index_worker"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4773424Z {"component":"apiworker","level":"info","msg":"apiworker: config notifier started","time":"2026-10-12T04:17:21Z","worker_type":"apiworker_config_notifier"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4774387Z {"component":"apiworker","level":"info","msg":"apiworker: template cache worker started","time":"2026-10-12T04:17:21Z","worker_type":"apiworker_template_cache"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4775598Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"mfa_factor_unenrolled_notification","msg":"mailer: reloaded template type: mfa_factor_unenrolled_notification","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4776835Z {"component":"apiworker","level":"info","msg":"apiworker: db worker started","time":"2026-10-12T04:17:21Z","worker_type":"apiworker_db_worker"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4778334Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"identity_linked_notification","msg":"mailer: reloaded template type: identity_linked_notification","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4779733Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"identity_unlinked_notification","msg":"mailer: reloaded template type: identity_unlinked_notification","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4781068Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"email_changed_notification","msg":"mailer: reloaded template type: email_changed_notification","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4782446Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"mfa_factor_enrolled_notification","msg":"mailer: reloaded template type: mfa_factor_enrolled_notification","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4783829Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"phone_changed_notification","msg":"mailer: reloaded template type: phone_changed_notification","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4784993Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"recovery","msg":"mailer: reloaded template type: recovery","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4786306Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"invite","msg":"mailer: reloaded template type: invite","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4787515Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"password_changed_notification","msg":"mailer: reloaded template type: password_changed_notification","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4790006Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"reauthentication","msg":"mailer: reloaded template type: reauthentication","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4791150Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"email_change","msg":"mailer: reloaded template type: email_change","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4793502Z {"error":"templatemailer: template type \"magic_link\": Get \"http://supabase_kong_jovra-local:8088/email/magic_link.html\": dial tcp 172.18.0.3:8088: connect: connection refused","event":"templatemailer_template_body_http_error","level":"error","mail_type":"magic_link","msg":"templatemailer: template type \"magic_link\": Get \"http://supabase_kong_jovra-local:8088/email/magic_link.html\": dial tcp 172.18.0.3:8088: connect: connection refused","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4795532Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"magic_link","msg":"mailer: reloaded template type: magic_link","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4796616Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"confirmation","msg":"mailer: reloaded template type: confirmation","time":"2026-10-12T04:17:21Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4799035Z {"component":"apiworker","config_conn_max_idle_time":"0s","config_conn_max_lifetime":"0s","config_conn_percentage":0,"config_max_idle_pool_size":0,"config_max_pool_size":0,"level":"info","limit_conn_max_idle_time":"0s","limit_conn_max_lifetime":"0s","limit_max_idle_conns":0,"limit_max_open_conns":0,"limit_strategy":"fixed","msg":"applying connection limits to db using the \"fixed\" strategy","server_max_conns":100,"time":"2026-10-12T04:17:21Z","worker_type":"apiworker_db_worker"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4801046Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"magic_link","msg":"mailer: reloaded template type: magic_link","time":"2026-10-12T04:17:31Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4801841Z {"level":"info","msg":"received graceful shutdown signal","time":"2026-10-12T04:17:43Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4802601Z {"component":"apiworker","level":"info","msg":"apiworker: template cache worker exited","time":"2026-10-12T04:17:43Z","worker_type":"apiworker_template_cache"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4803560Z {"component":"apiworker","level":"info","msg":"apiworker: config notifier exited","time":"2026-10-12T04:17:43Z","worker_type":"apiworker_config_notifier"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4804452Z {"component":"apiworker","level":"info","msg":"apiworker: db worker exited","time":"2026-10-12T04:17:43Z","worker_type":"apiworker_db_worker"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4805317Z {"component":"apiworker","level":"info","msg":"apiworker: index worker exited","time":"2026-10-12T04:17:43Z","worker_type":"apiworker_index_worker"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4806177Z {"component":"apiworker","error":"context canceled","level":"error","msg":"background apiworker is exiting","time":"2026-10-12T04:17:43Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4806864Z {"component":"api","level":"info","msg":"http server closed","time":"2026-10-12T04:17:43Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4807407Z {"level":"info","msg":"Go runtime metrics collection started","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4808417Z {"component":"pop","level":"info","msg":"Migrations already up to date, nothing to apply","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4809083Z {"args":[0.019645197],"component":"pop","level":"info","msg":"%.4f seconds","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4809701Z {"count":0,"level":"info","msg":"GoTrue migrations applied successfully","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4810745Z {"component":"api","level":"warning","msg":"DEPRECATION NOTICE: GOTRUE_JWT_ADMIN_GROUP_NAME not supported by Supabase's GoTrue, will be removed soon","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4811911Z {"component":"api","level":"warning","msg":"DEPRECATION NOTICE: GOTRUE_JWT_DEFAULT_GROUP_NAME not supported by Supabase's GoTrue, will be removed soon","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4812805Z {"level":"info","msg":"GoTrue API started on: 0.0.0.0:9999","time":"2026-10-12T04:17:44Z","version":"v2.188.1"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4813568Z {"component":"apiworker","level":"info","msg":"apiworker: index worker started","time":"2026-10-12T04:17:44Z","worker_type":"apiworker_index_worker"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4814485Z {"component":"apiworker","level":"info","msg":"apiworker: config notifier started","time":"2026-10-12T04:17:44Z","worker_type":"apiworker_config_notifier"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4815564Z {"component":"apiworker","level":"info","msg":"apiworker: template cache worker started","time":"2026-10-12T04:17:44Z","worker_type":"apiworker_template_cache"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4816474Z {"component":"apiworker","level":"info","msg":"apiworker: db worker started","time":"2026-10-12T04:17:44Z","worker_type":"apiworker_db_worker"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4817836Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"mfa_factor_unenrolled_notification","msg":"mailer: reloaded template type: mfa_factor_unenrolled_notification","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4819060Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"invite","msg":"mailer: reloaded template type: invite","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4820120Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"confirmation","msg":"mailer: reloaded template type: confirmation","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4821202Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"recovery","msg":"mailer: reloaded template type: recovery","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4822258Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"email_change","msg":"mailer: reloaded template type: email_change","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4823384Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"reauthentication","msg":"mailer: reloaded template type: reauthentication","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4824667Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"password_changed_notification","msg":"mailer: reloaded template type: password_changed_notification","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4825978Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"email_changed_notification","msg":"mailer: reloaded template type: email_changed_notification","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4827266Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"phone_changed_notification","msg":"mailer: reloaded template type: phone_changed_notification","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4828902Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"identity_unlinked_notification","msg":"mailer: reloaded template type: identity_unlinked_notification","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4830258Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"mfa_factor_enrolled_notification","msg":"mailer: reloaded template type: mfa_factor_enrolled_notification","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4831591Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"identity_linked_notification","msg":"mailer: reloaded template type: identity_linked_notification","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4832920Z {"event":"templatemailer_reloader_template_update","level":"info","mail_type":"magic_link","msg":"mailer: reloaded template type: magic_link","time":"2026-10-12T04:17:44Z"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4834919Z {"component":"apiworker","config_conn_max_idle_time":"0s","config_conn_max_lifetime":"0s","config_conn_percentage":0,"config_max_idle_pool_size":0,"config_max_pool_size":0,"level":"info","limit_conn_max_idle_time":"0s","limit_conn_max_lifetime":"0s","limit_max_idle_conns":0,"limit_max_open_conns":0,"limit_strategy":"fixed","msg":"applying connection limits to db using the \"fixed\" strategy","server_max_conns":100,"time":"2026-10-12T04:17:44Z","worker_type":"apiworker_db_worker"}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4865944Z ##[group]Run docker logs "$(docker ps -a --filter name=supabase_db --format '{{.Names}}' | head -1)" 2>&1 | tail -80
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4866700Z ^[[36;1mdocker logs "$(docker ps -a --filter name=supabase_db --format '{{.Names}}' | head -1)" 2>&1 | tail -80^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4930339Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4930592Z env:
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4930811Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.4931103Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5450273Z 	  return 'no error';
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5450542Z 	exception when others then
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5451057Z 	  get stacked diagnostics v_state = returned_sqlstate, v_message = message_text, v_detail = pg_exception_detail;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5451658Z 	  return v_state || ' | ' || v_message || ' | ' || coalesce(v_detail, '');
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5452317Z 	end $$;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5453314Z 172.18.0.7 2026-10-12 04:17:47.685 UTC [231] postgres@postgres LOG:  statement: grant execute on function pg_temp.error_of(text) to authenticated;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5454359Z 172.18.0.7 2026-10-12 04:17:47.694 UTC [231] postgres@postgres LOG:  statement: create function app_gateway.t67_insert_project(p_owner uuid) returns uuid
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5455086Z 	language plpgsql volatile security definer set search_path = '' as $$
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5455453Z 	declare v_id uuid;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5455652Z 	begin
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5455928Z 	  insert into public.projects (owner_id, local_project_id, title)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5456392Z 	  values (p_owner, gen_random_uuid(), 'Server-created') returning id into v_id;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5456775Z 	  return v_id;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5456963Z 	end $$;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5457478Z 172.18.0.7 2026-10-12 04:17:47.695 UTC [231] postgres@postgres LOG:  statement: alter function app_gateway.t67_insert_project(uuid) owner to jovra_owner;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5458864Z 172.18.0.7 2026-10-12 04:17:47.695 UTC [231] postgres@postgres LOG:  statement: revoke all on function app_gateway.t67_insert_project(uuid) from public;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5459847Z 172.18.0.7 2026-10-12 04:17:47.695 UTC [231] postgres@postgres LOG:  statement: grant execute on function app_gateway.t67_insert_project(uuid) to jovra_gateway, authenticated;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5460770Z 172.18.0.7 2026-10-12 04:17:47.696 UTC [231] postgres@postgres LOG:  statement: grant usage on schema app_gateway to authenticated;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5461495Z 172.18.0.7 2026-10-12 04:17:47.696 UTC [231] postgres@postgres LOG:  statement: grant jovra_gateway to postgres;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5462359Z 172.18.0.7 2026-10-12 04:17:47.766 UTC [232] postgres@postgres LOG:  statement: create function pg_temp.fk(p_table text, p_cols text[]) returns text language sql stable as $$
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5467210Z 	  select c.confrelid::regclass::text || '(' ||
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5468110Z 	         (select string_agg(a.attname, ',' order by k.ord) from unnest(c.confkey) with ordinality k(n, ord)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5468775Z 	            join pg_attribute a on a.attrelid = c.confrelid and a.attnum = k.n) || ') on delete ' ||
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5469243Z 	         c.confdeltype::text ||
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5469654Z 	         coalesce(' set null (' || (select string_agg(a.attname, ',') from unnest(c.confdelsetcols) n
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5470245Z 	                                       join pg_attribute a on a.attrelid = c.conrelid and a.attnum = n) || ')', '')
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5470675Z 	    from pg_constraint c
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5471026Z 	   where c.contype = 'f' and c.conrelid = ('public.' || p_table)::regclass
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5471588Z 	     and (select array_agg(a.attname::text order by k.ord) from unnest(c.conkey) with ordinality k(n, ord)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5472188Z 	            join pg_attribute a on a.attrelid = c.conrelid and a.attnum = k.n) = p_cols
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5472585Z 	$$;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5473459Z 172.18.0.7 2026-10-12 04:17:47.858 UTC [233] postgres@postgres ERROR:  new row for relation "point_event_revisions" violates check constraint "point_event_revisions_check"
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5474437Z 172.18.0.7 2026-10-12 04:17:47.858 UTC [233] postgres@postgres CONTEXT:  PL/pgSQL function results_eq(refcursor,refcursor,text) line 12 at FETCH
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5475242Z 	PL/pgSQL function results_eq(text,text,text) line 9 at assignment
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5476042Z 172.18.0.7 2026-10-12 04:17:47.858 UTC [233] postgres@postgres STATEMENT:  select results_eq($$insert into public.point_event_revisions (project_id, parent_revision, local_session_id,
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5476799Z 	                                                              schema_version, event_log)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5477294Z 	                    values ('a2000000-0000-4000-8000-000000000001', 1, 'e2000000-0000-4000-8000-000000000001',
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5478282Z 	                            '1', '[{"type": "pointWon"}, {"type": "pointWon"}]')
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5478644Z 	                    returning revision$$,
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5479060Z 	  $$values (2)$$, 'T-DB-13: with the current parent the insert succeeds as revision + 1');
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5479667Z 172.18.0.7 2026-10-12 04:17:47.886 UTC [234] postgres@postgres LOG:  statement: grant jovra_gateway to postgres;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5480467Z 172.18.0.7 2026-10-12 04:17:47.909 UTC [234] postgres@postgres LOG:  statement: create function pg_temp.gw(p_sql text) returns text language plpgsql as $$
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5481058Z 	declare
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5481239Z 	  v_state text;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5481425Z 	begin
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5481624Z 	  execute 'set local role jovra_gateway';
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5481888Z 	  execute p_sql;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5482092Z 	  execute 'reset role';
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5482308Z 	  return 'ok';
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5482510Z 	exception when others then
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5482799Z 	  get stacked diagnostics v_state = returned_sqlstate;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5483097Z 	  return v_state;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5483287Z 	end $$;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5483867Z 172.18.0.7 2026-10-12 04:17:47.911 UTC [234] postgres@postgres LOG:  statement: create function pg_temp.approve(p_actor text, p_clip uuid) returns text language sql as $$
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5484686Z 	  select pg_temp.gw(format('select app_gateway.approve_clip_share(%L, %L, gen_random_uuid())',
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5485176Z 	                           tests.get_supabase_uid(p_actor), p_clip))
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5485471Z 	$$;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5486049Z 172.18.0.7 2026-10-12 04:17:47.912 UTC [234] postgres@postgres LOG:  statement: create function pg_temp.revoke_share(p_actor text, p_clip uuid) returns text language sql as $$
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5486874Z 	  select pg_temp.gw(format('select app_gateway.revoke_clip_share(%L, %L, gen_random_uuid())',
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5487339Z 	                           tests.get_supabase_uid(p_actor), p_clip))
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5487895Z 	$$;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5488409Z 172.18.0.7 2026-10-12 04:17:48.037 UTC [234] postgres@postgres LOG:  statement: alter table public.lesson_clips disable trigger b20_pin_shared_clip;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5489296Z 172.18.0.7 2026-10-12 04:17:48.038 UTC [234] postgres@postgres LOG:  statement: alter table public.lesson_clips enable trigger b20_pin_shared_clip;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5490337Z 172.18.0.7 2026-10-12 04:17:48.123 UTC [235] postgres@postgres LOG:  statement: create function pg_temp.today() returns date language sql stable as $$ select (now() at time zone 'UTC')::date $$;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5491433Z 172.18.0.7 2026-10-12 04:17:48.125 UTC [235] postgres@postgres LOG:  statement: grant execute on function pg_temp.today() to authenticated;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5492362Z 172.18.0.7 2026-10-12 04:17:48.167 UTC [235] postgres@postgres LOG:  statement: create function pg_temp.append_two(p_project uuid) returns text language plpgsql as $$
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5492989Z 	declare
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5493165Z 	  v_state text;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5493356Z 	begin
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5493984Z 	  insert into public.point_event_revisions (project_id, parent_revision, local_session_id, schema_version, event_log)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5494570Z 	  values (p_project, null, gen_random_uuid(), '1', '[]');
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5495130Z 	  insert into public.point_event_revisions (project_id, parent_revision, local_session_id, schema_version, event_log)
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5495800Z 	  values (p_project, 1, gen_random_uuid(), '1', '[]');
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5496092Z 	  return 'ok';
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5496294Z 	exception when others then
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5496568Z 	  get stacked diagnostics v_state = returned_sqlstate;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5496860Z 	  return v_state;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5497049Z 	end $$;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5497775Z 172.18.0.7 2026-10-12 04:17:48.168 UTC [235] postgres@postgres LOG:  statement: grant execute on function pg_temp.append_two(uuid) to authenticated;
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5498551Z 172.18.0.1 2026-10-12 04:17:48.281 UTC [222] postgres@postgres LOG:  statement: drop extension if exists pgtap
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5529831Z ##[group]Run supabase stop --no-backup
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5530170Z ^[[36;1msupabase stop --no-backup^[[0m
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5592357Z shell: /usr/bin/bash -e {0}
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5592606Z env:
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5592829Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.5593124Z ##[endgroup]
+backend-db	UNKNOWN STEP	2026-10-12T04:17:48.8612705Z Stopping containers...
+backend-db	UNKNOWN STEP	2026-10-12T04:18:00.8921317Z Stopped supabase local development setup.
+backend-db	UNKNOWN STEP	2026-10-12T04:18:00.8927080Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	UNKNOWN STEP	2026-10-12T04:18:00.8929014Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	UNKNOWN STEP	2026-10-12T04:18:00.9213845Z Post job cleanup.
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0099965Z [command]/usr/bin/git version
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0145784Z git version 2.55.0
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0184104Z Temporarily overriding HOME='/home/runner/work/_temp/7df416b6-e322-40da-acf7-afc782ab4f60' before making global git config changes
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0185453Z Adding repository directory to the temporary git global config as a safe directory
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0191155Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jovra/jovra
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0231745Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0268460Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0544268Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0573380Z http.https://github.com/.extraheader
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0588831Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0619115Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0900854Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.0943472Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.1358901Z Cleaning up orphan processes
+backend-db	UNKNOWN STEP	2026-10-12T04:18:01.1777441Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, supabase/setup-cli@v1. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
