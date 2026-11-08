@@ -1,0 +1,64 @@
+backend-db	supabase test db	﻿2026-10-12T02:35:20.6431783Z ##[group]Run supabase test db
+backend-db	supabase test db	2026-10-12T02:35:20.6431997Z ^[[36;1msupabase test db^[[0m
+backend-db	supabase test db	2026-10-12T02:35:20.6486927Z shell: /usr/bin/bash -e {0}
+backend-db	supabase test db	2026-10-12T02:35:20.6487076Z env:
+backend-db	supabase test db	2026-10-12T02:35:20.6487214Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase test db	2026-10-12T02:35:20.6487551Z ##[endgroup]
+backend-db	supabase test db	2026-10-12T02:35:20.8476019Z Connecting to local database...
+backend-db	supabase test db	2026-10-12T02:35:21.5897279Z 3.36: Pulling from supabase/pg_prove
+backend-db	supabase test db	2026-10-12T02:35:21.7084543Z dcccee43ad5d: Pulling fs layer
+backend-db	supabase test db	2026-10-12T02:35:21.7084857Z 06d62d0de6d7: Pulling fs layer
+backend-db	supabase test db	2026-10-12T02:35:21.7085096Z a22cb17b3b93: Pulling fs layer
+backend-db	supabase test db	2026-10-12T02:35:21.7085273Z 4f4fb700ef54: Pulling fs layer
+backend-db	supabase test db	2026-10-12T02:35:21.7085522Z 4f4fb700ef54: Waiting
+backend-db	supabase test db	2026-10-12T02:35:21.8942200Z a22cb17b3b93: Verifying Checksum
+backend-db	supabase test db	2026-10-12T02:35:21.8942549Z a22cb17b3b93: Download complete
+backend-db	supabase test db	2026-10-12T02:35:21.9866046Z dcccee43ad5d: Verifying Checksum
+backend-db	supabase test db	2026-10-12T02:35:21.9866347Z dcccee43ad5d: Download complete
+backend-db	supabase test db	2026-10-12T02:35:22.0301502Z 4f4fb700ef54: Download complete
+backend-db	supabase test db	2026-10-12T02:35:22.0424012Z 06d62d0de6d7: Verifying Checksum
+backend-db	supabase test db	2026-10-12T02:35:22.0424661Z 06d62d0de6d7: Download complete
+backend-db	supabase test db	2026-10-12T02:35:22.0680734Z dcccee43ad5d: Pull complete
+backend-db	supabase test db	2026-10-12T02:35:22.7984272Z 06d62d0de6d7: Pull complete
+backend-db	supabase test db	2026-10-12T02:35:22.8160188Z a22cb17b3b93: Pull complete
+backend-db	supabase test db	2026-10-12T02:35:22.8217521Z 4f4fb700ef54: Pull complete
+backend-db	supabase test db	2026-10-12T02:35:22.8251696Z Digest: sha256:eda7c5e68719e9c8287e78c017118407b48df904a51c935f5ab6098b8c0bc6bc
+backend-db	supabase test db	2026-10-12T02:35:22.8261784Z Status: Downloaded newer image for ghcr.io/supabase/pg_prove:3.36
+backend-db	supabase test db	2026-10-12T02:35:22.9825179Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+backend-db	supabase test db	2026-10-12T02:35:22.9988543Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .............. ok
+backend-db	supabase test db	2026-10-12T02:35:23.0222524Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ..... ok
+backend-db	supabase test db	2026-10-12T02:35:23.0541011Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ... ok
+backend-db	supabase test db	2026-10-12T02:35:23.1073556Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ...... ok
+backend-db	supabase test db	2026-10-12T02:35:23.1785550Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .. ok
+backend-db	supabase test db	2026-10-12T02:35:23.2269140Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ....... ok
+backend-db	supabase test db	2026-10-12T02:35:23.2688338Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql ......... ok
+backend-db	supabase test db	2026-10-12T02:35:23.3447900Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql .. ok
+backend-db	supabase test db	2026-10-12T02:35:23.3879448Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql:168: ERROR:  new row violates row-level security policy for table "lesson_clips"
+backend-db	supabase test db	2026-10-12T02:35:23.3880193Z CONTEXT:  PL/pgSQL function results_eq(refcursor,refcursor,text) line 12 at FETCH
+backend-db	supabase test db	2026-10-12T02:35:23.3880798Z PL/pgSQL function results_eq(text,text,text) line 9 at assignment
+backend-db	supabase test db	2026-10-12T02:35:23.3910255Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql ... 
+backend-db	supabase test db	2026-10-12T02:35:23.3910742Z Dubious, test returned 3 (wstat 768, 0x300)
+backend-db	supabase test db	2026-10-12T02:35:23.3911000Z Failed 63/72 subtests 
+backend-db	supabase test db	2026-10-12T02:35:23.4548638Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql .......... ok
+backend-db	supabase test db	2026-10-12T02:35:23.4549205Z 
+backend-db	supabase test db	2026-10-12T02:35:23.4549555Z Test Summary Report
+backend-db	supabase test db	2026-10-12T02:35:23.4550005Z -------------------
+backend-db	supabase test db	2026-10-12T02:35:23.4550489Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql (Wstat: 768 (exited 3) Tests: 9 Failed: 0)
+backend-db	supabase test db	2026-10-12T02:35:23.4551020Z   Non-zero exit status: 3
+backend-db	supabase test db	2026-10-12T02:35:23.4551254Z   Parse errors: Bad plan.  You planned 72 tests but ran 9.
+backend-db	supabase test db	2026-10-12T02:35:23.4551540Z Files=10, Tests=300,  1 wallclock secs ( 0.03 usr  0.01 sys +  0.07 cusr  0.03 csys =  0.14 CPU)
+backend-db	supabase test db	2026-10-12T02:35:23.4552066Z Result: FAIL
+backend-db	supabase test db	2026-10-12T02:35:23.5529224Z github.com/supabase/cli/internal/utils/docker.go:410 (0x12a58d8)
+backend-db	supabase test db	2026-10-12T02:35:23.5529725Z github.com/supabase/cli/internal/utils/docker.go:374 (0x12a52c5)
+backend-db	supabase test db	2026-10-12T02:35:23.5530427Z github.com/supabase/cli/internal/db/test/test.go:89 (0x1664770)
+backend-db	supabase test db	2026-10-12T02:35:23.5530764Z github.com/supabase/cli/cmd/db.go:265 (0x2cd658b)
+backend-db	supabase test db	2026-10-12T02:35:23.5531087Z github.com/spf13/cobra@v1.10.2/command.go:1015 (0x61b8c2)
+backend-db	supabase test db	2026-10-12T02:35:23.5531416Z github.com/spf13/cobra@v1.10.2/command.go:1148 (0x61c205)
+backend-db	supabase test db	2026-10-12T02:35:23.5531724Z github.com/supabase/cli/cmd/root.go:173 (0x2ce8f26)
+backend-db	supabase test db	2026-10-12T02:35:23.5531958Z github.com/supabase/cli/main.go:11 (0x2cee08f)
+backend-db	supabase test db	2026-10-12T02:35:23.5532139Z internal/runtime/atomic/types.go:194 (0x44953d)
+backend-db	supabase test db	2026-10-12T02:35:23.5532318Z runtime/asm_amd64.s:1693 (0x485ce1)
+backend-db	supabase test db	2026-10-12T02:35:23.5532417Z 
+backend-db	supabase test db	2026-10-12T02:35:23.5532478Z error running container: exit 1
+backend-db	supabase test db	2026-10-12T02:35:23.5532687Z Try rerunning the command with --debug to troubleshoot the error.
+backend-db	supabase test db	2026-10-12T02:35:23.5660248Z ##[error]Process completed with exit code 1.
