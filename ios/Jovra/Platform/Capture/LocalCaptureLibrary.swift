@@ -13,13 +13,24 @@ struct CaptureSessionSeed: Sendable {
 
 enum LocalCaptureLibraryError: Error { case invalidSinglesSetup, unsupportedSource }
 
+struct StartupRecoverySummary: Equatable, Sendable {
+    var recovered = 0
+    var refused = 0
+    var scanFailed = false
+}
+
 /// One app-local service owns one SessionStore actor. Reopening with a root is a system-boundary
 /// injection for tests; production consumers will share the environment key's single instance.
 actor LocalCaptureLibrary: RecordingSink {
+    private let root: URL
+    private var startupRecovery: Task<StartupRecoverySummary, Never>?
+    // Never scan a journal opened by this process, including one created while scanning awaits I/O.
+    private var capturesStartedHere: Set<String> = []
     private let store: SessionStore
     private let media: MediaLibrary
 
     init(root: URL) throws {
+        self.root = root
         let store = try SessionStore(root: root)
         self.store = store
         media = MediaLibrary(store: store)
@@ -47,6 +58,7 @@ actor LocalCaptureLibrary: RecordingSink {
             archive: .init(state: .localOnly), storage: .init(originals: .onDevice, includeInDeviceBackup: false),
             exports: [], original: .init(state: .recording)
         )
+        capturesStartedHere.insert(id.rawValue)
         try await store.create(document)
         return id
     }
@@ -62,7 +74,53 @@ actor LocalCaptureLibrary: RecordingSink {
     }
 
     func sessions(_ query: SessionQuery = .init()) async throws -> [JovraCore.SessionSummary] {
-        try await store.list(query)
+        _ = await reconcileAtStartup()
+        return try await store.list(query)
+    }
+
+    func reconcileAtStartup() async -> StartupRecoverySummary {
+        if let startupRecovery { return await startupRecovery.value }
+        let task = Task { await runStartupRecovery() }
+        startupRecovery = task
+        return await task.value
+    }
+
+    private func runStartupRecovery() async -> StartupRecoverySummary {
+        let scanner = RecoveryScanner(root: root)
+        var summary = StartupRecoverySummary()
+        do { try await store.discardAbandonedFilesImports() } catch { summary.scanFailed = true }
+        do {
+            let candidates = try await scanner.scan { id in try await self.isStartupRecoveryCandidate(id) }
+            summary.refused = await scanner.refusals.count
+            for candidate in candidates {
+                do {
+                    guard let witness = await scanner.adoptionWitness(for: candidate.sessionID) else {
+                        summary.refused += 1
+                        continue
+                    }
+                    if try await store.reconcileFinishedCapture(candidate.recording, marks: candidate.marks,
+                                                                original: candidate.original, for: candidate.sessionID,
+                                                                verifyOriginals: witness.verify) {
+                        summary.recovered += 1
+                    }
+                } catch {
+                    summary.refused += 1
+                }
+            }
+        } catch {
+            summary.scanFailed = true
+        }
+        return summary
+    }
+
+    private func isStartupRecoveryCandidate(_ id: String) async throws -> Bool {
+        guard !capturesStartedHere.contains(id) else { return false }
+        return try await store.needsFinishedCaptureRecovery(id)
+    }
+
+    func importFile(_ source: URL, playerName: String) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).importVideo(source, playerName: playerName)
+        return SessionID(rawValue: id)
     }
 
     func appendReviewedPoint(winner: Side, startMs: Int, endMs: Int, for id: SessionID) async throws -> SessionPointEvent {

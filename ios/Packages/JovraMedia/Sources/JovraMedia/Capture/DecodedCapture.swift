@@ -13,8 +13,10 @@ public func decodeCaptureToEnd(_ url: URL) async throws -> DecodedCapture {
     let output = AVAssetReaderTrackOutput(track: track, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange])
     reader.add(output)
     guard reader.startReading() else { throw CaptureError.decodeFailed(reader.error?.localizedDescription ?? "startReading") }
+    defer { if reader.status == .reading { reader.cancelReading() } }
     var count = 0, end = CMTime.zero, previous: CMTime?, lastStep = CMTime.invalid
     while let sample = output.copyNextSampleBuffer() {
+        try Task.checkCancellation()
         guard CMSampleBufferGetImageBuffer(sample) != nil else { throw CaptureError.decodeFailed("missing decoded image") }
         count += 1
         let pts = CMSampleBufferGetPresentationTimeStamp(sample)

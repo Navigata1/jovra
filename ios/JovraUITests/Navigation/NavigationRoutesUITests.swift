@@ -21,7 +21,6 @@ final class NavigationRoutesUITests: XCTestCase {
     ]
 
     static let pushes: [Expected] = [
-        .init(launchName: "sessions.import", title: "Import videos", ticket: "T26"),
         .init(launchName: "sessions.matchOverview", title: "Match overview", ticket: "T22"),
         .init(launchName: "sessions.practiceOverview", title: "Practice overview", ticket: "T22"),
         .init(launchName: "insights.shotMap", title: "Shot map", ticket: "T41"),

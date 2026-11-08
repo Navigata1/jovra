@@ -1,0 +1,525 @@
+backend-db	No hosted identifiers or real email addresses in the tree	﻿2026-10-12T03:46:04.3224745Z ##[group]Run supabase/scripts/check-hosted-identifiers.sh
+backend-db	No hosted identifiers or real email addresses in the tree	2026-10-12T03:46:04.3225367Z ^[[36;1msupabase/scripts/check-hosted-identifiers.sh^[[0m
+backend-db	No hosted identifiers or real email addresses in the tree	2026-10-12T03:46:04.3497949Z shell: /usr/bin/bash -e {0}
+backend-db	No hosted identifiers or real email addresses in the tree	2026-10-12T03:46:04.3498346Z ##[endgroup]
+backend-db	No hosted identifiers or real email addresses in the tree	2026-10-12T03:46:04.4062065Z OK  262 files: no supabase.co host, API key, JWT or email outside example.test
+backend-db	supabase db reset (migrations and seed from scratch)	﻿2026-10-12T03:46:54.1820219Z ##[group]Run supabase db reset
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:46:54.1820554Z ^[[36;1msupabase db reset^[[0m
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:46:54.1884699Z shell: /usr/bin/bash -e {0}
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:46:54.1884954Z env:
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:46:54.1885178Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:46:54.1885463Z ##[endgroup]
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:46:54.4897220Z Resetting local database...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:46:54.7299913Z Recreating database...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:05.8947009Z Initialising schema...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.2808504Z Seeding globals from roles.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.2889075Z Applying migration 20261008000000_tester_signup_lock.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.2965006Z Applying migration 20261008010000_identity_membership_rls.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.2977669Z NOTICE (42P06): schema "app_private" already exists, skipping
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.2981830Z NOTICE (42P06): schema "app_ops" already exists, skipping
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.3453236Z Applying migration 20261008020000_media_lessons_rls.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.4843460Z Seeding data from supabase/seed/00_testers.sql...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.4910347Z Restarting containers...
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.6882054Z Finished supabase db reset on branch ticket/s77-backend-db-media-lessons-rls.
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.6883106Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	supabase db reset (migrations and seed from scratch)	2026-10-12T03:47:06.6884416Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	supabase db advisors (security, fail on warn)	﻿2026-10-12T03:47:06.7164315Z ##[group]Run supabase db advisors --local --type security --fail-on warn
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:06.7164915Z ^[[36;1msupabase db advisors --local --type security --fail-on warn^[[0m
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:06.7234750Z shell: /usr/bin/bash -e {0}
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:06.7235011Z env:
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:06.7235253Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:06.7235678Z ##[endgroup]
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:07.0421024Z Connecting to local database...
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:07.1483524Z No issues found
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:07.1484901Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	supabase db advisors (security, fail on warn)	2026-10-12T03:47:07.1486623Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	supabase test db	﻿2026-10-12T03:47:07.1707196Z ##[group]Run supabase test db
+backend-db	supabase test db	2026-10-12T03:47:07.1707718Z ^[[36;1msupabase test db^[[0m
+backend-db	supabase test db	2026-10-12T03:47:07.1769849Z shell: /usr/bin/bash -e {0}
+backend-db	supabase test db	2026-10-12T03:47:07.1770111Z env:
+backend-db	supabase test db	2026-10-12T03:47:07.1770335Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	supabase test db	2026-10-12T03:47:07.1770629Z ##[endgroup]
+backend-db	supabase test db	2026-10-12T03:47:07.4689322Z Connecting to local database...
+backend-db	supabase test db	2026-10-12T03:47:08.3995001Z 3.36: Pulling from supabase/pg_prove
+backend-db	supabase test db	2026-10-12T03:47:08.5446600Z dcccee43ad5d: Pulling fs layer
+backend-db	supabase test db	2026-10-12T03:47:08.5446977Z 06d62d0de6d7: Pulling fs layer
+backend-db	supabase test db	2026-10-12T03:47:08.5447265Z a22cb17b3b93: Pulling fs layer
+backend-db	supabase test db	2026-10-12T03:47:08.5447656Z 4f4fb700ef54: Pulling fs layer
+backend-db	supabase test db	2026-10-12T03:47:08.5447969Z 4f4fb700ef54: Waiting
+backend-db	supabase test db	2026-10-12T03:47:08.7510371Z a22cb17b3b93: Verifying Checksum
+backend-db	supabase test db	2026-10-12T03:47:08.7512709Z a22cb17b3b93: Download complete
+backend-db	supabase test db	2026-10-12T03:47:08.7966597Z dcccee43ad5d: Verifying Checksum
+backend-db	supabase test db	2026-10-12T03:47:08.7967184Z dcccee43ad5d: Download complete
+backend-db	supabase test db	2026-10-12T03:47:08.8932401Z 4f4fb700ef54: Verifying Checksum
+backend-db	supabase test db	2026-10-12T03:47:08.8933311Z 4f4fb700ef54: Download complete
+backend-db	supabase test db	2026-10-12T03:47:08.9029769Z dcccee43ad5d: Pull complete
+backend-db	supabase test db	2026-10-12T03:47:09.3626859Z 06d62d0de6d7: Verifying Checksum
+backend-db	supabase test db	2026-10-12T03:47:09.3627443Z 06d62d0de6d7: Download complete
+backend-db	supabase test db	2026-10-12T03:47:09.9525337Z 06d62d0de6d7: Pull complete
+backend-db	supabase test db	2026-10-12T03:47:09.9764496Z a22cb17b3b93: Pull complete
+backend-db	supabase test db	2026-10-12T03:47:09.9850854Z 4f4fb700ef54: Pull complete
+backend-db	supabase test db	2026-10-12T03:47:09.9889270Z Digest: sha256:eda7c5e68719e9c8287e78c017118407b48df904a51c935f5ab6098b8c0bc6bc
+backend-db	supabase test db	2026-10-12T03:47:09.9899701Z Status: Downloaded newer image for ghcr.io/supabase/pg_prove:3.36
+backend-db	supabase test db	2026-10-12T03:47:10.2060174Z psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+backend-db	supabase test db	2026-10-12T03:47:10.2299554Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .............. ok
+backend-db	supabase test db	2026-10-12T03:47:10.2658087Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ..... ok
+backend-db	supabase test db	2026-10-12T03:47:10.3148150Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ... ok
+backend-db	supabase test db	2026-10-12T03:47:10.4007757Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql ...... ok
+backend-db	supabase test db	2026-10-12T03:47:10.5387016Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql .. ok
+backend-db	supabase test db	2026-10-12T03:47:10.6046728Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ....... ok
+backend-db	supabase test db	2026-10-12T03:47:10.6650392Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql ......... ok
+backend-db	supabase test db	2026-10-12T03:47:10.7858314Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql .. ok
+backend-db	supabase test db	2026-10-12T03:47:11.0118336Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql ... ok
+backend-db	supabase test db	2026-10-12T03:47:11.1201398Z /home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql .......... ok
+backend-db	supabase test db	2026-10-12T03:47:11.1203151Z All tests successful.
+backend-db	supabase test db	2026-10-12T03:47:11.1204198Z Files=10, Tests=363,  1 wallclock secs ( 0.07 usr  0.02 sys +  0.08 cusr  0.07 csys =  0.24 CPU)
+backend-db	supabase test db	2026-10-12T03:47:11.1205235Z Result: PASS
+backend-db	supabase test db	2026-10-12T03:47:11.2308292Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	supabase test db	2026-10-12T03:47:11.2318204Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	pgTAP assertions by id	﻿2026-10-12T03:47:11.2541224Z ##[group]Run supabase status -o env > "$RUNNER_TEMP/supabase-db.env"
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2542211Z ^[[36;1msupabase status -o env > "$RUNNER_TEMP/supabase-db.env"^[[0m
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2543214Z ^[[36;1mdb_url="$(grep '^DB_URL=' "$RUNNER_TEMP/supabase-db.env" | cut -d= -f2- | tr -d '"')"^[[0m
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2544085Z ^[[36;1mfor f in supabase/tests/database/*.test.sql; do^[[0m
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2544672Z ^[[36;1m  echo "# $f"^[[0m
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2545409Z ^[[36;1m  psql "$db_url" -X -q -t -A -v ON_ERROR_STOP=1 -f "$f" 2>&1 | grep -E '^(not )?ok |^1\.\.|ERROR'^[[0m
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2546656Z ^[[36;1mdone^[[0m
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2637486Z shell: /usr/bin/bash -e {0}
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2637982Z env:
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2638378Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.2638907Z ##[endgroup]
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.5920539Z Stopped services: [supabase_realtime_jovra-local supabase_storage_jovra-local supabase_imgproxy_jovra-local supabase_pg_meta_jovra-local supabase_studio_jovra-local supabase_edge_runtime_jovra-local supabase_analytics_jovra-local supabase_vector_jovra-local supabase_pooler_jovra-local]
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.5922201Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.5923000Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	pgTAP assertions by id	2026-10-12T03:47:11.6106764Z # supabase/tests/database/000_harness.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.1881046Z 1..1
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.1882059Z ok 1 - harness: tests schema installed
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.1883041Z # supabase/tests/database/001_harness_selftest.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2532409Z 1..12
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2535516Z ok 1 - two test users get distinct ids
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2536550Z ok 2 - create_supabase_user keeps an explicit email
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2537270Z ok 3 - test users have a confirmed email
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2538061Z ok 4 - an unknown identifier raises instead of returning null
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2538836Z ok 5 - authenticate_as sets auth.uid()
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2539584Z ok 6 - authenticate_as switches to the authenticated role
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2540337Z ok 7 - the claims carry the user's email
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2541000Z ok 8 - the claims say the user is not anonymous
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2541720Z ok 9 - authenticate_as can switch to another user
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2542413Z ok 10 - clear_authentication leaves no user
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2543133Z ok 11 - clear_authentication switches to the anon role
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2543910Z ok 12 - authenticate_as_service_role switches to service_role
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.2544760Z # supabase/tests/database/010_tester_signup_lock.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3387264Z 1..30
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3406679Z ok 1 - the before_user_created hook exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3410965Z ok 2 - the hook is security definer
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3411758Z ok 3 - the hook pins an empty search_path
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3412522Z ok 4 - email_hmac pins an empty search_path
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3413279Z ok 5 - supabase_auth_admin can run the hook
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3413967Z ok 6 - anon cannot run the hook
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3414608Z ok 7 - authenticated cannot run the hook
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3415319Z ok 8 - service_role cannot run the hook
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3416324Z ok 9 - PUBLIC has no EXECUTE on the hook
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3417062Z ok 10 - anon cannot run email_hmac
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3417762Z ok 11 - authenticated cannot run email_hmac
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3418568Z ok 12 - supabase_auth_admin cannot run email_hmac directly
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3419368Z ok 13 - PUBLIC has no EXECUTE on email_hmac
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3420301Z ok 14 - anon cannot use app_private or app_ops; authenticated cannot use app_ops
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3421309Z ok 15 - no client or API role can read or write the allow-list
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3422468Z ok 16 - every table in schema app_ops has row level security enabled
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3423784Z ok 17 - the allow-list stores only an HMAC, never the address
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3424912Z ok 18 - an allow-listed tester may be created
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3425768Z ok 19 - an allow-listed address that has no account yet may be created
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3427015Z ok 20 - the address is trimmed and lower-cased before it is checked
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3428128Z ok 21 - an address that is not on the allow-list is refused with 403 signup_not_allowed
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3429228Z ok 22 - a sign-up without an email (phone) is refused
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3430058Z ok 23 - an anonymous sign-up is refused
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3430822Z ok 24 - an event without a user is refused
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3431576Z ok 25 - the seed creates five testers
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3432329Z ok 26 - every seeded address is at example.test
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3433228Z ok 27 - every seeded tester has a confirmed email and no password
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3434156Z ok 28 - every seeded tester is on the allow-list
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3434973Z ok 29 - with no HMAC key email_hmac returns null
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3435857Z ok 30 - with no HMAC key even an allow-listed tester is refused
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.3437094Z # supabase/tests/database/identity_01_catalog.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4426077Z 1..32
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4427654Z ok 1 - schema app_private exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4428138Z ok 2 - schema app_gateway exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4428589Z ok 3 - schema app_ops exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4429277Z ok 4 - jovra_owner exists and cannot log in, inherit, bypass RLS or act as superuser
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4430238Z ok 5 - jovra_gateway: login, noinherit, nobypassrls, connection limit 20
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4431096Z ok 6 - jovra_orchestrator: login, noinherit, nobypassrls, connection limit 10
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4431984Z ok 7 - no client, gateway or orchestrator role holds the privileges of jovra_owner
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4433554Z ok 8 - policies may call app_private helpers as authenticated (security-model §3); anon may not reach them
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4434834Z ok 9 - app_ops is unreachable for client roles
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4435629Z ok 10 - every table in schema public has row level security enabled
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4436788Z ok 11 - T-DB-02: public holds the migration 1 tables (the checks below are not vacuous)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4437874Z ok 12 - T-DB-02: every public table has the restrictive <table>_real_users_only policy for authenticated
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4438914Z ok 13 - T-DB-03: no security definer function in public
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4439686Z ok 14 - T-DB-03: every function in public and app_* pins search_path=''
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4440592Z ok 15 - T-DB-03: no function pins search_path to public
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4441506Z ok 16 - T-DB-03: no function in public, app_private or app_gateway is executable by PUBLIC or anon
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4442690Z ok 17 - T-DB-03: every app_gateway function is volatile (the backstop against Hyperdrive result caching)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4443670Z ok 18 - T-DB-03: no trigger function is executable by authenticated
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4444419Z ok 19 - T-DB-04: authenticated and anon have no USAGE on app_gateway
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4445286Z ok 20 - T-DB-04: no app_gateway function is executable by authenticated or anon
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4446432Z ok 21 - T-DB-04: the gateway and orchestrator roles may use app_gateway
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4447555Z ok 22 - T-DB-05: jovra_gateway and jovra_orchestrator have no privilege on any table in public, app_private or app_ops
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4448635Z ok 23 - T-DB-05: the command roles cannot use app_private or app_ops
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4449405Z ok 24 - T-DB-66: every table in public and app_ops is owned by jovra_owner
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4450099Z ok 25 - T-DB-66: every enum in public is owned by jovra_owner
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4450554Z ok 26 - T-DB-66: every helper, trigger and command function is owned by jovra_owner
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4451083Z ok 27 - T-DB-66: proowner = relowner for every definer helper and every public table
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4451965Z ok 28 - T-DB-66: no table is FORCE ROW LEVEL SECURITY, so definer helpers read rows as the owner
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4452708Z ok 29 - T-DB-67: at least one client-insertable table exists (the lint below is not vacuous)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4453316Z ok 30 - T-DB-67: every client-insertable table has a row-level BEFORE INSERT trigger a00_rls_guard
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4453843Z ok 31 - T-DB-67: no BEFORE INSERT trigger sorts before a00_rls_guard
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4454384Z ok 32 - T-DB-67: the INSERT policy and a00_rls_guard call the same app_private.can_insert_<table> predicate
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.4454931Z # supabase/tests/database/identity_02_role_matrix.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6127701Z 1..74
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6128482Z ok 1 - a profile is created for every new auth user, with no display name and is_tester false
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6129496Z ok 2 - creating a project creates exactly one owner membership for its owner
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6130346Z ok 3 - T-DB-01: unauthenticated select on profiles is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6131043Z ok 4 - T-DB-01: unauthenticated select on projects is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6131788Z ok 5 - T-DB-01: unauthenticated select on project_members is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6132552Z ok 6 - T-DB-01: unauthenticated select on camera_invites is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6133276Z ok 7 - T-DB-01: unauthenticated insert into projects is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6134073Z ok 8 - T-DB-01: unauthenticated callers cannot reach the app_private helpers
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6134879Z ok 9 - T-DB-01: anon holds no privilege on any table in public
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6135613Z ok 10 - owner sees their live project only (not B, not the deleted D)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6136810Z ok 11 - owner sees every membership row of their project (owner, coach, pending, revoked, expired)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6137727Z ok 12 - owner sees the camera invites of their live project
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6138349Z ok 13 - owner cannot select camera_invites.code_hash
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6138969Z ok 14 - owner cannot select the guest device thumbprint
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6139762Z ok 15 - owner creates a project through the client path; owner_id defaults to auth.uid()
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6140635Z ok 16 - the new project's owner membership is visible to the owner
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6141377Z ok 17 - owner updates the title of their project; revision is bumped
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6142047Z ok 18 - owner cannot write camera_invites directly
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6142766Z ok 19 - owner cannot delete a project (deletion goes through deletion_requests)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6143516Z ok 20 - T-DB-08: owner cannot update projects.owner_id
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6144085Z ok 21 - T-DB-08: owner cannot clear deleted_at
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6144753Z ok 22 - T-DB-09: owner updating another owner's project title changes 0 rows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6145495Z ok 23 - T-DB-10: owner cannot insert a membership directly
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6154127Z ok 24 - T-DB-10: owner cannot approve a coach by writing project_members (approve_member only)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6155152Z ok 25 - T-DB-31: owner sees no membership rows of a project with deleted_at set
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6156254Z ok 26 - T-DB-31: owner sees no camera invites of a project with deleted_at set
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6157052Z ok 27 - T-DB-31: owner cannot update a project with deleted_at set
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6157996Z ok 28 - T-DB-63: owner sees self and the approved coach; not the pending, revoked or expired coaches
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6158848Z ok 29 - T-DB-30: is_tester is not selectable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6159480Z ok 30 - T-DB-30: only id, display_name and created_at are selectable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6160181Z ok 31 - T-DB-30: a user updates their own display name
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6160753Z ok 32 - T-DB-30: a user cannot set is_tester
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6161339Z ok 33 - T-DB-30: profiles cannot be inserted by a client
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6161990Z ok 34 - T-DB-06: unrelated user sees 0 projects of other owners
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6162937Z ok 35 - T-DB-06: unrelated user sees 0 membership rows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6163539Z ok 36 - T-DB-06: unrelated user sees 0 camera invites
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6164375Z ok 37 - T-DB-30: unrelated user sees only their own profile
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6165053Z ok 38 - T-DB-30: updating another user's profile changes 0 rows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6165763Z ok 39 - T-DB-07: inserting a project for another owner is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6166736Z ok 40 - T-DB-06: unrelated user cannot update another owner's project
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6167467Z ok 41 - T-DB-06: has_project_role is false for an unrelated user
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6168180Z ok 42 - T-DB-06: shares_project_with is false for an unrelated user
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6168927Z ok 43 - coach sees the project they coach (not the deleted D, not B)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6169568Z ok 44 - coach sees only their own membership row
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6170280Z ok 45 - coach sees self and the project owner (co-member); not the pending coach
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6171023Z ok 46 - coach sees no camera invites
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6171550Z ok 47 - project_role is coach for an approved coach
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6172203Z ok 48 - T-DB-11: coach updating the project title changes 0 rows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6172834Z ok 49 - T-DB-10: coach cannot grant themselves owner
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6173421Z ok 50 - T-DB-10: coach cannot escalate their role
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6174029Z ok 51 - T-DB-31: a coach row on a deleted project grants nothing
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6174736Z ok 52 - T-DB-63: a pending coach sees only their own profile
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6175366Z ok 53 - T-DB-63: a pending coach sees 0 membership rows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6176154Z ok 54 - T-DB-63: a pending coach sees 0 projects
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6176832Z ok 55 - T-DB-63: shares_project_with is false while the coach is pending
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6177599Z ok 56 - viewer without a grant sees no project, membership or invite
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6178233Z ok 57 - viewer sees only their own profile
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6178942Z ok 58 - camera sees the invite it redeemed after approval, and not the unapproved one
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6179705Z ok 59 - camera sees no project and no membership
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6180247Z ok 60 - camera sees only its own profile
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6180803Z ok 61 - T-DB-28: acting as an anonymous-authenticated user
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6181468Z ok 62 - T-DB-28: anonymous user sees 0 profiles, not even its own
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6182107Z ok 63 - T-DB-28: anonymous user sees 0 projects
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6343196Z ok 64 - T-DB-28: anonymous user sees 0 memberships
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6344172Z ok 65 - T-DB-28: anonymous user sees 0 camera invites
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6366803Z ok 66 - T-DB-28: anonymous user cannot insert a project (RLS violation)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6369017Z ok 67 - T-DB-28: anonymous user cannot update even its own profile
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6369946Z ok 68 - T-DB-32: a revoked coach sees 0 projects and 0 memberships
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6370838Z ok 69 - T-DB-32: an expired coach sees 0 projects and 0 memberships
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6371761Z ok 70 - T-DB-32: revoking the coach removes the project at once
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6372703Z ok 71 - T-DB-32: the revoked coach no longer sees the owner's profile
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6373455Z ok 72 - B's title and revision are untouched
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6374052Z ok 73 - A's owner is unchanged
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6374618Z ok 74 - owner_a's display name is the one they set
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.6375354Z # supabase/tests/database/identity_03_guards.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7332637Z 1..30
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7333177Z ok 1 - current_actor() equals auth.uid() for a signed-in user
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7333873Z ok 2 - is_real_user() is true for a signed-in, non-anonymous user
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7334808Z ok 3 - current_actor() follows auth.uid() for the legacy claim setting
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7335692Z ok 4 - current_actor() is null when no claim is set
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7337177Z ok 5 - T-DB-67: postgres (operator, migrations) is not the client path
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7338876Z ok 6 - T-DB-67: the projects predicate refuses a row owned by someone else
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7340077Z ok 7 - T-DB-67: a server command run by jovra_gateway inserts past the guard (is_client_path() false)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7341620Z ok 8 - T-DB-67: the same definer insert called through the client role is refused by the guard
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7342816Z ok 9 - T-DB-67: exactly the server-created project was added for the victim
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7343854Z ok 10 - T-DB-65: anonymous user, valid row: 42501 RLS error, no DETAIL
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7345018Z ok 11 - T-DB-65: anonymous user, over-long title: the same 42501, not the length error
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7346313Z ok 12 - T-DB-65: anonymous user, invalid kind: the same 42501
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7347320Z ok 13 - T-DB-65: anonymous user naming the victim's local project id: the same 42501
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7348617Z ok 14 - T-DB-65: an unrelated user reusing the victim's local project id learns nothing (own row, no conflict)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7349863Z ok 15 - T-DB-65: the victim's project and revision are untouched
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7350762Z ok 16 - a 121-character title: P0422 field_too_long:title
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7351558Z ok 17 - a 120-character title is accepted
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7352342Z ok 18 - an unknown kind: P0422 invalid_value:kind (no CHECK DETAIL)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7353391Z ok 19 - a missing local project id: P0422 required:local_project_id
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7354275Z ok 20 - a null title: P0422 required:title (no NOT NULL DETAIL)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7354777Z ok 21 - an over-long title on update: P0422
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7355198Z ok 22 - an 81-character display name: P0422
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7355628Z ok 23 - an 80-character display name is accepted
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7356462Z ok 24 - camera_invites: a 61-character label is P0422
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7357339Z ok 25 - camera_invites: a code hash that is not 32 bytes is P0422 without echoing it
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7358168Z ok 26 - camera_invites: redeem_by more than 10 minutes out is P0422
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7358869Z ok 27 - camera_invites: an invite created by someone other than the project owner is P0422
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7359531Z ok 28 - a second owner row (not the project owner) is refused
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7360061Z ok 29 - the project still has exactly one owner row
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7360387Z ok 30 - an update bumps revision by one
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.7360717Z # supabase/tests/database/media_01_catalog.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8155516Z 1..42
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8156580Z ok 1 - camera_sources exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8157290Z ok 2 - source_manifests exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8157773Z ok 3 - sync_maps exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8158240Z ok 4 - calibration_versions exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8158906Z ok 5 - point_event_revisions exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8159536Z ok 6 - observations exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8159993Z ok 7 - lessons exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8160389Z ok 8 - lesson_clips exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8160978Z ok 9 - story_plans exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8161521Z ok 10 - story_plan_versions exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8162320Z ok 11 - artifacts exists (lesson_clips.excerpt_artifact_id and stale marking need it)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8163345Z ok 12 - access_grants exists (lesson_access and clip sharing need it)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8164068Z ok 13 - app_ops.quota_limits exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8164547Z ok 14 - app_ops.quota_counters exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8165446Z ok 15 - finding 31/22a: lesson_clips (project_id, source_id) -> camera_sources(project_id, id), SET NULL (source_id) only
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8166980Z ok 16 - finding 31/22a: observations (project_id, source_id) -> camera_sources(project_id, id), SET NULL (source_id) only
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8168316Z ok 17 - finding 31: calibration_versions (project_id, source_id) -> camera_sources(project_id, id), cascade
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8169408Z ok 18 - finding 31: artifacts (project_id, source_id) -> camera_sources(project_id, id)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8170423Z ok 19 - finding 31: artifacts (project_id, parent_artifact_id) -> artifacts(project_id, id)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8171703Z ok 20 - finding 31: access_grants (project_id, artifact_id) -> artifacts(project_id, id)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8172896Z ok 21 - finding 17: story_plan_versions (project_id, story_plan_id) -> story_plans(project_id, id)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8173804Z ok 22 - sync_maps name a manifest revision of their own project
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8174847Z ok 23 - finding 22a: deleting a source (and its calibrations) never stalls on an observation that used the calibration
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8176246Z ok 24 - finding 17: the composite targets render_jobs, quotes and usage_reservations will reference exist
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8177271Z ok 25 - T-DB-14: no client role may update, delete or truncate an append-only table
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8178274Z ok 26 - no client deletes: lessons, clips and media go through deletion_requests (objects first)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8179420Z ok 27 - camera_sources, source_manifests, artifacts and access_grants are written only through app_gateway
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8180951Z ok 28 - T-DB-17: r2 keys, etags, sessions, client probes, token hashes and invitee HMACs are not granted
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8181863Z ok 29 - T-DB-24: validation_state, planner_model_id, edl_sha256 and project_id are server-set on plan versions
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8182518Z ok 30 - T-DB-23: observations.provenance is never written by a client
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8183144Z ok 31 - finding 20: share approval, the excerpt link and the clip's project and source are not client-writable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8183874Z ok 32 - finding 23: every client-insertable table has the BEFORE INSERT a20_enforce_quota trigger
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8184530Z ok 33 - finding 23: every client-insertable table has an app_ops.quota_limits row
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8185026Z ok 34 - finding 23: the per-user aggregate limit row exists
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8185383Z ok 35 - quota tables are server-only
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8185819Z ok 36 - finding 20: jovra_gateway may call approve_clip_share and revoke_clip_share
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8186691Z ok 37 - finding 20: neither the orchestrator nor a client may call the clip-share commands
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8187205Z ok 38 - finding 20: deletion_scope has lesson_clip
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8187621Z ok 39 - T-DB-01: unauthenticated select on camera_sources is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8188072Z ok 40 - T-DB-01: unauthenticated select on point_event_revisions
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8188932Z ok 41 - T-DB-01: unauthenticated select on lessons is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8189353Z ok 42 - T-DB-01: unauthenticated insert into lessons is denied
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.8189771Z # supabase/tests/database/media_02_sources_events.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9645793Z 1..45
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9646801Z ok 1 - a server-written manifest gets revision 1 and becomes the project's current manifest
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9647605Z ok 2 - T-DB-12: coach inserting an event revision is an RLS violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9648040Z ok 3 - T-DB-12: nothing was appended
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9648574Z ok 4 - T-DB-13: the first revision is 1, created_by is the caller, the log hash is computed by the server
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9649224Z ok 5 - T-DB-13: a second device still on parent null gets P0409 revision_conflict
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9649760Z ok 6 - T-DB-13: a parent ahead of the current revision is P0409 too
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9650151Z ok 7 - created_by is not client-writable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9650571Z ok 8 - T-DB-13: with the current parent the insert succeeds as revision + 1
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9651038Z ok 9 - T-DB-13: the project's current_event_revision follows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9651597Z ok 10 - T-DB-15: the new revision marks the older film, preview and clip excerpt stale (not the thumbnail)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9652219Z ok 11 - T-DB-15: and the plan version bound to the older revision
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9652627Z ok 12 - T-DB-14: owner cannot update an event revision
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9652991Z ok 13 - T-DB-14: owner cannot delete an event revision
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9653626Z ok 14 - T-DB-14: owner cannot update a source manifest
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9653998Z ok 15 - T-DB-14: owner cannot delete a plan version
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9654515Z ok 16 - T-DB-14: owner cannot clear stale on a plan version
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9654915Z ok 17 - T-DB-43: reviewed_by cannot be supplied by a client
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9655426Z ok 18 - T-DB-43: a reviewed sync map records the caller as reviewer and author, revision 1
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9656218Z ok 19 - an estimated sync map has no reviewer; the next revision is 2
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9656704Z ok 20 - a client cannot insert a sync map in review state rejected
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9657189Z ok 21 - a sync map must name an existing manifest revision of its own project
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9657626Z ok 22 - T-DB-14: owner cannot update a sync map
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9657984Z ok 23 - owner adds a manual calibration as version 1
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9658394Z ok 24 - the next calibration of the same source is version 2
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9658863Z ok 25 - a client cannot claim a validated calibration
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9659325Z ok 26 - T-DB-14: owner cannot delete a calibration
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9659861Z ok 27 - T-DB-24: owner inserting a model-planned version is an RLS violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9660310Z ok 28 - T-DB-24: owner cannot set validation_state
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9661037Z ok 29 - T-DB-24: a user draft is accepted unvalidated; the trigger sets version 2 and the plan's project
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9662541Z ok 30 - owner A adding a version to B's plan is an RLS violation (the guard resolves the plan's own project)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9663557Z ok 31 - the plan's current_version follows its newest version
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9664208Z ok 32 - T-DB-24: a coach may add a heuristic draft
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9664989Z ok 33 - T-DB-24: a coach inserting a model-planned version is an RLS violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9665769Z ok 34 - T-DB-14: coach cannot update an event revision
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9667278Z ok 35 - coach sees the project's two sources
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9668243Z ok 36 - T-DB-59 (FK half): as jovra_owner, a version pairing project A with B's plan is an FK violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9669556Z ok 37 - T-DB-59 (FK half): the same insert with B's own project passes (the check is the FK, not the role)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9670475Z ok 38 - the helper restored the session role
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9671423Z ok 39 - T-DB-65: every parent_revision value gets the identical 42501 (the current one, 2, included)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9672681Z ok 40 - T-DB-06: an unrelated user sees 0 rows of A's events, sync maps, sources, manifests, versions, calibrations
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9673680Z ok 41 - T-DB-65: A's current_event_revision is untouched
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9674297Z ok 42 - T-DB-16: the camera sees only its own source
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9675003Z ok 43 - T-DB-16: and 0 rows of projects, manifests, artifacts and events
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9675728Z ok 44 - T-DB-17: camera_sources.r2_key is not selectable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9677045Z ok 45 - T-DB-16: after the invite is revoked, 0 rows at once
+backend-db	pgTAP assertions by id	2026-10-12T03:47:12.9677521Z # supabase/tests/database/media_03_lessons_clips.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1797235Z 1..72
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1798012Z ok 1 - owner creates a lesson; owner_id defaults to the caller
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1798941Z ok 2 - story 179: the first device's edit at revision 1 lands as revision 2
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1799761Z ok 3 - story 179: the second device, still at revision 1, changes 0 rows (a conflict to show, not an overwrite)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1800437Z ok 4 - lessons.owner_id is immutable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1800921Z ok 5 - T-DB-48 (grant half): owner cannot delete a lesson directly
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1801416Z ok 6 - T-DB-41: owner attaching a clip of B's match is an RLS violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1801888Z ok 7 - T-DB-45: a clip of A naming A2's source is an FK violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1802352Z ok 8 - T-DB-45: an observation of A naming A2's source is an FK violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1802847Z ok 9 - T-DB-45: a calibration of A naming A2's source is an FK violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1803671Z ok 10 - owner attaches a clip of their own match (same-project source)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1804300Z ok 11 - a clip longer than 10 minutes is P0422 (no CHECK DETAIL)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1804775Z ok 12 - T-DB-42: owner binding the coach's lesson into a plan is refused
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1805269Z ok 13 - owner binds their own lesson into a plan of their own project
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1805732Z ok 14 - T-DB-23: owner cannot insert an estimated observation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1806321Z ok 15 - T-DB-23: owner cannot insert a validated observation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1806717Z ok 16 - T-DB-23: owner cannot update provenance
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1807160Z ok 17 - T-DB-23: a client observation is manual, authored by the caller
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1807762Z ok 18 - T-DB-23: reviewing an estimated cue sets provenance reviewed and reviewed_by = the caller
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1808327Z ok 19 - T-DB-17: artifacts.r2_key is not selectable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1808724Z ok 20 - T-DB-17: artifacts.bucket_class is not selectable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1809134Z ok 21 - T-DB-17: access_grants.token_hash is not selectable
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1809542Z ok 22 - owner sees every member-visible artifact of A
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1809949Z ok 23 - T-DB-26 (grants): owner cannot write a grant directly
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1810372Z ok 24 - T-DB-22: a lesson coach adds a lesson-only observation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1810875Z ok 25 - T-DB-22: with a project_id they do not coach, the insert is an RLS violation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1811334Z ok 26 - a lesson coach sees the lesson
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1811891Z ok 27 - T-DB-49 (lesson side): a lesson coach sees no observation that also belongs to a project they cannot access
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1812487Z ok 28 - T-DB-21: a lesson viewer sees the lesson
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1812826Z ok 29 - T-DB-21: a lesson viewer sees 0 observations
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1813167Z ok 30 - T-DB-21: a lesson viewer sees 0 projects
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1813486Z ok 31 - T-DB-21: and 0 plans or sources
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1813798Z ok 32 - a lesson viewer cannot add an observation
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1814210Z ok 33 - T-DB-52: a lesson_view grantee cannot bind that lesson into a plan
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1814659Z ok 34 - T-DB-49: a project coach sees A's own observations
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1815136Z ok 35 - T-DB-49: but none that also carries a lesson the coach cannot access (A + LO, LO only)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1815629Z ok 36 - only the author may change an observation's text
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1816191Z ok 37 - T-DB-46: the coach attaches a clip of the owner's match to their own lesson
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1816668Z ok 38 - the coach sees their own clip, not the owner's lesson clips
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1817042Z ok 39 - a client cannot choose a clip's id
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1817390Z ok 40 - finding 31: a clip cannot link another clip's excerpt
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1817797Z ok 41 - T-DB-46: a grant on the coach's clip is refused until approved
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1818316Z ok 42 - T-DB-46: the coach cannot approve sharing the owner's footage (P0404, like a missing clip)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1818794Z ok 43 - an unrelated actor gets P0404
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1819150Z ok 44 - T-DB-46: the project owner approves sharing exactly this window
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1819607Z ok 45 - finding 20: the approval is pinned to the clip's fingerprint
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1820023Z ok 46 - T-DB-46: after approval the viewer sees the coach's clip
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1820407Z ok 47 - T-DB-46: and its excerpt, nothing else of the match
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1820880Z ok 48 - T-DB-46: once the owner revokes the coach, the downstream viewer gets 0 rows at once
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1821429Z ok 49 - T-DB-62: moving the window clears share_approved_at and unlinks the excerpt
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1822038Z ok 50 - T-DB-62: the unlinked excerpt is hidden at once (deleted_at set; the object goes with the deletion job)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1822583Z ok 51 - T-DB-62: the viewer sees 0 rows until re-approved
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1823064Z ok 52 - T-DB-62: the owner re-approves
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1823390Z ok 53 - T-DB-62: after re-approval the clip is visible again
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1823925Z ok 54 - finding 20: the coach cannot withdraw the owner's approval either
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1824425Z ok 55 - finding 20: the project owner withdraws the approval with revoke_clip_share
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1824891Z ok 56 - T-DB-62: revoke_clip_share has the same effect: 0 rows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1825291Z ok 57 - the coach still sees their own clip after the withdrawal
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1825637Z ok 58 - T-DB-69: approved again
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1826148Z ok 59 - T-DB-69: with the trigger disabled the approval timestamp survived the move
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.1826733Z ok 60 - T-DB-69: the viewer still sees 0 rows: share_approved_sha256 no longer equals the fingerprint
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2241969Z ok 61 - T-DB-18: the film, its thumbnail and captions; not the preview, edit manifest, other film or excerpts
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2243200Z ok 62 - T-DB-18: no project and no clip
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2243715Z ok 63 - the grantee sees their own grant row
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2244071Z ok 64 - T-DB-19: after revoke, 0 rows (no token refresh)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2244429Z ok 65 - T-DB-19: after expires_at, 0 rows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2244767Z ok 66 - T-DB-20: the clip grantee sees that clip only
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2245135Z ok 67 - T-DB-20: and its excerpt only (not the match film)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2245545Z ok 68 - T-DB-20: the lesson, the project and its observations: 0 rows
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2246409Z ok 69 - T-DB-06: an unrelated user sees 0 lessons, clips, observations, plans, artifacts and grants
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2247097Z ok 70 - story 173: the clip survives its source's deletion with source_id null and its project kept
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2247669Z ok 71 - finding 22a: the observation survives too (no stalled deletion)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2248076Z ok 72 - the source's calibrations go with it
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.2257808Z # supabase/tests/database/media_04_quotas.test.sql
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3602081Z 1..25
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3602472Z ok 1 - T-DB-64: event revision 1 of 3 allowed
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3602959Z ok 2 - T-DB-64: the third event revision (the limit) is allowed
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3603436Z ok 3 - T-DB-64: the fourth event revision of the day is P0429
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3603893Z ok 4 - T-DB-64: the fourth sync map of the day is P0429
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3604332Z ok 5 - T-DB-64: the fourth plan version of the day is P0429
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3604783Z ok 6 - T-DB-64: the fourth lesson of the day is P0429 (a per-user limit)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3605324Z ok 7 - T-DB-70: the day row and the lifetime row both hold 3: the refused insert rolled back
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3606227Z ok 8 - lessons are counted against the user
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3607013Z ok 9 - the per-user aggregate counted all 12 accepted rows and none of the 4 refused
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3608035Z ok 10 - one lifetime row per (table, subject): events, sync maps, versions, lessons and the aggregate
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3608895Z ok 11 - T-DB-64: project 1: 2 rows (total 2)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3609416Z ok 12 - T-DB-64: project 2: 2 rows (total 4)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3609931Z ok 13 - T-DB-64: project 3: 2 rows (total 6)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3610699Z ok 14 - T-DB-64: project 4, first row: the seventh of the day is allowed (one below the aggregate)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3611585Z ok 15 - T-DB-64: project 4, second row: refused at the *user_total limit though the project is under its own
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3612269Z ok 16 - T-DB-64: a fresh project 5 is refused too: the aggregate is per user, never N x the per-project limit
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3612851Z ok 17 - T-DB-64: one aggregate row for the user and day, holding 7
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3613249Z ok 18 - exactly 7 revisions landed across 5 projects
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3613703Z ok 19 - T-DB-64: a lesson coach's lesson-only observation (project_id null) is allowed
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3614180Z ok 20 - T-DB-64: and counted against the coach's user subject
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3614809Z ok 21 - the third project of the day is P0429
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3615250Z ok 22 - T-DB-70: with no quota_limits row for story_plans the insert is P0429 (fail closed)
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3616073Z ok 23 - T-DB-70: no counter row was left behind
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3616452Z ok 24 - T-DB-70: the refused insert left the aggregate unchanged
+backend-db	pgTAP assertions by id	2026-10-12T03:47:13.3616895Z ok 25 - T-DB-70: with no *user_total row a table under its own limit is P0429 too
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	﻿2026-10-12T03:47:13.3648378Z ##[group]Run supabase status -o env > "$RUNNER_TEMP/supabase-status.env"
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.3648942Z ^[[36;1msupabase status -o env > "$RUNNER_TEMP/supabase-status.env"^[[0m
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.3649470Z ^[[36;1mpython3 supabase/scripts/otp_smoke.py "$RUNNER_TEMP/supabase-status.env"^[[0m
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.3711953Z shell: /usr/bin/bash -e {0}
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.3712207Z env:
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.3712430Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.3712715Z ##[endgroup]
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.6781477Z Stopped services: [supabase_realtime_jovra-local supabase_storage_jovra-local supabase_imgproxy_jovra-local supabase_pg_meta_jovra-local supabase_studio_jovra-local supabase_edge_runtime_jovra-local supabase_analytics_jovra-local supabase_vector_jovra-local supabase_pooler_jovra-local]
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.6782881Z A new version of Supabase CLI is available: v2.120.0 (currently installed v)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:13.6783677Z We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1884693Z PASS  seed tester can request an email code (create_user false)  (HTTP 200)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1885397Z PASS  the code arrives in Mailpit  (six digits found)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1885804Z PASS  the tester signs in with the code  (HTTP 200)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1886471Z PASS  the access token is ES256  (alg ES256)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1886818Z PASS  the token belongs to the seeded tester
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1887171Z PASS  the token is a real, non-anonymous user
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1887565Z PASS  the same code cannot be used twice  (HTTP 403)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1888367Z PASS  OTP with create_user true for an unknown email is refused  (HTTP 422 {"code": 422, "error_code": "signup_disabled", "msg": "Signups not allowed for this instance"})
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1889159Z PASS  no user row was created for the unknown email
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1889878Z PASS  anonymous sign-in is refused  (HTTP 422 {"code": 422, "error_code": "anonymous_provider_disabled", "msg": "Anonymous sign-ins are disabled"})
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1890953Z PASS  the hook alone refuses an unknown email (invite path, sign-up switch not involved)  (HTTP 403 {"code": 403, "error_code": "unknown", "msg": "signup_not_allowed"})
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1891642Z PASS  no user row was created on the invite path
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1892058Z PASS  the hook lets an allow-listed email through on the same path  (HTTP 200)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1892585Z PASS  the operator can create an allow-listed tester with sign-ups off  (HTTP 200)
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1892913Z 
+backend-db	OTP sign-in through Auth and Mailpit; unknown emails refused	2026-10-12T03:47:14.1893008Z OK: 0 failing check(s)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	﻿2026-10-12T03:47:14.2021934Z ##[group]Run python3 supabase/scripts/postgrest_identity_smoke.py "$RUNNER_TEMP/supabase-status.env"
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.2022712Z ^[[36;1mpython3 supabase/scripts/postgrest_identity_smoke.py "$RUNNER_TEMP/supabase-status.env"^[[0m
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.2084925Z shell: /usr/bin/bash -e {0}
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.2085184Z env:
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.2085407Z   SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.2085697Z ##[endgroup]
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4650074Z PASS  T-DB-35: Accept-Profile app_private is refused  (HTTP 406 PGRST106)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4651178Z PASS  T-DB-35: the refusal lists exactly ['graphql_public', 'public']  (['graphql_public', 'public'])
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4652198Z PASS  T-DB-35: Accept-Profile app_gateway is refused  (HTTP 406 PGRST106)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4653172Z PASS  T-DB-35: the refusal lists exactly ['graphql_public', 'public']  (['graphql_public', 'public'])
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4654061Z PASS  T-DB-35: Accept-Profile app_ops is refused  (HTTP 406 PGRST106)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4654794Z PASS  T-DB-35: the refusal lists exactly ['graphql_public', 'public']  (['graphql_public', 'public'])
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4655505Z PASS  T-DB-35: an RPC into app_private is refused  (HTTP 406 {"code": "PGRST106", "message": "Invalid schema: app_private"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4656632Z PASS  T-DB-01: unauthenticated GET /projects is denied  (HTTP 401 {"code": "42501", "message": "permission denied for table projects"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4657488Z PASS  T-DB-01: unauthenticated POST /projects is denied  (HTTP 401 {"code": "42501", "message": "permission denied for table projects"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4658162Z PASS  owner creates a project; owner_id comes from the token  (HTTP 201)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4658616Z PASS  the owner membership row follows the project  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4659222Z PASS  T-DB-07: naming owner_id is denied  (HTTP 403 {"code": "42501", "message": "permission denied for table projects"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4660021Z PASS  T-DB-30: profiles.is_tester is not selectable  (HTTP 403 {"code": "42501", "message": "permission denied for table profiles"})
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4660700Z PASS  T-DB-06: the unrelated user sees 0 rows of the owner's project  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4661194Z PASS  T-DB-06: the unrelated user sees 0 membership rows  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4661656Z PASS  T-DB-09: the unrelated user's PATCH changes 0 rows  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4662045Z PASS  the owner's project is unchanged  (HTTP 200)
+backend-db	PostgREST exposed schemas and identity RLS with real session tokens (T-DB-35)	2026-10-12T03:47:14.4662343Z {"failed": 0}

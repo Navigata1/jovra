@@ -130,7 +130,7 @@ private extension SessionsRoute {
         switch self {
         case .importVideos:
             push("sessions.import", "T26", String(localized: "Import videos", table: "App", comment: "Screen name"),
-                 "Features/Sessions/Import/ImportScreen.swift")
+                 "Features/Sessions/Import/ImportScreen.swift", placeholder: false)
         case .matchOverview:
             push("sessions.matchOverview", "T22", String(localized: "Match overview", table: "App", comment: "Screen name"),
                  "Features/Sessions/MatchOverview/MatchOverviewScreen.swift")
@@ -307,8 +307,8 @@ private extension SheetRoute {
     }
 }
 
-private func push(_ name: String, _ ticket: String, _ title: String, _ file: String) -> RouteInfo {
-    RouteInfo(kind: .push, launchName: name, ticket: ticket, title: title, file: file)
+private func push(_ name: String, _ ticket: String, _ title: String, _ file: String, placeholder: Bool = true) -> RouteInfo {
+    RouteInfo(kind: .push, launchName: name, ticket: ticket, title: title, file: file, isPlaceholder: placeholder)
 }
 
 private func cover(_ name: String, _ ticket: String, _ title: String, _ close: String, _ file: String, placeholder: Bool = true) -> RouteInfo {
