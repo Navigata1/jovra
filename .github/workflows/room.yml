@@ -1,0 +1,73 @@
+name: room
+
+# JOVRA Room v1 and the watch bridge (G-ROOM / G-W-CONTRACT, docs/spec/watch-v1-spec.md). Two jobs:
+#   room-contracts  the Python reference and fixtures in spec/room agree (scripts/spec/validate_room.py);
+#   jovra-room      the Swift port in ios/Packages/JovraRoom passes every spec/room fixture on Linux, and the package
+#                   imports no UI or watch-transport framework.
+# The core ci.yml and studio checks are deliberately not edited; ci.yml also runs validate_room.py in its spec job.
+
+on:
+  pull_request:
+    paths:
+      - spec/room/**
+      - spec/contracts/capability-registry.v1.json
+      - spec/schemas/common.schema.json
+      - spec/schemas/studio/studio-common.schema.json
+      - scripts/spec/validate_room.py
+      - scripts/spec/jsonschema_subset.py
+      - design-reference/adaptive/brief/**
+      - docs/handoff/adaptive-v3/scripts/**
+      - ios/Packages/JovraRoom/**
+      - ios/Packages/JovraCore/**
+      - .github/workflows/room.yml
+  push:
+    branches: [main]
+    paths:
+      - spec/room/**
+      - spec/contracts/capability-registry.v1.json
+      - spec/schemas/common.schema.json
+      - spec/schemas/studio/studio-common.schema.json
+      - scripts/spec/validate_room.py
+      - scripts/spec/jsonschema_subset.py
+      - design-reference/adaptive/brief/**
+      - docs/handoff/adaptive-v3/scripts/**
+      - ios/Packages/JovraRoom/**
+      - ios/Packages/JovraCore/**
+      - .github/workflows/room.yml
+  workflow_dispatch:
+
+concurrency:
+  group: room-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  room-contracts:
+    name: room-contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Room contracts, fixtures and reference
+        run: python3 scripts/spec/validate_room.py
+
+  jovra-room:
+    name: jovra-room
+    runs-on: ubuntu-latest
+    container: swift:6.1
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: No UI or watch-transport framework in the package
+        run: |
+          if grep -rnE 'import UIKit|SwiftUI|WatchConnectivity' ios/Packages/JovraRoom --include='*.swift'; then
+            echo "JovraRoom must stay Foundation-only" >&2
+            exit 1
+          fi
+      - name: swift test (JovraRoom, Linux)
+        working-directory: ios/Packages/JovraRoom
+        run: swift test
