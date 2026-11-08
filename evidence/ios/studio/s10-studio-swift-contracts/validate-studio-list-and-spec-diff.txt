@@ -1,0 +1,66 @@
+$ python3 scripts/spec/validate_studio.py --list
+kind                                  type    count  invalid  module         coverage  swift     kotlin
+compile                               vector  44     -        compile        covered   pending   pending
+director                              vector  59     -        planner        covered   pending   pending
+edl-context                           vector  4      -        edl            covered   pending   pending
+job-transitions                       vector  32     -        jobstate       covered   pending   pending
+jovra.broll-catalog/1                 schema  1      1        records        covered   consumed  pending
+jovra.camera-invite/1                 schema  1      6        records        covered   consumed  pending
+jovra.credit-classes/1                schema  1      0        ledger         covered   pending   pending
+jovra.delivered-artifact/1            schema  1      6        records        covered   consumed  pending
+jovra.edit-plan/2                     schema  7      79       edl            covered   pending   pending
+jovra.keeper-catalog/1                schema  1      3        records        covered   consumed  pending
+jovra.lesson/1                        schema  3      6        records        covered   consumed  pending
+jovra.observation/1                   schema  3      5        records        covered   consumed  pending
+jovra.project-lock/1                  schema  1      4        records        covered   consumed  pending
+jovra.pts-table/1                     schema  1      17       normalization  covered   pending   pending
+jovra.quote/1                         schema  3      15       ledger         covered   pending   pending
+jovra.reference-catalog/1             schema  1      4        records        covered   consumed  pending
+jovra.render-job-transitions/1        schema  1      0        jobstate       covered   pending   pending
+jovra.render-job/1                    schema  2      8        jobstate       covered   pending   pending
+jovra.room-transcript/1               schema  4      57       room           covered   pending   pending
+jovra.room/1                          schema  0      0        room           covered   pending   pending
+jovra.source-manifest/1               schema  1      6        records        covered   consumed  pending
+jovra.storage-providers/1             schema  1      5        records        covered   consumed  pending
+jovra.story-brief/1                   schema  2      6        records        covered   consumed  pending
+jovra.story-profile-catalog/1         schema  1      0        records        covered   consumed  pending
+jovra.studio-fixture.invalid-cases/1  schema  30     0        core           covered   pending   pending
+jovra.studio-fixture.vectors/1        schema  15     0        core           covered   pending   pending
+jovra.sync-map/1                      schema  1      16       sync           covered   pending   pending
+jovra.usage-reservation/1             schema  2      15       ledger         covered   pending   pending
+keepers                               vector  26     -        keepers        covered   pending   pending
+ledger                                vector  21     -        ledger         covered   pending   pending
+normalization                         vector  37     -        normalization  covered   pending   pending
+planner                               vector  47     -        planner        covered   pending   pending
+progress-comparison                   vector  20     -        progress       covered   pending   pending
+quote-credits                         vector  8      -        ledger         covered   pending   pending
+room                                  vector  57     -        room           covered   pending   pending
+sample-truth                          vector  10     -        bundle         covered   pending   pending
+sound-delay                           vector  48     -        sync           covered   pending   pending
+staleness                             vector  9      -        keepers        covered   pending   pending
+sync-fit                              vector  17     -        sync           covered   pending   pending
+
+$ python3 scripts/spec/validate_studio.py | tail -3
+README without per-module lines                                            1
+generated files current                                                    83
+RESULT: PASS
+
+$ python3 ios/Packages/JovraStudioCore/Tools/generate_contract_models.py --check
+exit=0
+
+$ git diff --stat origin/main -- spec/
+ spec/studio/modules/records.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/spec/studio/modules/records.md b/spec/studio/modules/records.md
+index b75579d..7ab3cc5 100644
+--- a/spec/studio/modules/records.md
++++ b/spec/studio/modules/records.md
+@@ -4,7 +4,7 @@ reference: [spec/reference/studio/records.py, spec/reference/studio/generate_stu
+ cases: [spec/reference/studio/cases/records_cases.py]
+ kinds: [jovra.project-lock/1, jovra.source-manifest/1, jovra.observation/1, jovra.keeper-catalog/1, jovra.broll-catalog/1, jovra.story-profile-catalog/1, jovra.story-brief/1, jovra.reference-catalog/1, jovra.delivered-artifact/1, jovra.lesson/1, jovra.camera-invite/1, jovra.storage-providers/1]
+ coverage: covered
+-swift: pending
++swift: consumed
+ kotlin: pending
+ ---
+ 

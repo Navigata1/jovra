@@ -1,0 +1,66 @@
+# Linux CI: jovra-studio-core (swift:6.1 container), https://github.com/Navigata1/jovra/actions/runs/42513827449/job/128832387547
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:17.5965814Z Test Suite 'debug.xctest' passed at 2026-11-08 19:13:17.576
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:17.5967935Z Test Suite 'All tests' passed at 2026-11-08 19:13:17.576
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:17.5970082Z ◇ Test run started.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:17.6027126Z ◇ Test "every record with a registered decoder decodes and re-encodes byte-identically" started.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9085937Z Studio invalid cases (schema layer): 30 refused; unregistered schemas skipped: [(key: "jovra.pts-table/1", value: 5), (key: "jovra.room-transcript/1", value: 4)]
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9116857Z Studio round-trips: 34 records byte-identical across 19 schemas
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9117482Z   jovra.broll-catalog/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9117904Z   jovra.camera-invite/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9118320Z   jovra.credit-classes/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9118753Z   jovra.delivered-artifact/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9119197Z   jovra.edit-plan/2: 7
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9119589Z   jovra.keeper-catalog/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9120001Z   jovra.lesson/1: 3
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9120365Z   jovra.observation/1: 3
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9120774Z   jovra.project-lock/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9121168Z   jovra.quote/1: 3
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9122096Z   jovra.reference-catalog/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9122567Z   jovra.render-job-transitions/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9123037Z   jovra.render-job/1: 2
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9123437Z   jovra.source-manifest/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9123880Z   jovra.storage-providers/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9124323Z   jovra.story-brief/1: 2
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9124745Z   jovra.story-profile-catalog/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9125198Z   jovra.sync-map/1: 1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:18.9125588Z   jovra.usage-reservation/1: 2
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9732613Z   refused trailing newline: delivered-artifact.film.invalid.json#plan-hash-trailing-newline
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9751890Z   refused trailing newline: lesson.2026-10-07.invalid.json#id-trailing-newline
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9758513Z   refused trailing newline: quote.accepted.invalid.json#hash-trailing-newline
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9761761Z Studio fixture manifest: 39 kinds; consumers: ["ContractsConsumer"]
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9766401Z   jovra.broll-catalog/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9767427Z   jovra.camera-invite/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9768481Z   jovra.credit-classes/1 page=ledger swift=pending consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9769860Z   jovra.delivered-artifact/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9796974Z   jovra.edit-plan/2 page=edl swift=pending consumed=true files=7
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9798017Z   jovra.keeper-catalog/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9799050Z   jovra.lesson/1 page=records swift=consumed consumed=true files=3
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9800032Z   jovra.observation/1 page=records swift=consumed consumed=true files=3
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9801053Z   jovra.project-lock/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9802785Z   jovra.pts-table/1 page=normalization swift=pending consumed=false files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9803786Z   jovra.quote/1 page=ledger swift=pending consumed=true files=3
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9804779Z   jovra.reference-catalog/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9805938Z   jovra.render-job-transitions/1 page=jobstate swift=pending consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9807030Z   jovra.render-job/1 page=jobstate swift=pending consumed=true files=2
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9808055Z   jovra.room-transcript/1 page=room swift=pending consumed=false files=4
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9808999Z   jovra.room/1 page=room swift=pending consumed=false files=0
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9809975Z   jovra.source-manifest/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9811102Z   jovra.storage-providers/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9812518Z   jovra.story-brief/1 page=records swift=consumed consumed=true files=2
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9813622Z   jovra.story-profile-catalog/1 page=records swift=consumed consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9814823Z   jovra.studio-fixture.invalid-cases/1 page=core swift=pending consumed=false files=30
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9816013Z   jovra.studio-fixture.vectors/1 page=core swift=pending consumed=false files=15
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9817316Z   jovra.sync-map/1 page=sync swift=pending consumed=true files=1
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:19.9818337Z   jovra.usage-reservation/1 page=ledger swift=pending consumed=true files=2
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3659385Z ✔ Test "every record with a registered decoder decodes and re-encodes byte-identically" passed after 2.373 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3666865Z ✔ Suite "Studio fixture locator" passed after 2.375 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3667665Z ✔ Suite "Studio contracts: schema set" passed after 2.375 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3668461Z ✔ Suite "Studio contracts: strict decoding" passed after 2.375 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3669208Z ✔ Suite "Studio record header" passed after 2.375 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3669887Z ✔ Suite "Studio contracts: time" passed after 2.375 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3670642Z ✔ Suite "Studio contracts: vector consumers" passed after 2.376 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3671698Z ✔ Suite "Studio contracts: record round-trips" passed after 2.376 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3674380Z ✔ Suite "Studio contracts: fixture manifest" passed after 2.975 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3675519Z Studio invalid cases (reference layer): 154 decode (their rules belong to the module tickets); refused as integral floats: ["edit-plan.court-memories-storyboard.invalid.json#integral-float-frame"]
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3677945Z ✔ Suite "Studio contracts: invalid cases" passed after 5.754 seconds.
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T19:13:23.3678479Z ✔ Test run with 39 tests passed after 5.755 seconds.

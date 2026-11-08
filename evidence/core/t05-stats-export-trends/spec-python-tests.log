@@ -1,0 +1,8 @@
+$ python3 -m unittest discover -s scripts/spec -p "test_*.py" -v
+test_a_hand_edited_expectation_is_refused (test_trend_fixture.TrendFixture.test_a_hand_edited_expectation_is_refused) ... ok
+test_a_sample_session_never_reaches_a_real_trend (test_trend_fixture.TrendFixture.test_a_sample_session_never_reaches_a_real_trend) ... ok
+test_an_engine_that_averages_percentages_is_refused (test_trend_fixture.TrendFixture.test_an_engine_that_averages_percentages_is_refused) ... ok
+test_committed_fixture_is_schema_valid_and_passes_its_checks (test_trend_fixture.TrendFixture.test_committed_fixture_is_schema_valid_and_passes_its_checks) ... ok
+test_schema_refuses_an_unknown_field (test_trend_fixture.TrendFixture.test_schema_refuses_an_unknown_field) ... ok
+Ran 106 tests in 62.099s
+OK
