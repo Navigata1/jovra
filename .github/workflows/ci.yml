@@ -26,6 +26,7 @@ jobs:
         run: |
           cmp spec/contracts/csv/points.v1.json ios/Packages/JovraCore/Sources/JovraCore/Export/Contracts/points.v1.json
           cmp spec/contracts/csv/stats.v1.json ios/Packages/JovraCore/Sources/JovraCore/Export/Contracts/stats.v1.json
+          cmp spec/contracts/capability-registry.v1.json ios/Packages/JovraCore/Sources/JovraCore/Capabilities/Contracts/capability-registry.v1.json
       - name: swift test (JovraCore)
         working-directory: ios/Packages/JovraCore
         env:

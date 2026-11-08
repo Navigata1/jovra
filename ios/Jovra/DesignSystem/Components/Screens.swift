@@ -10,30 +10,30 @@ struct JovraScreen<Accessory: View, Content: View>: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Space.x3) {
-                HStack(alignment: .center) {
-                    JovraLockup(height: 40)
-                    Spacer(minLength: Space.x2)
-                    accessory
-                }
-                VStack(alignment: .leading, spacing: Space.half) {
-                    Text(title)
-                        .jovraDisplayTitle()
-                        .accessibilityAddTraits(.isHeader)
-                        .accessibilityIdentifier("screen.title")
-                    if let subtitle {
-                        Text(subtitle)
-                            .font(.jovraSubtitle)
-                            .foregroundStyle(.jovra(.textSecondary))
+            ReadableColumn {
+                VStack(alignment: .leading, spacing: Space.x3) {
+                    HStack(alignment: .center) {
+                        JovraLockup(height: 40)
+                        Spacer(minLength: Space.x2)
+                        accessory
                     }
+                    VStack(alignment: .leading, spacing: Space.half) {
+                        Text(title)
+                            .jovraDisplayTitle()
+                            .accessibilityAddTraits(.isHeader)
+                            .accessibilityIdentifier("screen.title")
+                        if let subtitle {
+                            Text(subtitle)
+                                .font(.jovraSubtitle)
+                                .foregroundStyle(.jovra(.textSecondary))
+                        }
+                    }
+                    content
                 }
-                content
+                .padding(.horizontal, Space.screenMargin)
+                .padding(.top, Space.x1)
+                .padding(.bottom, Space.x4)
             }
-            .padding(.horizontal, Space.screenMargin)
-            .padding(.top, Space.x1)
-            .padding(.bottom, Space.x4)
-            .frame(maxWidth: 720, alignment: .leading)
-            .frame(maxWidth: .infinity)
         }
         .scrollIndicators(.hidden)
         // An opaque page-coloured backdrop under the status bar, so scrolled content never sits

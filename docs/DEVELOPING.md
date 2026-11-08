@@ -25,8 +25,12 @@ ios/
     App/                      entry point, AppRoot (pre-shell / shell), AppShell (tabs), AppRouter, typed routes,
                               deep links, route catalog, placeholders, the ServiceKey seam, tab bar
     DesignSystem/
-      Tokens/                 ColorRole (semantic light/dark/Increase Contrast colours), spacing, type
-      Components/             buttons, cards, stat tile, filter pills, provenance badge, status pill, rows
+      Tokens/                 ColorRole (semantic light/dark/Increase Contrast colours), spacing, type,
+                              Motion (nil under Reduce Motion) and the haptic set
+      Components/             buttons, cards, stat tile, fraction popover, provenance/Sample/Fixture badges,
+                              status pill, rows, state cards, banners, toasts, readable column, capability
+                              detail; DEBUG gallery (`JOVRA_CORE_COMPONENT_GALLERY=<scenario>`) for UI tests
+      Art/                    vector hero and editorial art (no photographs, hidden from VoiceOver)
       Brand/                  BrandGeometry (Court Arc mark + JOVRA wordmark vectors), SwiftUI shapes, lockup
     Features/<Tab>/           one folder per feature (Home, Sessions, Record, Insights, Profile, Capture)
     Platform/LaunchConfiguration/  launch arguments (shared with the UI tests), Drive client configuration
@@ -268,8 +272,19 @@ There are two documented audit exceptions, and the test logs every issue it igno
   semantic findings remain failures even for an occluded scrolling element. `ScrollViewportAuditTests`
   includes visible-content, fixed-header, invalid-viewport and non-rendering negative controls.
 
-Text contrast for every colour role is also enforced independently by `ColorRoleContrastTests`
-(≥ 4.5:1 in light, dark and Increase Contrast).
+Contrast for every colour role is also enforced independently by `ColorRoleContrastTests`: text roles
+≥ 4.5:1 and graphic roles (markers, the REC dot, chart lines) ≥ 3:1, in light, dark and Increase Contrast,
+with translucent roles composited over their worst-case backdrop. A role that is neither paired nor
+classified as a surface fails the suite.
+
+To audit the component gallery with Increase Contrast on, switch the simulator and tell the test runner:
+
+```bash
+xcrun simctl ui "$SIMULATOR_ID" increase_contrast enabled
+TEST_RUNNER_JOVRA_EXPECT_INCREASED_CONTRAST=1 scripts/ios/ui-test.sh \
+  -only-testing JovraUITests/DesignSystemGalleryUITests/testEveryScenarioInIncreasedContrast
+xcrun simctl ui "$SIMULATOR_ID" increase_contrast disabled
+```
 
 ## Simulator hygiene
 

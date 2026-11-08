@@ -13,4 +13,18 @@ extension CapabilityRegistry {
     }
 }
 
-public enum CapabilityRegistryError: Error, Equatable, Sendable { case duplicateCapability }
+public enum CapabilityRegistryError: Error, Equatable, Sendable { case duplicateCapability, missingBundledRegistry }
+
+extension CapabilityRegistry {
+    /// The registry shipped with the app: a byte-identical copy of spec/contracts/capability-registry.v1.json
+    /// (checked by `BundledCapabilityRegistryTests` and CI). Badges and capability pages read it (ADR-0004).
+    public static func bundledData() -> Data? {
+        guard let url = Bundle.module.url(forResource: "capability-registry.v1", withExtension: "json") else { return nil }
+        return try? Data(contentsOf: url)
+    }
+
+    public static func bundled() throws -> CapabilityRegistry {
+        guard let data = bundledData() else { throw CapabilityRegistryError.missingBundledRegistry }
+        return try load(from: data)
+    }
+}
