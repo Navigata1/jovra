@@ -3,6 +3,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ImportScreen: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(AppRouter.self) private var router
     @Environment(\.localCaptureLibrary) private var library
     @State private var playerName = ""
@@ -14,11 +15,19 @@ struct ImportScreen: View {
     var body: some View {
         JovraScreen(title: String(localized: "Import videos", table: "App"),
                     subtitle: String(localized: "Save a local practice video from Files.", table: "Sessions.Import")) {
+            Button(String(localized: "Back to sessions", table: "Sessions.Import")) { dismiss() }
+                .buttonStyle(.jovraSecondary).accessibilityIdentifier("import.back")
             Text("Choose one H.264 or HEVC video in MOV or MP4 format. JOVRA keeps your selected file unchanged.", tableName: "Sessions.Import")
                 .fixedSize(horizontal: false, vertical: true)
-            TextField(String(localized: "Player name", table: "Sessions.Import"), text: $playerName)
-                .textFieldStyle(.roundedBorder).frame(minHeight: 44)
-                .disabled(selection != nil).accessibilityIdentifier("import.player")
+            Text("Player name", tableName: "Sessions.Import").font(.jovraLabel)
+            JovraTextInput(text: $playerName, title: String(localized: "Player name", table: "Sessions.Import"),
+                          identifier: "import.player")
+                .padding(.horizontal, Space.x2)
+                .background(.jovra(.surface), in: RoundedRectangle(cornerRadius: Radius.card))
+                .disabled(selection != nil)
+            if case .unavailable = library {
+                Text("Local library unavailable", tableName: "Sessions.Library")
+            }
             Button(String(localized: "Choose video from Files", table: "Sessions.Import")) { showPicker = true }
                 .buttonStyle(.jovraAccent).disabled(!canChoose).accessibilityIdentifier("import.choose")
             if selection != nil {

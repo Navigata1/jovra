@@ -14,6 +14,7 @@ final class FilesImportUITests: XCTestCase {
         name.tap()
         name.typeText("Practice Player\n")
         XCTAssertTrue(choose.isEnabled)
+        try auditScreen(app)
         choose.tap()
         let cancel = app.buttons["Cancel"].firstMatch
         XCTAssertTrue(cancel.waitForExistence(timeout: 10), app.debugDescription)
@@ -21,7 +22,7 @@ final class FilesImportUITests: XCTestCase {
         XCTAssertTrue(choose.waitForExistence(timeout: 5))
         XCTAssertFalse(app.staticTexts["import.saved"].exists)
         XCTAssertFalse(app.staticTexts["import.issue"].exists)
-        let back = app.navigationBars.buttons.firstMatch
+        let back = app.buttons["import.back"]
         XCTAssertTrue(back.exists)
         back.tap()
         XCTAssertTrue(app.buttons["library.import"].waitForExistence(timeout: 5))
