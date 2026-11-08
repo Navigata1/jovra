@@ -1,0 +1,8 @@
+// JOVRA Studio build settings (S04), included from Jovra.xcconfig. Committed: it must never hold a URL, key or secret
+// (CLAUDE.md rule 5; a copied app must not be able to reach anyone's data, user story 245).
+//
+// STUDIO_ENVIRONMENT selects the Studio cloud mode (spec SD11) and reaches Info.plist as JovraStudioEnvironment:
+//   demo  in-process, deterministic Sample content; no network, no account, no charge (the default)
+//   test  the test backend, only once its configuration exists outside source control; otherwise unavailable
+//   live  compiled but unavailable until its activation gates are recorded
+STUDIO_ENVIRONMENT = demo
