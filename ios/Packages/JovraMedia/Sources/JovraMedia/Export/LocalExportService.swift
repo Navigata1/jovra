@@ -10,6 +10,8 @@ public enum LocalExportProgress: Equatable, Sendable { case artifactsReady }
 public struct LocalExportPackage: Sendable {
     public let directory: URL
     public let videoFrames: Int
+    public let eventLogVersion: Int
+    public let includesAudio: Bool
     public var clip: URL { directory.appendingPathComponent("clip.mp4") }
     public var sessionJSON: URL { directory.appendingPathComponent("session.json") }
     public var pointsCSV: URL { directory.appendingPathComponent("points.csv") }
@@ -47,7 +49,7 @@ public actor LocalExportService {
         guard !FileManager.default.fileExists(atPath: directory.path) else { throw LocalExportError.unsafePath }
         try DurableDirectory.create(at: directory)
         let directoryIdentity = try DurableDirectory.identity(of: directory)
-        let package = LocalExportPackage(directory: directory, videoFrames: 0)
+        let package = LocalExportPackage(directory: directory, videoFrames: 0, eventLogVersion: version, includesAudio: false)
         let result = try await ClipExporter.exportClip(source: source,
             range: CMTimeRange(start: CMTime(value: Int64(range.fromMs - segment.startMs), timescale: 1000),
                                duration: CMTime(value: Int64(range.toMs - range.fromMs), timescale: 1000)),
@@ -82,7 +84,8 @@ public actor LocalExportService {
                 file: jsonFile, status: .done)
         ]
         try await store.recordExports(records, artifacts: artifacts, for: sessionID, expectedFolderIdentity: folderIdentity)
-        return LocalExportPackage(directory: directory, videoFrames: result.videoFrames)
+        return LocalExportPackage(directory: directory, videoFrames: result.videoFrames,
+                                  eventLogVersion: version, includesAudio: result.includesAudio)
     }
 
     private func write(_ data: Data, to url: URL) throws {

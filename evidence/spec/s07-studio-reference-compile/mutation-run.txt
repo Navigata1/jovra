@@ -1,0 +1,31 @@
+$ python3 evidence/spec/s07-studio-reference-compile/mutate.py <repo root>
+clean-frame-rule-off (regenerated): RESULT: FAIL; 2 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#coach-cut-3min-default-clock: rejected with cleanFrameRule
+    FAIL spec/studio/fixtures/vectors/compile.json#half-speed-replay-30fps-source: rejected with cleanFrameRule
+upscale-allowed (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#upscale-refused: rejected with upscaleRefused
+no-gap-cards (regenerated): RESULT: FAIL; 3 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#one-camera-restart: segments: ['title-card card.match-intro 0-240', 'live cam-a 1800-5400 240-3840', 'live cam-a 9000-12600 3840-7440', 'live cam-a 16200-19800 7440-11040', 'live cam-a 23400-27000 11040-14640', 'live cam-a 30600-34200 14640-18240', 'liv
+    FAIL spec/studio/fixtures/vectors/compile.json#one-camera-restart: totalFrames: 29040, hand value 29280
+final-card-over-gap (regenerated): RESULT: FAIL; 4 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#one-camera-restart: segments: ['title-card card.match-intro 0-240', 'live cam-a 1800-5400 240-3840', 'live cam-a 9000-12600 3840-7440', 'live cam-a 16200-19800 7440-11040', 'live cam-a 23400-27000 11040-14640', 'live cam-a 30600-34200 14640-18240', 'tit
+    FAIL spec/studio/fixtures/vectors/compile.json#one-camera-restart: totalFrames: 29520, hand value 29280
+titles-ignore-renderer-set (regenerated): RESULT: FAIL; 14 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#titles-not-in-this-build: segments: ['title-card card.goal 0-120', 'live camera-1 71800-75800 120-2120', 'title-card card.lesson 2120-2240', 'title-card card.lesson 2240-2360', 'live camera-1 149950-157200 2360-5985', 'replay camera-1 153455-153695 1/2 
+    FAIL spec/studio/fixtures/vectors/compile.json#titles-not-in-this-build: totalFrames: 6465, hand value 5865
+replay-centre-floor-not-half-up (regenerated): RESULT: FAIL; 2 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#match-broadcast-5min: segments: ['title-card card.match-intro 0-120', 'live camera-1 720-1170 120-345', 'replay camera-2 777-1017 1/2 345-585', 'live camera-1 71800-75800 585-2585', 'live camera-1 119900-125000 2585-5135', 'live camera-1 149950-157200 5
+    FAIL spec/studio/fixtures/vectors/compile.json#match-broadcast-full: segments: ['title-card card.match-intro 0-120', 'live camera-1 720-1170 120-345', 'replay camera-2 777-1017 1/2 345-585', 'live camera-1 71800-75800 585-2585', 'live camera-1 119900-125000 2585-5135', 'live camera-1 149950-157200 5
+hold-bed-over-kept-play (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#hold-bed-not-over-kept-play: bed: ['silence - 0-120', 'primary-bed cam-a@9000 120-1920', 'hold-bed cam-a@12600 1920-1980', 'hold-bed cam-a@12720 1980-2220', 'primary-bed cam-a@1800 2220-4020', 'primary-bed cam-a@16200 4020-5820', 'hold-bed cam-a@19800 5
+hold-bed-ignores-renderer-set (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#hold-bed-not-in-this-build: bed: ['primary-bed camera-1@720 0-225', 'primary-bed camera-1@71800 225-2225', 'primary-bed camera-1@119900 2225-4775', 'hold-bed camera-1@125000 4775-4820'], hand value ['primary-bed camera-1@720 0-225', 'primary-bed camera-
+fps-above-source-allowed (regenerated): RESULT: FAIL; 2 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#fps-above-source: refusal {'code': 'belowProfileMinimum', 'message': 'About 2 min 53 s of real material; Coach’s Cut needs at least 3 min. Mark more moments for a longer film.'}, hand value ['fpsAboveSource', 'A 120 fps film would repeat frames: camera-
+    FAIL spec/studio/fixtures/vectors/compile.json#fps-above-broll: rejected with cleanFrameRule
+stage-allowlist-off (regenerated): RESULT: FAIL; 1 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#court-memories-final-film-stage-s1: bed: ['alt-bed broll-1@60 0-1260', 'primary-bed camera-1@72000 1260-3060', 'primary-bed camera-1@120000 3060-5304', 'alt-bed broll-2@30 5304-7554'], hand value ['silence - 0-1260', 'primary-bed camera-1@72000 1260-306
+non-deterministic-plan-id (regenerated): RESULT: FAIL; 27 FAIL lines
+    FAIL spec/studio/fixtures/vectors/compile.json#coach-cut-3min: reference output differs from the stored expectation
+    FAIL spec/studio/fixtures/vectors/compile.json#coach-cut-5min: reference output differs from the stored expectation
+mutations: 11, survived: 0

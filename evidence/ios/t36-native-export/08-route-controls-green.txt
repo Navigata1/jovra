@@ -1,0 +1,13 @@
+SOURCE e4fcc5345aae198d61b991059281a69732d7525e
+COMMAND ['xcodebuild', 'test-without-building', '-project', 'ios/Jovra.xcodeproj', '-scheme', 'Jovra', '-destination', 'id=4265ADFD-39A3-4E71-8482-1945DDB5F899', '-derivedDataPath', '.derivedData-export', '-only-testing:JovraUITests/NativeExportUITests', '-parallel-testing-enabled', 'NO', '-resultBundlePath', '.derivedData-export/08-route-controls-green.xcresult', '-quiet']
+Writing result bundle at path:
+	/Users/IDC2.5/.codex/worktrees/jovra-core-continuation/implementation/native-export/.derivedData-export/08-route-controls-green.xcresult
+
+2026-10-09 13:56:54.835 xcodebuild[53279:132935965] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-09 13:56:54.835 xcodebuild[53279:132935965] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-09 13:57:21.138 xcodebuild[53279:132935965] [MT] IDETestOperationsObserverDebug: 28.038 elapsed -- Testing started completed.
+2026-10-09 13:57:21.138 xcodebuild[53279:132935965] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-09 13:57:21.138 xcodebuild[53279:132935965] [MT] IDETestOperationsObserverDebug: 28.038 sec, +28.038 sec -- end
+Testing started
+
+EXIT 0; ELAPSED 29.902s

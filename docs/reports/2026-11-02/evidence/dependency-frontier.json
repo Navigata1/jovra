@@ -1,0 +1,89 @@
+{
+  "note": "Issue-level direct blockers only. Existing partial implementations still need acceptance-gap review, and open PR work is owned by its current branch.",
+  "frontier": [
+    {
+      "id": "T04",
+      "title": "Scoring engine: event-log resolution, rules fold, conflicts, modes and the recalculation diff",
+      "blocked_by": [
+        "T03"
+      ]
+    },
+    {
+      "id": "T08",
+      "title": "Session store: single-writer document store, state facets, index, trash, migration and MediaLibrary custody",
+      "blocked_by": [
+        "T03"
+      ]
+    },
+    {
+      "id": "T11",
+      "title": "Synthetic sample video, practice clips and the benchmark corpus with the registry-consistency gate",
+      "blocked_by": [
+        "T03",
+        "T10"
+      ]
+    },
+    {
+      "id": "T12",
+      "title": "Design-system extensions: state components, provenance and sample badges, fraction popover, capability detail and hero art",
+      "blocked_by": [
+        "T03",
+        "T06"
+      ]
+    },
+    {
+      "id": "T15",
+      "title": "Capture engine: segment pipeline, write-ahead journal, fixture camera and device budget",
+      "blocked_by": [
+        "T03",
+        "T10"
+      ]
+    },
+    {
+      "id": "T32",
+      "title": "Rally segmentation core and rally-only composition",
+      "blocked_by": [
+        "T03",
+        "T10"
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "Studio packages, project wiring, Studio Info.plist keys and the Studio CI workflow",
+      "blocked_by": [
+        "T06"
+      ]
+    },
+    {
+      "id": "S77",
+      "title": "Migration 2: sources, manifests, sync, calibration, event revisions, observations, lessons, clips and story plans with RLS and quotas",
+      "blocked_by": [
+        "S76"
+      ]
+    },
+    {
+      "id": "S88",
+      "title": "Planner adapter, part 1: the heuristic planner and compiler ported to TypeScript with byte parity to the S06 and S07 reference",
+      "blocked_by": [
+        "S07"
+      ]
+    },
+    {
+      "id": "A01",
+      "title": "Android build foundation on Lane A: Gradle wrapper and catalog, build-logic, every ADR-0024 module skeleton, the module-boundary check and the required android-core CI job",
+      "blocked_by": []
+    },
+    {
+      "id": "A14",
+      "title": "Shared pane-policy contract (F-PANE-VECTORS): golden vectors, a Python reference and a validator with its own CI workflow",
+      "blocked_by": []
+    },
+    {
+      "id": "W01",
+      "title": "Swift JovraRoom package part 1: spec/room records, invalid cases and the freshness, snapshot, status, display, disconnect and analysis vectors, with a room CI workflow",
+      "blocked_by": [
+        "T03"
+      ]
+    }
+  ]
+}

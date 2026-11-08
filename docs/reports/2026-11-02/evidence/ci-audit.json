@@ -1,0 +1,945 @@
+{
+  "summary": "Live Nov 2 audit: current main 6e46a576 has a successful recorded CI run from Oct 12; PRs 365–371 all merged. The earlier zero-step billing blocker is contradicted by executed green checks, while mission state still describes it. Launch wiring and unfinished-recording recovery remain absent in app source. No tests, reruns, merges or repository edits performed.",
+  "capturedAtUTC": "2026-11-02T13:00:35.721754+00:00",
+  "checkout": {
+    "path": "/Users/IDC2.5/.codex/worktrees/jovra-sotu-2026-11-02",
+    "sha": "6e46a576240c587511f2f87a15d95507b7280158",
+    "iOSTree": "9a925bbca83a7545b40e8053ac0c2b4e8cc62243",
+    "iOSTreeEqualsRetainedTested73": true,
+    "retainedNativeTestedSHA": "73ce5c2f3627e3a599118d8b44ba66f2928bbd3f",
+    "qualification": "Source-tree identity permits explicit source rebind; no passing runtime SHA is transferred and no fresh main-SHA native run was performed.",
+    "treeIdentityEvidence": "Direct git rev-parse tested73:ios and HEAD:ios agree.",
+    "retainedNativeCriticalFileHashChecks": {
+      "ios/Jovra/Features/Replay/ReplayScreen.swift": true,
+      "ios/Jovra/Features/Export/ClipExportSheet.swift": true,
+      "ios/JovraUITests/CoreFlow/CoreFlowUITests.swift": true,
+      "ios/JovraUITests/Support/AccessibilityAuditing.swift": true
+    }
+  },
+  "strengths": [
+    "Five current-main automatic jobs actually executed and passed: jovra-core, spec, l10n, media-fixtures, native-data-export; the last independently validates exported JSON produced by the Swift job.",
+    "All seven old continuation PRs 365–371 merged after successful automatic checks; local software work is integrated rather than merely staged.",
+    "Media fixture CI reproduces committed decoded-frame hashes, and native media test commands explicitly serialize AVFoundation workloads.",
+    "Documentation separates simulator, physical device and store readiness and explicitly marks iOS 18 fallback runtime unverified.",
+    "Backend draft 380 exposes real failing database tests rather than hiding WIP under a billing explanation; no production activation is inferred.",
+    "No branch protection/rulesets is a documented ADR 0006 cost/plan decision; merge-only-green is explicitly agent-enforced, not misrepresented as GitHub-enforced."
+  ],
+  "findings": [
+    {
+      "title": "Mission continuation instructions contradict merged GitHub reality",
+      "severity": "high",
+      "detail": "ops state lines 288/302 says PRs 365–370 are unmerged;lines 330/640–645 tells the next worker to restore billing and merge them. Live API reports every PR 365–371 MERGED on Oct 11–12 and current-main CI 38196643491 completed five automatic jobs successfully. Following this handoff directs work to already-resolved blockers. Refutation attempted against live PR metadata, completed jobs and immutable head SHAs; contradiction survives. Preserve explicit founder step 5 hold unless later actual user authorization supersedes it; merges alone do not revoke a user boundary.",
+      "file": "ops/mission/state.json:288; ops/mission/state.json:330; ops/mission/state.json:640",
+      "fix": "Dated documentation-only reconciliation of PR dispositions/checks and next actions; retain historical failed evidence and keep any currently authorized expansion boundary explicit. Do not mark native/hardware/release gates complete merely from Linux CI."
+    },
+    {
+      "title": "Launch recovery and unfinished-recording recovery remain absent from the app path",
+      "severity": "high",
+      "detail": "RecoveryScanner line 56 refuses journals where finished=false or any segment is not finalized. Repository-wide app-source search found no RecoveryScanner, applyRecoveredCapture or CaptureJournal.open invocation in ios/Jovra. LocalCaptureLibrary init only creates SessionStore+MediaLibrary; the ServiceKey invokes that constructor. SessionStore exposes atomic adoption, but app startup does not call it. Library recover-in-progress text is passive presentation, not recovery wiring. This is a source completeness finding, not measured data loss, and cannot establish a crash-loss duration.",
+      "file": "ios/Packages/JovraMedia/Sources/JovraMedia/Capture/Recovery/RecoveryScanner.swift:56; ios/Jovra/Platform/Capture/LocalCaptureLibrary.swift:22; ios/Jovra/Platform/Capture/LocalCaptureLibraryKey.swift:19; docs/spec/ios-v1-spec.md:761",
+      "fix": "Implement bounded unfinished-prefix reconciliation and explicit startup scanner/adoption orchestration in a later authorized implementation slice. Preserve originals/WAL, exact provenance and unknown suffixes; prove process-kill/relaunch idempotence and actual decodability. Physical loss bounds remain a separate hardware gate."
+    },
+    {
+      "title": "Green automatic CI is not native runtime or release acceptance",
+      "severity": "medium",
+      "detail": "ci.yml runs the domain/contract/localization/fixture/export checks on Linux; macOS iOS-app is workflow_dispatch-only and runs JovraTests, not JovraUITests/CoreFlow. Latest current-main run skips iOS-app; recorded workflow_dispatch history contains only an older backend-db dispatch. iOS 18 runtime is explicitly unverified while deployment target 18 remains supported. This is a deliberate coverage boundary, not evidence current tests failed.",
+      "file": ".github/workflows/ci.yml:125; docs/DEVELOPING.md:15; docs/DEVELOPING.md:307; scripts/ios/core-flow-test.sh:16",
+      "fix": "Keep an explicit per-release native evidence matrix: current-source CoreFlow/AX, supported minimumOS runtime, signed physical devices, hardware capture/endurance and distribution readiness. Do not equate five hosted checks with those separate gates."
+    }
+  ],
+  "refutation": {
+    "F1": {
+      "verdict": "confirmed narrowly",
+      "confirmed": "Stale unmerged/billing assertions contradicted by actual merged metadata and executed jobs.",
+      "notConfirmed": "No inference that merging PRs itself lifts founder step 5 hold; no current billing-account settings/payment balance was inspected."
+    },
+    "F2": {
+      "verdict": "confirmed source-only",
+      "searched": "RecoveryScanner, applyRecoveredCapture, CaptureJournal.open, capture-journal and recovery-related references across ios/Jovra and relevant core/media source.",
+      "counterEvidenceFound": "A finished-stale-WAL scanner and atomic core adoption exist; no app caller, automatic launch coordinator or alternative unfinished recovery path found.",
+      "notClaimed": "No injected crash, measured loss, physical power loss or runtime proof was produced in this audit."
+    },
+    "oldBilling": {
+      "verdict": "refuted as current recorded implementation blocker",
+      "support": "Five successful executed jobs at exact current-main SHA; newer openPR automatic checks also execute.",
+      "limit": "Latest recorded actions are Oct 12, not a new Nov 2 test run; account-level billing configuration may change and was not directly inspected."
+    },
+    "backend380": {
+      "verdict": "known draft WIP, not a main regression or billing failure",
+      "support": "Draft body describes intentionally red work; actual 17-step backend job reaches supabase test db and fails semantic pgTAP cases. Logs show migration 20261008020000 applied, so do not infer the migration is absent merely from the body."
+    }
+  },
+  "github": {
+    "main": {
+      "sha": "6e46a576240c587511f2f87a15d95507b7280158",
+      "latestRecordedRun": {
+        "id": 38196643491,
+        "url": "https://github.com/Navigata1/jovra/actions/runs/38196643491",
+        "createdAt": "2026-10-12T02:39:32Z",
+        "completedAt": "2026-10-12T02:46:59Z",
+        "conclusion": "success"
+      },
+      "jobs": [
+        {
+          "id": 114640673881,
+          "name": "media-fixtures",
+          "conclusion": "success",
+          "steps": 9
+        },
+        {
+          "id": 114640673975,
+          "name": "spec",
+          "conclusion": "success",
+          "steps": 9
+        },
+        {
+          "id": 114640673998,
+          "name": "jovra-core",
+          "conclusion": "success",
+          "steps": 9
+        },
+        {
+          "id": 114640674002,
+          "name": "l10n",
+          "conclusion": "success",
+          "steps": 5
+        },
+        {
+          "id": 114640674807,
+          "name": "ios-app (manual)",
+          "conclusion": "skipped",
+          "steps": 0
+        },
+        {
+          "id": 114642158461,
+          "name": "native-data-export",
+          "conclusion": "success",
+          "steps": 6
+        }
+      ]
+    },
+    "pullRequests": [
+      {
+        "number": 365,
+        "title": "feat(ios): persist reviewed decisions and refold native scores",
+        "url": "https://github.com/Navigata1/jovra/pull/365",
+        "state": "MERGED",
+        "isDraft": false,
+        "headRefOid": "7ab17b72663309a3307d0f79122bf4a694265f5e",
+        "baseRefName": "main",
+        "mergedAt": "2026-10-11T22:31:10Z",
+        "closedAt": "2026-10-11T22:31:10Z",
+        "updatedAt": "2026-10-11T22:31:13Z",
+        "mergeCommit": {
+          "oid": "11f7de795df1367d47ef4086a25039d1c3d81a16"
+        },
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180423472/job/114591609113",
+            "startedAt": "2026-10-11T22:26:24Z",
+            "completedAt": "2026-10-11T22:30:33Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180423472/job/114591609261",
+            "startedAt": "2026-10-11T22:26:24Z",
+            "completedAt": "2026-10-11T22:27:56Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180423472/job/114591609266",
+            "startedAt": "2026-10-11T22:26:24Z",
+            "completedAt": "2026-10-11T22:26:34Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180423472/job/114591609287",
+            "startedAt": "2026-10-11T22:26:24Z",
+            "completedAt": "2026-10-11T22:27:08Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180423472/job/114591610167",
+            "startedAt": "2026-10-11T22:26:22Z",
+            "completedAt": "2026-10-11T22:26:22Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180423472/job/114592442967",
+            "startedAt": "2026-10-11T22:30:35Z",
+            "completedAt": "2026-10-11T22:30:46Z"
+          }
+        ]
+      },
+      {
+        "number": 366,
+        "title": "T17: native capture controls and verified local save",
+        "url": "https://github.com/Navigata1/jovra/pull/366",
+        "state": "MERGED",
+        "isDraft": false,
+        "headRefOid": "522d3b70b123ad6ea3b42f5ffcf6ac5f323183c6",
+        "baseRefName": "main",
+        "mergedAt": "2026-10-11T22:38:18Z",
+        "closedAt": "2026-10-11T22:38:18Z",
+        "updatedAt": "2026-10-11T22:38:20Z",
+        "mergeCommit": {
+          "oid": "66539da4bf44417b856487ff6fa232230ff4e0ae"
+        },
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180828437/job/114592826992",
+            "startedAt": "2026-10-11T22:32:28Z",
+            "completedAt": "2026-10-11T22:37:41Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180828437/job/114592826866",
+            "startedAt": "2026-10-11T22:32:29Z",
+            "completedAt": "2026-10-11T22:34:01Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180828437/job/114592827022",
+            "startedAt": "2026-10-11T22:32:28Z",
+            "completedAt": "2026-10-11T22:32:39Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180828437/job/114592826967",
+            "startedAt": "2026-10-11T22:32:29Z",
+            "completedAt": "2026-10-11T22:33:30Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180828437/job/114592827646",
+            "startedAt": "2026-10-11T22:32:27Z",
+            "completedAt": "2026-10-11T22:32:26Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180828437/job/114593854881",
+            "startedAt": "2026-10-11T22:37:43Z",
+            "completedAt": "2026-10-11T22:37:55Z"
+          }
+        ]
+      },
+      {
+        "number": 367,
+        "title": "T20: persist and reopen real sessions in native library",
+        "url": "https://github.com/Navigata1/jovra/pull/367",
+        "state": "MERGED",
+        "isDraft": false,
+        "headRefOid": "69a50b2c4f5c0acbf8bc093840f9c1a2113051bd",
+        "baseRefName": "main",
+        "mergedAt": "2026-10-11T22:46:28Z",
+        "closedAt": "2026-10-11T22:46:28Z",
+        "updatedAt": "2026-10-11T22:46:30Z",
+        "mergeCommit": {
+          "oid": "ab81f6ef9f337202b05889fa591cac99deba85c3"
+        },
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181276161/job/114594164386",
+            "startedAt": "2026-10-11T22:39:18Z",
+            "completedAt": "2026-10-11T22:46:09Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181276161/job/114594164424",
+            "startedAt": "2026-10-11T22:39:18Z",
+            "completedAt": "2026-10-11T22:40:50Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181276161/job/114594164452",
+            "startedAt": "2026-10-11T22:39:18Z",
+            "completedAt": "2026-10-11T22:39:29Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181276161/job/114594164268",
+            "startedAt": "2026-10-11T22:39:18Z",
+            "completedAt": "2026-10-11T22:39:55Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181276161/job/114594165198",
+            "startedAt": "2026-10-11T22:39:17Z",
+            "completedAt": "2026-10-11T22:39:16Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181276161/job/114595529246",
+            "startedAt": "2026-10-11T22:46:11Z",
+            "completedAt": "2026-10-11T22:46:21Z"
+          }
+        ]
+      },
+      {
+        "number": 368,
+        "title": "feat(T36): native foreground clip and data export controls",
+        "url": "https://github.com/Navigata1/jovra/pull/368",
+        "state": "MERGED",
+        "isDraft": false,
+        "headRefOid": "9269f8270d8c472175a075d5d35b185e53cec0ef",
+        "baseRefName": "main",
+        "mergedAt": "2026-10-11T23:06:46Z",
+        "closedAt": "2026-10-11T23:06:46Z",
+        "updatedAt": "2026-10-11T23:06:48Z",
+        "mergeCommit": {
+          "oid": "722d857657144aa666942053c1de537822de84b8"
+        },
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181940108/job/114596174136",
+            "startedAt": "2026-10-11T22:49:36Z",
+            "completedAt": "2026-10-11T22:56:22Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181940108/job/114596174614",
+            "startedAt": "2026-10-11T22:49:36Z",
+            "completedAt": "2026-10-11T22:50:51Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181940108/job/114596174278",
+            "startedAt": "2026-10-11T22:49:36Z",
+            "completedAt": "2026-10-11T22:49:47Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181940108/job/114596174290",
+            "startedAt": "2026-10-11T22:49:36Z",
+            "completedAt": "2026-10-11T22:50:17Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181940108/job/114596175063",
+            "startedAt": "2026-10-11T22:49:35Z",
+            "completedAt": "2026-10-11T22:49:34Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181940108/job/114597460670",
+            "startedAt": "2026-10-11T22:56:24Z",
+            "completedAt": "2026-10-11T22:56:34Z"
+          }
+        ]
+      },
+      {
+        "number": 369,
+        "title": "test(ios): scope foreground modal audits and retain negative controls",
+        "url": "https://github.com/Navigata1/jovra/pull/369",
+        "state": "MERGED",
+        "isDraft": false,
+        "headRefOid": "5f96a52622f142104759539274449b26d1f19132",
+        "baseRefName": "main",
+        "mergedAt": "2026-10-11T22:26:10Z",
+        "closedAt": "2026-10-11T22:26:10Z",
+        "updatedAt": "2026-10-11T22:26:12Z",
+        "mergeCommit": {
+          "oid": "05f2a964194e77a1de07659cf0d3586dd8472703"
+        },
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180021172/job/114590406325",
+            "startedAt": "2026-10-11T22:20:23Z",
+            "completedAt": "2026-10-11T22:25:31Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180021172/job/114590406254",
+            "startedAt": "2026-10-11T22:20:23Z",
+            "completedAt": "2026-10-11T22:21:55Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180021172/job/114590406369",
+            "startedAt": "2026-10-11T22:20:23Z",
+            "completedAt": "2026-10-11T22:20:32Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180021172/job/114590406384",
+            "startedAt": "2026-10-11T22:20:24Z",
+            "completedAt": "2026-10-11T22:21:12Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180021172/job/114590407299",
+            "startedAt": "2026-10-11T22:20:22Z",
+            "completedAt": "2026-10-11T22:20:22Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38180021172/job/114591439188",
+            "startedAt": "2026-10-11T22:25:33Z",
+            "completedAt": "2026-10-11T22:25:44Z"
+          }
+        ]
+      },
+      {
+        "number": 370,
+        "title": "feat(ios): complete native recording-to-export review flow",
+        "url": "https://github.com/Navigata1/jovra/pull/370",
+        "state": "MERGED",
+        "isDraft": false,
+        "headRefOid": "a6dcda2326f074afa12e879bf14d1da1b8f65aba",
+        "baseRefName": "main",
+        "mergedAt": "2026-10-12T00:29:20Z",
+        "closedAt": "2026-10-12T00:29:20Z",
+        "updatedAt": "2026-10-12T00:29:22Z",
+        "mergeCommit": {
+          "oid": "c7e51bbebfbc135197f5796a51183b83a2444957"
+        },
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38187551051/job/114613057027",
+            "startedAt": "2026-10-12T00:19:20Z",
+            "completedAt": "2026-10-12T00:26:10Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38187551051/job/114613056987",
+            "startedAt": "2026-10-12T00:19:19Z",
+            "completedAt": "2026-10-12T00:20:52Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38187551051/job/114613056841",
+            "startedAt": "2026-10-12T00:19:20Z",
+            "completedAt": "2026-10-12T00:19:31Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38187551051/job/114613057083",
+            "startedAt": "2026-10-12T00:19:19Z",
+            "completedAt": "2026-10-12T00:19:58Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38187551051/job/114613057695",
+            "startedAt": "2026-10-12T00:19:18Z",
+            "completedAt": "2026-10-12T00:19:18Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38187551051/job/114614400390",
+            "startedAt": "2026-10-12T00:26:13Z",
+            "completedAt": "2026-10-12T00:26:25Z"
+          }
+        ]
+      },
+      {
+        "number": 371,
+        "title": "docs: record verified local flow and blocked hosted release gate",
+        "url": "https://github.com/Navigata1/jovra/pull/371",
+        "state": "MERGED",
+        "isDraft": false,
+        "headRefOid": "dd3eb7069d371c9718273e8864167387d9dcb2f6",
+        "baseRefName": "main",
+        "mergedAt": "2026-10-12T00:46:51Z",
+        "closedAt": "2026-10-12T00:46:51Z",
+        "updatedAt": "2026-10-12T00:46:53Z",
+        "mergeCommit": {
+          "oid": "f1264a3ff46740c568cd132b383cd5feb7266c67"
+        },
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38188193278/job/114615026508",
+            "startedAt": "2026-10-12T00:29:31Z",
+            "completedAt": "2026-10-12T00:36:23Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38188193278/job/114615026446",
+            "startedAt": "2026-10-12T00:29:31Z",
+            "completedAt": "2026-10-12T00:30:23Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38188193278/job/114615026575",
+            "startedAt": "2026-10-12T00:29:32Z",
+            "completedAt": "2026-10-12T00:29:40Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38188193278/job/114615026592",
+            "startedAt": "2026-10-12T00:29:31Z",
+            "completedAt": "2026-10-12T00:30:02Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38188193278/job/114615027216",
+            "startedAt": "2026-10-12T00:29:30Z",
+            "completedAt": "2026-10-12T00:29:29Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38188193278/job/114616386883",
+            "startedAt": "2026-10-12T00:36:26Z",
+            "completedAt": "2026-10-12T00:36:38Z"
+          }
+        ]
+      },
+      {
+        "number": 374,
+        "title": "A14: Shared pane-policy contract (F-PANE-VECTORS): golden vectors, a Python reference and a validator with its own CI workflow",
+        "url": "https://github.com/Navigata1/jovra/pull/374",
+        "state": "OPEN",
+        "isDraft": false,
+        "headRefOid": "c9e2fc9ea9e7aefeb0350da254616ff3c7cc2fb6",
+        "baseRefName": "main",
+        "mergedAt": null,
+        "closedAt": null,
+        "updatedAt": "2026-10-11T22:53:25Z",
+        "mergeCommit": null,
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181730216/job/114595537057",
+            "startedAt": "2026-10-11T22:46:13Z",
+            "completedAt": "2026-10-11T22:53:05Z"
+          },
+          {
+            "name": "pane-policy",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181730162/job/114595536766",
+            "startedAt": "2026-10-11T22:46:13Z",
+            "completedAt": "2026-10-11T22:46:25Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181730216/job/114595536982",
+            "startedAt": "2026-10-11T22:46:13Z",
+            "completedAt": "2026-10-11T22:47:23Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181730216/job/114595537080",
+            "startedAt": "2026-10-11T22:46:13Z",
+            "completedAt": "2026-10-11T22:46:22Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181730216/job/114595537088",
+            "startedAt": "2026-10-11T22:46:13Z",
+            "completedAt": "2026-10-11T22:46:50Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181730216/job/114595537659",
+            "startedAt": "2026-10-11T22:46:12Z",
+            "completedAt": "2026-10-11T22:46:11Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38181730216/job/114596835034",
+            "startedAt": "2026-10-11T22:53:07Z",
+            "completedAt": "2026-10-11T22:53:16Z"
+          }
+        ]
+      },
+      {
+        "number": 378,
+        "title": "A01: Android build foundation on Lane A: Gradle wrapper and catalog, build-logic, every ADR-0024 module skeleton, the module-boundary check and the required android-core CI job",
+        "url": "https://github.com/Navigata1/jovra/pull/378",
+        "state": "OPEN",
+        "isDraft": true,
+        "headRefOid": "d8dcd542a59f5633cf2528342e6985f173bf9c77",
+        "baseRefName": "main",
+        "mergedAt": null,
+        "closedAt": null,
+        "updatedAt": "2026-10-12T04:17:30Z",
+        "mergeCommit": null,
+        "checks": [
+          {
+            "name": "android-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203173152/job/114660804226",
+            "startedAt": "2026-10-12T04:17:25Z",
+            "completedAt": "2026-10-12T04:19:49Z"
+          },
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203173204/job/114660804448",
+            "startedAt": "2026-10-12T04:17:25Z",
+            "completedAt": "2026-10-12T04:23:00Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203173204/job/114660804209",
+            "startedAt": "2026-10-12T04:17:25Z",
+            "completedAt": "2026-10-12T04:18:33Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203173204/job/114660804428",
+            "startedAt": "2026-10-12T04:17:25Z",
+            "completedAt": "2026-10-12T04:17:35Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203173204/job/114660804447",
+            "startedAt": "2026-10-12T04:17:25Z",
+            "completedAt": "2026-10-12T04:18:03Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203173204/job/114660805012",
+            "startedAt": "2026-10-12T04:17:24Z",
+            "completedAt": "2026-10-12T04:17:23Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203173204/job/114661965803",
+            "startedAt": "2026-10-12T04:23:02Z",
+            "completedAt": "2026-10-12T04:23:14Z"
+          }
+        ]
+      },
+      {
+        "number": 379,
+        "title": "S04: Studio packages, project wiring, Studio Info.plist keys and the Studio CI workflow",
+        "url": "https://github.com/Navigata1/jovra/pull/379",
+        "state": "OPEN",
+        "isDraft": false,
+        "headRefOid": "1ff9cafdd0f3e124d306408b5b5b1676d3477a1c",
+        "baseRefName": "main",
+        "mergedAt": null,
+        "closedAt": null,
+        "updatedAt": "2026-10-12T04:21:21Z",
+        "mergeCommit": null,
+        "checks": [
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203399425/job/114661498251",
+            "startedAt": "2026-10-12T04:20:49Z",
+            "completedAt": "2026-10-12T04:27:41Z"
+          },
+          {
+            "name": "studio-contracts",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203399385/job/114661498002",
+            "startedAt": "2026-10-12T04:20:48Z",
+            "completedAt": "2026-10-12T04:21:01Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203399425/job/114661498102",
+            "startedAt": "2026-10-12T04:20:48Z",
+            "completedAt": "2026-10-12T04:22:09Z"
+          },
+          {
+            "name": "jovra-studio-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203399385/job/114661498151",
+            "startedAt": "2026-10-12T04:20:48Z",
+            "completedAt": "2026-10-12T04:21:59Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203399425/job/114661498243",
+            "startedAt": "2026-10-12T04:20:48Z",
+            "completedAt": "2026-10-12T04:20:57Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203399425/job/114661498221",
+            "startedAt": "2026-10-12T04:20:49Z",
+            "completedAt": "2026-10-12T04:21:46Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203399425/job/114661499034",
+            "startedAt": "2026-10-12T04:20:47Z",
+            "completedAt": "2026-10-12T04:20:46Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203399425/job/114662946333",
+            "startedAt": "2026-10-12T04:27:43Z",
+            "completedAt": "2026-10-12T04:27:52Z"
+          }
+        ]
+      },
+      {
+        "number": 380,
+        "title": "S77: Migration 2: sources, manifests, sync, calibration, event revisions, observations, lessons, clips and story plans with RLS and quotas",
+        "url": "https://github.com/Navigata1/jovra/pull/380",
+        "state": "OPEN",
+        "isDraft": true,
+        "headRefOid": "3de4a4f3da216f5acb8da6ef38d85937e20338e8",
+        "baseRefName": "main",
+        "mergedAt": null,
+        "closedAt": null,
+        "updatedAt": "2026-10-12T04:16:28Z",
+        "mergeCommit": null,
+        "checks": [
+          {
+            "name": "backend-db",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203115703/job/114660630275",
+            "startedAt": "2026-10-12T04:16:33Z",
+            "completedAt": "2026-10-12T04:18:03Z"
+          },
+          {
+            "name": "jovra-core",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203115664/job/114660630376",
+            "startedAt": "2026-10-12T04:16:33Z",
+            "completedAt": "2026-10-12T04:23:27Z"
+          },
+          {
+            "name": "spec",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203115664/job/114660630522",
+            "startedAt": "2026-10-12T04:16:33Z",
+            "completedAt": "2026-10-12T04:18:17Z"
+          },
+          {
+            "name": "l10n",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203115664/job/114660630557",
+            "startedAt": "2026-10-12T04:16:33Z",
+            "completedAt": "2026-10-12T04:16:43Z"
+          },
+          {
+            "name": "media-fixtures",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203115664/job/114660630497",
+            "startedAt": "2026-10-12T04:16:33Z",
+            "completedAt": "2026-10-12T04:17:15Z"
+          },
+          {
+            "name": "ios-app (manual)",
+            "status": "COMPLETED",
+            "conclusion": "SKIPPED",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203115664/job/114660631113",
+            "startedAt": "2026-10-12T04:16:31Z",
+            "completedAt": "2026-10-12T04:16:31Z"
+          },
+          {
+            "name": "native-data-export",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "url": "https://github.com/Navigata1/jovra/actions/runs/38203115664/job/114662059990",
+            "startedAt": "2026-10-12T04:23:30Z",
+            "completedAt": "2026-10-12T04:23:39Z"
+          }
+        ]
+      }
+    ],
+    "branchProtection": {
+      "classic": "GET branches/main/protection returns 404 Branch not protected",
+      "rulesets": [],
+      "policy": "ADR 0006 explicitly says merging agent enforces green checks; no governance configuration change made."
+    },
+    "draft380Failure": {
+      "run": 38203115703,
+      "url": "https://github.com/Navigata1/jovra/actions/runs/38203115703",
+      "head": "3de4a4f3da216f5acb8da6ef38d85937e20338e8",
+      "job": 114660630275,
+      "steps": 17,
+      "failedStep": "supabase test db",
+      "annotation": "Process completed with exit code 1; no billing annotation",
+      "actualFailures": [
+        "media_02_sources_events: T-DB-13 revision-conflict assertions and23514 check violation; planned 45 but only 7 ran",
+        "media_03_lessons_clips: T-DB-69 viewer sees 1 row when fingerprint change should revoke visibility",
+        "media_04_quotas: T-DB-64 aggregate quota assertions 15–18 fail"
+      ],
+      "qualification": "Known draft WIP; isolated PR, not shipped main behavior."
+    }
+  },
+  "evidence": [
+    {
+      "id": "E1",
+      "kind": "live GitHub PRmetadata/check snapshots",
+      "path": "/tmp/jovra-github-audit-2026-11-02",
+      "files": "pr-365.json throughpr-371.json pluspr-374/378/379/380.json"
+    },
+    {
+      "id": "E2",
+      "kind": "live main executed jobs",
+      "path": "/tmp/jovra-github-audit-2026-11-02/main-jobs.txt",
+      "url": "https://github.com/Navigata1/jovra/actions/runs/38196643491"
+    },
+    {
+      "id": "E3",
+      "kind": "draft backend actual failed steps/annotation/log",
+      "paths": [
+        "/tmp/jovra-github-audit-2026-11-02/backend-failed-jobs.txt",
+        "/tmp/jovra-github-audit-2026-11-02/backend-failed-annotations.txt",
+        "/tmp/jovra-github-audit-2026-11-02/backend-failed-log.txt"
+      ]
+    },
+    {
+      "id": "E4",
+      "kind": "governance and dispatch history live reads",
+      "paths": [
+        "/tmp/jovra-github-audit-2026-11-02/main-protection.txt",
+        "/tmp/jovra-github-audit-2026-11-02/main-protection.stderr",
+        "/tmp/jovra-github-audit-2026-11-02/main-rulesets.txt",
+        "/tmp/jovra-github-audit-2026-11-02/workflow-dispatch-history.txt"
+      ]
+    },
+    {
+      "id": "E5",
+      "kind": "current-source test policy",
+      "paths": [
+        "/Users/IDC2.5/.codex/worktrees/jovra-sotu-2026-11-02/.github/workflows/ci.yml",
+        "/Users/IDC2.5/.codex/worktrees/jovra-sotu-2026-11-02/docs/DEVELOPING.md",
+        "/Users/IDC2.5/.codex/worktrees/jovra-sotu-2026-11-02/docs/adr/0006-merge-policy.md",
+        "/Users/IDC2.5/.codex/worktrees/jovra-sotu-2026-11-02/scripts/ios/core-flow-test.sh"
+      ]
+    },
+    {
+      "id": "E6",
+      "kind": "retained runtime custody/source identity",
+      "path": "/Users/IDC2.5/.codex/worktrees/jovra-sotu-2026-11-02/evidence/ios/core-flow-final/final-source-custody.json",
+      "qualification": "Historical SHA-bound native proof, not freshly executed."
+    }
+  ],
+  "limitations": [
+    "Read-only audit; only own/tmp snapshots were written. No tests, workflow reruns, merges, PR edits or source changes.",
+    "Latest source heads, PR dispositions and recorded job states checked live Nov 2; actual run dates retained separately.",
+    "No hardware, iOS 18 runtime, signing, store delivery, hosted cloud activation or billing-account configuration verification."
+  ]
+}
