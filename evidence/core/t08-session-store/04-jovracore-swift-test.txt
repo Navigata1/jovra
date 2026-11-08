@@ -1,0 +1,85 @@
+# swift test --package-path ios/Packages/JovraCore (macOS, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)), 2026-11-08T08:43:53Z
+# env JOVRA_MIGRATION_EVIDENCE_DIR set
+Test Case '-[JovraCoreTests.SessionStoreTests testAppendBatchSurvivesInterruptionAsNoneOrAllAndConcurrentFacetsDoNotLoseEvents]' passed (127.799 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testCreateSurvivesStoreRelaunchAndInterruptedWriteKeepsPreviousDocument]' passed (0.111 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFailureAfterRenameDoesNotAcknowledgeDurabilityButNewDocumentRemainsReadable]' passed (0.090 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFiltersAndOpponentQueriesDistinguishTeamsAndExcludeSamples]' passed (0.127 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureDocumentAndInvalidFolderArePreservedWithoutHidingHealthySession]' passed (0.107 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testFutureMutationRefusalLeavesDocumentBytesUnchanged]' passed (0.057 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testIndexRebuildAndCorruptSessionQuarantinePreserveHealthySessions]' passed (0.223 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testNewOriginalFacetUpgradesLegacyDocumentWithoutChangingMatch]' passed (0.090 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testOlderDocumentMigratesAndOpponentQueriesExcludeSamples]' passed (0.244 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testPointWithoutDetectedOrReviewedOutcomeIsRefused]' passed (0.028 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testSymlinkEscapeIsRefusedWithoutHidingHealthySessionOrTouchingExternalMedia]' passed (0.070 seconds).
+Test Case '-[JovraCoreTests.SessionStoreTests testZeroNegativeAndDuplicateSequenceRefusalLeavesLogUnchanged]' passed (0.034 seconds).
+	 Executed 12 tests, with 0 failures (0 unexpected) in 128.980 (128.981) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 128.980 (128.981) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 128.980 (128.983) seconds
+✔ Test percentagesUseHalfUpAndPoolCounts() passed after 0.353 seconds.
+✔ Test unitsConvertOnceAndPreserveEnteredText() passed after 0.353 seconds.
+✔ Test storedDecimalsRejectTrailingLineBreaksOnEveryHost() passed after 0.353 seconds.
+✔ Test codecRefusesSilentlyDroppedFieldsAndPreservesVersionText() passed after 0.353 seconds.
+✔ Test canonicalNumbersAndUnicodeHaveIndependentBytes() passed after 0.353 seconds.
+✔ Test persistedDecimalCannotSilentlyLosePrecision() passed after 0.353 seconds.
+✔ Test durableJournalReopensWithOnlyConfirmedMediaAndSegmentIntent() passed after 0.353 seconds.
+✔ Test failedJournalReplacementPreservesPreviouslyDurableSnapshot() passed after 0.353 seconds.
+✔ Test malformedAndAmbiguousJSONIsRefused() passed after 0.353 seconds.
+✔ Test fixturesAreDispatchedByKindAndUnknownKindsFail() passed after 0.353 seconds.
+✔ Test roundingDoesNotOverflowOrUsePlatformPercentFormatter() passed after 0.353 seconds.
+✔ Test unknownMajorAndInvalidMediaTimeThrowTypedErrors() passed after 0.353 seconds.
+✔ Test matchSessionBridgeKeepsStoredAuthoritativeValues() passed after 0.353 seconds.
+✔ Test timelineKeepsAbsentAndExplicitNullChangesDistinct() passed after 0.353 seconds.
+✔ Test otherPersistedRecordsRoundTripThroughRealTypes() passed after 0.353 seconds.
+✔ Test serveRateUsesDenominatorContributorsFromOnlyTheChosenSide() passed after 0.353 seconds.
+✔ Test sampleOverviewStatsMatchIndependentValues() passed after 0.354 seconds.
+✔ Test winnerOnlyCorrectionDoesNotPromoteAnUnreviewedEstimate() passed after 0.354 seconds.
+✔ Test cyclicFutureCorrectionAnchorRefuses() passed after 0.354 seconds.
+✔ Test unknownWinnerAndMissingTimesStayEmptyRatherThanInvented() passed after 0.354 seconds.
+✔ Test capabilityRegistryKeepsRequiredNullAndStatus() passed after 0.359 seconds.
+✔ Test missingShotObservationsAreUnknownRatherThanMeasuredZero() passed after 0.359 seconds.
+✔ Test momentumAndRequiredNullableDurationKeepTheirClosedContract() passed after 0.359 seconds.
+✔ Test estimatedContributorKeepsHeadlineStatProvisionalAndTraceable() passed after 0.359 seconds.
+✔ Test CSVQuotesNamesAndPreservesSampleAndUnicode() passed after 0.359 seconds.
+✔ Test sessionCreationDoesNotAcknowledgeAReplacedSessionsDirectory(symbolicLink:) with 2 test cases passed after 0.359 seconds.
+✔ Test correctionRecomputesCSVFromTheCurrentLog() passed after 0.359 seconds.
+✔ Test negativeCheckpointIndexRefusesBeforeLookup() passed after 0.359 seconds.
+✔ Test batchInterruptedAfterItsRenameKeepsAllFiveEvents() passed after 0.359 seconds.
+✔ Test journalRefusesOverlappingSegmentsAndUnrelatedSavedThroughTime() passed after 0.359 seconds.
+✔ Test sessionOptionalFieldsRoundTripThroughRealTypes() passed after 0.359 seconds.
+✔ Test exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() passed after 0.359 seconds.
+✔ Test sampleSessionUsesSamePublicFold() passed after 0.359 seconds.
+✔ Test publicScoringBoundaryRefusesInvalidContexts() passed after 0.359 seconds.
+✔ Test userWinnerCorrectionMustNotInheritModelValidation(status:) with 2 test cases passed after 0.359 seconds.
+✔ Test "encodes to the same lowercase strings" passed after 0.266 seconds.
+✔ Test "under an hour shows whole minutes" with 5 test cases passed after 0.266 seconds.
+✔ Test "decodes the four persisted provenance values" passed after 0.266 seconds.
+✔ Test "an hour or more shows hours and minutes" with 3 test cases passed after 0.266 seconds.
+✔ Test "rejects values outside the contract" passed after 0.266 seconds.
+✔ Test "negative and non-finite durations are treated as zero" with 3 test cases passed after 0.266 seconds.
+✔ Test "a time inside a frame maps to that frame, and frame starts round-trip despite float error" passed after 0.260 seconds.
+✔ Test "NTSC 29.97 fps (30000/1001): frame 30 starts at 1.001 s" passed after 0.252 seconds.
+✔ Test "negative times clamp to frame 0" passed after 0.252 seconds.
+✔ Test "malformed hex strings are rejected" with 11 test cases passed after 0.252 seconds.
+✔ Test "integer rates: frame 60 at 60 fps starts at exactly one second" passed after 0.252 seconds.
+✔ Test "normal text needs 4.5:1, large text and UI parts need 3:1" passed after 0.252 seconds.
+✔ Test "#767676 on white is the well-known 4.54:1 AA boundary grey" passed after 0.252 seconds.
+✔ Test "contrast ratio is symmetric" passed after 0.252 seconds.
+✔ Test "black on white is the maximum 21:1" passed after 0.252 seconds.
+✔ Test loveHoldMatchesIndependentFold() passed after 0.253 seconds.
+✔ Test captureHandoffAtomicallyKeepsExistingMarksAndStateFacetsAcrossRelaunch() passed after 0.398 seconds.
+✔ Test restoreSurvivesRelaunchBetweenTrashAndUndo() passed after 0.413 seconds.
+✔ Test exportedSampleDataMatchesTheIndependentCSVContracts() passed after 0.415 seconds.
+✔ Test version100DocumentOnDiskMigratesToTheCurrentVersionLosslessly() passed after 0.430 seconds.
+✔ Test durableReviewedPointsAndCorrectionsRecomputeLaterScoresAndStats() passed after 0.451 seconds.
+✔ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() passed after 0.454 seconds.
+✔ Test crashBetweenTempWriteAndRenameKeepsPreviousDocumentAndIgnoresTheTempFile() passed after 0.457 seconds.
+✔ Test recoveryAdoptionAtomicallyKeepsEditedMarksReportOriginalAndIndependentFacets() passed after 0.536 seconds.
+✔ Test restoringASessionInvalidatesItsPurgeToken() passed after 0.540 seconds.
+✔ Test interruptedTrashLeavesSessionInTheLibrary() passed after 0.580 seconds.
+✔ Test deletedIndexIsRebuiltByteForByteFromTheSessionFolders() passed after 0.585 seconds.
+✔ Test purgeIsRefusedWithoutAStoreIssuedConfirmationToken() passed after 0.696 seconds.
+✔ Test trashNeverAutoEmptiesOriginalsUnlessTheRetentionFlagIsSet() passed after 0.820 seconds.
+✔ Test trashHidesSessionFromLibraryAndRestoreRoundTripsTheDocument() passed after 0.850 seconds.
+✔ Test allDiscoveredRunnerFixturesPass() passed after 0.899 seconds.
+✔ Test nativeScoringInputsAndOutputsKeepEveryGoldenField() passed after 3.330 seconds.
+✔ Test run with 67 tests in 5 suites passed after 3.330 seconds.
