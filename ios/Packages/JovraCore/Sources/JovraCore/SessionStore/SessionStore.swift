@@ -341,17 +341,18 @@ public actor SessionStore {
         return result
     }
 
-    public func opponentHistory(playerID: String, opponentID: String) throws -> [SessionSummary] {
+    /// Sample sessions are left out unless `includeSamples` asks for them (the demo's own head-to-head).
+    public func opponentHistory(playerID: String, opponentID: String, includeSamples: Bool = false) throws -> [SessionSummary] {
         guard playerID != opponentID else { return [] }
-        return try list(.init(sample: false)).filter { summary in
+        return try list(.init(sample: includeSamples ? nil : false)).filter { summary in
             guard summary.hasMatch, let sides = summary.sides else { return false }
             return (sides.A.contains(playerID) && sides.B.contains(opponentID)) ||
                 (sides.B.contains(playerID) && sides.A.contains(opponentID))
         }
     }
 
-    public func headToHead(playerID: String, opponentID: String) throws -> [SessionSummary] {
-        try opponentHistory(playerID: playerID, opponentID: opponentID)
+    public func headToHead(playerID: String, opponentID: String, includeSamples: Bool = false) throws -> [SessionSummary] {
+        try opponentHistory(playerID: playerID, opponentID: opponentID, includeSamples: includeSamples)
     }
 
     public func quarantinedSessions() throws -> [QuarantinedSession] {
