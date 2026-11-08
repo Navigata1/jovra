@@ -1,0 +1,15 @@
+S79 red run: tests committed before the commands existed (backend-db run 42524937405, head 8f4dae0).
+Step 'supabase test db' failed; excerpt (runner timestamps stripped):
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_01_catalog.test.sql ................ 
+Failed 26/26 subtests 
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_02_uploads_cameras.test.sql ........ 
+Failed 53/55 subtests 
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_03_grants_links_deletion.test.sql .. 
+Failed 52/56 subtests 
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_04_money.test.sql .................. 
+Failed 65/65 subtests 
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_05_actor_audit.test.sql ............ 
+Failed 37/37 subtests 
+Failed 7/32 subtests 
+Files=18, Tests=623,  2 wallclock secs ( 0.10 usr  0.04 sys +  0.18 cusr  0.10 csys =  0.42 CPU)
+Result: FAIL

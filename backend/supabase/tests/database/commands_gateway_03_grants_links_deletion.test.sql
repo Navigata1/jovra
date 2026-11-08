@@ -164,8 +164,8 @@ select is(app_private.has_project_role('a7920000-0000-4000-8000-000000000001', '
 select is((select count(*)::int from public.projects where id = 'a7920000-0000-4000-8000-000000000001'), 0,
   'T-DB-51: the pending coach sees no project row');
 reset role;
-select is(pg_temp.call(format('select app_gateway.list_pending_members(%L, %L, gen_random_uuid())', pg_temp.uid('owner'),
-            'a7920000-0000-4000-8000-000000000001')) #> '{0}' - 'redeemedAt',
+select is((pg_temp.call(format('select app_gateway.list_pending_members(%L, %L, gen_random_uuid())', pg_temp.uid('owner'),
+            'a7920000-0000-4000-8000-000000000001')) #> '{0}') - 'redeemedAt',
   jsonb_build_object('userId', pg_temp.uid('coach'), 'maskedEmail', 'c•••@e•••.test'),
   'T-DB-58: the approval view shows the verified email masked, and no display_name');
 select ok(pg_temp.call(format('select app_gateway.list_pending_members(%L, %L, gen_random_uuid())', pg_temp.uid('owner'),
