@@ -23,3 +23,9 @@ internal fun JsonObject.requireString(name: String): String {
 
 internal fun JsonObject.optionalString(name: String): String? =
     if (name in this) requireString(name) else null
+
+internal fun JsonObject.requireBoolean(name: String): Boolean {
+    val token = this[name] as? JsonPrimitive
+    require(token != null && !token.isString) { "Expected a JSON boolean field: $name" }
+    return requireNotNull(token.content.toBooleanStrictOrNull()) { "Expected a JSON boolean field: $name" }
+}
