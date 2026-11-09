@@ -72,6 +72,17 @@ The base contexts are the vector files' own `context` cases. That they equal tod
 Python validator (`python3 scripts/spec/validate_studio.py`), not here. When a reference ticket regenerates the vectors
 (for example S55), this suite checks the regenerated files with no change.
 
+## S09 storyboard transitions
+
+The compiler accepts requested dissolves and dips on incoming beat boundaries. It reports missing beats and
+unsupported renderer operations and checks source handles and protected contact windows through the EDL validator.
+Audio fades follow the transition halves on the exact output clock. Transition frame counts must fit the safe integer
+range of the TypeScript adapter.
+
+`npm test` compares the complete compiler result of each compile case in `barcode-court.json` to the shared S09
+expectation. The renderer frame, click and overlay maps and clean alternate are separate outputs from the Python
+fixture generator. The `npm run parity` table still reports the original S06/S07 vectors.
+
 ## Known differences from the Python reference
 
 - Dates in a progress scope must be `YYYY-MM-DD` (the studio-common `date` format). Python's `date.fromisoformat`

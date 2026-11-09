@@ -11,7 +11,7 @@
 
 import {
   F, Reject, US_PER_S, canonicalSha256, floorDiv, has, isDict, isInt, lcm, minF, own, pyEq, pyMod, require,
-  roundHalfUp, sortedBy, sortedStrings, type J,
+  roundHalfUp, sortedBy, sortedStrings, truthy, type J,
 } from "./core.ts";
 import * as director from "./director.ts";
 import { ASPECTS, Source, fpsOf, validate, type Coverage } from "./edl.ts";
@@ -32,7 +32,7 @@ const REQUIRED_OPS = ["live", "silence"];   // a build without these cannot rend
 const TREATMENT_OP: Record<string, string> = {
   live: "live", replay: "replay", freeze: "freeze", "title-card": "card", broll: "broll",
 };
-const REQUEST_KEYS = ["fps", "width", "height", "planId", "trims"];
+const REQUEST_KEYS = ["fps", "width", "height", "planId", "trims", "transitions"];
 const CONTEXT_KEYS = ["edl", "media", "stage", "renderer"];
 const GAP_TEMPLATE = "card.recording-gap";
 const FINAL_TEMPLATE = "card.final-score";
@@ -179,6 +179,8 @@ interface Omitted { beatId: string | null; op: string; reason: string; [extra: s
 
 interface Entry { beat: J; op: string; sid: string | null; overlays?: J[] }
 
+interface Transition { type: "dissolve" | "dip"; frames: number }
+
 interface Item {
   beat: J;
   op: string;
@@ -194,6 +196,7 @@ interface Item {
   interval?: number;
   frame?: number;
   of?: Item;
+  transition?: Transition;
   id?: string;
   oIn?: number;
   oOut?: number;
@@ -220,6 +223,7 @@ export function compilePlan(profiles: Record<string, J>, plan: J, context: J, re
   const total = items.reduce((sum, i) => sum + i.n, 0);
   const outside = rangeRefusal(c, total, fps);
   if (outside) return { refusal: outside };
+  applyTransitions(c, items, omitted);
   const doc = assemble(c, items, fps, size, total, omitted);
   const result = validate(doc, profiles, c.edl);
   return {
@@ -556,6 +560,33 @@ function rangeRefusal(c: Ctx, total: number, fps: F): J {
   return null;
 }
 
+/** Apply an incoming transition to each shown beat; the EDL validator checks its handles and contact windows. */
+function applyTransitions(c: Ctx, items: Item[], omitted: Omitted[]): void {
+  const offered = own(c.request, "transitions");
+  const wanted = truthy(offered) ? offered : {};
+  require(isDict(wanted), "badRequest", "transitions are {beatId: {type, frames}}");
+  const shown = new Map<string, number>();
+  items.forEach((item, i) => { if (item.beat !== null) shown.set(item.beat.beatId, i); });
+  for (const beatId of sortedStrings(Object.keys(wanted))) {
+    const tr = wanted[beatId];
+    require(isDict(tr) && Object.keys(tr).length === 2 && has(tr, "type") && has(tr, "frames")
+      && (tr.type === "dissolve" || tr.type === "dip") && Number.isSafeInteger(tr.frames),
+    "badRequest", `${beatId}: a transition is {type: dissolve|dip, frames}`);
+    const index = shown.get(beatId);
+    if (index === undefined) {
+      omit(omitted, { beatId }, "transition", "beatOmitted");
+      continue;
+    }
+    require(index > 0, "badRequest", `${beatId}: the film's first segment starts with a cut`);
+    const why = c.available("transition");
+    if (why) {
+      omit(omitted, { beatId }, "transition", why);
+      continue;
+    }
+    items[index].transition = { type: tr.type, frames: tr.frames };
+  }
+}
+
 // ----- the document -------------------------------------------------------------------------------------------------
 
 function courtBedWanted(c: Ctx): boolean {
@@ -579,7 +610,7 @@ function assemble(c: Ctx, items: Item[], fps: F, size: [number, number], total: 
       grade = "none";
     }
   }
-  const audio = audioOf(c, items, fps, omitted);
+  const audio = audioOf(c, items, fps, total, omitted);
   const used = new Set<string>([
     ...segments.filter((s) => Object.hasOwn(s, "sourceId")).map((s) => s.sourceId),
     ...audio.bed.filter((p: J) => p.sourceId).map((p: J) => p.sourceId),
@@ -609,7 +640,7 @@ function assemble(c: Ctx, items: Item[], fps: F, size: [number, number], total: 
 function segmentOf(c: Ctx, item: Item, size: [number, number]): J {
   const head = {
     id: item.id, op: item.op === "card" ? "title-card" : item.op, outputInFrame: item.oIn,
-    outputOutFrame: item.oOut, transitionIn: { ...CUT },
+    outputOutFrame: item.oOut, transitionIn: { ...(item.transition ?? CUT) },
   };
   if (item.op === "card") {
     return { ...head, templateId: item.template, textRefs: [...item.textRefs!], overlayRefs: item.overlays };
@@ -672,8 +703,8 @@ interface BedPiece {
   fadeOutMs: number;
 }
 
-/** One route per output frame; every change of source sits on a segment boundary (all cuts) with 20 ms fades. */
-function audioOf(c: Ctx, items: Item[], fps: F, omitted: Omitted[]): J {
+/** One route per output frame. Bed switches use 20 ms fades, or longer fades across a transition. */
+function audioOf(c: Ctx, items: Item[], fps: F, total: number, omitted: Omitted[]): J {
   let court = courtBedWanted(c);
   if (court && c.available("primary-bed")) {
     omit(omitted, null, "primary-bed", c.available("primary-bed")!);
@@ -694,6 +725,17 @@ function audioOf(c: Ctx, items: Item[], fps: F, omitted: Omitted[]): J {
       continue;
     }
     pieces.push(piece);
+  }
+  for (const item of items) {
+    const transition = item.transition;
+    // The validator rejects impossible frame spans before it checks audio.
+    if (!transition || transition.frames < 2 || transition.frames > total) continue;
+    const after = Math.floor(transition.frames / 2);
+    const before = transition.frames - after;
+    for (const piece of pieces) {
+      if (piece.outputOutFrame === item.oIn) piece.fadeOutMs = Math.max(FADE_MS, F.from(before).mul(1000).div(fps).ceil());
+      if (piece.outputInFrame === item.oIn) piece.fadeInMs = Math.max(FADE_MS, F.from(after).mul(1000).div(fps).ceil());
+    }
   }
   const sounding = pieces.some((p) => p.route !== "silence");
   return { primarySourceId: sounding ? c.primaryId : null, bed: pieces.map((p) => ({ ...p })), narration: null, music: null };

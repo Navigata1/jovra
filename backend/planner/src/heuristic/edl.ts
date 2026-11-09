@@ -611,7 +611,7 @@ function checkTransition(tr: J, info: SegInfo, order: SegInfo[], grammar: J, out
   require(index > 0, "badTransition", "the first segment starts with a cut");
   require(grammar.transitions.includes(kind), "transitionNotAllowed", `${kind} is not allowed in this profile`);
   require(n >= 2, "badTransition", "a dissolve or dip spans at least 2 frames");
-  const ms = F.from(n * 1000).div(fpsFraction(outFpsRaw));
+  const ms = F.from(n).mul(1000).div(fpsFraction(outFpsRaw));
   require(ms.le(grammar.maxTransitionMs), "transitionTooLong", `${ms} ms exceeds ${grammar.maxTransitionMs} ms`);
   const prev = order[order.length - 1];
   const hOut = Math.floor(n / 2);   // output frames after the boundary that still show the outgoing source
