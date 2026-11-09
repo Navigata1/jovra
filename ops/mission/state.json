@@ -10,7 +10,7 @@
     "northStar": "Complete a trustworthy native iOS tennis product; preserve the local core while advancing the recorded Studio and native-platform roadmap through explicit evidence gates.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-11-09T16:40:15Z",
+    "updated": "2026-11-09T17:14:27Z",
     "sessionCount": 3,
     "assessmentReport": "docs/reports/2026-11-02/JOVRA-State-of-the-Union-v1-2026-11-02.html",
     "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md"
@@ -898,6 +898,13 @@
       "url": "https://github.com/Navigata1/jovra/pull/496",
       "phase": "P4",
       "mergedAt": "2026-11-09T16:38:44Z"
+    },
+    {
+      "number": 497,
+      "title": "Record iPad geometry diagnostic failure",
+      "url": "https://github.com/Navigata1/jovra/pull/497",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T17:10:48Z"
     }
   ],
   "resume": {
@@ -905,9 +912,9 @@
     "nextActions": [
       "Continue current-main signed-device and real-camera recovery tests; isolated synthetic cold-relaunch passed, but physical crash-loss remains open.",
       "Continue T26 after the full real-match Files import and verified retained hash; cover remaining Photos, duplicates and provider criteria.",
-      "Continue iPad iOS 27.2 diagnosis from #453/#456. The strict geometry-only f949 probe failed before its first station; the actual 17-point gesture was in bounds but the observed view shifted 127 points. No audit or paired comparison ran. Investigate the cause without weakening the original full-audit gate.",
+      "Continue iPad iOS 27.2 diagnosis from #453/#456. The gesture-based f949 geometry probe failed before its first station. A later alternate-app XCTest reached all five exact stations, but its overall supervisor failed on an unexplained installed-bundle fingerprint mismatch; neither run cleared the original audit. Preserve both results.",
       "Review draft #474 at exact current head atop #449: five focused simulator tests passed, while actual cancellation delivery, physical VoiceOver, Replay wiring and full T14 acceptance remain open. Preserve the two earlier native RED results.",
-      "Review current-main adoption draft #494 and dependent timeline draft #495 at their exact heads. Both passed selected iPhone simulator playback and CoreFlow suites; hosted CI, retarget/re-review after any merge, iPad, physical devices, production Replay and full T14 remain open.",
+      "Keep #494 adoption held: exact manual hosted iOS run 42657948112 failed during JovraMedia compilation. Review compatibility draft #498 and await its exact-head hosted run 42662558038; rebind/re-review to live main and preserve #495 dependency before any integration.",
       "Review draft #476 at its exact current head atop #474. Eight focused simulator tests passed on c9352e2; the archive-only points timeline, actually correcting a point, native menu activation for healthy-later selection, and full T28 remain open; draft #478 covers selector discovery and model-level selection.",
       "Review draft #478 at its exact current head atop #476. Nine focused simulator tests passed on 52fdbcc; a separate generated alternate-app XCUITest selected the actual menu and stepped to frame 1. A checked-in guarded runner, integration into main, confirmed-active interruption, physical devices and full T28 remain open.",
       "Review and integrate stacked draft #482/#483 against current parents: a clean-archive generated alternate app at 8e4240a passed the single simulator menu/f1 test and postflight, but the operator-reviewed runner is external and production launcher and physical devices remain untested.",
@@ -924,7 +931,7 @@
       "Android foundation #378 requires ADR-owner issues #375 and #376; watch #407 has owner review and automation gates.",
       "Privacy, external activation, store readiness and production acceptance remain governed by their explicit requirements.",
       "Ultra 3 full watch suite passed 19/19. Fresh Series 11 and SE 3 full suites each failed 1 of 19 on separate health-surface assertions; focused diagnostic runs passed 1/1 and 3/3 without reproducing either failure. Full matrix, physical WatchConnectivity, companion installation and owner gates remain open.",
-      "Historical playback adoption #485 remains held. Current-main replacement #494 and timeline #495 are drafts with separate iPhone simulator passes; fresh hosted checks, iPad and physical validation, production Replay wiring and full T14 acceptance remain open."
+      "Playback adoption #494 is held after its exact manual hosted iOS workflow failed during JovraMedia compilation. Compatibility draft #498 passed 11 focused local tests but still requires successful exact-head hosted verification. The stack needs current-main rebind, iPad/physical validation, production Replay wiring and full T14 acceptance."
     ],
     "conventions": [
       "Use source-bound current evidence; keep historical receipts and failures distinct.",
