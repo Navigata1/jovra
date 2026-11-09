@@ -27,4 +27,57 @@ final class FilesImportUITests: XCTestCase {
         back.tap()
         XCTAssertTrue(app.buttons["library.import"].waitForExistence(timeout: 5))
     }
+
+    @MainActor
+    func testSinglesMatchRequiresExplicitSetupAndFullFootageConfirmation() {
+        continueAfterFailure = false
+        let app = XCUIApplication.launchJovra { $0.demo = .off }
+        app.buttons["tab.sessions"].tap()
+        app.buttons["library.import"].tap()
+        let practice = app.textFields["import.player"]
+        XCTAssertTrue(practice.waitForExistence(timeout: 5))
+        app.buttons["Singles match"].tap()
+        let choose = app.buttons["import.choose"]
+        XCTAssertFalse(practice.exists)
+        XCTAssertFalse(choose.isEnabled)
+        for (id, name) in [("import.match.playerA", "Player A"), ("import.match.playerB", "Player B")] {
+            let field = app.textFields[id]
+            XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(name + "\n")
+        }
+        XCTAssertTrue(app.staticTexts["Six-game sets · Seven-point tiebreak at 6–6 · Let serves"].exists)
+        for (id, option) in [("import.match.format", "Best of one set"), ("import.match.scoring", "No-ad"),
+                             ("import.match.firstServer", "Player B"), ("import.match.nearPlayer", "Player A")] {
+            let picker = app.buttons[id]
+            revealInImportViewport(picker, in: app)
+            picker.tap()
+            let item = app.buttons[option]
+            XCTAssertTrue(item.waitForExistence(timeout: 5), app.debugDescription)
+            item.tap()
+            XCTAssertTrue(app.buttons["import.back"].exists, "Selecting a match option stays in Import")
+        }
+        let complete = app.switches["import.match.complete"]
+        revealInImportViewport(complete, in: app)
+        XCTAssertTrue(complete.label.hasPrefix("The video I choose"))
+        XCTAssertFalse(choose.isEnabled, "A scored match requires confirmation of complete footage")
+        complete.tap()
+        XCTAssertTrue(choose.isEnabled)
+    }
+
+    @MainActor
+    private func revealInImportViewport(_ control: XCUIElement, in app: XCUIApplication) {
+        let scroll = app.scrollViews.firstMatch
+        let tabBar = app.otherElements["tabBar"]
+        for _ in 0..<4 {
+            let frame = control.frame
+            let viewport = scroll.frame
+            let bottom = tabBar.exists ? min(viewport.maxY, tabBar.frame.minY) : viewport.maxY
+            if control.isHittable, !frame.isEmpty, frame.minY >= viewport.minY, frame.maxY <= bottom { return }
+            if !frame.isEmpty, frame.minY < viewport.minY {
+                scroll.swipeDown()
+            } else {
+                scroll.swipeUp()
+            }
+        }
+        XCTFail("Import control is not fully visible above the tab bar: \(control.identifier)")
+    }
 }
