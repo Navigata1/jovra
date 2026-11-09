@@ -103,6 +103,62 @@ struct LessonsJournalTests {
         #expect(try await journal.lesson(lesson.lessonId) == saved)
     }
 
+    enum DraftRelationship: CaseIterable, Sendable {
+        case sessions, clips, cues, films
+    }
+
+    @Test("a draft cannot add Sample relationships to a real lesson", arguments: DraftRelationship.allCases)
+    func draftCannotCrossTheSampleFence(_ relationship: DraftRelationship) async throws {
+        let s = try LessonsScratch()
+        defer { s.cleanUp() }
+        try await StudioSampleContent(records: StudioSampleRecords.load(from: StudioFixtures.root().appendingPathComponent("records")))
+            .install(into: s.store)
+        let sample = s.journal(StudioSampleContent.lessonProjectID)
+        let samples = try await sample.lessons()
+        let (journal, _) = try await s.journal()
+        let lesson = try await journal.create(date: "2026-11-04", title: "Real lesson")
+        let session = try await s.session("real-draft-session", bytes: syntheticVideo("real draft clip"))
+        let clip = try await journal.linkClip(sessionId: session.id, range: .init(startUs: 0, endUs: 1_000_000), to: lesson.lessonId)
+        var edit = try await journal.beginEdit(lesson.lessonId)
+        switch relationship {
+        case .sessions:
+            let sampleSession = try CoreFixtureSessions.jonVsAlex()
+            try await s.sessions.create(sampleSession)
+            await #expect(throws: LessonJournalError.sampleIsolation) {
+                _ = try await journal.linkClip(sessionId: sampleSession.id, range: .init(startUs: 0, endUs: 1_000_000),
+                                               to: lesson.lessonId)
+            }
+            edit.draft.sessionIds.append(sampleSession.id)
+        case .clips:
+            edit.draft.clips.append(try #require(samples.flatMap(\.clips).first))
+        case .cues:
+            var sampleCue = try #require(samples.flatMap(\.cues).first)
+            sampleCue.clipId = clip.clipId
+            edit.draft.cues.append(sampleCue)
+        case .films:
+            let sampleFilm = try #require(try await s.store.films(StudioSampleContent.matchProjectID).first)
+            edit.draft.filmIds.append(sampleFilm.artifactId)
+        }
+
+        await #expect(throws: LessonJournalError.relationshipsChanged(lesson.lessonId)) { _ = try await journal.save(edit) }
+        #expect(try await journal.lesson(lesson.lessonId) == edit.original)
+    }
+
+    @Test("saving authored fields keeps a shipped lesson's existing relationships")
+    func draftKeepsExistingRelationships() async throws {
+        let s = try LessonsScratch()
+        defer { s.cleanUp() }
+        try await StudioSampleContent(records: StudioSampleRecords.load(from: StudioFixtures.root().appendingPathComponent("records")))
+            .install(into: s.store)
+        let journal = s.journal(StudioSampleContent.lessonProjectID)
+        var edit = try await journal.beginEdit("lesson-0909")
+        #expect(!edit.original.clips.isEmpty)
+        edit.draft.focus = .value("Review the first movement")
+        let saved = try await journal.save(edit)
+        #expect(saved == edit.draft)
+        #expect(try await journal.lesson(saved.lessonId) == edit.draft)
+    }
+
     @Test("a practice checklist with counts reads 2 of 3 drills complete after ticking two drills to their targets")
     func practiceChecklist() async throws {
         let s = try LessonsScratch()
