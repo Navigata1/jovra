@@ -37,7 +37,7 @@ enum UnrecoverableReason {
 /// One journal segment after verification.
 private enum SegmentVerdict {
     case kept(SessionSegment, RecoveryFingerprint, MediaFileIdentity, PendingTruncation?)
-    case unrecoverable(String)
+    case unrecoverable(String, MediaFileIdentity?)
 }
 private struct PendingTruncation {
     let clonePath: String
@@ -98,6 +98,7 @@ public actor RecoveryScanner {
         var hashes = ["capture-journal.json": journalHash], identities = ["capture-journal.json": journalIdentity]
         var kept: [SessionSegment] = [], gaps = snapshot.gaps, pending: [PendingTruncation] = []
         var unrecoverable: [SessionRecoveryReportUnrecoverableItem] = []
+        var absentPaths: [String] = []
         var claimedEnd = 0
         for (index, original) in snapshot.segments.enumerated() {
             let end = original.startMs.addingReportingOverflow(original.durationMs)
@@ -108,7 +109,9 @@ public actor RecoveryScanner {
             case let .kept(segment, fingerprint, fileIdentity, truncation):
                 kept.append(segment); hashes[segment.file.path] = fingerprint; identities[segment.file.path] = fileIdentity
                 if let truncation { pending.append(truncation) }
-            case let .unrecoverable(reason):
+            case let .unrecoverable(reason, fileIdentity):
+                if let fileIdentity { identities[original.file.path] = fileIdentity }
+                else { absentPaths.append(original.file.path) }
                 unrecoverable.append(.init(path: original.file.path, reason: reason))
                 gaps.append(SessionGap(startMs: original.startMs, endMs: claimedEnd, reason: .other))
             }
@@ -176,7 +179,7 @@ public actor RecoveryScanner {
             try files.writeReceipt(try CanonicalJSON.encode(receipt))
         }
         for truncation in pending { identities[truncation.record.path] = try files.commit(truncation.clonePath, over: truncation.record.path, source: truncation.source, kept: truncation.kept) }
-        let witness = MediaAdoptionWitness(directory: identity, files: identities)
+        let witness = MediaAdoptionWitness(directory: identity, files: identities, absentPaths: absentPaths)
         try witness.verify(in: folder)
         witnesses[result.sessionID] = witness
         return result
@@ -190,18 +193,18 @@ public actor RecoveryScanner {
     private func verify(_ original: SessionSegment, _ files: RecoveryFiles) async throws -> SegmentVerdict {
         let path = original.file.path
         let first: (RecoveryFingerprint, Data, MediaFileIdentity)
-        do { first = try files.read(path) } catch RecoveryError.filesystem(ENOENT) { return .unrecoverable(UnrecoverableReason.missing) }
+        do { first = try files.read(path) } catch RecoveryError.filesystem(ENOENT) { return .unrecoverable(UnrecoverableReason.missing, nil) }
         let media = try files.url(path)
         guard !original.finalized else {
             // A closed segment is never altered: it decodes whole and agrees with the journal, or it is reported.
-            guard let decoded = try? await decodeCaptureToEnd(media) else { return .unrecoverable(UnrecoverableReason.undecodable) }
+            guard let decoded = try? await decodeCaptureToEnd(media) else { return .unrecoverable(UnrecoverableReason.undecodable, first.2) }
             let segment = try await describe(original, media: media, decoded: decoded, fingerprint: first.0)
             guard abs(segment.durationMs - original.durationMs) <= 1 else { throw RecoveryError.invalidJournal }
             return try unchanged(files, path, first, then: .kept(segment, first.0, first.2, nil))
         }
-        guard let layout = try? FragmentedMovieLayout.inspect(media) else { return .unrecoverable(UnrecoverableReason.noFragment) }
+        guard let layout = try? FragmentedMovieLayout.inspect(media) else { return .unrecoverable(UnrecoverableReason.noFragment, first.2) }
         guard layout.hasIncompleteTail, let prefix = layout.completeFragmentEnds.last else {
-            guard let decoded = try? await decodeCaptureToEnd(media) else { return .unrecoverable(UnrecoverableReason.undecodable) }
+            guard let decoded = try? await decodeCaptureToEnd(media) else { return .unrecoverable(UnrecoverableReason.undecodable, first.2) }
             var segment = try await describe(original, media: media, decoded: decoded, fingerprint: first.0)
             segment.finalized = true; segment.recoveredAfterInterruption = true
             return try unchanged(files, path, first, then: .kept(segment, first.0, first.2, nil))
@@ -210,7 +213,7 @@ public actor RecoveryScanner {
         do {
             let clone = try files.url(clonePath)
             guard let decoded = try? await decodeCaptureToEnd(clone) else {
-                try files.remove(clonePath); return .unrecoverable(UnrecoverableReason.undecodable)
+                try files.remove(clonePath); return .unrecoverable(UnrecoverableReason.undecodable, first.2)
             }
             let kept = try files.read(clonePath).0
             var segment = try await describe(original, media: clone, decoded: decoded, fingerprint: kept)

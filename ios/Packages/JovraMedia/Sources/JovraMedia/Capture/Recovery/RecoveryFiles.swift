@@ -23,15 +23,26 @@ struct MediaFileIdentity: Equatable, Sendable {
 public struct MediaAdoptionWitness: Sendable {
     let directory: DurableDirectory.Identity
     let files: [String: MediaFileIdentity]
+    let absentPaths: [String]
+
+    init(directory: DurableDirectory.Identity, files: [String: MediaFileIdentity], absentPaths: [String] = []) {
+        self.directory = directory; self.files = files; self.absentPaths = absentPaths
+    }
 
     /// A cheap final check within the store transaction, after the scanner decoded and hashed the files.
     public func verify(in folder: URL) throws {
         guard try DurableDirectory.identity(of: folder) == directory else { throw RecoveryError.changedFile }
+        let originals = RecoveryFiles(folder: folder)
         for (path, expected) in files {
-            let source = try RecoveryFiles(folder: folder).url(path)
+            let source = try originals.url(path)
             var actual = stat()
             guard lstat(source.path, &actual) == 0, (actual.st_mode & S_IFMT) == S_IFREG,
                   MediaFileIdentity(actual) == expected else { throw RecoveryError.changedFile }
+        }
+        for path in absentPaths {
+            let source = try originals.url(path)
+            var actual = stat()
+            guard lstat(source.path, &actual) != 0, errno == ENOENT else { throw RecoveryError.changedFile }
         }
     }
 }

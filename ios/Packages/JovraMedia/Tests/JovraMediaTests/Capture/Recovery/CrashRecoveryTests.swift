@@ -208,6 +208,12 @@ func tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_ tear: String)
     let root = try libraryRoot()
     defer { try? FileManager.default.removeItem(at: root) }
     let id = "partial"
+    let store = try SessionStore(root: root)
+    var draft = try sampleCaptureSession(id: id, title: "Sample pending recording",
+        recording: .init(mode: .simulatorFixture, segments: [], gaps: [], microphone: .notRequested, mediaAvailable: false),
+        marks: nil)
+    draft.original = .init(state: .recording)
+    try await store.create(draft)
     let folder = root.appendingPathComponent("sessions/\(id)")
     let clock = VirtualCaptureClock()
     let camera = FixtureCamera(url: try fixtureCamera(), duration: CMTime(value: 3, timescale: 1), clock: clock)
@@ -220,6 +226,7 @@ func tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_ tear: String)
     try await engine.resume()
     try await camera.waitUntilFinished()
     try await until { (try journal(folder).segments.last?.durationMs ?? 0) >= 2000 }
+    _ = try engine.markPoint(note: "Retained capture mark")
     await engine.simulateProcessDeath()
     // Explicit invalid bytes standing in for a damaged first segment, never a claimed capture.
     let damaged = folder.appendingPathComponent("originals/segment-0.mp4")
@@ -238,9 +245,56 @@ func tornSegmentIsTruncatedToItsLastCompleteFragmentNotDiscarded(_ tear: String)
     #expect(try await decodedFrames(folder.appendingPathComponent("originals/segment-1.mp4")) == 60)
     #expect(result.recording.gaps == [SessionGap(startMs: 0, endMs: 3000, reason: .other),
                                       SessionGap(startMs: 3000, endMs: 10_000, reason: .userPaused),
-                                      SessionGap(startMs: 12_000, endMs: 12_000, reason: .other)])
+                                      SessionGap(startMs: 12_000, endMs: 13_000, reason: .other)])
     #expect(try Data(contentsOf: damaged) == Data("not a movie".utf8), "unrecoverable media is kept, never deleted")
     try evidence("partial-recovery", folder: folder, result: result)
+
+    // Startup uses the same store transaction after a separate scan. Preserve edits written after scanning.
+    let damagedWitness = try #require(await scanner.adoptionWitness(for: id))
+    try Data("not a movie".utf8).write(to: damaged, options: .atomic)
+    #expect(throws: RecoveryError.changedFile) { try damagedWitness.verify(in: folder) }
+    try FileManager.default.removeItem(at: damaged)
+    let missing = try #require(try await scanner.scan().first)
+    #expect(missing.recording.recovery?.unrecoverable?.first?.reason == UnrecoverableReason.missing)
+    let missingWitness = try #require(await scanner.adoptionWitness(for: id))
+    try Data("not a movie".utf8).write(to: damaged)
+    #expect(throws: RecoveryError.changedFile) { try missingWitness.verify(in: folder) }
+    let current = try #require(try await scanner.scan().first)
+    let witness = try #require(await scanner.adoptionWitness(for: id))
+    try await store.update(id, facet: .review(.init(state: .inProgress)))
+    let recoveredMovie = folder.appendingPathComponent(result.recording.segments[0].file.path)
+    let movieBytes = try Data(contentsOf: recoveredMovie)
+    let journalURL = folder.appendingPathComponent("capture-journal.json")
+    let journalBytes = try Data(contentsOf: journalURL)
+    #expect(try await store.reconcileCaptureRecovery(current.recording, marks: current.marks, original: current.original,
+                                                     for: id, verifyOriginals: witness.verify))
+    let adopted = try await store.load(id)
+    #expect(adopted.original?.state == .partial)
+    #expect(adopted.recording == current.recording)
+    #expect(adopted.marks?.map(\.note) == ["Retained capture mark"])
+    #expect(adopted.review?.state == .inProgress)
+    #expect(try Data(contentsOf: recoveredMovie) == movieBytes)
+    #expect(try Data(contentsOf: damaged) == Data("not a movie".utf8))
+    #expect(try Data(contentsOf: journalURL) == journalBytes)
+    if let path = ProcessInfo.processInfo.environment["JOVRA_RECOVERY_EVIDENCE_DIR"] {
+        let destination = URL(fileURLWithPath: path).appendingPathComponent("partial-recovery/adopted-session.json")
+        try Data(contentsOf: folder.appendingPathComponent("session.json")).write(to: destination)
+    }
+
+    let state = try folderState(folder)
+    let reopened = try SessionStore(root: root)
+    let rescan = RecoveryScanner(root: root)
+    let repeated = try #require(try await rescan.scan { try await reopened.needsCaptureRecovery($0) }.first)
+    let repeatedWitness = try #require(await rescan.adoptionWitness(for: id))
+    #expect(try await !reopened.reconcileCaptureRecovery(repeated.recording, marks: repeated.marks,
+        original: repeated.original, for: id, verifyOriginals: repeatedWitness.verify))
+    #expect(try await reopened.load(id) == adopted)
+    let repeatedState = try folderState(folder)
+    #expect(Set(repeatedState.keys) == Set(state.keys))
+    for (file, original) in state {
+        let repeatedFile = try #require(repeatedState[file])
+        #expect(repeatedFile.0 == original.0 && repeatedFile.1 == original.1)
+    }
 }
 
 private func folderState(_ folder: URL) throws -> [String: (Data, Date)] {

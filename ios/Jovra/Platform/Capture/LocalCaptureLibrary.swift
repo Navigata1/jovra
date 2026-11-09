@@ -15,6 +15,7 @@ enum LocalCaptureLibraryError: Error { case invalidSinglesSetup, unsupportedSour
 
 struct StartupRecoverySummary: Equatable, Sendable {
     var recovered = 0
+    var partiallyRecovered = 0
     var refused = 0
     var scanFailed = false
 }
@@ -98,10 +99,14 @@ actor LocalCaptureLibrary: RecordingSink {
                         summary.refused += 1
                         continue
                     }
-                    if try await store.reconcileFinishedCapture(candidate.recording, marks: candidate.marks,
-                                                                original: candidate.original, for: candidate.sessionID,
-                                                                verifyOriginals: witness.verify) {
-                        summary.recovered += 1
+                    if try await store.reconcileCaptureRecovery(candidate.recording, marks: candidate.marks,
+                                                                 original: candidate.original, for: candidate.sessionID,
+                                                                 verifyOriginals: witness.verify) {
+                        if candidate.original.state == .partial {
+                            summary.partiallyRecovered += 1
+                        } else {
+                            summary.recovered += 1
+                        }
                     }
                 } catch {
                     summary.refused += 1
@@ -115,7 +120,7 @@ actor LocalCaptureLibrary: RecordingSink {
 
     private func isStartupRecoveryCandidate(_ id: String) async throws -> Bool {
         guard !capturesStartedHere.contains(id) else { return false }
-        return try await store.needsFinishedCaptureRecovery(id)
+        return try await store.needsCaptureRecovery(id)
     }
 
     func importFile(_ source: URL, playerName: String) async throws -> SessionID {

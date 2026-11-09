@@ -56,7 +56,7 @@ final class StartupRecoveryTests: XCTestCase {
         let witness = try XCTUnwrap(sourceWitness)
         try movie.write(to: movieURL, options: .atomic) // Same bytes, different file after verification.
         do {
-            _ = try await store.reconcileFinishedCapture(candidate.recording, marks: candidate.marks,
+            _ = try await store.reconcileCaptureRecovery(candidate.recording, marks: candidate.marks,
                                                          original: candidate.original, for: id.rawValue,
                                                          verifyOriginals: witness.verify)
             XCTFail("Replacement after the scan must not be acknowledged")
