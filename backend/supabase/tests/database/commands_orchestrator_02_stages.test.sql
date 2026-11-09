@@ -324,15 +324,15 @@ update public.usage_reservations set reserved_cost_micro_usd = cap_cost_micro_us
  where id = (pg_temp.hold('j4')).id;
 select is(pg_temp.walk(pg_temp.job('j4'), array['upload_pending', 'queued', 'normalizing', 'planning']), 'ok',
   'J4 (model planner) reaches planning with only 100,000 left in its hold');
+select pg_temp.keep('p4a', pg_temp.orch(pg_temp.reserve_sql(pg_temp.job('j4'), 'plan', 1)));
 select ok((select a.reserved_cost_micro_usd = 90000 and (a.planner_budget ->> 'repairAllowed')::boolean = false
                   and (a.planner_budget ->> 'maxOutputTokens')::int = 2000
-             from public.render_attempts a
-            where a.id = (pg_temp.orch(pg_temp.reserve_sql(pg_temp.job('j4'), 'plan', 1)) ->> 'attemptId')::uuid),
+             from public.render_attempts a where a.id = pg_temp.got('p4a', 'attemptId')::uuid),
   'T-DB-72 (b): when the hold covers one call but not the repair, the budget allows no repair call');
+select pg_temp.keep('p4b', pg_temp.orch(pg_temp.reserve_sql(pg_temp.job('j4'), 'plan', 2)));
 select ok((select a.reserved_cost_micro_usd = 1000 and a.planner_budget ->> 'effort' = 'none'
                   and (a.planner_budget ->> 'maxImages')::int = 0
-             from public.render_attempts a
-            where a.id = (pg_temp.orch(pg_temp.reserve_sql(pg_temp.job('j4'), 'plan', 2)) ->> 'attemptId')::uuid),
+             from public.render_attempts a where a.id = pg_temp.got('p4b', 'attemptId')::uuid),
   'T-DB-72 (a): when not even one call fits (10,000 left), the budget is zero: no provider call, heuristic fallback');
 select is(pg_temp.keep('c_p3', pg_temp.orch(pg_temp.claim_sql(pg_temp.got('p3', 'attemptId')))) ->> 'outputPlan',
   '[{"kind": "edit_manifest", "maxBytes": 1048576, "outputRef": "edit-manifest"}]'::jsonb::text,
@@ -376,10 +376,11 @@ select is(pg_temp.move(pg_temp.job('j1'), 'ready'), 'artifact_not_verified',
 select is(pg_temp.keep('v1', pg_temp.orch(pg_temp.reserve_sql(pg_temp.job('j1'), 'verify_output', 1))) ->> 'state',
   'reserved', 'the verify stage is reserved');
 select pg_temp.keep('c_v1', pg_temp.orch(pg_temp.claim_sql(pg_temp.got('v1', 'attemptId'))));
-select ok(pg_temp.orch(format('select app_gateway.mark_artifact_verified(%L, sha256(convert_to(%L, ''UTF8'')), %L, '
-                              '''{"decoded": true, "frames": 3600}''::jsonb, gen_random_uuid())',
-                              pg_temp.got('v1', 'attemptId'), pg_temp.got('c_v1', 'leaseToken'),
-                              pg_temp.got('f_r1', 'outputRefs')::jsonb ->> 0)) ? 'error' = false
+select pg_temp.keep('mv1', pg_temp.orch(format(
+  'select app_gateway.mark_artifact_verified(%L, sha256(convert_to(%L, ''UTF8'')), %L, '
+  '''{"decoded": true, "frames": 3600}''::jsonb, gen_random_uuid())',
+  pg_temp.got('v1', 'attemptId'), pg_temp.got('c_v1', 'leaseToken'), pg_temp.got('f_r1', 'outputRefs')::jsonb ->> 0)));
+select ok((select not (v ? 'error') from pg_temp.t_out where k = 'mv1')
           and (select state = 'ready' and verified_at is not null and verification ->> 'frames' = '3600'
                  from public.artifacts where id = (pg_temp.got('f_r1', 'outputRefs')::jsonb ->> 0)::uuid),
   'mark_artifact_verified, under the verify stage''s lease, makes the film ready and verified');
