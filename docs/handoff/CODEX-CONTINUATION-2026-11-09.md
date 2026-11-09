@@ -20,9 +20,11 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   audit. Proposed source `725c0a3` passed its AX5 transport test; the unchanged
   CoreFlow audit then timed out twice on iOS 27.2, including an isolated rerun.
   On iOS 26.5 it passed Replay but failed an unbound Export accessibility
-  finding. Draft [#453](https://github.com/Navigata1/jovra/pull/453) preserves
-  the proposed Replay fix; a separate Export hypothesis is being tested.
-  Raw receipts are retained locally in
+  finding. The Replay fix [#453](https://github.com/Navigata1/jovra/pull/453)
+  plus Export backdrop [#456](https://github.com/Navigata1/jovra/pull/456)
+  then passed the complete unchanged iPad CoreFlow audit on iOS 26.5. The
+  combined iOS 27.2 run timed out at Replay. A separate contrast-first probe
+  passed; an all-types-first diagnostic is in progress. Raw receipts are retained locally in
   `/Users/IDC2.5/JOVRA-media/codex-evidence/2026-11-09`.
 - The supplied private media is described in `docs/fixtures/real-footage.md`.
   The original February match and two-minute excerpt matched their recorded
@@ -37,6 +39,15 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Review and fixes
 
+- Match-import opt-in source `6926587` passed six hosted and two UI tests
+  on the iPhone simulator. It requires explicit match setup and per-video
+  confirmation and begins with an empty score log. The first UI run failed
+  on a clipped tap, retained as evidence. Real-provider match opt-in and AX5
+  are still unverified.
+- Watch simulator safety follow-up [#455](https://github.com/Navigata1/jovra/pull/455)
+  is a reviewed draft; real watch validation and the W03 owner decisions stay open.
+- Studio demo boundary follow-up [#454](https://github.com/Navigata1/jovra/pull/454)
+  has passed 171 macOS package tests; Linux and full S14 acceptance remain open.
 - [#441](https://github.com/Navigata1/jovra/pull/441) remains blocked on the
   failed 0.10 m calibration criterion and persisted validity. Bounded
   validity correction [#448](https://github.com/Navigata1/jovra/pull/448)
@@ -65,9 +76,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Immediate continuation
 
-1. Diagnose the iPad CoreFlow accessibility audit timeout against the proposed
-   fix. Preserve the main failure and both candidate timeouts. Do not weaken
-   the audit.
+1. Finish diagnosing iOS 27.2 Replay audit timeouts. A contrast-first probe
+   passed; an all-types-first probe is running. Preserve all prior failures
+   and keep the original full audit as the acceptance gate.
 2. Continue T26 Photos, batches, duplicate handling, provider and interruption
    criteria. The full match is already imported as a practice video and verified.
 3. Re-query PR heads and gates, finish independent reviews, and integrate
