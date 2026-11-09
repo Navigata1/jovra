@@ -1,32 +1,55 @@
-$ swift test --package-path ios/Packages/JovraCore  (macOS, 2026-11-09T01:45Z)
-◇ Suite "CourtDiagramLayout" started.
+$ swift test --package-path ios/Packages/JovraCore  (macOS, 2026-11-09, after merging origin/main 1d41080)
+	 Executed 12 tests, with 0 failures (0 unexpected) in 145.040 (145.042) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 145.040 (145.044) seconds
 ◇ Suite "CourtCalibration" started.
+◇ Suite "CourtDiagramLayout" started.
 calibration vectors C01-exact-four-point: 4 (fits 4)
 calibration vectors C02-least-squares: 2 (fits 2)
 calibration vectors C03-jittered-corners: 6 (fits 6)
 calibration vectors C04-fit-check: 5 (fits 0)
-calibration vectors C05-validity: 10 (fits 0)
+calibration vectors C05-validity: 17 (fits 0)
 calibration vectors C06-tap-mapping: 6 (fits 0)
 calibration vectors C07-refused: 4 (fits 4)
 calibration vectors C08-geometry: 13 (fits 0)
 calibration vectors C09-placement-words: 8 (fits 0)
 Consumed jovra.fixture.calibration: 9 fixtures
-✔ Test missingShotObservationsAreUnknownRatherThanMeasuredZero() passed after 3.300 seconds.
-✔ Test otherPersistedRecordsRoundTripThroughRealTypes() passed after 3.303 seconds.
-✔ Test outliersClampToTheEdgeAndSayItAndTapsRoundTrip() passed after 3.337 seconds.
-✔ Test scaleAndHeightFollowTheCourt() passed after 3.337 seconds.
-✔ Test depthBandsSplitTheFarHalfAtTheServiceLine() passed after 3.337 seconds.
-✔ Test aDifferentLensFormatOrZoomInvalidates() passed after 0.502 seconds.
-✔ Test aRecordWithoutACameraFormatIsRefused() passed after 0.502 seconds.
-✔ Test nothingMeasuredIsNeverAPass() passed after 0.502 seconds.
-✔ Test pastItsStaleFromTimeACalibrationIsInvalidWithThatReason() passed after 0.502 seconds.
-✔ Test exactTapsProjectEveryIntersection() passed after 0.502 seconds.
-✔ Suite "CourtDiagramLayout" passed after 3.342 seconds.
-✔ Test aCalibrationPerturbedBeyondThreePixelsIsAPoorFitAndInvalid() passed after 0.502 seconds.
-✔ Suite "CourtCalibration" passed after 3.342 seconds.
-✔ Test resetRestoresTheAnalysisRecordsAndRemoveTakesThemAway() passed after 4.800 seconds.
-✔ Test mediaFixtureRecordsHaveRealTypesAndExactRoundTrips() passed after 5.834 seconds.
-	 Executed 12 tests, with 0 failures (0 unexpected) in 237.648 (237.650) seconds
-	 Executed 12 tests, with 0 failures (0 unexpected) in 237.648 (237.650) seconds
-	 Executed 12 tests, with 0 failures (0 unexpected) in 237.648 (237.652) seconds
-✔ Test run with 136 tests in 9 suites passed after 7.941 seconds.
+✔ Test exactStoredDecimalAllowsLeadingZeroesWithoutRewriting() passed after 1.716 seconds.
+✔ Test doublesAddPerServerServeLinesWhoseCountsSumToTheTeam() passed after 1.742 seconds.
+✔ Test aMissingSampleFileIsTheMissingMediaStateNotAnError() passed after 2.042 seconds.
+✔ Test everyNamedFormatPresetHasAPassingFixture() passed after 2.042 seconds.
+✔ Test everyStatsCSVRowIsAFractionWithTraceableContributors() passed after 2.064 seconds.
+✔ Test anOverlayForASessionOutsideTheLibraryIsRefused() passed after 2.065 seconds.
+✔ Test anOverlayRepeatingAnIDTheSessionAlreadyHasIsRefused() passed after 2.066 seconds.
+✔ Test anAllSampleScopeCountsSamplesAndIsFlaggedSample() passed after 2.066 seconds.
+✔ Test aMixedScopeCountsOnlyTheRealItems() passed after 2.075 seconds.
+✔ Test anEmptyScopeIsNotSample() passed after 2.075 seconds.
+✔ Test everyServeMarkIsWithinOneFrameOfTheRenderedServe() passed after 2.076 seconds.
+✔ Test everyContractConflictKindComesFromAPassingFixture() passed after 2.040 seconds.
+✔ Test everyMediaIDInTheInstalledSessionsExistsInTheSampleMediaManifest() passed after 2.076 seconds.
+✔ Test anEditThatChangesNoNumberListsNoStat() passed after 1.876 seconds.
+✔ Test aRecordedPoorFitRemainsInvalidAfterReopening(_:) with 3 test cases passed after 1.593 seconds.
+✔ Test aCalibrationPerturbedBeyondThreePixelsIsAPoorFitAndInvalid() passed after 1.570 seconds.
+✔ Test tapsBecomeVideoPixelsBeforeFitting() passed after 1.570 seconds.
+✔ Test exactTapsProjectEveryIntersection() passed after 1.570 seconds.
+✔ Test nothingMeasuredIsNeverAPass() passed after 1.570 seconds.
+✔ Test aDifferentLensFormatOrZoomInvalidates() passed after 1.570 seconds.
+✔ Test recordedCameraMovementWithATimestampInvalidatesFromThatTime() passed after 1.570 seconds.
+✔ Test aRecordedUnusableStateRemainsInvalidWithoutMeasurements(_:) with 3 test cases passed after 1.570 seconds.
+✔ Test aRecordWithoutACameraFormatIsRefused() passed after 1.570 seconds.
+✔ Test serviceBoxVariantDrawsOnlyThatBoxWithThirds() passed after 1.368 seconds.
+✔ Test pastItsStaleFromTimeACalibrationIsInvalidWithThatReason() passed after 1.570 seconds.
+✔ Test outliersClampToTheEdgeAndSayItAndTapsRoundTrip() passed after 1.368 seconds.
+✔ Test scaleAndHeightFollowTheCourt() passed after 1.306 seconds.
+✔ Test doublesAlleysAreDrawnOutsideTheSinglesSidelines() passed after 1.287 seconds.
+✔ Test depthBandsSplitTheFarHalfAtTheServiceLine() passed after 1.287 seconds.
+✔ Test centreServiceLineRunsOnlyBetweenTheServiceLines() passed after 1.287 seconds.
+✔ Test everySegmentIsTheGeometryLineMapped() passed after 1.287 seconds.
+✔ Suite "CourtCalibration" passed after 2.106 seconds.
+✔ Suite "CourtDiagramLayout" passed after 2.106 seconds.
+✔ Test anOverlayThatIsNotFlaggedSampleIsRefused() passed after 2.138 seconds.
+✔ Test aScopeMixingOneRealSessionWithSamplesCountsOnlyTheRealSession() passed after 2.855 seconds.
+✔ Test allDiscoveredRunnerFixturesPass() passed after 5.735 seconds.
+✔ Test run with 139 tests in 9 suites passed after 6.607 seconds.
+
+65 calibration vectors in 9 fixtures (16 fits): 4 + 2 + 6 + 5 + 17 + 6 + 4 + 13 + 8.
+0 failures: 12 XCTest and 139 Swift Testing tests.

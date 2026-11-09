@@ -23,6 +23,9 @@ struct CourtGallery: View {
         case guideLoupe = "guide-loupe"
     }
 
+    /// Tall enough to read a to-scale court (2.17 times longer than wide) and short enough to keep it on one screen.
+    static let fullCourtHeight: CGFloat = 440
+
     var scenario: Scenario
     @State private var corners: [VideoPixel] = SyntheticCourtFrame.trueCorners
     @State private var deuce = true
@@ -85,6 +88,9 @@ struct CourtGallery: View {
                 }
                 CourtDiagram(variant: .full, placements: SamplePlacements.forehands,
                              summary: "Forehand placements, sample, 15 placed: 9 deep, 2 short, 3 out, 1 needs review")
+                    // As on the shot map (S11): the whole court, both baselines, sits in the card with its legend.
+                    .frame(height: Self.fullCourtHeight)
+                    .frame(maxWidth: .infinity)
                     .accessibilityIdentifier("court.diagram.full")
                 CourtMarkerLegend()
             }
@@ -174,7 +180,10 @@ struct CourtGallery: View {
             .aspectRatio(16 / 9, contentMode: .fit)
             .background(Color.jovra(.editorial))
             .clipShape(RoundedRectangle(cornerRadius: Radius.control, style: .continuous))
-            .overlay(alignment: .topTrailing) { SampleBadge(size: .small, onForest: true).padding(Space.x1) }
+            // At accessibility sizes the badge would cover the far brackets; the page header carries it instead.
+            .overlay(alignment: .topTrailing) {
+                if !typeSize.isAccessibilitySize { SampleBadge(size: .small, onForest: true).padding(Space.x1) }
+            }
             .accessibilityIdentifier("court.guide")
             VStack(alignment: .leading, spacing: Space.half) {
                 Text(check.verdict == .poor ? "Check the corners" : "All four corners visible")
@@ -185,7 +194,7 @@ struct CourtGallery: View {
                     .font(.jovraBody)
                     .foregroundStyle(.jovra(.textSecondary))
                     .fixedSize(horizontal: false, vertical: true)
-                Text(String(format: "Untapped lines: %.1f px RMSE (limit %.0f px at 1080p)", check.rmsePx ?? 0, check.thresholdPx))
+                Text(String(format: "Untapped lines: %.1f px RMSE, limit %.0f px", check.rmsePx ?? 0, check.thresholdPx))
                     .font(.jovraTimecode)
                     .foregroundStyle(.jovra(check.verdict == .poor ? .attentionInk : .positiveInk))
                     .fixedSize(horizontal: false, vertical: true)

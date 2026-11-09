@@ -102,6 +102,26 @@ struct Loupe<Content: View>: View {
     }
 }
 
+/// Where the loupe goes for a touch: 96 pt above the finger when the whole circle fits there, otherwise beside the
+/// finger towards the middle of the frame (never below it, where the hand is). It always stays inside the frame it
+/// magnifies, so a far corner near the top edge is still shown whole.
+enum LoupePlacement {
+    /// Centre-to-finger distance: clear of a fingertip and of the 44 pt bracket target.
+    static let lift: CGFloat = 96
+
+    static func centre(touch: CGPoint, in container: CGSize, diameter: CGFloat) -> CGPoint {
+        let radius = diameter / 2
+        func inside(_ value: CGFloat, _ extent: CGFloat) -> CGFloat {
+            extent < diameter ? extent / 2 : min(max(value, radius), extent - radius)
+        }
+        if touch.y - lift >= radius || container.width < diameter {
+            return CGPoint(x: inside(touch.x, container.width), y: inside(touch.y - lift, container.height))
+        }
+        let towardsMiddle: CGFloat = touch.x > container.width / 2 ? -lift : lift
+        return CGPoint(x: inside(touch.x + towardsMiddle, container.width), y: inside(touch.y, container.height))
+    }
+}
+
 extension CourtIntersection {
     /// "Near left corner bracket", the VoiceOver name of a corner handle (S05).
     var bracketName: String {

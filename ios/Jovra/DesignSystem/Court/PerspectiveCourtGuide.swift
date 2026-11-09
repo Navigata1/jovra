@@ -24,6 +24,7 @@ struct PerspectiveCourtGuide<Background: View>: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     static var lineOpacity: Double { 0.7 }
+    static var loupeDiameter: CGFloat { 112 }
 
     private var calibration: Homography? {
         guard corners.count == 4 else { return nil }
@@ -46,7 +47,7 @@ struct PerspectiveCourtGuide<Background: View>: View {
                     handle(index, corner: corner, mapping: mapping)
                 }
                 if let touch = touch ?? pinnedTouch(mapping) {
-                    Loupe(center: touch, contentSize: proxy.size) {
+                    Loupe(center: touch, contentSize: proxy.size, diameter: Self.loupeDiameter) {
                         ZStack(alignment: .topLeading) {
                             background()
                             if let calibration {
@@ -55,7 +56,7 @@ struct PerspectiveCourtGuide<Background: View>: View {
                             }
                         }
                     }
-                    .position(x: touch.x, y: touch.y - 96 >= 60 ? touch.y - 96 : touch.y + 96)
+                    .position(LoupePlacement.centre(touch: touch, in: proxy.size, diameter: Self.loupeDiameter))
                     .transition(Motion.transition(edge: .bottom, reduceMotion: reduceMotion))
                 }
             }

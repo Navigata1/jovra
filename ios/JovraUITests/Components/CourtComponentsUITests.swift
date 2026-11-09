@@ -50,6 +50,10 @@ final class CourtComponentsUITests: XCTestCase {
         XCTAssertEqual(diagram.label, "Forehand placements, sample, 15 placed: 9 deep, 2 short, 3 out, 1 needs review")
         let legend = app.descendants(matching: .any)["court.legend"].firstMatch
         XCTAssertEqual(legend.label, "Legend: filled circle, In, triangle, Out, and ring, Needs review")
+        // The serve zones are words VoiceOver can reach, not pixels in a drawing.
+        for (zone, word) in [("wide", "Wide"), ("body", "Body"), ("t", "T")] {
+            XCTAssertEqual(app.staticTexts["court.zone.\(zone)"].firstMatch.label, word)
+        }
     }
 
     @MainActor

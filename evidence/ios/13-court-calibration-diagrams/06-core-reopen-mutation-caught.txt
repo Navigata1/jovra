@@ -1,0 +1,16 @@
+Mutation: CalibrationValidity.evaluate ignores a stored status of invalid or needsReview
+("case .invalid, .needsReview: return .valid"), then:
+$ swift test --package-path ios/Packages/JovraCore --filter 'allDiscoveredRunnerFixturesPass|CourtCalibration'
+◇ Test run started.
+✘ Test aRecordedUnusableStateRemainsInvalidWithoutMeasurements(_:) recorded an issue with 1 argument status → .needsReview at CourtCalibrationTests.swift:83:9: Expectation failed: reopened.validity(atMs: 0, current: Self.binding).status == "invalid"
+✘ Test aRecordedUnusableStateRemainsInvalidWithoutMeasurements(_:) recorded an issue with 1 argument status → .invalid at CourtCalibrationTests.swift:83:9: Expectation failed: reopened.validity(atMs: 0, current: Self.binding).status == "invalid"
+✘ Test aRecordedUnusableStateRemainsInvalidWithoutMeasurements(_:) with 3 test cases failed after 0.003 seconds with 2 issues.
+✘ Suite "CourtCalibration" failed after 0.003 seconds with 2 issues.
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at CalibrationRunner.swift:140:17: Expectation failed: validity.status == expected.status
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at CalibrationRunner.swift:141:17: Expectation failed: validity.reasonCode == expected.reason
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at CalibrationRunner.swift:140:17: Expectation failed: validity.status == expected.status
+✘ Test allDiscoveredRunnerFixturesPass() recorded an issue at CalibrationRunner.swift:141:17: Expectation failed: validity.reasonCode == expected.reason
+✘ Test allDiscoveredRunnerFixturesPass() failed after 3.939 seconds with 4 issues.
+✘ Test run with 11 tests in 1 suite failed after 3.940 seconds with 6 issues.
+
+Source restored; the same command is green (see 02-core-green.txt).

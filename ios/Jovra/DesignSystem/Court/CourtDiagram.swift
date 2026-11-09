@@ -45,6 +45,7 @@ struct CourtDiagram: View {
     var showsBandLabels = true
 
     @Namespace private var rotorSpace
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     private var aspect: CGFloat {
         let probe = CourtDiagramLayout(variant: variant, width: 100)
@@ -56,6 +57,11 @@ struct CourtDiagram: View {
             let layout = CourtDiagramLayout(variant: variant, width: Double(proxy.size.width))
             ZStack(alignment: .topLeading) {
                 CourtSurface(layout: layout, showsLabels: showsBandLabels)
+                if showsBandLabels {
+                    ForEach(layout.zones, id: \.zone) { zone in
+                        zoneLabel(zone)
+                    }
+                }
                 ForEach(placements) { placement in
                     marker(placement, layout: layout)
                 }
@@ -71,6 +77,30 @@ struct CourtDiagram: View {
             }
         }
     }
+
+    /// "Wide", "Body" and "T" as real text, so VoiceOver reads the zones and the words follow Dynamic Type. They
+    /// sit at the net end of the box: serves land towards the service line, so markers never cover the words. At
+    /// accessibility sizes a word is wider than a third of the box, so it reads up the zone from the net instead,
+    /// like the depth labels along the run-off.
+    @ViewBuilder private func zoneLabel(_ zone: CourtDiagramLayout.Zone) -> some View {
+        let midX = zone.origin.x + zone.size.width / 2, netY = zone.origin.y + zone.size.height
+        let word = Text(zone.zone.title)
+            .font(.jovraCaption.weight(.semibold))
+            .foregroundStyle(.jovra(.textSecondaryOnEditorial))
+            .lineLimit(1)
+            .fixedSize()
+            .accessibilityIdentifier("court.zone.\(zone.zone.rawValue)")
+        if typeSize.isAccessibilitySize {
+            word.frame(width: zone.size.height / 2, alignment: .leading)
+                .rotationEffect(.degrees(-90))
+                .position(x: midX, y: netY - Self.zoneLabelInset / 2 - zone.size.height / 4)
+        } else {
+            word.position(x: midX, y: netY - Self.zoneLabelInset)
+        }
+    }
+
+    /// From the net up to the middle of a zone word.
+    static let zoneLabelInset: CGFloat = 22
 
     private func marker(_ placement: CourtPlacement, layout: CourtDiagramLayout) -> some View {
         let placed = layout.place(placement.court)
@@ -100,8 +130,9 @@ struct CourtDiagram: View {
 /// The drawn court: forest surface, depth-band tint, ivory lines, a meshed net with posts. Decorative.
 struct CourtSurface: View {
     var layout: CourtDiagramLayout
-    /// Band ("Deep", "Short") and zone ("T", "Body", "Wide") labels, drawn in the canvas: they scale with the
-    /// court's width like the lines, and VoiceOver reads the diagram's summary and markers instead.
+    /// Band labels ("Deep", "Short"), drawn in the canvas along the run-off: they scale with the court's width
+    /// like the lines, and VoiceOver reads the diagram's summary and markers instead. Zone words are real text
+    /// laid over the surface by `CourtDiagram`.
     var showsLabels = true
 
     var body: some View {
@@ -151,10 +182,6 @@ struct CourtSurface: View {
             rotated.translateBy(x: runOff / 2, y: band.origin.y + band.size.height / 2)
             rotated.rotate(by: .degrees(-90))
             rotated.draw(text, at: .zero, anchor: .center)
-        }
-        for zone in layout.zones {
-            let text = context.resolve(Text(zone.zone.title).font(.system(size: size + 2, weight: .semibold)).foregroundStyle(ink))
-            context.draw(text, at: CGPoint(x: zone.origin.x + zone.size.width / 2, y: zone.origin.y + size + 4), anchor: .center)
         }
     }
 

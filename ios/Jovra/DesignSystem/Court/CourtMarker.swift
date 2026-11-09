@@ -91,6 +91,8 @@ struct CourtMarkerLegend: View {
     /// Legend text sits on the forest court card by default.
     var onCourtCard = true
     @Environment(\.dynamicTypeSize) private var typeSize
+    /// The shapes grow with the words beside them, so a legend read at an accessibility size keeps its glyphs legible.
+    @ScaledMetric(relativeTo: .subheadline) private var glyph: CGFloat = 16
 
     var body: some View {
         // One row as in the reference; stacked once the words no longer fit beside each other.
@@ -108,7 +110,7 @@ struct CourtMarkerLegend: View {
     @ViewBuilder private var items: some View {
         ForEach(kinds) { kind in
             HStack(spacing: Space.x1) {
-                CourtMarker(kind: kind, size: 16)
+                CourtMarker(kind: kind, size: glyph)
                 Text(kind.title)
                     .font(.jovraLabel)
                     .foregroundStyle(.jovra(onCourtCard ? .textOnEditorial : .textPrimary))
