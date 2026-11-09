@@ -39,8 +39,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Review and fixes
 
-- Match-import opt-in source `6926587` passed six hosted and two UI tests
-  on the iPhone simulator. It requires explicit match setup and per-video
+- Match-import opt-in [#457](https://github.com/Navigata1/jovra/pull/457)
+  merged as `0706e4c`. Reviewed head `6926587` passed six hosted and two UI
+  tests on the iPhone simulator and every required hosted check. It requires explicit match setup and per-video
   confirmation and begins with an empty score log. The first UI run failed
   on a clipped tap, retained as evidence. Real-provider match opt-in and AX5
   are still unverified.
@@ -76,7 +77,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Immediate continuation
 
-1. Finish diagnosing iOS 27.2 Replay audit timeouts. A contrast-first probe
+1. Rerun full CoreFlow on current main `0706e4c`, which now includes #457.
+   Then finish diagnosing iOS 27.2 Replay audit timeouts. A contrast-first probe
    passed; an all-types-first probe is running. Preserve all prior failures
    and keep the original full audit as the acceptance gate.
 2. Continue T26 Photos, batches, duplicate handling, provider and interruption
