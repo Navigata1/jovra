@@ -95,17 +95,17 @@ object CanonicalJson {
             offset++
             budget.charge(2)
             val entries = TreeMap<String, Value>(::compareScalars)
-            if (!take('}')) {
-                do {
-                    val key = string()
-                    require(key !in entries) { "Duplicate JSON object key at offset $offset" }
-                    if (!take(':')) malformed()
-                    budget.charge(quotedLength(key) + 1)
-                    entries[key] = value(childDepth)
-                } while (take(',').also { if (it) budget.charge(1) })
-                if (!take('}')) malformed()
+            if (take('}')) return ObjectValue(entries)
+            while (true) {
+                val key = string()
+                require(key !in entries) { "Duplicate JSON object key at offset $offset" }
+                if (!take(':')) malformed()
+                budget.charge(quotedLength(key) + 1)
+                entries[key] = value(childDepth)
+                if (take('}')) return ObjectValue(entries)
+                if (!take(',')) malformed()
+                budget.charge(1)
             }
-            return ObjectValue(entries)
         }
 
         private fun array(childDepth: Int): Value {
@@ -169,6 +169,7 @@ object CanonicalJson {
                 return Literal.ZERO
             }
             val last = (digits.count - 1 downTo first).first { digits[it] != '0' }
+            // Position of the decimal point relative to the first significant digit.
             val point = digits.whole.length.toLong() + exponent - first
             val number = NumberValue(digits, first..last, point, token.startsWith('-'))
             budget.charge(number.length)
@@ -257,7 +258,7 @@ object CanonicalJson {
                 repeat((-point).toInt()) { output.putAscii('0') }
             }
             for (index in significant) {
-                if (point > 0 && index - significant.first == point.toInt()) output.putAscii('.')
+                if (point > 0 && (index - significant.first).toLong() == point) output.putAscii('.')
                 output.putAscii(digits[index])
             }
             if (point > count) repeat((point - count).toInt()) { output.putAscii('0') }
