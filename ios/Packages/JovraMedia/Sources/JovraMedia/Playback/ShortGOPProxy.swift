@@ -17,8 +17,8 @@ public struct ShortGOPProxy: Sendable {
     /// Longest side of the proxy; smaller sources keep their size.
     public static let maximumDimension = 1280
 
-    /// Builds the proxy beside `directory`'s other files, writing to a temporary name and moving it into place,
-    /// so a half-written proxy is never used.
+    /// Builds a distinct proxy beside `directory`'s other files and publishes it without replacing a file.
+    /// The caller owns the proxy directory and its cache lifecycle.
     public static func build(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> ShortGOPProxy {
         let staged = try await encode(from: source, into: directory, frameRate: frameRate)
         defer { staged.discard() }
@@ -40,8 +40,9 @@ public struct ShortGOPProxy: Sendable {
                 throw ShortGOPProxyError.frameCountMismatch(expected: expectedFrameCount, written: frameCount)
             }
             try Task.checkCancellation()
-            // Both paths are in the proxy directory. Replace any cached copy in one operation.
-            guard rename(partial.path, final.path) == 0 else { throw ShortGOPProxyError.writeFailed }
+            guard renameatx_np(AT_FDCWD, partial.path, AT_FDCWD, final.path, UInt32(RENAME_EXCL)) == 0 else {
+                throw ShortGOPProxyError.writeFailed
+            }
             return ShortGOPProxy(url: final, frameCount: frameCount)
         }
     }
@@ -66,9 +67,9 @@ public struct ShortGOPProxy: Sendable {
         reader.add(output)
 
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let name = source.deletingPathExtension().lastPathComponent
-        let partial = directory.appendingPathComponent("\(name).proxy-\(UUID().uuidString).partial.mov")
-        let final = directory.appendingPathComponent("\(name).proxy.mov")
+        let job = UUID().uuidString
+        let partial = directory.appendingPathComponent("\(job).proxy.partial.mov")
+        let final = directory.appendingPathComponent("\(job).proxy.mov")
         var keepPartial = false
         defer { if !keepPartial { try? FileManager.default.removeItem(at: partial) } }
         let writer = try AVAssetWriter(outputURL: partial, fileType: .mov)
