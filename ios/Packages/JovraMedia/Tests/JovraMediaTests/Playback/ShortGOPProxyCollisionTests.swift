@@ -63,7 +63,7 @@ struct ShortGOPProxyCollisionTests {
         let encoded = try staged.movie.evidenceBytes()
         try sentinel.write(to: staged.final, options: .withoutOverwriting)
 
-        #expect(throws: ShortGOPProxyError.writeFailed) { try staged.publish() }
+        await #expect(throws: ShortGOPProxyError.writeFailed) { try await staged.publish() }
         #expect(try Data(contentsOf: staged.final) == sentinel)
         #expect(try staged.movie.evidenceBytes() == encoded)
         #expect(!FileManager.default.fileExists(atPath: staged.retiredWriter.path))

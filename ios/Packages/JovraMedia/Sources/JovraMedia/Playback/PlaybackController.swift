@@ -59,6 +59,7 @@ public final class PlaybackController {
         try await $0.frame(at: $1)
     }
     @ObservationIgnored var beforeProxyHandoff: (@MainActor (Data, URL) async -> Void)?
+    @ObservationIgnored var beforeProxyVerification: (@Sendable () -> Void)?
     @ObservationIgnored private lazy var seeker = ChaseSeeker { [weak self] time, precision in
         await self?.performSeek(to: time, precision: precision) ?? false
     }
@@ -371,13 +372,16 @@ public final class PlaybackController {
                 if let beforeProxyHandoff = self.beforeProxyHandoff {
                     await beforeProxyHandoff(try staged.movie.evidenceBytes(), staged.retiredWriter)
                 }
-                // Accept and publish on the same actor as close(), with no suspension between them.
+                // Order the filesystem commit with close. Verify the committed clone off the main actor.
                 guard !self.isClosed else { return }
-                let proxy = try staged.publish(expectedFrameCount: expected)
+                let publication = try staged.commit(expectedFrameCount: expected)
+                let url = try await publication.verifiedURL(beforeVerification: self.beforeProxyVerification)
+                guard !self.isClosed else { return }
+                let proxy = ShortGOPProxy(url: url, frameCount: staged.frameCount)
                 self.stepper = try ProxyBackwardStepper(proxy: proxy, frameRate: rate)
                 self.proxyState = .ready
             } catch {
-                self.proxyState = .failed
+                if !self.isClosed { self.proxyState = .failed }
             }
         }
     }

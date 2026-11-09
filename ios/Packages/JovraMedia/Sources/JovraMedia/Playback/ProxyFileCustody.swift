@@ -132,36 +132,88 @@ final class ProxyMovie: Sendable {
 
     deinit { Darwin.close(descriptor) }
 
-    func publish(to receiver: ProxyDirectory, as name: String) throws -> URL {
+    func commit(to receiver: ProxyDirectory, as name: String) throws -> Commit {
         let source = try proxyMetadata(descriptor)
         guard source.st_nlink == 0, source.st_mode & 0o777 == 0o600 else { throw ShortGOPProxyError.writeFailed }
         try receiver.verify()
         guard fclonefileat(descriptor, receiver.descriptor, name, UInt32(CLONE_NOOWNERCOPY)) == 0 else {
             throw ShortGOPProxyError.writeFailed
         }
-        let final = openat(receiver.descriptor, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
-        guard final >= 0 else { throw ShortGOPProxyError.writeFailed }
-        defer { Darwin.close(final) }
-        let metadata = try proxyMetadata(final)
-        try refuseProxyACL(final)
-        guard metadata.st_mode & S_IFMT == S_IFREG, metadata.st_mode & 0o777 == 0o600,
-              metadata.st_uid == geteuid(), metadata.st_nlink == 1, metadata.st_size == source.st_size else {
-            throw ShortGOPProxyError.writeFailed
+        return try Commit(movie: self, receiver: receiver, name: name, size: source.st_size)
+    }
+
+    final class Commit: Sendable {
+        private let movie: ProxyMovie
+        private let receiver: ProxyDirectory
+        private let name: String
+        private let size: off_t
+        private let descriptor: Int32
+        private let identity: ProxyFileIdentity
+        private let modified: timespec
+        private let changed: timespec
+
+        init(movie: ProxyMovie, receiver: ProxyDirectory, name: String, size: off_t) throws {
+            let fd = openat(receiver.descriptor, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
+            guard fd >= 0 else { throw ShortGOPProxyError.writeFailed }
+            do {
+                let metadata = try proxyMetadata(fd)
+                try Self.requirePrivateFile(fd, metadata, size: size)
+                self.movie = movie
+                self.receiver = receiver
+                self.name = name
+                self.size = size
+                descriptor = fd
+                identity = ProxyFileIdentity(metadata)
+                modified = metadata.st_mtimespec
+                changed = metadata.st_ctimespec
+            } catch {
+                Darwin.close(fd)
+                throw error
+            }
         }
-        // A receiver that changes after cloning receives no acknowledgement or path-based cleanup.
-        var offset: off_t = 0
-        while offset < source.st_size {
-            let length = Int(min(64 * 1024, source.st_size - offset))
-            guard try Self.read(descriptor, at: offset, count: length) == Self.read(final, at: offset, count: length) else {
+
+        deinit { Darwin.close(descriptor) }
+
+        func verifiedURL(beforeVerification: (@Sendable () -> Void)? = nil) async throws -> URL {
+            let verifier = Task.detached(priority: .utility) {
+                beforeVerification?()
+                return try self.verify()
+            }
+            return try await withTaskCancellationHandler {
+                try await verifier.value
+            } onCancel: {
+                verifier.cancel()
+            }
+        }
+
+        private func verify() throws -> URL {
+            var offset: off_t = 0
+            while offset < size {
+                try Task.checkCancellation()
+                let length = Int(min(64 * 1024, size - offset))
+                guard try ProxyMovie.read(movie.descriptor, at: offset, count: length)
+                    == ProxyMovie.read(descriptor, at: offset, count: length) else {
+                    throw ShortGOPProxyError.writeFailed
+                }
+                offset += off_t(length)
+            }
+            try Task.checkCancellation()
+            try receiver.verify()
+            let current = try proxyMetadata(descriptor)
+            try Self.requirePrivateFile(descriptor, current, size: size)
+            guard current.st_mtimespec.tv_sec == modified.tv_sec, current.st_mtimespec.tv_nsec == modified.tv_nsec,
+                  current.st_ctimespec.tv_sec == changed.tv_sec, current.st_ctimespec.tv_nsec == changed.tv_nsec,
+                  try receiver.entry(name, type: S_IFREG) == identity else { throw ShortGOPProxyError.writeFailed }
+            return receiver.url.appendingPathComponent(name)
+        }
+
+        private static func requirePrivateFile(_ fd: Int32, _ metadata: stat, size: off_t) throws {
+            try refuseProxyACL(fd)
+            guard metadata.st_mode & S_IFMT == S_IFREG, metadata.st_mode & 0o777 == 0o600,
+                  metadata.st_uid == geteuid(), metadata.st_nlink == 1, metadata.st_size == size else {
                 throw ShortGOPProxyError.writeFailed
             }
-            offset += off_t(length)
         }
-        try receiver.verify()
-        guard try receiver.entry(name, type: S_IFREG) == ProxyFileIdentity(metadata) else {
-            throw ShortGOPProxyError.writeFailed
-        }
-        return receiver.url.appendingPathComponent(name)
     }
 
     // The optional host handoff probe observes bytes without holding a writable stage pathname.

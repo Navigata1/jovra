@@ -180,6 +180,42 @@ struct ShortGOPProxyTests {
         #expect(!FileManager.default.fileExists(atPath: writerDirectory.path))
     }
 
+    @Test
+    @MainActor
+    func closeCanRunWhileCommittedProxyVerificationIsHeldOffMain() async throws {
+        let truth = try catalog.truth(id: "frameCounter/fc-240")
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let controller = try await PlaybackController.open(url: catalog.mediaURL(for: truth), proxyDirectory: directory)
+        defer { controller.close() }
+        let entered = DispatchSemaphore(value: 0)
+        let released = DispatchSemaphore(value: 0)
+        defer { released.signal() }
+        controller.beforeProxyVerification = {
+            #expect(!Thread.isMainThread)
+            entered.signal()
+            _ = released.wait(timeout: .now() + 5)
+        }
+        let build = Task { await controller.buildProxy() }
+        let deadline = ContinuousClock.now + .seconds(3)
+        var held = entered.wait(timeout: .now()) == .success
+        while !held, ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(1))
+            held = entered.wait(timeout: .now()) == .success
+        }
+        try #require(held)
+        #expect(controller.proxyState == .building)
+        let committed = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+        try #require(committed.count == 1)
+        controller.close()
+        #expect(controller.proxyState == .none)
+        released.signal()
+        await build.value
+        #expect(controller.proxyState == .none)
+        #expect(try hasCompleteMovieAtom(in: Data(contentsOf: committed[0])))
+        #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path) == [committed[0].lastPathComponent])
+    }
+
     /// The same budget measured end to end on the controller (readout and displayed still updated).
     @Test
     @MainActor

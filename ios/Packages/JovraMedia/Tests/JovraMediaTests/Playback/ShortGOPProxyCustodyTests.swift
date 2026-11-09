@@ -47,7 +47,7 @@ struct ShortGOPProxyCustodyTests {
         let marker = receiver.appendingPathComponent("sentinel")
         try sentinel.write(to: marker, options: .withoutOverwriting)
 
-        #expect(throws: ShortGOPProxyError.writeFailed) { try staged.publish() }
+        await #expect(throws: ShortGOPProxyError.writeFailed) { try await staged.publish() }
         #expect(try staged.movie.evidenceBytes() == encoded)
         #expect(try files.contentsOfDirectory(atPath: receiver.path) == ["sentinel"])
         #expect(try Data(contentsOf: marker) == sentinel)
@@ -74,7 +74,7 @@ struct ShortGOPProxyCustodyTests {
         try files.createDirectory(at: retired.deletingLastPathComponent(), withIntermediateDirectories: false,
                                   attributes: [.posixPermissions: 0o700])
         try sentinel.write(to: retired, options: .withoutOverwriting)
-        let proxy = try staged.publish()
+        let proxy = try await staged.publish()
         #expect(try Data(contentsOf: proxy.url) == encoded)
         let permissions = try files.attributesOfItem(atPath: proxy.url.path)[.posixPermissions] as? Int
         #expect(permissions == 0o600)
@@ -110,10 +110,49 @@ struct ShortGOPProxyCustodyTests {
         _ = try directory("parent", in: root)
         try files.moveItem(at: detached.appendingPathComponent("proxies"), to: receiver)
 
-        #expect(throws: ShortGOPProxyError.writeFailed) { try staged.publish() }
+        await #expect(throws: ShortGOPProxyError.writeFailed) { try await staged.publish() }
         #expect(try staged.movie.evidenceBytes() == ownBytes)
         #expect(!files.fileExists(atPath: staged.final.path))
         #expect(try files.contentsOfDirectory(atPath: receiver.path).isEmpty)
+    }
+
+    @Test
+    func earlyWriterCancellationNeverPublishesAndAnyResidueStaysPrivate() async throws {
+        let root = try scratch()
+        defer { try? files.removeItem(at: root) }
+        let temporary = files.temporaryDirectory.resolvingSymlinksInPath()
+        let before = Set(try files.contentsOfDirectory(atPath: temporary.path))
+        let gate = FirstProxyFrameGate()
+        let source = try fixture()
+        let task = Task {
+            try await ShortGOPProxy.encode(from: source, into: root, frameRate: .fps60) { await gate.hold() }
+        }
+        defer {
+            task.cancel()
+            Task { await gate.release() }
+        }
+        let deadline = ContinuousClock.now + .seconds(5)
+        while await !gate.isHolding, ContinuousClock.now < deadline { try await Task.sleep(for: .milliseconds(1)) }
+        let held = await gate.isHolding
+        let newNames = try files.contentsOfDirectory(atPath: temporary.path)
+            .filter { $0.hasPrefix("JOVRA-Proxy-") && !before.contains($0) }
+        let writerDirectory = newNames.count == 1 ? temporary.appendingPathComponent(newNames[0]) : nil
+        let sawWriterFile = writerDirectory.map { files.fileExists(atPath: $0.appendingPathComponent("encoded.mov").path) }
+        task.cancel()
+        await gate.release()
+        await #expect(throws: CancellationError.self) { try await task.value }
+        try #require(held && sawWriterFile == true, "The real writer appended its first frame in one new stage")
+        let stage = try #require(writerDirectory)
+        #expect(try files.contentsOfDirectory(atPath: root.path).isEmpty)
+        if files.fileExists(atPath: stage.path) {
+            let metadata = try files.attributesOfItem(atPath: stage.path)
+            #expect(metadata[.type] as? FileAttributeType == .typeDirectory)
+            #expect(metadata[.posixPermissions] as? Int == 0o700)
+            print("Early cancellation retained protected writer scratch")
+            try files.removeItem(at: stage)
+        } else {
+            print("Early cancellation left no writer scratch")
+        }
     }
 
     private func scratch() throws -> URL {
@@ -128,5 +167,24 @@ struct ShortGOPProxyCustodyTests {
 
     private func fixture() throws -> URL {
         try catalog.mediaURL(for: catalog.truth(id: "frameCounter/fc-060"))
+    }
+}
+
+
+private actor FirstProxyFrameGate {
+    private var pending: CheckedContinuation<Void, Never>?
+    private var released = false
+    var isHolding: Bool { pending != nil }
+
+    func hold() async {
+        guard !released else { return }
+        await withCheckedContinuation { pending = $0 }
+    }
+
+    func release() {
+        released = true
+        let continuation = pending
+        pending = nil
+        continuation?.resume()
     }
 }

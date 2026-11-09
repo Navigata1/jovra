@@ -17,10 +17,11 @@ public struct ShortGOPProxy: Sendable {
     public static let maximumDimension = 1280
 
     /// Builds a distinct proxy beside `directory`'s other files and publishes it without replacing a file.
-    /// The caller supplies an existing private local directory on the scratch volume and owns its cache lifecycle.
+    /// The caller supplies an existing private directory on the same clone-capable local filesystem.
+    /// There is no cross-volume copy fallback. The caller owns its cache lifecycle.
     public static func build(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> ShortGOPProxy {
         let staged = try await encode(from: source, into: directory, frameRate: frameRate)
-        return try staged.publish()
+        return try await staged.publish()
     }
 
     /// A complete encode that has retired its private writer name and holds only the file descriptor.
@@ -32,16 +33,24 @@ public struct ShortGOPProxy: Sendable {
         var retiredWriter: URL { movie.retiredWriter }
         var final: URL { receiver.url.appendingPathComponent(finalName) }
 
-        func publish(expectedFrameCount: Int? = nil) throws -> ShortGOPProxy {
+        func commit(expectedFrameCount: Int? = nil) throws -> ProxyMovie.Commit {
             if let expectedFrameCount, frameCount != expectedFrameCount {
                 throw ShortGOPProxyError.frameCountMismatch(expected: expectedFrameCount, written: frameCount)
             }
             try Task.checkCancellation()
-            return ShortGOPProxy(url: try movie.publish(to: receiver, as: finalName), frameCount: frameCount)
+            return try movie.commit(to: receiver, as: finalName)
+        }
+
+        func publish(expectedFrameCount: Int? = nil) async throws -> ShortGOPProxy {
+            let publication = try commit(expectedFrameCount: expectedFrameCount)
+            let url = try await publication.verifiedURL()
+            try Task.checkCancellation()
+            return ShortGOPProxy(url: url, frameCount: frameCount)
         }
     }
 
-    static func encode(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> Staged {
+    static func encode(from source: URL, into directory: URL, frameRate: FrameRate,
+                       afterFirstFrame: (@Sendable () async -> Void)? = nil) async throws -> Staged {
         try Task.checkCancellation()
         let receiver = try ProxyDirectory(directory)
         let asset = AVURLAsset(url: source)
@@ -117,11 +126,11 @@ public struct ShortGOPProxy: Sendable {
                 }
                 guard input.append(sample) else { throw ShortGOPProxyError.writeFailed }
                 written += 1
+                if written == 1, let afterFirstFrame { await afterFirstFrame() }
             }
             guard reader.status == .completed else { throw ShortGOPProxyError.readFailed }
             input.markAsFinished()
             await writer.finishWriting()
-            try Task.checkCancellation()
             guard writer.status == .completed else { throw ShortGOPProxyError.writeFailed }
         } catch {
             if reader.status == .reading { reader.cancelReading() }
@@ -129,6 +138,7 @@ public struct ShortGOPProxy: Sendable {
             throw error
         }
         let output = try ProxyMovie(retiring: movie, in: scratch)
+        try Task.checkCancellation()
         return Staged(movie: output, receiver: receiver, finalName: "\(job).proxy.mov", frameCount: written)
     }
 }
@@ -148,7 +158,7 @@ public actor ProxyBackwardStepper {
     public static func prepare(original: URL, frameRate: FrameRate, proxyDirectory: URL,
                                expectedFrameCount: Int? = nil) async throws -> ProxyBackwardStepper {
         let staged = try await ShortGOPProxy.encode(from: original, into: proxyDirectory, frameRate: frameRate)
-        let proxy = try staged.publish(expectedFrameCount: expectedFrameCount)
+        let proxy = try await staged.publish(expectedFrameCount: expectedFrameCount)
         return try ProxyBackwardStepper(proxy: proxy, frameRate: frameRate)
     }
 
