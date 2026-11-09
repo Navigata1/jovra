@@ -288,7 +288,7 @@ final class ReplayMissingOriginalTests: XCTestCase {
             let identifier = (node as? UIAccessibilityIdentification)?.accessibilityIdentifier
                 ?? (node.responds(to: NSSelectorFromString("accessibilityIdentifier"))
                     ? node.value(forKey: "accessibilityIdentifier") as? String : nil)
-            let frame = NSStringFromCGRect(node.accessibilityFrame)
+            let frame = String(describing: node.accessibilityFrame)
             lines.append("\(depth) \(type(of: node)) label=\(node.accessibilityLabel ?? "-") value=\(node.accessibilityValue ?? "-") id=\(identifier ?? "-") traits=\(node.accessibilityTraits.rawValue) frame=\(frame)")
             var children: [Any] = node.accessibilityElements ?? []
             if children.isEmpty {
