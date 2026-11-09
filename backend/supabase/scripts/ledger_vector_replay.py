@@ -170,6 +170,7 @@ class Case:
         self.by_key: dict[tuple, str] = {}
         self.tokens: dict[str, str] = {}
         self.owner = ""
+        self.layer = "sql"   # who decided the current step's accepted outcome
 
     # setup ---------------------------------------------------------------------------------------------------
     def setup(self) -> None:
@@ -309,6 +310,7 @@ class Case:
             raise Refused({"illustrativeQuote"}, "app", "an illustrative Sample quote is never stored")
         if self.env == "demo":
             q["accepted"] = True
+            self.layer = "gateway"   # a demo identity's acceptance never reaches the database
             return {}
         if q["sql"] is None:
             self.create_sql_quote(a["quoteId"])
@@ -358,6 +360,7 @@ class Case:
 
     def op_attach(self, a: dict) -> dict:
         hold = self.holds[a["reservationId"]]
+        self.layer = "adapter"   # SQL created the job with the hold; the vector names it here
         if hold["job_name"] == a["jobId"]:
             return {"jobId": a["jobId"], "replayed": True}
         if hold["job_name"] is not None:
@@ -460,6 +463,7 @@ class Case:
         for step in self.v["steps"]:
             label = f"{self.v['id']} step {step['step']} {step['op']}"
             expect = step["expect"]
+            self.layer = "sql"
             try:
                 got = ops[step["op"]](step["args"])
             except Refused as refused:
@@ -468,7 +472,7 @@ class Case:
                              f"{label}: refused by {refused.layer} as {expect.get('rejectCode', 'nothing expected')}",
                              refused.detail)
                 continue
-            tally["sql"] = tally.get("sql", 0) + 1
+            tally[self.layer] = tally.get(self.layer, 0) + 1
             wrong = {k: (got.get(k), v) for k, v in expect.items() if got.get(k) != v}
             checks.check("rejectCode" not in expect and not wrong, f"{label}: {json.dumps(expect, sort_keys=True)}",
                          f"got/expected {wrong}" if wrong else ("accepted, expected " + str(expect.get("rejectCode"))
