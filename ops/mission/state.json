@@ -10,7 +10,7 @@
     "northStar": "Complete a trustworthy native iOS tennis product; preserve the local core while advancing the recorded Studio and native-platform roadmap through explicit evidence gates.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-11-09T08:27:36Z",
+    "updated": "2026-11-09T08:40:00Z",
     "sessionCount": 3,
     "assessmentReport": "docs/reports/2026-11-02/JOVRA-State-of-the-Union-v1-2026-11-02.html",
     "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md"
@@ -179,37 +179,37 @@
           "id": "P4-G1",
           "title": "Domain and conformance tests",
           "command": "swift test --package-path ios/Packages/JovraCore",
-          "status": "passed",
+          "status": "pending",
           "evidence": "docs/reports/2026-11-02/evidence/swift-core-tests.txt",
           "lastRun": "2026-11-02T13:11:10.874209+00:00",
-          "notes": "Fresh November2 Core run on assessed main6e46a576:12XCTest+57Swift Testing PASS with Swift6.3.3. lastRun is receipt verification time; actual execution timestamps are retained in the log. No native app/device acceptance transfer."
+          "notes": "Partial recovery changes SessionStore after the historical full Core run. Two focused Core tests passed; rerun full Core and conformance on resulting main."
         },
         {
           "id": "P4-G2",
           "title": "Dedicated simulator core flow and export evidence",
           "command": "scripts/ios/core-flow-test.sh and independent JSON/CSV/FFmpeg artifact checks",
-          "status": "passed",
+          "status": "pending",
           "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
           "lastRun": "2026-11-09T08:04:50Z",
-          "notes": "CoreFlow 1/1 on the 0706e4c iOS and spec trees; the documentation-only #450 merge to 1f15d42 left both trees identical. Actual synthetic session/export schema, canonical bytes, corrected scoring and stats CSV, and full 30-frame clip decode passed. No separately sampled pre-export original hash for this rerun."
+          "notes": "CoreFlow 1/1 passed on product source 0706e4c; partial recovery changes product code. Rerun full CoreFlow and verify actual exports on resulting main."
         },
         {
           "id": "P4-G3",
           "title": "Latest recorded required hosted checks and core dependency merges",
-          "command": "gh pr checks 457 --repo Navigata1/jovra",
-          "status": "passed",
+          "command": "gh pr checks 463 --repo Navigata1/jovra",
+          "status": "pending",
           "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
           "lastRun": "2026-11-09T08:00:11Z",
-          "notes": "PR #457 reviewed head 6926587 passed all triggered automatic checks before its 0706e4c merge. Manual iOS was skipped and does not count as runtime proof. lastRun records merge time."
+          "notes": "PR #463 requires exact-head hosted checks against current main. Manual iOS is separately verified and not hosted CI."
         },
         {
           "id": "P4-G4",
           "title": "Signed iPhone finished-recovery and Files import integration",
           "command": "xcodebuild test with JovraTests/StartupRecoveryTests and JovraTests/FilesImportTests",
-          "status": "passed",
+          "status": "pending",
           "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
           "lastRun": "2026-11-08T10:29:56Z",
-          "notes": "Combined iOS tree 7ca1f93b78194d39baca390ef200d42db43779a2. Signed iPhone 15 Pro Max run passed 6. An earlier test failed with storageUnavailable from a device path alias, fixed in #395. Tests used synthetic media. Live camera, provider picker, and full hardware acceptance remain open."
+          "notes": "Historical signed iPhone suite passed six synthetic tests on iOS tree 7ca1f93. Partial recovery changes product code; signed-device tests on current source remain open."
         },
         {
           "id": "P4-G5",
@@ -378,6 +378,15 @@
             "mergedAt": "2026-11-09T08:00:11Z"
           },
           "notes": "Explicit setup, per-file attestation and empty point log. Exact reviewed head 6926587 passed 8 simulator tests and all triggered automated CI; squash 0706e4c. Actual match provider selection and AX5 remain open under full T26."
+        },
+        {
+          "id": "P4-STARTUP-PARTIAL",
+          "title": "Recover verified playable portions of interrupted captures",
+          "status": "in_progress",
+          "dependsOn": [
+            "P4-STARTUP-RECOVERY"
+          ],
+          "notes": "PR #463 carries the reviewed change; package and hosted-library tests passed. Confirm exact-head CI and integration; rendered UI, cold relaunch and physical crash-loss remain open."
         }
       ]
     }
@@ -765,18 +774,26 @@
       "url": "https://github.com/Navigata1/jovra/pull/450",
       "phase": "P4",
       "mergedAt": "2026-11-09T08:27:12Z"
+    },
+    {
+      "number": 462,
+      "title": "Record physical iPhone background recovery evidence",
+      "url": "https://github.com/Navigata1/jovra/pull/462",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T08:38:45Z"
     }
   ],
   "resume": {
     "activePhase": "P4",
     "nextActions": [
-      "Review and test partial startup recovery with damaged or missing segments; preserve source files, marks and edits, and keep physical crash-loss acceptance open.",
+      "Verify exact-head #463 CI and review against current main; after integration rerun full Core, simulator CoreFlow/export checks and signed-device gates on current source.",
       "Continue T26 after the full real-match Files import and verified retained hash; cover remaining Photos, duplicates and provider criteria.",
       "Diagnose iOS 27.2 Replay audit timeout. Contrast-first passed, all-types-first timed out, and the named checks passed at one position while the remaining all-mask bits timed out. Keep original full audit.",
       "Review and integrate bounded #448, #449 and #447 with their parent branches; keep full acceptance criteria open.",
       "Continue native iOS, Android, watch and Studio through the live ticket DAG and recorded owner gates.",
       "Review and continue A02 draft #460 after its Pixel placeholder-shell test; preserve A01 owner ADR gates and disk floor.",
-      "Review draft #461 against #444; point-in-time media proof does not complete atomic receipt/lesson publication or native wiring."
+      "Review draft #461 against #444; point-in-time media proof does not complete atomic receipt/lesson publication or native wiring.",
+      "Keep Android A03 local helper on hold after reproduced creation and release custody races; do not run it on real AVDs."
     ],
     "blockers": [
       "Live calls, alarm, thermal, crash-loss bound and power-loss evidence remain incomplete. The match imported as a practice video.",

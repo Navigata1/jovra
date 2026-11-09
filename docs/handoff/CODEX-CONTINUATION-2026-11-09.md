@@ -6,10 +6,10 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Current evidence
 
-- Main `0706e4c1f031a6648b48b13d5fbbd5aec2b56c76`: dedicated iPhone
+- On product source `0706e4c1f031a6648b48b13d5fbbd5aec2b56c76`: dedicated iPhone
   simulator CoreFlow passed 1/1 after rendering the 11 sample media files and
   matching their decoded-frame hashes. Its iOS and spec trees match the tested
-  checkout. Independently checked the actual
+  checkout, but subsequent recovery changes require a new run. Independently checked the actual
   synthetic session and export JSON, canonical encoding, corrected scoring
   CSV, stats CSV and one-second 30-frame decoded clip.
 - iPhone 15 Pro Max on earlier main product source `d1f13ab`: a live-camera recording
@@ -50,6 +50,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Review and fixes
 
+- Partial startup recovery [#463](https://github.com/Navigata1/jovra/pull/463) adopts verified playable footage when another segment is damaged or missing. On tested source `176db13`, 78 Media and 45 benchmark tests passed, along with 2/2 app-hosted startup tests using an isolated simulator host ID. The latter exercises the recovery summary and Library model, not rendered UI or a cold relaunch. Source files, marks and edits are preserved; an external writer after the witness check and physical crash-loss remain open. Refresh PR status before claiming integration and rerun current-main gates afterward.
+- Android A03 helper remains local and on hold: fake-SDK review reproduced first-creation directory redirection and a late emulator-lock release race. Do not run it on real AVDs. Its tracked issue is #181.
 - Match-import opt-in [#457](https://github.com/Navigata1/jovra/pull/457)
   merged as `0706e4c`. Reviewed head `6926587` passed six hosted and two UI
   tests on the iPhone simulator and every required hosted check. It requires explicit match setup and per-video
@@ -107,8 +109,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Immediate continuation
 
-1. Finish diagnosing iOS 27.2 Replay audit timeouts. CoreFlow on current main
-   `0706e4c` has passed on the iPhone simulator. The contrast-first probe
+1. Finish diagnosing iOS 27.2 Replay audit timeouts. CoreFlow on product source
+   `0706e4c` passed on the iPhone simulator; rerun after product changes. The contrast-first probe
    passed and the all-types-first probe timed out. Preserve all prior failures
    and keep the original full audit as the acceptance gate.
 2. Continue T26 Photos, batches, duplicate handling, provider and interruption
