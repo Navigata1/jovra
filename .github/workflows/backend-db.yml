@@ -7,11 +7,15 @@ on:
   pull_request:
     paths:
       - backend/supabase/**
+      - spec/studio/fixtures/vectors/ledger.json
+      - spec/studio/contracts/render-job-transitions.v1.json
       - .github/workflows/backend-db.yml
   push:
     branches: [main]
     paths:
       - backend/supabase/**
+      - spec/studio/fixtures/vectors/ledger.json
+      - spec/studio/contracts/render-job-transitions.v1.json
       - .github/workflows/backend-db.yml
   workflow_dispatch:
 
@@ -77,6 +81,13 @@ jobs:
         run: |
           supabase status -o env > "$RUNNER_TEMP/supabase-t71.env"
           python3 supabase/scripts/concurrent_accept_smoke.py "$RUNNER_TEMP/supabase-t71.env"
+
+      # S80: the ledger vectors replayed through the SQL commands give the same balances, and the SQL transition table
+      # equals spec/studio/contracts/render-job-transitions.v1.json for every pair of job states.
+      - name: Ledger vectors replayed through the SQL commands (S80 adapter test)
+        run: |
+          supabase status -o env > "$RUNNER_TEMP/supabase-ledger.env"
+          python3 supabase/scripts/ledger_vector_replay.py "$RUNNER_TEMP/supabase-ledger.env"
 
       - name: OTP sign-in through Auth and Mailpit; unknown emails refused
         run: |
