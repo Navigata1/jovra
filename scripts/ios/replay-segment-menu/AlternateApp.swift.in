@@ -1,0 +1,108 @@
+#if DEBUG && targetEnvironment(simulator)
+import Foundation
+import JovraCore
+import JovraMedia
+import SwiftUI
+
+@main
+struct JovraSegmentMenuProbeApp: App {
+    private enum State {
+        case pending, ready(LocalCaptureLibrary), refused
+    }
+
+    @AppStorage(AppearancePreference.storageKey) private var appearance = AppearancePreference.system
+    @State private var state = State.pending
+    @State private var started = false
+
+    var body: some Scene {
+        WindowGroup {
+            Group {
+                switch state {
+                case .pending: ProgressView("Preparing synthetic Replay")
+                case .ready(let library):
+                    AppRoot()
+                        .preferredColorScheme(appearance.colorScheme)
+                        .tint(.jovra(.textPrimary))
+                        .environment(\.launchConfiguration, .current)
+                        .environment(\.localCaptureLibrary, .ready(library))
+                case .refused:
+                    Text("Synthetic Replay setup refused")
+                        .accessibilityIdentifier("segment-menu.seed.refused")
+                }
+            }
+            .task {
+                guard !started else { return }
+                started = true
+                do { state = .ready(try await SegmentMenuProbeSeed.install()) }
+                catch { state = .refused }
+            }
+        }
+    }
+}
+
+private enum SegmentMenuProbeSeed {
+    private struct Receipt: Codable {
+        let bundle: String
+        let fixture: String
+        let sourceSessionSHA256: String
+        let storedSessionSHA256: String
+        let originalSHA256: String
+    }
+
+    @MainActor static func install() async throws -> LocalCaptureLibrary {
+        let bundle = "@APP_BUNDLE@"
+        let token = "@TOKEN@"
+        let fixtureID = ProbeFixture.id
+        guard let runID = UUID(uuidString: token), runID.uuidString.lowercased() == token,
+              bundle == "com.islanddevcrew.jovra.menuprobe" + token.replacingOccurrences(of: "-", with: ""),
+              Bundle.main.bundleIdentifier == bundle,
+              ProcessInfo.processInfo.environment["JOVRA_SEGMENT_MENU_APP_TOKEN"] == token,
+              let seedURL = Bundle.main.url(forResource: "segment-menu-fixture", withExtension: "json"),
+              let clipURL = Bundle.main.url(forResource: "fixture-camera-720p30", withExtension: "mp4") else {
+            throw ProbeCustodyError.unsafePath
+        }
+        let seed = try Data(contentsOf: seedURL)
+        let clip = try Data(contentsOf: clipURL)
+        try ProbeFixture.verify(session: seed, media: clip)
+        let document = try ContractCodec.decode(SessionDocument.self, from: seed)
+        guard document.id == fixtureID, document.sample?.synthetic == true,
+              document.recording.segments.map({ $0.file.path }) == ["originals/segment-0.mp4", "originals/segment-1.mp4"] else {
+            throw ProbeCustodyError.unsafePath
+        }
+
+        let home = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true).resolvingSymlinksInPath()
+        guard home.path.contains("/CoreSimulator/Devices/"),
+              home.path.contains("/data/Containers/Data/Application/") else { throw ProbeCustodyError.unsafePath }
+        let owned = try ProbeRoot.create(home: home, name: "JOVRA-SegmentMenu-" + token)
+        defer { owned.close() }
+        let root = try owned.bind([])
+        let store = try SessionStore(root: owned.url)
+        try await store.create(document)
+        let session = try owned.bind(["sessions", fixtureID])
+        let storedLeaf = try owned.bindLeaf(in: session, name: "session.json")
+        let library = MediaLibrary(store: store)
+        let later = try await library.reserveOriginalURL(sessionID: fixtureID, relativePath: "originals/segment-1.mp4")
+        let expectedLater = owned.url.appendingPathComponent("sessions").appendingPathComponent(fixtureID)
+            .appendingPathComponent("originals/segment-1.mp4")
+        guard later.standardizedFileURL == expectedLater.standardizedFileURL else { throw ProbeCustodyError.unsafePath }
+        let originals = try owned.bind(["sessions", fixtureID, "originals"])
+        try owned.requireAbsent(in: originals, leaf: "segment-0.mp4")
+        let originalLeaf = try owned.write(clip, in: originals, leaf: "segment-1.mp4")
+        _ = try await library.adoptOriginal(sessionID: fixtureID, relativePath: "originals/segment-1.mp4")
+        let ready = try LocalCaptureLibrary(root: owned.url)
+        let stored = try await store.load(fixtureID)
+        try ProbeFixture.verify(session: owned.read(storedLeaf, maximumBytes: seed.count),
+                                media: owned.read(originalLeaf, maximumBytes: clip.count))
+        try owned.requireAbsent(in: originals, leaf: "segment-0.mp4")
+        try owned.verify(storedLeaf)
+        try owned.verify(originalLeaf)
+        guard stored == document else { throw ProbeCustodyError.identityChanged }
+        let receipt = Receipt(bundle: bundle, fixture: fixtureID, sourceSessionSHA256: ProbeFixture.sessionSHA256,
+                              storedSessionSHA256: ProbeFixture.sessionSHA256, originalSHA256: ProbeFixture.mediaSHA256)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        try owned.write(encoder.encode(receipt), in: root, leaf: "seed-receipt.json")
+        return ready
+    }
+}
+#endif
