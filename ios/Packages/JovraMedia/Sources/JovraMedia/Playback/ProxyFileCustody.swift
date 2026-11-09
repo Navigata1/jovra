@@ -19,6 +19,14 @@ private func proxyMetadata(_ descriptor: Int32) throws -> stat {
     return value
 }
 
+private func refuseProxyACL(_ descriptor: Int32) throws {
+    if let acl = acl_get_fd_np(descriptor, ACL_TYPE_EXTENDED) {
+        acl_free(acl)
+        throw ShortGOPProxyError.writeFailed
+    }
+    guard errno == ENOENT else { throw ShortGOPProxyError.writeFailed }
+}
+
 /// Pins the receiver and its ancestors. Mutations use the held directory descriptor.
 final class ProxyDirectory: Sendable {
     let url: URL
@@ -53,6 +61,7 @@ final class ProxyDirectory: Sendable {
                 identities.append(ProxyFileIdentity(try proxyMetadata(current)))
             }
             let receiver = try proxyMetadata(current)
+            try refuseProxyACL(current)
             guard receiver.st_uid == geteuid(), receiver.st_mode & 0o022 == 0 else {
                 throw ShortGOPProxyError.writeFailed
             }
@@ -94,29 +103,27 @@ final class ProxyDirectory: Sendable {
     }
 }
 
-/// The writer's completed file, held in an exclusive, process-private scratch directory.
-final class ProxyLeaf: Sendable {
-    let directory: ProxyDirectory
-    let name: String
+/// Seals an authentic writer result in the process-private namespace before exposing a handoff.
+final class ProxyMovie: Sendable {
     private let descriptor: Int32
-    private let identity: ProxyFileIdentity
-    var url: URL { directory.url.appendingPathComponent(name) }
+    let retiredWriter: URL
 
-    init(_ directory: ProxyDirectory, name: String) throws {
-        try directory.verify()
-        let fd = openat(directory.descriptor, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
+    init(retiring name: String, in scratch: ProxyDirectory) throws {
+        try scratch.verify()
+        let fd = openat(scratch.descriptor, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
         guard fd >= 0 else { throw ShortGOPProxyError.writeFailed }
         do {
             let opened = try proxyMetadata(fd)
-            let identity = ProxyFileIdentity(opened)
-            guard opened.st_mode & S_IFMT == S_IFREG,
-                  try directory.entry(name, type: S_IFREG) == identity else {
-                throw ShortGOPProxyError.writeFailed
-            }
-            self.directory = directory
-            self.name = name
-            self.descriptor = fd
-            self.identity = identity
+            guard opened.st_mode & S_IFMT == S_IFREG, opened.st_uid == geteuid(),
+                  opened.st_nlink == 1, opened.st_size > 0 else { throw ShortGOPProxyError.writeFailed }
+            try refuseProxyACL(fd)
+            guard fchmod(fd, 0o600) == 0 else { throw ShortGOPProxyError.writeFailed }
+            try scratch.verify()
+            guard try scratch.entry(name, type: S_IFREG) == ProxyFileIdentity(opened),
+                  unlinkat(scratch.descriptor, name, 0) == 0,
+                  try proxyMetadata(fd).st_nlink == 0 else { throw ShortGOPProxyError.writeFailed }
+            descriptor = fd
+            retiredWriter = scratch.url.appendingPathComponent(name)
         } catch {
             Darwin.close(fd)
             throw error
@@ -125,27 +132,55 @@ final class ProxyLeaf: Sendable {
 
     deinit { Darwin.close(descriptor) }
 
-    func publish(to receiver: ProxyDirectory, as finalName: String) throws -> URL {
-        try verify()
+    func publish(to receiver: ProxyDirectory, as name: String) throws -> URL {
+        let source = try proxyMetadata(descriptor)
+        guard source.st_nlink == 0, source.st_mode & 0o777 == 0o600 else { throw ShortGOPProxyError.writeFailed }
         try receiver.verify()
-        // A hard link exposes the complete owned file atomically. An existing name or another
-        // volume is a refusal; no receiver pathname is passed to the writer or used as a source.
-        guard linkat(directory.descriptor, name, receiver.descriptor, finalName, 0) == 0 else {
+        guard fclonefileat(descriptor, receiver.descriptor, name, UInt32(CLONE_NOOWNERCOPY)) == 0 else {
             throw ShortGOPProxyError.writeFailed
         }
-        try verify()
+        let final = openat(receiver.descriptor, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
+        guard final >= 0 else { throw ShortGOPProxyError.writeFailed }
+        defer { Darwin.close(final) }
+        let metadata = try proxyMetadata(final)
+        try refuseProxyACL(final)
+        guard metadata.st_mode & S_IFMT == S_IFREG, metadata.st_mode & 0o777 == 0o600,
+              metadata.st_uid == geteuid(), metadata.st_nlink == 1, metadata.st_size == source.st_size else {
+            throw ShortGOPProxyError.writeFailed
+        }
+        // A receiver that changes after cloning receives no acknowledgement or path-based cleanup.
+        var offset: off_t = 0
+        while offset < source.st_size {
+            let length = Int(min(64 * 1024, source.st_size - offset))
+            guard try Self.read(descriptor, at: offset, count: length) == Self.read(final, at: offset, count: length) else {
+                throw ShortGOPProxyError.writeFailed
+            }
+            offset += off_t(length)
+        }
         try receiver.verify()
-        guard try receiver.entry(finalName, type: S_IFREG) == identity else { throw ShortGOPProxyError.writeFailed }
-        return receiver.url.appendingPathComponent(finalName)
+        guard try receiver.entry(name, type: S_IFREG) == ProxyFileIdentity(metadata) else {
+            throw ShortGOPProxyError.writeFailed
+        }
+        return receiver.url.appendingPathComponent(name)
     }
 
-    func discard() {
-        guard (try? verify()) != nil else { return }
-        _ = unlinkat(directory.descriptor, name, 0)
+    // The optional host handoff probe observes bytes without holding a writable stage pathname.
+    func evidenceBytes() throws -> Data {
+        try Self.read(descriptor, at: 0, count: Int(proxyMetadata(descriptor).st_size))
     }
 
-    private func verify() throws {
-        try directory.verify()
-        guard try directory.entry(name, type: S_IFREG) == identity else { throw ShortGOPProxyError.writeFailed }
+    private static func read(_ fd: Int32, at offset: off_t, count: Int) throws -> Data {
+        var bytes = Data(count: count)
+        try bytes.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) in
+            guard let address = buffer.baseAddress else { throw ShortGOPProxyError.writeFailed }
+            var readCount = 0
+            while readCount < count {
+                let amount = pread(fd, address.advanced(by: readCount), count - readCount, offset + off_t(readCount))
+                if amount < 0, errno == EINTR { continue }
+                guard amount > 0 else { throw ShortGOPProxyError.writeFailed }
+                readCount += amount
+            }
+        }
+        return bytes
     }
 }

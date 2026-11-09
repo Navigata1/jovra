@@ -157,25 +157,26 @@ struct ShortGOPProxyTests {
         let controller = try await PlaybackController.open(url: catalog.mediaURL(for: truth), proxyDirectory: directory)
         defer { controller.close() }
         let gate = ProxyHandoffGate()
-        controller.beforeProxyHandoff = { await gate.hold($0) }
+        controller.beforeProxyHandoff = { await gate.hold(bytes: $0, retiredWriter: $1) }
         defer { gate.release() }
         let build = Task { await controller.buildProxy() }
         let deadline = ContinuousClock.now + .seconds(5)
-        while gate.partial == nil, ContinuousClock.now < deadline {
+        while gate.receipt == nil, ContinuousClock.now < deadline {
             try await Task.sleep(for: .milliseconds(1))
         }
-        let partial = try #require(gate.partial, "The real detached encode reached its handoff")
-        let writerDirectory = partial.deletingLastPathComponent()
+        let receipt = try #require(gate.receipt, "The real detached encode reached its handoff")
+        let writerDirectory = receipt.retiredWriter.deletingLastPathComponent()
         let systemTemporary = FileManager.default.temporaryDirectory.resolvingSymlinksInPath()
         #expect(writerDirectory.deletingLastPathComponent().path == systemTemporary.path)
-        try #require(try hasCompleteMovieAtom(in: partial))
+        try #require(hasCompleteMovieAtom(in: receipt.bytes))
+        #expect(!FileManager.default.fileExists(atPath: writerDirectory.path))
         #expect(controller.proxyState == .building)
         #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty)
         controller.close()
         gate.release()
         await build.value
         #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty)
-        #expect(!FileManager.default.fileExists(atPath: partial.path))
+        #expect(!FileManager.default.fileExists(atPath: receipt.retiredWriter.path))
         #expect(!FileManager.default.fileExists(atPath: writerDirectory.path))
     }
 
@@ -208,8 +209,7 @@ struct ShortGOPProxyTests {
 }
 
 /// AVAssetWriter finishes this MOV by appending a complete top-level movie atom.
-private func hasCompleteMovieAtom(in url: URL) throws -> Bool {
-    let bytes = try Data(contentsOf: url)
+private func hasCompleteMovieAtom(in bytes: Data) -> Bool {
     var offset = 0
     while bytes.count - offset >= 8 {
         let size = bytes[offset..<(offset + 4)].reduce(0) { ($0 << 8) | Int($1) }
@@ -222,11 +222,11 @@ private func hasCompleteMovieAtom(in url: URL) throws -> Bool {
 
 @MainActor
 private final class ProxyHandoffGate {
-    private(set) var partial: URL?
+    private(set) var receipt: (bytes: Data, retiredWriter: URL)?
     private var pending: CheckedContinuation<Void, Never>?
 
-    func hold(_ partial: URL) async {
-        self.partial = partial
+    func hold(bytes: Data, retiredWriter: URL) async {
+        receipt = (bytes, retiredWriter)
         await withCheckedContinuation { pending = $0 }
     }
 

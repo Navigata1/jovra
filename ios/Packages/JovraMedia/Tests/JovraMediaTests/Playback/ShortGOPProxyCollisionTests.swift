@@ -60,14 +60,13 @@ struct ShortGOPProxyCollisionTests {
         let sourceBytes = try Data(contentsOf: original)
         let directory = try proxyFolder(in: workspace)
         let staged = try await ShortGOPProxy.encode(from: original, into: directory, frameRate: .fps60)
-        let encoded = try Data(contentsOf: staged.partial)
+        let encoded = try staged.movie.evidenceBytes()
         try sentinel.write(to: staged.final, options: .withoutOverwriting)
 
         #expect(throws: ShortGOPProxyError.writeFailed) { try staged.publish() }
         #expect(try Data(contentsOf: staged.final) == sentinel)
-        #expect(try Data(contentsOf: staged.partial) == encoded)
-        staged.discard()
-        #expect(!FileManager.default.fileExists(atPath: staged.partial.path))
+        #expect(try staged.movie.evidenceBytes() == encoded)
+        #expect(!FileManager.default.fileExists(atPath: staged.retiredWriter.path))
         #expect(try Data(contentsOf: staged.final) == sentinel)
         #expect(try Data(contentsOf: original) == sourceBytes)
     }

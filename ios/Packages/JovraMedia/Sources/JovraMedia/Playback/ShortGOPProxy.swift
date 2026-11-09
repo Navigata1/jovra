@@ -20,31 +20,24 @@ public struct ShortGOPProxy: Sendable {
     /// The caller supplies an existing private local directory on the scratch volume and owns its cache lifecycle.
     public static func build(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> ShortGOPProxy {
         let staged = try await encode(from: source, into: directory, frameRate: frameRate)
-        defer { staged.discard() }
         return try staged.publish()
     }
 
-    /// A complete encode with its unique temporary name still in place.
+    /// A complete encode that has retired its private writer name and holds only the file descriptor.
     struct Staged: Sendable {
-        let leaf: ProxyLeaf
-        let temporary: ProxyDirectory
+        let movie: ProxyMovie
         let receiver: ProxyDirectory
         let finalName: String
         let frameCount: Int
-        var partial: URL { leaf.url }
+        var retiredWriter: URL { movie.retiredWriter }
         var final: URL { receiver.url.appendingPathComponent(finalName) }
-
-        func discard() {
-            leaf.discard()
-            temporary.discardPrivateChild(leaf.directory)
-        }
 
         func publish(expectedFrameCount: Int? = nil) throws -> ShortGOPProxy {
             if let expectedFrameCount, frameCount != expectedFrameCount {
                 throw ShortGOPProxyError.frameCountMismatch(expected: expectedFrameCount, written: frameCount)
             }
             try Task.checkCancellation()
-            return ShortGOPProxy(url: try leaf.publish(to: receiver, as: finalName), frameCount: frameCount)
+            return ShortGOPProxy(url: try movie.publish(to: receiver, as: finalName), frameCount: frameCount)
         }
     }
 
@@ -69,17 +62,13 @@ public struct ShortGOPProxy: Sendable {
         reader.add(output)
 
         let job = "JOVRA-Proxy-" + UUID().uuidString
-        // AVAssetWriter needs a URL. The caller cannot choose its private, exclusive scratch pathname.
+        // AVAssetWriter needs a URL. The stage is exclusive and kept inside the OS-provided
+        // process-private temp namespace. Other same-user code must not mutate that namespace.
         let temporary = try ProxyDirectory(FileManager.default.temporaryDirectory)
         let scratch = try temporary.privateChild(job)
         let movie = "encoded.mov"
-        var keepScratch = false
-        defer {
-            if !keepScratch {
-                if let output = try? ProxyLeaf(scratch, name: movie) { output.discard() }
-                temporary.discardPrivateChild(scratch)
-            }
-        }
+        // A failed writer can leave an unbound file. Leave it protected for system temp cleanup.
+        defer { temporary.discardPrivateChild(scratch) }
         try scratch.verify()
         let writer = try AVAssetWriter(outputURL: scratch.url.appendingPathComponent(movie), fileType: .mov)
         let fps = max(1, Int(frameRate.framesPerSecond.rounded()))
@@ -139,10 +128,8 @@ public struct ShortGOPProxy: Sendable {
             if writer.status == .writing { writer.cancelWriting() }
             throw error
         }
-        let output = try ProxyLeaf(scratch, name: movie)
-        keepScratch = true
-        return Staged(leaf: output, temporary: temporary, receiver: receiver, finalName: "\(job).proxy.mov",
-                      frameCount: written)
+        let output = try ProxyMovie(retiring: movie, in: scratch)
+        return Staged(movie: output, receiver: receiver, finalName: "\(job).proxy.mov", frameCount: written)
     }
 }
 
@@ -161,7 +148,6 @@ public actor ProxyBackwardStepper {
     public static func prepare(original: URL, frameRate: FrameRate, proxyDirectory: URL,
                                expectedFrameCount: Int? = nil) async throws -> ProxyBackwardStepper {
         let staged = try await ShortGOPProxy.encode(from: original, into: proxyDirectory, frameRate: frameRate)
-        defer { staged.discard() }
         let proxy = try staged.publish(expectedFrameCount: expectedFrameCount)
         return try ProxyBackwardStepper(proxy: proxy, frameRate: frameRate)
     }

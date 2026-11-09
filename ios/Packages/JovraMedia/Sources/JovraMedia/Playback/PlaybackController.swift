@@ -58,7 +58,7 @@ public final class PlaybackController {
     @ObservationIgnored var decodeProxyFrame: @MainActor (ProxyBackwardStepper, Int) async throws -> PlaybackFrame = {
         try await $0.frame(at: $1)
     }
-    @ObservationIgnored var beforeProxyHandoff: (@MainActor (URL) async -> Void)?
+    @ObservationIgnored var beforeProxyHandoff: (@MainActor (Data, URL) async -> Void)?
     @ObservationIgnored private lazy var seeker = ChaseSeeker { [weak self] time, precision in
         await self?.performSeek(to: time, precision: precision) ?? false
     }
@@ -360,7 +360,6 @@ public final class PlaybackController {
                 encoder.cancel()
             }
             let staged = try? result.get()
-            defer { staged?.discard() }
             guard let self else { return }
             defer { self.proxyTask = nil }
             guard !self.isClosed else { return }
@@ -368,12 +367,12 @@ public final class PlaybackController {
                 self.proxyState = .failed
                 return
             }
-            if let beforeProxyHandoff = self.beforeProxyHandoff {
-                await beforeProxyHandoff(staged.partial)
-            }
-            // Accept and publish on the same actor as close(), with no suspension between them.
-            guard !self.isClosed else { return }
             do {
+                if let beforeProxyHandoff = self.beforeProxyHandoff {
+                    await beforeProxyHandoff(try staged.movie.evidenceBytes(), staged.retiredWriter)
+                }
+                // Accept and publish on the same actor as close(), with no suspension between them.
+                guard !self.isClosed else { return }
                 let proxy = try staged.publish(expectedFrameCount: expected)
                 self.stepper = try ProxyBackwardStepper(proxy: proxy, frameRate: rate)
                 self.proxyState = .ready
