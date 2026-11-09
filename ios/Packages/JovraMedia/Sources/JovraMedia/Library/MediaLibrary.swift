@@ -79,14 +79,17 @@ public actor MediaLibrary {
         return url
     }
 
-    /// Verify current finalized segments against owned bytes, in the caller's order.
-    public func originalSHA256s(sessionID: String, segments: [SessionSegment]) async throws -> [String] {
+    /// Verify finalized segments against owned bytes and the exact media state the caller checked.
+    public func originalSHA256s(expected: SessionDocument, segments: [SessionSegment]) async throws -> [String] {
+        func matchesSnapshot(_ current: SessionDocument) -> Bool {
+            current.recording == expected.recording && current.original == expected.original && current.sample == expected.sample
+        }
         try Task.checkCancellation()
-        let folder = try await store.sessionDirectory(sessionID)
+        let folder = try await store.sessionDirectory(expected.id)
         let identity = try DurableDirectory.identity(of: folder)
-        let before = try await store.load(sessionID)
-        guard !segments.isEmpty, before.recording.mediaAvailable,
-              segments.allSatisfy({ $0.finalized && before.recording.segments.contains($0) }) else {
+        let before = try await store.load(expected.id)
+        guard matchesSnapshot(before), !segments.isEmpty, expected.recording.mediaAvailable,
+              segments.allSatisfy({ $0.finalized && expected.recording.segments.contains($0) }) else {
             throw MediaLibraryError.notFound
         }
         var files: [String: MediaFileIdentity] = [:]
@@ -101,9 +104,8 @@ public actor MediaLibrary {
             files[path] = fileIdentity
             hashes.append(fingerprint.sha256)
         }
-        let after = try await store.load(sessionID)
-        guard before.recording == after.recording, before.original == after.original,
-              before.sample == after.sample else { throw MediaLibraryError.notFound }
+        let after = try await store.load(expected.id)
+        guard matchesSnapshot(after) else { throw MediaLibraryError.notFound }
         try MediaAdoptionWitness(directory: identity, files: files).verify(in: folder)
         return hashes
     }

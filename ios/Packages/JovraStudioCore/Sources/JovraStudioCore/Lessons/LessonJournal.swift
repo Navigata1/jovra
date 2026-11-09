@@ -1,8 +1,9 @@
 import Foundation
 import JovraCore
 
-/// Hashes the supplied current segments' owned originals in order, or throws if custody is unverified.
-public typealias LessonMediaVerifier = @Sendable (String, [SessionSegment]) async throws -> [String]
+/// Hashes the selected owned originals in order. The verifier must check that recording, original and Sample
+/// state still match the supplied session snapshot before and after reading.
+public typealias LessonMediaVerifier = @Sendable (SessionDocument, [SessionSegment]) async throws -> [String]
 
 /// Why a journal operation was refused.
 public enum LessonJournalError: Error, Equatable, Sendable {

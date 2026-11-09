@@ -102,7 +102,7 @@ public struct LessonClipSources: Codable, Equatable, Sendable {
         }
         guard covered == range.endUs else { throw LessonJournalError.noVideo(document.id) }
         try Task.checkCancellation()
-        let hashes = try await verifier(document.id, spans.map(\.segment))
+        let hashes = try await verifier(document, spans.map(\.segment))
         try Task.checkCancellation()
         guard hashes.count == spans.count else { throw LessonJournalError.noVideo(document.id) }
         return try zip(spans, hashes).map { span, hash in

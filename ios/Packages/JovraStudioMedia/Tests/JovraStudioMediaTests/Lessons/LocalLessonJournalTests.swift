@@ -1,5 +1,6 @@
 import Foundation
 import JovraCore
+import JovraMedia
 import JovraStudioCore
 import JovraStudioMedia
 import Testing
@@ -46,6 +47,55 @@ struct LocalLessonJournalTests {
         let repaired = try await journal.findTheVideo(clipId: clip.clipId, in: lesson.lessonId, candidateSessionId: "restored")
         #expect(repaired.sessionId.value == "restored" && repaired.window.value == range && repaired.status == .available)
         #expect(try Data(contentsOf: fixture) == bytes)
+    }
+
+    enum RecordingChange: CaseIterable, Sendable { case gap, duration, original }
+
+    @Test(arguments: RecordingChange.allCases)
+    func aRecordingChangeBetweenTimelineReadAndMediaVerificationRefusesTheLink(change: RecordingChange) async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let sessions = try SessionStore(root: root.appendingPathComponent("Core"))
+        let store = try StudioProjectStore(root: root.appendingPathComponent("Studio"), sessions: sessions)
+        let project = try await store.create(kind: .lessonSeries)
+        let fixture = StudioFixtures.repositoryRoot().appendingPathComponent("ios/Jovra/Resources/Fixtures/fixture-camera-720p30.mp4")
+        _ = try await addSession("source", fileName: "segment-0.mp4", start: 0,
+                                 bytes: Data(contentsOf: fixture), store: sessions)
+
+        let ready = AsyncStream<Void>.makeStream()
+        let resume = AsyncStream<Void>.makeStream()
+        let media = MediaLibrary(store: sessions)
+        let journal = LessonJournal(store: store, projectId: project.projectId, sessions: sessions, verifyMedia: { expected, segments in
+            ready.continuation.yield()
+            for await _ in resume.stream {}
+            return try await media.originalSHA256s(expected: expected, segments: segments)
+        })
+        let lesson = try await journal.create(date: "2026-11-04", title: "Check the same recording")
+        let link = Task {
+            defer { ready.continuation.finish() }
+            return try await journal.linkClip(sessionId: "source", range: .init(startUs: 1_000_000, endUs: 2_000_000),
+                                              to: lesson.lessonId)
+        }
+        defer { resume.continuation.finish(); link.cancel() }
+        var arrival = ready.stream.makeAsyncIterator()
+        try #require(await arrival.next() != nil, "The journal had already checked its original timeline")
+        var recording = try await sessions.load("source").recording
+        switch change {
+        case .gap:
+            recording.gaps = [.init(startMs: 1_250, endMs: 1_500, reason: .interruption)]
+            try await sessions.updateRecording(recording, for: "source")
+        case .duration:
+            recording.durationMs = 1_500
+            try await sessions.updateRecording(recording, for: "source")
+        case .original:
+            try await sessions.update("source", facet: .original(.init(state: .partial)))
+        }
+        resume.continuation.finish()
+
+        await #expect(throws: LessonJournalError.noVideo("source")) { _ = try await link.value }
+        #expect(try await journal.lesson(lesson.lessonId) == lesson)
+        #expect(try await store.record(named: "\(lesson.lessonId).clip-sources.json",
+                                       in: .lessons, of: project.projectId) == nil)
     }
 
     private func addSession(_ id: String, fileName: String, start: Int, bytes: Data, store: SessionStore) async throws -> URL {

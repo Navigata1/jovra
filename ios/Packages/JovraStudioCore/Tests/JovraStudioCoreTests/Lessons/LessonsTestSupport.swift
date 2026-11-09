@@ -24,8 +24,8 @@ struct LessonsScratch {
 
     func journal(_ projectId: String) -> LessonJournal {
         LessonJournal(store: store, projectId: projectId, sessions: sessions, now: { ProjectScratch.fixedNow },
-                      makeID: LessonsIDs().next, verifyMedia: { [sessions] id, segments in
-                          let directory = try await sessions.sessionDirectory(id)
+                      makeID: LessonsIDs().next, verifyMedia: { [sessions] expected, segments in
+                          let directory = try await sessions.sessionDirectory(expected.id)
                           return try segments.map { try StudioSHA256.hex(Data(contentsOf: directory.appendingPathComponent($0.file.path))) }
                       })
     }
