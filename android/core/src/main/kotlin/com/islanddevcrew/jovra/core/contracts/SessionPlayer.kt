@@ -1,6 +1,8 @@
 package com.islanddevcrew.jovra.core.contracts
 
 import com.islanddevcrew.jovra.core.json.CanonicalJson
+import com.islanddevcrew.jovra.core.json.optionalString
+import com.islanddevcrew.jovra.core.json.requireString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -66,11 +68,11 @@ data class SessionPlayer(
             val fields = Json.parseToJsonElement(input) as JsonObject
             require(fields.keys.all { it in fieldNames }) { "Unknown player field" }
 
-            val hand = fields.text("handedness")
-            val backhand = fields.text("backhand")
+            val hand = fields.requireString("handedness")
+            val backhand = fields.requireString("backhand")
             return SessionPlayer(
-                id = OpaqueId(fields.text("id")),
-                displayName = fields.text("displayName"),
+                id = OpaqueId(fields.requireString("id")),
+                displayName = fields.requireString("displayName"),
                 handedness = requireNotNull(Handedness.entries.firstOrNull { it.wireName == hand }) {
                     "Unknown player handedness"
                 },
@@ -78,15 +80,9 @@ data class SessionPlayer(
                     "Unknown player backhand"
                 },
                 isSelf = fields.boolean("isSelf"),
-                level = if ("level" in fields) fields.text("level") else null,
-                profileId = if ("profileId" in fields) OpaqueId(fields.text("profileId")) else null,
+                level = fields.optionalString("level"),
+                profileId = fields.optionalString("profileId")?.let(::OpaqueId),
             )
-        }
-
-        private fun JsonObject.text(name: String): String {
-            val token = this[name] as? JsonPrimitive
-            require(token != null && token.isString) { "Expected a string player field: $name" }
-            return token.content
         }
 
         private fun JsonObject.boolean(name: String): Boolean {
