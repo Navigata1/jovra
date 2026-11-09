@@ -115,19 +115,19 @@ final class FakeWatchBridgeTests: XCTestCase {
 
     func testLateRetiredBridgeDoesNotRefreshBeforeOrAfterWatchRestart() throws {
         var retired = try WatchTestRecords.sample(bridgeSeq: 20)
-        bridge.deliverNow(retired)
+        bridge.deliverNow(try wireValidated(retired))
         var current = try WatchTestRecords.sample(bridgeSeq: 1)
         current.bridge.bridgeInstanceId = "sample-bridge-run-2"
-        bridge.deliverNow(current)
+        bridge.deliverNow(try wireValidated(current))
         XCTAssertEqual(receiver.snapshot, current)
 
         retired.bridge.bridgeSeq = 21
         clock.advance(byMs: 3_001)
-        assertRefusedWithoutRefresh(retired, expecting: .bridgeInstanceRetired)
+        try assertRefusedWithoutRefresh(retired, expecting: .bridgeInstanceRetired)
         bridge.restartReceiver()
         XCTAssertTrue(receiver.isAwaitingLiveUpdate)
         retired.bridge.bridgeSeq += 1
-        assertRefusedWithoutRefresh(retired, expecting: .bridgeInstanceRetired)
+        try assertRefusedWithoutRefresh(retired, expecting: .bridgeInstanceRetired)
         XCTAssertTrue(receiver.isAwaitingLiveUpdate)
     }
 
@@ -135,19 +135,19 @@ final class FakeWatchBridgeTests: XCTestCase {
         let paired = try WatchTestRecords.sample()
         var foreign = try WatchTestRecords.sample(bridgeSeq: 999)
         foreign.bridge.bridgeDeviceId = "foreign-phone"
-        assertRefusedWithoutRefresh(foreign, expecting: .notPairedBridge)
+        try assertRefusedWithoutRefresh(foreign, expecting: .notPairedBridge)
         XCTAssertNil(receiver.snapshot)
 
-        bridge.deliverNow(paired)
+        bridge.deliverNow(try wireValidated(paired))
         XCTAssertEqual(receiver.snapshot, paired)
         foreign.bridge.bridgeInstanceId = "foreign-bridge"
-        assertRefusedWithoutRefresh(foreign, expecting: .notPairedBridge)
+        try assertRefusedWithoutRefresh(foreign, expecting: .notPairedBridge)
     }
 
     func testAnUnboundReceiverCannotAcceptAFirstPayload() throws {
         let unbound = WatchSnapshotReceiver(clock: clock, baselineId: "pb-unbound", pairedPhoneId: nil)
         let unboundBridge = FakeWatchBridge(sink: unbound)
-        unboundBridge.deliverNow(try WatchTestRecords.sample())
+        unboundBridge.deliverNow(try wireValidated(WatchTestRecords.sample()))
         XCTAssertNil(unbound.snapshot)
         XCTAssertNil(unbound.observation)
         XCTAssertEqual(unbound.lastOutcome, .notPairedBridge)
@@ -167,46 +167,54 @@ final class FakeWatchBridgeTests: XCTestCase {
 
     func testSessionMarksSurviveSwitchingRoomsAndANewerEpochCanResetThem() throws {
         let first = try WatchTestRecords.sample()
-        bridge.deliverNow(first)
+        bridge.deliverNow(try wireValidated(first))
         var other = try WatchTestRecords.sample(bridgeSeq: 9)
         other.sessionId = "sample-other-session"
         other.hostEpoch = 1
         other.snapshotSeq = 1
         other.eventRevision = 0
-        bridge.deliverNow(other)
+        bridge.deliverNow(try wireValidated(other))
         XCTAssertEqual(receiver.snapshot, other)
 
         var old = try WatchTestRecords.sample(bridgeSeq: 10)
         old.snapshotSeq -= 1
-        assertRefusedWithoutRefresh(old, expecting: .snapshotSeqRegressed)
+        try assertRefusedWithoutRefresh(old, expecting: .snapshotSeqRegressed)
         var newEpoch = old
         newEpoch.hostEpoch += 1
         newEpoch.snapshotSeq = 1
         newEpoch.eventRevision = 0
-        bridge.deliverNow(newEpoch)
+        bridge.deliverNow(try wireValidated(newEpoch))
         XCTAssertEqual(receiver.lastOutcome, .accepted)
         XCTAssertEqual(receiver.snapshot, newEpoch)
     }
 
     private func assertRegressionRefused(_ verdict: BridgeVerdict, regress: (inout WatchBridgeSnapshot) -> Void) throws {
-        bridge.deliverNow(try WatchTestRecords.sample())
+        bridge.deliverNow(try wireValidated(WatchTestRecords.sample()))
         var older = try WatchTestRecords.sample(bridgeSeq: 9)
         regress(&older)
         clock.advance(byMs: 3_001)
-        assertRefusedWithoutRefresh(older, expecting: verdict)
+        try assertRefusedWithoutRefresh(older, expecting: verdict)
 
         let valid = try WatchTestRecords.sample(bridgeSeq: 9)
-        bridge.deliverNow(valid)
+        bridge.deliverNow(try wireValidated(valid))
         XCTAssertEqual(receiver.lastOutcome, .accepted, "a refusal must not consume the valid successor's sequence")
         XCTAssertEqual(receiver.snapshot, valid)
     }
 
+    private func wireValidated(_ payload: WatchBridgeSnapshot) throws -> WatchBridgeSnapshot {
+        let record = try RoomRecord.decode(RoomRecord.watchBridge(payload).canonicalData())
+        // These fixtures have no capability-backed analysis result.
+        try record.checkRules(registry: RoomCapabilityRegistry(statuses: [:]))
+        XCTAssertEqual(record, .watchBridge(payload))
+        return payload
+    }
+
     private func assertRefusedWithoutRefresh(_ payload: WatchBridgeSnapshot, expecting verdict: BridgeVerdict,
-                                             file: StaticString = #filePath, line: UInt = #line) {
+                                             file: StaticString = #filePath, line: UInt = #line) throws {
         let cached = receiver.snapshot
         let observation = receiver.observation
         let board = receiver.board
-        bridge.deliverNow(payload)
+        bridge.deliverNow(try wireValidated(payload))
         XCTAssertEqual(receiver.lastOutcome, verdict, file: file, line: line)
         XCTAssertTrue(receiver.snapshot == cached, "a refusal must preserve the last snapshot", file: file, line: line)
         XCTAssertEqual(receiver.observation, observation, "a refusal must not stamp a new clock observation",
