@@ -54,6 +54,11 @@ object CanonicalJson {
         }
     }
 
+    internal fun validateObject(text: String, maxDepth: Int) {
+        require(maxDepth in 1..MAX_DEPTH)
+        require(Parser(text, OutputBudget(Int.MAX_VALUE), maxDepth).parse() is ObjectValue) { "Expected a JSON object" }
+    }
+
     private fun canonicalize(text: String, maxOutputBytes: Int): ByteArray {
         val budget = OutputBudget(maxOutputBytes)
         val value = Parser(text, budget).parse()
@@ -74,7 +79,11 @@ object CanonicalJson {
         }
     }
 
-    private class Parser(private val text: String, private val budget: OutputBudget) {
+    private class Parser(
+        private val text: String,
+        private val budget: OutputBudget,
+        private val maxDepth: Int = MAX_DEPTH,
+    ) {
         private var offset = 0
 
         fun parse(): Value {
@@ -85,7 +94,7 @@ object CanonicalJson {
         }
 
         private fun value(depth: Int): Value {
-            require(depth < MAX_DEPTH) { "JSON nesting exceeds $MAX_DEPTH values" }
+            require(depth < maxDepth) { "JSON nesting exceeds $maxDepth values" }
             skipWhitespace()
             return when (text.getOrNull(offset)) {
                 '{' -> objectValue(depth + 1)
