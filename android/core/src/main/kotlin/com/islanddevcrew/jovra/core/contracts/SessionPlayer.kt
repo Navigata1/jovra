@@ -2,10 +2,10 @@ package com.islanddevcrew.jovra.core.contracts
 
 import com.islanddevcrew.jovra.core.json.CanonicalJson
 import com.islanddevcrew.jovra.core.json.optionalString
+import com.islanddevcrew.jovra.core.json.requireBoolean
 import com.islanddevcrew.jovra.core.json.requireString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -79,16 +79,10 @@ data class SessionPlayer(
                 backhand = requireNotNull(Backhand.entries.firstOrNull { it.wireName == backhand }) {
                     "Unknown player backhand"
                 },
-                isSelf = fields.boolean("isSelf"),
+                isSelf = fields.requireBoolean("isSelf"),
                 level = fields.optionalString("level"),
                 profileId = fields.optionalString("profileId")?.let(::OpaqueId),
             )
-        }
-
-        private fun JsonObject.boolean(name: String): Boolean {
-            val token = this[name] as? JsonPrimitive
-            require(token != null && !token.isString) { "Expected a boolean player field: $name" }
-            return requireNotNull(token.content.toBooleanStrictOrNull()) { "Expected a boolean player field: $name" }
         }
     }
 }
