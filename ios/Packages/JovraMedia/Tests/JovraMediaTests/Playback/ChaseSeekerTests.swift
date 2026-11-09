@@ -55,6 +55,26 @@ struct ChaseSeekerTests {
     }
 
     @Test
+    func failedExactSeekDoesNotLandOrSuppressAnIdenticalRetry() async {
+        let time = t(5)
+        var outcomes = [false, true]
+        let playerSeek: ChaseSeeker.Perform = { _, _ in
+            _ = outcomes.removeFirst() // The inherited Void bridge loses the player's result.
+        }
+        let seeker = ChaseSeeker(perform: playerSeek)
+        await seeker.request(time, precision: .exact)
+        #expect(seeker.isIdle)
+        #expect(seeker.lastCompleted == nil)
+        #expect(seeker.issuedCount == 1)
+
+        await seeker.request(time, precision: .exact)
+        #expect(seeker.lastCompleted == .init(time: time, precision: .exact))
+        #expect(seeker.issuedCount == 2)
+        await seeker.request(time, precision: .exact)
+        #expect(seeker.issuedCount == 2, "A successful identical seek is still deduplicated")
+    }
+
+    @Test
     func requestReturnsOnlyAfterTheSeekerSettles() async {
         let seeks = GatedSeeks()
         let seeker = ChaseSeeker { await seeks.perform($0, $1) }
