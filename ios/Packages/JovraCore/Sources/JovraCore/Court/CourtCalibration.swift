@@ -36,6 +36,16 @@ public struct CalibrationCheck: Hashable, Sendable {
         }
     }
 
+    init(recordedRMSEPx: Decimal, frameHeight: Int) {
+        thresholdPx = Self.thresholdPx(frameHeight: frameHeight)
+        // Compare the stored decimal before conversion. Decimal overflow can produce NaN, which compares below finite values.
+        let scaledResidual = recordedRMSEPx * 1080
+        let scaledLimit = Decimal(frameHeight) * Decimal(Self.poorFitPxAt1080p)
+        let fits = !scaledResidual.isNaN && recordedRMSEPx >= 0 && scaledResidual <= scaledLimit
+        verdict = fits ? .good : .poor
+        rmsePx = NSDecimalNumber(decimal: recordedRMSEPx).doubleValue
+    }
+
     public static func thresholdPx(frameHeight: Int) -> Double {
         poorFitPxAt1080p * Double(frameHeight) / 1080
     }
@@ -72,6 +82,8 @@ public enum CalibrationValidity: Hashable, Sendable {
         case lensChanged, formatChanged, zoomChanged, poorFit
         /// The camera moved: stale from this session time ("stale from mm:ss").
         case stale(fromMs: Int)
+        /// The status a reopened record was stored with: invalid, awaiting review, or camera moved with no time.
+        case recordedInvalid, needsReview, cameraMoved
 
         public var code: String {
             switch self {
@@ -79,6 +91,9 @@ public enum CalibrationValidity: Hashable, Sendable {
             case .formatChanged: "formatChanged"
             case .zoomChanged: "zoomChanged"
             case .poorFit: "poorFit"
+            case .recordedInvalid: "recordedInvalid"
+            case .needsReview: "needsReview"
+            case .cameraMoved: "cameraMoved"
             case .stale: "stale"
             }
         }
@@ -97,15 +112,23 @@ public enum CalibrationValidity: Hashable, Sendable {
         return nil
     }
 
-    /// First failing reason wins, in this order: lens, format, zoom, poor fit, stale.
+    /// First failing reason wins, in this order: lens, format, zoom, poor fit, stale, then the status a reopened
+    /// record was stored with. Refitting stored taps always succeeds, so that status is carried, never re-derived:
+    /// `invalid` and `needsReview` stay unusable, and `cameraMoved` with no stale-from time is unusable throughout.
     public static func evaluate(binding: CameraBinding, current: CameraBinding, checkVerdict: CalibrationCheck.Verdict?,
-                                staleFromMs: Int?, atMs: Int) -> CalibrationValidity {
+                                staleFromMs: Int?, atMs: Int,
+                                recordedStatus: SessionCalibrationStatus? = nil) -> CalibrationValidity {
         if binding.lens != current.lens { return .invalid(.lensChanged) }
         if binding.width != current.width || binding.height != current.height { return .invalid(.formatChanged) }
         if binding.zoomFactor != current.zoomFactor { return .invalid(.zoomChanged) }
         if checkVerdict == .poor { return .invalid(.poorFit) }
         if let staleFromMs, atMs >= staleFromMs { return .invalid(.stale(fromMs: staleFromMs)) }
-        return .valid
+        switch recordedStatus {
+        case .invalid: return .invalid(.recordedInvalid)
+        case .needsReview: return .invalid(.needsReview)
+        case .cameraMoved where staleFromMs == nil: return .invalid(.cameraMoved)
+        case .cameraMoved, .valid, nil: return .valid
+        }
     }
 }
 
@@ -119,6 +142,8 @@ public struct CourtCalibration: Hashable, Sendable {
     public var staleFromMs: Int?
     /// The latest reprojection check, when line pixels were measured.
     public var check: CalibrationCheck?
+    /// The status a reopened session record was stored with; nil for a calibration fitted just now.
+    public private(set) var recordedStatus: SessionCalibrationStatus?
 
     public init(imagePoints: [VideoPixel], courtPoints: [CourtPoint], camera: CameraBinding?, staleFromMs: Int? = nil) throws(CalibrationError) {
         self.imagePoints = imagePoints
@@ -134,7 +159,8 @@ public struct CourtCalibration: Hashable, Sendable {
     }
 
     /// A session calibration record: normalized image points (0..1, top-left) scaled by its camera format. A
-    /// record without a camera format cannot be placed in pixels and is refused as degenerate.
+    /// record without a camera format cannot be placed in pixels and is refused as degenerate. The stored status
+    /// and residual are kept, so reopening a poor or unusable calibration never reads valid.
     public init(record: SessionCalibration) throws(CalibrationError) {
         guard let camera = record.camera else { throw .degenerate }
         let w = Double(camera.width), h = Double(camera.height)
@@ -144,6 +170,10 @@ public struct CourtCalibration: Hashable, Sendable {
         try self.init(imagePoints: image, courtPoints: court,
                       camera: CameraBinding(lens: camera.lens, width: camera.width, height: camera.height, zoomFactor: zoom),
                       staleFromMs: record.staleFromMs)
+        recordedStatus = record.status
+        if let residual = record.residualPx {
+            check = CalibrationCheck(recordedRMSEPx: residual, frameHeight: camera.height)
+        }
     }
 
     public func project(_ point: CourtPoint) -> VideoPixel? { homography.project(point) }
@@ -160,7 +190,7 @@ public struct CourtCalibration: Hashable, Sendable {
     /// judged on fit and staleness.
     public func validity(atMs: Int, current: CameraBinding) -> CalibrationValidity {
         CalibrationValidity.evaluate(binding: camera ?? current, current: current, checkVerdict: check?.verdict,
-                                     staleFromMs: staleFromMs, atMs: atMs)
+                                     staleFromMs: staleFromMs, atMs: atMs, recordedStatus: recordedStatus)
     }
 
     private static func double(_ value: Decimal) -> Double { NSDecimalNumber(decimal: value).doubleValue }

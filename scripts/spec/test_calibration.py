@@ -85,6 +85,22 @@ class ValidityTests(unittest.TestCase):
         self.assertEqual(court.validity(self.BIND, {**self.BIND, "zoomFactor": "1.5"}, 0, 9, {"verdict": "poor"})["reason"],
                          "zoomChanged")
 
+    def test_a_record_stored_unusable_is_never_valid_when_reopened(self):
+        # Refitting the stored taps always succeeds, so the stored status has to be carried, not re-derived.
+        for status, reason in [("invalid", "recordedInvalid"), ("needsReview", "needsReview"), ("cameraMoved", "cameraMoved")]:
+            self.assertEqual(court.validity(self.BIND, self.BIND, None, 0, None, status),
+                             {"status": "invalid", "reason": reason})
+        self.assertEqual(court.validity(self.BIND, self.BIND, None, 0, {"verdict": "good"}, "valid"), {"status": "valid"})
+
+    def test_a_dated_camera_move_is_stale_from_that_time_only(self):
+        self.assertEqual(court.validity(self.BIND, self.BIND, 120_000, 119_999, None, "cameraMoved"), {"status": "valid"})
+        self.assertEqual(court.validity(self.BIND, self.BIND, 120_000, 120_000, None, "cameraMoved"),
+                         {"status": "invalid", "reason": "stale", "staleFromMs": 120_000})
+
+    def test_a_camera_reason_is_reported_before_the_stored_status(self):
+        other = {**self.BIND, "lens": "telephoto"}
+        self.assertEqual(court.validity(self.BIND, other, None, 0, None, "invalid")["reason"], "lensChanged")
+
 
 class MappingAndWordsTests(unittest.TestCase):
     def test_aspect_fit_letterbox(self):

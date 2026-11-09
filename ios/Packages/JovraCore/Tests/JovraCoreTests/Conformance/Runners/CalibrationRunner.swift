@@ -44,6 +44,7 @@ struct CalibrationRunner: FixtureRunner {
         var current: Binding?
         var staleFromMs: Int?
         var atMs: Int?
+        var recordedStatus: SessionCalibrationStatus?
         var check: CheckRef?
         // mapping
         var gravity: VideoGravity?
@@ -64,7 +65,7 @@ struct CalibrationRunner: FixtureRunner {
 
         enum CodingKeys: String, CodingKey {
             case op, name, record, imagePoints, courtPoints, expectedError, tolerance, frameHeight, observations, binding,
-                 current, staleFromMs, atMs, check, gravity, view, video, point, landing, hitterX, result, doubles, expected
+                 current, staleFromMs, atMs, recordedStatus, check, gravity, view, video, point, landing, hitterX, result, doubles, expected
         }
 
         init(from decoder: Decoder) throws {
@@ -82,6 +83,7 @@ struct CalibrationRunner: FixtureRunner {
             current = try c.decodeIfPresent(Binding.self, forKey: .current)
             staleFromMs = try c.decodeIfPresent(Int.self, forKey: .staleFromMs)
             atMs = try c.decodeIfPresent(Int.self, forKey: .atMs)
+            recordedStatus = try c.decodeIfPresent(SessionCalibrationStatus.self, forKey: .recordedStatus)
             check = try c.decodeIfPresent(CheckRef.self, forKey: .check)
             gravity = try c.decodeIfPresent(VideoGravity.self, forKey: .gravity)
             view = try c.decodeIfPresent(Size.self, forKey: .view)
@@ -133,7 +135,8 @@ struct CalibrationRunner: FixtureRunner {
                 let validity = CalibrationValidity.evaluate(
                     binding: CameraBinding(lens: b.lens, width: b.width, height: b.height, zoomFactor: try #require(Decimal(string: b.zoomFactor))),
                     current: CameraBinding(lens: now.lens, width: now.width, height: now.height, zoomFactor: try #require(Decimal(string: now.zoomFactor))),
-                    checkVerdict: verdict, staleFromMs: c.staleFromMs, atMs: try #require(c.atMs))
+                    checkVerdict: verdict, staleFromMs: c.staleFromMs, atMs: try #require(c.atMs),
+                    recordedStatus: c.recordedStatus)
                 #expect(validity.status == expected.status, "\(label)")
                 #expect(validity.reasonCode == expected.reason, "\(label)")
                 if case .invalid(.stale(let from)) = validity { #expect(from == expected.staleFromMs, "\(label)") }

@@ -209,15 +209,18 @@ def c04() -> tuple:
 
 
 def validity_case(name: str, current: dict | None = None, stale: int | None = None, at: int = 60_000,
-                  check: str | None = None, expect: dict | None = None) -> dict:
+                  check: str | None = None, expect: dict | None = None, recorded: str | None = None) -> dict:
     binding = {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"}
     cur = {**binding, **(current or {})}
     chk = None if check is None else {"verdict": check}
-    got = court.validity(binding, cur, stale, at, chk)
+    got = court.validity(binding, cur, stale, at, chk, recorded)
     if got != expect:
         raise ValueError(f"{name}: expected {expect}, engine says {got}")
-    return {"op": "validity", "name": name, "binding": binding, "current": cur, "staleFromMs": stale, "atMs": at,
+    case = {"op": "validity", "name": name, "binding": binding, "current": cur, "staleFromMs": stale, "atMs": at,
             "check": chk, "expected": got}
+    if recorded is not None:
+        case["recordedStatus"] = recorded
+    return case
 
 
 def c05() -> tuple:
@@ -236,6 +239,20 @@ def c05() -> tuple:
         validity_case("the same zoom written differently", {"zoomFactor": "1.00"}, expect={"status": "valid"}),
         validity_case("lens is reported before a stale time", {"lens": "telephoto"}, stale=0, check="poor",
                       expect={"status": "invalid", "reason": "lensChanged"}),
+        # A reopened record: refitting its taps always succeeds, so the status it was stored with is carried.
+        validity_case("a record stored valid reopens valid", check="good", recorded="valid", expect={"status": "valid"}),
+        validity_case("a record stored invalid stays invalid", recorded="invalid",
+                      expect={"status": "invalid", "reason": "recordedInvalid"}),
+        validity_case("a record stored needing review stays unusable", check="good", recorded="needsReview",
+                      expect={"status": "invalid", "reason": "needsReview"}),
+        validity_case("a record stored camera-moved with no time is unusable throughout", at=0, recorded="cameraMoved",
+                      expect={"status": "invalid", "reason": "cameraMoved"}),
+        validity_case("a record stored camera-moved with a time is valid before it", stale=120_000, at=119_999,
+                      recorded="cameraMoved", expect={"status": "valid"}),
+        validity_case("and stale from that time", stale=120_000, at=120_000, recorded="cameraMoved",
+                      expect={"status": "invalid", "reason": "stale", "staleFromMs": 120_000}),
+        validity_case("a stored poor fit is reported before the stored status", check="poor", recorded="needsReview",
+                      expect={"status": "invalid", "reason": "poorFit"}),
     ])
 
 
@@ -371,7 +388,8 @@ def _rerun(case: dict) -> list[str]:
         if got["verdict"] != exp["verdict"] or not _close(got["rmsePx"], exp["rmsePx"], TOL_PX):
             problems.append(f"{case['name']}: check {got}")
     elif op == "validity":
-        got = court.validity(case["binding"], case["current"], case["staleFromMs"], case["atMs"], case["check"])
+        got = court.validity(case["binding"], case["current"], case["staleFromMs"], case["atMs"], case["check"],
+                             case.get("recordedStatus"))
         if got != case["expected"]:
             problems.append(f"{case['name']}: validity {got}")
     elif op in ("viewToVideo", "videoToView"):

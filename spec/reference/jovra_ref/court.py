@@ -25,7 +25,8 @@ compares them with where those lines are seen; a fit is poor above 3 px at 1080p
 (2 px at 720p). With nothing measured the check is `notMeasurable`, never a pass.
 
 Validity binds a calibration to one lens, format (width x height) and zoom, and to the time the camera moved
-("stale from mm:ss"). Reasons are reported in this order: lensChanged, formatChanged, zoomChanged, poorFit, stale.
+("stale from mm:ss"). Reasons are reported in this order: lensChanged, formatChanged, zoomChanged, poorFit, stale,
+then the status a reopened record was stored with (recordedInvalid, needsReview, cameraMoved).
 
 Taps are converted to video pixels before fitting, never fitted in view points: `view_to_video` undoes the
 aspect-fit (or aspect-fill) placement of the video in its view.
@@ -302,8 +303,19 @@ def fit_check(h, observations, frame_height: int) -> dict:
     return {"verdict": "good" if rmse <= threshold else "poor", "rmsePx": rmse, "thresholdPx": threshold}
 
 
-def validity(binding: dict, current: dict, stale_from_ms: int | None, at_ms: int, check: dict | None) -> dict:
-    """Is a calibration usable at `at_ms` with the camera configured as `current`? First failing reason wins."""
+# What a stored calibration's status means when the record is reopened. Refitting stored taps always succeeds, so a
+# status the record carries is reported, never re-derived from the fit.
+RECORDED_STATUS_REASONS = {"invalid": "recordedInvalid", "needsReview": "needsReview", "cameraMoved": "cameraMoved"}
+
+
+def validity(binding: dict, current: dict, stale_from_ms: int | None, at_ms: int, check: dict | None,
+             recorded_status: str | None = None) -> dict:
+    """Is a calibration usable at `at_ms` with the camera configured as `current`? First failing reason wins.
+
+    `recorded_status` is the status a reopened session record carries (session.schema.json calibration.status).
+    After the camera, fit and stale-time reasons, a record stored `invalid` or `needsReview` stays unusable, and one
+    stored `cameraMoved` without a stale-from time is unusable throughout; with a time it is valid before it.
+    """
     if binding["lens"] != current["lens"]:
         return {"status": "invalid", "reason": "lensChanged"}
     if (binding["width"], binding["height"]) != (current["width"], current["height"]):
@@ -314,6 +326,10 @@ def validity(binding: dict, current: dict, stale_from_ms: int | None, at_ms: int
         return {"status": "invalid", "reason": "poorFit"}
     if stale_from_ms is not None and at_ms >= stale_from_ms:
         return {"status": "invalid", "reason": "stale", "staleFromMs": stale_from_ms}
+    if recorded_status == "cameraMoved" and stale_from_ms is not None:
+        return {"status": "valid"}
+    if recorded_status in RECORDED_STATUS_REASONS:
+        return {"status": "invalid", "reason": RECORDED_STATUS_REASONS[recorded_status]}
     return {"status": "valid"}
 
 

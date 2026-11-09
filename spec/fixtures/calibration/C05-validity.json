@@ -103,6 +103,83 @@
       "atMs": 60000,
       "check": {"verdict": "poor"},
       "expected": {"status": "invalid", "reason": "lensChanged"}
+    },
+    {
+      "op": "validity",
+      "name": "a record stored valid reopens valid",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": {"verdict": "good"},
+      "expected": {"status": "valid"},
+      "recordedStatus": "valid"
+    },
+    {
+      "op": "validity",
+      "name": "a record stored invalid stays invalid",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "recordedInvalid"},
+      "recordedStatus": "invalid"
+    },
+    {
+      "op": "validity",
+      "name": "a record stored needing review stays unusable",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": {"verdict": "good"},
+      "expected": {"status": "invalid", "reason": "needsReview"},
+      "recordedStatus": "needsReview"
+    },
+    {
+      "op": "validity",
+      "name": "a record stored camera-moved with no time is unusable throughout",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 0,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "cameraMoved"},
+      "recordedStatus": "cameraMoved"
+    },
+    {
+      "op": "validity",
+      "name": "a record stored camera-moved with a time is valid before it",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": 120000,
+      "atMs": 119999,
+      "check": null,
+      "expected": {"status": "valid"},
+      "recordedStatus": "cameraMoved"
+    },
+    {
+      "op": "validity",
+      "name": "and stale from that time",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": 120000,
+      "atMs": 120000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "stale", "staleFromMs": 120000},
+      "recordedStatus": "cameraMoved"
+    },
+    {
+      "op": "validity",
+      "name": "a stored poor fit is reported before the stored status",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": {"verdict": "poor"},
+      "expected": {"status": "invalid", "reason": "poorFit"},
+      "recordedStatus": "needsReview"
     }
   ]
 }

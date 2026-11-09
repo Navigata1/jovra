@@ -69,6 +69,40 @@ struct CourtCalibrationTests {
         #expect(throws: CalibrationError.degenerate) { try CourtCalibration(record: record) }
     }
 
+    @Test(arguments: ["5.44", "3.00000000000000000001", "1e127"])
+    func aRecordedPoorFitRemainsInvalidAfterReopening(_ residual: String) throws {
+        let residualPx = try #require(Decimal(string: residual))
+        let reopened = try reopen(status: .valid, residualPx: residualPx)
+        #expect(reopened.validity(atMs: 0, current: Self.binding) == .invalid(.poorFit))
+        #expect(reopened.check?.verdict == .poor)
+    }
+
+    @Test(arguments: [SessionCalibrationStatus.invalid, .needsReview, .cameraMoved])
+    func aRecordedUnusableStateRemainsInvalidWithoutMeasurements(_ status: SessionCalibrationStatus) throws {
+        let reopened = try reopen(status: status)
+        #expect(reopened.validity(atMs: 0, current: Self.binding).status == "invalid")
+        #expect(reopened.check == nil, "A recorded status must not invent a measured residual")
+    }
+
+    @Test func recordedCameraMovementWithATimestampInvalidatesFromThatTime() throws {
+        let reopened = try reopen(status: .cameraMoved, residualPx: 1, staleFromMs: 120_000)
+        #expect(reopened.validity(atMs: 119_999, current: Self.binding) == .valid)
+        #expect(reopened.validity(atMs: 120_000, current: Self.binding) == .invalid(.stale(fromMs: 120_000)))
+    }
+
+    private func reopen(status: SessionCalibrationStatus, residualPx: Decimal? = nil,
+                        staleFromMs: Int? = nil) throws -> CourtCalibration {
+        let record = SessionCalibration(id: "recorded-court", method: .value, frameMs: 0, imagePoints: [
+            .init(x: 0.125, y: 0.875), .init(x: 0.875, y: 0.875),
+            .init(x: 0.875, y: 0.125), .init(x: 0.125, y: 0.125)
+        ], courtPoints: CourtGeometry.doublesCorners.map { .init(x: Decimal($0.point.x), y: Decimal($0.point.y)) },
+            residualPx: residualPx, status: status, staleFromMs: staleFromMs,
+            camera: .init(lens: .wide, width: 1920, height: 1080, zoomFactor: "1"),
+            provenance: .init(status: .manual, source: "user"))
+        let data = try CanonicalJSON.encode(record)
+        return try CourtCalibration(record: ContractCodec.decode(SessionCalibration.self, from: data))
+    }
+
     @Test func tapsBecomeVideoPixelsBeforeFitting() throws {
         // A 1920 x 1080 frame shown aspect-fit in a 960 x 600 view: scale 0.5 with 30 pt bars top and bottom.
         let mapping = VideoFrameMapping(viewSize: PlaneSize(width: 960, height: 600), videoSize: PlaneSize(width: 1920, height: 1080))

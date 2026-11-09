@@ -137,6 +137,7 @@
         "current": {"$ref": "#/$defs/binding"},
         "staleFromMs": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]},
         "atMs": {"type": "integer", "minimum": 0},
+        "recordedStatus": {"enum": ["valid", "needsReview", "invalid", "cameraMoved"], "description": "The status a reopened session record was stored with (session.schema.json calibration.status); absent for a calibration fitted just now."},
         "check": {"oneOf": [{"type": "null"}, {
           "type": "object", "required": ["verdict"], "additionalProperties": false,
           "properties": {"verdict": {"enum": ["good", "poor", "notMeasurable"]}}
@@ -147,7 +148,7 @@
           "additionalProperties": false,
           "properties": {
             "status": {"enum": ["valid", "invalid"]},
-            "reason": {"enum": ["lensChanged", "formatChanged", "zoomChanged", "poorFit", "stale"]},
+            "reason": {"enum": ["lensChanged", "formatChanged", "zoomChanged", "poorFit", "stale", "recordedInvalid", "needsReview", "cameraMoved"]},
             "staleFromMs": {"type": "integer", "minimum": 0}
           }
         }
