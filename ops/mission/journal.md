@@ -65,3 +65,11 @@ Steps1–3 complete; step4 remains in progress. T03/330, order amendment332, loc
 - Files import #393 merged as `70aad22` after separate exact-head reviews and required CI. Simulator 11 passed, including the native picker cancellation and CoreFlow. The actual synthetic import sidecar validates and matches the fixture hash and bytes.
 - The signed combined iPhone 15 Pro Max run passed 6. The merged iOS tree matches the tested tree. The actual simulator CoreFlow package independently passed JSON, CSV and decoded clip verification.
 - Retained Claude's original #389 and published isolated S88 draft #394 with 143/143 parity. Historical #380 RED was superseded by a green merge. Physical camera and Files-provider UI, Android app, and remaining full-ticket and release gates stay open.
+
+## 2026-11-09 — current-main CoreFlow and physical continuation
+
+- Read Claude's November 8 handoff and reconciled live main d1f13ab. Rendered all 11 sample clips with decoded-frame hashes matching committed references. Current-main iPhone-simulator CoreFlow passed 1/1; its actual synthetic export JSON/CSV and one-second clip passed independent checks.
+- Physical iPhone live-camera test passed process termination and replay; a separate pause/resume/save/replay passed after correcting the first permission-sheet test. Loss-bound and broader interruption evidence stay open.
+- iPad main CoreFlow failed the Replay Pause Dynamic Type audit. Candidate AX5 controls passed but full CoreFlow audit timed out. Work remains active.
+- Review findings posted to #441, #442 and #443; bounded independently reviewed follow-up drafts #448, #449 and #447 published. Full original acceptance and parent branches remain open.
+- Supplied footage located and hashes checked. Full-match Files picker test is in progress with a temporary Files-enabled iPhone build. Private media and raw device diagnostics remain local.
