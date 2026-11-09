@@ -20,6 +20,7 @@ public final class PlaybackController {
     public let url: URL
     public let frameRate: FrameRate
     public let frameCount: Int
+    /// Exposed for video rendering. Direct mutations bypass the controller's lifecycle.
     @ObservationIgnored public let player: AVPlayer
 
     /// The frame the playhead is on (while dragging: the frame under the finger).
@@ -70,6 +71,14 @@ public final class PlaybackController {
     /// Opens a local original. Missing files, files without video and variable-rate files are typed errors.
     public static func open(url: URL, proxyDirectory: URL? = nil,
                             slowBackwardStep: Duration = defaultSlowBackwardStep) async throws -> PlaybackController {
+        try await open(url: url, proxyDirectory: proxyDirectory, slowBackwardStep: slowBackwardStep) {
+            try await $0.waitUntilReady()
+        }
+    }
+
+    static func open(url: URL, proxyDirectory: URL? = nil,
+                     slowBackwardStep: Duration = defaultSlowBackwardStep,
+                     awaitReadiness: @MainActor (PlaybackController) async throws -> Void) async throws -> PlaybackController {
         guard url.isFileURL, FileManager.default.fileExists(atPath: url.path) else { throw PlaybackOpenError.missingFile }
         let info: MediaInfo
         do { info = try await MediaProbe.probe(url) } catch { throw PlaybackOpenError.unreadable }
@@ -85,12 +94,25 @@ public final class PlaybackController {
         guard frames > 0 else { throw PlaybackOpenError.noVideo }
         let controller = PlaybackController(url: url, asset: asset, frameRate: rate, frameCount: frames, videoStart: firstVideoTime,
                                             proxyDirectory: proxyDirectory, slowBackwardStep: slowBackwardStep)
-        try await controller.waitUntilReady()
-        if firstVideoTime > .zero, !(await controller.landOriginal(at: 0, precision: .exact)) {
-            controller.close()
-            throw PlaybackOpenError.unreadable
+        return try await withTaskCancellationHandler {
+            do {
+                try Task.checkCancellation()
+                try await awaitReadiness(controller)
+                try Task.checkCancellation()
+                if firstVideoTime > .zero, !(await controller.landOriginal(at: 0, precision: .exact)) {
+                    try Task.checkCancellation()
+                    throw PlaybackOpenError.unreadable
+                }
+                try Task.checkCancellation()
+                controller.observePlayback()
+                return controller
+            } catch {
+                controller.close()
+                throw error
+            }
+        } onCancel: {
+            Task { @MainActor in controller.close() }
         }
-        return controller
     }
 
     /// Whole frames in a constant-rate track's duration (rounded: containers round durations to their timescale).
@@ -112,6 +134,10 @@ public final class PlaybackController {
         player.actionAtItemEnd = .pause
         player.automaticallyWaitsToMinimizeStalling = false
         self.player = player
+    }
+
+    private func observePlayback() {
+        guard let item = player.currentItem else { return }
         let interval = CMTime(frame: 1, at: frameRate)
         timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             MainActor.assumeIsolated { self?.playerTimeChanged(time) }
@@ -132,13 +158,17 @@ public final class PlaybackController {
         canPlaySlowForward = item.canPlaySlowForward
     }
 
-    /// Stops playback, removes observers and cancels proxy work. An already published proxy stays for next time.
+    /// Permanently closes this controller. An already published proxy stays for next time.
     public func close() {
+        guard !isClosed else { return }
         isClosed = true
+        seeker.close()
+        player.currentItem?.cancelPendingSeeks()
         player.pause()
         isPlaying = false
         invalidateStill()
         proxyTask?.cancel()
+        if proxyState == .building { proxyState = .none }
         if let timeObserver { player.removeTimeObserver(timeObserver) }
         if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
         timeObserver = nil
@@ -148,6 +178,7 @@ public final class PlaybackController {
     // MARK: Transport
 
     public func play() {
+        guard !isClosed else { return }
         invalidateStill()
         let restartFrame: Int?
         if let loop, !loop.contains(currentFrame)
@@ -166,7 +197,7 @@ public final class PlaybackController {
         player.defaultRate = rate.value
         Task { @MainActor in
             await seeker.settled()
-            guard isPlaying else { return }
+            guard !isClosed, isPlaying else { return }
             if let loop {
                 guard loop.contains(frame(at: player.currentTime())) else { pause(); return }
             } else if restartFrame != nil, seeker.lastCompleted == nil {
@@ -179,6 +210,7 @@ public final class PlaybackController {
     }
 
     public func pause() {
+        guard !isClosed else { return }
         pendingLoopResume = nil
         isPlaying = false
         player.pause()
@@ -190,7 +222,7 @@ public final class PlaybackController {
     /// Changes the rate; a slow rate on an item that cannot play slow forward is refused.
     @discardableResult
     public func setRate(_ newRate: PlaybackRate) -> Bool {
-        guard !newRate.isSlow || canPlaySlowForward else { return false }
+        guard !isClosed, !newRate.isSlow || canPlaySlowForward else { return false }
         rate = newRate
         player.defaultRate = newRate.value
         if player.rate != 0 { player.rate = newRate.value }
@@ -201,6 +233,7 @@ public final class PlaybackController {
 
     /// Requests `frame` and waits for the seek queue to drain. A failed latest seek restores the playhead readout.
     public func seek(toFrame frame: Int, precision: SeekPrecision = .exact) async {
+        guard !isClosed else { return }
         invalidateStill()
         let target = clamp(frame)
         currentFrame = target
@@ -209,6 +242,7 @@ public final class PlaybackController {
 
     /// A drag position: the readout follows at once, the player chases with a coarse seek.
     public func scrub(toFrame frame: Int) {
+        guard !isClosed else { return }
         if isPlaying { pause() }
         invalidateStill()
         currentFrame = clamp(frame)
@@ -222,6 +256,7 @@ public final class PlaybackController {
 
     /// Steps whole frames (negative is backward), pausing playback first. Clamped to the clip.
     public func step(byCount count: Int) async {
+        guard !isClosed else { return }
         if isPlaying { pause() }
         let target = clamp(currentFrame + count)
         guard count != 0, target != currentFrame else { return }
@@ -259,18 +294,20 @@ public final class PlaybackController {
 
     /// Skips by whole seconds (negative is back), clamped to the clip.
     public func skip(seconds: Int) async {
+        guard !isClosed else { return }
         if isPlaying { pause() }
         let frames = seconds * frameRate.frames / frameRate.perSeconds
         await seek(toFrame: currentFrame + frames, precision: .exact)
     }
 
-    /// Returns once no seek is in flight.
+    /// Waits for the seek queue to drain or close.
     public func settle() async { await seeker.settled() }
 
     // MARK: Loop
 
     /// Sets or clears the A–B loop. A playhead outside the new loop moves to A.
     public func setLoop(_ newLoop: FrameLoop?) {
+        guard !isClosed else { return }
         if pendingLoopResume != nil { currentFrame = clamp(frame(at: player.currentTime())) }
         pendingLoopResume = nil
         loop = newLoop
@@ -286,6 +323,7 @@ public final class PlaybackController {
             seeker.submit(time(of: newLoop.start), precision: .exact)
             Task { @MainActor in
                 await seeker.settled()
+                guard !isClosed else { return }
                 let shouldResume = pendingLoopResume == generation
                 if shouldResume { pendingLoopResume = nil }
                 guard stillRequest == generation else { return }
@@ -324,10 +362,7 @@ public final class PlaybackController {
             defer { staged?.discard() }
             guard let self else { return }
             defer { self.proxyTask = nil }
-            guard !self.isClosed else {
-                self.proxyState = .none
-                return
-            }
+            guard !self.isClosed else { return }
             guard let staged else {
                 self.proxyState = .failed
                 return
@@ -346,6 +381,7 @@ public final class PlaybackController {
     // MARK: Player callbacks
 
     private func performSeek(to time: CMTime, precision: SeekPrecision) async -> Bool {
+        guard !isClosed else { return false }
         let tolerance = precision == .exact ? CMTime.zero : Self.coarseTolerance
         return await seekPlayer(player, itemTime(time), tolerance)
     }
@@ -354,7 +390,7 @@ public final class PlaybackController {
     private func landOriginal(at target: Int, precision: SeekPrecision) async -> Bool {
         let generation = stillRequest
         let landed = await seeker.request(time(of: target), precision: precision)
-        guard stillRequest == generation else { return false }
+        guard !isClosed, stillRequest == generation else { return false }
         if !landed { currentFrame = clamp(frame(at: player.currentTime())) }
         return landed
     }
@@ -376,11 +412,12 @@ public final class PlaybackController {
     }
 
     private func playerTimeChanged(_ time: CMTime) {
-        guard isPlaying, seeker.isIdle, player.rate != 0 else { return }
+        guard !isClosed, isPlaying, seeker.isIdle, player.rate != 0 else { return }
         currentFrame = clamp(frame(at: time))
     }
 
     private func reachedEnd() {
+        guard !isClosed else { return }
         let ended = clamp(frame(at: player.currentTime()))
         guard let loop, isPlaying else {
             isPlaying = false
@@ -390,9 +427,9 @@ public final class PlaybackController {
         currentFrame = loop.start
         let generation = stillRequest
         Task { @MainActor in
-            guard isPlaying, self.loop == loop, stillRequest == generation else { return }
+            guard !isClosed, isPlaying, self.loop == loop, stillRequest == generation else { return }
             let landed = await landOriginal(at: loop.start, precision: .exact)
-            guard isPlaying, self.loop == loop, stillRequest == generation else { return }
+            guard !isClosed, isPlaying, self.loop == loop, stillRequest == generation else { return }
             guard landed else { pause(); return }
             loopWraps.append(LoopWrap(endedAt: ended, restartedAt: frame(at: player.currentTime())))
             seeker.playheadMoved()

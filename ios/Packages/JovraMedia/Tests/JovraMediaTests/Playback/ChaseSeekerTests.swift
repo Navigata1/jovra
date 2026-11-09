@@ -129,6 +129,25 @@ struct ChaseSeekerTests {
     }
 
     @Test
+    func closingBeforeDispatchNeverCallsTheBackend() async {
+        var calls = 0
+        let seeker = ChaseSeeker { _, _ in
+            calls += 1
+            return true
+        }
+        seeker.submit(t(5), precision: .exact)
+        seeker.close()
+        seeker.close()
+        let landed = await seeker.request(t(6), precision: .exact)
+        await drain()
+        #expect(!landed)
+        #expect(seeker.isIdle)
+        #expect(seeker.lastCompleted == nil)
+        #expect(seeker.issuedCount == 0)
+        #expect(calls == 0)
+    }
+
+    @Test
     func anExactReleaseAfterACoarseDragToTheSameTimeStillRuns() async {
         let seeks = GatedSeeks()
         let seeker = ChaseSeeker { await seeks.perform($0, $1) }
