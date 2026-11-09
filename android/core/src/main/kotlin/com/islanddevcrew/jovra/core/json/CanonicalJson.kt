@@ -46,6 +46,14 @@ object CanonicalJson {
         }
     }
 
+    // Reuse the strict grammar before a typed decoder reads the original scalar spellings.
+    internal fun validateFlatNumberObject(text: String) {
+        val value = Parser(text, OutputBudget(Int.MAX_VALUE)).parse()
+        require(value is ObjectValue && value.entries.values.all { it is NumberValue || it == Literal.ZERO }) {
+            "Expected a JSON object containing only number tokens"
+        }
+    }
+
     private fun canonicalize(text: String, maxOutputBytes: Int): ByteArray {
         val budget = OutputBudget(maxOutputBytes)
         val value = Parser(text, budget).parse()
@@ -209,7 +217,7 @@ object CanonicalJson {
         override fun writeTo(output: ByteBuffer) = forEachQuotedScalar(text) { output.putScalar(it) }
     }
 
-    private class ObjectValue(private val entries: Map<String, Value>) : Value {
+    private class ObjectValue(val entries: Map<String, Value>) : Value {
         override fun writeTo(output: ByteBuffer) {
             output.putAscii('{')
             for ((index, entry) in entries.entries.withIndex()) {
