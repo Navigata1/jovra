@@ -82,30 +82,81 @@ struct ProbeRoot {
         }
     }
 
-    func write(_ bytes: Data, folders: [String], leaf: String) throws {
+    struct Directory {
+        fileprivate let folders: [String]
+        fileprivate let identities: [Identity]
+    }
+
+    struct Leaf {
+        fileprivate let parent: Directory
+        fileprivate let name: String
+        fileprivate let identity: Identity
+    }
+
+    func bind(_ folders: [String]) throws -> Directory {
+        try walk(folders) { _, identities in Directory(folders: folders, identities: identities) }
+    }
+
+    func bindLeaf(in directory: Directory, name: String) throws -> Leaf {
+        try Self.validate(name)
+        return try use(directory) { parent in
+            Leaf(parent: directory, name: name, identity: try Self.entryIdentity(name, at: parent, type: S_IFREG))
+        }
+    }
+
+    @discardableResult
+    func write(_ bytes: Data, in directory: Directory, leaf: String) throws -> Leaf {
         try Self.validate(leaf)
-        try withDirectory(folders) { parent in
+        return try use(directory) { parent in
             let fd = openat(parent, leaf, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
             guard fd >= 0 else { throw ProbeCustodyError.filesystem(errno) }
             let file = FileHandle(fileDescriptor: fd, closeOnDealloc: true)
+            let created = Leaf(parent: directory, name: leaf, identity: try Self.identity(fd))
             try file.write(contentsOf: bytes)
             try file.synchronize()
-            try file.close()
             guard fsync(parent) == 0 else { throw ProbeCustodyError.filesystem(errno) }
+            try verify(created)
+            try file.close()
+            return created
         }
-        try verify()
     }
 
-    func requireAbsent(folders: [String], leaf: String) throws {
+    func read(_ leaf: Leaf, maximumBytes: Int) throws -> Data {
+        try use(leaf.parent) { parent in
+            let fd = openat(parent, leaf.name, O_RDONLY | O_NOFOLLOW | O_NONBLOCK)
+            guard fd >= 0 else { throw ProbeCustodyError.filesystem(errno) }
+            let file = FileHandle(fileDescriptor: fd, closeOnDealloc: true)
+            guard try Self.identity(fd) == leaf.identity else { throw ProbeCustodyError.identityChanged }
+            let bytes = try file.read(upToCount: maximumBytes + 1) ?? Data()
+            guard bytes.count <= maximumBytes else { throw ProbeCustodyError.identityChanged }
+            try verify(leaf)
+            return bytes
+        }
+    }
+
+    func verify(_ leaf: Leaf) throws {
+        guard try bindLeaf(in: leaf.parent, name: leaf.name).identity == leaf.identity else {
+            throw ProbeCustodyError.identityChanged
+        }
+    }
+
+    func requireAbsent(in directory: Directory, leaf: String) throws {
         try Self.validate(leaf)
-        try withDirectory(folders) { parent in
+        try use(directory) { parent in
             var metadata = stat()
             let result = fstatat(parent, leaf, &metadata, AT_SYMLINK_NOFOLLOW)
             guard result == -1, errno == ENOENT else { throw ProbeCustodyError.fileAlreadyPresent }
         }
     }
 
-    private func withDirectory<T>(_ folders: [String], use: (Int32) throws -> T) throws -> T {
+    private func use<T>(_ directory: Directory, _ action: (Int32) throws -> T) throws -> T {
+        try walk(directory.folders) { parent, identities in
+            guard identities == directory.identities else { throw ProbeCustodyError.identityChanged }
+            return try action(parent)
+        }
+    }
+
+    private func walk<T>(_ folders: [String], _ action: (Int32, [Identity]) throws -> T) throws -> T {
         try verify()
         var opened: [Int32] = []
         defer { opened.reversed().forEach { _ = Darwin.close($0) } }
@@ -115,8 +166,16 @@ struct ProbeRoot {
             parent = try Self.directory(folder, at: parent)
             opened.append(parent)
         }
+        let identities = try ([rootFD] + opened).map(Self.identity)
+        let result = try action(parent, identities)
+        for (index, folder) in folders.enumerated() {
+            let directory = index == 0 ? rootFD : opened[index - 1]
+            guard try Self.entryIdentity(folder, at: directory, type: S_IFDIR) == identities[index + 1] else {
+                throw ProbeCustodyError.identityChanged
+            }
+        }
         try verify()
-        return try use(parent)
+        return result
     }
 
     private static func validate(_ name: String) throws {
@@ -132,7 +191,16 @@ struct ProbeRoot {
         return fd
     }
 
-    private struct Identity: Equatable { let device: dev_t; let inode: ino_t }
+    fileprivate struct Identity: Equatable { let device: dev_t; let inode: ino_t }
+    private static func entryIdentity(_ name: String, at parent: Int32, type: mode_t) throws -> Identity {
+        var metadata = stat()
+        guard fstatat(parent, name, &metadata, AT_SYMLINK_NOFOLLOW) == 0 else {
+            throw ProbeCustodyError.filesystem(errno)
+        }
+        guard (metadata.st_mode & S_IFMT) == type else { throw ProbeCustodyError.unsafePath }
+        return Identity(device: metadata.st_dev, inode: metadata.st_ino)
+    }
+
     private static func identity(_ fd: Int32) throws -> Identity {
         var metadata = stat()
         guard fstat(fd, &metadata) == 0 else { throw ProbeCustodyError.filesystem(errno) }

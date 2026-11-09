@@ -75,31 +75,34 @@ private enum SegmentMenuProbeSeed {
               home.path.contains("/data/Containers/Data/Application/") else { throw ProbeCustodyError.unsafePath }
         let owned = try ProbeRoot.create(home: home, name: "JOVRA-SegmentMenu-" + token)
         defer { owned.close() }
+        let root = try owned.bind([])
         let store = try SessionStore(root: owned.url)
         try await store.create(document)
+        let session = try owned.bind(["sessions", fixtureID])
+        let storedLeaf = try owned.bindLeaf(in: session, name: "session.json")
         let library = MediaLibrary(store: store)
         let later = try await library.reserveOriginalURL(sessionID: fixtureID, relativePath: "originals/segment-1.mp4")
-        let folder = ["sessions", fixtureID, "originals"]
         let expectedLater = owned.url.appendingPathComponent("sessions").appendingPathComponent(fixtureID)
             .appendingPathComponent("originals/segment-1.mp4")
         guard later.standardizedFileURL == expectedLater.standardizedFileURL else { throw ProbeCustodyError.unsafePath }
-        try owned.requireAbsent(folders: folder, leaf: "segment-0.mp4")
-        try owned.write(clip, folders: folder, leaf: "segment-1.mp4")
+        let originals = try owned.bind(["sessions", fixtureID, "originals"])
+        try owned.requireAbsent(in: originals, leaf: "segment-0.mp4")
+        let originalLeaf = try owned.write(clip, in: originals, leaf: "segment-1.mp4")
         _ = try await library.adoptOriginal(sessionID: fixtureID, relativePath: "originals/segment-1.mp4")
+        let ready = try LocalCaptureLibrary(root: owned.url)
         let stored = try await store.load(fixtureID)
-        guard stored == document, ProbeFixture.sha256(try Data(contentsOf: later)) == ProbeFixture.mediaSHA256 else {
-            throw ProbeCustodyError.identityChanged
-        }
-        try owned.requireAbsent(folders: folder, leaf: "segment-0.mp4")
-        let storedURL = expectedLater.deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("session.json")
+        try ProbeFixture.verify(session: owned.read(storedLeaf, maximumBytes: seed.count),
+                                media: owned.read(originalLeaf, maximumBytes: clip.count))
+        try owned.requireAbsent(in: originals, leaf: "segment-0.mp4")
+        try owned.verify(storedLeaf)
+        try owned.verify(originalLeaf)
+        guard stored == document else { throw ProbeCustodyError.identityChanged }
         let receipt = Receipt(bundle: bundle, fixture: fixtureID, sourceSessionSHA256: ProbeFixture.sessionSHA256,
-                              storedSessionSHA256: ProbeFixture.sha256(try Data(contentsOf: storedURL)),
-                              originalSHA256: ProbeFixture.mediaSHA256)
+                              storedSessionSHA256: ProbeFixture.sessionSHA256, originalSHA256: ProbeFixture.mediaSHA256)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
-        try owned.write(encoder.encode(receipt), folders: [], leaf: "seed-receipt.json")
-        try owned.verify()
-        return try LocalCaptureLibrary(root: owned.url)
+        try owned.write(encoder.encode(receipt), in: root, leaf: "seed-receipt.json")
+        return ready
     }
 }
 #endif
