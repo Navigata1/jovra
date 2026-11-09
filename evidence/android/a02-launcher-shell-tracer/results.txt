@@ -1,0 +1,29 @@
+A02 local exact-source receipt excerpts.
+
+--- A01 RED (exit 1) ---
+e: file:///Volumes/JovraA02-F46A6DA7/jv/android/app/src/test/kotlin/com/islanddevcrew/jovra/app/shell/ShellNavigationTest.kt:22:44 Unresolved reference 'MainActivity'.
+         Unresolved reference 'MainActivity'.
+Gradle exit 1
+
+--- Frozen local gate (exit 0) ---
+BUILD SUCCESSFUL in 1m 4s
+Gradle exit 0
+Checked 20 modules: 0 violation(s).
+compactLaunchShowsFiveLabelledDestinationsInABottomBar
+expandedLaunchShowsTheSameDestinationsInARail
+test {'tests': 8, 'failures': 0, 'errors': 0, 'skipped': 0}
+testDebugUnitTest {'tests': 18, 'failures': 0, 'errors': 0, 'skipped': 0}
+02-shell-red-resume: 28 readings, minimum internal 17.00 GiB, external 21.10 GiB
+03-shell-first-green: 17 readings, minimum internal 17.00 GiB, external 20.85 GiB
+04-shell-frozen: 35 readings, minimum internal 16.65 GiB, external 20.44 GiB
+
+--- Signed debug APK ---
+package: name='com.islanddevcrew.jovra' versionCode='1' versionName='0.1.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+minSdkVersion:'29'
+targetSdkVersion:'36'
+launchable-activity: name='com.islanddevcrew.jovra.app.shell.MainActivity'  label='' icon=''
+296502c892943cf5c0dec6583ed4fcde6ba99c5a7fccba2bd05b93f637f4cfa0  /Volumes/JovraA02-F46A6DA7/jv/android/app/build/outputs/apk/debug/app-debug.apk
+52602091 bytes
+Verifies
+Verified using v2 scheme (APK Signature Scheme v2): true
+Number of signers: 1

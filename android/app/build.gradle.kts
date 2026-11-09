@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+android {
+    sourceSets.named("main") { kotlin.directories.add("shell") }
+}
+
 dependencies {
     implementation(project(":core"))
     implementation(project(":studio-core"))
