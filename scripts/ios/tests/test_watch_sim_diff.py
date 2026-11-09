@@ -17,45 +17,51 @@ def ident(udid, name, runtime=WATCH, kind="watch"):
 
 OTHER = {"o1": ident("o1", "Someone else's phone", IOS, "iphone"), "o2": ident("o2", "An existing watch")}
 OURS = {f"j{i}": ident(f"j{i}", name) for i, name in enumerate(NAMES)}
+RECORDED = list(OURS.values())
 
 
 class WatchSimDiffTests(unittest.TestCase):
     def test_create_that_adds_only_ours_passes(self):
-        lines, problems = watch_sim_diff.compare("create", dict(OTHER), {**OTHER, **OURS}, NAMES)
+        lines, problems = watch_sim_diff.compare("create", dict(OTHER), {**OTHER, **OURS}, RECORDED)
         self.assertEqual(problems, [])
         self.assertIn("other devices after, unchanged: 2", "\n".join(lines))
 
     def test_delete_that_removes_only_ours_passes(self):
-        _, problems = watch_sim_diff.compare("delete", {**OTHER, **OURS}, dict(OTHER), NAMES)
+        _, problems = watch_sim_diff.compare("delete", {**OTHER, **OURS}, dict(OTHER), RECORDED)
         self.assertEqual(problems, [])
 
     def test_removing_another_device_fails(self):
         after = {**OURS, "o1": OTHER["o1"]}
-        _, problems = watch_sim_diff.compare("create", dict(OTHER), after, NAMES)
+        _, problems = watch_sim_diff.compare("create", dict(OTHER), after, RECORDED)
         self.assertEqual(problems, ["a device this script does not own was removed or changed: o2"])
+
+    def test_a_matching_name_does_not_exempt_an_unowned_uuid(self):
+        foreign = {"wrong": ident("wrong", NAMES[0], IOS, "iphone")}
+        _, problems = watch_sim_diff.compare("delete", {**OURS, **foreign}, {}, RECORDED)
+        self.assertEqual(problems, ["a device this script does not own was removed or changed: wrong"])
 
     def test_renaming_another_device_fails(self):
         after = {**OTHER, **OURS, "o2": ident("o2", "Renamed watch")}
-        _, problems = watch_sim_diff.compare("create", dict(OTHER), after, NAMES)
+        _, problems = watch_sim_diff.compare("create", dict(OTHER), after, RECORDED)
         self.assertEqual(len(problems), 1)
 
     def test_device_added_by_another_process_is_reported_not_failed(self):
         after = {**OTHER, **OURS, "x9": ident("x9", "Another agent's phone", IOS, "iphone")}
-        lines, problems = watch_sim_diff.compare("create", dict(OTHER), after, NAMES)
+        lines, problems = watch_sim_diff.compare("create", dict(OTHER), after, RECORDED)
         self.assertEqual(problems, [])
         self.assertIn("added meanwhile by another process (not touched): 1", "\n".join(lines))
 
     def test_create_missing_one_of_ours_fails(self):
         after = {**OTHER, "j0": OURS["j0"], "j1": OURS["j1"]}
-        _, problems = watch_sim_diff.compare("create", dict(OTHER), after, NAMES)
+        _, problems = watch_sim_diff.compare("create", dict(OTHER), after, RECORDED)
         self.assertEqual(problems, ["JOVRA Watch SE 3 40mm is missing after create"])
 
     def test_delete_leaving_one_of_ours_fails(self):
-        _, problems = watch_sim_diff.compare("delete", {**OTHER, **OURS}, {**OTHER, "j2": OURS["j2"]}, NAMES)
+        _, problems = watch_sim_diff.compare("delete", {**OTHER, **OURS}, {**OTHER, "j2": OURS["j2"]}, RECORDED)
         self.assertEqual(problems, ["JOVRA Watch SE 3 40mm is still present after delete"])
 
     def test_report_never_names_other_devices(self):
-        lines, _ = watch_sim_diff.compare("create", dict(OTHER), {**OTHER, **OURS}, NAMES)
+        lines, _ = watch_sim_diff.compare("create", dict(OTHER), {**OTHER, **OURS}, RECORDED)
         self.assertNotIn("Someone else", "\n".join(lines))
 
 

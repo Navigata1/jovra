@@ -321,16 +321,21 @@ first that needs the embed. The core owner has not yet confirmed that move.
 
 ```sh
 scripts/ios/watch-sim.sh create --evidence evidence/watch/<ticket>   # the three JOVRA watch simulators, before/after check
+WATCH_UDID="$(scripts/ios/watch-sim.sh udid 'JOVRA Watch Ultra 3 49mm')"
 xcodebuild -project ios/Jovra.xcodeproj -scheme JovraWatch \
-  -destination 'platform=watchOS Simulator,name=JOVRA Watch Ultra 3 49mm' -derivedDataPath .derivedData build
+  -destination "id=$WATCH_UDID" -derivedDataPath .derivedData build
 scripts/ios/watch-ui-test.sh [-only-testing JovraWatchUITests/<Class>] [-device ultra49|series42|se40]
 scripts/ios/watch-sim.sh delete --evidence evidence/watch/<ticket>   # when done
 ```
 
 `watch-sim.sh` creates `JOVRA Watch Ultra 3 49mm`, `JOVRA Watch Series 11 42mm` and `JOVRA Watch SE 3 40mm` on the
-newest installed watchOS runtime (a destination without `OS=` resolves to the latest one) and touches no other
-simulator; `watch_sim_diff.py` fails the run if any other device was removed or changed. Harness states run on a
-frozen receiver clock so screenshots are stable; growing ages are covered by `FakeWatchBridgeTests`.
+newest installed watchOS runtime unless `WATCH_RUNTIME` specifies one. Run creation, tests and cleanup from the
+same checkout and keep `.cache/watch-sim/owned.json` until cleanup. The script verifies each recorded UUID, device
+type, name and runtime against the simulator inventory. An exact-name collision with a device outside this
+checkout stops the operation. Cleanup also stops if a recorded watch is paired. The before/after check verifies
+the identity of every other simulator by UUID. Use `--evidence` to save the summary with the result.
+
+Harness states run on a frozen receiver clock so screenshots are stable. `FakeWatchBridgeTests` covers growing ages.
 
 Watch copy goes through `String(localized:table: "Watch")` and `Text(_:tableName: "Watch")`; there is no watch String
 Catalog yet, because `catalog_ownership.py` accepts catalogs only in `ios/Jovra/Resources/Localization` from
