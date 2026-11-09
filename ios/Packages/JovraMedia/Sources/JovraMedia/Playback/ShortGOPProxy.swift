@@ -1,5 +1,4 @@
 @preconcurrency import AVFoundation
-import Darwin
 import Foundation
 import JovraCore
 
@@ -18,37 +17,43 @@ public struct ShortGOPProxy: Sendable {
     public static let maximumDimension = 1280
 
     /// Builds a distinct proxy beside `directory`'s other files and publishes it without replacing a file.
-    /// The caller owns the proxy directory and its cache lifecycle.
+    /// The caller supplies an existing private directory on the same clone-capable local filesystem.
+    /// There is no cross-volume copy fallback. The caller owns its cache lifecycle.
     public static func build(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> ShortGOPProxy {
         let staged = try await encode(from: source, into: directory, frameRate: frameRate)
-        defer { staged.discard() }
-        return try staged.publish()
+        return try await staged.publish()
     }
 
-    /// A complete encode with its unique temporary name still in place.
+    /// A complete encode that has retired its private writer name and holds only the file descriptor.
     struct Staged: Sendable {
-        let partial: URL
-        let final: URL
+        let movie: ProxyMovie
+        let receiver: ProxyDirectory
+        let finalName: String
         let frameCount: Int
+        var retiredWriter: URL { movie.retiredWriter }
+        var final: URL { receiver.url.appendingPathComponent(finalName) }
 
-        func discard() {
-            try? FileManager.default.removeItem(at: partial)
-        }
-
-        func publish(expectedFrameCount: Int? = nil) throws -> ShortGOPProxy {
+        func commit(expectedFrameCount: Int? = nil) throws -> ProxyMovie.Commit {
             if let expectedFrameCount, frameCount != expectedFrameCount {
                 throw ShortGOPProxyError.frameCountMismatch(expected: expectedFrameCount, written: frameCount)
             }
             try Task.checkCancellation()
-            guard renameatx_np(AT_FDCWD, partial.path, AT_FDCWD, final.path, UInt32(RENAME_EXCL)) == 0 else {
-                throw ShortGOPProxyError.writeFailed
+            return try movie.commit(to: receiver, as: finalName)
+        }
+
+        func publish(expectedFrameCount: Int? = nil) async throws -> ShortGOPProxy {
+            let publication = try commit(expectedFrameCount: expectedFrameCount)
+            let verified = try await publication.verified()
+            return try withExtendedLifetime(verified) {
+                ShortGOPProxy(url: try verified.acknowledge(), frameCount: frameCount)
             }
-            return ShortGOPProxy(url: final, frameCount: frameCount)
         }
     }
 
-    static func encode(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> Staged {
+    static func encode(from source: URL, into directory: URL, frameRate: FrameRate,
+                       afterFirstFrame: (@Sendable () async -> Void)? = nil) async throws -> Staged {
         try Task.checkCancellation()
+        let receiver = try ProxyDirectory(directory)
         let asset = AVURLAsset(url: source)
         guard let track = try await asset.loadTracks(withMediaType: .video).first else { throw ShortGOPProxyError.noVideo }
         let (naturalSize, transform, timeScale) = try await track.load(.naturalSize, .preferredTransform, .naturalTimeScale)
@@ -66,13 +71,16 @@ public struct ShortGOPProxy: Sendable {
         guard reader.canAdd(output) else { throw ShortGOPProxyError.readFailed }
         reader.add(output)
 
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let job = UUID().uuidString
-        let partial = directory.appendingPathComponent("\(job).proxy.partial.mov")
-        let final = directory.appendingPathComponent("\(job).proxy.mov")
-        var keepPartial = false
-        defer { if !keepPartial { try? FileManager.default.removeItem(at: partial) } }
-        let writer = try AVAssetWriter(outputURL: partial, fileType: .mov)
+        let job = "JOVRA-Proxy-" + UUID().uuidString
+        // AVAssetWriter needs a URL. The stage is exclusive and kept inside the OS-provided
+        // process-private temp namespace. Other same-user code must not mutate that namespace.
+        let temporary = try ProxyDirectory(FileManager.default.temporaryDirectory)
+        let scratch = try temporary.privateChild(job)
+        let movie = "encoded.mov"
+        // A failed writer can leave an unbound file. Leave it protected for system temp cleanup.
+        defer { temporary.discardPrivateChild(scratch) }
+        try scratch.verify()
+        let writer = try AVAssetWriter(outputURL: scratch.url.appendingPathComponent(movie), fileType: .mov)
         let fps = max(1, Int(frameRate.framesPerSecond.rounded()))
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: [
             AVVideoCodecKey: AVVideoCodecType.h264,
@@ -97,6 +105,7 @@ public struct ShortGOPProxy: Sendable {
         writer.add(input)
 
         try Task.checkCancellation()
+        try scratch.verify()
         guard reader.startReading(), writer.startWriting() else {
             if reader.status == .reading { reader.cancelReading() }
             throw reader.status == .failed ? ShortGOPProxyError.readFailed : ShortGOPProxyError.writeFailed
@@ -118,19 +127,20 @@ public struct ShortGOPProxy: Sendable {
                 }
                 guard input.append(sample) else { throw ShortGOPProxyError.writeFailed }
                 written += 1
+                if written == 1, let afterFirstFrame { await afterFirstFrame() }
             }
             guard reader.status == .completed else { throw ShortGOPProxyError.readFailed }
             input.markAsFinished()
             await writer.finishWriting()
-            try Task.checkCancellation()
             guard writer.status == .completed else { throw ShortGOPProxyError.writeFailed }
         } catch {
             if reader.status == .reading { reader.cancelReading() }
             if writer.status == .writing { writer.cancelWriting() }
             throw error
         }
-        keepPartial = true
-        return Staged(partial: partial, final: final, frameCount: written)
+        let sealedMovie = try ProxyMovie(retiring: movie, in: scratch)
+        try Task.checkCancellation()
+        return Staged(movie: sealedMovie, receiver: receiver, finalName: "\(job).proxy.mov", frameCount: written)
     }
 }
 
@@ -149,8 +159,7 @@ public actor ProxyBackwardStepper {
     public static func prepare(original: URL, frameRate: FrameRate, proxyDirectory: URL,
                                expectedFrameCount: Int? = nil) async throws -> ProxyBackwardStepper {
         let staged = try await ShortGOPProxy.encode(from: original, into: proxyDirectory, frameRate: frameRate)
-        defer { staged.discard() }
-        let proxy = try staged.publish(expectedFrameCount: expectedFrameCount)
+        let proxy = try await staged.publish(expectedFrameCount: expectedFrameCount)
         return try ProxyBackwardStepper(proxy: proxy, frameRate: frameRate)
     }
 

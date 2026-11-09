@@ -291,8 +291,8 @@ struct VideoLab: View {
         openError = nil
         zoom.reset()
         pendingLoopStart = nil
-        let proxies = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("VideoLabProxies", isDirectory: true)
+        let proxies = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask,
+                                                   appropriateFor: nil, create: true)
         do {
             let opened = try await PlaybackController.open(url: source.url, proxyDirectory: proxies)
             guard !Task.isCancelled else { opened.close(); return }

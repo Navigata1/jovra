@@ -58,6 +58,8 @@ public final class PlaybackController {
     @ObservationIgnored var decodeProxyFrame: @MainActor (ProxyBackwardStepper, Int) async throws -> PlaybackFrame = {
         try await $0.frame(at: $1)
     }
+    @ObservationIgnored var beforeProxyHandoff: (@MainActor (Data, URL) async -> Void)?
+    @ObservationIgnored var beforeProxyVerification: (@Sendable () -> Void)?
     @ObservationIgnored private lazy var seeker = ChaseSeeker { [weak self] time, precision in
         await self?.performSeek(to: time, precision: precision) ?? false
     }
@@ -359,7 +361,6 @@ public final class PlaybackController {
                 encoder.cancel()
             }
             let staged = try? result.get()
-            defer { staged?.discard() }
             guard let self else { return }
             defer { self.proxyTask = nil }
             guard !self.isClosed else { return }
@@ -367,13 +368,22 @@ public final class PlaybackController {
                 self.proxyState = .failed
                 return
             }
-            // Publish on the same actor as close(), without suspension between acceptance and rename.
             do {
-                let proxy = try staged.publish(expectedFrameCount: expected)
-                self.stepper = try ProxyBackwardStepper(proxy: proxy, frameRate: rate)
-                self.proxyState = .ready
+                if let beforeProxyHandoff = self.beforeProxyHandoff {
+                    await beforeProxyHandoff(try staged.movie.evidenceBytes(), staged.retiredWriter)
+                }
+                // Order the filesystem commit with close. Verify the committed clone off the main actor.
+                guard !self.isClosed else { return }
+                let publication = try staged.commit(expectedFrameCount: expected)
+                let verified = try await publication.verified(beforeVerification: self.beforeProxyVerification)
+                guard !self.isClosed else { return }
+                try withExtendedLifetime(verified) {
+                    let proxy = ShortGOPProxy(url: try verified.acknowledge(), frameCount: staged.frameCount)
+                    self.stepper = try ProxyBackwardStepper(proxy: proxy, frameRate: rate)
+                    self.proxyState = .ready
+                }
             } catch {
-                self.proxyState = .failed
+                if !self.isClosed { self.proxyState = .failed }
             }
         }
     }

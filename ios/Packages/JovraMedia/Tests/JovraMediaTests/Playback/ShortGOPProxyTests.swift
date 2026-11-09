@@ -2,7 +2,7 @@
 import Foundation
 import JovraBenchmark
 import JovraCore
-import JovraMedia
+@testable import JovraMedia
 import Testing
 import XCTest
 
@@ -156,25 +156,65 @@ struct ShortGOPProxyTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let controller = try await PlaybackController.open(url: catalog.mediaURL(for: truth), proxyDirectory: directory)
         defer { controller.close() }
+        let gate = ProxyHandoffGate()
+        controller.beforeProxyHandoff = { await gate.hold(bytes: $0, retiredWriter: $1) }
+        defer { gate.release() }
         let build = Task { await controller.buildProxy() }
-        let startDeadline = ContinuousClock.now + .seconds(5)
-        while try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty,
-              ContinuousClock.now < startDeadline {
+        let deadline = ContinuousClock.now + .seconds(5)
+        while gate.receipt == nil, ContinuousClock.now < deadline {
             try await Task.sleep(for: .milliseconds(1))
         }
-        try #require(controller.proxyState == .building, "The detached encoder must have started")
-        // Hold the controller actor until a complete movie is on disk. The worker can encode
-        // independently, but close must win over the controller's pending handoff.
-        try #require(waitForCompleteProxyMovie(in: directory))
-        // Movie finalization can finish writing the atom before returning to the worker.
-        // Observe publication for a bounded window without yielding the controller actor.
-        let prematurePublication = proxyWasPublished(in: directory)
+        let receipt = try #require(gate.receipt, "The real detached encode reached its handoff")
+        let writerDirectory = receipt.retiredWriter.deletingLastPathComponent()
+        let expectedRoot = try DurableDirectory.identity(of: FileManager.default.temporaryDirectory)
+        let writerRoot = try DurableDirectory.identity(of: writerDirectory.deletingLastPathComponent())
+        #expect(writerRoot == expectedRoot)
+        try #require(hasCompleteMovieAtom(in: receipt.bytes))
+        #expect(!FileManager.default.fileExists(atPath: writerDirectory.path))
         #expect(controller.proxyState == .building)
-        #expect(!prematurePublication, "The encoder must not publish before the controller handoff")
+        #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty)
         controller.close()
+        gate.release()
         await build.value
-        #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty,
-                "Closing before handoff must leave neither a published proxy nor the encoded partial")
+        #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty)
+        #expect(!FileManager.default.fileExists(atPath: receipt.retiredWriter.path))
+        #expect(!FileManager.default.fileExists(atPath: writerDirectory.path))
+    }
+
+    @Test
+    @MainActor
+    func closeCanRunWhileCommittedProxyVerificationIsHeldOffMain() async throws {
+        let truth = try catalog.truth(id: "frameCounter/fc-240")
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let controller = try await PlaybackController.open(url: catalog.mediaURL(for: truth), proxyDirectory: directory)
+        defer { controller.close() }
+        let entered = DispatchSemaphore(value: 0)
+        let released = DispatchSemaphore(value: 0)
+        defer { released.signal() }
+        controller.beforeProxyVerification = {
+            #expect(!Thread.isMainThread)
+            entered.signal()
+            _ = released.wait(timeout: .now() + 5)
+        }
+        let build = Task { await controller.buildProxy() }
+        let deadline = ContinuousClock.now + .seconds(3)
+        var held = consumeSignaledCheckpoint(entered)
+        while !held, ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(1))
+            held = consumeSignaledCheckpoint(entered)
+        }
+        try #require(held)
+        #expect(controller.proxyState == .building)
+        let committed = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+        try #require(committed.count == 1)
+        controller.close()
+        #expect(controller.proxyState == .none)
+        released.signal()
+        await build.value
+        #expect(controller.proxyState == .none)
+        #expect(try hasCompleteMovieAtom(in: Data(contentsOf: committed[0])))
+        #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path) == [committed[0].lastPathComponent])
     }
 
     /// The same budget measured end to end on the controller (readout and displayed still updated).
@@ -205,35 +245,38 @@ struct ShortGOPProxyTests {
     }
 }
 
+/// Polls an already signaled checkpoint without blocking an asynchronous test.
+private func consumeSignaledCheckpoint(_ semaphore: DispatchSemaphore) -> Bool {
+    semaphore.wait(timeout: .now()) == .success
+}
+
 /// AVAssetWriter finishes this MOV by appending a complete top-level movie atom.
-private func waitForCompleteProxyMovie(in directory: URL) -> Bool {
-    let deadline = ContinuousClock.now + .seconds(10)
-    while ContinuousClock.now < deadline {
-        let files = (try? FileManager.default.contentsOfDirectory(at: directory,
-                                                                 includingPropertiesForKeys: nil)) ?? []
-        for file in files {
-            guard let bytes = try? Data(contentsOf: file) else { continue }
-            var offset = 0
-            while bytes.count - offset >= 8 {
-                let size = bytes[offset..<(offset + 4)].reduce(0) { ($0 << 8) | Int($1) }
-                guard size >= 8, size <= bytes.count - offset else { break }
-                if bytes[(offset + 4)..<(offset + 8)].elementsEqual("moov".utf8) { return true }
-                offset += size
-            }
-        }
-        Thread.sleep(forTimeInterval: 0.02)
+private func hasCompleteMovieAtom(in bytes: Data) -> Bool {
+    var offset = 0
+    while bytes.count - offset >= 8 {
+        let size = bytes[offset..<(offset + 4)].reduce(0) { ($0 << 8) | Int($1) }
+        guard size >= 8, size <= bytes.count - offset else { return false }
+        if bytes[(offset + 4)..<(offset + 8)].elementsEqual("moov".utf8) { return true }
+        offset += size
     }
     return false
 }
 
-private func proxyWasPublished(in directory: URL) -> Bool {
-    let deadline = ContinuousClock.now + .seconds(1)
-    while ContinuousClock.now < deadline {
-        if let names = try? FileManager.default.contentsOfDirectory(atPath: directory.path),
-           names.contains(where: { $0.hasSuffix(".proxy.mov") }) { return true }
-        Thread.sleep(forTimeInterval: 0.01)
+@MainActor
+private final class ProxyHandoffGate {
+    private(set) var receipt: (bytes: Data, retiredWriter: URL)?
+    private var pending: CheckedContinuation<Void, Never>?
+
+    func hold(bytes: Data, retiredWriter: URL) async {
+        receipt = (bytes, retiredWriter)
+        await withCheckedContinuation { pending = $0 }
     }
-    return false
+
+    func release() {
+        let continuation = pending
+        pending = nil
+        continuation?.resume()
+    }
 }
 
 /// The AC's timing gate: XCTClockMetric over 50 backward steps on the 240 fps fixture, after the proxy is built.
