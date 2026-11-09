@@ -14,6 +14,7 @@ edit it by hand. A new page appears here when the generator runs. Each page's fr
 - [keepers](keepers.md)
 - [ledger](ledger.md)
 - [media-fixtures](media-fixtures.md)
+- [multiangle-generator](multiangle-generator.md)
 - [normalization](normalization.md)
 - [planner](planner.md)
 - [progress](progress.md)

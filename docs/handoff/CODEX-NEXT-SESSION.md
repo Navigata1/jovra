@@ -1,6 +1,6 @@
 # JOVRA — next Codex session
 
-**Latest implementation handoff:** [November 8 continuation](CODEX-CONTINUATION-2026-11-08.md). The assessment below is historical.
+**Latest implementation handoff:** [November 9 continuation](CODEX-CONTINUATION-2026-11-09.md), following [Claude → Codex, November 8 evening](CLAUDE-HANDOFF-2026-11-08.md) and the [November 8 continuation](CODEX-CONTINUATION-2026-11-08.md). The assessment below is historical.
 
 Assessment: **2026-11-02**, America/Chicago. This is a source/verification handoff, not a production release.
 

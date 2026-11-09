@@ -5,7 +5,7 @@ import Foundation
 import JovraCore
 
 public enum FilesImportError: Error, Equatable, Sendable {
-    case invalidPlayer, unsupportedFile, unsupportedVideo, unreadableSource
+    case invalidPlayer, invalidMatchSetup, unsupportedFile, unsupportedVideo, unreadableSource
 }
 
 /// One local Files selection. Copy without re-encoding, then verify the retained copy before publication.
@@ -17,6 +17,18 @@ public struct FilesImportService: Sendable {
         try Task.checkCancellation()
         let name = playerName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty, name.unicodeScalars.count <= 60 else { throw FilesImportError.invalidPlayer }
+        let player = SessionPlayer(id: "player", displayName: name, handedness: .unknown, backhand: .unknown, isSelf: false)
+        return try await importVideo(source, players: [player], scoring: nil)
+    }
+
+    public func importMatch(_ source: URL, setup: FilesImportMatchSetup) async throws -> String {
+        try Task.checkCancellation()
+        let scoring = try setup.scoringInput()
+        _ = try ScoringEngine.fold(scoring)
+        return try await importVideo(source, players: scoring.players, scoring: scoring)
+    }
+
+    private func importVideo(_ source: URL, players: [SessionPlayer], scoring: ScoringInput?) async throws -> String {
         let ext = source.pathExtension.lowercased()
         guard source.isFileURL, ["mov", "mp4"].contains(ext) else { throw FilesImportError.unsupportedFile }
 
@@ -55,8 +67,9 @@ public struct FilesImportService: Sendable {
             let now = Date.now.ISO8601Format()
             let title = String(source.deletingPathExtension().lastPathComponent.unicodeScalars.prefix(120))
             let document = SessionDocument(id: id.uuidString, sport: .value, createdAt: now, updatedAt: now,
-                title: title, sessionKind: .strokePractice,
-                players: [.init(id: "player", displayName: name, handedness: .unknown, backhand: .unknown, isSelf: false)],
+                title: title, sessionKind: scoring == nil ? .strokePractice : .match,
+                players: players, sides: scoring?.sides,
+                match: scoring.map { .init(format: $0.format, toss: $0.toss, log: $0.log) },
                 recording: .init(mode: .import, importSource: .files, startedAt: recordedDate?.ISO8601Format(),
                     durationMs: milliseconds, segments: [segment], gaps: [], microphone: .notRequested, mediaAvailable: true),
                 analysis: .init(state: .notRequested, runs: []), review: .init(state: .notStarted),

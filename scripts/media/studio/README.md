@@ -30,3 +30,4 @@ folder is not a Python package, so the core `unittest discover -s scripts/media`
 | `jovra_studio_media/barcode.py`, `clicks.py`, `badge.py` | the barcode codec, the 1 kHz click codec, the angle-name banner |
 | `jovra_studio_media/model.py`, `manifest.py`, `pipeline.py` | Studio clips over core clips, the manifest plan and hashes, render and verify |
 | `jovra_studio_media/sets/` | `barcode_sources.py`, `match.py`, `broll.py`, `angles.py` (discovered by file name) |
+| `multiangle/` | S58's synthetic multi-angle generator, built on this package ([its README](multiangle/README.md)) |
