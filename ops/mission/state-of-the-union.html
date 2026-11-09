@@ -65,7 +65,7 @@ button.copy:hover{background:rgba(88,215,179,.2)}
 
 <main>
   <header class="hero">
-    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-11-09 09:01Z</p>
+    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-11-09 09:03Z</p>
     <h1>JOVRA core continuation</h1>
     <p class="tagline">Record safely. Review honestly. Own the export.</p>
     <div style="margin-top:14px">
@@ -108,7 +108,7 @@ Operating procedure:
   <section aria-labelledby="metrics"><h2 id="metrics">Scoreboard: Baseline &rarr; Current &rarr; Target</h2>
   <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Baseline</th><th>Current</th><th>Target</th></tr></thead><tbody><tr><td><b>November 2 mapped full tickets (historical workflow inventory)</b></td><td>295 scoped</td><td><span class="chip amber">17 closed / 278 open</span></td><td>Close only with full acceptance evidence</td></tr></tbody></table></div>
   <p class="small muted" style="margin-top:6px">green = at/past target &middot; blue = moving toward target &middot; amber = unchanged &middot; red = moving away</p></section>
-  <section aria-labelledby="risks"><h2 id="risks">Risks &amp; Blockers</h2><div class="panel"><ul class="bare"><li><span class="chip red">blocker</span> Live calls, alarm, thermal, crash-loss bound and power-loss evidence remain incomplete. The match imported as a practice video.</li><li><span class="chip red">blocker</span> The iPad candidate passed full iOS 26.5 CoreFlow but iOS 27.2 full .all audits timed out. Fresh remainder-only probes passed at both top and recorded bottom viewports; the cause is unresolved and the full audit remains open.</li><li><span class="chip red">blocker</span> Android foundation #378 requires ADR-owner issues #375 and #376; watch #407 has owner review and automation gates.</li><li><span class="chip red">blocker</span> Privacy, external activation, store readiness and production acceptance remain governed by their explicit requirements.</li><li><span class="chip red">blocker</span> A fresh full watch suite passed 19/19 on the reviewed Ultra 3 simulator pair; physical WatchConnectivity, companion installation, Series/SE matrix and owner gates remain open. The earlier disk-interrupted run is retained.</li><li><span class="chip red">high</span> <b>Concurrent Claude work</b> &mdash; <span class="muted">Original checkout and all Claude worktrees preserved; only isolated Codex checkouts change.</span></li><li><span class="chip amber">medium</span> <b>Physical device validation</b> &mdash; <span class="muted">Simulator evidence does not prove physical capture, signing, endurance or store readiness.</span></li><li><span class="chip amber">medium</span> <b>Required checks and current ownership</b> &mdash; <span class="muted">Historical billing failure and draft #380 red are superseded. #380 merged with backend-db passing. Requery current exact heads and coordinate on overlapping work.</span></li></ul></div></section>
+  <section aria-labelledby="risks"><h2 id="risks">Risks &amp; Blockers</h2><div class="panel"><ul class="bare"><li><span class="chip red">blocker</span> Live calls, alarm, thermal, crash-loss bound and power-loss evidence remain incomplete. The match imported as a practice video.</li><li><span class="chip red">blocker</span> The iPad candidate passed full iOS 26.5 CoreFlow but iOS 27.2 full .all audits timed out. Fresh remainder-only probes passed at both top and recorded two-swipe viewport; the cause is unresolved and the full audit remains open.</li><li><span class="chip red">blocker</span> Android foundation #378 requires ADR-owner issues #375 and #376; watch #407 has owner review and automation gates.</li><li><span class="chip red">blocker</span> Privacy, external activation, store readiness and production acceptance remain governed by their explicit requirements.</li><li><span class="chip red">blocker</span> A fresh full watch suite passed 19/19 on the reviewed Ultra 3 simulator pair; physical WatchConnectivity, companion installation, Series/SE matrix and owner gates remain open. The earlier disk-interrupted run is retained.</li><li><span class="chip red">high</span> <b>Concurrent Claude work</b> &mdash; <span class="muted">Original checkout and all Claude worktrees preserved; only isolated Codex checkouts change.</span></li><li><span class="chip amber">medium</span> <b>Physical device validation</b> &mdash; <span class="muted">Simulator evidence does not prove physical capture, signing, endurance or store readiness.</span></li><li><span class="chip amber">medium</span> <b>Required checks and current ownership</b> &mdash; <span class="muted">Historical billing failure and draft #380 red are superseded. #380 merged with backend-db passing. Requery current exact heads and coordinate on overlapping work.</span></li></ul></div></section>
 
   <section aria-labelledby="phases">
     <h2 id="phases">Phases</h2>
@@ -262,12 +262,12 @@ Operating procedure:
       <td><b>Domain and conformance tests</b><br><span class="small">On main 97319ca: 12 XCTest and 122 Swift Testing passed, plus 209 spec documents, 82 native conformance outputs, two native exports and two bundles. Runtime evidence is local to the mounted SSD.</span></td>
       <td><code>swift test --package-path ios/Packages/JovraCore</code></td>
       <td>/Volumes/JovraA02-F46A6DA7/JOVRA-Core-97319ca-hahwlrk7/run-status.json</td>
-      <td>2026-11-09T09:01:32Z</td></tr><tr>
+      <td>2026-11-09T08:55:22Z</td></tr><tr>
       <td><span class="chip green">passed</span></td>
       <td><b>Dedicated simulator core flow and export evidence</b><br><span class="small">Main 97319ca full CoreFlow 1/1 passed on iPhone simulator, including Replay and Export audits and relaunch. Actual synthetic schema, references, canonical JSON, corrected points and stats CSV passed; pre/post original hash matched and original/export decoded through end, including 30 ordered export frames.</span></td>
       <td><code>scripts/ios/core-flow-test.sh and independent JSON/CSV/FFmpeg artifact checks</code></td>
       <td>/Volumes/JovraA02-F46A6DA7/JOVRA-Review-97319ca.PxV5Ep/CoreFlow.xcresult</td>
-      <td>2026-11-09T09:01:32Z</td></tr><tr>
+      <td>2026-11-09T09:00:58Z</td></tr><tr>
       <td><span class="chip green">passed</span></td>
       <td><b>Latest recorded required hosted checks and core dependency merges</b><br><span class="small">PR #463 exact bc12c57 passed all triggered hosted checks before merge as 97319ca. Manual iOS was skipped; simulator and physical evidence are recorded separately.</span></td>
       <td><code>gh pr checks 463 --repo Navigata1/jovra</code></td>
@@ -304,7 +304,7 @@ Gates not yet passed:
 Next actions (from last session):
   - Continue current-main signed-device and cold-app-relaunch recovery tests; preserve user videos and report physical crash-loss limits.
   - Continue T26 after the full real-match Files import and verified retained hash; cover remaining Photos, duplicates and provider criteria.
-  - Diagnose iOS 27.2 Replay full .all timeout. Fresh remainder-only top and bottom passed; retain prior failures and the original full audit gate.
+  - Diagnose iOS 27.2 Replay full .all timeout. Fresh remainder-only top and two-swipe viewports passed; retain prior failures and the original full audit gate.
   - Review and integrate bounded #448, #449 and #447 with their parent branches; keep full acceptance criteria open.
   - Continue native iOS, Android, watch and Studio through the live ticket DAG and recorded owner gates.
   - Review and continue A02 draft #460 after its Pixel placeholder-shell test; preserve A01 owner ADR gates and disk floor.
@@ -313,7 +313,7 @@ Next actions (from last session):
   - Continue duplicate Files choice after review of cancellation race; native simulator provider and cancel probes failed, so retain those failures and do not claim picker acceptance.
 Known blockers:
   - Live calls, alarm, thermal, crash-loss bound and power-loss evidence remain incomplete. The match imported as a practice video.
-  - The iPad candidate passed full iOS 26.5 CoreFlow but iOS 27.2 full .all audits timed out. Fresh remainder-only probes passed at both top and recorded bottom viewports; the cause is unresolved and the full audit remains open.
+  - The iPad candidate passed full iOS 26.5 CoreFlow but iOS 27.2 full .all audits timed out. Fresh remainder-only probes passed at both top and recorded two-swipe viewport; the cause is unresolved and the full audit remains open.
   - Android foundation #378 requires ADR-owner issues #375 and #376; watch #407 has owner review and automation gates.
   - Privacy, external activation, store readiness and production acceptance remain governed by their explicit requirements.
   - A fresh full watch suite passed 19/19 on the reviewed Ultra 3 simulator pair; physical WatchConnectivity, companion installation, Series/SE matrix and owner gates remain open. The earlier disk-interrupted run is retained.

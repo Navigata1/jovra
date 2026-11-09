@@ -102,7 +102,7 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   replacement, launched, and opened five placeholder tabs on Pixel 6 Pro.
   Foldable hardware, accessibility, full product features and owner gates remain open.
 - Files duplicate service [#466](https://github.com/Navigata1/jovra/pull/466) is a reviewed draft with focused tests. The separate UX work is held on a cancellation race; native simulator picker selection and cancellation attempts failed, so do not claim provider acceptance. The broad Media run was interrupted.
-- iPad remainder-mask-only fresh diagnostics `d3a13e7` passed at top and recorded bottom viewports. They do not explain or clear the earlier full `.all` timeout. Private receipts are under `/Volumes/JovraA02-F46A6DA7/JOVRA-iPad-d3a13e7-k7qcvxi6`.
+- iPad remainder-mask-only fresh diagnostics `d3a13e7` passed at top and the recorded two-swipe viewport. They do not explain or clear the earlier full `.all` timeout. Private receipts are under `/Volumes/JovraA02-F46A6DA7/JOVRA-iPad-d3a13e7-k7qcvxi6`.
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
   and [#376](https://github.com/Navigata1/jovra/issues/376). Watch foundation
