@@ -117,6 +117,67 @@ struct PlaybackSeekOutcomeTests {
         #expect(loop.contains(controller.readout.frame))
     }
 
+    @Test
+    func clearingPendingLoopPositioningLeavesTruthfulPausedState() async throws {
+        let (controller, gate) = try await gatedLoopPositioning()
+        defer { controller.close() }
+        controller.setLoop(nil)
+        gate.finish(false)
+        await controller.settle()
+        let actual = controller.player.currentTime().frameIndex(at: .fps60)
+        #expect(controller.loop == nil)
+        #expect(!controller.isPlaying)
+        #expect(controller.player.rate == 0)
+        #expect(controller.readout.frame == actual)
+    }
+
+    @Test
+    func aNewerSeekSupersedesPendingLoopResume() async throws {
+        let (controller, gate) = try await gatedLoopPositioning()
+        defer { gate.finish(false); controller.close() }
+        let newer = Task { await controller.seek(toFrame: 60) }
+        try await waitUntil("replacement target queued") { controller.readout.frame == 60 }
+        gate.finish(false)
+        await newer.value
+        #expect(!controller.isPlaying)
+        #expect(controller.player.rate == 0)
+        #expect(controller.readout.frame == 60)
+        #expect(controller.player.currentTime().frameIndex(at: .fps60) == 60)
+    }
+
+    @Test
+    func aRateChangeWaitsForSuccessfulLoopPositioning() async throws {
+        let (controller, gate) = try await gatedLoopPositioning()
+        defer { gate.finish(false); controller.close() }
+        #expect(controller.setRate(.half))
+        #expect(controller.player.rate == 0)
+        #expect(!controller.isPlaying)
+        gate.finish(true)
+        try await waitUntil("positioned half-speed playback") { controller.player.rate == 0.5 }
+        #expect(controller.isPlaying)
+        #expect((80...100).contains(controller.player.currentTime().frameIndex(at: .fps60)))
+    }
+
+    private func gatedLoopPositioning() async throws -> (PlaybackController, GatedOriginalSeek) {
+        let (controller, _) = try await open()
+        let gate = GatedOriginalSeek(frame: 80)
+        do {
+            await controller.seek(toFrame: 5)
+            try #require(controller.setRate(.quarter))
+            controller.play()
+            try await waitUntil("actual AVPlayer play") { controller.player.rate > 0 }
+            controller.seekPlayer = { await gate.perform($0, time: $1, tolerance: $2) }
+            let loop = try #require(FrameLoop(start: 80, end: 100, frameCount: controller.frameCount))
+            controller.setLoop(loop)
+            try await waitUntil("loop position seek in flight") { gate.isWaiting }
+            return (controller, gate)
+        } catch {
+            gate.finish(false)
+            controller.close()
+            throw error
+        }
+    }
+
     private func waitUntil(_ label: String, _ condition: () -> Bool) async throws {
         let deadline = ContinuousClock.now + .seconds(2)
         while !condition(), ContinuousClock.now < deadline { try await Task.sleep(for: .milliseconds(5)) }
@@ -134,7 +195,8 @@ private final class GatedOriginalSeek {
 
     func perform(_ player: AVPlayer, time: CMTime, tolerance: CMTime) async -> Bool {
         if time.frameIndex(at: .fps60) == frame {
-            return await withCheckedContinuation { pending = $0 }
+            let allowed = await withCheckedContinuation { pending = $0 }
+            guard allowed else { return false }
         }
         return await player.seek(to: time, toleranceBefore: tolerance, toleranceAfter: tolerance)
     }
