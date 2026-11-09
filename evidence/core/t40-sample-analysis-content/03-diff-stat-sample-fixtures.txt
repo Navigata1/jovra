@@ -1,0 +1,9 @@
+$ git diff --stat origin/main -- spec/fixtures/sample   (new files only; every existing byte is unchanged)
+ .../sample/analysis/analysis.expected.json         |   90 +
+ .../2026-10-02-forehand-session.analysis.json      |  202 ++
+ .../2026-10-04-serve-practice.analysis.json        |  316 ++
+ .../analysis/sessions/jon-vs-alex.analysis.json    | 3606 ++++++++++++++++++++
+ 4 files changed, 4214 insertions(+)
+
+$ git diff --stat --diff-filter=MDR origin/main -- spec/fixtures   (modified, deleted or renamed fixture files: none)
+(empty)

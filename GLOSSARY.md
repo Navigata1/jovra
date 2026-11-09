@@ -479,6 +479,10 @@ _Avoid_: Parent mode, kids mode, family mode
 **Sample data**:
 Illustrative content, such as the Jon vs Alex sample match and the synthetic sample video, always visibly labelled
 "Sample" and never pooled with your stats, trends or goals. Sample is a label on top of provenance, not a provenance.
+One sample-scope rule decides what a block counts: samples count only when the whole scope is sample, and that block
+carries the Sample badge; any scope that mixes real and sample data counts the real data only (`SampleScope`).
+The sample's stroke tags, placements, calibrations, serve marks, swing key moments and comparison ship as analysis
+overlays that are installed onto the sample sessions (`SampleAnalysisRecord`); every lab number is computed from them.
 _Avoid_: Demo data, mock data, fake data, placeholder
 
 **Synthetic sample video**:

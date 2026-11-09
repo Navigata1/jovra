@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA sample-analysis fixture",
+  "description": "The analysis oracle (T40, screens.md §0.6, S11-S14). 'expected' is what JovraCore's SampleAnalysisSummary computes over the installed sample library (library sessions with the analysis overlays applied): forehand placements by depth, first-serve placements by box and zone, serve-mark completeness, swing key moments and comparisons with the bundled media that shows each sync time. 'reference' is reference-only: the manual-assisted serve speeds over the marks (references.serve_speed), each mark's offset from the renderer's frames, each calibration's re-projection error against the rendered pixels, and the brief's literals against the computed values.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "covers", "libraryFixture", "analysisFiles", "mediaManifest", "seed", "expected", "reference"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.sampleAnalysis"},
+    "id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "covers": {"type": "array", "items": {"type": "string"}},
+    "libraryFixture": {"type": "string", "minLength": 1, "description": "Path of the library oracle, relative to this file; its sessionFiles are the sessions the overlays apply to."},
+    "analysisFiles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "common.schema.json#/$defs/relativePath"}},
+    "mediaManifest": {"type": "string", "minLength": 1},
+    "seed": {"type": "integer", "minimum": 0, "description": "The SplitMix64 seed behind the placed-shot choice, Alex's stroke tags, the Out taps and the serve-mark offsets."},
+    "expected": {"$ref": "#/$defs/summary"},
+    "reference": {"$ref": "#/$defs/reference"}
+  },
+  "$defs": {
+    "ratio": {"$ref": "common.schema.json#/$defs/ratio"},
+    "zones": {
+      "type": "object",
+      "required": ["placed", "wide", "body", "t"],
+      "additionalProperties": false,
+      "properties": {
+        "placed": {"type": "integer", "minimum": 0},
+        "wide": {"$ref": "#/$defs/ratio"},
+        "body": {"$ref": "#/$defs/ratio"},
+        "t": {"$ref": "#/$defs/ratio"}
+      }
+    },
+    "mediaTime": {"$ref": "common.schema.json#/$defs/mediaTime"},
+    "comparisonSide": {
+      "type": "object",
+      "required": ["sessionId", "date", "syncTimeMs", "mediaId", "offsetMs"],
+      "additionalProperties": false,
+      "properties": {
+        "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+        "date": {"$ref": "common.schema.json#/$defs/date"},
+        "syncTimeMs": {"$ref": "common.schema.json#/$defs/timeMs"},
+        "mediaId": {"type": ["string", "null"], "description": "The bundled sample media that shows the sync time (a practice clip before the session video); null when none does."},
+        "offsetMs": {"type": ["integer", "null"], "description": "The sync time inside that media."}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["sample", "shotPlacement", "servePlacement", "serveMarks", "keyMoments", "comparisons"],
+      "additionalProperties": false,
+      "properties": {
+        "sample": {"type": "boolean"},
+        "shotPlacement": {
+          "description": "S11, per session, hitter and non-serve stroke with any placement: Deep (in or needs review, beyond the service line), Short (inside it) and Out (an Out tap), each of the placed shots; tagged counts that hitter's stroke tags.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sessionId", "hitter", "stroke", "tagged", "placed", "deep", "short", "out", "needsReview", "percentagesRounded"],
+            "additionalProperties": false,
+            "properties": {
+              "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+              "hitter": {"$ref": "common.schema.json#/$defs/id"},
+              "stroke": {"type": "string"},
+              "tagged": {"type": "integer", "minimum": 0},
+              "placed": {"type": "integer", "minimum": 0},
+              "deep": {"$ref": "#/$defs/ratio"},
+              "short": {"$ref": "#/$defs/ratio"},
+              "out": {"$ref": "#/$defs/ratio"},
+              "needsReview": {"type": "integer", "minimum": 0},
+              "percentagesRounded": {"type": "boolean", "description": "The three displayed percentages do not sum to 100 ('Percentages are rounded.')."}
+            }
+          }
+        },
+        "servePlacement": {
+          "description": "S12, per session and server: placed first serves in, by the receiver's box (deuce when the bounce's x and y differ in sign) and by zone (equal thirds of the box from the centre service line: T, Body, Wide).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sessionId", "server", "serve", "deuce", "ad"],
+            "additionalProperties": false,
+            "properties": {
+              "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+              "server": {"$ref": "common.schema.json#/$defs/id"},
+              "serve": {"const": "first"},
+              "deuce": {"$ref": "#/$defs/zones"},
+              "ad": {"$ref": "#/$defs/zones"}
+            }
+          }
+        },
+        "serveMarks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sessionId", "marked", "complete", "deuce", "ad", "calibrationIds"],
+            "additionalProperties": false,
+            "properties": {
+              "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+              "marked": {"type": "integer", "minimum": 0},
+              "complete": {"type": "integer", "minimum": 0, "description": "Marks with contact, bounce, bounce position and server position ('Review 12 serves')."},
+              "deuce": {"type": "integer", "minimum": 0},
+              "ad": {"type": "integer", "minimum": 0},
+              "calibrationIds": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/id"}}
+            }
+          }
+        },
+        "keyMoments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sessionId", "swings"],
+            "additionalProperties": false,
+            "properties": {
+              "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+              "swings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "kind", "stroke", "moments"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {"$ref": "common.schema.json#/$defs/id"},
+                    "kind": {"enum": ["serve", "stroke"]},
+                    "stroke": {"type": "string"},
+                    "shotId": {"$ref": "common.schema.json#/$defs/id"},
+                    "serveMarkId": {"$ref": "common.schema.json#/$defs/id"},
+                    "markId": {"$ref": "common.schema.json#/$defs/id"},
+                    "moments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["name", "time"],
+                        "additionalProperties": false,
+                        "properties": {"name": {"type": "string"}, "time": {"$ref": "#/$defs/mediaTime"}}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "comparisons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "sessionId", "syncedAt", "note", "left", "right"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "common.schema.json#/$defs/id"},
+              "sessionId": {"$ref": "common.schema.json#/$defs/id", "description": "The session folder the project is saved in (clip A's)."},
+              "syncedAt": {"enum": ["contact", "custom", "unsynced"]},
+              "note": {"type": ["string", "null"]},
+              "left": {"$ref": "#/$defs/comparisonSide"},
+              "right": {"$ref": "#/$defs/comparisonSide"}
+            }
+          }
+        }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "required": ["serveSpeeds", "serveMarkTruth", "calibrationTruth", "brief"],
+      "additionalProperties": false,
+      "properties": {
+        "serveSpeeds": {
+          "type": "object",
+          "required": ["sessionId", "unit", "marks", "fastest"],
+          "additionalProperties": false,
+          "properties": {
+            "sessionId": {"$ref": "common.schema.json#/$defs/id"},
+            "unit": {"enum": ["mph", "km/h"]},
+            "marks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["serveMarkId", "mph", "kmh", "range", "frames"],
+                "additionalProperties": false,
+                "properties": {
+                  "serveMarkId": {"$ref": "common.schema.json#/$defs/id"},
+                  "mph": {"type": "integer", "minimum": 0},
+                  "kmh": {"type": "integer", "minimum": 0},
+                  "range": {"$ref": "#/$defs/range"},
+                  "frames": {"type": "integer", "minimum": 1, "description": "Marked frames from contact to bounce."}
+                }
+              }
+            },
+            "fastest": {
+              "type": "object",
+              "required": ["serveMarkId", "value", "unit", "range", "of"],
+              "additionalProperties": false,
+              "properties": {
+                "serveMarkId": {"$ref": "common.schema.json#/$defs/id"},
+                "value": {"type": "integer", "minimum": 0},
+                "unit": {"enum": ["mph", "km/h"]},
+                "range": {"$ref": "#/$defs/range"},
+                "of": {"type": "integer", "minimum": 0}
+              }
+            }
+          }
+        },
+        "serveMarkTruth": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["serveMarkId", "truthServe", "truthFrames", "offsetFrames"],
+            "additionalProperties": false,
+            "properties": {
+              "serveMarkId": {"$ref": "common.schema.json#/$defs/id"},
+              "truthServe": {"type": "integer", "minimum": 0},
+              "truthFrames": {"$ref": "#/$defs/framePair"},
+              "offsetFrames": {"$ref": "#/$defs/offsetPair"}
+            }
+          }
+        },
+        "calibrationTruth": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["calibrationId", "truth", "maxErrorPx"],
+            "additionalProperties": false,
+            "properties": {
+              "calibrationId": {"$ref": "common.schema.json#/$defs/id"},
+              "truth": {"type": "string", "minLength": 1},
+              "maxErrorPx": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        },
+        "brief": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["screen", "literal", "computed", "equal"],
+            "additionalProperties": false,
+            "properties": {
+              "screen": {"type": "string"},
+              "literal": {"type": "string"},
+              "computed": {"type": "string"},
+              "equal": {"type": "boolean"},
+              "why": {"type": "string", "description": "Why the rendered data cannot produce the brief's literal."}
+            }
+          }
+        }
+      }
+    },
+    "range": {
+      "type": "object",
+      "required": ["low", "high", "pct"],
+      "additionalProperties": false,
+      "properties": {"low": {"type": "integer"}, "high": {"type": "integer"}, "pct": {"type": "integer"}}
+    },
+    "framePair": {
+      "type": "object",
+      "required": ["contact", "bounce"],
+      "additionalProperties": false,
+      "properties": {"contact": {"type": "integer", "minimum": 0}, "bounce": {"type": "integer", "minimum": 0}}
+    },
+    "offsetPair": {
+      "type": "object",
+      "required": ["contact", "bounce"],
+      "additionalProperties": false,
+      "properties": {"contact": {"type": "integer", "minimum": -1, "maximum": 1}, "bounce": {"type": "integer", "minimum": -1, "maximum": 1}}
+    }
+  }
+}

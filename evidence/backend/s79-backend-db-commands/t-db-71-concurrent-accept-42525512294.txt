@@ -1,0 +1,17 @@
+S79 backend-db run 42525512294 (head 6d550c1): T-DB-71 two-session script
+2026-11-08T21:31:32.8254269Z ##[group]Run supabase status -o env > "$RUNNER_TEMP/supabase-t71.env"
+^[[36;1msupabase status -o env > "$RUNNER_TEMP/supabase-t71.env"^[[0m
+^[[36;1mpython3 supabase/scripts/concurrent_accept_smoke.py "$RUNNER_TEMP/supabase-t71.env"^[[0m
+env:
+  SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+Stopped services: [supabase_realtime_jovra-local supabase_storage_jovra-local supabase_imgproxy_jovra-local supabase_pg_meta_jovra-local supabase_studio_jovra-local supabase_edge_runtime_jovra-local supabase_analytics_jovra-local supabase_vector_jovra-local supabase_pooler_jovra-local]
+A new version of Supabase CLI is available: v3.0.0 (currently installed v)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+PASS  T-DB-71 setup: two owners, verified sources and plans (committed)
+PASS  T-DB-71 setup: an environment ceiling that fits one of the two caps  (caps [227793, 227793])
+PASS  T-DB-71: while A is open, B waits on the spend advisory lock  (waiting=1)
+PASS  T-DB-71: exactly one of two concurrent acceptances succeeds, the other is P0402 budget_exceeded  (A=consented B=P0402)
+PASS  T-DB-71: B returned only after A committed (the ceiling checks were serialized)  (B took 3.1s)
+PASS  T-DB-71: spend_commitments holds one cap_open row and one job exists for the two quotes  (commitments/ledger/jobs=1 1 1)
+PASS  T-DB-71 cleanup: users, projects and the limits row removed
+T-DB-71: all checks passed

@@ -1,0 +1,16 @@
+$ reader.py bc-024 --manifest spec/studio/fixtures/media/barcodeSources/bc-024.json
+barcodes: PASS (240 of 240 frames match the frame map)
+$ reader.py bc-030 --manifest spec/studio/fixtures/media/barcodeSources/bc-030.json
+barcodes: PASS (300 of 300 frames match the frame map)
+$ reader.py bc-060 --manifest spec/studio/fixtures/media/barcodeSources/bc-060.json
+barcodes: PASS (600 of 600 frames match the frame map)
+$ reader.py bc-030-restart-seg0 --manifest spec/studio/fixtures/media/barcodeSources/bc-030-restart-seg0.json
+barcodes: PASS (150 of 150 frames match the frame map)
+$ reader.py bc-030-restart-seg1 --manifest spec/studio/fixtures/media/barcodeSources/bc-030-restart-seg1.json
+barcodes: PASS (150 of 150 frames match the frame map)
+$ reader.py bc-030-silent --manifest spec/studio/fixtures/media/barcodeSources/bc-030-silent.json
+barcodes: PASS (300 of 300 frames match the frame map)
+$ reader.py angle-near-left --manifest spec/studio/fixtures/media/angles/angle-near-left.json --labels 12
+labels: PASS (2 labels on 12 frames)
+$ reader.py angle-far-baseline --manifest spec/studio/fixtures/media/angles/angle-far-baseline.json --labels 12
+labels: PASS (2 labels on 12 frames)

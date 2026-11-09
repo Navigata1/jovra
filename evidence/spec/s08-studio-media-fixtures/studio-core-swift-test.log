@@ -1,0 +1,53 @@
+$ python3 ios/Packages/JovraStudioCore/Tools/generate_contract_models.py --check
+exit 0 (generated sources current)
+$ (cd ios/Packages/JovraStudioCore && swift test)
+Test Suite 'All tests' passed at 2026-11-08 16:00:43.225.
+✔ Test "ECMA-262 anchors: $ is rewritten outside character classes only" with 4 test cases passed after 0.006 seconds.
+✔ Test "an id pattern refuses a trailing newline and accepts the id" passed after 0.009 seconds.
+✔ Test "oneOf needs exactly one match, if/then applies only when the condition holds" passed after 0.033 seconds.
+✔ Test "the loader reports an unsupported keyword, a dangling $ref and a non-portable escape" passed after 0.032 seconds.
+✔ Test "malformed JSON is unreadable, never partially decoded" with 5 test cases passed after 0.032 seconds.
+✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 0.033 seconds.
+✔ Test "an edit plan names version 2 of its contract" passed after 0.032 seconds.
+✔ Test "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" with 10 test cases passed after 0.032 seconds.
+✔ Test "a fixture that does not exist is an error naming the path, never a silent empty read" passed after 0.033 seconds.
+✔ Test "a record that is not a JSON object with a schemaVersion string is an error" passed after 0.032 seconds.
+✔ Test "a record without a sample flag is not Sample data" passed after 0.150 seconds.
+✔ Test "the embedded schemas equal spec/schemas/studio byte for byte, and the models were generated from them" passed after 0.150 seconds.
+✔ Test "the Sample project lock names jovra.project-lock version 1 and is Sample data" passed after 0.147 seconds.
+✔ Test "NTSC frames: 30000/1001 fps maps microseconds to frames exactly" passed after 0.147 seconds.
+✔ Test "zero denominators and overflow are errors, never wrong numbers" passed after 0.147 seconds.
+✔ Test "half-up rounds .5 away from minus infinity, for both signs" with 10 test cases passed after 0.147 seconds.
+✔ Test "a rational media time converts to exact microseconds" passed after 0.147 seconds.
+✔ Test "it is the same rule as the core percentage (Percent.pct is half-up of 100n/d)" passed after 0.147 seconds.
+✔ Test "every keyword the Studio schemas use is implemented, every $ref resolves, every pattern is portable" passed after 0.154 seconds.
+✔ Test "an unknown property is refused, at the root and nested" passed after 0.154 seconds.
+✔ Suite "Studio fixture locator" passed after 0.154 seconds.
+✔ Test "a duplicate member name is refused before any schema check" passed after 0.154 seconds.
+✔ Test "an exponent integer (7.44e2) is not an integer either" passed after 0.153 seconds.
+✔ Suite "Studio contracts: schema set" passed after 0.154 seconds.
+✔ Suite "Studio record header" passed after 0.154 seconds.
+✔ Suite "Studio contracts: time" passed after 0.154 seconds.
+✔ Test "a document of another contract is refused by name" passed after 0.154 seconds.
+✔ Test "explicit null and absence stay distinct: a required nullable field must be present" passed after 0.165 seconds.
+✔ Test "decimals survive exactly: an observation's confidence 0.62 round-trips as 0.62" passed after 0.185 seconds.
+✔ Test "the writer refuses a value that breaks its schema (an id ending in a newline)" passed after 0.186 seconds.
+✔ Test "a decoded record re-encodes through the codec and decodes to the same value" passed after 0.158 seconds.
+✔ Test "the typed model carries the fixture's values, not just its bytes" passed after 0.248 seconds.
+✔ Test "an integral float (744.0) in a frame field is refused; 744 is accepted" passed after 0.302 seconds.
+✔ Suite "Studio contracts: strict decoding" passed after 0.302 seconds.
+✔ Test "the trailing-newline id and hash cases are refused, although Python's re.search accepts them (finding 6)" passed after 0.504 seconds.
+✔ Test "every schema-layer invalid case of a registered schema is refused" passed after 1.161 seconds.
+✔ Test "every registered vector checker runs on at least one case of its kind" passed after 1.360 seconds.
+✔ Suite "Studio contracts: vector consumers" passed after 1.367 seconds.
+✔ Test "the records page is consumed only while its decoders stay registered" passed after 1.617 seconds.
+✔ Test "the repository's fixtures, module pages and Swift consumers agree" passed after 1.745 seconds.
+✔ Test "every record with a registered decoder decodes and re-encodes byte-identically" passed after 1.733 seconds.
+✔ Suite "Studio contracts: record round-trips" passed after 1.765 seconds.
+✔ Test "a new fixture kind with no module page fails" passed after 1.780 seconds.
+✔ Test "a page that says swift: consumed with no Swift consumer fails" passed after 1.785 seconds.
+✔ Test "a new kind whose page says swift: pending passes unconsumed" passed after 1.838 seconds.
+✔ Suite "Studio contracts: fixture manifest" passed after 1.838 seconds.
+✔ Test "reference-layer cases pass the Swift decoder unless they carry an integral float" passed after 5.749 seconds.
+✔ Suite "Studio contracts: invalid cases" passed after 5.750 seconds.
+✔ Test run with 39 tests in 9 suites passed after 5.750 seconds.
