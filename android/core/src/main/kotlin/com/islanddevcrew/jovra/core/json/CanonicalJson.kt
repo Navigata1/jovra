@@ -47,10 +47,10 @@ object CanonicalJson {
     }
 
     // Reuse the strict grammar before a typed decoder reads the original scalar spellings.
-    internal fun validateFlatNumberObject(text: String) {
+    internal fun validateFlatObject(text: String) {
         val value = Parser(text, OutputBudget(Int.MAX_VALUE)).parse()
-        require(value is ObjectValue && value.entries.values.all { it is NumberValue || it == Literal.ZERO }) {
-            "Expected a JSON object containing only number tokens"
+        require(value is ObjectValue && value.entries.values.none { it is ObjectValue || it is ArrayValue }) {
+            "Expected a JSON object with scalar fields"
         }
     }
 
@@ -276,7 +276,7 @@ object CanonicalJson {
         }
     }
 
-    private fun requireValidScalars(text: String) {
+    internal fun requireValidScalars(text: String) {
         var index = 0
         while (index < text.length) {
             val character = text[index++]
