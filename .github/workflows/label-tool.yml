@@ -1,0 +1,64 @@
+name: Label tool
+
+# The benchmark kit's macOS labelling tool (V01, tools/label-tool): its package tests, which drive the real
+# window in-process on the synthetic sample video, and its XCUITest on the built app. Hosted Macs allow UI
+# automation; the build Mac asks for a password first, so this run is the out-of-process evidence.
+#
+# Path-filtered: do not make `label-tool` a required status check.
+
+on:
+  pull_request:
+    paths:
+      - "tools/label-tool/**"
+      - "scripts/benchmarks/**"
+      - "ios/Packages/JovraMedia/Sources/JovraBenchmark/**"
+      - "ios/Packages/JovraMedia/Tests/JovraBenchmarkTests/Labels/**"
+      - "spec/schemas/benchmark-*.json"
+      - "spec/fixtures/labels/**"
+      - "spec/benchmarks/labels/**"
+      - ".github/workflows/label-tool.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/label-tool/**"
+      - "scripts/benchmarks/**"
+      - "ios/Packages/JovraMedia/Sources/JovraBenchmark/**"
+      - ".github/workflows/label-tool.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: label-tool-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  label-tool:
+    name: label-tool
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg and XcodeGen
+        run: brew install ffmpeg xcodegen
+      - name: Restore rendered media
+        uses: actions/cache@v4
+        with:
+          path: .cache/media
+          key: label-tool-media-${{ runner.os }}-${{ hashFiles('scripts/media/**/*.py', 'spec/fixtures/sample/media-manifest.json', 'spec/fixtures/sample/jon-vs-alex.points.csv') }}
+      - name: Render the synthetic sample video (and the silent frame-counter clips)
+        run: python3 scripts/media/render.py --check --set sample --set frameCounter
+      - name: Label format, split and scorer tests (JovraBenchmark)
+        run: swift test --package-path ios/Packages/JovraMedia --filter 'LabelScoringFixtureTests|LabelSplitTests|BenchmarkLabelsTests|BenchmarkLabelSetTests'
+      - name: Label tool tests (the founder flow through the real window, in-process)
+        run: swift test --package-path tools/label-tool
+      - name: XCUITest on the built app
+        run: scripts/benchmarks/label-tool-ui-test.sh
+      - name: Keep the UI test result bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: label-tool-ui-xcresult
+          path: .derivedData/label-tool-ui.xcresult
+          if-no-files-found: ignore

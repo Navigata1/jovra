@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA benchmark observations",
+  "description": "What one analysis stage found on one recording, in the form the label scorer reads (V01; jovra-benchmark score). A stage lists only the kinds it produces: an omitted kind is not scored, an empty list is scored as finding nothing. `analysed` is the stage's coverage (V-track rule 4): the ranges it looked at. Times and points only, never imagery.",
+  "$comment": "Schema 1.0.0, added by V01. The JovraVision stage outputs of V00 convert to this document for scoring.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "recordingSha256", "producer"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.benchmarkObservations"},
+    "recordingSha256": {"$ref": "common.schema.json#/$defs/sha256"},
+    "producer": {"$ref": "common.schema.json#/$defs/source", "description": "The stage and its method version, e.g. model:shots@0.1.0."},
+    "analysed": {
+      "type": "array",
+      "description": "Half-open ranges of the recording the stage analysed, in order and without overlap.",
+      "items": {
+        "type": "object",
+        "required": ["start", "end"],
+        "additionalProperties": false,
+        "properties": {
+          "start": {"$ref": "common.schema.json#/$defs/mediaTime"},
+          "end": {"$ref": "common.schema.json#/$defs/mediaTime"}
+        }
+      }
+    },
+    "hits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["time"],
+        "additionalProperties": false,
+        "properties": {
+          "time": {"$ref": "common.schema.json#/$defs/mediaTime"},
+          "player": {"enum": ["near", "far"]},
+          "stroke": {"enum": ["serve", "forehand", "backhand", "volley", "overhead", "other"]}
+        }
+      }
+    },
+    "bounces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["time"],
+        "additionalProperties": false,
+        "properties": {
+          "time": {"$ref": "common.schema.json#/$defs/mediaTime"},
+          "imagePoint": {"$ref": "benchmark-labels.schema.json#/$defs/imagePoint"}
+        }
+      }
+    },
+    "rallies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["start", "end"],
+        "additionalProperties": false,
+        "properties": {
+          "start": {"$ref": "common.schema.json#/$defs/mediaTime"},
+          "end": {"$ref": "common.schema.json#/$defs/mediaTime"}
+        }
+      }
+    },
+    "courtCorners": {
+      "type": "array",
+      "description": "Court corner estimates, each for the frame at `time`, in the label order farLeft, farRight, nearRight, nearLeft.",
+      "items": {
+        "type": "object",
+        "required": ["time", "points"],
+        "additionalProperties": false,
+        "properties": {
+          "time": {"$ref": "common.schema.json#/$defs/mediaTime"},
+          "points": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {"oneOf": [{"type": "null"}, {"$ref": "benchmark-labels.schema.json#/$defs/imagePoint"}]}
+          }
+        }
+      }
+    }
+  }
+}

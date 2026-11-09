@@ -1,0 +1,66 @@
+$ jovra-benchmark score --labels L01.labels.json --observations L01.observations.json
+# labels and observations are the two documents inside spec/fixtures/labels/L01-every-kind-both-splits.json (synthetic)
+task          labelScoring 1.0.0
+recording     sha256 d9db095691ae78dbfbbc8d3bed01cbe609b1c332c9b004658491817690f0b130
+labels        sha256 860834ed375e0738345115e940e4cb62d6db9d0f4af6ab150768a2bda03ee7b1 (synthetic, fixture-author@1.0.0)
+observations  rule:fixture@1.0.0
+split         jovra.hashWindows.v1, 30 s windows, 300 per mille held out: 1 of 4 windows (1)
+tolerances    hit 100 ms, bounce 100 ms, rally boundary 1000 ms
+
+                                                                      tuning          held-out
+windows                                                               3 (90 s)        1 (30 s)
+hits              labels                                              7               4
+                  observations                                        8               5
+                  matched                                             6               3
+                  precision                                           0.7500          0.6000
+                  recall                                              0.8571          0.7500
+                  recall near                                         0.8000          0.5000
+                  recall far                                          1.0000          1.0000
+                  timing MAE                                          46.667 ms       46.667 ms
+                  timing bias                                         +26.667 ms      +13.333 ms
+                  strokes compared                                    5               2
+                  stroke accuracy                                     0.6000          1.0000
+bounces           labels in play                                      4               2
+                  labels not in play                                  1               0
+                  observations                                        5               2
+                  matched                                             3               2
+                  dropped on a label not in play                      1               0
+                  precision                                           0.6000          1.0000
+                  recall                                              0.7500          1.0000
+                  timing MAE                                          66.667 ms       25.000 ms
+                  placed                                              3               1
+                  placement error median                              16.00 px        45.00 px
+                  placement error mean                                11.33 px        45.00 px
+rally boundaries  labels                                              7               3
+                  observations                                        7               5
+                  matched                                             5               2
+                  precision                                           0.7143          0.4000
+                  recall                                              0.7143          0.6667
+                  F1                                                  0.7143          0.5000
+court corners     corners compared                                    7               4
+                  observations before any labelled camera position    0               0
+                  corner error mean                                   7.43 px         11.25 px
+                  corner error max                                    18.00 px        45.00 px
+coverage          analysed share                                      1.0000          0.6667
+exit status 0
+
+$ jovra-benchmark score ... --hit-tolerance 50/1000    # a tighter tolerance drops the 60, 90 and 100 ms pairs
+tolerances    hit 50 ms, bounce 100 ms, rally boundary 1000 ms
+
+                                                                      tuning          held-out
+windows                                                               3 (90 s)        1 (30 s)
+hits              labels                                              7               4
+                  observations                                        7               6
+                  matched                                             3               2
+                  precision                                           0.4286          0.3333
+                  recall                                              0.4286          0.5000
+                  recall near                                         0.6000          0.0000
+                  recall far                                          0.0000          1.0000
+                  timing MAE                                          20.000 ms       25.000 ms
+                  timing bias                                         +20.000 ms      -25.000 ms
+                  strokes compared                                    3               1
+                  stroke accuracy                                     0.6667          1.0000
+
+$ jovra-benchmark score --labels L01.labels.json --observations L02.observations.json    # another recording
+jovra-benchmark: the observations cannot be scored: observations are for a different recording than the labels
+exit status 2

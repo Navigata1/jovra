@@ -1,0 +1,37 @@
+$ python3 scripts/spec/validate.py
+instances valid                    212
+jovra.benchmarkLabelSet checks     1
+jovra.fixture.labelScoring checks  2
+schemas                            29
+RESULT: PASS
+
+$ python3 -m unittest scripts/spec/test_label_scoring.py
+Ran 20 tests in 0.023s
+
+OK
+
+$ swift test --package-path ios/Packages/JovraMedia --no-parallel   (build Mac, 2026-11-09)
+✔ Test run with 125 tests in 20 suites passed after 208.462 seconds.
+✔ Suite "Benchmark label set" passed after 0.197 seconds.
+✔ Suite "Benchmark label documents" passed after 1.971 seconds.
+✔ Suite "Label scorer reproduces the hand-computed fixtures" passed after 0.006 seconds.
+✔ Suite "Label split: hash-fixed windows" passed after 0.180 seconds.
+✔ Test run with 67 tests in 12 suites passed after 3.945 seconds.
+
+$ swift test --package-path tools/label-tool   (build Mac, 2026-11-09)
+	 Executed 6 tests, with 1 test skipped and 0 failures (0 unexpected) in 1.943 (1.944) seconds
+	 Executed 6 tests, with 1 test skipped and 0 failures (0 unexpected) in 1.943 (1.945) seconds
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testALabelFileThatCannotBeTrustedIsLeftUntouched]' passed (0.193 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testFounderFlowOnTheSyntheticSampleVideo]' passed (0.467 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testKeysDoNothingBeforeARecordingIsOpenAndAMissingFileSaysWhy]' passed (0.055 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testPlaybackRunsAndPausesAndTheKeysStillWorkWhileItPlays]' passed (1.012 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testReopeningLoadsTheSavedLabelsAndTheScorerReadsThem]' passed (0.215 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testSnapshotsForEvidence]' skipped (0.001 seconds).
+real excerpt (2 min, sound only): 83 candidates, 41.5 per minute
+◇ Test "real excerpt, sound only: the finder runs and offers a workable number of candidates" started.
+✔ Suite "Hit candidates from audio onsets" passed after 0.270 seconds.
+✔ Suite "Label document edits" passed after 0.002 seconds.
+✔ Suite "Label keymap" passed after 0.003 seconds.
+✔ Suite "Label tool menu" passed after 0.086 seconds.
+✔ Test "real excerpt, sound only: the finder runs and offers a workable number of candidates" passed after 0.270 seconds.
+✔ Test run with 20 tests in 4 suites passed after 0.270 seconds.

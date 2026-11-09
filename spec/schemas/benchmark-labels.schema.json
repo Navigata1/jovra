@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA benchmark labels (spec/benchmarks/labels/*.labels.json)",
+  "description": "Ground truth a person marked on one real recording, for the analysis benchmarks of the V track (ADR-0031): hits, bounces, rally boundaries and court corners per camera position, keyed by the recording's SHA-256. It holds times and points only. No frame, no audio, no file name and no person's name ever enters a label file (docs/fixtures/real-footage.md). The tuning / held-out split is fixed by the recording's hash (spec/reference/jovra_ref/labels.py) and written here, so it exists before the first label. Written by the labelling tool (tools/label-tool); scripts/spec/validate.py re-derives the split and checks time order.",
+  "$comment": "Schema 1.0.0, added by V01. Times are presentation times on the recording's own timeline as rationals (common mediaTime); image points are normalized 0..1 from the top-left of the displayed picture (common point2).",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "recording", "labelledBy", "split", "hits", "bounces", "rallies", "cameraPositions"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.benchmarkLabels"},
+    "recording": {"$ref": "#/$defs/recording"},
+    "labelledBy": {
+      "type": "object",
+      "required": ["method", "tool"],
+      "additionalProperties": false,
+      "description": "How the labels were made. A method and a tool version, never a person's name.",
+      "properties": {
+        "method": {"enum": ["human", "synthetic"], "description": "human: a person marked each label on the recording. synthetic: derived from a rendered fixture's ground truth (tests only)."},
+        "tool": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,31}@[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "split": {"$ref": "#/$defs/split"},
+    "hits": {
+      "type": "array",
+      "description": "Racket contacts on the recording's own court, in time order. Contacts on a neighbouring court are never labelled as hits.",
+      "items": {
+        "type": "object",
+        "required": ["time", "player", "stroke"],
+        "additionalProperties": false,
+        "properties": {
+          "time": {"$ref": "common.schema.json#/$defs/mediaTime", "description": "The frame on screen at contact."},
+          "player": {"enum": ["near", "far"], "description": "Which end of the court the hitter is at, as seen from the camera."},
+          "stroke": {"enum": ["serve", "forehand", "backhand", "volley", "overhead", "other", null], "description": "The stroke type (GLOSSARY); null when it was not labelled."}
+        }
+      }
+    },
+    "bounces": {
+      "type": "array",
+      "description": "Ball bounces on the court surface, in time order.",
+      "items": {
+        "type": "object",
+        "required": ["time", "imagePoint", "inPlay"],
+        "additionalProperties": false,
+        "properties": {
+          "time": {"$ref": "common.schema.json#/$defs/mediaTime"},
+          "imagePoint": {"$ref": "#/$defs/imagePoint", "description": "Where the ball touches the ground in the picture."},
+          "inPlay": {"type": "boolean", "description": "True for a bounce during a live rally. False for a dead ball (after the point ended, a feed, a ball rolling back): a detector is neither rewarded nor penalised for it. This is not a line call."}
+        }
+      }
+    },
+    "rallies": {
+      "type": "array",
+      "description": "Rally boundaries (GLOSSARY: from the serve put in play or the first feed until the ball is dead), in time order and without overlap. The last rally may be open (end null) while labelling is in progress; an open rally is never sealed into the label set.",
+      "items": {
+        "type": "object",
+        "required": ["start", "end"],
+        "additionalProperties": false,
+        "properties": {
+          "start": {"$ref": "common.schema.json#/$defs/mediaTime"},
+          "end": {"oneOf": [{"type": "null"}, {"$ref": "common.schema.json#/$defs/mediaTime"}]}
+        }
+      }
+    },
+    "cameraPositions": {
+      "type": "array",
+      "description": "The court corners for each position the camera held, in time order. A new entry starts where the camera moved.",
+      "items": {
+        "type": "object",
+        "required": ["from", "corners"],
+        "additionalProperties": false,
+        "properties": {
+          "from": {"$ref": "common.schema.json#/$defs/mediaTime", "description": "The first frame filmed from this position."},
+          "corners": {
+            "type": "object",
+            "required": ["court", "order", "points"],
+            "additionalProperties": false,
+            "properties": {
+              "court": {"const": "doubles", "description": "The four doubles corners (GLOSSARY, Calibration)."},
+              "order": {"const": "farLeft,farRight,nearRight,nearLeft", "description": "Far and near are the baselines as seen from the camera; left and right as they appear in the picture."},
+              "points": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {"oneOf": [{"type": "null", "description": "Not marked: the corner is hidden or outside the picture."}, {"$ref": "#/$defs/imagePoint"}]}
+              }
+            }
+          }
+        }
+      }
+    },
+    "hitCandidates": {
+      "type": "object",
+      "required": ["method", "items"],
+      "additionalProperties": false,
+      "description": "Audio onsets the labelling tool offered as possible hits, so the labeller confirms or rejects instead of searching. A candidate is never a label: only the hits above are ground truth. A rejected candidate is a labelled negative (a bounce, a footstep, a neighbouring court).",
+      "properties": {
+        "method": {"type": "string", "pattern": "^jovra\\.[a-zA-Z]+\\.v[0-9]+$"},
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["time", "decision"],
+            "additionalProperties": false,
+            "properties": {
+              "time": {"$ref": "common.schema.json#/$defs/mediaTime", "description": "The onset in the audio."},
+              "decision": {"enum": ["pending", "confirmed", "rejected"]}
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "recording": {
+      "type": "object",
+      "required": ["sha256", "byteSize", "duration", "width", "height", "frameRate", "variableFrameRate"],
+      "additionalProperties": false,
+      "description": "The file the labels were made on, identified by its bytes. No name and no path.",
+      "properties": {
+        "sha256": {"$ref": "common.schema.json#/$defs/sha256"},
+        "byteSize": {"type": "integer", "minimum": 1},
+        "duration": {"$ref": "common.schema.json#/$defs/mediaTime"},
+        "width": {"type": "integer", "minimum": 2, "description": "Displayed picture width in pixels (after the track rotation)."},
+        "height": {"type": "integer", "minimum": 2},
+        "frameRate": {"$ref": "common.schema.json#/$defs/frameRate", "description": "Nominal rate (the median frame duration's)."},
+        "variableFrameRate": {"type": "boolean"}
+      }
+    },
+    "split": {
+      "type": "object",
+      "required": ["method", "windowMs", "heldOutPermille", "durationMs", "heldOutWindows"],
+      "additionalProperties": false,
+      "description": "jovra.hashWindows.v1: the timeline in windows of windowMs; the held-out windows are those with the smallest SHA-256(method, recording hash, index). Every other window is a tuning window, so the two never overlap. A gating run reads held-out windows only.",
+      "properties": {
+        "method": {"const": "jovra.hashWindows.v1"},
+        "windowMs": {"type": "integer", "minimum": 1000},
+        "heldOutPermille": {"type": "integer", "minimum": 1, "maximum": 999},
+        "durationMs": {"type": "integer", "minimum": 1},
+        "heldOutWindows": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 0}}
+      }
+    },
+    "imagePoint": {
+      "type": "object",
+      "required": ["x", "y"],
+      "additionalProperties": false,
+      "description": "Normalized image space: 0..1 from the top-left of the displayed picture.",
+      "properties": {
+        "x": {"type": "number", "minimum": 0, "maximum": 1},
+        "y": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    }
+  }
+}
