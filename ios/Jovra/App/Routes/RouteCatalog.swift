@@ -55,7 +55,7 @@ extension AppDestination {
             .sheet(.pointEditor(session, "launch-point")),
             .sheet(.clipExport(session, "launch-point")),
             .sheet(.sharePack(session)),
-            .sheet(.capabilityDetail("serve-speed-manual")),
+            .sheet(.capabilityDetail("serveSpeed.manualAssisted")),
             .sheet(.matchFormat(.sessionSetup)),
             .sheet(.players),
             .sheet(.cameraPreset),
@@ -245,7 +245,7 @@ private extension SheetRoute {
         case .capabilityDetail:
             sheet("capabilityDetail", "T12", String(localized: "How this was measured", table: "App", comment: "Sheet name"),
                   String(localized: "Close how this was measured", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/CapabilityDetail/CapabilityDetailSheet.swift")
+                  "Features/CapabilityDetail/CapabilityDetailSheet.swift", placeholder: CapabilityDetailSheet.isPlaceholder)
         case .matchFormat:
             sheet("matchFormat", "T21", String(localized: "Match format", table: "App", comment: "Sheet name"),
                   String(localized: "Close match format", table: "App", comment: "VoiceOver label of the Close control"),

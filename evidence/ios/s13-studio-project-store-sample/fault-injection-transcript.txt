@@ -1,0 +1,38 @@
+# Fault injection: JOVRA_EVIDENCE=1 swift test --filter 'ProjectStoreDurability|ProjectDeleteScope'
+# The fault closure throws at StudioProjectWriteCheckpoint.temporaryFileFlushed (after the temp file is flushed, before rename) or .documentRenamed; a new store then reloads from disk, as a restarted process would.
+[Computing dependencies]
+[1 / 1]
+Build complete! (0.75 sec)
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Studio project store: delete scopes and films" started.
+◇ Suite "Studio project store: durability and the index" started.
+◇ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" started.
+◇ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" started.
+◇ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test "a process killed after the rename has committed the new studio.json" started.
+◇ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" started.
+◇ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" started.
+◇ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" started.
+◇ Test "a corrupted index is rebuilt from the project folders with the same project list" started.
+◇ Test "a created project reloads from its folder in a new store with the same kind and no sources" started.
+◇ Test case passing 1 argument scope → .project to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test case passing 1 argument scope → .derived to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test case passing 1 argument scope → .cloudCopies to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+✔ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" passed after 0.055 seconds.
+✔ Test "a created project reloads from its folder in a new store with the same kind and no sources" passed after 0.073 seconds.
+fault-injection: died at temporaryFileFlushed; studio.json bytes unchanged (379 B); orphan temp file .studio.json-671FAF1A-CDFF-49C1-95E4-96FCCCBCF5EB.tmp ignored; reloaded revision 0
+✔ Test "a process killed after the rename has committed the new studio.json" passed after 0.127 seconds.
+✔ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" passed after 0.146 seconds.
+✔ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" passed after 0.181 seconds.
+✔ Test "a corrupted index is rebuilt from the project folders with the same project list" passed after 0.195 seconds.
+✔ Suite "Studio project store: durability and the index" passed after 0.195 seconds.
+✔ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" passed after 0.376 seconds.
+✔ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" passed after 0.787 seconds.
+delete(cloudCopies): originals sha256 before ["45af25ec7eeeec0163eeceae355e863fe05298409dd7af977bab20158a651be9", "542f1020dfd86d65f247af9753c3764907b9c722a8824f4a53b1ec6022d87629"] after ["45af25ec7eeeec0163eeceae355e863fe05298409dd7af977bab20158a651be9", "542f1020dfd86d65f247af9753c3764907b9c722a8824f4a53b1ec6022d87629"]
+delete(project): originals sha256 before ["45af25ec7eeeec0163eeceae355e863fe05298409dd7af977bab20158a651be9", "542f1020dfd86d65f247af9753c3764907b9c722a8824f4a53b1ec6022d87629"] after ["45af25ec7eeeec0163eeceae355e863fe05298409dd7af977bab20158a651be9", "542f1020dfd86d65f247af9753c3764907b9c722a8824f4a53b1ec6022d87629"]
+delete(derived): originals sha256 before ["45af25ec7eeeec0163eeceae355e863fe05298409dd7af977bab20158a651be9", "542f1020dfd86d65f247af9753c3764907b9c722a8824f4a53b1ec6022d87629"] after ["45af25ec7eeeec0163eeceae355e863fe05298409dd7af977bab20158a651be9", "542f1020dfd86d65f247af9753c3764907b9c722a8824f4a53b1ec6022d87629"]
+✔ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" with 3 test cases passed after 1.186 seconds.
+✔ Suite "Studio project store: delete scopes and films" passed after 1.186 seconds.
+✔ Test run with 9 tests in 2 suites passed after 1.186 seconds.

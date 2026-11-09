@@ -1,0 +1,43 @@
+# Scratch revert: finding 9 (remembered (quoteId, credits) history: a redelivered reserve or top-up after a top-up replays) (2026-11-08T23:03:12Z); restored afterwards, never committed
+$ diff -u <shipped> <scratch-reverted>
+--- shipped/Ledger.swift	2026-11-08 17:03:12
++++ scratch/Ledger.swift	2026-11-08 17:03:12
+@@ -239,7 +239,7 @@
+         try R.require(credits >= 0, .badAmount, "credits must be an integer >= 0")
+         let key = Key(projectId: projectId, planRevision: planRevision, outputSpecSha256: outputSpecSha256)
+         if let existing = byKey[key], let r = reservations[existing] {
+-            try R.require(r.reserveRequests.contains(AppliedRequest(quoteId: quoteId, credits: credits))
++            try R.require((quoteId == r.quoteId && credits == r.reservedCredits)
+                           && (jobId == nil || jobId == r.jobId), .idempotencyConflict,
+                           "same idempotency key with different terms or another job (after budget_exceeded, top up instead)")
+             return ReserveResult(reservationId: r.reservationId, replayed: true, balance: balance)
+@@ -276,10 +276,6 @@
+         typealias R = LedgerRejection
+         var r = try reservation(reservationId)
+         try R.require(credits >= 0, .badAmount, "credits must be an integer >= 0")
+-        if r.topupRequests.contains(AppliedRequest(quoteId: quoteId, credits: credits)) {
+-            // a redelivered top-up that was already applied: replay the current state, charge nothing (finding 9)
+-            return TopupResult(reservationId: reservationId, reservedCredits: r.reservedCredits, replayed: true, balance: balance)
+-        }
+         try R.require(r.status == .held, .reservationClosed, "reservation is \(r.status.rawValue)")
+         let quote = try self.quote(quoteId)
+         try R.require(quoteId != r.quoteId && quoteId != r.initialQuoteId, .idempotencyConflict, "a top-up needs a new accepted quote")
+$ swift test --filter LedgerRecordRuleTests|LedgerParityTests
+◇ Test run started.
+✔ Test "all 8 quote-credit vectors give the reference's cap" passed after 0.120 seconds.
+✔ Test "all 32 job-transition vectors give the reference's state, resume stage, attempt or code" passed after 0.125 seconds.
+✘ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" recorded an issue at LedgerRecordRuleTests.swift:117:6: Caught error: idempotencyConflict: same idempotency key with different terms or another job (after budget_exceeded, top up instead)
+✘ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" failed after 0.127 seconds with 1 issue.
+✔ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" passed after 0.127 seconds.
+✔ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" passed after 0.129 seconds.
+✘ Test "all 21 ledger sequences give the reference's step results and final ledger" recorded an issue at LedgerParityTests.swift:21:6: Caught error: retries-after-topup-replay step number(6): rejected with idempotencyConflict: same idempotency key with different terms or another job (after budget_exceeded, top up instead), expected object([JovraStudioCore.StudioJSONMember(key: "reservationId", value: JovraStudioCore.StudioJSONValue.string("res-0001")), JovraStudioCore.StudioJSONMember(key: "replayed", value: JovraStudioCore.StudioJSONValue.bool(true)), JovraStudioCore.StudioJSONMember(key: "balance", value: JovraStudioCore.StudioJSONValue.number(5))])
+✘ Test "all 21 ledger sequences give the reference's step results and final ledger" failed after 0.135 seconds with 1 issue.
+✔ Test "the bundled contracts are the repository's render-job-transitions and credit-classes files, byte for byte" passed after 0.143 seconds.
+✔ Test "a vector with a wrong expectation is reported as a mismatch" passed after 0.160 seconds.
+✘ Suite "Ledger: vector parity with jobstate.py and ledger.py" failed after 0.161 seconds with 1 issue.
+✔ Test "every stored render-job, quote and usage-reservation record passes its rules" passed after 0.240 seconds.
+✔ Test "every reference-layer invalid case fails with the reference's code; schema-layer cases never decode" passed after 0.322 seconds.
+✘ Suite "Ledger: record rules and the reference's invalid cases" failed after 0.322 seconds with 1 issue.
+✘ Test run with 10 tests in 2 suites failed after 0.322 seconds with 2 issues.
+# restored; rerun:
+✔ Test run with 10 tests in 2 suites passed after 0.503 seconds.

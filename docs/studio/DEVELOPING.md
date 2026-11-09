@@ -90,6 +90,7 @@ come from configuration outside source control.
 | `swift test --package-path ios/Packages/JovraStudioMedia` | Studio media tests (macOS) |
 | `python3 scripts/spec/validate_studio.py [-v \| --list]` | Studio contracts, fixtures, reference, module pages and determinism |
 | `python3 ios/Packages/JovraStudioCore/Tools/generate_contract_models.py [--check]` | regenerate (or check) the Swift Studio contract models and embedded schemas after a change under `spec/schemas/studio` (S10) |
+| `scripts/studio/sync-sample-resources.sh [--check]` | refresh (or check) the app's bundled Studio sample records, `ios/Jovra/Resources/StudioSample`, from `spec/studio/fixtures/records` (S13; a JovraStudioCore test fails on any byte of drift) |
 | `scripts/ios/generate.sh` | regenerate the Xcode project after adding or removing files |
 | `xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -only-testing:JovraTests/<StudioSuite> -destination id=<your simulator> -derivedDataPath <worktree>/.derivedData` | hosted Studio unit tests (`ios/JovraTests/Studio`) |
 | `scripts/ios/ui-test.sh -only-testing JovraUITests/<StudioClass> studio/<ticket>` | Studio UI tests (`ios/JovraUITests/Studio`), screenshots exported to `evidence/ios/studio/<ticket>/` |

@@ -242,27 +242,55 @@ func sampleCaptureSession(id: String, title: String, recording: SessionRecording
     }
 }
 
-@Test func mediaServicesResetClosesTheSegmentAsACameraErrorGapAndResumesIntoTheSameSession() async throws {
+/// Re-arms a media-services reset one second into every stream it is rebuilt for.
+private final class RecurringResetCamera: CaptureSource, @unchecked Sendable {
+    let fixture: FixtureCamera
+    private let lock = NSLock()
+    private var prepares = 0
+    init(fixture: FixtureCamera) { self.fixture = fixture }
+    var mode: SessionRecordingMode { fixture.mode }
+    var label: String { fixture.label }
+    var prepareCount: Int { lock.withLock { prepares } }
+    func prepare(preset: CapturePreset, microphone: SessionRecordingMicrophone) async throws -> CaptureSourceFormat {
+        lock.withLock { prepares += 1 }
+        fixture.injectFailure(at: CMTime(value: 1, timescale: 1), failure: .mediaServicesReset)
+        return try await fixture.prepare(preset: preset, microphone: microphone)
+    }
+    func start(at sessionTime: CMTime, onSample: @escaping @Sendable (CaptureSample) throws -> Void,
+               onFailure: @escaping @Sendable (any Error) -> Void) async throws {
+        try await fixture.start(at: sessionTime, onSample: onSample, onFailure: onFailure)
+    }
+    func stop() async { await fixture.stop() }
+}
+
+// T16 (#18): the engine rebuilds after a reset on its own (CrashRecoveryTests). A reset that keeps recurring
+// is rebuilt a bounded number of times, then the engine waits paused with the gap pending for the player.
+@Test func recurringMediaServicesResetsStopBeingRebuiltAfterTheLimitAndLeaveTheRecordingPausedNotEnded() async throws {
     let folder = temporaryFolder()
     defer { try? FileManager.default.removeItem(at: folder) }
     let clock = VirtualCaptureClock()
-    let camera = FixtureCamera(url: try fixtureCameraURL(), duration: CMTime(value: 2, timescale: 1), clock: clock)
+    let fixture = FixtureCamera(url: try fixtureCameraURL(), duration: CMTime(value: 2, timescale: 1), clock: clock)
+    let camera = RecurringResetCamera(fixture: fixture)
     let sink = ReceivingSink()
     let engine = CaptureEngine(source: camera, clock: clock, sink: sink)
     _ = try await engine.prepare(CapturePreset(width: 1280, height: 720), microphone: .denied)
-    camera.injectFailure(at: CMTime(value: 1, timescale: 1), failure: .mediaServicesReset)
-    try await engine.start(sessionID: "media-reset", folder: folder)
-    await #expect(throws: CaptureSourceFailure.mediaServicesReset) { try await camera.waitUntilFinished() }
-    for _ in 0..<2000 where engine.status.phase != .paused { try await Task.sleep(nanoseconds: 1_000_000) }
-    #expect(engine.status.phase == .paused)
-    #expect(engine.activity.isActive)
-    clock.advance(by: CMTimeSubtract(CMTime(value: 4, timescale: 1), clock.now()))
-    try await engine.resume()
-    try await camera.waitUntilFinished()
+    try await engine.start(sessionID: "media-reset-limit", folder: folder)
+    let journalURL = folder.appendingPathComponent("capture-journal.json")
+    for _ in 0..<4000 {
+        if engine.status.phase == .paused, camera.prepareCount == 4,
+           (try? CaptureJournal.open(url: journalURL).snapshot()).map({ $0.segments.count == 4 && $0.segments.allSatisfy(\.finalized) }) == true { break }
+        try await Task.sleep(nanoseconds: 1_000_000)
+    }
+    #expect(camera.prepareCount == 4, "the first prepare plus three automatic rebuilds")
+    #expect(engine.status.phase == .paused && engine.activity.isActive)
+    let paused = try CaptureJournal.open(url: journalURL).snapshot()
+    #expect(paused.segments.count == 4 && paused.segments.allSatisfy { $0.finalized && $0.durationMs == 1000 })
+    #expect(paused.gaps.count == 3 && paused.gaps.allSatisfy { $0.reason == .cameraError })
+    try await engine.resume()   // The player's choice; this stream is not re-armed.
+    try await fixture.waitUntilFinished()
     let record = try await engine.stop()
-    #expect(record.segments.map(\.startMs) == [0, 4000])
-    #expect(record.segments.map(\.durationMs) == [1000, 2000])
-    #expect(record.gaps == [SessionGap(startMs: 1000, endMs: 4000, reason: .cameraError)])
+    #expect(record.segments.map(\.durationMs) == [1000, 1000, 1000, 1000, 2000])
+    #expect(record.gaps.count == 4 && record.gaps.allSatisfy { $0.reason == .cameraError })
     #expect(await sink.received.count == 1)
 }
 

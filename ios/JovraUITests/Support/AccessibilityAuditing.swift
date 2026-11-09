@@ -38,6 +38,29 @@ enum AccessibilityAudit {
         return frame.minY < viewport.minY || frame.maxY > viewport.maxY
     }
 
+    /// XCTest's "Audit failed to complete in time".
+    static func isTimeout(_ error: NSError) -> Bool {
+        error.domain == "com.apple.xcode.xctest.accessibilityAudit" && error.code == -56
+    }
+
+    /// `types` split into individual audit types, so a timed-out audit can be repeated in smaller parts.
+    /// Together the parts are exactly `types`.
+    static func singleTypes(in types: XCUIAccessibilityAuditType) -> [XCUIAccessibilityAuditType] {
+        let all: [XCUIAccessibilityAuditType] = [.contrast, .elementDetection, .hitRegion, .sufficientElementDescription,
+                                                 .dynamicType, .textClipped, .trait]
+        var parts = all.filter { types.contains($0) }
+        // Any type not named above (a newer SDK's) still runs, in one last part.
+        let rest = types.subtracting(XCUIAccessibilityAuditType(parts))
+        if !rest.isEmpty { parts.append(rest) }
+        return parts
+    }
+
+    /// A contrast finding on text that is nothing but a dash ("—", no data). The glyph covers too few
+    /// pixels for the renderer to measure; its colour role is proved ≥ 4.5:1 by ColorRoleContrastTests.
+    static func isGlyphOnlyContrastIssue(type: XCUIAccessibilityAuditType, label: String) -> Bool {
+        type == .contrast && !label.isEmpty && label.allSatisfy { "—–-".contains($0) }
+    }
+
     /// Height of the band above the tab bar in which contrast sampling is unreliable.
     static let edgeBand: CGFloat = 16
     static let maximumSteps = 6
@@ -60,11 +83,14 @@ enum AccessibilityAudit {
 extension XCTestCase {
     /// Audits every part of the current screen for `types` (all audits by default).
     @MainActor
-    func auditScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType = .all, scrollIdentifier: String? = nil) throws {
+    /// `pageTop` is where a full-screen page without a tab bar stops scrolling under its status-bar
+    /// backdrop (the component gallery passes it); content above it is clipped, not shown.
+    func auditScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType = .all, scrollIdentifier: String? = nil,
+                     pageTop: CGFloat? = nil) throws {
         // On a tab screen the lockup is the first row, Space.x1 (8 pt) below the status-bar backdrop.
         let lockup = app.descendants(matching: .any).matching(identifier: "brand.lockup").firstMatch
         let onTabScreen = scrollIdentifier == nil && app.otherElements["tabBar"].exists && lockup.exists
-        let visibleTop = onTabScreen ? lockup.frame.minY - 8 : 0
+        let visibleTop = onTabScreen ? lockup.frame.minY - 8 : (pageTop ?? 0)
         let scrollView = scrollIdentifier.map { app.scrollViews[$0] } ?? app.scrollViews.firstMatch
         if let scrollIdentifier, !scrollView.exists {
             XCTFail("Requested foreground scroll view is missing: " + scrollIdentifier); return
@@ -138,13 +164,28 @@ extension XCTestCase {
         let tabBarFrame = hasForegroundTabBar ? tabBar.frame : .null
         let markerY = marker.exists ? marker.frame.minY : nil
         var setAside: [String] = []
-        try app.performAccessibilityAudit(for: types) { issue in
-            guard let element = issue.element else { return false }
+        let handler: (XCUIAccessibilityAuditIssue) -> Bool = { issue in
+            guard let element = issue.element else {
+                // A rendered finding with no element (text recognition) cannot be placed; if the page
+                // moved during the audit it was read from stale pixels, so it is set aside like the rest.
+                let isRendered = issue.auditType == .contrast || issue.auditType == .elementDetection
+                if isRendered, !isRepeat, let markerY, abs(marker.frame.minY - markerY) > 1 {
+                    print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element set aside: the audit moved the page by \(marker.frame.minY - markerY) pt (\(issue.compactDescription))")
+                    setAside.append(issue.compactDescription)
+                    return true
+                }
+                print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element: FAILS (\(issue.compactDescription); \(issue.detailedDescription))")
+                return false
+            }
             // Tab bar titles stop growing at xxxLarge, like the system tab bar; the Large Content
             // Viewer shows them enlarged. The audit reports the cap as a Dynamic Type issue: exempt
             // inside the bar only. Text clipping is never exempt.
             if issue.auditType == .dynamicType, tabBarFrame.contains(element.frame) {
                 print("audit: ignored dynamic type on tab bar “\(element.label)” (capped titles, Large Content Viewer)")
+                return true
+            }
+            if AccessibilityAudit.isGlyphOnlyContrastIssue(type: issue.auditType, label: element.label) {
+                print("audit: contrast on the lone dash “\(element.label)” ignored (too few pixels to sample; colour role tested)")
                 return true
             }
             let frame = element.frame
@@ -174,6 +215,17 @@ extension XCTestCase {
             }
             print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue on “\(element.label)” at \(frame), visible \(visibleTop)–\(visibleBottom): ignored (clipped or in the edge band)")
             return true
+        }
+        do {
+            try app.performAccessibilityAudit(for: types, handler)
+        } catch let error as NSError where AccessibilityAudit.isTimeout(error) {
+            // A long page on a busy machine can exceed the audit's own time limit. The same audit then
+            // runs one type at a time, each with less to do; every finding is handled the same way.
+            print("audit: timed out auditing every type at once; repeating one type at a time")
+            for type in AccessibilityAudit.singleTypes(in: types) {
+                print("audit: auditing \(AccessibilityAudit.name(of: type)) alone")
+                try app.performAccessibilityAudit(for: type, handler)
+            }
         }
         guard !setAside.isEmpty else { return }
         waitForScrollingToSettle(marker)

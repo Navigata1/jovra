@@ -1,0 +1,217 @@
+{
+  "schemaVersion": "jovra.pts-table/1",
+  "sample": true,
+  "sourceId": "sample-corner-vfr",
+  "normalizerVersion": "jovra-normalize@0.1.0",
+  "original": {
+    "timescale": 600,
+    "nominalFps": {
+      "num": 30,
+      "den": 1
+    },
+    "pts": [
+      {
+        "value": 0,
+        "step": 22,
+        "count": 2
+      },
+      {
+        "value": 39,
+        "step": 24,
+        "count": 2
+      },
+      {
+        "value": 78,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 117,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 162,
+        "step": 17,
+        "count": 2
+      },
+      {
+        "value": 200,
+        "step": 22,
+        "count": 2
+      },
+      {
+        "value": 239,
+        "step": 24,
+        "count": 2
+      },
+      {
+        "value": 278,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 317,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 362,
+        "step": 17,
+        "count": 2
+      },
+      {
+        "value": 400,
+        "step": 22,
+        "count": 2
+      },
+      {
+        "value": 439,
+        "step": 24,
+        "count": 2
+      },
+      {
+        "value": 478,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 517,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 562,
+        "step": 17,
+        "count": 2
+      },
+      {
+        "value": 610,
+        "step": 12,
+        "count": 2
+      },
+      {
+        "value": 639,
+        "step": 24,
+        "count": 2
+      },
+      {
+        "value": 678,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 717,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 762,
+        "step": 17,
+        "count": 2
+      },
+      {
+        "value": 800,
+        "step": 22,
+        "count": 2
+      },
+      {
+        "value": 839,
+        "step": 24,
+        "count": 2
+      },
+      {
+        "value": 878,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 917,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 962,
+        "step": 17,
+        "count": 2
+      },
+      {
+        "value": 1000,
+        "step": 22,
+        "count": 2
+      },
+      {
+        "value": 1039,
+        "step": 24,
+        "count": 2
+      },
+      {
+        "value": 1078,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 1117,
+        "step": 23,
+        "count": 2
+      },
+      {
+        "value": 1162,
+        "step": 17,
+        "count": 2
+      }
+    ],
+    "endPts": 1200,
+    "frameCount": 60,
+    "width": 3840,
+    "height": 2160,
+    "rotationDegrees": 90,
+    "hdr": true,
+    "transfer": "hlg"
+  },
+  "proxy": {
+    "fps": {
+      "num": 30,
+      "den": 1
+    },
+    "timescale": 3000,
+    "frameDurationTicks": 100,
+    "startPts": 0,
+    "frameCount": 60,
+    "width": 1080,
+    "height": 1920,
+    "rotationAppliedDegrees": 90,
+    "displayRotationDegrees": 0,
+    "transfer": "bt709",
+    "bitDepth": 8,
+    "toneMap": {
+      "method": "ffmpeg-zscale-tonemap",
+      "params": "transfer=linear,tonemap=hable,desat=0,transfer=bt709",
+      "version": "ffmpeg@8.0.0"
+    },
+    "upconverted": false
+  },
+  "runs": [
+    {
+      "proxyFrame": 0,
+      "count": 30,
+      "originalFrame": 0,
+      "originalStep": 1,
+      "originalPts": 0
+    },
+    {
+      "proxyFrame": 30,
+      "count": 2,
+      "originalFrame": 29,
+      "originalStep": 2,
+      "originalPts": 579
+    },
+    {
+      "proxyFrame": 32,
+      "count": 28,
+      "originalFrame": 32,
+      "originalStep": 1,
+      "originalPts": 639
+    }
+  ]
+}

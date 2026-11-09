@@ -24,6 +24,12 @@ private func layoutFile(_ bytes: [UInt8], body: (URL) throws -> Void) throws {
         #expect(layout.completeFragmentEnds == [32])
         #expect(layout.hasIncompleteTail)
     }
+    // Power loss can leave a zero-filled extent after the last saved fragment: a torn tail, not a bad file.
+    try layoutFile(complete + Array(repeating: 0, count: 4096)) { url in
+        let layout = try FragmentedMovieLayout.inspect(url)
+        #expect(layout.completeFragmentEnds == [32])
+        #expect(layout.hasIncompleteTail)
+    }
     for malformed in [[0,0,0,4,102,116,121,112], [0,0,0,1,102,116,121,112,255,255,255,255,255,255,255,255],
                       [0,0,0,0,102,116,121,112], [0,0,0,8,109,100,97,116]] as [[UInt8]] {
         try layoutFile(malformed) { url in

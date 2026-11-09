@@ -1,0 +1,57 @@
+# Release configuration: swift test -c release --filter ProjectEntitlements
+[Computing dependencies]
+[Pre-planning 1 / 211]
+[Planning deferred tasks]
+[20 / 74] JovraCore_JovraCore
+[38 / 74] JovraCore_JovraCore
+[41 / 76] JovraCore_JovraCore
+[42 / 76] JovraCore
+[53 / 112]
+[54 / 112]
+[56 / 112]
+[59 / 112]
+[61 / 112]
+[62 / 112]
+[63 / 112]
+[66 / 112]
+[67 / 112]
+[68 / 112]
+[69 / 112]
+[70 / 112]
+[72 / 112]
+[75 / 112]
+[76 / 112]
+[77 / 112]
+[78 / 112]
+[80 / 112] StudioConsumerGenerator-product
+[82 / 112] StudioConsumerGenerator-product
+[83 / 112] StudioConsumerGenerator-product
+[84 / 112] JovraCore
+[91 / 113] JovraCore
+[91 / 113] JovraStudioCore
+[93 / 114] JovraStudioCore
+[99 / 114] JovraStudioCore
+[104 / 114] JovraStudioCore-product
+[105 / 115] JovraStudioCoreTests-product
+[107 / 118]
+[109 / 118] JovraStudioCoreTests-product
+[114 / 118] JovraStudioCoreTests-product
+[116 / 118]
+[116 / 118] JovraStudioCoreTests-product
+Build complete! (173.62 sec)
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Studio project store: the localStudio entitlement" started.
+◇ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" started.
+◇ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" started.
+◇ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" started.
+◇ Test "with localStudio off, creating a Studio film project is refused with the stated reason" started.
+◇ Test "with localStudio off, a film already made, the original, its export and the core library stay available" started.
+✔ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" passed after 0.005 seconds.
+✔ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" passed after 0.006 seconds.
+✔ Test "with localStudio off, creating a Studio film project is refused with the stated reason" passed after 0.031 seconds.
+✔ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" passed after 0.048 seconds.
+✔ Test "with localStudio off, a film already made, the original, its export and the core library stay available" passed after 0.377 seconds.
+✔ Suite "Studio project store: the localStudio entitlement" passed after 0.377 seconds.
+✔ Test run with 5 tests in 1 suite passed after 0.377 seconds.

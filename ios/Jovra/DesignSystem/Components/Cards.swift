@@ -25,7 +25,7 @@ extension View {
     func jovraCard(padding: CGFloat = Space.x2) -> some View { modifier(CardSurface(padding: padding)) }
 }
 
-/// Forest editorial card for hero content, with a quiet court-line backdrop instead of photography.
+/// Forest editorial card for hero content, with vector court art (`CourtHeroArt`) instead of photography.
 struct EditorialCard<Content: View>: View {
     @ViewBuilder var content: Content
     /// Read before the card forces a dark environment onto its contents.
@@ -43,8 +43,7 @@ struct EditorialCard<Content: View>: View {
             .background {
                 ZStack {
                     fill
-                    CourtLinesBackdrop()
-                        .stroke(Color.jovra(.textOnEditorial).opacity(0.14), lineWidth: 1.5)
+                    CourtHeroArt()
                     LinearGradient(
                         colors: [fill.opacity(0), fill.opacity(0.85)],
                         startPoint: .top, endPoint: .bottom

@@ -98,3 +98,63 @@ struct RecoveryFiles {
         try DurableDirectory.synchronize(folder, matching: identity)
     }
 }
+
+/// Torn-segment truncation. The prefix is cloned (APFS copy-on-write, or a streamed copy where cloning is
+/// unavailable), truncated and decoded before it may replace the torn file in one atomic rename.
+extension RecoveryFiles {
+    static let clonePrefix = ".recovery-", cloneSuffix = ".mp4"
+
+    func truncatedClone(of path: String, length: UInt64) throws -> String {
+        let source = try url(path)
+        let directory = (path as NSString).deletingLastPathComponent
+        let clonePath = "\(directory)/\(Self.clonePrefix)\(UUID().uuidString)\(Self.cloneSuffix)"
+        let clone = try url(clonePath)
+        if clonefile(source.path, clone.path, UInt32(CLONE_NOFOLLOW)) != 0 { try copyPrefix(source, to: clone, length: length) }
+        let descriptor = open(clone.path, O_WRONLY | O_NOFOLLOW)
+        guard descriptor >= 0 else { throw RecoveryError.filesystem(errno) }
+        defer { close(descriptor) }
+        var info = stat()
+        guard fstat(descriptor, &info) == 0, (info.st_mode & S_IFMT) == S_IFREG, UInt64(info.st_size) >= length,
+              ftruncate(descriptor, off_t(length)) == 0, fsync(descriptor) == 0 else { throw RecoveryError.filesystem(errno) }
+        return clonePath
+    }
+    private func copyPrefix(_ source: URL, to clone: URL, length: UInt64) throws {
+        let input = open(source.path, O_RDONLY | O_NOFOLLOW | O_NONBLOCK)
+        guard input >= 0 else { throw RecoveryError.filesystem(errno) }
+        let reader = FileHandle(fileDescriptor: input, closeOnDealloc: true)
+        defer { try? reader.close() }
+        let output = open(clone.path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
+        guard output >= 0 else { throw RecoveryError.filesystem(errno) }
+        let writer = FileHandle(fileDescriptor: output, closeOnDealloc: true)
+        defer { try? writer.close() }
+        var remaining = length
+        while remaining > 0, let chunk = try reader.read(upToCount: Int(min(remaining, 1_048_576))), !chunk.isEmpty {
+            try writer.write(contentsOf: chunk); remaining -= UInt64(chunk.count)
+        }
+        guard remaining == 0 else { throw RecoveryError.changedFile }
+    }
+    func remove(_ path: String) throws {
+        let target = try url(path)
+        guard unlink(target.path) == 0 || errno == ENOENT else { throw RecoveryError.filesystem(errno) }
+    }
+    /// Clones left by a scan that was itself interrupted. Only this scanner's own temporary names match.
+    func removeAbandonedClones() throws {
+        let originals = try url("originals")
+        guard let names = try? FileManager.default.contentsOfDirectory(atPath: originals.path) else { return }
+        for name in names where name.hasPrefix(Self.clonePrefix) && name.hasSuffix(Self.cloneSuffix)
+            && UUID(uuidString: String(name.dropFirst(Self.clonePrefix.count).dropLast(Self.cloneSuffix.count))) != nil {
+            try remove("originals/\(name)")
+        }
+    }
+    /// Replaces the torn file with its verified prefix, refusing if the torn file changed since it was read.
+    func commit(_ clonePath: String, over path: String, source: MediaFileIdentity, kept: RecoveryFingerprint) throws -> MediaFileIdentity {
+        let target = try url(path), clone = try url(clonePath)
+        var current = stat()
+        guard lstat(target.path, &current) == 0, MediaFileIdentity(current) == source else { throw RecoveryError.changedFile }
+        guard rename(clone.path, target.path) == 0 else { throw RecoveryError.filesystem(errno) }
+        try DurableDirectory.synchronize(target.deletingLastPathComponent())
+        let (fingerprint, _, identity) = try read(path)
+        guard fingerprint == kept else { throw RecoveryError.changedFile }
+        return identity
+    }
+}
