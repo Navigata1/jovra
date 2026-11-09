@@ -37,6 +37,9 @@ public final class CaptureEngine: @unchecked Sendable {
     private var clockOrigin = CMTime.zero
     private var latestVideoTime = CMTime.zero
     private var pendingGap: (startMs: Int, reason: SessionGapReason)?
+    /// Rebuilds the engine attempts on its own per recording before leaving the choice to the player.
+    static let automaticRebuildLimit = 3
+    private var automaticRebuilds = 0
     private var continuations: [UUID: AsyncStream<CaptureStatus>.Continuation] = [:]
 
     public init(source: any CaptureSource, clock: any CaptureClock = RealtimeCaptureClock(), sink: any RecordingSink,
@@ -76,6 +79,7 @@ public final class CaptureEngine: @unchecked Sendable {
             guard phase == .ready else { throw CaptureError.invalidState }
             guard (lastBudget?.freeBytes ?? 0) >= 32 * 1024 * 1024 else { throw CaptureError.storageUnavailable }
             self.sessionID = sessionID; self.sessionFolder = folder; self.clockOrigin = clock.now(); latestVideoTime = .zero
+            automaticRebuilds = 0
             journal = try CaptureJournal(url: folder.appendingPathComponent("capture-journal.json"), sessionID: sessionID,
                                          mode: source.mode, microphone: microphone)
             try openSegment(at: .zero)
@@ -97,9 +101,35 @@ public final class CaptureEngine: @unchecked Sendable {
                 }
             }
         }, onFailure: { [weak self] error in
-            let reason: SessionGapReason = (error as? CaptureSourceFailure) == .interrupted ? .interruption : .cameraError
-            Task { try? await self?.interrupt(reason: reason) }
+            let failure = error as? CaptureSourceFailure
+            let reason: SessionGapReason = failure == .interrupted ? .interruption : .cameraError
+            Task { [weak self] in
+                guard let self else { return }
+                do { try await self.interrupt(reason: reason) }
+                catch CaptureError.invalidState { return }   // Not recording: nothing to close or rebuild.
+                catch {}                                       // The segment close failed; the gap is still pending.
+                if failure == .mediaServicesReset { await self.rebuildAfterReset() }
+            }
         })
+    }
+    /// A media-services reset tears down the capture session but not the recording: rebuild the source and
+    /// resume into a new segment, leaving a cameraError gap for the rebuild. If rebuilding fails, or the reset
+    /// keeps recurring, the engine stays paused with that gap pending, so the player can resume or stop.
+    private func rebuildAfterReset() async {
+        let request = queue.sync { () -> (CapturePreset, SessionRecordingMicrophone)? in
+            guard phase == .paused, automaticRebuilds < Self.automaticRebuildLimit, let preset else { return nil }
+            automaticRebuilds += 1
+            return (preset, microphone)
+        }
+        guard let (preset, microphone) = request else { return }
+        do {
+            let rebuilt = try await source.prepare(preset: preset, microphone: microphone)
+            guard queue.sync(execute: { () -> Bool in
+                guard phase == .paused else { return false }
+                format = rebuilt; return true
+            }) else { return }
+            try await resume()
+        } catch {}
     }
     public func pause() async throws { try await interrupt(reason: .userPaused) }
     public func interrupt(reason: SessionGapReason) async throws {
