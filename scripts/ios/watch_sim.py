@@ -66,17 +66,20 @@ def load_owners(receipt: Path) -> dict[str, Identity]:
     return owners
 
 
-def save_owners(receipt: Path, owners: dict[str, Identity]) -> None:
-    data = {"checkout": str(CHECKOUT), "devices": list(owners.values())}
-    descriptor, temporary_name = tempfile.mkstemp(dir=receipt.parent, prefix=".owned-", suffix=".tmp")
+def write_atomically(path: Path, contents: str) -> None:
+    descriptor, temporary_name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.stem}-", suffix=".tmp")
     pending = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as output:
-            json.dump(data, output, indent=2)
-            output.write("\n")
-        pending.replace(receipt)
+            output.write(contents)
+        pending.replace(path)
     finally:
         pending.unlink(missing_ok=True)
+
+
+def save_owners(receipt: Path, owners: dict[str, Identity]) -> None:
+    data = {"checkout": str(CHECKOUT), "devices": list(owners.values())}
+    write_atomically(receipt, json.dumps(data, indent=2) + "\n")
 
 
 def verify_owners(owners: dict[str, Identity], devices: dict[str, Identity]) -> None:
@@ -112,12 +115,18 @@ def create(receipt: Path, owners: dict[str, Identity], before: dict[str, Identit
         print(f"   created  {name} ({udid})")
 
 
+def require_deletable(owners: dict[str, Identity]) -> None:
+    verify_owners(owners, inventory())
+    if paired_watch_ids().intersection(ident[0] for ident in owners.values()):
+        raise ValueError("refusing to delete a watch in an existing simulator pair")
+
+
 def delete(receipt: Path, owners: dict[str, Identity]) -> None:
     for udid, name, _, _ in list(owners.values()):
-        verify_owners(owners, inventory())
-        if paired_watch_ids().intersection(ident[0] for ident in owners.values()):
-            raise ValueError("refusing to delete a watch in an existing simulator pair")
+        require_deletable(owners)
         simctl("shutdown", udid, check=False)
+        # The checkout lock does not coordinate with external pairing commands.
+        require_deletable(owners)
         simctl("delete", udid)
         del owners[name]
         save_owners(receipt, owners)
@@ -126,7 +135,7 @@ def delete(receipt: Path, owners: dict[str, Identity]) -> None:
 
 def write_report(path: Path, report: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(report, encoding="utf-8")
+    write_atomically(path, report)
 
 
 def main() -> int:

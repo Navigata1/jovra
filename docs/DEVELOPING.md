@@ -333,8 +333,10 @@ newest installed watchOS runtime unless `WATCH_RUNTIME` specifies one. Run creat
 same checkout and keep `.cache/watch-sim/owned.json` until cleanup. The receipt belongs to that checkout. The
 helper refuses a shared cache path or a receipt copied from another checkout. It verifies each recorded UUID,
 device type, name and runtime against the simulator inventory. An exact-name collision with a device outside this
-checkout stops the operation. Cleanup also stops if a recorded watch is paired. The before/after check verifies
-the identity of every other simulator by UUID. Use `--evidence` to save the summary with the result.
+checkout stops the operation. Cleanup checks identities and pairs before shutdown and again just before deletion.
+The checkout lock cannot coordinate external pairing commands, which can still change the pair state after that
+last check. The before/after check verifies every other simulator's identity by UUID. Use `--evidence` to save
+the result. The report replaces its destination atomically, including when an old report path is a symlink.
 
 Harness states run on a frozen receiver clock so screenshots are stable. `FakeWatchBridgeTests` covers growing ages.
 

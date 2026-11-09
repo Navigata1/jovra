@@ -39,6 +39,8 @@ elif args[0] in ("create", "shutdown", "delete"):
         print(udid)
         if blocked := os.environ.get("TEST_BLOCK_OWNED_RECEIPT"):
             pathlib.Path(blocked).mkdir()
+    if args[0] == "shutdown" and os.environ.get("TEST_PAIR_ON_SHUTDOWN"):
+        state["pairs"]["new-pair"] = {"watch": {"udid": args[1]}}
     if args[0] == "delete":
         for runtime, devices in state["devices"].items():
             state["devices"][runtime] = [d for d in devices if d["udid"] != args[1]]
@@ -159,6 +161,44 @@ class WatchSimTests(unittest.TestCase):
         self.assertIn("existing simulator pair", deleted.stderr)
         self.assertIn("result: FAIL", report.read_text())
         self.assertEqual(self.state(), state)
+
+    def test_refuses_delete_when_a_watch_is_paired_during_shutdown(self):
+        self.assertEqual(self.run_watch("create").returncode, 0)
+        before = self.state()
+        receipt_before = self.ownership.read_bytes()
+        udid = before["devices"][WATCH][0]["udid"]
+        self.env["TEST_PAIR_ON_SHUTDOWN"] = "1"
+
+        refused = self.run_watch("delete")
+
+        self.assertNotEqual(refused.returncode, 0, refused.stdout)
+        self.assertIn("existing simulator pair", refused.stderr)
+        self.assertEqual(self.state()["devices"], before["devices"])
+        self.assertEqual(self.state()["pairs"], {"new-pair": {"watch": {"udid": udid}}})
+        self.assertEqual(self.state()["mutations"], before["mutations"] + [["shutdown", udid]])
+        self.assertEqual(self.ownership.read_bytes(), receipt_before)
+
+    def test_evidence_publication_does_not_follow_stale_report_symlinks(self):
+        evidence = self.state_file.parent / "reports"
+        evidence.mkdir()
+        with tempfile.TemporaryDirectory() as outside:
+            sentinel = Path(outside) / "do-not-modify"
+            original = b"external evidence sentinel\x00\xff\n"
+            for operation in ("create", "delete"):
+                with self.subTest(operation=operation):
+                    sentinel.write_bytes(original)
+                    report = evidence / f"simctl-{operation}.txt"
+                    report.symlink_to(sentinel)
+                    if operation == "delete":
+                        state = self.state()
+                        state["pairs"]["existing-pair"] = {"watch": {"udid": state["devices"][WATCH][0]["udid"]}}
+                        self.write_state(state)
+                    result = self.run_watch(operation, "--evidence", str(evidence))
+                    self.assertEqual(result.returncode, 0 if operation == "create" else 1, result.stderr)
+                    self.assertEqual(sentinel.read_bytes(), original, result.stdout)
+                    self.assertFalse(report.is_symlink())
+                    self.assertIn("result: PASS" if operation == "create" else "result: FAIL", report.read_text())
+            self.assertEqual({path.name for path in evidence.iterdir()}, {"simctl-create.txt", "simctl-delete.txt"})
 
     def test_another_worktree_cannot_reuse_a_shared_or_copied_receipt(self):
         checkout = self.ownership.parents[2]
