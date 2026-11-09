@@ -70,9 +70,9 @@ class WatchSimTests(unittest.TestCase):
             "WATCH_RUNTIME": WATCH,
         }
 
-    def run_watch(self, *args):
+    def run_watch(self, *args, entrypoint=None):
         return subprocess.run(
-            ["bash", str(self.entrypoint), *args], env=self.env, text=True,
+            ["bash", str(entrypoint or self.entrypoint), *args], env=self.env, text=True,
             capture_output=True, check=False, timeout=10,
         )
 
@@ -115,7 +115,7 @@ class WatchSimTests(unittest.TestCase):
         deleted = self.run_watch("delete", "--evidence", str(evidence))
         self.assertEqual(deleted.returncode, 0, deleted.stderr)
         self.assertEqual(self.state()["devices"], {IOS: [foreign], WATCH: []})
-        self.assertEqual(json.loads(self.ownership.read_text()), [])
+        self.assertEqual(json.loads(self.ownership.read_text())["devices"], [])
         self.assertEqual(self.state()["mutations"][3:],
                          [[command, udid] for udid in names.values() for command in ("shutdown", "delete")])
         for operation in ("create", "delete"):
@@ -157,3 +157,50 @@ class WatchSimTests(unittest.TestCase):
         self.assertIn("existing simulator pair", deleted.stderr)
         self.assertIn("result: FAIL", report.read_text())
         self.assertEqual(self.state(), state)
+
+    def test_another_worktree_cannot_reuse_a_shared_or_copied_receipt(self):
+        checkout = self.ownership.parents[2]
+        second = checkout.parent / (checkout.name + "-other")
+        self.addCleanup(shutil.rmtree, second, True)
+        git = ["git", "-C", str(checkout), "-c", "core.hooksPath=/dev/null"]
+        commands = [
+            ["init", "--quiet", "--template="],
+            ["add", "scripts"],
+            ["-c", "user.name=IDC", "-c", "user.email=hello@islanddevcrew.com",
+             "commit", "--quiet", "--no-gpg-sign", "-m", "Synthetic simulator test checkout"],
+            ["worktree", "add", "--quiet", "--detach", str(second)],
+        ]
+        for command in commands:
+            subprocess.run([*git, *command], check=True, capture_output=True, timeout=10)
+
+        created = self.run_watch("create")
+        self.assertEqual(created.returncode, 0, created.stderr)
+        baseline = self.state()
+        receipt_before = self.ownership.read_bytes()
+        foreign_entrypoint = second / self.entrypoint.relative_to(checkout)
+        foreign_cache = second / ".cache"
+        foreign_receipt = second / self.ownership.relative_to(checkout)
+
+        foreign_cache.symlink_to(self.ownership.parents[1], target_is_directory=True)
+        for operation in ("udid", "create", "delete"):
+            with self.subTest(receipt="shared", operation=operation):
+                self.write_state(baseline)
+                self.ownership.write_bytes(receipt_before)
+                args = [operation, ULTRA] if operation == "udid" else [operation]
+                refused = self.run_watch(*args, entrypoint=foreign_entrypoint)
+                self.assertNotEqual(refused.returncode, 0, refused.stdout)
+                self.assertIn("must be local to this checkout", refused.stderr)
+                self.assertEqual(self.state(), baseline)
+                self.assertEqual(self.ownership.read_bytes(), receipt_before)
+
+        foreign_cache.unlink()
+        foreign_receipt.parent.mkdir(parents=True)
+        foreign_receipt.write_bytes(receipt_before)
+        self.write_state(baseline)
+        self.ownership.write_bytes(receipt_before)
+        refused = self.run_watch("delete", entrypoint=foreign_entrypoint)
+        self.assertNotEqual(refused.returncode, 0, refused.stdout)
+        self.assertIn("belongs to a different checkout", refused.stderr)
+        self.assertEqual(self.state(), baseline)
+        self.assertEqual(foreign_receipt.read_bytes(), receipt_before)
+        self.assertEqual(self.run_watch("udid", ULTRA).stdout.strip(), baseline["devices"][WATCH][0]["udid"])

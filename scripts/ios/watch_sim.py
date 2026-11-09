@@ -13,6 +13,7 @@ from uuid import UUID
 
 from watch_sim_diff import Identity, compare, identities
 
+CHECKOUT = Path(__file__).resolve().parents[2]
 TYPE = "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-"
 TYPES = {
     "JOVRA Watch Ultra 3 49mm": TYPE + "Ultra-3-49mm",
@@ -49,10 +50,12 @@ def load_owners(receipt: Path) -> dict[str, Identity]:
     if not receipt.exists():
         return {}
     owners = {}
-    records = json.loads(receipt.read_text(encoding="utf-8"))
-    if not isinstance(records, list):
+    data = json.loads(receipt.read_text(encoding="utf-8"))
+    if not isinstance(data, dict) or not isinstance(data.get("devices"), list):
         raise ValueError("invalid simulator ownership receipt")
-    for item in records:
+    if data.get("checkout") != str(CHECKOUT):
+        raise ValueError("simulator ownership receipt belongs to a different checkout")
+    for item in data["devices"]:
         udid, name, kind, os_runtime = item
         if (str(UUID(udid)).upper() != udid or name in owners or TYPES.get(name) != kind
                 or not re.fullmatch(RUNTIME, os_runtime)
@@ -64,7 +67,8 @@ def load_owners(receipt: Path) -> dict[str, Identity]:
 
 def save_owners(receipt: Path, owners: dict[str, Identity]) -> None:
     pending = receipt.with_suffix(".tmp")
-    pending.write_text(json.dumps(list(owners.values()), indent=2) + "\n", encoding="utf-8")
+    data = {"checkout": str(CHECKOUT), "devices": list(owners.values())}
+    pending.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
     pending.replace(receipt)
 
 
@@ -126,13 +130,16 @@ def main() -> int:
     commands.add_parser("list")
     commands.add_parser("udid").add_argument("name", choices=TYPES)
     args = parser.parse_args()
-    directory = Path(__file__).resolve().parents[2] / ".cache" / "watch-sim"
+    directory = CHECKOUT / ".cache" / "watch-sim"
     receipt = directory / "owned.json"
+    lock_path = directory / "lock"
     evidence = getattr(args, "evidence", None)
     report_path = evidence / f"simctl-{args.command}.txt" if evidence else None
     try:
+        if directory.resolve() != directory or receipt.is_symlink() or lock_path.is_symlink():
+            raise ValueError("simulator ownership storage must be local to this checkout")
         directory.mkdir(parents=True, exist_ok=True)
-        with (directory / "lock").open("a") as lock:
+        with lock_path.open("a") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
             owners = load_owners(receipt)
             before = inventory()

@@ -330,8 +330,9 @@ scripts/ios/watch-sim.sh delete --evidence evidence/watch/<ticket>   # when done
 
 `watch-sim.sh` creates `JOVRA Watch Ultra 3 49mm`, `JOVRA Watch Series 11 42mm` and `JOVRA Watch SE 3 40mm` on the
 newest installed watchOS runtime unless `WATCH_RUNTIME` specifies one. Run creation, tests and cleanup from the
-same checkout and keep `.cache/watch-sim/owned.json` until cleanup. The script verifies each recorded UUID, device
-type, name and runtime against the simulator inventory. An exact-name collision with a device outside this
+same checkout and keep `.cache/watch-sim/owned.json` until cleanup. The receipt belongs to that checkout. The
+helper refuses a shared cache path or a receipt copied from another checkout. It verifies each recorded UUID,
+device type, name and runtime against the simulator inventory. An exact-name collision with a device outside this
 checkout stops the operation. Cleanup also stops if a recorded watch is paired. The before/after check verifies
 the identity of every other simulator by UUID. Use `--evidence` to save the summary with the result.
 
