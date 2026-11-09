@@ -7,7 +7,10 @@ import SwiftUI
 /// `JOVRA_CORE_COMPONENT_GALLERY=<scenario>` replaces the app's root with one scenario.
 struct CoreComponentsGalleryHarness: ViewModifier {
     func body(content: Content) -> some View {
-        if let rawState = ProcessInfo.processInfo.environment["JOVRA_CORE_COMPONENT_GALLERY"],
+        if let rawSource = ProcessInfo.processInfo.environment["JOVRA_VIDEO_LAB"],
+           let source = VideoLab.Source(rawValue: rawSource) {
+            VideoLab(source: source)
+        } else if let rawState = ProcessInfo.processInfo.environment["JOVRA_CORE_COMPONENT_GALLERY"],
            let state = CoreComponentsGallery.Scenario(rawValue: rawState) {
             CoreComponentsGallery(state: state)
         } else {
