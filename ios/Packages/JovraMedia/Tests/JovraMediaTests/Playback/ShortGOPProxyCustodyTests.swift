@@ -144,12 +144,37 @@ struct ShortGOPProxyCustodyTests {
     }
 
     @Test
+    func cancellingAfterWorkerVerificationRefusesAcknowledgment() async throws {
+        let root = try scratch()
+        defer { try? files.removeItem(at: root) }
+        let staged = try await ShortGOPProxy.encode(from: fixture(), into: root, frameRate: .fps60)
+        let gate = ProxyTestGate()
+        let acknowledgment = Task {
+            let verified = try await staged.commit().verified()
+            await gate.hold()
+            return try verified.acknowledge()
+        }
+        defer {
+            acknowledgment.cancel()
+            Task { await gate.release() }
+        }
+        let deadline = ContinuousClock.now + .seconds(5)
+        while await !gate.isHolding, ContinuousClock.now < deadline { try await Task.sleep(for: .milliseconds(1)) }
+        let held = await gate.isHolding
+        acknowledgment.cancel()
+        await gate.release()
+        await #expect(throws: CancellationError.self) { try await acknowledgment.value }
+        #expect(held, "Cancellation happened after the detached verifier returned its receipt")
+        #expect(try Data(contentsOf: staged.final) == staged.movie.evidenceBytes())
+    }
+
+    @Test
     func earlyWriterCancellationNeverPublishesAndAnyResidueStaysPrivate() async throws {
         let root = try scratch()
         defer { try? files.removeItem(at: root) }
         let temporary = files.temporaryDirectory.resolvingSymlinksInPath()
         let before = Set(try files.contentsOfDirectory(atPath: temporary.path))
-        let gate = FirstProxyFrameGate()
+        let gate = ProxyTestGate()
         let source = try fixture()
         let task = Task {
             try await ShortGOPProxy.encode(from: source, into: root, frameRate: .fps60) { await gate.hold() }
@@ -198,7 +223,7 @@ struct ShortGOPProxyCustodyTests {
 }
 
 
-private actor FirstProxyFrameGate {
+private actor ProxyTestGate {
     private var pending: CheckedContinuation<Void, Never>?
     private var released = false
     var isHolding: Bool { pending != nil }

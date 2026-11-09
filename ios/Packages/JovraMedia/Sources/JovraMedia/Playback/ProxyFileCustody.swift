@@ -178,7 +178,12 @@ final class ProxyMovie: Sendable {
             fileprivate let commit: Commit
 
             /// Point-in-time acknowledgment. Keep the held file and receiver bound until the caller uses it.
-            func acknowledge() throws -> URL { try commit.rebind() }
+            func acknowledge() throws -> URL {
+                try Task.checkCancellation()
+                let url = try commit.rebind()
+                try Task.checkCancellation()
+                return url
+            }
         }
 
         func verified(beforeVerification: (@Sendable () -> Void)? = nil) async throws -> Verified {
