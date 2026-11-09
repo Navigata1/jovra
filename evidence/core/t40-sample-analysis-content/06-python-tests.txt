@@ -1,0 +1,17 @@
+$ python3 -m unittest scripts/spec/test_sample_analysis.py -v
+test_a_calibration_off_the_rendered_pixels_is_refused ... ok
+test_a_moved_placement_in_the_committed_files_is_refused ... ok
+test_a_serve_mark_two_frames_from_the_rendered_contact_is_refused ... ok
+test_an_edited_expectation_is_refused ... ok
+test_committed_fixture_is_schema_valid_and_passes_its_checks ... ok
+test_every_serve_mark_is_within_one_frame_of_the_rendered_serve ... ok
+test_moving_one_placement_changes_the_oracle_fractions ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.679s
+
+OK
+
+$ python3 -m unittest discover -s scripts/spec -p "test_*.py"  (whole spec suite, run on this tree before the final regeneration)
+Ran 132 tests in 509.068s
+OK

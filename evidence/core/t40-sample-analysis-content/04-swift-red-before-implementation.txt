@@ -1,0 +1,8 @@
+$ swift build --build-tests (JovraCore, tests written before SampleContent/Analysis existed)
+   |                                                                                                              `- error: cannot find type 'SampleAnalysisSummary' in scope
+   |                                                                    `- error: cannot find 'SampleAnalysisRecord' in scope
+   |                           `- error: cannot find 'SampleAnalysisSummary' in scope
+ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/Runners/SampleAnalysisRecordRunner.swift:8:68: error: cannot find 'SampleAnalysisRecord' in scope
+ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/Runners/SampleAnalysisRunner.swift:16:27: error: cannot find 'SampleAnalysisSummary' in scope
+ios/Packages/JovraCore/Tests/JovraCoreTests/Conformance/Runners/SampleAnalysisRunner.swift:9:110: error: cannot find type 'SampleAnalysisSummary' in scope
+RESULT: RED (does not compile: the analysis types do not exist yet)
