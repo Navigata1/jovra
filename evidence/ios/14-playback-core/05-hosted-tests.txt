@@ -1,0 +1,22 @@
+COMMAND: xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -destination id=<JOVRA-T14> -derivedDataPath <worktree>/.derivedData -only-testing:JovraTests/VideoZoomTests -only-testing:JovraTests/FrameReadoutFormatTests -only-testing:JovraTests/JogStripAccessibilityTests -only-testing:JovraTests/ReplayPlaybackModelTests -only-testing:JovraTests/MotionTests -parallel-testing-enabled NO
+✔ Test "Motion.standard and Motion.reveal resolve to nil with Reduce Motion on" passed after 0.001 seconds.
+✔ Test "without Reduce Motion: standard is a snappy 0.25 s, reveal an ease-out 0.2 s" passed after 0.001 seconds.
+✔ Test "haptics map to the system feedback the spec names" passed after 0.001 seconds.
+✔ Test "metric tokens match §5.3" passed after 0.001 seconds.
+✔ Test pinchIsClampedToTheSameRangeTheAccessibleLevelsCover() passed after 0.001 seconds.
+✔ Test accessibleStepsVisitEveryLevelAndResumeFromAPinchedScale() passed after 0.001 seconds.
+✔ Test panStaysInsideThePictureAndResetClearsIt() passed after 0.001 seconds.
+✔ Test timeHasHundredthsAndHoursWhenNeeded() passed after 0.001 seconds.
+✔ Test ratesAndFractionalFrameRatesReadNaturally() passed after 0.001 seconds.
+✔ Test theReadoutAddsTheRateOnlyWhenItIsNot1x() passed after 0.002 seconds.
+✔ Test anIncrementMovesExactlyOneFrameAndTheReadoutSaysSo() passed after 0.114 seconds.
+✔ Test run with 11 tests in 4 suites passed after 0.133 seconds.
+Test class                                                          passed  failed  skipped  expected
+JovraTests/ReplayPlaybackModelTests                                      2       0        0         0
+JovraTests/MotionTests (Motion and haptics)                              4       0        0         0
+JovraTests/VideoZoomTests (Video zoom)                                   3       0        0         0
+JovraTests/FrameReadoutFormatTests (Frame readout text)                  3       0        0         0
+JovraTests/JogStripAccessibilityTests (Jog strip VoiceOver adjust)       1       0        0         0
+Total: 13 passed, 0 failed, 0 skipped, 0 expected failure(s) in 5 classes (xcresult summary: 13 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T14 B7D403BE-869C-4F1D-B84F-0CBF0006402F (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/hosted-final.xcresult
