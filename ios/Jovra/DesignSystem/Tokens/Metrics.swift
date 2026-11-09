@@ -18,9 +18,24 @@ enum Radius {
     static let card: CGFloat = 22
     /// Inputs, thumbnails and inner tiles.
     static let control: CGFloat = 14
+    /// Sheet corners.
+    static let sheet: CGFloat = 28
+    /// A capsule: any radius at least half the height.
+    static let pill: CGFloat = .infinity
 }
 
 enum HitTarget {
     /// Apple HIG and CLAUDE.md rule 8: every control is at least 44×44 pt.
     static let minimum: CGFloat = 44
+    /// Capture controls used at arm's length (Mark point, Pause, ScorePad).
+    static let capture: CGFloat = 64
+    /// The Stop disc.
+    static let stop: CGFloat = 76
+}
+
+/// Video review metrics (screens.md §5.3).
+enum VideoMetrics {
+    /// The frame-quantized scrubber; never at the bottom edge.
+    static let jogStripHeight: CGFloat = 48
+    static let timelineToJogGap: CGFloat = 16
 }

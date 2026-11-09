@@ -44,12 +44,15 @@ struct AvatarInitial: View {
     }
 }
 
-/// A settings-style row: symbol, title, optional subtitle and trailing content.
+/// A settings-style row: symbol, title, optional subtitle and trailing content. A destructive row
+/// ("Delete all JOVRA data") uses `destructiveInk` for its title and symbol; its words say what it does,
+/// so the colour only reinforces them. For a row with a switch, use `ToggleRow`.
 struct SettingsRow<Trailing: View>: View {
     var symbol: String
     var title: String
     var subtitle: String?
     var titleRole: ColorRole = .textPrimary
+    var isDestructive = false
     @ViewBuilder var trailing: Trailing
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -59,12 +62,12 @@ struct SettingsRow<Trailing: View>: View {
             if !dynamicTypeSize.isAccessibilitySize {
                 Image(systemName: symbol)
                     .font(.title3)
-                    .foregroundStyle(.jovra(titleRole))
+                    .foregroundStyle(.jovra(ink))
                     .frame(width: 32)
                     .accessibilityHidden(true)
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.body).foregroundStyle(.jovra(titleRole))
+                Text(title).font(.body).foregroundStyle(.jovra(ink))
                     .fixedSize(horizontal: false, vertical: true)
                 if let subtitle {
                     Text(subtitle).font(.subheadline).foregroundStyle(.jovra(.textSecondary))
@@ -77,11 +80,47 @@ struct SettingsRow<Trailing: View>: View {
         .frame(minHeight: 56)
         .contentShape(Rectangle())
     }
+
+    private var ink: ColorRole { isDestructive ? .destructiveInk : titleRole }
 }
 
 extension SettingsRow where Trailing == SettingsChevron {
-    init(symbol: String, title: String, subtitle: String? = nil, titleRole: ColorRole = .textPrimary) {
-        self.init(symbol: symbol, title: title, subtitle: subtitle, titleRole: titleRole) { SettingsChevron() }
+    init(symbol: String, title: String, subtitle: String? = nil, titleRole: ColorRole = .textPrimary, isDestructive: Bool = false) {
+        self.init(symbol: symbol, title: title, subtitle: subtitle, titleRole: titleRole, isDestructive: isDestructive) { SettingsChevron() }
+    }
+}
+
+/// Title, description and a switch (S19, S20, N3–N5). The whole row is the switch: VoiceOver reads
+/// the title, the description and the state as one control, and any tap on the row toggles it.
+struct ToggleRow: View {
+    var symbol: String?
+    var title: String
+    var description: String?
+    @Binding var isOn: Bool
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var body: some View {
+        Toggle(isOn: $isOn) {
+            HStack(alignment: .firstTextBaseline, spacing: Space.x2) {
+                if let symbol, !dynamicTypeSize.isAccessibilitySize {
+                    Image(systemName: symbol)
+                        .font(.title3)
+                        .foregroundStyle(.jovra(.textPrimary))
+                        .frame(width: 32)
+                        .accessibilityHidden(true)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title).font(.body).foregroundStyle(.jovra(.textPrimary))
+                        .fixedSize(horizontal: false, vertical: true)
+                    if let description {
+                        Text(description).font(.subheadline).foregroundStyle(.jovra(.textSecondary))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+        }
+        .tint(.jovra(.positiveInk))
+        .frame(minHeight: 56)
     }
 }
 

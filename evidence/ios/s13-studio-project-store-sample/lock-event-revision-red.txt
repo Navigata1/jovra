@@ -1,0 +1,18 @@
+# S13 round 1: lock event revision, RED run before the fix (2026-11-09T00:37:58Z, HEAD 13a025a + new tests)
+# swift test --package-path ios/Packages/JovraStudioCore --filter ProjectLockEventRevisionTests
+◇ Test run started.
+✘ Test "a primary session with no recorded events is refused with eventLogEmpty, not a schema error" recorded an issue at ProjectLockEventRevisionTests.swift:128:15: Expectation failed: expected error ".eventLogEmpty" of type StudioProjectStoreError, but ".invalidRecord("project-lock: schema: $.eventRevision: 0 < minimum 1")" of type StudioProjectStoreError was thrown instead
+✘ Test "a primary session with no recorded events is refused with eventLogEmpty, not a schema error" failed after 0.578 seconds with 1 issue.
+✘ Test "a lock taken after the session gains a correction records the newer revision, never the stale snapshot" recorded an issue at ProjectLockEventRevisionTests.swift:85:6: Caught error: .invalidRecord("project-lock: schema: $.eventRevision: 0 < minimum 1")
+✘ Test "a lock taken after the session gains a correction records the newer revision, never the stale snapshot" failed after 0.599 seconds with 1 issue.
+✘ Test "create with a primary session seeds the event-log version from that session's log" recorded an issue at ProjectLockEventRevisionTests.swift:65:9: Expectation failed: project.revisions.eventLogVersion == expected
+✘ Test "create with a primary session seeds the event-log version from that session's log" recorded an issue at ProjectLockEventRevisionTests.swift:66:9: Expectation failed: try await store.revisions(project.projectId).eventLogVersion == expected
+✘ Test "create with a primary session seeds the event-log version from that session's log" failed after 0.620 seconds with 2 issues.
+✘ Test "a lock on a fresh real project records the primary session's current event revision" recorded an issue at ProjectLockEventRevisionTests.swift:69:6: Caught error: .invalidRecord("project-lock: schema: $.eventRevision: 0 < minimum 1")
+✘ Test "a lock on a fresh real project records the primary session's current event revision" failed after 0.620 seconds with 1 issue.
+✘ Test "a lock whose primary session was deleted is refused with sessionNotFound" recorded an issue at ProjectLockEventRevisionTests.swift:146:15: Expectation failed: expected error ".sessionNotFound("real-0-591c33e0")" of type StudioProjectStoreError, but ".invalidRecord("project-lock: schema: $.eventRevision: 0 < minimum 1")" of type StudioProjectStoreError was thrown instead
+✘ Test "a lock whose primary session was deleted is refused with sessionNotFound" failed after 0.670 seconds with 1 issue.
+✘ Test "the Sample project never reads the core session store: its lock keeps the records' event revision" recorded an issue at ProjectLockEventRevisionTests.swift:164:9: Expectation failed: try await store.refreshEventLogVersion(for: StudioSampleContent.matchProjectID).eventLogVersion == 3
+✘ Test "the Sample project never reads the core session store: its lock keeps the records' event revision" failed after 0.836 seconds with 1 issue.
+✘ Suite "Studio project store: the lock's event revision" failed after 0.836 seconds with 7 issues.
+✘ Test run with 6 tests in 1 suite failed after 0.836 seconds with 7 issues.

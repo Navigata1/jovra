@@ -105,7 +105,12 @@ final class NavigationRoutesUITests: XCTestCase {
             XCTAssertEqual(close.label, expected.closeLabel)
             XCTAssertGreaterThanOrEqual(close.frame.width, 44)
             XCTAssertGreaterThanOrEqual(close.frame.height, 44)
-            try auditSheet(app)
+            // The capability page (T12) is a long scrolling sheet, audited step by step down its scroll view.
+            if expected.launchName == "sheet.capabilityDetail" {
+                try auditScreen(app, scrollIdentifier: "capability.scroll")
+            } else {
+                try auditSheet(app)
+            }
 
             close.tap()
             XCTAssertTrue(app.heading(expected.title).waitForNonExistence(timeout: 5), "closing \(expected.launchName) dismisses it")
@@ -215,6 +220,12 @@ final class NavigationRoutesUITests: XCTestCase {
         }
         if expected.launchName == "sheet.clipExport" {
             XCTAssertTrue(app.textFields["export.from"].waitForExistence(timeout: 5), "Export renders actual range controls", file: file, line: line)
+            XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
+            return
+        }
+        if expected.launchName == "sheet.capabilityDetail" {
+            XCTAssertTrue(app.descendants(matching: .any)["capability.status"].waitForExistence(timeout: 5),
+                          "The capability sheet renders the registry entry", file: file, line: line)
             XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
             return
         }

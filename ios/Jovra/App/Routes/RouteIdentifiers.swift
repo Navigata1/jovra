@@ -32,7 +32,7 @@ struct DrillID: RouteIdentifier { var rawValue: String }
 struct ComparisonID: RouteIdentifier { var rawValue: String }
 /// A practice goal (GLOSSARY: Goal).
 struct GoalID: RouteIdentifier { var rawValue: String }
-/// A capability of the registry, such as `serve-speed-manual` (GLOSSARY: Capability).
+/// A capability of the registry, such as `serveSpeed.manualAssisted` (GLOSSARY: Capability).
 struct CapabilityID: RouteIdentifier { var rawValue: String }
 
 /// A time in a session's media, kept rational (value / timescale) so a route never rounds a frame
