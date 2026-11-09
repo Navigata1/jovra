@@ -16,8 +16,12 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonPrimitive
 
-/** Exact rational time on the session timeline (common.schema.json, mediaTime). */
-data class MediaTime(val value: Long, val timescale: Long) {
+/**
+ * Exact rational time on the session timeline (common.schema.json, mediaTime).
+ * The schema gives timescale a minimum but no maximum. The portable type uses the positive
+ * signed 32-bit range accepted by Swift MediaTime; the value remains signed 64-bit.
+ */
+data class MediaTime(val value: Long, val timescale: Int) {
     init {
         require(value >= 0) { "Media time value must be non-negative" }
         require(timescale > 0) { "Media time timescale must be positive" }
@@ -59,15 +63,14 @@ private object MediaTimeSerializer : KSerializer<MediaTime> {
                 else -> throw SerializationException("Unknown media time field")
             }
         }
-        MediaTime(
-            requireNotNull(value) { "Missing media time value" },
-            requireNotNull(timescale) { "Missing media time timescale" },
-        )
+        val scale = requireNotNull(timescale) { "Missing media time timescale" }
+        require(scale in 1..Int.MAX_VALUE.toLong()) { "Media time timescale exceeds the portable range" }
+        MediaTime(requireNotNull(value) { "Missing media time value" }, scale.toInt())
     }
 
     override fun serialize(encoder: Encoder, value: MediaTime) = encoder.encodeStructure(descriptor) {
         encodeLongElement(descriptor, 0, value.value)
-        encodeLongElement(descriptor, 1, value.timescale)
+        encodeLongElement(descriptor, 1, value.timescale.toLong())
     }
 }
 
