@@ -1,0 +1,31 @@
+# Scratch revert: finding 5 (reserve keys: only the record's own key or <key>:topup:<quoteId>) (2026-11-08T23:02:59Z); restored afterwards, never committed
+$ diff -u <shipped> <scratch-reverted>
+--- shipped/ReservationRecordRules.swift	2026-11-08 17:02:59
++++ scratch/ReservationRecordRules.swift	2026-11-08 17:02:59
+@@ -68,12 +68,12 @@
+             let k = record.idempotencyKey
+             let own = ["reserve", k.projectId, String(k.planRevision), k.outputSpecSha256]
+             try R.require(k.projectId == record.projectId, .badEntryKey, "the idempotency key names another project")
+-            try R.require(Array(parts.prefix(4)) == own && (parts.count == 4 || (parts.count == 6 && parts[4] == "topup")),
++            try R.require(Array(parts.prefix(4)) == own,
+                           .badEntryKey, "\(entry.key): reserve keys are the record's own key \(own.joined(separator: ":")), or that key plus :topup:<quoteId>")
+             if parts.count == 4 {
+                 try R.require(index == 0, .badEntryKey, "the one initial reserve entry is the first entry; a retried reserve "
+                               + "replays, it never writes a second hold under another key")
+-            } else {
++            } else if parts.count == 6 {
+                 try R.require(index > 0 && !topups.contains(parts[5]) && parts[5] != record.initialQuoteId, .badEntryKey,
+                               "\(entry.key): one top-up per accepted quote, never the quote that funded the initial hold (\(record.initialQuoteId))")
+                 topups.append(parts[5])
+$ swift test --filter LedgerRecordRuleTests
+◇ Test run started.
+✘ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" recorded an issue at LedgerRecordRuleTests.swift:110:9: Expectation failed: an error was expected but none was thrown
+✘ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" failed after 0.114 seconds with 1 issue.
+✔ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" passed after 0.115 seconds.
+✔ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" passed after 0.115 seconds.
+✔ Test "every stored render-job, quote and usage-reservation record passes its rules" passed after 0.218 seconds.
+✔ Test "every reference-layer invalid case fails with the reference's code; schema-layer cases never decode" passed after 0.314 seconds.
+✘ Suite "Ledger: record rules and the reference's invalid cases" failed after 0.314 seconds with 1 issue.
+✘ Test run with 5 tests in 1 suite failed after 0.314 seconds with 1 issue.
+# restored; rerun:
+✔ Test run with 5 tests in 1 suite passed after 0.284 seconds.
