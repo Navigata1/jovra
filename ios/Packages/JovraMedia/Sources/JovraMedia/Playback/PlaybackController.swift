@@ -49,6 +49,7 @@ public final class PlaybackController {
     @ObservationIgnored private var timeObserver: Any?
     @ObservationIgnored private var endObserver: (any NSObjectProtocol)?
     @ObservationIgnored private var stillRequest = 0
+    @ObservationIgnored private var pendingLoopResume: Int?
     @ObservationIgnored private var isClosed = false
     @ObservationIgnored var seekPlayer: @MainActor (AVPlayer, CMTime, CMTime) async -> Bool = { player, time, tolerance in
         await player.seek(to: time, toleranceBefore: tolerance, toleranceAfter: tolerance)
@@ -178,6 +179,7 @@ public final class PlaybackController {
     }
 
     public func pause() {
+        pendingLoopResume = nil
         isPlaying = false
         player.pause()
         if seeker.isIdle { currentFrame = clamp(frame(at: player.currentTime())) }
@@ -191,7 +193,7 @@ public final class PlaybackController {
         guard !newRate.isSlow || canPlaySlowForward else { return false }
         rate = newRate
         player.defaultRate = newRate.value
-        if isPlaying { player.rate = newRate.value }
+        if player.rate != 0 { player.rate = newRate.value }
         return true
     }
 
@@ -269,26 +271,27 @@ public final class PlaybackController {
 
     /// Sets or clears the A–B loop. A playhead outside the new loop moves to A.
     public func setLoop(_ newLoop: FrameLoop?) {
+        if pendingLoopResume != nil { currentFrame = clamp(frame(at: player.currentTime())) }
+        pendingLoopResume = nil
         loop = newLoop
         loopWraps = []
         player.currentItem?.forwardPlaybackEndTime = newLoop.map { itemTime(time(of: $0.end + 1)) } ?? .invalid
         if let newLoop, !newLoop.contains(currentFrame) || !newLoop.contains(frame(at: player.currentTime())) {
             let resume = isPlaying
-            if resume { player.pause() }
+            if resume { pause() }
             invalidateStill()
             currentFrame = newLoop.start
-            seeker.submit(time(of: newLoop.start), precision: .exact)
             let generation = stillRequest
+            if resume { pendingLoopResume = generation }
+            seeker.submit(time(of: newLoop.start), precision: .exact)
             Task { @MainActor in
                 await seeker.settled()
-                guard self.loop == newLoop, stillRequest == generation else { return }
+                let shouldResume = pendingLoopResume == generation
+                if shouldResume { pendingLoopResume = nil }
+                guard stillRequest == generation else { return }
                 let actual = clamp(frame(at: player.currentTime()))
                 currentFrame = actual
-                if resume, isPlaying {
-                    guard newLoop.contains(actual) else { pause(); return }
-                    seeker.playheadMoved()
-                    player.rate = rate.value
-                }
+                if shouldResume, self.loop == newLoop, newLoop.contains(actual) { play() }
             }
         }
     }
@@ -357,6 +360,7 @@ public final class PlaybackController {
     }
 
     private func invalidateStill() {
+        pendingLoopResume = nil
         stillRequest &+= 1
         still = nil
     }

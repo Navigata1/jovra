@@ -50,7 +50,8 @@ struct PlaybackSeekOutcomeTests {
         let (controller, _) = try await open()
         defer { controller.close() }
         await controller.seek(toFrame: 30)
-        controller.setLoop(try #require(FrameLoop(start: 20, end: 40, frameCount: controller.frameCount)))
+        let loop = try #require(FrameLoop(start: 20, end: 40, frameCount: controller.frameCount))
+        controller.setLoop(loop)
         await controller.seek(toFrame: 5)
         let gate = GatedOriginalSeek(frame: 20)
         controller.seekPlayer = { await gate.perform($0, time: $1, tolerance: $2) }
@@ -82,7 +83,8 @@ struct PlaybackSeekOutcomeTests {
         controller.seekPlayer = { await gate.perform($0, time: $1, tolerance: $2) }
         defer { gate.finish(false) }
 
-        controller.setLoop(try #require(FrameLoop(start: 80, end: 100, frameCount: controller.frameCount)))
+        let loop = try #require(FrameLoop(start: 80, end: 100, frameCount: controller.frameCount))
+        controller.setLoop(loop)
         try await waitUntil("loop position seek in flight") { gate.isWaiting }
         gate.finish(false)
         await controller.settle()
