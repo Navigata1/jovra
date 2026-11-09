@@ -1,6 +1,7 @@
 package com.islanddevcrew.jovra.core.contracts
 
 import com.islanddevcrew.jovra.core.json.CanonicalJson
+import com.islanddevcrew.jovra.core.json.requireStrictLong
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -14,7 +15,6 @@ import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.encoding.encodeStructure
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonDecoder
-import kotlinx.serialization.json.JsonPrimitive
 
 /**
  * Exact rational time on the session timeline (common.schema.json, mediaTime).
@@ -76,16 +76,7 @@ private object MediaTimeSerializer : KSerializer<MediaTime> {
 
 private object StrictLong : KSerializer<Long> {
     override val descriptor = PrimitiveSerialDescriptor("StrictJsonLong", PrimitiveKind.LONG)
-    private val integer = Regex("-?(0|[1-9][0-9]*)")
-
-    override fun deserialize(decoder: Decoder): Long {
-        // Read the scalar from the original stream. Canonical output can erase its decimal or exponent form.
-        val scalar = (decoder as JsonDecoder).decodeJsonElement() as? JsonPrimitive
-        require(scalar != null && !scalar.isString && integer.matches(scalar.content)) {
-            "Expected a JSON integer token"
-        }
-        return requireNotNull(scalar.content.toLongOrNull()) { "JSON integer exceeds signed 64-bit range" }
-    }
+    override fun deserialize(decoder: Decoder): Long = (decoder as JsonDecoder).decodeJsonElement().requireStrictLong()
 
     override fun serialize(encoder: Encoder, value: Long) = encoder.encodeLong(value)
 }
