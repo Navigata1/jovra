@@ -4,7 +4,7 @@ reference: [spec/reference/studio/ledger.py]
 cases: [spec/reference/studio/cases/ledger_cases.py]
 kinds: [jovra.quote/1, jovra.usage-reservation/1, jovra.credit-classes/1, ledger, quote-credits]
 coverage: covered
-swift: pending
+swift: consumed
 kotlin: pending
 ---
 
