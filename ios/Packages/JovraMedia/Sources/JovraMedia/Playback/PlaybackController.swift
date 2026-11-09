@@ -50,6 +50,12 @@ public final class PlaybackController {
     @ObservationIgnored private var endObserver: (any NSObjectProtocol)?
     @ObservationIgnored private var stillRequest = 0
     @ObservationIgnored private var isClosed = false
+    @ObservationIgnored var seekPlayer: @MainActor (AVPlayer, CMTime, CMTime) async -> Bool = { player, time, tolerance in
+        await player.seek(to: time, toleranceBefore: tolerance, toleranceAfter: tolerance)
+    }
+    @ObservationIgnored var decodeProxyFrame: @MainActor (ProxyBackwardStepper, Int) async throws -> PlaybackFrame = {
+        try await $0.frame(at: $1)
+    }
     @ObservationIgnored private lazy var seeker = ChaseSeeker { [weak self] time, precision in
         await self?.performSeek(to: time, precision: precision) ?? false
     }
@@ -220,7 +226,7 @@ public final class PlaybackController {
             let request = stillRequest
             seeker.submit(time(of: target), precision: .exact)
             do {
-                let frame = try await stepper.frame(at: target)
+                let frame = try await decodeProxyFrame(stepper, target)
                 if request == stillRequest, currentFrame == target {
                     still = frame
                     clearStillWhenLanded(request: request, target: target)
@@ -323,7 +329,7 @@ public final class PlaybackController {
 
     private func performSeek(to time: CMTime, precision: SeekPrecision) async -> Bool {
         let tolerance = precision == .exact ? CMTime.zero : Self.coarseTolerance
-        return await player.seek(to: itemTime(time), toleranceBefore: tolerance, toleranceAfter: tolerance)
+        return await seekPlayer(player, itemTime(time), tolerance)
     }
 
     @discardableResult
