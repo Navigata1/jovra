@@ -96,6 +96,10 @@ class SessionLibraryMetadata private constructor(
             require(players != null && players.size in 1..4) { "Expected one to four session players" }
             val storage = fields.closedObject("storage", storageFields)
             val archive = fields.closedObject("archive", archiveFields)
+            val archiveState = archive.wireValue("state", ArchiveState.entries, ArchiveState::wireName)
+            require(!version.startsWith("1.0.") || archiveState != ArchiveState.WAITING_FOR_WIFI) {
+                "Waiting for Wi-Fi requires session schema 1.1 or later"
+            }
             return SessionLibraryMetadata(
                 schemaVersion = version,
                 id = OpaqueId(fields.requireString("id")),
@@ -110,7 +114,7 @@ class SessionLibraryMetadata private constructor(
                 recording = decodeRecording(fields.closedObject("recording", recordingFields)),
                 storedOriginals = storage.wireValue("originals", Originals.entries, Originals::wireName),
                 includeInDeviceBackup = storage.requireBoolean("includeInDeviceBackup"),
-                storedArchiveState = archive.wireValue("state", ArchiveState.entries, ArchiveState::wireName),
+                storedArchiveState = archiveState,
             )
         }
 
