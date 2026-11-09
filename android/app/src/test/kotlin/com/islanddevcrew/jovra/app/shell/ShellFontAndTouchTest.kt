@@ -84,8 +84,13 @@ class ShellFontAndTouchTest {
         for ((index, first) in targets.withIndex()) {
             for (second in targets.drop(index + 1)) {
                 assertTrue("Navigation touch bounds overlap: $first and $second", !first.overlaps(second))
-                if (compact) assertTrue("Expected ordered bar targets", first.center.x < second.center.x)
-                else assertTrue("Expected ordered rail targets", first.center.y < second.center.y)
+                if (compact) {
+                    assertTrue("Expected ordered targets in a shared bar row",
+                        first.center.x < second.center.x && first.top < second.bottom && second.top < first.bottom)
+                } else {
+                    assertTrue("Expected ordered targets in a shared rail column",
+                        first.center.y < second.center.y && first.left < second.right && second.left < first.right)
+                }
             }
         }
         destination("Home").assertIsSelected()
@@ -99,9 +104,13 @@ class ShellFontAndTouchTest {
                 hasTextExactly(selected) and SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading) and textLayout,
                 useUnmergedTree = true,
             )
+            val placeholder = compose.onNode(hasTextExactly("This section is coming soon.") and textLayout, useUnmergedTree = true)
             assertReadable(heading, "$selected heading")
-            assertReadable(compose.onNode(hasTextExactly("This section is coming soon.") and textLayout,
-                useUnmergedTree = true), "$selected placeholder")
+            assertReadable(placeholder, "$selected placeholder")
+            for (body in listOf(heading, placeholder)) {
+                val bounds = body.fetchSemanticsNode().boundsInRoot
+                assertTrue("$selected content $bounds overlaps a navigation target", targets.none { it.overlaps(bounds) })
+            }
         }
     }
 
@@ -126,8 +135,14 @@ class ShellFontAndTouchTest {
             "lineExtents=${(0 until layout.lineCount).map { layout.getLineLeft(it) to layout.getLineRight(it) }} " +
             "visibleEnd=${layout.getLineEnd(layout.lineCount - 1, visibleEnd = true)}"
         println(detail)
-        assertTrue("Text layout overflow: $detail", !layout.hasVisualOverflow)
-        assertTrue("$context has ellipsized text", (0 until layout.lineCount).none(layout::isLineEllipsized))
+        val lines = 0 until layout.lineCount
+        // A paragraph may reserve the whole constraint width even when its placed lines fit.
+        assertTrue("Text line falls outside the allocated width: $detail",
+            lines.all { layout.getLineLeft(it) >= 0f && layout.getLineRight(it) <= layout.size.width.toFloat() })
+        assertTrue("Vertical text overflow: $detail", !layout.didOverflowHeight)
+        assertTrue("$context has ellipsized text", lines.none(layout::isLineEllipsized))
+        assertEquals("$context retains every visible character", layout.layoutInput.text.length,
+            layout.getLineEnd(layout.lineCount - 1, visibleEnd = true))
         assertTrue("$context layout ${layout.size} is clipped to $visible",
             visible.width >= layout.size.width - 1f && visible.height >= layout.size.height - 1f)
     }
