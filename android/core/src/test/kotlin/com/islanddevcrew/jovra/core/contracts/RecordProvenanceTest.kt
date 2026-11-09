@@ -62,6 +62,7 @@ class RecordProvenanceTest {
         assertEquals(true, record.sample)
         val expected = """{"calibrationId":"court-1","capabilityId":"swing.pose2D","capabilityVersion":"v1+local","computedAt":"2026-10-07T18:00:00.125Z","confidence":0.123456789012345678901234567890123456789,"denominator":9007199254740993,"sample":true,"source":"model:pose.v2@2.0+test","status":"estimated"}"""
         assertCanonical(record, expected)
+        assertEquals(record, decode(expected))
     }
 
     @Test
