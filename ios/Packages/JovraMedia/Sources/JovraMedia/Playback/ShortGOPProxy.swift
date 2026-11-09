@@ -19,6 +19,7 @@ public struct ShortGOPProxy: Sendable {
     /// Builds the proxy beside `directory`'s other files, writing to a temporary name and moving it into place,
     /// so a half-written proxy is never used.
     public static func build(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> ShortGOPProxy {
+        try Task.checkCancellation()
         let asset = AVURLAsset(url: source)
         guard let track = try await asset.loadTracks(withMediaType: .video).first else { throw ShortGOPProxyError.noVideo }
         let (naturalSize, transform, timeScale) = try await track.load(.naturalSize, .preferredTransform, .naturalTimeScale)
@@ -40,6 +41,7 @@ public struct ShortGOPProxy: Sendable {
         let name = source.deletingPathExtension().lastPathComponent
         let partial = directory.appendingPathComponent("\(name).proxy-\(UUID().uuidString).partial.mov")
         let final = directory.appendingPathComponent("\(name).proxy.mov")
+        defer { try? FileManager.default.removeItem(at: partial) }
         let writer = try AVAssetWriter(outputURL: partial, fileType: .mov)
         let fps = max(1, Int(frameRate.framesPerSecond.rounded()))
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: [
@@ -64,8 +66,9 @@ public struct ShortGOPProxy: Sendable {
         guard writer.canAdd(input) else { throw ShortGOPProxyError.writeFailed }
         writer.add(input)
 
+        try Task.checkCancellation()
         guard reader.startReading(), writer.startWriting() else {
-            try? FileManager.default.removeItem(at: partial)
+            if reader.status == .reading { reader.cancelReading() }
             throw reader.status == .failed ? ShortGOPProxyError.readFailed : ShortGOPProxyError.writeFailed
         }
         var written = 0
@@ -80,6 +83,7 @@ public struct ShortGOPProxy: Sendable {
                 }
                 while !input.isReadyForMoreMediaData {
                     try Task.checkCancellation()
+                    guard writer.status == .writing else { throw ShortGOPProxyError.writeFailed }
                     try await Task.sleep(for: .milliseconds(1))
                 }
                 guard input.append(sample) else { throw ShortGOPProxyError.writeFailed }
@@ -88,11 +92,11 @@ public struct ShortGOPProxy: Sendable {
             guard reader.status == .completed else { throw ShortGOPProxyError.readFailed }
             input.markAsFinished()
             await writer.finishWriting()
+            try Task.checkCancellation()
             guard writer.status == .completed else { throw ShortGOPProxyError.writeFailed }
         } catch {
-            reader.cancelReading()
-            writer.cancelWriting()
-            try? FileManager.default.removeItem(at: partial)
+            if reader.status == .reading { reader.cancelReading() }
+            if writer.status == .writing { writer.cancelWriting() }
             throw error
         }
         try? FileManager.default.removeItem(at: final)

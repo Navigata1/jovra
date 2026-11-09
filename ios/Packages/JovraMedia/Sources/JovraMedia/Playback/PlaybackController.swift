@@ -49,6 +49,7 @@ public final class PlaybackController {
     @ObservationIgnored private var timeObserver: Any?
     @ObservationIgnored private var endObserver: (any NSObjectProtocol)?
     @ObservationIgnored private var stillRequest = 0
+    @ObservationIgnored private var isClosed = false
     @ObservationIgnored private lazy var seeker = ChaseSeeker { [weak self] time, precision in
         await self?.performSeek(to: time, precision: precision)
     }
@@ -70,11 +71,15 @@ public final class PlaybackController {
         let asset = AVURLAsset(url: url)
         guard let track = try? await asset.loadTracks(withMediaType: .video).first,
               let range = try? await track.load(.timeRange) else { throw PlaybackOpenError.noVideo }
-        let frames = Self.frameCount(of: range.duration, at: rate)
+        // A leading empty edit belongs to the item timeline, not the clip's video-frame clock.
+        let edits = try? await track.load(.segments)
+        let firstVideoTime = edits?.first(where: { !$0.isEmpty })?.timeMapping.target.start ?? range.start
+        let frames = Self.frameCount(of: CMTimeSubtract(range.end, firstVideoTime), at: rate)
         guard frames > 0 else { throw PlaybackOpenError.noVideo }
-        let controller = PlaybackController(url: url, asset: asset, frameRate: rate, frameCount: frames, videoStart: range.start,
+        let controller = PlaybackController(url: url, asset: asset, frameRate: rate, frameCount: frames, videoStart: firstVideoTime,
                                             proxyDirectory: proxyDirectory, slowBackwardStep: slowBackwardStep)
         try await controller.waitUntilReady()
+        if firstVideoTime > .zero { await controller.seek(toFrame: 0) }
         return controller
     }
 
@@ -119,8 +124,10 @@ public final class PlaybackController {
 
     /// Stops playback, removes observers and cancels proxy work. The proxy file stays for next time.
     public func close() {
+        isClosed = true
         player.pause()
         isPlaying = false
+        invalidateStill()
         proxyTask?.cancel()
         if let timeObserver { player.removeTimeObserver(timeObserver) }
         if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
@@ -131,7 +138,7 @@ public final class PlaybackController {
     // MARK: Transport
 
     public func play() {
-        still = nil
+        invalidateStill()
         if let loop, !loop.contains(currentFrame) {
             currentFrame = loop.start
             seeker.submit(time(of: loop.start), precision: .exact)
@@ -171,6 +178,7 @@ public final class PlaybackController {
 
     /// Moves the playhead to `frame` and returns once the player has landed (or a later request has).
     public func seek(toFrame frame: Int, precision: SeekPrecision = .exact) async {
+        invalidateStill()
         let target = clamp(frame)
         currentFrame = target
         await seeker.request(time(of: target), precision: precision)
@@ -179,6 +187,7 @@ public final class PlaybackController {
     /// A drag position: the readout follows at once, the player chases with a coarse seek.
     public func scrub(toFrame frame: Int) {
         if isPlaying { pause() }
+        invalidateStill()
         currentFrame = clamp(frame)
         seeker.submit(time(of: currentFrame), precision: .coarse)
     }
@@ -193,16 +202,16 @@ public final class PlaybackController {
         if isPlaying { pause() }
         let target = clamp(currentFrame + count)
         guard count != 0, target != currentFrame else { return }
+        invalidateStill()
         currentFrame = target
         if count < 0, proxyState == .ready, let stepper {
-            stillRequest += 1
             let request = stillRequest
             seeker.submit(time(of: target), precision: .exact)
             do {
                 let frame = try await stepper.frame(at: target)
                 if request == stillRequest, currentFrame == target {
                     still = frame
-                    clearStillIfLanded()
+                    clearStillWhenLanded(request: request, target: target)
                 }
                 return
             } catch is CancellationError {
@@ -236,8 +245,9 @@ public final class PlaybackController {
     public func setLoop(_ newLoop: FrameLoop?) {
         loop = newLoop
         loopWraps = []
-        player.currentItem?.forwardPlaybackEndTime = newLoop.map { time(of: $0.end + 1) } ?? .invalid
+        player.currentItem?.forwardPlaybackEndTime = newLoop.map { itemTime(time(of: $0.end + 1)) } ?? .invalid
         if let newLoop, !newLoop.contains(currentFrame) {
+            invalidateStill()
             currentFrame = newLoop.start
             seeker.submit(time(of: newLoop.start), precision: .exact)
         }
@@ -255,15 +265,25 @@ public final class PlaybackController {
     public func waitForProxy() async { await proxyTask?.value }
 
     private func startProxyIfNeeded() {
-        guard let proxyDirectory, proxyState == .none, proxyTask == nil else { return }
+        guard !isClosed, let proxyDirectory, proxyState == .none, proxyTask == nil else { return }
         proxyState = .building
         let url = url, rate = frameRate, expected = frameCount
         proxyTask = Task { @MainActor [weak self] in
-            let result = await Task.detached(priority: .utility) {
+            let encoder = Task.detached(priority: .utility) {
                 try await ProxyBackwardStepper.prepare(original: url, frameRate: rate, proxyDirectory: proxyDirectory,
                                                        expectedFrameCount: expected)
-            }.result
+            }
+            let result = await withTaskCancellationHandler {
+                await encoder.result
+            } onCancel: {
+                encoder.cancel()
+            }
             guard let self else { return }
+            defer { self.proxyTask = nil }
+            guard !self.isClosed else {
+                self.proxyState = .none
+                return
+            }
             switch result {
             case .success(let stepper):
                 self.stepper = stepper
@@ -271,7 +291,6 @@ public final class PlaybackController {
             case .failure:
                 self.proxyState = .failed
             }
-            self.proxyTask = nil
         }
     }
 
@@ -279,18 +298,21 @@ public final class PlaybackController {
 
     private func performSeek(to time: CMTime, precision: SeekPrecision) async {
         let tolerance = precision == .exact ? CMTime.zero : Self.coarseTolerance
-        await player.seek(to: CMTimeAdd(videoStart, time), toleranceBefore: tolerance, toleranceAfter: tolerance)
-        clearStillIfLanded()
+        await player.seek(to: itemTime(time), toleranceBefore: tolerance, toleranceAfter: tolerance)
     }
 
-    private func clearStillIfLanded() {
-        guard let still, seeker.lastCompleted == .init(time: time(of: still.index), precision: .exact),
-              still.index == currentFrame else { return }
-        // The original sits on the proxy's frame; drop the still only once nothing newer is queued.
-        Task { @MainActor in
+    private func invalidateStill() {
+        stillRequest &+= 1
+        still = nil
+    }
+
+    private func clearStillWhenLanded(request: Int, target: Int) {
+        // Completion is recorded by the seeker after the player callback returns.
+        Task { @MainActor [weak self] in
+            guard let self else { return }
             await seeker.settled()
-            if self.still?.index == self.currentFrame,
-               seeker.lastCompleted?.time == time(of: currentFrame) { self.still = nil }
+            if stillRequest == request, still?.index == target,
+               seeker.lastCompleted == .init(time: time(of: target), precision: .exact) { still = nil }
         }
     }
 
@@ -319,6 +341,7 @@ public final class PlaybackController {
     // MARK: Clock
 
     private func time(of frame: Int) -> CMTime { CMTime(frame: frame, at: frameRate) }
+    private func itemTime(_ clipTime: CMTime) -> CMTime { CMTimeAdd(videoStart, clipTime) }
 
     private func frame(at playerTime: CMTime) -> Int {
         CMTimeSubtract(playerTime, videoStart).frameIndex(at: frameRate)

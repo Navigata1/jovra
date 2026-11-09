@@ -97,6 +97,52 @@ struct ShortGOPProxyTests {
         #expect(controller.still == nil, "the still clears once the original has caught up on the same frame")
     }
 
+    @Test(arguments: [false, true])
+    @MainActor
+    func aNewPositionNeverShowsTheOldBackwardStepStill(scrub: Bool) async throws {
+        let truth = try catalog.truth(id: "frameCounter/fc-240")
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let controller = try await PlaybackController.open(url: catalog.mediaURL(for: truth), proxyDirectory: directory)
+        defer { controller.close() }
+        let displayed = DisplayedFrame(controller, truth: truth)
+        await controller.buildProxy()
+        try #require(controller.proxyState == .ready)
+        await controller.seek(toFrame: 400)
+        await controller.step(byCount: -1)
+        let oldStill = try #require(controller.still)
+        #expect(try FrameCode.read(from: LumaPlane(image: oldStill.image), truth: truth) == 399)
+
+        let expected = scrub ? 410 : 400
+        if scrub {
+            controller.scrub(toFrame: expected)
+            await controller.endScrub(atFrame: expected)
+        } else {
+            await controller.step(byCount: 1)
+        }
+        await controller.settle()
+        #expect(controller.readout.frame == expected)
+        #expect(controller.still == nil, "The old proxy still must not cover the newly selected frame")
+        #expect(try await displayed.code(controller) == expected)
+    }
+
+    @Test
+    @MainActor
+    func closingDuringProxyBuildDoesNotPublishOrLeaveTemporaryMedia() async throws {
+        let truth = try catalog.truth(id: "frameCounter/fc-240")
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let controller = try await PlaybackController.open(url: catalog.mediaURL(for: truth), proxyDirectory: directory)
+        defer { controller.close() }
+        let build = Task { await controller.buildProxy() }
+        for _ in 0..<100 where controller.proxyState == .none { try await Task.sleep(for: .milliseconds(1)) }
+        try #require(controller.proxyState == .building, "Close while the actual proxy encoder is pending")
+        controller.close()
+        await build.value
+        #expect(try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty,
+                "Closing before publication must leave neither a final proxy nor a partial copy")
+    }
+
     /// The same budget measured end to end on the controller (readout and displayed still updated).
     @Test
     @MainActor
