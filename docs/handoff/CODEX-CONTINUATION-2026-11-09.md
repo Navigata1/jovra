@@ -23,8 +23,11 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   finding. The Replay fix [#453](https://github.com/Navigata1/jovra/pull/453)
   plus Export backdrop [#456](https://github.com/Navigata1/jovra/pull/456)
   then passed the complete unchanged iPad CoreFlow audit on iOS 26.5. The
-  combined iOS 27.2 run timed out at Replay. A separate contrast-first probe
-  passed; an all-types-first diagnostic is in progress. Raw receipts are retained locally in
+  combined iOS 27.2 run timed out at Replay. A contrast-first probe passed,
+  but an all-types-first probe timed out at the same geometry. Seven named
+  iOS audit types passed individually and the remaining `.all` mask timed out.
+  The per-type legacy record/log reports failure; the modern summary is
+  incomplete after a duplicate result-path invocation. Raw receipts are retained locally in
   `/Users/IDC2.5/JOVRA-media/codex-evidence/2026-11-09`.
 - The supplied private media is described in `docs/fixtures/real-footage.md`.
   The original February match and two-minute excerpt matched their recorded
@@ -46,7 +49,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   on a clipped tap, retained as evidence. Real-provider match opt-in and AX5
   are still unverified.
 - Watch simulator safety follow-up [#455](https://github.com/Navigata1/jovra/pull/455)
-  is a reviewed draft; real watch validation and the W03 owner decisions stay open.
+  is a reviewed draft. The prior alert acknowledgment test passed 1/1 on a
+  newly created Apple Watch Ultra 3 / iPhone simulator pair. Companion install,
+  real watch validation and W03 owner decisions stay open.
 - Studio demo boundary follow-up [#454](https://github.com/Navigata1/jovra/pull/454)
   has passed 171 macOS package tests; Linux and full S14 acceptance remain open.
 - [#441](https://github.com/Navigata1/jovra/pull/441) remains blocked on the
@@ -65,8 +70,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   tested source. Automatic subscriptions, privacy exclusions, renderer wiring
   and general multi-file durability remain open.
 - The verified S88 planner continuation [#452](https://github.com/Navigata1/jovra/pull/452)
-  remains draft on current main. S06/S07 parity is covered, while S09 transition
-  parity and the oversized inherited scope still need work.
+  remains draft. S06/S07 parity is covered; reviewed S09 transition tracer
+  [#458](https://github.com/Navigata1/jovra/pull/458) matches all six shared
+  compiler results. Renderer parity and oversized inherited scope remain open.
 - The unsigned Android owner proposal is draft [#451](https://github.com/Navigata1/jovra/pull/451).
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
@@ -77,8 +83,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Immediate continuation
 
-1. Rerun full CoreFlow on current main `0706e4c`, which now includes #457.
-   Then finish diagnosing iOS 27.2 Replay audit timeouts. A contrast-first probe
+1. Finish the running full CoreFlow on current main `0706e4c`, which includes
+   #457. Then finish diagnosing iOS 27.2 Replay audit timeouts. A contrast-first probe
    passed; an all-types-first probe is running. Preserve all prior failures
    and keep the original full audit as the acceptance gate.
 2. Continue T26 Photos, batches, duplicate handling, provider and interruption
