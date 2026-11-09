@@ -79,6 +79,35 @@ public actor MediaLibrary {
         return url
     }
 
+    /// Verify current finalized segments against owned bytes, in the caller's order.
+    public func originalSHA256s(sessionID: String, segments: [SessionSegment]) async throws -> [String] {
+        try Task.checkCancellation()
+        let folder = try await store.sessionDirectory(sessionID)
+        let identity = try DurableDirectory.identity(of: folder)
+        let before = try await store.load(sessionID)
+        guard !segments.isEmpty, before.recording.mediaAvailable,
+              segments.allSatisfy({ $0.finalized && before.recording.segments.contains($0) }) else {
+            throw MediaLibraryError.notFound
+        }
+        var files: [String: MediaFileIdentity] = [:]
+        var hashes: [String] = []
+        for segment in segments {
+            let path = segment.file.path
+            guard files[path] == nil else { throw MediaLibraryError.unsafePath }
+            let (fingerprint, _, fileIdentity) = try RecoveryFiles(folder: folder).readOwnedOriginal(path)
+            guard fingerprint.bytes > 0, segment.file.bytes == nil || segment.file.bytes == fingerprint.bytes else {
+                throw MediaLibraryError.notFound
+            }
+            files[path] = fileIdentity
+            hashes.append(fingerprint.sha256)
+        }
+        let after = try await store.load(sessionID)
+        guard before.recording == after.recording, before.original == after.original,
+              before.sample == after.sample else { throw MediaLibraryError.notFound }
+        try MediaAdoptionWitness(directory: identity, files: files).verify(in: folder)
+        return hashes
+    }
+
     public func includeOriginalsInDeviceBackup(_ enabled: Bool, sessionID: String) async throws {
         let folder = try await recordingFolder(sessionID: sessionID)
         let oldPolicy = try await store.load(sessionID).storage.includeInDeviceBackup

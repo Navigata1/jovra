@@ -70,7 +70,7 @@ struct LessonsClipRepairTests {
         #expect(try await l.journal.refreshClipAvailability(in: l.lessonId).clips.map(\.status) == [.available])
     }
 
-    @Test("an original replaced in place by other bytes under the same name leaves the clip missing")
+    @Test("a source whose declared hash contradicts its on-disk bytes is not available")
     func replacedOriginalIsMissing() async throws {
         let s = try LessonsScratch()
         defer { s.cleanUp() }
@@ -82,6 +82,92 @@ struct LessonsClipRepairTests {
         await #expect(throws: LessonJournalError.notTheSameVideo(clipId: l.clipId)) {
             _ = try await l.journal.findTheVideo(clipId: l.clipId, in: l.lessonId, candidateSessionId: l.sessionId)
         }
+    }
+
+    @Test func linksOrdinaryCaptureWithoutAStoredHash() async throws {
+        let s = try LessonsScratch()
+        defer { s.cleanUp() }
+        let (journal, _) = try await s.journal()
+        var document = try await s.session("ordinary-capture", bytes: syntheticVideo("actual bytes"))
+        document.recording.segments[0].file.sha256 = nil
+        try await s.sessions.updateRecording(document.recording, for: document.id)
+        let lesson = try await journal.create(date: "2026-11-04", title: "Ordinary capture")
+        let clip = try await journal.linkClip(sessionId: document.id, range: .init(startUs: 0, endUs: 1_000_000), to: lesson.lessonId)
+        #expect(clip.status == .available)
+    }
+
+    @Test(arguments: [false, true])
+    func missingOrReplacedBytesWithUnchangedMetadataAreNotAvailable(remove: Bool) async throws {
+        let s = try LessonsScratch()
+        defer { s.cleanUp() }
+        let linked = try await Self.linked(s, bytes: syntheticVideo("original"))
+        let folder = try await s.sessions.sessionDirectory(linked.sessionId)
+        let file = folder.appendingPathComponent("media/segment-000.mov")
+        if remove {
+            try FileManager.default.removeItem(at: file)
+        } else {
+            try syntheticVideo("impostor").write(to: file)
+        }
+        #expect(try await linked.journal.refreshClipAvailability(in: linked.lessonId).clips.map(\.status) == [.missing])
+        await #expect(throws: LessonJournalError.notTheSameVideo(clipId: linked.clipId)) {
+            _ = try await linked.journal.findTheVideo(clipId: linked.clipId, in: linked.lessonId, candidateSessionId: linked.sessionId)
+        }
+    }
+
+    @Test func sameBytesAtDifferentSessionOffsetCannotRepairTheClip() async throws {
+        let s = try LessonsScratch()
+        defer { s.cleanUp() }
+        let bytes = syntheticVideo("same exact bytes")
+        let linked = try await Self.linked(s, bytes: bytes)
+        var shifted = try await s.session("shifted", bytes: bytes, kind: .servePractice)
+        shifted.recording.segments[0].startMs = 1
+        try await s.sessions.updateRecording(shifted.recording, for: shifted.id)
+        await #expect(throws: LessonJournalError.notTheSameVideo(clipId: linked.clipId)) {
+            _ = try await linked.journal.findTheVideo(clipId: linked.clipId, in: linked.lessonId, candidateSessionId: shifted.id)
+        }
+        #expect(try await linked.journal.lesson(linked.lessonId).clips.first?.sessionId.value == linked.sessionId)
+    }
+
+    @Test func aDeclaredGapInsideTheClipIsNotCovered() async throws {
+        let s = try LessonsScratch()
+        defer { s.cleanUp() }
+        let (journal, _) = try await s.journal()
+        var document = try await s.session("interrupted", bytes: syntheticVideo("recorded media"))
+        document.recording.gaps = [.init(startMs: 500, endMs: 600, reason: .interruption)]
+        try await s.sessions.updateRecording(document.recording, for: document.id)
+        let lesson = try await journal.create(date: "2026-11-04", title: "Interrupted")
+        await #expect(throws: LessonJournalError.noVideo(document.id)) {
+            _ = try await journal.linkClip(sessionId: document.id, range: .init(startUs: 0, endUs: 1_000_000),
+                                           to: lesson.lessonId)
+        }
+        #expect(try await journal.lesson(lesson.lessonId) == lesson)
+    }
+
+    @Test func missingVerifierAndLegacyReceiptFailClosed() async throws {
+        let s = try LessonsScratch()
+        defer { s.cleanUp() }
+        let linked = try await Self.linked(s, bytes: syntheticVideo("actual legacy source"))
+        let unavailable = LessonJournal(store: s.store, projectId: linked.journal.projectId, sessions: s.sessions)
+        let original = try await unavailable.lesson(linked.lessonId)
+        await #expect(throws: LessonJournalError.mediaVerificationUnavailable) {
+            _ = try await unavailable.refreshClipAvailability(in: linked.lessonId)
+        }
+        #expect(try await unavailable.lesson(linked.lessonId) == original)
+
+        let name = "\(linked.lessonId).clip-sources.json"
+        let data = try #require(try await s.store.record(named: name, in: .lessons, of: linked.journal.projectId))
+        var receipt = try JSONDecoder().decode(LessonClipSources.self, from: data)
+        receipt.clips[0].window = nil
+        receipt.clips[0].files[0].startUs = nil
+        receipt.clips[0].files[0].endUs = nil
+        let legacy = try JSONEncoder().encode(receipt)
+        try await s.store.writeRecord(legacy, named: name, in: .lessons, of: linked.journal.projectId)
+        await #expect(throws: LessonJournalError.cannotVerify(clipId: linked.clipId)) {
+            _ = try await linked.journal.findTheVideo(clipId: linked.clipId, in: linked.lessonId,
+                                                     candidateSessionId: linked.sessionId)
+        }
+        #expect(try await linked.journal.lesson(linked.lessonId) == original)
+        #expect(try await s.store.record(named: name, in: .lessons, of: linked.journal.projectId) == legacy)
     }
 
     @Test("a Sample lesson never reads the core session store: its clips are shown as shipped")

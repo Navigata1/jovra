@@ -1,7 +1,10 @@
 import Foundation
 import JovraCore
 
-/// Why a journal operation was refused. Nothing is written when an operation throws.
+/// Hashes the supplied current segments' owned originals in order, or throws if custody is unverified.
+public typealias LessonMediaVerifier = @Sendable (String, [SessionSegment]) async throws -> [String]
+
+/// Why a journal operation was refused.
 public enum LessonJournalError: Error, Equatable, Sendable {
     /// The lesson would break a `jovra.lesson/1` record rule.
     case rule(LessonRejection)
@@ -20,6 +23,8 @@ public enum LessonJournalError: Error, Equatable, Sendable {
     case badRange
     /// The session has no recorded video covering the range.
     case noVideo(String)
+    /// This journal cannot check actual local media.
+    case mediaVerificationUnavailable
     /// A rejected observation stays on record and is never a cue.
     case observationRejected(String)
     /// Text a person types: 1 to 500 characters, not only whitespace.
@@ -51,11 +56,12 @@ public enum LessonJournalError: Error, Equatable, Sendable {
 /// - A clip remembers the SHA-256 of the original it was cut from (`<lessonId>.clip-sources.json`, a local file beside
 ///   the lesson, not a shared contract). When that original is deleted or replaced, the clip is `missing`; "Find the
 ///   video" re-links it only to a file with the same hash, never to one that merely has the same name.
-/// - Every write is one read-modify-write inside the project store and passes `LessonRules`.
+/// - Each lesson update passes `LessonRules`. New links store their proof before the lesson update.
 public struct LessonJournal: Sendable {
     public let projectId: String
     let store: StudioProjectStore
     let sessions: SessionStore?
+    private let verifyMedia: LessonMediaVerifier?
     let now: @Sendable () -> Date
     let makeID: @Sendable (String) -> String
 
@@ -63,10 +69,12 @@ public struct LessonJournal: Sendable {
 
     public init(store: StudioProjectStore, projectId: String, sessions: SessionStore? = nil,
                 now: @escaping @Sendable () -> Date = { Date() },
-                makeID: @escaping @Sendable (String) -> String = { "\($0)-\(UUID().uuidString.lowercased().prefix(12))" }) {
+                makeID: @escaping @Sendable (String) -> String = { "\($0)-\(UUID().uuidString.lowercased().prefix(12))" },
+                verifyMedia: LessonMediaVerifier? = nil) {
         self.store = store
         self.projectId = projectId
         self.sessions = sessions
+        self.verifyMedia = verifyMedia
         self.now = now
         self.makeID = makeID
     }
@@ -162,16 +170,13 @@ public struct LessonJournal: Sendable {
         guard !current.sample else { throw .sampleIsolation }
         let document = try await session(sessionId)
         guard document.sample == nil else { throw .sampleIsolation }
-        guard range.startUs >= 0, range.startUs < range.endUs else { throw .badRange }
-        if let duration = document.recording.durationMs, range.endUs > duration * 1000 { throw .badRange }
-        let covering = LessonClipSources.segments(of: document, covering: range)
-        guard !covering.isEmpty else { throw .noVideo(sessionId) }
+        let covering = try await verifiedFiles(of: document, range: range)
         let clip = LessonClip(clipId: makeID("clip"), sourceId: .null, sessionId: .value(sessionId), keeperId: .null,
                               window: .value(range), status: .available, label: .init(try Self.text(optional: label)))
         let fingerprint = LessonClipSources.Entry(clipId: clip.clipId, sessionId: sessionId,
-                                                  files: covering.map { .init(name: $0.name, sha256: $0.sha256) })
+                                                  window: range, files: covering)
         // The fingerprint lands first: a clip is never stored without the hash that proves its video.
-        try await updateSources(of: current) { $0.upsert(fingerprint) }
+        try await updateSources(of: current) { try $0.insert(fingerprint) }
         try await mutate(lessonId) { lesson in
             guard lesson.clips.count < 100 else { throw LessonJournalError.limitReached("clips") }
             if !lesson.sessionIds.contains(sessionId) {
@@ -274,18 +279,22 @@ public struct LessonJournal: Sendable {
     @discardableResult
     public func refreshClipAvailability(in lessonId: String) async throws(LessonJournalError) -> Lesson {
         let current = try await lesson(lessonId)
-        guard !current.sample, sessions != nil else { return current }
+        guard !current.sample, current.clips.contains(where: { $0.status != .deleted && $0.sessionId.value != nil }) else {
+            return current
+        }
+        guard sessions != nil, verifyMedia != nil else { throw .mediaVerificationUnavailable }
         let sources = try await clipSources(of: current)
         var found: [String: LessonClipStatus] = [:]
         for clip in current.clips where clip.status != .deleted {
             guard let sessionId = clip.sessionId.value else { continue }
-            let present = try await holdsOriginal(sessionId, matching: sources.entry(clip.clipId))
+            let present = try await holdsOriginal(sessionId, range: clip.window.value, matching: sources.entry(clip.clipId))
             let status: LessonClipStatus = present ? (clip.status == .missing ? .available : clip.status) : .missing
             if status != clip.status { found[clip.clipId] = status }
         }
         guard !found.isEmpty else { return current }
         let changes = found
         return try await mutate(lessonId) { lesson in
+            guard lesson.clips == current.clips else { throw LessonJournalError.changedElsewhere(lessonId) }
             for index in lesson.clips.indices {
                 if let status = changes[lesson.clips[index].clipId] { lesson.clips[index].status = status }
             }
@@ -293,28 +302,28 @@ public struct LessonJournal: Sendable {
     }
 
     /// "Find the video" (the core missing-file repair): re-links a clip to `candidateSessionId` when that session
-    /// holds an original with exactly the recorded SHA-256 (a restored or re-imported copy of the same file). A file
-    /// with the same name but other bytes is `notTheSameVideo`, and the clip stays missing.
+    /// holds the same original bytes at the recorded timeline coordinates. A legacy receipt without a timeline
+    /// cannot prove a repair. The immutable receipt is left untouched when the clip is relinked.
     @discardableResult
     public func findTheVideo(clipId: String, in lessonId: String,
                              candidateSessionId: String) async throws(LessonJournalError) -> LessonClip {
         let current = try await lesson(lessonId)
         guard !current.sample else { throw .sampleIsolation }
-        guard current.clips.contains(where: { $0.clipId == clipId }) else { throw .clipNotFound(clipId) }
-        guard let entry = try await clipSources(of: current).entry(clipId), !entry.files.isEmpty else {
+        guard let clip = current.clips.first(where: { $0.clipId == clipId }), clip.status != .deleted else {
+            throw .clipNotFound(clipId)
+        }
+        guard let range = clip.window.value, let entry = try await clipSources(of: current).entry(clipId),
+              entry.window == range, !entry.files.isEmpty, entry.files.allSatisfy(\.hasTimeline) else {
             throw .cannotVerify(clipId: clipId)
         }
         let candidate = try await session(candidateSessionId)
         guard candidate.sample == nil else { throw .sampleIsolation }
-        guard candidate.original?.state != .trashed, LessonClipSources.holds(candidate, entry) else {
+        guard try await holdsOriginal(candidate.id, range: range, matching: entry) else {
             throw .notTheSameVideo(clipId: clipId)
         }
-        try await updateSources(of: current) { sources in
-            sources.upsert(LessonClipSources.Entry(clipId: clipId, sessionId: candidateSessionId, files: entry.files))
-        }
         let lesson = try await mutate(lessonId) { lesson in
-            guard let index = lesson.clips.firstIndex(where: { $0.clipId == clipId }) else {
-                throw LessonJournalError.clipNotFound(clipId)
+            guard let index = lesson.clips.firstIndex(where: { $0.clipId == clipId }), lesson.clips[index] == clip else {
+                throw LessonJournalError.changedElsewhere(lessonId)
             }
             let previous = lesson.clips[index].sessionId.value
             lesson.clips[index].sessionId = .value(candidateSessionId)
@@ -352,13 +361,16 @@ public struct LessonJournal: Sendable {
         return box.value!
     }
 
-    private func updateSources(of lesson: Lesson, _ change: @escaping @Sendable (inout LessonClipSources) -> Void) async throws(LessonJournalError) {
+    private func updateSources(of lesson: Lesson, _ change: @escaping @Sendable (inout LessonClipSources) throws -> Void) async throws(LessonJournalError) {
         let name = LessonClipSources.fileName(lesson.lessonId)
         let empty = LessonClipSources(lessonId: lesson.lessonId, sample: lesson.sample)
         try await storeCall {
             try await store.updateRecord(named: name, in: .lessons, of: projectId) { current in
                 var sources = try current.map { try LessonClipSources.decode($0) } ?? empty
-                change(&sources)
+                guard sources.lessonId == lesson.lessonId, sources.sample == lesson.sample else {
+                    throw LessonJournalError.unreadable(name)
+                }
+                try change(&sources)
                 return try sources.encoded()
             }
         }
@@ -369,20 +381,40 @@ public struct LessonJournal: Sendable {
         guard let bytes = try await storeCall({ try await store.record(named: name, in: .lessons, of: projectId) }) else {
             return LessonClipSources(lessonId: lesson.lessonId, sample: lesson.sample)
         }
-        do { return try LessonClipSources.decode(bytes) } catch { throw .unreadable(name) }
+        do {
+            let sources = try LessonClipSources.decode(bytes)
+            guard sources.lessonId == lesson.lessonId, sources.sample == lesson.sample else {
+                throw LessonJournalError.unreadable(name)
+            }
+            return sources
+        } catch { throw .unreadable(name) }
     }
 
-    /// Whether `sessionId` exists, is not in Trash and holds every recorded original of `entry` (any original when
-    /// nothing was recorded).
-    private func holdsOriginal(_ sessionId: String, matching entry: LessonClipSources.Entry?) async throws(LessonJournalError) -> Bool {
-        guard let sessions else { return true }
-        let document: SessionDocument
-        do { document = try await sessions.load(sessionId) }
-        catch SessionStoreError.notFound { return false }
-        catch { throw .unreadable(sessionId) }
-        guard document.original?.state != .trashed else { return false }
-        guard let entry, !entry.files.isEmpty else { return document.recording.mediaAvailable }
-        return LessonClipSources.holds(document, entry)
+    private func holdsOriginal(_ sessionId: String, range: StudioIntervalUs?,
+                               matching entry: LessonClipSources.Entry?) async throws(LessonJournalError) -> Bool {
+        guard let range, let entry, entry.window == range,
+              !entry.files.isEmpty, entry.files.allSatisfy(\.hasTimeline) else { return false }
+        do {
+            let document = try await session(sessionId)
+            guard document.sample == nil else { return false }
+            let files = try await verifiedFiles(of: document, range: range)
+            return LessonClipSources.matches(entry, actual: files)
+        } catch .sessionNotFound, .noVideo, .badRange {
+            return false
+        }
+    }
+
+    private func verifiedFiles(of document: SessionDocument, range: StudioIntervalUs) async throws(LessonJournalError) -> [LessonClipSources.File] {
+        guard let verifyMedia else { throw .mediaVerificationUnavailable }
+        do {
+            return try await LessonClipSources.verify(document, range: range, with: verifyMedia)
+        } catch let error as LessonJournalError {
+            throw error
+        } catch is CancellationError {
+            throw .mediaVerificationUnavailable
+        } catch {
+            throw .noVideo(document.id)
+        }
     }
 
     private func session(_ id: String) async throws(LessonJournalError) -> SessionDocument {

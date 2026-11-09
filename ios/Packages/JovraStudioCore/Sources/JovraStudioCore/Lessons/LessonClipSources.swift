@@ -12,12 +12,21 @@ public struct LessonClipSources: Codable, Equatable, Sendable {
         /// The original's file name, for the repair sheet ("segment-000.mov"). Never used to match.
         public var name: String
         public var sha256: String
+        /// Full segment coordinates. Absent in older receipts, which cannot prove a repaired mapping.
+        public var startUs: Int?
+        public var endUs: Int?
+
+        var hasTimeline: Bool {
+            guard let startUs, let endUs else { return false }
+            return startUs >= 0 && startUs < endUs
+        }
     }
 
     public struct Entry: Codable, Equatable, Sendable {
         public var clipId: String
-        /// The session the clip is linked to now.
+        /// The session originally verified. Repair preserves this original receipt.
         public var sessionId: String
+        public var window: StudioIntervalUs?
         /// Every original the clip's range covers.
         public var files: [File]
     }
@@ -38,9 +47,9 @@ public struct LessonClipSources: Codable, Equatable, Sendable {
 
     public func entry(_ clipId: String) -> Entry? { clips.first { $0.clipId == clipId } }
 
-    mutating func upsert(_ entry: Entry) {
-        if let index = clips.firstIndex(where: { $0.clipId == entry.clipId }) { clips[index] = entry }
-        else { clips.append(entry) }
+    mutating func insert(_ entry: Entry) throws {
+        guard self.entry(entry.clipId) == nil else { throw LessonRejection(.duplicateId, "duplicate clip receipt") }
+        clips.append(entry)
         clips.sort { $0.clipId < $1.clipId }
     }
 
@@ -54,22 +63,61 @@ public struct LessonClipSources: Codable, Equatable, Sendable {
 
     func encoded() throws -> Data { try CanonicalJSON.encode(self) }
 
-    /// The finalized originals of `document` that overlap `range` (session microseconds, half-open) and carry a
-    /// SHA-256.
-    static func segments(of document: SessionDocument, covering range: StudioIntervalUs) -> [(name: String, sha256: String)] {
-        document.recording.segments.compactMap { segment in
-            let start = segment.startMs * 1000, end = (segment.startMs + segment.durationMs) * 1000
-            guard segment.finalized, start < range.endUs, range.startUs < end,
-                  let sha = segment.file.sha256, sha.count == 64 else { return nil }
-            let name = segment.file.path.split(separator: "/").last.map(String.init) ?? segment.file.path
-            return (name, sha)
+    /// Verify continuous coverage in the session clock and hash the original files in timeline order.
+    static func verify(_ document: SessionDocument, range: StudioIntervalUs,
+                       with verifier: LessonMediaVerifier) async throws -> [File] {
+        guard range.startUs >= 0, range.startUs < range.endUs else { throw LessonJournalError.badRange }
+        let limit = Int.max / 1_000
+        if let duration = document.recording.durationMs {
+            guard duration > 0, duration <= limit, range.endUs <= duration * 1_000 else {
+                throw LessonJournalError.badRange
+            }
+        }
+        guard document.recording.mediaAvailable, document.original?.state != .trashed else {
+            throw LessonJournalError.noVideo(document.id)
+        }
+        for gap in document.recording.gaps {
+            guard gap.startMs >= 0, gap.startMs <= gap.endMs, gap.endMs <= limit else {
+                throw LessonJournalError.badRange
+            }
+            if gap.startMs < gap.endMs, gap.startMs * 1_000 < range.endUs, range.startUs < gap.endMs * 1_000 {
+                throw LessonJournalError.noVideo(document.id)
+            }
+        }
+        let segments = document.recording.segments.sorted { $0.startMs < $1.startMs }
+        var covered = range.startUs
+        var spans: [(segment: SessionSegment, startUs: Int, endUs: Int)] = []
+        for segment in segments {
+            let start = segment.startMs, duration = segment.durationMs
+            guard start >= 0, start <= limit, duration > 0, duration <= limit - start else {
+                throw LessonJournalError.badRange
+            }
+            let lo = start * 1_000, hi = (start + duration) * 1_000
+            guard lo < range.endUs, range.startUs < hi else { continue }
+            guard segment.finalized, hi > covered, spans.isEmpty ? lo <= covered : lo == covered else {
+                throw LessonJournalError.noVideo(document.id)
+            }
+            spans.append((segment, lo, hi))
+            covered = min(hi, range.endUs)
+        }
+        guard covered == range.endUs else { throw LessonJournalError.noVideo(document.id) }
+        try Task.checkCancellation()
+        let hashes = try await verifier(document.id, spans.map(\.segment))
+        try Task.checkCancellation()
+        guard hashes.count == spans.count else { throw LessonJournalError.noVideo(document.id) }
+        return try zip(spans, hashes).map { span, hash in
+            let file = span.segment.file
+            guard hash.utf8.count == 64, hash.utf8.allSatisfy({ (48...57).contains($0) || (97...102).contains($0) }),
+                  file.sha256 == nil || file.sha256 == hash else { throw LessonJournalError.noVideo(document.id) }
+            let name = file.path.split(separator: "/").last.map(String.init) ?? file.path
+            return File(name: name, sha256: hash, startUs: span.startUs, endUs: span.endUs)
         }
     }
 
-    /// True when `document` holds a finalized original with every hash of `entry`.
-    static func holds(_ document: SessionDocument, _ entry: Entry) -> Bool {
-        guard document.recording.mediaAvailable else { return false }
-        let hashes = Set(document.recording.segments.filter(\.finalized).compactMap(\.file.sha256))
-        return entry.files.allSatisfy { hashes.contains($0.sha256) }
+    static func matches(_ expected: Entry, actual: [File]) -> Bool {
+        !expected.files.isEmpty && expected.files.count == actual.count &&
+            zip(expected.files, actual).allSatisfy { old, new in
+                old.hasTimeline && old.sha256 == new.sha256 && old.startUs == new.startUs && old.endUs == new.endUs
+            }
     }
 }
