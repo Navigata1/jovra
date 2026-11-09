@@ -10,10 +10,10 @@
     "northStar": "Complete a trustworthy native iOS tennis product; preserve the local core while advancing the recorded Studio and native-platform roadmap through explicit evidence gates.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-11-08T10:34:53+00:00",
+    "updated": "2026-11-09T08:15:00Z",
     "sessionCount": 3,
     "assessmentReport": "docs/reports/2026-11-02/JOVRA-State-of-the-Union-v1-2026-11-02.html",
-    "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md"
+    "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md"
   },
   "policies": {
     "merge": "auto",
@@ -187,20 +187,20 @@
         {
           "id": "P4-G2",
           "title": "Dedicated simulator core flow and export evidence",
-          "command": "xcodebuild test (CoreFlowUITests, FilesImportUITests, ScrollViewportAuditTests, FilesImportTests and StartupRecoveryTests) and independent JSON/CSV/FFmpeg artifact checks",
-          "status": "pending",
-          "evidence": "ops/mission/evidence/2026-11-08-coreflow-actual.json",
-          "lastRun": "2026-11-08T10:24:54Z",
-          "notes": "Bounded CoreFlow on tested iOS source d3049a8. Combined simulator run passed 11 tests. Independently verified actual session JSON, corrected point and stats CSV bytes, and a decoded 30-frame one-second clip. No independently sampled pre-export hash for this rerun. The final merged iOS tree has a separate signed focused receipt. Rerun full CoreFlow on current main for phase-close acceptance."
+          "command": "scripts/ios/core-flow-test.sh and independent JSON/CSV/FFmpeg artifact checks",
+          "status": "passed",
+          "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
+          "lastRun": "2026-11-09T08:04:50Z",
+          "notes": "Current-main 0706e4c iOS and spec trees: CoreFlow 1/1 on iPhone simulator; actual synthetic session/export schema, canonical bytes, corrected scoring and stats CSV, and full 30-frame clip decode independently passed. No separately sampled pre-export original hash for this rerun."
         },
         {
           "id": "P4-G3",
           "title": "Latest recorded required hosted checks and core dependency merges",
-          "command": "gh pr checks 392, 393 and 395 (separate exact-head check queries)",
+          "command": "gh pr checks 457 --repo Navigata1/jovra",
           "status": "passed",
-          "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
-          "lastRun": "2026-11-08T10:34:53+00:00",
-          "notes": "Current implementation receipts retain exact reviewed heads. Fresh required checks passed before each recorded merge. Manual iOS check skipped and excluded from hosted gate claims. lastRun is the receipt observation time."
+          "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
+          "lastRun": "2026-11-09T08:00:11Z",
+          "notes": "PR #457 reviewed head 6926587 passed all triggered automatic checks before its 0706e4c merge. Manual iOS was skipped and does not count as runtime proof. lastRun records merge time."
         },
         {
           "id": "P4-G4",
@@ -216,9 +216,9 @@
           "title": "Physical live capture, interruption and provider selection",
           "command": "Run the connected iPhone acceptance steps in the continuation handoff",
           "status": "pending",
-          "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
+          "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
           "lastRun": null,
-          "notes": "Successful Files selection through the system UI, live-camera start/stop, controlled interruptions, and unfinished or torn recordings still need separate receipts."
+          "notes": "Full February match imported through Files on iPhone and opened in Replay. Its retained original was copied back and independently matched the supplied SHA-256 and byte count. Temporary Files-enabled build was replaced by the standard build. Wider interruption, crash-loss bound and power-loss gates remain open; iPad audit fix is under verification. On earlier main d1f13ab, live-camera process termination and reopening passed once, and a separate pause/resume/save/replay passed. The first permission-sheet probe failed."
         }
       ],
       "tasks": [
@@ -364,6 +364,20 @@
             "mergedAt": "2026-11-08T10:34:30Z"
           },
           "notes": "T26 is split into bounded Files ingest and follow-ups for Photos/batches/duplicates/provider UX. This slice includes refusal and staging cleanup controls. Full T26 remains open. Accepted head bf18141. Squash 70aad22."
+        },
+        {
+          "id": "P4-FILES-MATCH",
+          "title": "Explicit singles match setup for Files import",
+          "status": "done",
+          "dependsOn": [
+            "P4-FILES-IMPORT"
+          ],
+          "pr": {
+            "number": 457,
+            "url": "https://github.com/Navigata1/jovra/pull/457",
+            "mergedAt": "2026-11-09T08:00:11Z"
+          },
+          "notes": "Explicit setup, per-file attestation and empty point log. Exact reviewed head 6926587 passed 8 simulator tests and all triggered automated CI; squash 0706e4c. Actual match provider selection and AX5 remain open under full T26."
         }
       ]
     }
@@ -737,20 +751,30 @@
       "mergedAt": "2026-11-08T10:34:30Z",
       "title": "Safely import one verified practice video from Files",
       "phase": "P4"
+    },
+    {
+      "number": 457,
+      "title": "Explicit singles match setup for Files import",
+      "url": "https://github.com/Navigata1/jovra/pull/457",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T08:00:11Z"
     }
   ],
   "resume": {
     "activePhase": "P4",
     "nextActions": [
-      "Read the November 8 continuation and refresh live main, PR ownership and exact check status.",
-      "Exercise a real Files selection on iPhone, then provider selection. Continue remaining T26 imports in bounded slices.",
-      "Exercise live camera, interruptions and torn recovery under T16/T17. Then continue Trash and deletion under T20/T56/T57.",
-      "Coordinate S88 #389 versus draft #394. Keep Android #378 behind its ADRs. Preserve separate Studio, hosted, watch and release gates."
+      "Continue T26 after the full real-match Files import and verified retained hash; cover remaining Photos, duplicates and provider criteria.",
+      "Diagnose iOS 27.2 Replay audit timeout. Contrast-first passed, all-types-first timed out, and the named checks passed at one position while the remaining all-mask bits timed out. Keep original full audit.",
+      "Review and integrate bounded #448, #449 and #447 with their parent branches; keep full acceptance criteria open.",
+      "Continue native iOS, Android, watch and Studio through the live ticket DAG and recorded owner gates.",
+      "Review and continue A02 draft #460 after its Pixel placeholder-shell test; preserve A01 owner ADR gates and disk floor."
     ],
     "blockers": [
-      "Native synthetic simulator and signed iPhone receipts are current for these bounded slices. Real media, physical UI, live camera, iOS 18 fallback and store evidence are pending.",
-      "Android build foundation #378 remains a draft with #375/#376 gates. No installable Android app was available on main.",
-      "Paid or hosted activation, founder pricing and G1\u2013G9 remain governed by their explicit requirements."
+      "Live calls, alarm, thermal, crash-loss bound and power-loss evidence remain incomplete. The match imported as a practice video.",
+      "iPad Replay and Export candidate passed full iOS 26.5 CoreFlow. iOS 27.2 full audits timed out; contrast and all seven named types passed individually at one position, and the remaining all-mask bits timed out. Full audit remains open.",
+      "Android foundation #378 requires ADR-owner issues #375 and #376; watch #407 has owner review and automation gates.",
+      "Privacy, external activation, store readiness and production acceptance remain governed by their explicit requirements.",
+      "The full watch UI suite was interrupted at the 8 GiB internal disk floor. Its focused alert test passed; disk headroom and the full suite must be rechecked."
     ],
     "conventions": [
       "Use source-bound current evidence; keep historical receipts and failures distinct.",
@@ -758,7 +782,7 @@
       "All GitHub CLI uses Navigata1-scoped GH_TOKEN without changing global active account.",
       "See PLAN for historical authorization: October9hold then recorded October11green light; this assessment performs no product expansion."
     ],
-    "handoff": "docs/handoff/CODEX-CONTINUATION-2026-11-08.md",
+    "handoff": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
     "assessment": "docs/reports/2026-11-02/README.md"
   }
 }
