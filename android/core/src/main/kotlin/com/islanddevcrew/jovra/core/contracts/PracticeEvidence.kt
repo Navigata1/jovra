@@ -31,8 +31,9 @@ class PracticeEvidence(
     enum class Side { A, B }
 
     val pointIds: List<OpaqueId>? = pointIds?.let {
-        require(it.size <= MAX_POINT_IDS) { "Practice evidence contains too many point IDs" }
-        Collections.unmodifiableList(ArrayList(it))
+        val snapshot = it.asSequence().take(MAX_POINT_IDS + 1).toList()
+        require(snapshot.size <= MAX_POINT_IDS) { "Practice evidence contains too many point IDs" }
+        Collections.unmodifiableList(snapshot)
     }
 
     init {
