@@ -28,6 +28,8 @@ public enum LessonJournalError: Error, Equatable, Sendable {
     case badDate(String)
     /// An edit tried to change the lesson's id or its Sample flag; neither ever changes.
     case identityChanged(String)
+    /// An edit tried to change links managed by the journal's relationship operations.
+    case relationshipsChanged(String)
     /// The stored lesson changed after the edit began; the edit is kept by the caller, nothing is overwritten.
     case changedElsewhere(String)
     /// "Find the video": the candidate is not the same video (its SHA-256 differs, whatever its name).
@@ -110,8 +112,8 @@ public struct LessonJournal: Sendable {
         LessonEdit(original: try await lesson(lessonId))
     }
 
-    /// Saves an edit when the stored lesson is still the one the edit began from; otherwise `changedElsewhere`, and
-    /// the newer stored lesson is never overwritten.
+    /// Saves an edit when the stored lesson is still the one the edit began from. Session, clip, cue and film links
+    /// stay as stored, so a draft cannot bypass the journal's relationship operations.
     @discardableResult
     public func save(_ edit: LessonEdit) async throws(LessonJournalError) -> Lesson {
         guard edit.hasUnsavedChanges else { return edit.original }
@@ -120,6 +122,10 @@ public struct LessonJournal: Sendable {
         }
         return try await mutate(edit.original.lessonId) { stored in
             guard stored == edit.original else { throw LessonJournalError.changedElsewhere(edit.original.lessonId) }
+            guard edit.draft.sessionIds == stored.sessionIds, edit.draft.clips == stored.clips,
+                  edit.draft.cues == stored.cues, edit.draft.filmIds == stored.filmIds else {
+                throw LessonJournalError.relationshipsChanged(stored.lessonId)
+            }
             stored = edit.draft
         }
     }

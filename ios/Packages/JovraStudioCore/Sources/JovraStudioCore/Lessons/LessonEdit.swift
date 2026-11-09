@@ -12,7 +12,7 @@ public enum LessonLeaveDecision: Equatable, Sendable {
 public struct LessonEdit: Equatable, Sendable {
     /// The lesson as stored when the edit began.
     public let original: Lesson
-    /// The fields being edited.
+    /// The fields being edited. Use the journal's relationship operations to change session, clip, cue or film links.
     public var draft: Lesson
 
     public init(original: Lesson) {
