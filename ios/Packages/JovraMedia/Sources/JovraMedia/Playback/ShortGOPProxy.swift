@@ -1,5 +1,4 @@
 @preconcurrency import AVFoundation
-import Darwin
 import Foundation
 import JovraCore
 
@@ -18,7 +17,7 @@ public struct ShortGOPProxy: Sendable {
     public static let maximumDimension = 1280
 
     /// Builds a distinct proxy beside `directory`'s other files and publishes it without replacing a file.
-    /// The caller owns the proxy directory and its cache lifecycle.
+    /// The caller supplies an existing private local directory and owns its cache lifecycle.
     public static func build(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> ShortGOPProxy {
         let staged = try await encode(from: source, into: directory, frameRate: frameRate)
         defer { staged.discard() }
@@ -27,28 +26,26 @@ public struct ShortGOPProxy: Sendable {
 
     /// A complete encode with its unique temporary name still in place.
     struct Staged: Sendable {
-        let partial: URL
-        let final: URL
+        let leaf: ProxyLeaf
+        let finalName: String
         let frameCount: Int
+        var partial: URL { leaf.url }
+        var final: URL { leaf.directory.url.appendingPathComponent(finalName) }
 
-        func discard() {
-            try? FileManager.default.removeItem(at: partial)
-        }
+        func discard() { leaf.discard() }
 
         func publish(expectedFrameCount: Int? = nil) throws -> ShortGOPProxy {
             if let expectedFrameCount, frameCount != expectedFrameCount {
                 throw ShortGOPProxyError.frameCountMismatch(expected: expectedFrameCount, written: frameCount)
             }
             try Task.checkCancellation()
-            guard renameatx_np(AT_FDCWD, partial.path, AT_FDCWD, final.path, UInt32(RENAME_EXCL)) == 0 else {
-                throw ShortGOPProxyError.writeFailed
-            }
-            return ShortGOPProxy(url: final, frameCount: frameCount)
+            return ShortGOPProxy(url: try leaf.publish(as: finalName), frameCount: frameCount)
         }
     }
 
     static func encode(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> Staged {
         try Task.checkCancellation()
+        let receiver = try ProxyDirectory(directory)
         let asset = AVURLAsset(url: source)
         guard let track = try await asset.loadTracks(withMediaType: .video).first else { throw ShortGOPProxyError.noVideo }
         let (naturalSize, transform, timeScale) = try await track.load(.naturalSize, .preferredTransform, .naturalTimeScale)
@@ -66,13 +63,21 @@ public struct ShortGOPProxy: Sendable {
         guard reader.canAdd(output) else { throw ShortGOPProxyError.readFailed }
         reader.add(output)
 
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let job = UUID().uuidString
-        let partial = directory.appendingPathComponent("\(job).proxy.partial.mov")
-        let final = directory.appendingPathComponent("\(job).proxy.mov")
+        let job = "JOVRA-Proxy-" + UUID().uuidString
+        let partial = try ProxyLeaf(receiver, name: "\(job).proxy.partial.mov", create: true)
         var keepPartial = false
-        defer { if !keepPartial { try? FileManager.default.removeItem(at: partial) } }
-        let writer = try AVAssetWriter(outputURL: partial, fileType: .mov)
+        defer { if !keepPartial { partial.discard() } }
+
+        // The writer needs a URL. Its pathname stays in process-owned system scratch, never in the receiver.
+        let temporary = try ProxyDirectory(FileManager.default.temporaryDirectory)
+        let scratch = try temporary.privateChild(job)
+        let movie = "encoded.mov"
+        defer {
+            if let output = try? ProxyLeaf(scratch, name: movie, create: false) { output.discard() }
+            temporary.discardPrivateChild(scratch)
+        }
+        try scratch.verify()
+        let writer = try AVAssetWriter(outputURL: scratch.url.appendingPathComponent(movie), fileType: .mov)
         let fps = max(1, Int(frameRate.framesPerSecond.rounded()))
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: [
             AVVideoCodecKey: AVVideoCodecType.h264,
@@ -97,6 +102,7 @@ public struct ShortGOPProxy: Sendable {
         writer.add(input)
 
         try Task.checkCancellation()
+        try scratch.verify()
         guard reader.startReading(), writer.startWriting() else {
             if reader.status == .reading { reader.cancelReading() }
             throw reader.status == .failed ? ShortGOPProxyError.readFailed : ShortGOPProxyError.writeFailed
@@ -129,8 +135,10 @@ public struct ShortGOPProxy: Sendable {
             if writer.status == .writing { writer.cancelWriting() }
             throw error
         }
+        let output = try ProxyLeaf(scratch, name: movie, create: false)
+        try output.copy(to: partial)
         keepPartial = true
-        return Staged(partial: partial, final: final, frameCount: written)
+        return Staged(leaf: partial, finalName: "\(job).proxy.mov", frameCount: written)
     }
 }
 
