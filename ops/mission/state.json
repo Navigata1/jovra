@@ -10,7 +10,7 @@
     "northStar": "Complete a trustworthy native iOS tennis product; preserve the local core while advancing the recorded Studio and native-platform roadmap through explicit evidence gates.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-11-09T10:49:29Z",
+    "updated": "2026-11-09T12:38:37Z",
     "sessionCount": 3,
     "assessmentReport": "docs/reports/2026-11-02/JOVRA-State-of-the-Union-v1-2026-11-02.html",
     "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md"
@@ -182,7 +182,7 @@
           "status": "passed",
           "evidence": "/Volumes/JovraA02-F46A6DA7/JOVRA-Core-97319ca-hahwlrk7/run-status.json",
           "lastRun": "2026-11-09T08:55:22Z",
-          "notes": "On main 97319ca: 12 XCTest and 122 Swift Testing passed, plus 209 spec documents, 82 native conformance outputs, two native exports and two bundles. Runtime evidence is local to the mounted SSD. Main 2bc30a6 added only the independently reviewed synthetic host helper; iOS and spec trees remain identical. Subsequent 2bc30a6 and d51d952 merges add the test harness only; product package and spec trees remain unchanged."
+          "notes": "On main 97319ca: 12 XCTest and 122 Swift Testing passed, plus 209 spec documents, 82 native conformance outputs, two native exports and two bundles. Runtime evidence is local to the mounted SSD. Main 2bc30a6 added only the independently reviewed synthetic host helper; iOS and spec trees remain identical. Subsequent 2bc30a6 and d51d952 merges add the test harness only; product package and spec trees remain unchanged. Documentation-only #467 left product and spec unchanged."
         },
         {
           "id": "P4-G2",
@@ -191,7 +191,7 @@
           "status": "passed",
           "evidence": "/Volumes/JovraA02-F46A6DA7/JOVRA-Review-97319ca.PxV5Ep/CoreFlow.xcresult",
           "lastRun": "2026-11-09T09:00:58Z",
-          "notes": "Main 97319ca full CoreFlow 1/1 passed on iPhone simulator, including Replay and Export audits and relaunch. Actual synthetic schema, references, canonical JSON, corrected points and stats CSV passed; pre/post original hash matched and original/export decoded through end, including 30 ordered export frames. Main 2bc30a6 added only the separate host test helper; tested iOS/spec and CoreFlow script remain unchanged. Subsequent helper and UI-test merges leave the app source, existing CoreFlow test and runner unchanged."
+          "notes": "Main 97319ca full CoreFlow 1/1 passed on iPhone simulator, including Replay and Export audits and relaunch. Actual synthetic schema, references, canonical JSON, corrected points and stats CSV passed; pre/post original hash matched and original/export decoded through end, including 30 ordered export frames. Main 2bc30a6 added only the separate host test helper; tested iOS/spec and CoreFlow script remain unchanged. Subsequent helper and UI-test merges leave the app source, existing CoreFlow test and runner unchanged. Documentation-only #467 left tested app and CoreFlow inputs unchanged."
         },
         {
           "id": "P4-G3",
@@ -807,6 +807,13 @@
       "url": "https://github.com/Navigata1/jovra/pull/469",
       "phase": "P4",
       "mergedAt": "2026-11-09T09:30:11Z"
+    },
+    {
+      "number": 467,
+      "title": "Record post-recovery main and watch verification",
+      "url": "https://github.com/Navigata1/jovra/pull/467",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T11:01:09Z"
     }
   ],
   "resume": {
@@ -819,15 +826,15 @@
       "Continue native iOS, Android, watch and Studio through the live ticket DAG and recorded owner gates.",
       "Review and continue A02 draft #460 after its Pixel placeholder-shell test; preserve A01 owner ADR gates and disk floor.",
       "Review draft #461 against #444; point-in-time media proof does not complete atomic receipt/lesson publication or native wiring.",
-      "Keep Android A03 local helper on hold after reproduced creation and release custody races; do not run it on real AVDs.",
-      "Continue duplicate Files choices in reviewed drafts #466/#470; cancellation race was fixed in hosted tests, but native simulator provider selection/cancel failed and physical/AX acceptance remains open."
+      "Review fake-only Android acquisition draft #471; the prior local operational helper remains unsafe and must not run on real AVDs. CLI, real SDK adapter and lifecycle remain open.",
+      "Continue reviewed duplicate Files drafts #466/#470. Physical wrong-file rejection/copy passed; native Cancel and swipe failed. User-assisted dismissal was observed and native picker reopened, but exact folder verification failed. The user clarified they saw the picker reopen and closed it again; automation did not complete its final exact-folder verification. Preserve original JOVRA and all seven alternate app/runner pairs; do not infer a full pass."
     ],
     "blockers": [
       "Live calls, alarm, thermal, crash-loss bound and power-loss evidence remain incomplete. The match imported as a practice video.",
       "The iPad candidate passed full iOS 26.5 CoreFlow. On iOS 27.2 a fresh first-only full .all diagnostic passed at the recorded viewport, but a subsequent fresh full CoreFlow again timed out in Replay before Export. The cause and full audit gate remain open.",
       "Android foundation #378 requires ADR-owner issues #375 and #376; watch #407 has owner review and automation gates.",
       "Privacy, external activation, store readiness and production acceptance remain governed by their explicit requirements.",
-      "A fresh full watch suite passed 19/19 on the reviewed Ultra 3 simulator pair; physical WatchConnectivity, companion installation, Series/SE matrix and owner gates remain open. The earlier disk-interrupted run is retained."
+      "Ultra 3 full watch suite passed 19/19. Fresh Series 11 and SE 3 full suites each failed 1 of 19 on separate health-surface assertions; focused diagnostic runs passed 1/1 and 3/3 without reproducing either failure. Full matrix, physical WatchConnectivity, companion installation and owner gates remain open."
     ],
     "conventions": [
       "Use source-bound current evidence; keep historical receipts and failures distinct.",
