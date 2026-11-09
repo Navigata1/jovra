@@ -206,26 +206,32 @@ struct ImportScreen: View {
         if request.intent.isMatch { containsFullMatch = false }
         work = Task {
             defer { work = nil; cancelling = false }
-            do {
-                // If publication completed before cancellation, acknowledge the actual saved session.
+            await completeFilesImport {
                 switch request.intent {
                 case .match(let setup):
-                    imported = try await library.importMatch(url, setup: setup, importingAgain: request.duplicatePermission)
+                    return try await library.importMatch(url, setup: setup, importingAgain: request.duplicatePermission)
                 case .practice(let name):
-                    imported = try await library.importFile(url, playerName: name, importingAgain: request.duplicatePermission)
+                    return try await library.importFile(url, playerName: name, importingAgain: request.duplicatePermission)
                 }
+            } onPublished: { id in
+                imported = id
                 duplicate = nil
-            } catch FilesImportError.duplicate(let existing) {
-                duplicate = .init(intent: request.intent, fingerprint: existing.fingerprint, existing: existing)
-            } catch FilesImportError.duplicateUnverified(let fingerprint) {
-                duplicate = .init(intent: request.intent, fingerprint: fingerprint, existing: nil)
-            } catch FilesImportError.differentDuplicateSelection {
-                issue = String(localized: "That is a different video. Select the same video or cancel to start a new import.", table: "Sessions.Import")
-            } catch is CancellationError {
-                return
-            } catch {
-                issue = String(localized: "Import could not be confirmed. Check your library before trying again. Your selected file was not changed.", table: "Sessions.Import")
+            } onFailure: { error in
+                presentImportFailure(error, intent: request.intent)
             }
+        }
+    }
+
+    private func presentImportFailure(_ error: any Error, intent: FilesImportIntent) {
+        switch error as? FilesImportError {
+        case .duplicate(let existing):
+            duplicate = .init(intent: intent, fingerprint: existing.fingerprint, existing: existing)
+        case .duplicateUnverified(let fingerprint):
+            duplicate = .init(intent: intent, fingerprint: fingerprint, existing: nil)
+        case .differentDuplicateSelection:
+            issue = String(localized: "That is a different video. Select the same video or cancel to start a new import.", table: "Sessions.Import")
+        default:
+            issue = String(localized: "Import could not be confirmed. Check your library before trying again. Your selected file was not changed.", table: "Sessions.Import")
         }
     }
 
@@ -243,6 +249,7 @@ struct ImportScreen: View {
             } catch is CancellationError {
                 return
             } catch {
+                guard !Task.isCancelled else { return }
                 duplicate?.existing = nil
                 duplicate?.confirmsFullMatch = false
             }

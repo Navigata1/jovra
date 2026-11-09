@@ -30,3 +30,17 @@ struct ImportDuplicateDecision {
         return FilesImportRequest(intent: intent, duplicatePermission: fingerprint)
     }
 }
+
+/// A completed save remains visible after Cancel. Only a failure can be discarded.
+@MainActor
+func completeFilesImport(_ operation: () async throws -> SessionID, onPublished: (SessionID) -> Void,
+                         onFailure: (any Error) -> Void) async {
+    do {
+        onPublished(try await operation())
+    } catch is CancellationError {
+        return
+    } catch {
+        guard !Task.isCancelled else { return }
+        onFailure(error)
+    }
+}

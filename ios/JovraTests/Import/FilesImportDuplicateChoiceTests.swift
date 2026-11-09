@@ -68,6 +68,66 @@ final class FilesImportDuplicateChoiceTests: XCTestCase {
     }
 
     @MainActor
+    func testLateFailuresDoNotPresentAfterCancellation() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let library = try LocalCaptureLibrary(root: root)
+        let source = try XCTUnwrap(Bundle.main.url(forResource: "fixture-camera-720p30", withExtension: "mp4"))
+        _ = try await library.importFile(source, playerName: "Original")
+        let receipt = try await duplicate(in: library, for: source)
+        let failures: [(label: String, error: any Error)] = [
+            ("verified duplicate", FilesImportError.duplicate(receipt)),
+            ("unverified duplicate", FilesImportError.duplicateUnverified(receipt.fingerprint)),
+            ("different selection", FilesImportError.differentDuplicateSelection),
+            ("read error", CocoaError(.fileReadUnknown)),
+        ]
+
+        for failure in failures {
+            let delivered = await Task { @MainActor in
+                var presented = false
+                await completeFilesImport {
+                    // The service is already delivering its result when Cancel reaches the UI task.
+                    withUnsafeCurrentTask { $0?.cancel() }
+                    throw failure.error
+                } onPublished: { _ in
+                    XCTFail("A nonpublication failure cannot acknowledge a save")
+                } onFailure: { _ in
+                    presented = true
+                }
+                return presented
+            }.value
+            XCTAssertFalse(delivered, "Late \(failure.label) was presented after Cancel")
+        }
+    }
+
+    @MainActor
+    func testSuccessfulPublicationIsStillAcknowledgedAfterCancellation() async {
+        let expected = SessionID(rawValue: "published")
+        let delivered = await Task { @MainActor in
+            var published: SessionID?
+            await completeFilesImport {
+                withUnsafeCurrentTask { $0?.cancel() }
+                return expected
+            } onPublished: { published = $0 } onFailure: { _ in
+                XCTFail("A completed publication cannot become a failure")
+            }
+            return published
+        }.value
+        XCTAssertEqual(delivered, expected)
+    }
+
+    @MainActor
+    func testUncancelledFailureIsStillPresented() async {
+        var observed: FilesImportError?
+        await completeFilesImport {
+            throw FilesImportError.differentDuplicateSelection
+        } onPublished: { _ in
+            XCTFail("A refused selection cannot acknowledge a save")
+        } onFailure: { observed = $0 as? FilesImportError }
+        XCTAssertEqual(observed, .differentDuplicateSelection)
+    }
+
+    @MainActor
     private func duplicate(in library: LocalCaptureLibrary, for source: URL) async throws -> FilesImportDuplicate {
         do {
             _ = try await library.importFile(source, playerName: "Later")
