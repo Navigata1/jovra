@@ -13,7 +13,10 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
-/** Stored provenance metadata from common.schema.json, independent of capability promotion. */
+/**
+ * Stored provenance metadata from common.schema.json, independent of capability promotion.
+ * Confidence keeps exact JVM decimal values, including some the Swift Decimal codec cannot represent.
+ */
 data class RecordProvenance(
     val status: Status,
     val source: String,
@@ -98,6 +101,7 @@ data class RecordProvenance(
             val token = element as? JsonPrimitive
             require(token != null && !token.isString) { "Expected a JSON confidence number" }
             return requireNotNull(token.content.toBigDecimalOrNull()) { "Expected a JSON confidence number" }
+                .stripTrailingZeros()
         }
 
         private fun confidenceToken(value: BigDecimal, maxOutputBytes: Int): JsonElement {
