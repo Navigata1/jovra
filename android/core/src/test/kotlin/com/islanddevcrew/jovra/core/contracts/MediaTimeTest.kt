@@ -77,6 +77,14 @@ class MediaTimeTest {
     }
 
     @Test
+    fun `nested values cannot enter the scalar decoder`() {
+        assertRefused("""{"value":[744],"timescale":240}""")
+        assertRefused("""{"value":744,"timescale":{"nested":240}}""")
+        val nested = "[".repeat(16_384) + "0" + "]".repeat(16_384)
+        assertRefused("""{"value":$nested,"timescale":240}""")
+    }
+
+    @Test
     fun `negative values nonpositive scales and numeric overflow are refused`() {
         for (input in listOf(
             """{"value":-1,"timescale":240}""",
