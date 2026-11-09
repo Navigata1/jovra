@@ -149,7 +149,8 @@ public final class PlaybackController {
     public func play() {
         invalidateStill()
         let restartFrame: Int?
-        if let loop, !loop.contains(currentFrame) {
+        if let loop, !loop.contains(currentFrame)
+            || (seeker.isIdle && !loop.contains(frame(at: player.currentTime()))) {
             restartFrame = loop.start
         } else if loop == nil, currentFrame >= frameCount - 1 {
             restartFrame = 0
@@ -165,7 +166,9 @@ public final class PlaybackController {
         Task { @MainActor in
             await seeker.settled()
             guard isPlaying else { return }
-            if restartFrame != nil, seeker.lastCompleted == nil {
+            if let loop {
+                guard loop.contains(frame(at: player.currentTime())) else { pause(); return }
+            } else if restartFrame != nil, seeker.lastCompleted == nil {
                 pause()
                 return
             }
@@ -232,13 +235,18 @@ public final class PlaybackController {
                     clearStillWhenLanded(request: request, target: target)
                 }
                 return
-            } catch is CancellationError {
-                return
             } catch {
-                // A proxy that cannot give back the exact frame is never used again; the original still lands.
-                proxyState = .failed
-                self.stepper = nil
+                guard request == stillRequest else { return }
+                if !(error is CancellationError) {
+                    // A proxy that cannot decode the frame is never used again.
+                    proxyState = .failed
+                    self.stepper = nil
+                }
                 await seeker.settled()
+                guard request == stillRequest else { return }
+                if seeker.lastCompleted != .init(time: time(of: target), precision: .exact) {
+                    currentFrame = clamp(frame(at: player.currentTime()))
+                }
                 return
             }
         }
@@ -264,15 +272,22 @@ public final class PlaybackController {
         loop = newLoop
         loopWraps = []
         player.currentItem?.forwardPlaybackEndTime = newLoop.map { itemTime(time(of: $0.end + 1)) } ?? .invalid
-        if let newLoop, !newLoop.contains(currentFrame) {
+        if let newLoop, !newLoop.contains(currentFrame) || !newLoop.contains(frame(at: player.currentTime())) {
+            let resume = isPlaying
+            if resume { player.pause() }
             invalidateStill()
             currentFrame = newLoop.start
             seeker.submit(time(of: newLoop.start), precision: .exact)
             let generation = stillRequest
             Task { @MainActor in
                 await seeker.settled()
-                if self.loop == newLoop, stillRequest == generation, seeker.lastCompleted == nil {
-                    currentFrame = clamp(frame(at: player.currentTime()))
+                guard self.loop == newLoop, stillRequest == generation else { return }
+                let actual = clamp(frame(at: player.currentTime()))
+                currentFrame = actual
+                if resume, isPlaying {
+                    guard newLoop.contains(actual) else { pause(); return }
+                    seeker.playheadMoved()
+                    player.rate = rate.value
                 }
             }
         }

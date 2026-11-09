@@ -99,6 +99,24 @@ struct PlaybackSeekOutcomeTests {
         #expect(controller.readout.frame == actual)
     }
 
+    @Test
+    func successfulActiveLoopPositioningResumesInsideTheLoop() async throws {
+        let (controller, _) = try await open()
+        defer { controller.close() }
+        await controller.seek(toFrame: 5)
+        try #require(controller.setRate(.quarter))
+        controller.play()
+        try await waitUntil("actual AVPlayer play") { controller.player.rate > 0 }
+        let loop = try #require(FrameLoop(start: 80, end: 100, frameCount: controller.frameCount))
+
+        controller.setLoop(loop)
+        try await waitUntil("positioned playback") {
+            controller.player.rate > 0 && loop.contains(controller.player.currentTime().frameIndex(at: .fps60))
+        }
+        #expect(controller.isPlaying)
+        #expect(loop.contains(controller.readout.frame))
+    }
+
     private func waitUntil(_ label: String, _ condition: () -> Bool) async throws {
         let deadline = ContinuousClock.now + .seconds(2)
         while !condition(), ContinuousClock.now < deadline { try await Task.sleep(for: .milliseconds(5)) }
