@@ -148,6 +148,7 @@ final class ReplayMissingOriginalTests: XCTestCase {
         let healthyFrame = await waitFor("replay.frame", in: healthyView)
         XCTAssertNotNil(healthyFrame)
         let calibrationPicker = await waitForSegmentPicker(in: healthyView)
+        if calibrationPicker == nil { attachHealthyReplayDiagnostic(window: healthyWindow, root: healthyView) }
         _ = try XCTUnwrap(calibrationPicker, "positive control: the existing picker is discoverable while video is healthy")
         healthyWindow.isHidden = true
         healthyWindow.rootViewController = nil
@@ -276,6 +277,40 @@ final class ReplayMissingOriginalTests: XCTestCase {
             try? await Task.sleep(for: .milliseconds(10))
         }
         return nil
+    }
+
+    private func attachHealthyReplayDiagnostic(window: UIWindow, root: UIView) {
+        var visited = Set<ObjectIdentifier>()
+        var lines: [String] = []
+
+        func visit(_ node: NSObject, depth: Int) {
+            guard depth < 40, lines.count < 350, visited.insert(ObjectIdentifier(node)).inserted else { return }
+            let identifier = (node as? UIAccessibilityIdentification)?.accessibilityIdentifier
+                ?? (node.responds(to: NSSelectorFromString("accessibilityIdentifier"))
+                    ? node.value(forKey: "accessibilityIdentifier") as? String : nil)
+            let frame = NSStringFromCGRect(node.accessibilityFrame)
+            lines.append("\(depth) \(type(of: node)) label=\(node.accessibilityLabel ?? "-") value=\(node.accessibilityValue ?? "-") id=\(identifier ?? "-") traits=\(node.accessibilityTraits.rawValue) frame=\(frame)")
+            var children: [Any] = node.accessibilityElements ?? []
+            if children.isEmpty {
+                let count = node.accessibilityElementCount()
+                if count != NSNotFound, count > 0 { children = (0..<count).compactMap { node.accessibilityElement(at: $0) } }
+            }
+            if let view = node as? UIView { children += view.subviews }
+            for case let child as NSObject in children { visit(child, depth: depth + 1) }
+        }
+        visit(root, depth: 0)
+
+        let hierarchy = XCTAttachment(string: lines.joined(separator: "\n"))
+        hierarchy.name = "Healthy two-segment Replay accessibility tree"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        let image = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+            window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+        }
+        let screenshot = XCTAttachment(image: image)
+        screenshot.name = "Healthy two-segment Replay"
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
     }
 
     private func waitForSegmentPicker(in root: NSObject) async -> NSObject? {
