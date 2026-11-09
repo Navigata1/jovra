@@ -10,7 +10,7 @@
     "northStar": "Complete a trustworthy native iOS tennis product; preserve the local core while advancing the recorded Studio and native-platform roadmap through explicit evidence gates.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-11-09T07:22:00Z",
+    "updated": "2026-11-09T07:31:00Z",
     "sessionCount": 3,
     "assessmentReport": "docs/reports/2026-11-02/JOVRA-State-of-the-Union-v1-2026-11-02.html",
     "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md"
@@ -218,7 +218,7 @@
           "status": "pending",
           "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
           "lastRun": null,
-          "notes": "Full real-match Files import is being probed; live calls, alarm, thermal, crash loss bound and power-loss gates remain open. iPad CoreFlow accessibility failed on main; fix validation is in progress."
+          "notes": "Full February match imported through Files on iPhone and opened in Replay. Its retained original was copied back and independently matched the supplied SHA-256 and byte count. Temporary Files-enabled build was replaced by the standard build. Wider interruption, crash-loss bound and power-loss gates remain open; iPad audit fix is under verification."
         }
       ],
       "tasks": [
@@ -742,13 +742,13 @@
   "resume": {
     "activePhase": "P4",
     "nextActions": [
-      "Finish the current iPhone real-match Files import and verify original hash and replay.",
+      "Continue T26 after the full real-match Files import and verified retained hash; cover remaining Photos, duplicates and provider criteria.",
       "Resolve the iPad Replay audit on proposed 725c0a3, preserving all failures and the unchanged audit.",
       "Review and integrate bounded #448, #449 and #447 with their parent branches; keep full acceptance criteria open.",
       "Continue native iOS, Android, watch and Studio through the live ticket DAG and recorded owner gates."
     ],
     "blockers": [
-      "Real match Files import, wider interruption and crash-loss evidence remain incomplete.",
+      "Live calls, alarm, thermal, crash-loss bound and power-loss evidence remain incomplete. The match imported as a practice video.",
       "Current-main iPad Replay Dynamic Type audit failed; the proposed fix has passed an AX5 test but its full audit timed out.",
       "Android foundation #378 requires ADR-owner issues #375 and #376; watch #407 has owner review and automation gates.",
       "Privacy, external activation, store readiness and production acceptance remain governed by their explicit requirements."

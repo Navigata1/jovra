@@ -73,3 +73,6 @@ Steps1–3 complete; step4 remains in progress. T03/330, order amendment332, loc
 - iPad main CoreFlow failed the Replay Pause Dynamic Type audit. Candidate AX5 controls passed but full CoreFlow audit timed out. Work remains active.
 - Review findings posted to #441, #442 and #443; bounded independently reviewed follow-up drafts #448, #449 and #447 published. Full original acceptance and parent branches remain open.
 - Supplied footage located and hashes checked. Full-match Files picker test is in progress with a temporary Files-enabled iPhone build. Private media and raw device diagnostics remain local.
+
+- Full private February match selected through the iPhone Files picker, imported and opened in Replay. The retained file copied back from the device independently matches the original byte count and SHA-256. Initial picker attempts are retained; normal iPhone build restored after the temporary Files-enabled test build. Further T26 acceptance stays open.
+- Drafts #451 and #452 record the unsigned Android owner proposal and the current-main S88 integration candidate. Neither closes its full ticket.

@@ -22,10 +22,13 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   Receipts remain in `/private/tmp/jovra-nov09/` on this Mac.
 - The supplied private media is described in `docs/fixtures/real-footage.md`.
   The original February match and two-minute excerpt matched their recorded
-  hashes. A temporary local iPhone build exposes its Documents folder for the
-  Files test. The first real-match picker test was interrupted after no import
-  staging appeared. The corrected picker-confirmation probe is running.
-  Keep video and device diagnostics out of GitHub.
+  hashes. The full match imported through Files and opened in Replay on iPhone.
+  The actual retained file copied back from the device matches the original
+  and session SHA-256 and byte count. The importer records a practice video.
+  A temporary Files-enabled build was used and the standard build restored.
+  One picker probe was interrupted and a second failed to start import before
+  selecting the actual file cell succeeded. The temporary Documents source
+  copy remains on the phone. Keep video and device diagnostics out of GitHub.
 
 ## Review and fixes
 
@@ -44,6 +47,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   protects the live event-admission seam; 144 StudioCore tests passed on its
   tested source. Automatic subscriptions, privacy exclusions, renderer wiring
   and general multi-file durability remain open.
+- The verified S88 planner continuation [#452](https://github.com/Navigata1/jovra/pull/452)
+  remains draft on current main. S06/S07 parity is covered, while S09 transition
+  parity and the oversized inherited scope still need work.
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
   and [#376](https://github.com/Navigata1/jovra/issues/376). Watch foundation
@@ -53,12 +59,11 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Immediate continuation
 
-1. Finish the real-match Files import and verify saved-original size and SHA-256
-   against the guide, plus replay. Preserve the interrupted first attempt.
-   Restore the normal app configuration afterward without uninstalling.
-2. Run the unchanged iPad CoreFlow audit against the proposed fix without
+1. Finish the unchanged iPad CoreFlow audit against the proposed fix without
    concurrent device/build activity. Preserve both earlier failures. Do not
    weaken the audit.
+2. Continue T26 Photos, batches, duplicate handling, provider and interruption
+   criteria. The full match is already imported as a practice video and verified.
 3. Re-query PR heads and gates, finish independent reviews, and integrate
    bounded fixes safely. Keep the original full ticket criteria open.
 4. Continue native platform and Studio work through their DAGs. Obtain the
