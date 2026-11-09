@@ -80,6 +80,40 @@ struct CloudDemoMoneyTests {
         #expect(CloudError.demoDisabled.message == "Demo mode does not upload or charge.")
     }
 
+    @Test("malformed upload sizes cannot produce parts or claim confirmed bytes")
+    func invalidUploadSizesHaveNoParts() throws {
+        let size = UploadSession.partSizeBytes
+        let firstOversized = 10_000 * size + 1
+        var session = UploadSession(uploadId: "u", sourceId: "camera-1", byteCount: firstOversized,
+                                    confirmedParts: [1], completed: false, sample: false)
+        try #require(session.partCount == 0, "The protocol supports at most 10,000 parts")
+        for byteCount in [Int.min, -2 * size, 0, firstOversized, Int.max] {
+            session.byteCount = byteCount
+            let decoded = try JSONDecoder().decode(UploadSession.self, from: JSONEncoder().encode(session))
+            #expect(decoded.partCount == 0)
+            #expect(decoded.remainingParts.isEmpty)
+            #expect(decoded.confirmedBytes == 0)
+        }
+    }
+
+    @Test("resume counts only unique valid confirmations, including the short final part")
+    func invalidPartNumbersDoNotConfirmBytes() throws {
+        let size = UploadSession.partSizeBytes
+        let session = UploadSession(uploadId: "u", sourceId: "camera-1", byteCount: 2 * size + 7,
+                                    confirmedParts: [Int.min, 0, 1, 1, 3, 4, Int.max], completed: false, sample: false)
+        let decoded = try JSONDecoder().decode(UploadSession.self, from: JSONEncoder().encode(session))
+        #expect(decoded.partCount == 3)
+        #expect(decoded.remainingParts == [2])
+        #expect(decoded.confirmedBytes == size + 7)
+
+        var lastSupported = decoded
+        lastSupported.byteCount = 10_000 * size
+        lastSupported.confirmedParts = [10_000]
+        #expect(lastSupported.partCount == 10_000)
+        #expect(lastSupported.remainingParts.count == 9_999)
+        #expect(lastSupported.confirmedBytes == size)
+    }
+
     @Test("the demo identity is the demo profile: no account reference and no credential")
     func noToken() async throws {
         #expect(try await DemoCloudClient().identity() == .demoProfile)

@@ -175,9 +175,9 @@ public actor DemoCloudClient: CloudClient {
     /// Deletion running or failed for the Sample film's cloud copies (three uploaded sources and the film);
     /// otherwise nothing is in the cloud to delete.
     public func deleteCloudCopies(projectId: String) async throws(CloudError) -> DeletionRequest {
-        let status: DeletionRequest.Status = switch scenario {
-        case .deletionRunning: .running(removed: 1, total: 4)
-        case .deletionFailed: .failed(removed: 3, total: 4)
+        let status: DeletionRequest.Status = switch (projectId == film.projectId, scenario) {
+        case (true, .deletionRunning): .running(removed: 1, total: 4)
+        case (true, .deletionFailed): .failed(removed: 3, total: 4)
         default: .nothingToDelete
         }
         return DeletionRequest(requestId: "deletion-sample-01", scope: "project:\(projectId)", status: status, sample: true)

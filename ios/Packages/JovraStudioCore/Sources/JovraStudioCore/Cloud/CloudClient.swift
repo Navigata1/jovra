@@ -237,6 +237,7 @@ public enum AcceptResult: Codable, Equatable, Sendable {
 /// (`{url, method, headers, expiresAt}`) are fetched per part by the HTTP adapter (S97) and never stored here.
 public struct UploadSession: Codable, Equatable, Sendable {
     public static let partSizeBytes = 32 * 1_024 * 1_024
+    private static let maximumPartCount = 10_000
 
     public var uploadId: String
     public var sourceId: String
@@ -254,19 +255,30 @@ public struct UploadSession: Codable, Equatable, Sendable {
         self.sample = sample
     }
 
-    public var partCount: Int { (byteCount + Self.partSizeBytes - 1) / Self.partSizeBytes }
+    /// A size outside the multipart protocol's bounds has no resumable parts.
+    public var partCount: Int {
+        guard byteCount > 0 else { return 0 }
+        let count = (byteCount - 1) / Self.partSizeBytes + 1
+        return count <= Self.maximumPartCount ? count : 0
+    }
 
     /// The parts still to send, in order: a resume never re-sends a confirmed part.
     public var remainingParts: [Int] {
+        let count = partCount
+        guard count > 0 else { return [] }
         let confirmed = Set(confirmedParts)
-        return partCount == 0 ? [] : (1...partCount).filter { !confirmed.contains($0) }
+        return (1...count).filter { !confirmed.contains($0) }
     }
 
-    /// Bytes the server confirmed (the last part may be short).
+    /// Bytes the server confirmed on valid, unique parts (the last part may be short).
     public var confirmedBytes: Int {
-        let confirmed = Set(confirmedParts)
+        let count = partCount
+        guard count > 0 else { return 0 }
+        let validParts = 1...count
+        let confirmed = Set(confirmedParts.filter(validParts.contains))
+        let lastPartBytes = byteCount - (count - 1) * Self.partSizeBytes
         return confirmed.reduce(0) { sum, part in
-            sum + (part == partCount ? byteCount - (partCount - 1) * Self.partSizeBytes : Self.partSizeBytes)
+            sum + (part == count ? lastPartBytes : Self.partSizeBytes)
         }
     }
 }
