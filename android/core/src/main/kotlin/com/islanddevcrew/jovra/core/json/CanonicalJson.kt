@@ -27,23 +27,34 @@ object CanonicalJson {
         IllegalArgumentException("Canonical JSON $limit exceeds $maxBytes bytes")
 
     /** Controlled input path without a caller-defined aggregate cap. */
-    fun canonicalize(bytes: ByteArray): ByteArray = canonicalize(bytes, Int.MAX_VALUE)
+    fun canonicalize(bytes: ByteArray): ByteArray = canonicalize(decodeJsonInput(bytes, Int.MAX_VALUE), Int.MAX_VALUE)
 
     /**
      * Bounds supplied bytes and canonical output. Callers reading external streams must separately
      * bound their read before creating the input byte array.
      */
-    fun canonicalize(bytes: ByteArray, limits: Limits): ByteArray {
-        if (bytes.size > limits.maxInputBytes) throw LimitExceeded(Limit.INPUT, limits.maxInputBytes)
-        return canonicalize(bytes, limits.maxOutputBytes)
-    }
+    fun canonicalize(bytes: ByteArray, limits: Limits): ByteArray =
+        canonicalize(decodeJsonInput(bytes, limits.maxInputBytes), limits.maxOutputBytes)
 
-    private fun canonicalize(bytes: ByteArray, maxOutputBytes: Int): ByteArray {
-        val text = try {
+    internal fun decodeJsonInput(bytes: ByteArray, maxInputBytes: Int): String {
+        require(maxInputBytes >= 0) { "JSON input limit must be non-negative" }
+        if (bytes.size > maxInputBytes) throw LimitExceeded(Limit.INPUT, maxInputBytes)
+        return try {
             Charsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString()
         } catch (error: CharacterCodingException) {
             throw IllegalArgumentException("Malformed UTF-8 JSON", error)
         }
+    }
+
+    // Reuse the strict grammar before a typed decoder reads the original scalar spellings.
+    internal fun validateFlatNumberObject(text: String) {
+        val value = Parser(text, OutputBudget(Int.MAX_VALUE)).parse()
+        require(value is ObjectValue && value.entries.values.all { it is NumberValue || it == Literal.ZERO }) {
+            "Expected a JSON object containing only number tokens"
+        }
+    }
+
+    private fun canonicalize(text: String, maxOutputBytes: Int): ByteArray {
         val budget = OutputBudget(maxOutputBytes)
         val value = Parser(text, budget).parse()
         // Parsed values retain only input-sized tokens. Nothing expands until the exact size is admitted.
@@ -206,7 +217,7 @@ object CanonicalJson {
         override fun writeTo(output: ByteBuffer) = forEachQuotedScalar(text) { output.putScalar(it) }
     }
 
-    private class ObjectValue(private val entries: Map<String, Value>) : Value {
+    private class ObjectValue(val entries: Map<String, Value>) : Value {
         override fun writeTo(output: ByteBuffer) {
             output.putAscii('{')
             for ((index, entry) in entries.entries.withIndex()) {
