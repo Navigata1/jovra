@@ -1,4 +1,5 @@
 import AVFoundation
+import Foundation
 import JovraCore
 import JovraMedia
 import Observation
@@ -9,7 +10,7 @@ import Observation
 final class ReplayPlaybackModel {
     enum OpenIssue: Equatable {
         case sessionUnavailable
-        case originalMissing
+        case archiveOnlyOriginal
         case originalUnavailable
     }
 
@@ -24,7 +25,7 @@ final class ReplayPlaybackModel {
     var error: String? {
         switch openIssue {
         case .sessionUnavailable: String(localized: "Couldn't open the session. Try again.", table: "Replay")
-        case .originalMissing, .originalUnavailable:
+        case .archiveOnlyOriginal, .originalUnavailable:
             String(localized: "The original isn't available on this iPhone.", table: "Replay")
         case nil: nil
         }
@@ -48,7 +49,10 @@ final class ReplayPlaybackModel {
             guard generation == token else { return }
             document = loaded
             guard let first = segments.first, loaded.recording.mediaAvailable else {
-                openIssue = .originalMissing
+                // Older documents may declare archive-only storage without an Original facet.
+                let archiveOnly = loaded.original.map { $0.state == .archiveOnly }
+                    ?? (loaded.storage.originals == .archivedOnly)
+                openIssue = archiveOnly && !loaded.recording.mediaAvailable ? .archiveOnlyOriginal : .originalUnavailable
                 return
             }
             await selectSegment(first.id)
@@ -68,6 +72,12 @@ final class ReplayPlaybackModel {
             let url = try await library.fileURL(session, relativePath: segment.file.path)
             try Task.checkCancellation()
             guard generation == token else { return }
+            let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+            guard attributes[.type] as? FileAttributeType == .typeRegular,
+                  FileManager.default.isReadableFile(atPath: url.path) else {
+                openIssue = .originalUnavailable
+                return
+            }
             player = AVPlayer(url: url)
             do {
                 let info = try await MediaProbe.probe(url)
@@ -89,7 +99,8 @@ final class ReplayPlaybackModel {
             }
         } catch {
             guard generation == token else { return }
-            openIssue = (error as? MediaLibraryError) == .notFound ? .originalMissing : .originalUnavailable
+            // The library's .notFound also covers indeterminate fileExists failures.
+            openIssue = .originalUnavailable
         }
     }
 

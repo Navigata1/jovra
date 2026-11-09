@@ -34,7 +34,7 @@ struct ReplayScreen: View {
                     if case .unavailable = library {
                         Text("Local library unavailable. Reopen JOVRA to try again.", tableName: "Replay")
                     } else {
-                        if playback.openIssue == .originalMissing, let message = playback.error {
+                        if playback.openIssue == .archiveOnlyOriginal, let message = playback.error {
                             VideoSurface(content: .missing(title: String(localized: "Video missing", table: "Replay"),
                                                            message: message, action: nil),
                                          zoom: .constant(.init()), topTrailing: { EmptyView() }, bottomBar: { EmptyView() })

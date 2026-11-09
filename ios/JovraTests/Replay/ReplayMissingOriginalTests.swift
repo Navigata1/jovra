@@ -48,6 +48,25 @@ final class ReplayMissingOriginalTests: XCTestCase {
         XCTAssertNil(find("replay.error", in: view), "the card replaces the generic error")
     }
 
+    func testLegacyArchiveOnlyWithoutOriginalFacetStillShowsMissingVideo() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        let id = SessionID(rawValue: UUID().uuidString)
+        var session = archiveSession(id: id, segmentPath: "originals/segment-000.mp4")
+        session.schemaVersion = .v1_1
+        session.original = nil
+        try await store.create(session)
+        let library = try LocalCaptureLibrary(root: root)
+        let window = try mount(ReplayRequest(session: id, point: nil, filter: nil), library: library)
+        defer { window.isHidden = true }
+        let view = try XCTUnwrap(window.rootViewController?.view)
+        let state = await waitFor("video.state", in: view)
+        XCTAssertNotNil(state)
+        XCTAssertNil(find("replay.error", in: view))
+        XCTAssertNil(find("replay.play", in: view))
+    }
+
     func testUnverifiedLookupFailureDoesNotClaimVideoIsMissing() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }
