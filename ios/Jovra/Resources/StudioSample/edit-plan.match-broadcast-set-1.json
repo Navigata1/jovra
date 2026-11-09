@@ -1,0 +1,247 @@
+{
+  "schemaVersion": "jovra.edit-plan/2",
+  "projectId": "sample-court-day",
+  "planId": "match-broadcast-set-1",
+  "planRevision": 1,
+  "sample": true,
+  "cleanAlternate": false,
+  "bindings": {
+    "sourceManifestRevision": 1,
+    "syncRevision": 2,
+    "eventRevision": 3,
+    "profileId": "match-broadcast",
+    "profileRevision": 1,
+    "keeperCatalogRevision": 1,
+    "brollCatalogRevision": 1
+  },
+  "output": {
+    "fps": {
+      "num": 30,
+      "den": 1
+    },
+    "width": 1920,
+    "height": 1080,
+    "aspect": "16:9",
+    "totalFrames": 9000,
+    "container": "mp4",
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000
+  },
+  "grade": {
+    "presetId": "none"
+  },
+  "sources": [
+    {
+      "id": "camera-1",
+      "role": "match",
+      "sha256": "3dd8384c35d332710ba3248a9588d8e274ddff6d26ceb2b2dfe409ca2b2051ff",
+      "proxy": {
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "width": 1920,
+        "height": 1080,
+        "frameCount": 216000,
+        "ptsTableSha256": "d3ef40eeb96e30c77316e347624752351434bd0b9ed8b9bfbe58444319d77afa"
+      },
+      "hasAudio": true,
+      "coverage": [
+        {
+          "inFrame": 0,
+          "outFrame": 216000,
+          "sessionStartUs": 0,
+          "rate": {
+            "num": 1000000000,
+            "den": 1000000000
+          }
+        }
+      ]
+    },
+    {
+      "id": "camera-2",
+      "role": "match",
+      "sha256": "637ced057c91240f310c4e851bafb3213cf886594d669f861e415d70dd1b8318",
+      "proxy": {
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "width": 1920,
+        "height": 1080,
+        "frameCount": 216000,
+        "ptsTableSha256": "6b89d4d90eb93ac76119dc55ef7420fce311cfc4505144897889bcf1bd7acfae"
+      },
+      "hasAudio": true,
+      "coverage": [
+        {
+          "inFrame": 0,
+          "outFrame": 216000,
+          "sessionStartUs": 119837,
+          "rate": {
+            "num": 1000300102,
+            "den": 1000000000
+          }
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "id": "m01",
+      "op": "title-card",
+      "outputInFrame": 0,
+      "outputOutFrame": 150,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "templateId": "card.match-intro",
+      "textRefs": [
+        "note-players"
+      ],
+      "overlayRefs": []
+    },
+    {
+      "id": "m02",
+      "op": "live",
+      "outputInFrame": 150,
+      "outputOutFrame": 4650,
+      "transitionIn": {
+        "type": "cut",
+        "frames": 0
+      },
+      "sourceId": "camera-1",
+      "sourceInFrame": 6000,
+      "sourceOutFrame": 15000,
+      "speed": {
+        "num": 1,
+        "den": 1
+      },
+      "sessionInUs": 100000000,
+      "keeperId": null,
+      "protectedFrames": [],
+      "overlayRefs": [
+        {
+          "kind": "score",
+          "refId": "game-07",
+          "eventRevision": 3,
+          "provenance": "reviewed"
+        }
+      ],
+      "framing": {
+        "mode": "fill"
+      }
+    },
+    {
+      "id": "m03",
+      "op": "replay",
+      "outputInFrame": 4650,
+      "outputOutFrame": 4890,
+      "transitionIn": {
+        "type": "dissolve",
+        "frames": 8
+      },
+      "sourceId": "camera-2",
+      "sourceInFrame": 14388,
+      "sourceOutFrame": 14628,
+      "speed": {
+        "num": 1,
+        "den": 2
+      },
+      "replayOf": "m02",
+      "labelTemplateId": "label.replay",
+      "overlayRefs": [],
+      "framing": {
+        "mode": "fill"
+      }
+    },
+    {
+      "id": "m04",
+      "op": "live",
+      "outputInFrame": 4890,
+      "outputOutFrame": 9000,
+      "transitionIn": {
+        "type": "dissolve",
+        "frames": 8
+      },
+      "sourceId": "camera-1",
+      "sourceInFrame": 15600,
+      "sourceOutFrame": 23820,
+      "speed": {
+        "num": 1,
+        "den": 1
+      },
+      "sessionInUs": 260000000,
+      "keeperId": null,
+      "protectedFrames": [],
+      "overlayRefs": [
+        {
+          "kind": "score",
+          "refId": "game-08",
+          "eventRevision": 3,
+          "provenance": "reviewed"
+        }
+      ],
+      "framing": {
+        "mode": "fill"
+      }
+    }
+  ],
+  "chapters": [
+    {
+      "id": "ch-intro",
+      "outputInFrame": 0,
+      "templateId": "chapter.intro"
+    },
+    {
+      "id": "ch-games",
+      "outputInFrame": 150,
+      "templateId": "chapter.games"
+    }
+  ],
+  "audio": {
+    "primarySourceId": "camera-1",
+    "narration": null,
+    "music": null,
+    "bed": [
+      {
+        "route": "silence",
+        "sourceId": null,
+        "sourceInFrame": null,
+        "outputInFrame": 0,
+        "outputOutFrame": 150,
+        "fadeInMs": 10,
+        "fadeOutMs": 10
+      },
+      {
+        "route": "primary-bed",
+        "sourceId": "camera-1",
+        "sourceInFrame": 6000,
+        "outputInFrame": 150,
+        "outputOutFrame": 4650,
+        "fadeInMs": 20,
+        "fadeOutMs": 20
+      },
+      {
+        "route": "hold-bed",
+        "sourceId": "camera-1",
+        "sourceInFrame": 15000,
+        "outputInFrame": 4650,
+        "outputOutFrame": 4890,
+        "fadeInMs": 20,
+        "fadeOutMs": 134
+      },
+      {
+        "route": "primary-bed",
+        "sourceId": "camera-1",
+        "sourceInFrame": 15600,
+        "outputInFrame": 4890,
+        "outputOutFrame": 9000,
+        "fadeInMs": 134,
+        "fadeOutMs": 20
+      }
+    ]
+  }
+}

@@ -1,0 +1,209 @@
+# CI run 42544227085 (backend-db), step "pgTAP assertions by id", commands_orchestrator_* files
+# supabase/tests/database/commands_orchestrator_01_catalog.test.sql
+1..25
+ok 1 - the S80 orchestration command list has 16 functions (9 stage and lease commands, 7 host reads and writes)
+ok 2 - T-DB-04: no S80 command is executable by authenticated, anon or service_role
+ok 3 - T-DB-04: no S80 command is executable by PUBLIC
+ok 4 - jovra_orchestrator may execute every S80 command
+ok 5 - T-DB-53 / T-DB-57: jovra_gateway cannot execute any orchestration command
+ok 6 - T-DB-57: the §13.1 lint query returns zero rows (no function executable by both roles)
+ok 7 - T-DB-57: both roles hold commands, so the zero-row lint above is not vacuous
+ok 8 - T-DB-57: every *_for_attempt function is executable by jovra_orchestrator and never by jovra_gateway
+ok 9 - T-DB-57 is not vacuous: the render-host upload and read twins exist (security-model §4.1), so the check above covers all seven *_for_attempt functions
+ok 10 - every app_gateway function belongs to exactly one command role (none is orphaned)
+ok 11 - T-DB-53: as jovra_gateway, every orchestration command (set_job_state, reserve_stage, finish_attempt, mark_artifact_verified, ...) is 42501 permission denied
+ok 12 - T-DB-53: jovra_gateway calling set_job_state is denied
+ok 13 - T-DB-57: a *_for_attempt function called as jovra_gateway is denied
+ok 14 - every S80 command is volatile, security definer, search_path '' and owned by jovra_owner
+ok 15 - the transition table, lease lock, rate-card, output and upload helpers run only inside definer commands
+ok 16 - render_jobs.resume_state exists
+ok 17 - render_attempts.charged_cost_micro_usd exists
+ok 18 - finding 32: the charge of a stage and the resume state are never granted to a client
+ok 19 - consumption once per (job, stage): a unique index allows one succeeded attempt per stage
+ok 20 - T-DB-55: rates-v0-inferred prices every job stage
+ok 21 - T-DB-55: every stage floor is positive
+ok 22 - T-DB-55: a zero stage floor cannot be stored (CHECK floor_micro_usd > 0)
+ok 23 - the rate-card tables have RLS and the a05 secret guard like every app_ops table
+ok 24 - T-DB-05: no client or command role reads or writes the rate card
+ok 25 - audit rows can name the orchestrator and a render attempt as their actor
+# supabase/tests/database/commands_orchestrator_02_stages.test.sql
+1..62
+ok 1 - fixture: three held jobs (heuristic cap 455,584; model caps 705,584)
+ok 2 - consented -> ready is not a transition of the contract (P0409 transition_not_allowed)
+ok 3 - compare-and-set: the job is not in the expected state (P0409 state_conflict)
+ok 4 - story 193: the job walks its real stages consented -> upload_pending -> queued -> normalizing
+ok 5 - a redelivered step whose target the job already reached replays
+ok 6 - normalizing -> paused
+ok 7 - pausing stores the state to resume and the pause time
+ok 8 - a resume can only return to the stored state, never skip ahead
+ok 9 - resume returns to the stored state
+ok 10 - resuming clears the resume state and the pause time
+ok 11 - a stored resume state must be one the job can return to (never ready)
+ok 12 - reserve_stage reserves the normalize stage of J1 (no lease yet)
+ok 13 - T-DB-55: the estimate is computed in SQL (191 MiB x 20 = 3,820 lifted to the 5,000 floor, never zero)
+ok 14 - T-DB-55: input_refs are the quote's verified sources of the job's project (not the declared one, not B's)
+ok 15 - the output plan lists the stage's outputs per angle, each with its kind's byte cap
+ok 16 - the hold, the spend ledger (stage_reserve) and an ids-only dispatch outbox row move in the same transaction
+ok 17 - T-DB-36: the same (job, stage, attempt) again returns the same attempt
+ok 18 - T-DB-36: one attempt row, nothing reserved or committed twice
+ok 19 - a stage is reserved only while the job is in that stage's state
+ok 20 - claim_attempt returns a jvl_ lease token once
+ok 21 - only the token's SHA-256 is stored; the attempt runs under a 5-minute lease with its stored inputs
+ok 22 - an output the stage's plan does not list is refused (P0422)
+ok 23 - finding 32: an output above its byte cap is refused (P0422)
+ok 24 - measurements are non-negative integers only
+ok 25 - no artifact is registered by a refused result
+ok 26 - the normalize stage succeeds with one listed output
+ok 27 - the stage is charged its actual cost (60 s x 60 = 3,600) and the rest of its reservation returns to the hold
+ok 28 - the output is registered as verifying under a server-generated key, with both sources in artifact_sources
+ok 29 - story 199: a later attempt of a charged stage replays the charged attempt; nothing is reserved again
+ok 30 - consumption once per (job, stage): a second succeeded attempt of a stage cannot exist
+ok 31 - J1 moves on to planning
+ok 32 - the plan stage of J1 is reserved
+ok 33 - T-DB-55: inputs are the verified sources plus this job's verified artifacts; a writing artifact, another job's and another project's are never listed
+ok 34 - T-DB-72: a heuristic plan stage reserves the floor and writes a planner budget of zero (no provider call)
+ok 35 - a stage never runs on a changed source set: a source rejected since the quote is P0409 inputs_changed
+ok 36 - J1 moves on to final_rendering
+ok 37 - the final render (1,500 x 120 s x 2 angles = 360,000) fits: 3,600 + 1,000 + 360,000 <= 455,584
+ok 38 - T-DB-36: a second final render while the first is open would cross the cap: P0402
+ok 39 - T-DB-36: the refused reservation left no attempt row and nothing reserved
+ok 40 - a stage reservation that would cross the environment's daily ceiling is P0402 (2,000 > 1,000 left)
+ok 41 - J3 (model planner, plan-by-job) reaches planning
+ok 42 - J3's plan stage is reserved
+ok 43 - T-DB-72 (a): the reservation covers the worst case of the first call and its one repair (2 x 90,000), and the budget carries exactly those numbers
+ok 44 - J4 (model planner) reaches planning with only 100,000 left in its hold
+ok 45 - T-DB-72 (b): when the hold covers one call but not the repair, the budget allows no repair call
+ok 46 - T-DB-72 (a): when not even one call fits (10,000 left), the budget is zero: no provider call, heuristic fallback
+ok 47 - the claim returns the plan stage's output plan
+ok 48 - T-DB-72 (c): measured tokens above the reservation (50,000 x 3 + 10,000 x 15 = 300,000 > 180,000) stop the job
+ok 49 - T-DB-72 (c): one stage_overrun commitment (120,000); the hold is charged at most the reservation
+ok 50 - T-DB-72 (c): without the overrun the next reservation (1,000) would fit under this ceiling
+ok 51 - T-DB-72 (c): the next reserve_stage sees the overrun in the day's total and is P0402
+ok 52 - the final render is claimed
+ok 53 - the final render registers the film and its thumbnail
+ok 54 - the film is keyed by its artifact id in the films bucket and its thumbnail is its child
+ok 55 - J1 moves on to verifying
+ok 56 - T-DB-53: as jovra_orchestrator, set_job_state(verifying -> ready) without a verified film is P0409
+ok 57 - the verify stage is reserved
+ok 58 - mark_artifact_verified, under the verify stage's lease, makes the film ready and verified
+ok 59 - the verify stage succeeds
+ok 60 - T-DB-53: with a verified film the job reaches ready
+ok 61 - ready settles the hold: 3,600 + 36,000 + 60 consumed, the open plan reservation (1,000) released and its attempt canceled
+ok 62 - nothing more can be reserved against a settled hold
+# supabase/tests/database/commands_orchestrator_03_leases.test.sql
+1..35
+ok 1 - fixture: job J is consented by the owner and moved to normalizing
+ok 2 - attempt 1 of normalize is reserved
+ok 3 - the host claims attempt 1
+ok 4 - a second claim of the same attempt is fenced
+ok 5 - a claim of an unknown attempt is P0404
+ok 6 - the host label is a lower-case slug (never free text)
+ok 7 - a heartbeat with another token is P0409 stale_lease
+ok 8 - the current token extends the lease and is told not to cancel
+ok 9 - the heartbeat mirrors the stage's progress onto the job
+ok 10 - T-DB-37: finish_attempt with a stale token is P0409 stale_lease
+ok 11 - T-DB-37: no artifact is registered and nothing is charged; the attempt keeps running
+ok 12 - T-DB-37: finish_attempt past leased_until is P0409 lease_expired
+ok 13 - an expired lease cannot be extended
+ok 14 - the reconciler's sweep marks the one expired attempt
+ok 15 - the attempt is lease_expired (retryable) and its reservation returned to the hold
+ok 16 - T-DB-37: a result after lease_expired is rejected
+ok 17 - T-DB-37: no artifact registered and nothing charged for the zombie attempt
+ok 18 - the retry (attempt 2) reserves again
+ok 19 - a failed attempt registers no outputs (P0422)
+ok 20 - attempt 2 fails (retryable)
+ok 21 - a failed attempt's real cost is recorded (2 s x 60 = 120) but never charged; its reservation returns
+ok 22 - a redelivered failure replays
+ok 23 - another result for a finished attempt is P0409 already_finished
+ok 24 - only the verify_output stage may mark an artifact verified
+ok 25 - attempt 3 succeeds
+ok 26 - story 199: the redelivered success replays
+ok 27 - story 199: one artifact and one charge (30 s x 60 = 1,800) for the stage, whatever the redeliveries
+ok 28 - the host route records a refused result after the command rolled back
+ok 29 - a refusal for an unknown attempt is recorded too
+ok 30 - one denied row each: actor_kind render_attempt, the attempt id when it resolves, else null
+ok 31 - the reason is a machine code, never free text
+ok 32 - an open cleanup reservation (1,000)
+ok 33 - the job is canceled
+ok 34 - canceling releases the unconsumed reservation, cancels the open attempt and fences its claim
+ok 35 - T-DB-47: three lease tokens were minted and none is stored in an app_ops row, an attempt or a job
+# supabase/tests/database/commands_orchestrator_04_plan_keys_deletion.test.sql
+1..27
+ok 1 - T-DB-68: a plan-by-job hold for PA
+ok 2 - T-DB-68: a plan-by-job hold for PB with the same output spec is allowed (another plan, another key)
+ok 3 - T-DB-68: a second plan-by-job acceptance for PA with the same output is P0409
+ok 4 - the plan-by-job job and its hold are keyed (PA, NULL, hash of the unplanned output)
+ok 5 - job A reaches planning
+ok 6 - job A's plan stage is reserved and claimed
+ok 7 - the plan stage succeeds and names the version V it produced
+ok 8 - T-DB-68: job and hold both moved to (PA, V, core.output_spec_sha256 with planRevision 1)
+ok 9 - the key moved in the transaction that recorded the stage's one charge
+ok 10 - job A reaches awaiting_review
+ok 11 - the owner asks for a quote naming V with the same output
+ok 12 - T-DB-68: the quote for V meets the moved hold: P0409, never a second hold and job
+ok 13 - T-DB-68: PA still has exactly one held reservation
+ok 14 - the owner revises to V2 within the remaining reservation
+ok 15 - T-DB-68: the revise moved output_spec_sha256 and the version on both job and reservation
+ok 16 - a separate job for (PB, VB1) holds that key
+ok 17 - job B (plan-by-job of PB) reaches planning
+ok 18 - §13.6: job B's plan stage producing VB1 cannot move onto the key job B1 holds (P0409 requote_conflict)
+ok 19 - the refused success changed nothing: no charge, the job and its hold keep their key, the attempt is still open
+ok 20 - the server path carries no user claims (auth.uid() is null)
+ok 21 - T-DB-73: the lesson-scope deletion step completes (no P0401 from check_story_plan_lessons)
+ok 22 - T-DB-73: the Progress plan keeps its other lesson
+ok 23 - T-DB-73: the plan's versions are invalid and stale
+ok 24 - T-DB-73: the lesson is gone, the other stays, and the request reached done with its counts
+ok 25 - a retried deletion step replays
+ok 26 - T-DB-73: a client cannot rewrite lesson_ids (only the server path may remove a lesson)
+ok 27 - T-DB-73: a coach without access to the remaining lesson cannot bind it into a plan (client path still checked)
+# supabase/tests/database/commands_orchestrator_05_attempt_io.test.sql
+1..49
+ok 1 - fixture: job J is consented by the owner and moved to normalizing
+ok 2 - T-DB-37 (upload path): an output upload with another lease token is P0409 stale_lease
+ok 3 - an output upload for an unknown attempt is P0404
+ok 4 - an output ref the normalize stage's stored output_plan does not list (film) is refused (P0422)
+ok 5 - finding 32: declared bytes one above the plan's cap for that output (64 MiB for a PTS table) are refused (P0422)
+ok 6 - an empty output cannot be declared
+ok 7 - a planned output within its cap opens a 3-part session under the server-generated key of the work bucket
+ok 8 - the output is a writing artifact of the job and attempt; its session names the attempt and output and holds no capability (the lease token is the host's only credential)
+ok 9 - a redelivered authorization returns the same open session
+ok 10 - a second declaration of the same output with other bytes is P0409 declaration_mismatch
+ok 11 - T-DB-57: the user commands record_part and complete_upload_check refuse a render-host session (P0404)
+ok 12 - a session belongs to the attempt that opened it: another attempt's current lease cannot touch it (P0404)
+ok 13 - the attempt records the multipart upload id; the session is open
+ok 14 - a part that is not exactly 32 MiB (except the last) is refused
+ok 15 - a part whose streamed SHA-256 differs from the host's digest is refused
+ok 16 - part 1 is recorded
+ok 17 - completion with parts 2 and 3 missing is P0409 parts_incomplete
+ok 18 - parts 2 and 3 (the last, 70,000,000 - 2 x 32 MiB = 2,891,136 bytes) are recorded
+ok 19 - a part list that differs from the stored one is P0409 parts_mismatch
+ok 20 - the completion check returns the stored parts in order, the only list R2's complete() is given
+ok 21 - an object whose R2 size differs from the declaration is refused
+ok 22 - the written output keeps state writing, now with its bytes and declared SHA-256, until finish_attempt reports it
+ok 23 - a written output cannot be authorized again within the attempt
+ok 24 - a listed source is read under its R2 key and the etag it was verified at (T-R2-15)
+ok 25 - another project's source, an unknown id and the attempt's own unverified output are not in input_refs (P0404)
+ok 26 - an input read with another lease token is refused
+ok 27 - a listed source rejected since the reservation is gone (P0410), never read
+ok 28 - only the verify_output stage reads artifacts through authorize_artifact_read_for_attempt
+ok 29 - a planned output that was never written cannot be reported (P0409 output_not_written)
+ok 30 - an output whose upload is still open cannot be reported either
+ok 31 - a reported output with other bytes than were written is P0409 output_mismatch
+ok 32 - the refused results changed nothing: no charge, the attempt runs, the output is still writing
+ok 33 - the attempt succeeds reporting the output it wrote
+ok 34 - the written output moves to verifying with both sources recorded; the unreported one is failed and its session aborted
+ok 35 - a finished attempt writes nothing more
+ok 36 - the cleanup attempt opens a session for its report
+ok 37 - T-DB-37 (upload path): the right token past leased_until is P0409 lease_expired
+ok 38 - the reconciler's sweep aborts the expired attempt's session and fails its unfinished output
+ok 39 - J moves on to verifying
+ok 40 - the verify stage is reserved and claimed
+ok 41 - the verify stage reads the output another attempt of its job wrote and that waits for verification
+ok 42 - the verify stage reads a ready artifact listed in its input_refs
+ok 43 - another job's artifact, another project's artifact and a failed output are not the verify stage's to read (P0404)
+ok 44 - an artifact read with another lease token is refused
+ok 45 - authorize_attempt_input stays limited to input_refs for the verify stage too
+ok 46 - the job is canceled
+ok 47 - canceling the job aborts the canceled attempt's open session and fails its unfinished output
+ok 48 - each opened session and each written output leaves one audit row (redeliveries and refusals leave none)
+ok 49 - T-DB-47: no lease token is stored in an upload session, part, artifact, attempt or audit row

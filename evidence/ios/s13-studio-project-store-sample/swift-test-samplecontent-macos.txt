@@ -1,0 +1,43 @@
+# swift test --filter SampleContent (macOS 27.2, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)), round 1 2026-11-09T00:39:52Z
+Building for debugging...
+[Computing dependencies]
+[1 / 5]
+Build complete! (0.58 sec)
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Studio sample content: bundled resources" started.
+◇ Suite "Studio sample content" started.
+◇ Test "the SHA-256 here agrees with the published test vectors and with the system tool" started.
+◇ Test "changing one byte in a scratch copy of the bundled records fails the check, naming the file" started.
+◇ Test "installing twice keeps the installed sample; a real project holding a sample id is never overwritten" started.
+◇ Test "a record that is not flagged Sample is refused, and so is a missing one" started.
+◇ Test "removing deletes every Sample project in one call and leaves real projects untouched" started.
+◇ Test "the match project's revisions, slots and owners come from the stored sample records" started.
+◇ Test "a missing or an extra file in the bundled copy fails the check" started.
+◇ Test "every installed project and every installed record is flagged Sample, byte for byte as shipped" started.
+◇ Test "each identity is made of records of the sample project, and the identities do not share a record" started.
+◇ Test "locking the installed sample reproduces the shipped lock as revision 2, with the reference's manifest hash" started.
+◇ Test "the bundled sample records are byte-identical to spec/studio/fixtures/records (sha256 equality)" started.
+◇ Suite "Studio sample content: the sample-scope rule" started.
+◇ Test "installing yields a match project whose score from the core fold reads Jon 6 6 / Alex 4 3, Final" started.
+◇ Test "with only real sessions, installing and removing the Studio sample adds no session and changes no number" started.
+◇ Test "with real and core sample sessions in the library, installing the Studio sample leaves stats and trends unchanged" started.
+✔ Test "the SHA-256 here agrees with the published test vectors and with the system tool" passed after 0.048 seconds.
+✔ Test "a record that is not flagged Sample is refused, and so is a missing one" passed after 0.463 seconds.
+✔ Test "each identity is made of records of the sample project, and the identities do not share a record" passed after 0.475 seconds.
+✔ Test "a missing or an extra file in the bundled copy fails the check" passed after 0.809 seconds.
+✔ Test "the bundled sample records are byte-identical to spec/studio/fixtures/records (sha256 equality)" passed after 0.914 seconds.
+✔ Test "changing one byte in a scratch copy of the bundled records fails the check, naming the file" passed after 0.921 seconds.
+✔ Suite "Studio sample content: bundled resources" passed after 0.922 seconds.
+✔ Test "every installed project and every installed record is flagged Sample, byte for byte as shipped" passed after 1.032 seconds.
+✔ Test "the match project's revisions, slots and owners come from the stored sample records" passed after 1.035 seconds.
+✔ Test "removing deletes every Sample project in one call and leaves real projects untouched" passed after 1.047 seconds.
+✔ Test "locking the installed sample reproduces the shipped lock as revision 2, with the reference's manifest hash" passed after 1.082 seconds.
+✔ Test "installing twice keeps the installed sample; a real project holding a sample id is never overwritten" passed after 1.128 seconds.
+✔ Test "installing yields a match project whose score from the core fold reads Jon 6 6 / Alex 4 3, Final" passed after 1.305 seconds.
+✔ Suite "Studio sample content" passed after 1.307 seconds.
+✔ Test "with only real sessions, installing and removing the Studio sample adds no session and changes no number" passed after 3.287 seconds.
+✔ Test "with real and core sample sessions in the library, installing the Studio sample leaves stats and trends unchanged" passed after 4.382 seconds.
+✔ Suite "Studio sample content: the sample-scope rule" passed after 4.396 seconds.
+✔ Test run with 14 tests in 3 suites passed after 4.396 seconds.
