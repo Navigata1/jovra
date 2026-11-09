@@ -107,6 +107,48 @@ returns text language sql volatile set search_path = extensions as $$
     'every table in schema ' || testing_schema || ' has row level security enabled')
 $$;
 
+-- A render host writes one planned output of its running attempt through the lease-fenced upload commands (S80):
+-- authorize, attach, every 32 MiB part, the completion check and "written". Returns the artifact id, or
+-- 'SQLSTATE message' of the first refusal (the commands' effects roll back with it). The caller must be a member of
+-- jovra_orchestrator; security invoker, so the commands are reached through that role's own privileges.
+create or replace function tests.write_attempt_output(p_attempt uuid, p_lease_token text, p_output_ref text,
+                                                      p_bytes bigint, p_sha256 bytea)
+returns text language plpgsql set search_path = '' as $$
+declare
+  v_lease   bytea := pg_catalog.sha256(pg_catalog.convert_to(p_lease_token, 'UTF8'));
+  v_auth    jsonb;
+  v_session uuid;
+  v_count   int;
+  v_bytes   bigint;
+  v_parts   jsonb := '[]';
+  v_state   text;
+  v_msg     text;
+begin
+  execute 'set local role jovra_orchestrator';
+  v_auth := app_gateway.authorize_output_upload_for_attempt(p_attempt, v_lease, p_output_ref, p_bytes, p_sha256,
+                                                            gen_random_uuid());
+  v_session := (v_auth ->> 'sessionId')::uuid;
+  v_count := (v_auth ->> 'partCount')::int;
+  perform app_gateway.attach_upload_id_for_attempt(p_attempt, v_lease, v_session, 'test-upload-' || v_session,
+                                                   gen_random_uuid());
+  for n in 1 .. v_count loop
+    v_bytes := case when n < v_count then 33554432 else p_bytes - (v_count - 1)::bigint * 33554432 end;
+    perform app_gateway.record_part_for_attempt(p_attempt, v_lease, v_session, n, v_bytes::int, 'etag-' || n,
+                                                pg_catalog.sha256(pg_catalog.convert_to('part-' || n, 'UTF8')),
+                                                pg_catalog.sha256(pg_catalog.convert_to('part-' || n, 'UTF8')),
+                                                gen_random_uuid());
+    v_parts := v_parts || pg_catalog.jsonb_build_array(pg_catalog.jsonb_build_object('n', n, 'etag', 'etag-' || n));
+  end loop;
+  perform app_gateway.complete_upload_check_for_attempt(p_attempt, v_lease, v_session, v_parts, gen_random_uuid());
+  perform app_gateway.mark_output_written_for_attempt(p_attempt, v_lease, v_session, p_bytes, gen_random_uuid());
+  execute 'reset role';
+  return v_auth ->> 'artifactId';
+exception when others then
+  get stacked diagnostics v_state = returned_sqlstate, v_msg = message_text;
+  return v_state || ' ' || v_msg;
+end
+$$;
+
 revoke all on all functions in schema tests from public;
 grant execute on all functions in schema tests to anon, authenticated, service_role;
 
