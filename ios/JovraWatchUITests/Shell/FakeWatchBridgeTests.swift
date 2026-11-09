@@ -154,7 +154,10 @@ final class FakeWatchBridgeTests: XCTestCase {
     }
 
     func testHigherBridgeSequenceCannotRegressTheHostEpoch() throws {
-        try assertRegressionRefused(.staleEpoch) { $0.hostEpoch -= 1 }
+        try assertRegressionRefused(.staleEpoch) {
+            $0.hostEpoch -= 1
+            $0.receipts = []
+        }
     }
 
     func testHigherBridgeSequenceCannotRegressTheSessionSnapshot() throws {
@@ -162,7 +165,11 @@ final class FakeWatchBridgeTests: XCTestCase {
     }
 
     func testHigherBridgeSequenceCannotRegressTheEventRevision() throws {
-        try assertRegressionRefused(.eventRevisionRegressed) { $0.eventRevision -= 1 }
+        try assertRegressionRefused(.eventRevisionRegressed) {
+            $0.eventRevision -= 1
+            $0.score?.eventRevision = $0.eventRevision
+            $0.receipts = []
+        }
     }
 
     func testSessionMarksSurviveSwitchingRoomsAndANewerEpochCanResetThem() throws {
@@ -173,6 +180,8 @@ final class FakeWatchBridgeTests: XCTestCase {
         other.hostEpoch = 1
         other.snapshotSeq = 1
         other.eventRevision = 0
+        other.score = nil
+        other.receipts = []
         bridge.deliverNow(try wireValidated(other))
         XCTAssertEqual(receiver.snapshot, other)
 
@@ -183,6 +192,8 @@ final class FakeWatchBridgeTests: XCTestCase {
         newEpoch.hostEpoch += 1
         newEpoch.snapshotSeq = 1
         newEpoch.eventRevision = 0
+        newEpoch.score = nil
+        newEpoch.receipts = []
         bridge.deliverNow(try wireValidated(newEpoch))
         XCTAssertEqual(receiver.lastOutcome, .accepted)
         XCTAssertEqual(receiver.snapshot, newEpoch)
