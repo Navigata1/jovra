@@ -63,6 +63,28 @@ jobs:
       - name: Label tool tests (the founder flow through the real window, in-process)
         # One test at a time, so the log names the test that was running if the process dies.
         run: swift test --package-path tools/label-tool --no-parallel
+      - name: Show crash reports when the tool's tests die
+        if: failure()
+        run: |
+          sleep 20
+          ls -la ~/Library/Logs/DiagnosticReports/ 2>/dev/null || true
+          for report in ~/Library/Logs/DiagnosticReports/*.ips; do
+            [ -f "$report" ] || continue
+            echo "== $report"
+            python3 - "$report" <<'PY'
+          import json, sys
+          text = open(sys.argv[1]).read()
+          head, _, body = text.partition("\n")
+          doc = json.loads(body)
+          print(json.loads(head).get("app_name"), doc.get("exception"), doc.get("termination"))
+          images = doc.get("usedImages", [])
+          for thread in doc.get("threads", []):
+              if thread.get("triggered"):
+                  for frame in thread.get("frames", [])[:40]:
+                      image = images[frame["imageIndex"]].get("name", "?") if frame.get("imageIndex", -1) < len(images) else "?"
+                      print("  ", image, frame.get("symbol", "?"), "+", frame.get("symbolLocation", ""))
+          PY
+          done
       - name: XCUITest on the built app
         run: scripts/benchmarks/label-tool-ui-test.sh
       - name: Keep the UI test result bundle
