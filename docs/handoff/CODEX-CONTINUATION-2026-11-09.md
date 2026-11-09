@@ -56,7 +56,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   iPad simulators were removed after receipts were retained. Companion install,
   real watch validation and W03 owner decisions stay open.
 - Studio demo boundary follow-up [#454](https://github.com/Navigata1/jovra/pull/454)
-  has passed 171 macOS package tests; Linux and full S14 acceptance remain open.
+  has passed 171 macOS package tests and its corrected-head Linux Studio job.
+  Full S14 acceptance and parent integration remain open.
 - [#441](https://github.com/Navigata1/jovra/pull/441) remains blocked on the
   failed 0.10 m calibration criterion and persisted validity. Bounded
   validity correction [#448](https://github.com/Navigata1/jovra/pull/448)
@@ -92,8 +93,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 ## Immediate continuation
 
 1. Finish diagnosing iOS 27.2 Replay audit timeouts. CoreFlow on current main
-   `0706e4c` has passed on the iPhone simulator. A contrast-first probe
-   passed; an all-types-first probe is running. Preserve all prior failures
+   `0706e4c` has passed on the iPhone simulator. The contrast-first probe
+   passed and the all-types-first probe timed out. Preserve all prior failures
    and keep the original full audit as the acceptance gate.
 2. Continue T26 Photos, batches, duplicate handling, provider and interruption
    criteria. The full match is already imported as a practice video and verified.

@@ -65,7 +65,7 @@ button.copy:hover{background:rgba(88,215,179,.2)}
 
 <main>
   <header class="hero">
-    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-11-09 08:09Z</p>
+    <p class="eyebrow">Mission Control &middot; State of the Union &middot; generated 2026-11-09 08:11Z</p>
     <h1>JOVRA core continuation</h1>
     <p class="tagline">Record safely. Review honestly. Own the export.</p>
     <div style="margin-top:14px">
@@ -75,7 +75,7 @@ button.copy:hover{background:rgba(88,215,179,.2)}
       <span class="chip amber">10/11 gates passed</span>
       <span class="chip ">50 PRs merged</span>
       <span class="chip ">sessions: 3</span>
-      <span class="chip ">updated: 2026-11-09T08:10:00Z</span>
+      <span class="chip ">updated: 2026-11-09T08:11:00Z</span>
     </div>
     <div class="bar big" role="img" aria-label="Overall progress 71%"><div class="fill" style="width:71%"></div></div>
     <p class="small muted" style="margin-top:6px">Overall: 71% of tasks complete &middot; repo Navigata1/jovra &middot; plan: ops/mission/PLAN.md</p>
@@ -265,21 +265,21 @@ Operating procedure:
       <td>2026-11-02T13:11:10.874209+00:00</td></tr><tr>
       <td><span class="chip green">passed</span></td>
       <td><b>Dedicated simulator core flow and export evidence</b><br><span class="small">Current-main 0706e4c iOS and spec trees: CoreFlow 1/1 on iPhone simulator; actual synthetic session/export schema, canonical bytes, corrected scoring and stats CSV, and full 30-frame clip decode independently passed. No separately sampled pre-export original hash for this rerun.</span></td>
-      <td><code>xcodebuild test (CoreFlowUITests, FilesImportUITests, ScrollViewportAuditTests, FilesImportTests and StartupRecoveryTests) and independent JSON/CSV/FFmpeg artifact checks</code></td>
+      <td><code>scripts/ios/core-flow-test.sh and independent JSON/CSV/FFmpeg artifact checks</code></td>
       <td>docs/handoff/CODEX-CONTINUATION-2026-11-09.md</td>
       <td>2026-11-09T08:04:50Z</td></tr><tr>
       <td><span class="chip green">passed</span></td>
-      <td><b>Latest recorded required hosted checks and core dependency merges</b><br><span class="small">Current implementation receipts retain exact reviewed heads. Fresh required checks passed before each recorded merge. Manual iOS check skipped and excluded from hosted gate claims. lastRun is the receipt observation time.</span></td>
-      <td><code>gh pr checks 392, 393 and 395 (separate exact-head check queries)</code></td>
-      <td>docs/handoff/CODEX-CONTINUATION-2026-11-08.md</td>
-      <td>2026-11-08T10:34:53+00:00</td></tr><tr>
-      <td><span class="chip green">passed</span></td>
-      <td><b>Signed iPhone finished-recovery and Files import integration</b><br><span class="small">Current main product source d1f13ab: physical iPhone 15 Pro Max live-camera process termination and reopened playback passed once; separately pause/resume/save/replay passed. Earlier permission-sheet probe failed. Loss bound and full physical gates remain open.</span></td>
-      <td><code>xcodebuild test with JovraTests/StartupRecoveryTests and JovraTests/FilesImportTests</code></td>
+      <td><b>Latest recorded required hosted checks and core dependency merges</b><br><span class="small">PR #457 reviewed head 6926587 passed all triggered automatic checks before its 0706e4c merge. Manual iOS was skipped and does not count as runtime proof. lastRun records merge time.</span></td>
+      <td><code>gh pr checks 457 --repo Navigata1/jovra</code></td>
       <td>docs/handoff/CODEX-CONTINUATION-2026-11-09.md</td>
-      <td>2026-11-09T07:15:39Z</td></tr><tr>
+      <td>2026-11-09T08:00:11Z</td></tr><tr>
+      <td><span class="chip green">passed</span></td>
+      <td><b>Signed iPhone finished-recovery and Files import integration</b><br><span class="small">Combined iOS tree 7ca1f93b78194d39baca390ef200d42db43779a2. Signed iPhone 15 Pro Max run passed 6. An earlier test failed with storageUnavailable from a device path alias, fixed in #395. Tests used synthetic media. Live camera, provider picker, and full hardware acceptance remain open.</span></td>
+      <td><code>xcodebuild test with JovraTests/StartupRecoveryTests and JovraTests/FilesImportTests</code></td>
+      <td>docs/handoff/CODEX-CONTINUATION-2026-11-08.md</td>
+      <td>2026-11-08T10:29:56Z</td></tr><tr>
       <td><span class="chip ">pending</span></td>
-      <td><b>Physical live capture, interruption and provider selection</b><br><span class="small">Full February match imported through Files on iPhone and opened in Replay. Its retained original was copied back and independently matched the supplied SHA-256 and byte count. Temporary Files-enabled build was replaced by the standard build. Wider interruption, crash-loss bound and power-loss gates remain open; iPad audit fix is under verification.</span></td>
+      <td><b>Physical live capture, interruption and provider selection</b><br><span class="small">Full February match imported through Files on iPhone and opened in Replay. Its retained original was copied back and independently matched the supplied SHA-256 and byte count. Temporary Files-enabled build was replaced by the standard build. Wider interruption, crash-loss bound and power-loss gates remain open; iPad audit fix is under verification. On earlier main d1f13ab, live-camera process termination and reopening passed once, and a separate pause/resume/save/replay passed. The first permission-sheet probe failed.</span></td>
       <td><code>Run the connected iPhone acceptance steps in the continuation handoff</code></td>
       <td>docs/handoff/CODEX-CONTINUATION-2026-11-09.md</td>
       <td>&mdash;</td></tr></tbody></table></div>
@@ -302,7 +302,7 @@ Gates not yet passed:
   - [pending] Physical live capture, interruption and provider selection  -&gt;  Run the connected iPhone acceptance steps in the continuation handoff
 Next actions (from last session):
   - Continue T26 after the full real-match Files import and verified retained hash; cover remaining Photos, duplicates and provider criteria.
-  - Diagnose iOS 27.2 Replay audit timeouts. Contrast-first probe passed and all-types-first diagnostic is running; keep original full audit.
+  - Diagnose iOS 27.2 Replay audit timeout. Contrast-first passed, all-types-first timed out, and the named checks passed at one position while the remaining all-mask bits timed out. Keep original full audit.
   - Review and integrate bounded #448, #449 and #447 with their parent branches; keep full acceptance criteria open.
   - Continue native iOS, Android, watch and Studio through the live ticket DAG and recorded owner gates.
 Known blockers:
