@@ -37,6 +37,8 @@ public enum StudioProjectStoreError: Error, Equatable, Sendable {
     case stalenessRefused(String)
     /// A plan made before a correction is never rendered as current (story 233); rebuild it first.
     case planStale(String)
+    /// A real project's primary core log cannot be verified from this store.
+    case eventFreshnessUnverified(String)
     /// A real project already uses this id.
     case idInUse(String)
 }
@@ -460,7 +462,7 @@ public actor StudioProjectStore {
     }
 
     /// The primary session's event-log version as stored in the core session store now.
-    private struct LiveEventLog: Equatable {
+    struct LiveEventLog: Equatable {
         let sessionId: String
         let version: Int
     }
@@ -480,7 +482,7 @@ public actor StudioProjectStore {
 
     /// Reading the session suspends, and another call on this actor may move the primary meanwhile, so the project
     /// is read again afterwards and the read repeated until both name the same session.
-    private func projectWithLiveEventLog(_ projectId: String) async throws -> (StudioProject, LiveEventLog?) {
+    func projectWithLiveEventLog(_ projectId: String) async throws -> (StudioProject, LiveEventLog?) {
         var live = try await liveEventLogVersion(of: project(projectId))
         for _ in 0..<Self.maxPrimaryReads {
             let current = try project(projectId)
