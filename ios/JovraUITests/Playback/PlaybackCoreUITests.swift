@@ -3,15 +3,15 @@ import XCTest
 /// T14: the shared player, video surface, jog strip and transport, driven through the DEBUG video lab on the
 /// bundled frame-counter fixtures and the synthetic sample match.
 final class PlaybackCoreUITests: XCTestCase {
-    override func setUpWithError() throws {
+    override func setUp() async throws {
         continueAfterFailure = false
-        XCUIDevice.shared.orientation = .portrait
+        await MainActor.run { XCUIDevice.shared.orientation = .portrait }
         try XCTSkipIf(FrameCounterFixtures.directory() == nil,
                       "Frame-counter fixtures are not rendered: python3 scripts/media/render.py --set frameCounter")
     }
 
-    override func tearDown() {
-        XCUIDevice.shared.orientation = .portrait
+    override func tearDown() async throws {
+        await MainActor.run { XCUIDevice.shared.orientation = .portrait }
     }
 
     @MainActor
