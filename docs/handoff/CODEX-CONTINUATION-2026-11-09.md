@@ -86,8 +86,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
   and [#376](https://github.com/Navigata1/jovra/issues/376). Watch foundation
-  [#407](https://github.com/Navigata1/jovra/pull/407) has the recorded owner
-  review and automation gates, with embedding tracked in #419. S88 #389/#394
+  [#407](https://github.com/Navigata1/jovra/pull/407) still requires a recorded
+  core-owner review and full automation verification, with embedding tracked in #419. S88 #389/#394
   still needs coordination.
 
 ## Immediate continuation
