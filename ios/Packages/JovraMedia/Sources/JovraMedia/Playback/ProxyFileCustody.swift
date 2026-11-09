@@ -21,7 +21,7 @@ private func proxyMetadata(_ descriptor: Int32) throws -> stat {
 
 private func refuseProxyACL(_ descriptor: Int32) throws {
     if let acl = acl_get_fd_np(descriptor, ACL_TYPE_EXTENDED) {
-        acl_free(acl)
+        acl_free(UnsafeMutableRawPointer(acl))
         throw ShortGOPProxyError.writeFailed
     }
     guard errno == ENOENT else { throw ShortGOPProxyError.writeFailed }
