@@ -6,29 +6,9 @@ final class ReplayFlowUITests: XCTestCase {
 
     @MainActor
     func testActualSavedRecordingOpensDecodedReplayAndDurableReviewedCorrection() throws {
-        let title = "Replay " + UUID().uuidString.prefix(8)
         let app = XCUIApplication.launchJovra { $0.demo = .off }
-        app.buttons["tab.record"].tap()
-        for (id, text) in [("capture.setup.title", title), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
-            let field = app.textFields[id]
-            XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(text + "\n")
-        }
-        app.swipeUp(); app.buttons["record.previewCapture"].tap()
-        XCTAssertTrue(app.buttons["capture.start"].waitForExistence(timeout: 10))
-        app.buttons["capture.start"].tap()
-        let saved = app.staticTexts["capture.confirmedTime"]
-        XCTAssertTrue(saved.waitForExistence(timeout: 15))
-        let enough = NSPredicate { _, _ in
-            let seconds = saved.label.split(separator: ":").last.flatMap { Int($0) } ?? 0
-            return seconds >= 4
-        }
-        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: enough, object: nil)], timeout: 12), .completed)
-        app.buttons["capture.stop"].tap()
-        let stop = app.buttons.matching(identifier: "capture.confirmStop").firstMatch
-        XCTAssertTrue(stop.waitForExistence(timeout: 5)); stop.tap()
-        XCTAssertTrue(app.staticTexts["capture.saved"].waitForExistence(timeout: 20))
-        app.buttons["capture.openLibrary"].tap()
-        let row = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'library.session.' AND label CONTAINS %@", title)).firstMatch
+        let title = recordFixture(in: app)
+        let row = sessionRow(title, in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 10)); row.tap()
         XCTAssertTrue(app.buttons["replay.play"].waitForExistence(timeout: 15))
         XCTAssertTrue(app.staticTexts["replay.sample"].exists)
@@ -59,6 +39,72 @@ final class ReplayFlowUITests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10)); row.tap()
         reveal(app.buttons["review.point.2"], in: app); app.buttons["review.point.2"].tap()
         XCTAssertTrue(app.staticTexts["review.scoreBefore"].label.contains("0–15"))
+    }
+
+    @MainActor
+    func testReplayTransportRemainsReachableAtAX5() {
+        let standard = XCUIApplication.launchJovra(contentSize: .large) { $0.demo = .off }
+        let title = recordFixture(in: standard)
+        let standardRow = sessionRow(title, in: standard)
+        XCTAssertTrue(standardRow.waitForExistence(timeout: 10)); standardRow.tap()
+        let standardPause = standard.buttons["replay.pause"]
+        XCTAssertTrue(standardPause.waitForExistence(timeout: 20))
+        reveal(standardPause, in: standard)
+        let standardPauseHeight = standardPause.frame.height
+        standard.terminate()
+
+        let app = XCUIApplication.launchJovra(contentSize: .accessibility5) { $0.demo = .off }
+        app.buttons["tab.sessions"].tap()
+        let row = sessionRow(title, in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 10)); row.tap()
+        XCTAssertTrue(app.staticTexts["replay.frame"].waitForExistence(timeout: 20))
+
+        let controls = ["replay.frame.previous", "replay.play", "replay.pause", "replay.frame.next"].map { app.buttons[$0] }
+        let pause = app.buttons["replay.pause"]
+        reveal(pause, in: app)
+        XCTAssertGreaterThan(pause.frame.height, standardPauseHeight, "Pause grows at AX5")
+        XCTAssertTrue(controls.allSatisfy { $0.exists })
+        let frames = controls.map { $0.frame }
+        for (above, below) in zip(frames, frames.dropFirst()) {
+            XCTAssertLessThanOrEqual(above.maxY, below.minY, "Replay transport stacks in reading order at AX5")
+        }
+        for control in controls {
+            reveal(control, in: app)
+            XCTAssertTrue(control.isEnabled, control.identifier)
+            XCTAssertGreaterThanOrEqual(control.frame.width, 44, control.identifier)
+            XCTAssertGreaterThanOrEqual(control.frame.height, 44, control.identifier)
+        }
+        reveal(pause, in: app)
+        attachScreenshot(app, name: "replay-transport-ax5")
+    }
+
+    @MainActor private func recordFixture(in app: XCUIApplication) -> String {
+        let title = "Replay " + UUID().uuidString.prefix(8)
+        app.buttons["tab.record"].tap()
+        for (id, text) in [("capture.setup.title", title), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
+            let field = app.textFields[id]
+            XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(text + "\n")
+        }
+        app.swipeUp(); app.buttons["record.previewCapture"].tap()
+        XCTAssertTrue(app.buttons["capture.start"].waitForExistence(timeout: 10))
+        app.buttons["capture.start"].tap()
+        let saved = app.staticTexts["capture.confirmedTime"]
+        XCTAssertTrue(saved.waitForExistence(timeout: 15))
+        let enough = NSPredicate { _, _ in
+            let seconds = saved.label.split(separator: ":").last.flatMap { Int($0) } ?? 0
+            return seconds >= 4
+        }
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: enough, object: nil)], timeout: 12), .completed)
+        app.buttons["capture.stop"].tap()
+        let stop = app.buttons.matching(identifier: "capture.confirmStop").firstMatch
+        XCTAssertTrue(stop.waitForExistence(timeout: 5)); stop.tap()
+        XCTAssertTrue(app.staticTexts["capture.saved"].waitForExistence(timeout: 20))
+        app.buttons["capture.openLibrary"].tap()
+        return title
+    }
+
+    @MainActor private func sessionRow(_ title: String, in app: XCUIApplication) -> XCUIElement {
+        app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'library.session.' AND label CONTAINS %@", title)).firstMatch
     }
 
     @MainActor private func replace(_ field: XCUIElement, with text: String) {
