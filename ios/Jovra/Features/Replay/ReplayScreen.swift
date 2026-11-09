@@ -71,17 +71,19 @@ struct ReplayScreen: View {
                 }
             }.aspectRatio(16 / 9, contentMode: .fit).frame(minHeight: 180)
                 .clipShape(RoundedRectangle(cornerRadius: Radius.card))
-            if playback.segments.count > 1 {
-                Picker(String(localized: "Recording segment", table: "Replay"), selection: Binding(
-                    get: { playback.selectedSegmentID ?? "" },
-                    set: { id in Task { await playback.selectSegment(id) } })) {
-                    ForEach(Array(playback.segments.enumerated()), id: \.element.id) { offset, segment in
-                        Text("Segment \(JovraFormat.count(offset + 1))", tableName: "Replay").tag(segment.id)
-                    }
-                }.pickerStyle(.menu).frame(minHeight: 52).disabled(playback.isWorking)
-                Text("Segments play separately; recording gaps are preserved.", tableName: "Replay")
-                    .font(.jovraLabel).fixedSize(horizontal: false, vertical: true)
-            }
+        }
+        if playback.document?.recording.mediaAvailable == true, playback.segments.count > 1 {
+            Picker(String(localized: "Recording segment", table: "Replay"), selection: Binding(
+                get: { playback.selectedSegmentID ?? "" },
+                set: { id in Task { await playback.selectSegment(id) } })) {
+                ForEach(Array(playback.segments.enumerated()), id: \.element.id) { offset, segment in
+                    Text("Segment \(JovraFormat.count(offset + 1))", tableName: "Replay").tag(segment.id)
+                }
+            }.pickerStyle(.menu).frame(minHeight: 52).disabled(playback.isWorking)
+            Text("Segments play separately; recording gaps are preserved.", tableName: "Replay")
+                .font(.jovraLabel).fixedSize(horizontal: false, vertical: true)
+        }
+        if playback.player != nil {
             Text(playback.frameStatus).font(.jovraLabel).fixedSize(horizontal: false, vertical: true)
             if let frame = playback.frame {
                 Text("Selected decoded frame", tableName: "Replay").font(.jovraLabel)
