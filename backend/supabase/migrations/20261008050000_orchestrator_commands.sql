@@ -161,7 +161,7 @@ language sql immutable set search_path = '' as $$
            'outputRef', o.ref, 'kind', o.kind, 'maxBytes', app_private.output_byte_ceiling(o.kind)) order by o.ord),
          '[]'::jsonb)
     from (select n * 10 + v.k as ord, v.r || '-' || n as ref, v.kind
-            from pg_catalog.generate_series(1, pg_catalog.greatest(1, pg_catalog.least(coalesce(p_angles, 1), 6))) n
+            from pg_catalog.generate_series(1, greatest(1, least(coalesce(p_angles, 1), 6))) n
            cross join (values (1, 'analysis-proxy', 'analysis_proxy'), (2, 'render-proxy', 'render_proxy'),
                               (3, 'pts-table', 'pts_table')) v(k, r, kind)
            where p_stage = 'normalize'
@@ -542,7 +542,7 @@ begin
 
   -- The estimate, in SQL from the rate card and the quote's inputs, never below the stage's positive floor (T-DB-55).
   v_mib := ((v_quote.inputs ->> 'verifiedBytes')::bigint + 1048575) / 1048576;
-  v_est := pg_catalog.greatest(v_rate.floor_micro_usd,
+  v_est := greatest(v_rate.floor_micro_usd,
              v_rate.per_verified_mib_micro_usd * v_mib
              + v_rate.per_output_angle_second_micro_usd
                * (v_quote.inputs -> 'outputSpec' ->> 'durationTargetSec')::bigint
@@ -555,13 +555,13 @@ begin
     if v_quote.planner_choice = 'model' then
       v_call := app_private.planner_call_cost(v_card);
       v_free := v_hold.cap_cost_micro_usd - v_hold.reserved_cost_micro_usd;
-      if v_call > 0 and pg_catalog.greatest(v_est, 2 * v_call) <= v_free then
-        v_est := pg_catalog.greatest(v_est, 2 * v_call);
+      if v_call > 0 and greatest(v_est, 2 * v_call) <= v_free then
+        v_est := greatest(v_est, 2 * v_call);
         v_budget := pg_catalog.jsonb_build_object('maxImages', v_card.planner_max_images,
           'maxInputTokens', v_card.planner_max_input_tokens, 'maxOutputTokens', v_card.planner_max_output_tokens,
           'effort', v_card.planner_effort, 'repairAllowed', true);
-      elsif v_call > 0 and pg_catalog.greatest(v_est, v_call) <= v_free then
-        v_est := pg_catalog.greatest(v_est, v_call);
+      elsif v_call > 0 and greatest(v_est, v_call) <= v_free then
+        v_est := greatest(v_est, v_call);
         v_budget := pg_catalog.jsonb_build_object('maxImages', v_card.planner_max_images,
           'maxInputTokens', v_card.planner_max_input_tokens, 'maxOutputTokens', v_card.planner_max_output_tokens,
           'effort', v_card.planner_effort, 'repairAllowed', false);
@@ -748,7 +748,7 @@ begin
   end if;
 
   -- 4b. success: the stage's one charge, at most its reservation (once per (job, stage), unique index)
-  v_charge := pg_catalog.least(v_cost, v_try.reserved_cost_micro_usd);
+  v_charge := least(v_cost, v_try.reserved_cost_micro_usd);
   begin
     update public.render_attempts
        set state = 'succeeded', measurements = p_measurements, actual_cost_micro_usd = v_cost,
