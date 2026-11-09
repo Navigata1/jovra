@@ -17,7 +17,7 @@ public struct ShortGOPProxy: Sendable {
     public static let maximumDimension = 1280
 
     /// Builds a distinct proxy beside `directory`'s other files and publishes it without replacing a file.
-    /// The caller supplies an existing private local directory and owns its cache lifecycle.
+    /// The caller supplies an existing private local directory on the scratch volume and owns its cache lifecycle.
     public static func build(from source: URL, into directory: URL, frameRate: FrameRate) async throws -> ShortGOPProxy {
         let staged = try await encode(from: source, into: directory, frameRate: frameRate)
         defer { staged.discard() }
@@ -27,19 +27,24 @@ public struct ShortGOPProxy: Sendable {
     /// A complete encode with its unique temporary name still in place.
     struct Staged: Sendable {
         let leaf: ProxyLeaf
+        let temporary: ProxyDirectory
+        let receiver: ProxyDirectory
         let finalName: String
         let frameCount: Int
         var partial: URL { leaf.url }
-        var final: URL { leaf.directory.url.appendingPathComponent(finalName) }
+        var final: URL { receiver.url.appendingPathComponent(finalName) }
 
-        func discard() { leaf.discard() }
+        func discard() {
+            leaf.discard()
+            temporary.discardPrivateChild(leaf.directory)
+        }
 
         func publish(expectedFrameCount: Int? = nil) throws -> ShortGOPProxy {
             if let expectedFrameCount, frameCount != expectedFrameCount {
                 throw ShortGOPProxyError.frameCountMismatch(expected: expectedFrameCount, written: frameCount)
             }
             try Task.checkCancellation()
-            return ShortGOPProxy(url: try leaf.publish(as: finalName), frameCount: frameCount)
+            return ShortGOPProxy(url: try leaf.publish(to: receiver, as: finalName), frameCount: frameCount)
         }
     }
 
@@ -64,17 +69,16 @@ public struct ShortGOPProxy: Sendable {
         reader.add(output)
 
         let job = "JOVRA-Proxy-" + UUID().uuidString
-        let partial = try ProxyLeaf(receiver, name: "\(job).proxy.partial.mov", create: true)
-        var keepPartial = false
-        defer { if !keepPartial { partial.discard() } }
-
-        // The writer needs a URL. Its pathname stays in process-owned system scratch, never in the receiver.
+        // AVAssetWriter needs a URL. The caller cannot choose its private, exclusive scratch pathname.
         let temporary = try ProxyDirectory(FileManager.default.temporaryDirectory)
         let scratch = try temporary.privateChild(job)
         let movie = "encoded.mov"
+        var keepScratch = false
         defer {
-            if let output = try? ProxyLeaf(scratch, name: movie, create: false) { output.discard() }
-            temporary.discardPrivateChild(scratch)
+            if !keepScratch {
+                if let output = try? ProxyLeaf(scratch, name: movie) { output.discard() }
+                temporary.discardPrivateChild(scratch)
+            }
         }
         try scratch.verify()
         let writer = try AVAssetWriter(outputURL: scratch.url.appendingPathComponent(movie), fileType: .mov)
@@ -135,10 +139,10 @@ public struct ShortGOPProxy: Sendable {
             if writer.status == .writing { writer.cancelWriting() }
             throw error
         }
-        let output = try ProxyLeaf(scratch, name: movie, create: false)
-        try output.copy(to: partial)
-        keepPartial = true
-        return Staged(leaf: partial, finalName: "\(job).proxy.mov", frameCount: written)
+        let output = try ProxyLeaf(scratch, name: movie)
+        keepScratch = true
+        return Staged(leaf: output, temporary: temporary, receiver: receiver, finalName: "\(job).proxy.mov",
+                      frameCount: written)
     }
 }
 

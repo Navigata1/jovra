@@ -58,6 +58,7 @@ public final class PlaybackController {
     @ObservationIgnored var decodeProxyFrame: @MainActor (ProxyBackwardStepper, Int) async throws -> PlaybackFrame = {
         try await $0.frame(at: $1)
     }
+    @ObservationIgnored var beforeProxyHandoff: (@MainActor (URL) async -> Void)?
     @ObservationIgnored private lazy var seeker = ChaseSeeker { [weak self] time, precision in
         await self?.performSeek(to: time, precision: precision) ?? false
     }
@@ -367,7 +368,11 @@ public final class PlaybackController {
                 self.proxyState = .failed
                 return
             }
-            // Publish on the same actor as close(), without suspension between acceptance and rename.
+            if let beforeProxyHandoff = self.beforeProxyHandoff {
+                await beforeProxyHandoff(staged.partial)
+            }
+            // Accept and publish on the same actor as close(), with no suspension between them.
+            guard !self.isClosed else { return }
             do {
                 let proxy = try staged.publish(expectedFrameCount: expected)
                 self.stepper = try ProxyBackwardStepper(proxy: proxy, frameRate: rate)

@@ -43,21 +43,30 @@ struct ShortGOPProxyCustodyTests {
         let ownBytes = try Data(contentsOf: staged.partial)
         let detached = root.appendingPathComponent("detached")
         let authentic: URL
+        let replacement: URL
         if replacedReceiver {
             try files.moveItem(at: receiver, to: detached)
             _ = try directory("proxies", in: root)
-            authentic = detached.appendingPathComponent(staged.partial.lastPathComponent)
+            authentic = staged.partial
+            replacement = receiver.appendingPathComponent(staged.partial.lastPathComponent)
         } else {
             try files.moveItem(at: staged.partial, to: detached)
             authentic = detached
+            replacement = staged.partial
         }
-        try sentinel.write(to: staged.partial, options: .withoutOverwriting)
+        try sentinel.write(to: replacement, options: .withoutOverwriting)
 
         #expect(throws: ShortGOPProxyError.writeFailed) { try staged.publish() }
+        #expect(try Data(contentsOf: authentic) == ownBytes)
         staged.discard()
         #expect(!files.fileExists(atPath: staged.final.path))
-        #expect((try? Data(contentsOf: staged.partial)) == sentinel)
-        #expect(try Data(contentsOf: authentic) == ownBytes)
+        #expect((try? Data(contentsOf: replacement)) == sentinel)
+        if replacedReceiver {
+            #expect(try files.contentsOfDirectory(atPath: detached.path).isEmpty)
+            #expect(!files.fileExists(atPath: authentic.path))
+        } else {
+            #expect(try Data(contentsOf: authentic) == ownBytes)
+        }
         #expect(try Data(contentsOf: source) == original)
     }
 
@@ -75,9 +84,10 @@ struct ShortGOPProxyCustodyTests {
         try files.moveItem(at: detached.appendingPathComponent("proxies"), to: receiver)
 
         #expect(throws: ShortGOPProxyError.writeFailed) { try staged.publish() }
+        #expect((try? Data(contentsOf: staged.partial)) == ownBytes)
         staged.discard()
         #expect(!files.fileExists(atPath: staged.final.path))
-        #expect((try? Data(contentsOf: staged.partial)) == ownBytes)
+        #expect(try files.contentsOfDirectory(atPath: receiver.path).isEmpty)
     }
 
     private func scratch() throws -> URL {

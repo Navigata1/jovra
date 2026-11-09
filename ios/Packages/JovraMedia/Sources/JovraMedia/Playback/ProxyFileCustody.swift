@@ -94,7 +94,7 @@ final class ProxyDirectory: Sendable {
     }
 }
 
-/// An exclusive receiver partial, or the writer's completed regular file in its private scratch directory.
+/// The writer's completed file, held in an exclusive, process-private scratch directory.
 final class ProxyLeaf: Sendable {
     let directory: ProxyDirectory
     let name: String
@@ -102,10 +102,9 @@ final class ProxyLeaf: Sendable {
     private let identity: ProxyFileIdentity
     var url: URL { directory.url.appendingPathComponent(name) }
 
-    init(_ directory: ProxyDirectory, name: String, create: Bool) throws {
+    init(_ directory: ProxyDirectory, name: String) throws {
         try directory.verify()
-        let access = create ? O_RDWR | O_CREAT | O_EXCL : O_RDONLY | O_NONBLOCK
-        let fd = openat(directory.descriptor, name, access | O_NOFOLLOW | O_CLOEXEC, 0o600)
+        let fd = openat(directory.descriptor, name, O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)
         guard fd >= 0 else { throw ShortGOPProxyError.writeFailed }
         do {
             let opened = try proxyMetadata(fd)
@@ -126,24 +125,18 @@ final class ProxyLeaf: Sendable {
 
     deinit { Darwin.close(descriptor) }
 
-    func copy(to target: ProxyLeaf) throws {
+    func publish(to receiver: ProxyDirectory, as finalName: String) throws -> URL {
         try verify()
-        try target.verify()
-        let size = try proxyMetadata(descriptor).st_size
-        guard size > 0, fcopyfile(descriptor, target.descriptor, nil, UInt32(COPYFILE_DATA)) == 0,
-              try proxyMetadata(target.descriptor).st_size == size else { throw ShortGOPProxyError.writeFailed }
-        try Task.checkCancellation()
+        try receiver.verify()
+        // A hard link exposes the complete owned file atomically. An existing name or another
+        // volume is a refusal; no receiver pathname is passed to the writer or used as a source.
+        guard linkat(directory.descriptor, name, receiver.descriptor, finalName, 0) == 0 else {
+            throw ShortGOPProxyError.writeFailed
+        }
         try verify()
-        try target.verify()
-    }
-
-    func publish(as finalName: String) throws -> URL {
-        try verify()
-        guard renameatx_np(directory.descriptor, name, directory.descriptor, finalName,
-                          UInt32(RENAME_EXCL)) == 0 else { throw ShortGOPProxyError.writeFailed }
-        try directory.verify()
-        guard try directory.entry(finalName, type: S_IFREG) == identity else { throw ShortGOPProxyError.writeFailed }
-        return directory.url.appendingPathComponent(finalName)
+        try receiver.verify()
+        guard try receiver.entry(finalName, type: S_IFREG) == identity else { throw ShortGOPProxyError.writeFailed }
+        return receiver.url.appendingPathComponent(finalName)
     }
 
     func discard() {
