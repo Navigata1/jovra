@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 from uuid import UUID
 
 from watch_sim_diff import Identity, compare, identities
@@ -66,10 +67,16 @@ def load_owners(receipt: Path) -> dict[str, Identity]:
 
 
 def save_owners(receipt: Path, owners: dict[str, Identity]) -> None:
-    pending = receipt.with_suffix(".tmp")
     data = {"checkout": str(CHECKOUT), "devices": list(owners.values())}
-    pending.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-    pending.replace(receipt)
+    descriptor, temporary_name = tempfile.mkstemp(dir=receipt.parent, prefix=".owned-", suffix=".tmp")
+    pending = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as output:
+            json.dump(data, output, indent=2)
+            output.write("\n")
+        pending.replace(receipt)
+    finally:
+        pending.unlink(missing_ok=True)
 
 
 def verify_owners(owners: dict[str, Identity], devices: dict[str, Identity]) -> None:

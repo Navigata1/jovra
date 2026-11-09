@@ -37,6 +37,8 @@ elif args[0] in ("create", "shutdown", "delete"):
             {"udid": udid, "name": name, "deviceTypeIdentifier": kind}
         )
         print(udid)
+        if blocked := os.environ.get("TEST_BLOCK_OWNED_RECEIPT"):
+            pathlib.Path(blocked).mkdir()
     if args[0] == "delete":
         for runtime, devices in state["devices"].items():
             state["devices"][runtime] = [d for d in devices if d["udid"] != args[1]]
@@ -204,3 +206,27 @@ class WatchSimTests(unittest.TestCase):
         self.assertEqual(self.state(), baseline)
         self.assertEqual(foreign_receipt.read_bytes(), receipt_before)
         self.assertEqual(self.run_watch("udid", ULTRA).stdout.strip(), baseline["devices"][WATCH][0]["udid"])
+
+    def test_create_preserves_external_file_linked_from_stale_receipt_temp(self):
+        self.ownership.parent.mkdir(parents=True)
+        with tempfile.TemporaryDirectory() as outside:
+            sentinel = Path(outside) / "do-not-modify"
+            original = b"external sentinel\x00\xff\n"
+            sentinel.write_bytes(original)
+            stale_temp = self.ownership.with_suffix(".tmp")
+            stale_temp.symlink_to(sentinel)
+
+            created = self.run_watch("create")
+            self.assertEqual(sentinel.read_bytes(), original, created.stdout)
+            self.assertEqual(created.returncode, 0, created.stderr)
+            self.assertTrue(stale_temp.is_symlink())
+            self.assertEqual({p.name for p in self.ownership.parent.iterdir()}, {"lock", "owned.json", "owned.tmp"})
+            self.assertEqual(len(json.loads(self.ownership.read_text())["devices"]), 3)
+
+    def test_failed_receipt_publication_removes_the_own_temporary_file(self):
+        self.env["TEST_BLOCK_OWNED_RECEIPT"] = str(self.ownership)
+        created = self.run_watch("create")
+        self.assertNotEqual(created.returncode, 0, created.stdout)
+        self.assertTrue(self.ownership.is_dir(), "The injected blocker must remain untouched")
+        self.assertEqual({p.name for p in self.ownership.parent.iterdir()}, {"lock", "owned.json"})
+        self.assertEqual([item[0] for item in self.state()["mutations"]], ["create"])
