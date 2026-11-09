@@ -1,0 +1,15 @@
+COMMAND: swift test --package-path ios/Packages/JovraMedia --filter "Chase|PlaybackValue|PlaybackController|ShortGOP|ProxyBackward"
+RED: the tests were written first; the public API they use did not exist.
+error: SwiftCompile normal arm64 failed with a nonzero exit code. Command line:     cd ios/Packages
+ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/ChaseSeekerTests.swift:8:15: error: cannot find type 'ChaseSeeker' in scope
+    |               `- error: cannot find type 'ChaseSeeker' in scope
+ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/ChaseSeekerTests.swift:11:47: error: cannot find type 'SeekPrecision' in scope
+    |                                               `- error: cannot find type 'SeekPrecision' in scope
+ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/PlaybackControllerTests.swift:18:24: error: cannot find type 'PlaybackController' in scope
+    |                        `- error: cannot find type 'PlaybackController' in scope
+ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/PlaybackControllerTests.swift:26:29: error: cannot find type 'PlaybackController' in scope
+    |                             `- error: cannot find type 'PlaybackController' in scope
+ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/PlaybackControllerTests.swift:43:54: error: cannot find type 'PlaybackController' in scope
+    |                                                      `- error: cannot find type 'PlaybackController' in scope
+error: Build failed
+error: fatalError

@@ -1,0 +1,10 @@
+COMMAND: SIMULATOR_ID=<JOVRA-T14> DERIVED_DATA=<worktree>/.derivedData scripts/ios/ui-test.sh -only-testing JovraUITests/PlaybackCoreUITests -only-testing JovraUITests/CoreComponentsUITests -only-testing JovraUITests/ReplayFlowUITests 14-playback-core
+Simulator: JOVRA-T14 B7D403BE-869C-4F1D-B84F-0CBF0006402F (iPhone 17 Pro, iOS Simulator 27.2); frame counters read from .cache/media via JOVRA_FRAME_COUNTER_DIR (none skipped)
+==> Summary
+Test class                          passed  failed  skipped  expected
+JovraUITests/CoreComponentsUITests       4       0        0         0
+JovraUITests/PlaybackCoreUITests         9       0        0         0
+JovraUITests/ReplayFlowUITests           1       0        0         0
+Total: 14 passed, 0 failed, 0 skipped, 0 expected failure(s) in 3 classes (xcresult summary: 14 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T14 B7D403BE-869C-4F1D-B84F-0CBF0006402F (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261108-205958.xcresult

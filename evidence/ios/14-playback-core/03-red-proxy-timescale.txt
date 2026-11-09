@@ -1,0 +1,12 @@
+COMMAND: swift test --package-path ios/Packages/JovraMedia --no-parallel --filter "ProxyBackwardStepTiming"
+BEHAVIOURAL RED (2026-11-08), found by the timing gate after the first proxy implementation:
+
+ShortGOPProxyTests.swift:136: error: -[JovraMediaTests.ProxyBackwardStepTimingTests testBackwardStepsWithTheProxyAverageUnder100ms] :
+  failed - failure(JovraMedia.FramePlaybackError.unavailableFrame(expected: 469, actual: 468))   (x6 iterations)
+XCTAssertEqual failed: ("[]") is not equal to ("[420]") - 50 steps back from 470 decode frame 420
+
+Cause: AVAssetWriter's default movie timescale (600) rounded 240 fps frame times, so proxy frame 469 decoded as 468.
+The controller's first version also swallowed this with try? and silently fell back to the original.
+Fix: the proxy keeps the source track's natural timescale (input.mediaTimeScale, writer.movieTimeScale); a proxy
+frame that does not decode as itself now marks the proxy failed and is never used again.
+New guard: ShortGOPProxyTests.everyProxyFrameDecodesAsItself (every frame of fc-060 and fc-240, decoded through the stepper).

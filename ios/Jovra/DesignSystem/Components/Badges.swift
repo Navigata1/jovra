@@ -24,6 +24,8 @@ struct ProvenanceBadge: View {
     var kind: Kind
     var size: Size = .regular
     var onForest = false
+    /// A more specific caption for the same badge ("Sample video (synthetic)" on video surfaces).
+    var customTitle: String? = nil
 
     private var ink: ColorRole { onForest ? .textOnEditorial : .textPrimary }
 
@@ -32,7 +34,7 @@ struct ProvenanceBadge: View {
             Image(systemName: symbol)
                 .imageScale(.small)
                 .accessibilityHidden(true)
-            Text(title)
+            Text(customTitle ?? title)
         }
         .font(.caption.weight(.semibold))
         .foregroundStyle(.jovra(ink))
@@ -44,8 +46,9 @@ struct ProvenanceBadge: View {
                 Capsule().strokeBorder(Color.jovra(ink), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
             }
         }
-        // Reserve the label's natural width, so a compact section header never splits “Sam-ple”.
-        .fixedSize(horizontal: true, vertical: true)
+        // Reserve the label's natural width, so a compact section header never splits “Sam-ple”; a longer
+        // custom caption may wrap at the largest text sizes rather than clip.
+        .fixedSize(horizontal: customTitle == nil, vertical: true)
         .layoutPriority(1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityText)
@@ -73,7 +76,8 @@ struct ProvenanceBadge: View {
     }
 
     private var accessibilityText: String {
-        switch kind {
+        if let customTitle { return customTitle }
+        return switch kind {
         case .sample: String(localized: "Sample data", table: "DesignSystem.Components")
         default: String(localized: "\(title) value", table: "DesignSystem.Components", comment: "VoiceOver: a provenance badge, e.g. “Estimated value”")
         }
@@ -84,7 +88,9 @@ struct ProvenanceBadge: View {
 struct SampleBadge: View {
     var size: ProvenanceBadge.Size = .regular
     var onForest = false
-    var body: some View { ProvenanceBadge(kind: .sample, size: size, onForest: onForest) }
+    /// Overrides "Sample" with a caller-owned, already localized caption that still says Sample.
+    var text: String? = nil
+    var body: some View { ProvenanceBadge(kind: .sample, size: size, onForest: onForest, customTitle: text) }
 }
 
 /// Only the camera adapter chooses when this badge is shown (ADR-0012).

@@ -1,0 +1,12 @@
+s10-light-lab-portrait: Claude (T14) — Matches 10-smart-replay's video stack: 16:9 card on Radius.card, Sample badge top trailing, scrim bottom bar with time, timeline, jog strip, then the 5-disc transport (56 pt sunken discs, 72 pt forest play). Deliberate differences: no scoreboard, filter pills or point card (T28 Replay owns them); the fifth slot is the A–B loop (Replay puts Rally only there); the badge reads "Sample video (synthetic)" per screens.md.
+s10-dark-lab-portrait: Claude (T14) — Same layout in dark: forest page, ivory play disc, sunken discs on forest panel; readout and timeline legible. Matches the reference's hierarchy.
+s10-ax5-lab-portrait: Claude (T14) — AX5: header and source pills stack, the Sample badge moves above the video instead of covering it, transport wraps (prev/play/next, then rate and loop); nothing leaves the 402 pt window (asserted).
+s10-ax5-dark-lab-sample: Claude (T14) — AX5 dark on the 54:00 synthetic sample match: badge above the video, readout "… · 60 fps", no clipping (audit incl. textClipped passed).
+s10-light-lab-landscape: Claude (T14) — iPhone landscape per screens.md S10: video leading at full height, 300 pt trailing panel with title, timeline, jog strip, readout and transport in a scroll view.
+s10-dark-lab-landscape: Claude (T14) — As light landscape, dark roles.
+s10-ax5-lab-landscape: Claude (T14) — AX5 landscape: badge above the video, the panel scrolls; transport uses its narrow (play on its own row) layout so the 300 pt panel never overflows.
+s10-light-lab-layout: Claude (T14) — Layout test state: jog strip 48 pt, ≥16 pt under the timeline, above the transport row, far from the bottom edge.
+s10-light-lab-half-rate: Claude (T14) — After choosing 0.5× from the rate popover the disc reads 0.5× and the readout ends "· 0.5×".
+s10-light-lab-zoomed: Claude (T14) — Pinched to 400%: the reset control appears in the video bar, zoom control reads 400%, frame stepping kept the zoom.
+s10-light-lab-missing: Claude (T14) — Missing original: dark StateCard "Video missing" / "The original isn't on this iPhone." in place of the video, no crash; transport hidden with an explanation.
+s10-light-lab-sample: Claude (T14) — Sample match open: "Sample video (synthetic)" badge over the footage (the footage also burns in its own label).
