@@ -117,7 +117,11 @@ class ShellFontAndTouchTest {
         val layout = results.single()
         val visible = node.fetchSemanticsNode().boundsInRoot
         assertEquals("$context uses the configured font scale", MAXIMUM_FONT_SCALE, layout.layoutInput.density.fontScale, 0f)
-        assertTrue("$context has text layout overflow", !layout.hasVisualOverflow)
+        val detail = "$context scale=${layout.layoutInput.density.fontScale} text=${layout.layoutInput.text.text} " +
+            "constraints=${layout.layoutInput.constraints} size=${layout.size} visible=$visible " +
+            "lines=${layout.lineCount} horizontal=${layout.didOverflowWidth} vertical=${layout.didOverflowHeight}"
+        println(detail)
+        assertTrue("Text layout overflow: $detail", !layout.hasVisualOverflow)
         assertTrue("$context has ellipsized text", (0 until layout.lineCount).none(layout::isLineEllipsized))
         assertTrue("$context layout ${layout.size} is clipped to $visible",
             visible.width >= layout.size.width - 1f && visible.height >= layout.size.height - 1f)
