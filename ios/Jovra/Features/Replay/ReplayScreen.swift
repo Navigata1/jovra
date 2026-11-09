@@ -9,6 +9,7 @@ struct ReplayScreen: View {
     @Environment(AppRouter.self) private var router
     @Environment(\.localCaptureLibrary) private var library
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var playback = ReplayPlaybackModel()
     @State private var review = ReviewedPointModel()
     @State private var startText = JovraFormat.count(0)
@@ -48,6 +49,14 @@ struct ReplayScreen: View {
                 .ignoresSafeArea(.container, edges: .bottom)
         }
         .background(Color.jovra(.background).ignoresSafeArea()).preferredColorScheme(.dark)
+        .overlay {
+            // A regular-width sheet leaves its presenting view visible outside the modal.
+            if horizontalSizeClass == .regular,
+               case .clipExport(let session, _)? = router.sheet, session == request.session {
+                Color.jovra(.background).ignoresSafeArea()
+                    .allowsHitTesting(false).accessibilityHidden(true)
+            }
+        }
         .task(id: request) {
             guard case .ready(let library) = library else { return }
             await playback.open(library: library, session: request.session)
