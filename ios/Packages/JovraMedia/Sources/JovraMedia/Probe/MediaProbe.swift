@@ -180,10 +180,14 @@ public struct FrameTiming: Sendable, Equatable {
         let median = durations.sorted()[(durations.count - 1) / 2]
         let regular = durations.filter { abs($0 - median) <= 1 }
         let mean = Double(regular.reduce(0, +)) / Double(regular.count)
-        let standard = Self.standardRates
-            .map { rate in (rate, Double(timescale) * Double(rate.1) / Double(rate.0)) }
-            .filter { abs($0.1 - mean) <= 1 && abs($0.1 - mean) <= 0.002 * $0.1 }
-            .min { abs($0.1 - mean) < abs($1.1 - mean) }
+        let candidates: [(rate: (Int64, Int64), duration: Double)] = Self.standardRates.map { rate in
+            (rate, Double(timescale) * Double(rate.1) / Double(rate.0))
+        }
+        let matching = candidates.filter { candidate in
+            let difference = abs(candidate.duration - mean)
+            return difference <= 1 && difference <= 0.002 * candidate.duration
+        }
+        let standard = matching.min { abs($0.duration - mean) < abs($1.duration - mean) }
         if let (rate, _) = standard {
             frameRate = FrameRate(frames: Int(rate.0), perSeconds: Int(rate.1))
         } else {
