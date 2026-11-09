@@ -146,6 +146,24 @@ class PracticeEvidenceTest {
     }
 
     @Test
+    fun `direct construction bounds the point IDs actually copied`() {
+        val row = decode(raw())
+        val changingIds = object : AbstractList<OpaqueId>() {
+            private var firstSizeRead = true
+            override val size: Int get() {
+                if (!firstSizeRead) return 51
+                firstSizeRead = false
+                return 50
+            }
+
+            override fun get(index: Int): OpaqueId = OpaqueId("point-$index")
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            PracticeEvidence(row.sessionId, row.stat, row.value, row.provenance, row.availability, pointIds = changingIds)
+        }
+    }
+
+    @Test
     fun `stat and text use Unicode scalar limits and reject malformed Unicode`() {
         val stat = "🎾".repeat(80)
         val text = "🎾".repeat(120)
