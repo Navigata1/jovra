@@ -174,19 +174,28 @@ final class ProxyMovie: Sendable {
 
         deinit { Darwin.close(descriptor) }
 
-        func verifiedURL(beforeVerification: (@Sendable () -> Void)? = nil) async throws -> URL {
+        struct Verified: Sendable {
+            fileprivate let commit: Commit
+
+            /// Point-in-time acknowledgment. Keep the held file and receiver bound until the caller uses it.
+            func acknowledge() throws -> URL { try commit.rebind() }
+        }
+
+        func verified(beforeVerification: (@Sendable () -> Void)? = nil) async throws -> Verified {
             let verifier = Task.detached(priority: .utility) {
                 beforeVerification?()
-                return try self.verify()
+                try self.verifyBytes()
             }
-            return try await withTaskCancellationHandler {
+            try await withTaskCancellationHandler {
                 try await verifier.value
             } onCancel: {
                 verifier.cancel()
             }
+            try Task.checkCancellation()
+            return Verified(commit: self)
         }
 
-        private func verify() throws -> URL {
+        private func verifyBytes() throws {
             var offset: off_t = 0
             while offset < size {
                 try Task.checkCancellation()
@@ -198,6 +207,10 @@ final class ProxyMovie: Sendable {
                 offset += off_t(length)
             }
             try Task.checkCancellation()
+            _ = try rebind()
+        }
+
+        private func rebind() throws -> URL {
             try receiver.verify()
             let current = try proxyMetadata(descriptor)
             try Self.requirePrivateFile(descriptor, current, size: size)

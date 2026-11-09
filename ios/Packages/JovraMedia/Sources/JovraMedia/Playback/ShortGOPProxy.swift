@@ -43,9 +43,10 @@ public struct ShortGOPProxy: Sendable {
 
         func publish(expectedFrameCount: Int? = nil) async throws -> ShortGOPProxy {
             let publication = try commit(expectedFrameCount: expectedFrameCount)
-            let url = try await publication.verifiedURL()
-            try Task.checkCancellation()
-            return ShortGOPProxy(url: url, frameCount: frameCount)
+            let verified = try await publication.verified()
+            return try withExtendedLifetime(verified) {
+                ShortGOPProxy(url: try verified.acknowledge(), frameCount: frameCount)
+            }
         }
     }
 

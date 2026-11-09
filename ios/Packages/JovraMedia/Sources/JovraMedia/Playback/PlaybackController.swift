@@ -375,11 +375,13 @@ public final class PlaybackController {
                 // Order the filesystem commit with close. Verify the committed clone off the main actor.
                 guard !self.isClosed else { return }
                 let publication = try staged.commit(expectedFrameCount: expected)
-                let url = try await publication.verifiedURL(beforeVerification: self.beforeProxyVerification)
+                let verified = try await publication.verified(beforeVerification: self.beforeProxyVerification)
                 guard !self.isClosed else { return }
-                let proxy = ShortGOPProxy(url: url, frameCount: staged.frameCount)
-                self.stepper = try ProxyBackwardStepper(proxy: proxy, frameRate: rate)
-                self.proxyState = .ready
+                try withExtendedLifetime(verified) {
+                    let proxy = ShortGOPProxy(url: try verified.acknowledge(), frameCount: staged.frameCount)
+                    self.stepper = try ProxyBackwardStepper(proxy: proxy, frameRate: rate)
+                    self.proxyState = .ready
+                }
             } catch {
                 if !self.isClosed { self.proxyState = .failed }
             }

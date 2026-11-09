@@ -116,6 +116,33 @@ struct ShortGOPProxyCustodyTests {
         #expect(try files.contentsOfDirectory(atPath: receiver.path).isEmpty)
     }
 
+    @Test(arguments: [false, true])
+    func replacementAfterWorkerVerificationCannotBeAcknowledged(replacedReceiver: Bool) async throws {
+        let root = try scratch()
+        defer { try? files.removeItem(at: root) }
+        let receiver = try directory("proxies", in: root)
+        let staged = try await ShortGOPProxy.encode(from: fixture(), into: receiver, frameRate: .fps60)
+        let verified = try await staged.commit().verified()
+        let authentic: URL
+        if replacedReceiver {
+            let detached = root.appendingPathComponent("detached")
+            try files.moveItem(at: receiver, to: detached)
+            _ = try directory("proxies", in: root)
+            authentic = detached.appendingPathComponent(staged.final.lastPathComponent)
+        } else {
+            authentic = root.appendingPathComponent("detached.mov")
+            try files.moveItem(at: staged.final, to: authentic)
+        }
+        let encoded = try staged.movie.evidenceBytes()
+        let replacement = Data(repeating: 0xA5, count: encoded.count)
+        try replacement.write(to: staged.final, options: .withoutOverwriting)
+        try files.setAttributes([.posixPermissions: 0o600], ofItemAtPath: staged.final.path)
+
+        #expect(throws: ShortGOPProxyError.writeFailed) { try verified.acknowledge() }
+        #expect(try Data(contentsOf: authentic) == encoded)
+        #expect(try Data(contentsOf: staged.final) == replacement)
+    }
+
     @Test
     func earlyWriterCancellationNeverPublishesAndAnyResidueStaysPrivate() async throws {
         let root = try scratch()
