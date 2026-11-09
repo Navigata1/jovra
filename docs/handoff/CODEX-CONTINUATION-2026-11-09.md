@@ -51,7 +51,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   are still unverified.
 - Watch simulator safety follow-up [#455](https://github.com/Navigata1/jovra/pull/455)
   is a reviewed draft. The prior alert acknowledgment test passed 1/1 on a
-  newly created Apple Watch Ultra 3 / iPhone simulator pair. Companion install,
+  newly created Apple Watch Ultra 3 / iPhone simulator pair. A subsequent
+  full watch suite was interrupted at the disk floor. The test-owned pair and
+  iPad simulators were removed after receipts were retained. Companion install,
   real watch validation and W03 owner decisions stay open.
 - Studio demo boundary follow-up [#454](https://github.com/Navigata1/jovra/pull/454)
   has passed 171 macOS package tests; Linux and full S14 acceptance remain open.
@@ -65,6 +67,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   corrects stale frames, shifted loops and close-vs-proxy publication. The
   final correction has 15 focused tests and one timing test. Full T14 remains
   open for wider acceptance and integration.
+- Lesson relationship fence [#459](https://github.com/Navigata1/jovra/pull/459)
+  is independently reviewed. Real media custody and transaction durability remain open.
 - [#443](https://github.com/Navigata1/jovra/pull/443) remains blocked on
   stale-plan, privacy and crash consistency. Draft [#447](https://github.com/Navigata1/jovra/pull/447)
   protects the live event-admission seam; 144 StudioCore tests passed on its
@@ -75,6 +79,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   [#458](https://github.com/Navigata1/jovra/pull/458) matches all six shared
   compiler results. Renderer parity and oversized inherited scope remain open.
 - The unsigned Android owner proposal is draft [#451](https://github.com/Navigata1/jovra/pull/451).
+- A02 shell work is underway in an isolated APFS image on Extreme SSD.
+  A first guarded Gradle attempt stopped before tests when internal free space
+  dropped below the 8 GiB floor. The initial attempt is not a product result.
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
   and [#376](https://github.com/Navigata1/jovra/issues/376). Watch foundation
