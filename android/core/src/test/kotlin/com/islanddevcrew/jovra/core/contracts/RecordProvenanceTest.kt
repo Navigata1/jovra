@@ -66,6 +66,23 @@ class RecordProvenanceTest {
     }
 
     @Test
+    fun `public construction and copy compare confidence by numeric value`() {
+        val expected = decode(record(extra = ",\"confidence\":0.75"))
+        val constructed = RecordProvenance(RecordProvenance.Status.MANUAL, "user", confidence = BigDecimal("0.750"))
+        val copied = expected.copy(confidence = BigDecimal("0.75000"))
+        for (value in listOf(constructed, copied)) {
+            val decoded = decode(value.encodeJson(128).decodeToString())
+            assertEquals(expected, value)
+            assertEquals(value, expected)
+            assertEquals(value, decoded)
+            assertEquals(expected.hashCode(), value.hashCode())
+            assertEquals(1, setOf(expected, value, decoded).size)
+        }
+        assertEquals(3, setOf(expected, expected.copy(confidence = BigDecimal("0.76")), expected.copy(confidence = null)).size)
+        assertEquals(3, setOf(expected, expected.copy(denominator = 1), expected.copy(sample = false)).size)
+    }
+
+    @Test
     fun `status and producer tokens follow the shared lexical rules`() {
         for ((wire, status) in listOf(
             "manual" to RecordProvenance.Status.MANUAL,
