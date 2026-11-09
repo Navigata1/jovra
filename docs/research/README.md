@@ -8,6 +8,7 @@ synthesis pass turned them into four decision documents. Every claim in these fi
 
 | File | What it is |
 |---|---|
+| [vision-spike-2026-11-09.md](vision-spike-2026-11-09.md) | Local measurement of Apple's built-in Vision models on real match footage: what works (near-player pose) and what needs trained detectors (far player, ball). Sizes the V track |
 | [competitive-analysis.md](competitive-analysis.md) | The comparison Jon asked for: SwingVision, Onform, SevenSix and five more, with fact sheets, an App Store screenshot review (§2.1), count-backed pros and cons, a feature matrix, the "Praised → improve" and "Complaint → fix" tables, and the **Verification log** (§11) of ten independently re-checked claims |
 | [feature-backlog.md](feature-backlog.md) | Prioritized backlog (P0 iOS v1, P1, P2/Android, Later, Never) with user value, evidence, approach, honesty label and affected screens; NEW items marked |
 | [technical-feasibility.md](technical-feasibility.md) | Per-capability approach, APIs, reliability, failure modes, validation gates and initial capability-registry status, plus iOS and Android API cheat-sheets |
