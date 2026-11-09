@@ -71,17 +71,28 @@ extension StudioProjectStore {
         try advance(projectId, .keepers, to: revision, named: changedKeepers)
     }
 
-    /// The project's plans and films with their status now, and the ledger's last change.
-    public func staleness(_ projectId: String) throws -> (result: StudioStaleness.Result, lastChange: StudioStalenessLedger.LastChange?) {
-        let project = try project(projectId)
+    /// Read the live primary revision before classifying real films. Pending event changes are projected in memory;
+    /// `lastChange` describes the last stored ledger entry. This read never publishes or repairs the projection.
+    public func staleness(_ projectId: String) async throws -> (result: StudioStaleness.Result, lastChange: StudioStalenessLedger.LastChange?) {
+        let (project, live) = try await projectWithLiveEventLog(projectId)
+        let change: StudioStaleness.Change?
+        if project.sample {
+            change = nil
+        } else {
+            guard let live else { throw StudioProjectStoreError.eventFreshnessUnverified(projectId) }
+            let saved = project.revisions.eventLogVersion
+            let revision = try Self.monotonic(saved, live.version)
+            change = revision > saved ? .init(kind: .event, projectId: projectId, revision: revision, named: []) : nil
+        }
         let state = try stalenessState(project)
-        let result = try judge(state, project: project, change: nil)
+        let result = try judge(state, project: project, change: change)
         return (result.result, state.ledger?.lastChange)
     }
 
-    /// Refuses a plan made before a correction (story 233): a stale plan is never rendered as current.
-    public func requireCurrentPlan(_ planId: String, in projectId: String) throws {
-        let (result, _) = try staleness(projectId)
+    /// Checks admission against the observed core revision (story 233). A later correction still invalidates
+    /// the admitted plan's bindings; admission does not reserve or lock the core session.
+    public func requireCurrentPlan(_ planId: String, in projectId: String) async throws {
+        let (result, _) = try await staleness(projectId)
         guard let plan = result.plans.first(where: { $0.planId == planId }) else { throw StudioProjectStoreError.notFound }
         guard plan.status == .current else { throw StudioProjectStoreError.planStale(planId) }
     }

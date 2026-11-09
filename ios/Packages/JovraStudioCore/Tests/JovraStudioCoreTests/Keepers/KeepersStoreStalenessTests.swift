@@ -117,6 +117,69 @@ struct KeepersStoreStalenessTests {
         try await f.store.requireCurrentPlan("court-memories-final", in: b)
     }
 
+    @Test("a saved core correction refuses the previous plan before a Studio refresh, including after reopening")
+    func admissionReadsTheLiveCorrection() async throws {
+        let f = try await Self.fixture(); defer { f.scratch.cleanUp() }
+        let (a, b) = (f.projects[0], f.projects[1])
+        let before = try await f.store.revisions(a)
+        let film = try #require(try await f.store.films(a).first)
+        try await f.store.requireCurrentPlan("court-memories-final", in: a)
+        _ = try await Self.voidFirstPoint(of: f.sessionIds[0], in: f.sessions)
+
+        let core = try SessionStore(root: f.scratch.core)
+        let reopened = try f.scratch.store(sessions: core)
+        for store in [f.store, reopened] {
+            let result = try await store.staleness(a).result
+            #expect(result.stalePlanIds == ["court-memories-final"])
+            #expect(result.staleFilmIds == [film.artifactId])
+            await #expect(throws: StudioProjectStoreError.planStale("court-memories-final")) {
+                try await store.requireCurrentPlan("court-memories-final", in: a)
+            }
+        }
+        try await reopened.requireCurrentPlan("court-memories-final", in: b)
+        // Admission and the read projection must not write revisions or alter the saved film.
+        #expect(try await reopened.revisions(a) == before)
+        #expect(try await reopened.films(a).first == film)
+    }
+
+    @Test("a real plan cannot be admitted without its authoritative core session store")
+    func admissionRefusesUnavailableCoreStore() async throws {
+        let f = try await Self.fixture(); defer { f.scratch.cleanUp() }
+        let a = f.projects[0]
+        try await f.store.requireCurrentPlan("court-memories-final", in: a)
+        let disconnected = try f.scratch.store()
+        await #expect(throws: StudioProjectStoreError.eventFreshnessUnverified(a)) {
+            try await disconnected.requireCurrentPlan("court-memories-final", in: a)
+        }
+    }
+
+    @Test("interrupted event projection cannot re-admit a stale plan; reopening can retry the event update")
+    func admissionSurvivesInterruptedEventProjection() async throws {
+        let f = try await Self.fixture(); defer { f.scratch.cleanUp() }
+        let a = f.projects[0]
+        let oldVersion = try await f.store.revisions(a).eventLogVersion
+        let interrupted = try f.scratch.store(sessions: f.sessions) { checkpoint in
+            if case .temporaryFileFlushed(let url) = checkpoint, url.lastPathComponent.hasPrefix(".studio.json-") {
+                throw SimulatedProcessDeath()
+            }
+        }
+        _ = try await Self.voidFirstPoint(of: f.sessionIds[0], in: f.sessions)
+        await #expect(throws: SimulatedProcessDeath.self) {
+            _ = try await interrupted.refreshEventLogVersion(for: a)
+        }
+
+        let core = try SessionStore(root: f.scratch.core)
+        let reopened = try f.scratch.store(sessions: core)
+        #expect(try await reopened.revisions(a).eventLogVersion == oldVersion)
+        #expect(try await reopened.films(a).first?.stale.value?.reason == .eventRevision)
+        await #expect(throws: StudioProjectStoreError.planStale("court-memories-final")) {
+            try await reopened.requireCurrentPlan("court-memories-final", in: a)
+        }
+        let retried = try await reopened.refreshEventLogVersion(for: a)
+        #expect(retried.eventLogVersion == oldVersion + 1)
+        #expect(try await reopened.staleness(a).result.stalePlanIds == ["court-memories-final"])
+    }
+
     @Test("a sync or keeper change that spares the plan carries it forward; a later change it uses stales it")
     func sparedChangesCarryThePlan() async throws {
         let f = try await Self.fixture(); defer { f.scratch.cleanUp() }

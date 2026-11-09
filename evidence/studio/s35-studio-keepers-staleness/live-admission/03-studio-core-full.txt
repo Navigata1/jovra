@@ -1,0 +1,621 @@
+SOURCE 2bf6d3d0c31c42e129ef6d753de39d682a07c73c
+COMMAND ['swift', 'test', '--package-path', 'ios/Packages/JovraStudioCore', '--scratch-path', '.s35-owned-build', '--jobs', '2']
+Building for debugging...
+[Starting]
+[2 / 6] JovraStudioCore
+[3 / 7] JovraStudioCore
+[8 / 12] JovraStudioCore
+[11 / 12] JovraStudioCoreTests-product
+Build complete! (2.63 sec)
+Test Suite 'All tests' started at 2026-11-09 01:08:01.913.
+Test Suite 'All tests' passed at 2026-11-09 01:08:01.915.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "EDL stage allowlist (SD6b)" started.
+◇ Suite "Studio fixture locator" started.
+◇ Suite "Keepers: staleness through the project store" started.
+◇ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" started.
+◇ Suite "Ledger: vector parity with jobstate.py and ledger.py" started.
+◇ Suite "Studio project store: sources, slots and revisions" started.
+◇ Suite "Studio contracts: fixture manifest" started.
+◇ Suite "Studio project store: the localStudio entitlement" started.
+◇ Suite "Studio contracts: vector consumers" started.
+◇ Suite "Studio sample content: bundled resources" started.
+◇ Suite "Ledger: RenderJobMachine for local and cloud jobs" started.
+◇ Suite "Keepers: parity with keepers.py and staleness.py" started.
+◇ Suite "Studio sample content: the sample-scope rule" started.
+◇ Suite "Ledger: record rules and the reference's invalid cases" started.
+◇ Suite "Ledger: QuoteReservation (client quote and consent state)" started.
+◇ Suite "EDL validator: parity with edl.py" started.
+◇ Suite "Studio contracts: time" started.
+◇ Suite "Studio sample content" started.
+◇ Suite "Studio project store: delete scopes and films" started.
+◇ Suite "Ledger: random retry and redelivery sequences" started.
+◇ Suite "Studio contracts: strict decoding" started.
+◇ Suite "Studio contracts: schema set" started.
+◇ Suite "Studio contracts: invalid cases" started.
+◇ Suite "Keepers: select, exclude, annotate and markBroll" started.
+◇ Suite "Studio contracts: record round-trips" started.
+◇ Suite "Studio project store: the lock's event revision" started.
+◇ Suite "EDL exact arithmetic" started.
+◇ Test "narration and the warm grade are refused in S1" started.
+◇ Test "operations are read from the plan's fields" started.
+◇ Suite "Studio project store: durability and the index" started.
+◇ Suite "Studio record header" started.
+◇ Test "correcting an early point stales the dependent plan and its film in the same transaction; another session's films stay current" started.
+◇ Test "a plan bound ahead of its project is refused and nothing is written" started.
+◇ Test "finding 0: the first frame of a restarted interval maps through that interval (half-open coverage)" started.
+◇ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" started.
+◇ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" started.
+◇ Test "a correction found at lock time stales what was built before it" started.
+◇ Test "finding 2: a null keeperId does not switch contact protection off" started.
+◇ Test "the records page is consumed only while its decoders stay registered" started.
+◇ Test "a fixture that does not exist is an error naming the path, never a silent empty read" started.
+◇ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" started.
+◇ Test "finding 1: re-showing a live moment as a second 1x live segment is a replay without its label" started.
+◇ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" started.
+◇ Test "a real plan cannot be admitted without its authoritative core session store" started.
+◇ Test "a source is a reference: no file of the original appears in the project folder" started.
+◇ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" started.
+◇ Test "finding 7: the alternate bed returning mid-segment, and an alternate bed at a dissolve without an audio dip" started.
+◇ Test "a page that says swift: consumed with no Swift consumer fails" started.
+◇ Test "one phone is a complete project: create with a primary session holds it as the primary camera-1" started.
+◇ Test "S1 enables exactly the spec's list" started.
+◇ Test "the repository's fixtures, module pages and Swift consumers agree" started.
+◇ Test "every registered vector checker runs on at least one case of its kind" started.
+◇ Test "with the core session store attached, a source must be an existing session, and the event-log version is read from it" started.
+◇ Test "a new kind whose page says swift: pending passes unconsumed" started.
+◇ Test "the Rally Pulse 9:16 fixture is valid under the contract and refused by S1 for reframe and music" started.
+◇ Test "the bundled contracts are the repository's render-job-transitions and credit-classes files, byte for byte" started.
+◇ Test "all 32 job-transition vectors give the reference's state, resume stage, attempt or code" started.
+◇ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" started.
+◇ Test "a new fixture kind with no module page fails" started.
+◇ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" started.
+◇ Test "with localStudio off, a film already made, the original, its export and the core library stay available" started.
+◇ Test "finding 8: a plan naming another project is refused against this project's records" started.
+◇ Test "interrupted event projection cannot re-admit a stale plan; reopening can retry the event update" started.
+◇ Test "the jobstate and ledger pages say swift: consumed, and the manifest fails without LedgerConsumer" started.
+◇ Test "a sync or keeper change that spares the plan carries it forward; a later change it uses stales it" started.
+◇ Test "a vector with a wrong expectation is reported as a mismatch" started.
+◇ Test "changing one byte in a scratch copy of the bundled records fails the check, naming the file" started.
+◇ Test "a stored resume stage is checked, never trusted, whatever path the record took" started.
+◇ Test "a local job never enters a cloud-only state" started.
+◇ Test "every working state belongs to a named stage, and analyzing is shown as Build film, never as analysis" started.
+◇ Test "the bundled sample records are byte-identical to spec/studio/fixtures/records (sha256 equality)" started.
+◇ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" started.
+◇ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" started.
+◇ Test "all 21 ledger sequences give the reference's step results and final ledger" started.
+◇ Test "with localStudio off, creating a Studio film project is refused with the stated reason" started.
+◇ Test "every staleness vector matches the reference and its hand assertions (zero mismatches)" started.
+◇ Test "the happy path: none -> requested -> presented -> consented -> accepted(reservationId)" started.
+◇ Test "a missing or an extra file in the bundled copy fails the check" started.
+◇ Test "all 8 quote-credit vectors give the reference's cap" started.
+◇ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" started.
+◇ Test "the SHA-256 here agrees with the published test vectors and with the system tool" started.
+◇ Test "every keepers vector matches the reference and its hand assertions (zero mismatches)" started.
+◇ Test "with real and core sample sessions in the library, installing the Studio sample leaves stats and trends unchanged" started.
+◇ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" started.
+◇ Test "every reference-layer invalid case fails with the reference's code; schema-layer cases never decode" started.
+◇ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" started.
+◇ Test "pause, retry and cancel work the same for local jobs; a retry counts an attempt" started.
+◇ Test "consent needs the upload box, and the model-provider box exactly when the cloud plans the story" started.
+◇ Test "demo mode ends in demoDisabled with the Sample quote and no reservation" started.
+◇ Test "replaying the stored jobs reaches their state, resume stage and attempt" started.
+◇ Test "every stored render-job, quote and usage-reservation record passes its rules" started.
+◇ Test "the two clean-alternate pairs are reproduced byte for byte by cleanAlternate" started.
+◇ Test "a consent half a second before expiry is accepted; acceptance after expiry is not" started.
+◇ Test "validate() without a trusted context returns contextMissing" started.
+◇ Test "the typed clean alternate equals the stored typed record" started.
+◇ Test "unavailable, expired-on-arrival, illustrative and live quotes never reach consent" started.
+◇ Test "the Sample film binds the canonical hash Swift computes for the final plan (the key staleness uses)" started.
+◇ Test "consent at 23:15:00.500Z on a quote that expires at 23:15:00Z is refused and the quote expires" started.
+◇ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" started.
+◇ Test "a cap above the spending limit waits in aboveCap until the player raises the limit" started.
+◇ Test "it is the same rule as the core percentage (Percent.pct is half-up of 100n/d)" started.
+◇ Test "installing twice keeps the installed sample; a real project holding a sample id is never overwritten" started.
+◇ Test "a record that is not flagged Sample is refused, and so is a missing one" started.
+◇ Test "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test "installing yields a match project whose score from the core fold reads Jon 6 6 / Alex 4 3, Final" started.
+◇ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" started.
+◇ Test "the match project's revisions, slots and owners come from the stored sample records" started.
+◇ Test "a boolean speed is badSpeed in the validator itself, not only in the schema layer" started.
+◇ Test "every finding code except the stage gate is a code edl.py raises" started.
+◇ Test "with only real sessions, installing and removing the Studio sample adds no session and changes no number" started.
+◇ Test "the trusted context is built from the stored records, with the reviewed sync map's coverage" started.
+◇ Test "a stage that enables every operation the plan uses refuses nothing" started.
+◇ Test "finding 0: a frame looked up without its window's interval maps half-open (freezes and overlay moments)" started.
+◇ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" started.
+◇ Test "removing deletes every Sample project in one call and leaves real projects untouched" started.
+◇ Test "1,000 seeded sequences: reserved never exceeds the cap, no stage is charged twice, credits are conserved" started.
+◇ Test "the accept request carries no amount: the client never computes a price the server trusts" started.
+◇ Test "reference-layer cases pass the Swift decoder unless they carry an integral float" started.
+◇ Test "each identity is made of records of the sample project, and the identities do not share a record" started.
+◇ Test "a rational media time converts to exact microseconds" started.
+◇ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test "every schema-layer invalid case of a registered schema is refused" started.
+◇ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" started.
+◇ Test "the bundled contract drives the same machine as the repository's file" started.
+◇ Test "every record with a registered decoder decodes and re-encodes byte-identically" started.
+◇ Test "every valid edit-plan record passes as stored" started.
+◇ Test "every installed project and every installed record is flagged Sample, byte for byte as shipped" started.
+◇ Test "zero denominators and overflow are errors, never wrong numbers" started.
+◇ Test "the typed model carries the fixture's values, not just its bytes" started.
+◇ Test "an id pattern refuses a trailing newline and accepts the id" started.
+◇ Test "NTSC frames: 30000/1001 fps maps microseconds to frames exactly" started.
+◇ Test "explicit null and absence stay distinct: a required nullable field must be present" started.
+◇ Test "ECMA-262 anchors: $ is rewritten outside character classes only" started.
+◇ Test "B-roll marked as not from this match is never offered as match footage by a later plan (planner input)" started.
+◇ Test "an integral float (744.0) in a frame field is refused; 744 is accepted" started.
+◇ Test "malformed JSON is unreadable, never partially decoded" started.
+◇ Test "the loader reports an unsupported keyword, a dangling $ref and a non-portable escape" started.
+◇ Test "the embedded schemas equal spec/schemas/studio byte for byte, and the models were generated from them" started.
+◇ Test "a decoded record re-encodes through the codec and decodes to the same value" started.
+◇ Test "locking the installed sample reproduces the shipped lock as revision 2, with the reference's manifest hash" started.
+◇ Test "the trailing-newline id and hash cases are refused, although Python's re.search accepts them (finding 6)" started.
+◇ Test "the writer refuses a value that breaks its schema (an id ending in a newline)" started.
+◇ Test "a duplicate member name is refused before any schema check" started.
+◇ Test "create with a primary session seeds the event-log version from that session's log" started.
+◇ Test "every keyword the Studio schemas use is implemented, every $ref resolves, every pattern is portable" started.
+◇ Test "an unknown property is refused, at the root and nested" started.
+◇ Test "an exponent integer (7.44e2) is not an integer either" started.
+◇ Test "decimals survive exactly: an observation's confidence 0.62 round-trips as 0.62" started.
+◇ Test "candidates(project, eventVersion) is a jovra.keeper-catalog/1 record the strict encoder accepts" started.
+◇ Test "a document of another contract is refused by name" started.
+◇ Test "excluding a person or the location removes every B-roll clip that shows them from later plans" started.
+◇ Test "an excluded keeper never appears in any profile's order, in the plan input or in the stored catalog" started.
+◇ Test "markBroll refuses an empty window, a repeated id, stock footage and another day's clip claimed as this match" started.
+◇ Test "oneOf needs exactly one match, if/then applies only when the condition holds" started.
+◇ Test "select and annotate keep a keeper with the player's note; each edit names the keepers it changed" started.
+◇ Test "a lock whose primary session was deleted is refused with sessionNotFound" started.
+◇ Test "a primary session with no recorded events is refused with eventLogEmpty, not a schema error" started.
+◇ Test "a lock on a fresh real project records the primary session's current event revision" started.
+◇ Test "the Sample project never reads the core session store: its lock keeps the records' event revision" started.
+◇ Test "a lock taken after the session gains a correction records the newer revision, never the stale snapshot" started.
+  rally-pulse-portrait under S1: stageNotEnabled: alt-bed is not enabled in this build; it is enabled in S2
+  rally-pulse-portrait under S1: stageNotEnabled: multi-angle is not enabled in this build; it is enabled in S2
+  rally-pulse-portrait under S1: stageNotEnabled: music is not enabled in this build; it is enabled in S5
+  rally-pulse-portrait under S1: stageNotEnabled: reframe is not enabled in this build; it is enabled in S5
+◇ Test "fractions compare exactly where binary floating point would not" started.
+◇ Test "products beyond Int64 stay exact" started.
+◇ Test case passing 1 argument state → .budgetExceeded to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .consented to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .queued to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .quoteExpired to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .quoted to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .uploadPending to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .uploading to "a local job never enters a cloud-only state" started.
+staleness parity:
+  match     event-revision-stales-the-project
+  match     sync-camera-2-spares-a-camera-1-plan
+keepers parity:
+  match     sync-camera-1-stales-every-plan-using-it
+  edl-context restart-first-frame: valid-plan
+EDL parity: 79 edit-plan invalid cases, 79 match, 0 mismatch(es)
+  code                         cases  matched
+  badChapters                  1      1
+  badInteger                   1      1
+  badOutput                    2      2
+  badOverlays                  1      1
+  badReframe                   1      1
+  badSpeed                     2      2
+  badTemplate                  1      1
+  bedCoverage                  1      1
+  bedOutOfSync                 1      1
+  bedSwitchNotAtBoundary       2      2
+  chronology                   1      1
+  cleanFrameRule               1      1
+  consentMissing               3      3
+  contactProtected             1      1
+  contactUnprotected           1      1
+  courtBedOffLive              2      2
+  coverageMismatch             1      1
+  disclosureMissing            1      1
+  duplicateId                  1      1
+  durationMismatch             1      1
+  durationOutsideProfile       1      1
+  fadeTooShort                 3      3
+  forbiddenField               3      3
+  framingAspect                1      1
+  freezeDuration               1      1
+  holdBedNotContinuous         1      1
+  holdBedNotDeadTime           1      1
+  holdBedOverLive              1      1
+  incompleteCoverage           1      1
+  kindMismatch                 2      2
+  liveWithoutCourtAudio        1      1
+  motionInCleanAlternate       1      1
+  opNotAllowed                 3      3
+  outputGap                    1      1
+  outsideCoverage              1      1
+  overlayNotAllowed            1      1
+  overlayOutsideMoment         2      2
+  panTooFast                   1      1
+  projectMismatch              1      1
+  provenanceMismatch           1      1
+  provenanceNotAllowed         1      1
+  reframeNotReviewed           1      1
+  replayBeforeOriginal         1      1
+  replayOutsideOriginal        1      1
+  replayWithoutLabel           1      1
+  rightsMissing                4      4
+  sessionTimeMismatch          1      1
+  staleRevision                3      3
+  transitionHandle             1      1
+  transitionNotAllowed         2      2
+  transitionTooLong            1      1
+  unknownField                 1      1
+  unknownSource                1      1
+  untrustedReference           4      4
+  untrustedSource              1      1
+  upscaleRefused               1      1
+  match     keeper-k04-change
+  edl-context restart-extrapolated-session: sessionTimeMismatch: segment c05: sessionInUs must be 2000000000 from the sync map
+  match     jon-vs-alex-one-per-point
+  match     voided-point-is-not-a-keeper
+  match     default-pre-and-post-roll
+  match     clamped-to-the-session
+  match     same-point-two-angles-one-keeper
+  match     angle-without-coverage-has-no-view
+  match     primary-angle-missing
+  match     reviewed-contacts-widen-the-window
+  match     estimated-hit-inside-reviewed-window
+  match     estimated-hit-outside-is-labelled
+  match     mark-on-a-point-and-mark-alone
+  match     lesson-clips
+  match     shot-for-unknown-event
+  match     rally-pulse-order
+  match     rally-pulse-limit
+  match     coach-cut-order
+  match     match-broadcast-all-in-order
+  match     excluded-keeper-never-offered
+  match     progress-all
+  match     progress-user-chosen
+  match     progress-seeded-random
+  match     progress-no-comparable-evidence
+  match     court-memories-chapters
+  match     court-memories-says-what-is-missing
+Ledger record rules accept: ["quote.accepted-storyboard.json", "quote.accepted.json", "quote.sample-illustrative.json", "render-job.queue-sample.json", "render-job.ready.json", "usage-reservation.held.json", "usage-reservation.settled.json"]
+  match     keeper-k01-change-stales-the-film
+  clean alternate court-memories-storyboard: 8828 bytes, identical
+  clean alternate rally-pulse-portrait: 5715 bytes, identical
+  match     keeper-then-event
+  edl-context window-ends-at-restart: valid-plan
+  match     jon-vs-alex-broadcast
+Ledger invalid cases refused with the reference's code: [(key: "jovra.quote/1", value: 11), (key: "jovra.render-job/1", value: 7), (key: "jovra.usage-reservation/1", value: 15), (key: "schema", value: 5)]
+  match     old-version-kept
+◇ Test case passing 3 arguments num → 1, den → 2, expected → 1 to "half-up rounds .5 away from minus infinity, for both signs" started.
+  edl-context dissolve-across-restart: transitionHandle: transition needs source handles [107996,108004) inside the same coverage (never across a gap)
+  match     revision-must-increase
+◇ Test case passing 3 arguments num → -1, den → 2, expected → 0 to "half-up rounds .5 away from minus infinity, for both signs" started.
+  match     jon-vs-alex-rally-pulse
+keepers vectors: 26 cases, 26 match, 0 mismatch(es)
+  match     film-without-its-plan
+staleness vectors: 9 cases, 9 match, 0 mismatch(es)
+◇ Test case passing 3 arguments num → 3, den → 2, expected → 2 to "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test case passing 3 arguments num → -3, den → 2, expected → -1 to "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test case passing 3 arguments num → 5, den → 3, expected → 2 to "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test case passing 3 arguments num → 4, den → 3, expected → 1 to "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test "a process killed after the rename has committed the new studio.json" started.
+◇ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" started.
+◇ Test case passing 3 arguments num → -4, den → 3, expected → -1 to "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" started.
+◇ Test "a corrupted index is rebuilt from the project folders with the same project list" started.
+◇ Test "a created project reloads from its folder in a new store with the same kind and no sources" started.
+◇ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" started.
+◇ Test case passing 3 arguments num → -5, den → 3, expected → -2 to "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test "the Sample project lock names jovra.project-lock version 1 and is Sample data" started.
+◇ Test case passing 3 arguments num → 0, den → 7, expected → 0 to "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test "a record without a sample flag is not Sample data" started.
+◇ Test "a record that is not a JSON object with a schemaVersion string is an error" started.
+◇ Test "an edit plan names version 2 of its contract" started.
+◇ Test case passing 3 arguments num → 7, den → -2, expected → -3 to "half-up rounds .5 away from minus infinity, for both signs" started.
+◇ Test case passing 1 argument scope → .derived to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test case passing 1 argument scope → .cloudCopies to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+Studio fixture manifest: 42 kinds; consumers: ["ContractsConsumer", "EDLConsumer", "KeepersConsumer", "LedgerConsumer"]
+  barcode-court page=barcode-court swift=pending consumed=false files=1
+  compile page=compile swift=pending consumed=false files=1
+  director page=planner swift=pending consumed=false files=1
+  edl-context page=edl swift=consumed consumed=true files=1
+  job-transitions page=jobstate swift=consumed consumed=true files=1
+  jovra.broll-catalog/1 page=records swift=consumed consumed=true files=1
+  jovra.camera-invite/1 page=records swift=consumed consumed=true files=1
+  jovra.credit-classes/1 page=ledger swift=consumed consumed=true files=1
+  jovra.delivered-artifact/1 page=records swift=consumed consumed=true files=1
+  jovra.edit-plan/2 page=edl swift=consumed consumed=true files=7
+  jovra.keeper-catalog/1 page=records swift=consumed consumed=true files=1
+  jovra.lesson/1 page=records swift=consumed consumed=true files=3
+  jovra.observation/1 page=records swift=consumed consumed=true files=3
+  jovra.project-lock/1 page=records swift=consumed consumed=true files=1
+  jovra.pts-table/1 page=normalization swift=pending consumed=false files=1
+  jovra.quote/1 page=ledger swift=consumed consumed=true files=3
+  jovra.reference-catalog/1 page=records swift=consumed consumed=true files=1
+  jovra.render-job-transitions/1 page=jobstate swift=consumed consumed=true files=1
+  jovra.render-job/1 page=jobstate swift=consumed consumed=true files=2
+  jovra.room-transcript/1 page=room swift=pending consumed=false files=4
+  jovra.room/1 page=room swift=pending consumed=false files=0
+  jovra.source-manifest/1 page=records swift=consumed consumed=true files=1
+  jovra.storage-providers/1 page=records swift=consumed consumed=true files=1
+  jovra.story-brief/1 page=records swift=consumed consumed=true files=2
+  jovra.story-profile-catalog/1 page=records swift=consumed consumed=true files=1
+  jovra.studio-fixture.invalid-cases/1 page=core swift=pending consumed=false files=30
+  jovra.studio-fixture.vectors/1 page=core swift=pending consumed=false files=16
+  jovra.studio-media-demo-subset/1 page=media-fixtures swift=pending consumed=false files=0
+  jovra.studio-media-truth/1 page=media-fixtures swift=pending consumed=false files=0
+  jovra.sync-map/1 page=sync swift=pending consumed=true files=1
+  jovra.usage-reservation/1 page=ledger swift=consumed consumed=true files=2
+  keepers page=keepers swift=consumed consumed=true files=1
+  ledger page=ledger swift=consumed consumed=true files=1
+  normalization page=normalization swift=pending consumed=false files=1
+  planner page=planner swift=pending consumed=false files=1
+  progress-comparison page=progress swift=pending consumed=false files=1
+  quote-credits page=ledger swift=consumed consumed=true files=1
+  room page=room swift=pending consumed=false files=1
+  sample-truth page=bundle swift=pending consumed=false files=1
+  sound-delay page=sync swift=pending consumed=false files=1
+  staleness page=keepers swift=consumed consumed=true files=1
+  sync-fit page=sync swift=pending consumed=false files=1
+◇ Test case passing 1 argument scope → .project to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+Ledger property test: base seed 0x51220261108, 1000 sequences, 17322 operations, 2193 replays, 2106 stage charges, 203 top-ups, 253 releases; rejections [(key: "budgetExceeded", value: 844), (key: "idempotencyConflict", value: 1511), (key: "insufficientCredits", value: 75), (key: "overCap", value: 1578), (key: "quoteNotAccepted", value: 2), (key: "reservationClosed", value: 1135)]
+◇ Test case passing 2 arguments pattern → "^[a-z]+$", expected → "^[a-z]+\z" to "ECMA-262 anchors: $ is rewritten outside character classes only" started.
+◇ Test case passing 2 arguments pattern → "^[$]$", expected → "^[$]\z" to "ECMA-262 anchors: $ is rewritten outside character classes only" started.
+◇ Test case passing 2 arguments pattern → "^a\$$", expected → "^a\$\z" to "ECMA-262 anchors: $ is rewritten outside character classes only" started.
+◇ Test case passing 1 argument text → "{"schemaVersion": "jovra.observation/1"" to "malformed JSON is unreadable, never partially decoded" started.
+◇ Test case passing 2 arguments pattern → "^(a|b)$", expected → "^(a|b)\z" to "ECMA-262 anchors: $ is rewritten outside character classes only" started.
+◇ Test case passing 1 argument text → "[1, 2" to "malformed JSON is unreadable, never partially decoded" started.
+◇ Test case passing 1 argument text → "{"a": 01}" to "malformed JSON is unreadable, never partially decoded" started.
+◇ Test case passing 1 argument text → "{"a": "\ud800"}" to "malformed JSON is unreadable, never partially decoded" started.
+◇ Test case passing 1 argument text → "{} {}" to "malformed JSON is unreadable, never partially decoded" started.
+  valid edit-plan.coach-cut-serve: 7 segments, 192 s, motion false, needsCleanAlternate false
+  valid edit-plan.court-memories-final: 5 segments, 258 s, motion true, needsCleanAlternate true
+  valid edit-plan.court-memories-storyboard.clean: 6 segments, 258 s, motion false, needsCleanAlternate false
+  valid edit-plan.court-memories-storyboard: 6 segments, 258 s, motion true, needsCleanAlternate true
+  valid edit-plan.match-broadcast-set-1: 4 segments, 300 s, motion true, needsCleanAlternate true
+✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 2.380 seconds.
+  valid edit-plan.rally-pulse-portrait.clean: 4 segments, 45 s, motion false, needsCleanAlternate false
+  valid edit-plan.rally-pulse-portrait: 4 segments, 45 s, motion true, needsCleanAlternate true
+✔ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" passed after 2.400 seconds.
+✔ Test "S1 enables exactly the spec's list" passed after 2.400 seconds.
+✔ Test "a fixture that does not exist is an error naming the path, never a silent empty read" passed after 2.401 seconds.
+✔ Test "operations are read from the plan's fields" passed after 2.401 seconds.
+✔ Test "narration and the warm grade are refused in S1" passed after 2.401 seconds.
+✔ Test "one phone is a complete project: create with a primary session holds it as the primary camera-1" passed after 2.411 seconds.
+✔ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" passed after 2.411 seconds.
+✔ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" passed after 2.418 seconds.
+✔ Test "the bundled contracts are the repository's render-job-transitions and credit-classes files, byte for byte" passed after 2.418 seconds.
+✔ Test "all 32 job-transition vectors give the reference's state, resume stage, attempt or code" passed after 2.475 seconds.
+✔ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" passed after 2.475 seconds.
+✔ Test "finding 1: re-showing a live moment as a second 1x live segment is a replay without its label" passed after 2.475 seconds.
+  refused camera-invite.invalid.json#coach-invite: schema: $.invites[1].role: expected "camera", got "coach"
+  refused delivered-artifact.film.invalid.json#auto-published: schema: $.youtubePrep.published: expected false, got true
+  refused delivered-artifact.film.invalid.json#public-film: schema: $.delivery.visibility: expected "private", got "public"
+  refused delivered-artifact.film.invalid.json#plan-hash-trailing-newline: schema: $.bindings.editPlanSha256: "8888888888888888888888888888888888888888888888888888888888888888\n" does not match ^[0-9a-f]{64}$
+  refused edit-plan.coach-cut-serve.invalid.json#free-text-card: schema: $.segments[0]: matches 0 of oneOf (exactly 1 required); closest: $.segments[0].templateId: "Your goal: win" does not match ^[a-z][a-z0-9-]{0,31}(\.[a-z0
+  refused edit-plan.court-memories-storyboard.invalid.json#executable-command: schema: $.command: unknown property "command" (additionalProperties is false)
+  refused edit-plan.court-memories-storyboard.invalid.json#approval-in-plan: schema: $.approved: unknown property "approved" (additionalProperties is false)
+✔ Test "finding 2: a null keeperId does not switch contact protection off" passed after 2.633 seconds.
+✔ Test "the Rally Pulse 9:16 fixture is valid under the contract and refused by S1 for reframe and music" passed after 2.633 seconds.
+  refused edit-plan.court-memories-storyboard.invalid.json#signed-url-source: schema: $.sources[0].url: unknown property "url" (additionalProperties is false)
+  refused edit-plan.court-memories-storyboard.invalid.json#unlabelled-speed: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].speed.num: expected 1, got 5
+  refused edit-plan.court-memories-storyboard.invalid.json#wipe-transition: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].transitionIn.type: "wipe" is not one of the allowed values
+✔ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" passed after 2.739 seconds.
+✔ Test "finding 8: a plan naming another project is refused against this project's records" passed after 2.739 seconds.
+✔ Test "finding 7: the alternate bed returning mid-segment, and an alternate bed at a dissolve without an audio dip" passed after 2.739 seconds.
+✔ Test "a source is a reference: no file of the original appears in the project folder" passed after 2.739 seconds.
+✔ Test "a vector with a wrong expectation is reported as a mismatch" passed after 2.739 seconds.
+✔ Test "with the core session store attached, a source must be an existing session, and the event-log version is read from it" passed after 2.739 seconds.
+✔ Test "a stored resume stage is checked, never trusted, whatever path the record took" passed after 2.739 seconds.
+✔ Test "every working state belongs to a named stage, and analyzing is shown as Build film, never as analysis" passed after 2.739 seconds.
+✔ Test "a local job never enters a cloud-only state" with 7 test cases passed after 2.740 seconds.
+✔ Test "finding 0: the first frame of a restarted interval maps through that interval (half-open coverage)" passed after 2.740 seconds.
+✔ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" passed after 2.740 seconds.
+✔ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" passed after 2.740 seconds.
+✔ Test "with localStudio off, creating a Studio film project is refused with the stated reason" passed after 2.740 seconds.
+✔ Test "changing one byte in a scratch copy of the bundled records fails the check, naming the file" passed after 2.740 seconds.
+✔ Test "all 21 ledger sequences give the reference's step results and final ledger" passed after 2.740 seconds.
+✔ Test "the happy path: none -> requested -> presented -> consented -> accepted(reservationId)" passed after 2.740 seconds.
+✔ Test "a plan bound ahead of its project is refused and nothing is written" passed after 2.740 seconds.
+✔ Test "all 8 quote-credit vectors give the reference's cap" passed after 2.740 seconds.
+✔ Test "finding 5: a second reserve entry 'reserve:<k>:retry' summed into the hold is badEntryKey" passed after 2.740 seconds.
+✔ Test "a real plan cannot be admitted without its authoritative core session store" passed after 2.740 seconds.
+✔ Test "a missing or an extra file in the bundled copy fails the check" passed after 2.740 seconds.
+✔ Test "the SHA-256 here agrees with the published test vectors and with the system tool" passed after 2.740 seconds.
+✔ Test "the bundled sample records are byte-identical to spec/studio/fixtures/records (sha256 equality)" passed after 2.740 seconds.
+✔ Test "with localStudio off, a film already made, the original, its export and the core library stay available" passed after 2.740 seconds.
+✔ Test "pause, retry and cancel work the same for local jobs; a retry counts an attempt" passed after 2.740 seconds.
+✔ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" passed after 2.740 seconds.
+✔ Test "consent needs the upload box, and the model-provider box exactly when the cloud plans the story" passed after 2.740 seconds.
+✔ Test "demo mode ends in demoDisabled with the Sample quote and no reservation" passed after 2.740 seconds.
+✔ Test "replaying the stored jobs reaches their state, resume stage and attempt" passed after 2.740 seconds.
+✔ Test "every edit-plan invalid case fails with the reference's finding code (zero mismatches)" passed after 2.740 seconds.
+✔ Test "every stored render-job, quote and usage-reservation record passes its rules" passed after 2.740 seconds.
+✔ Test "the two clean-alternate pairs are reproduced byte for byte by cleanAlternate" passed after 2.740 seconds.
+✔ Test "a consent half a second before expiry is accepted; acceptance after expiry is not" passed after 2.740 seconds.
+✔ Test "a correction found at lock time stales what was built before it" passed after 2.740 seconds.
+✔ Test "the Sample film binds the canonical hash Swift computes for the final plan (the key staleness uses)" passed after 2.740 seconds.
+✔ Test "consent at 23:15:00.500Z on a quote that expires at 23:15:00Z is refused and the quote expires" passed after 2.740 seconds.
+✔ Test "unavailable, expired-on-arrival, illustrative and live quotes never reach consent" passed after 2.740 seconds.
+✔ Test "finding 9: a redelivered reserve and a redelivered top-up after a top-up replay with no charge" passed after 2.740 seconds.
+✔ Test "a cap above the spending limit waits in aboveCap until the player raises the limit" passed after 2.740 seconds.
+✔ Test "it is the same rule as the core percentage (Percent.pct is half-up of 100n/d)" passed after 2.740 seconds.
+✔ Test "validate() without a trusted context returns contextMissing" passed after 2.740 seconds.
+✔ Test "every reference-layer invalid case fails with the reference's code; schema-layer cases never decode" passed after 2.740 seconds.
+✔ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" passed after 2.741 seconds.
+✔ Test "a record that is not flagged Sample is refused, and so is a missing one" passed after 2.740 seconds.
+✔ Test "half-up rounds .5 away from minus infinity, for both signs" with 10 test cases passed after 2.740 seconds.
+✔ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" passed after 2.740 seconds.
+✔ Test "the typed clean alternate equals the stored typed record" passed after 2.740 seconds.
+✔ Test "every keepers vector matches the reference and its hand assertions (zero mismatches)" passed after 2.740 seconds.
+✔ Test "every staleness vector matches the reference and its hand assertions (zero mismatches)" passed after 2.740 seconds.
+✔ Test "a stage that enables every operation the plan uses refuses nothing" passed after 2.741 seconds.
+✔ Test "every finding code except the stage gate is a code edl.py raises" passed after 2.740 seconds.
+✔ Test "a sync or keeper change that spares the plan carries it forward; a later change it uses stales it" passed after 2.741 seconds.
+✔ Test "the records page is consumed only while its decoders stay registered" passed after 2.741 seconds.
+✔ Test "finding 0: a frame looked up without its window's interval maps half-open (freezes and overlay moments)" passed after 2.741 seconds.
+✔ Test "a boolean speed is badSpeed in the validator itself, not only in the schema layer" passed after 2.740 seconds.
+  refused edit-plan.court-memories-storyboard.invalid.json#copied-score-digits: schema: $.segments[2]: matches 0 of oneOf (exactly 1 required); closest: $.segments[2].overlayRefs[0].value: unknown property "value" (additionalProperties is f
+  refused trailing newline: delivered-artifact.film.invalid.json#plan-hash-trailing-newline
+  refused trailing newline: lesson.2026-10-07.invalid.json#id-trailing-newline
+  refused trailing newline: quote.accepted.invalid.json#hash-trailing-newline
+  refused edit-plan.court-memories-storyboard.invalid.json#aspect-21-9: schema: $.output.aspect: "21:9" is not one of the allowed values
+✔ Test "the accept request carries no amount: the client never computes a price the server trusts" passed after 2.774 seconds.
+◇ Test case passing 1 argument text → "jovra.project-lock/1
+" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → "jovra.project-lock" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → "jovra.project-lock/0" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → "jovra.project-lock/01" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → "jovra.project-lock/1.0" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → "jovra.Project-Lock/1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → "jovra./1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → "JOVRA.project-lock/1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → "other.project-lock/1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+◇ Test case passing 1 argument text → " jovra.project-lock/1" to "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" started.
+✔ Test "the trusted context is built from the stored records, with the reviewed sync map's coverage" passed after 2.776 seconds.
+✔ Test "a new kind whose page says swift: pending passes unconsumed" passed after 2.776 seconds.
+✔ Test "a rational media time converts to exact microseconds" passed after 2.776 seconds.
+✔ Test "the match project's revisions, slots and owners come from the stored sample records" passed after 2.776 seconds.
+✔ Test "correcting an early point stales the dependent plan and its film in the same transaction; another session's films stay current" passed after 2.777 seconds.
+✔ Test "the repository's fixtures, module pages and Swift consumers agree" passed after 2.777 seconds.
+✔ Test "a top-up keyed by the initial quote is refused in the ledger and in a stored record" passed after 2.776 seconds.
+✔ Test "each identity is made of records of the sample project, and the identities do not share a record" passed after 2.777 seconds.
+✔ Test "a page that says swift: consumed with no Swift consumer fails" passed after 2.777 seconds.
+✔ Test "installing twice keeps the installed sample; a real project holding a sample id is never overwritten" passed after 2.777 seconds.
+✔ Test "the bundled contract drives the same machine as the repository's file" passed after 2.777 seconds.
+✔ Test "1,000 seeded sequences: reserved never exceeds the cap, no stage is charged twice, credits are conserved" passed after 2.777 seconds.
+✔ Test "zero denominators and overflow are errors, never wrong numbers" passed after 2.777 seconds.
+✔ Test "a new fixture kind with no module page fails" passed after 2.777 seconds.
+✔ Test "an id pattern refuses a trailing newline and accepts the id" passed after 2.776 seconds.
+✔ Test "NTSC frames: 30000/1001 fps maps microseconds to frames exactly" passed after 2.777 seconds.
+✔ Test "explicit null and absence stay distinct: a required nullable field must be present" passed after 2.776 seconds.
+✔ Test "B-roll marked as not from this match is never offered as match footage by a later plan (planner input)" passed after 2.776 seconds.
+✔ Test "ECMA-262 anchors: $ is rewritten outside character classes only" with 4 test cases passed after 2.777 seconds.
+✔ Test "the typed model carries the fixture's values, not just its bytes" passed after 2.777 seconds.
+✔ Test "the loader reports an unsupported keyword, a dangling $ref and a non-portable escape" passed after 2.777 seconds.
+✔ Test "malformed JSON is unreadable, never partially decoded" with 5 test cases passed after 2.777 seconds.
+✔ Test "the embedded schemas equal spec/schemas/studio byte for byte, and the models were generated from them" passed after 2.777 seconds.
+✔ Test "removing deletes every Sample project in one call and leaves real projects untouched" passed after 2.777 seconds.
+✔ Test "a decoded record re-encodes through the codec and decodes to the same value" passed after 2.777 seconds.
+✔ Test "interrupted event projection cannot re-admit a stale plan; reopening can retry the event update" passed after 2.777 seconds.
+✔ Test "the writer refuses a value that breaks its schema (an id ending in a newline)" passed after 2.777 seconds.
+✔ Test "a duplicate member name is refused before any schema check" passed after 2.777 seconds.
+✔ Test "an integral float (744.0) in a frame field is refused; 744 is accepted" passed after 2.777 seconds.
+✔ Test "every keyword the Studio schemas use is implemented, every $ref resolves, every pattern is portable" passed after 2.777 seconds.
+✔ Test "an unknown property is refused, at the root and nested" passed after 2.777 seconds.
+✔ Test "every valid edit-plan record passes as stored" passed after 2.777 seconds.
+✔ Test "an exponent integer (7.44e2) is not an integer either" passed after 2.777 seconds.
+✔ Test "decimals survive exactly: an observation's confidence 0.62 round-trips as 0.62" passed after 2.777 seconds.
+✔ Test "a document of another contract is refused by name" passed after 2.777 seconds.
+✔ Test "an excluded keeper never appears in any profile's order, in the plan input or in the stored catalog" passed after 2.777 seconds.
+✔ Test "excluding a person or the location removes every B-roll clip that shows them from later plans" passed after 2.777 seconds.
+✔ Test "markBroll refuses an empty window, a repeated id, stock footage and another day's clip claimed as this match" passed after 2.777 seconds.
+✔ Test "oneOf needs exactly one match, if/then applies only when the condition holds" passed after 2.777 seconds.
+✔ Test "select and annotate keep a keeper with the player's note; each edit names the keepers it changed" passed after 2.774 seconds.
+✔ Test "candidates(project, eventVersion) is a jovra.keeper-catalog/1 record the strict encoder accepts" passed after 2.777 seconds.
+✔ Test "installing yields a match project whose score from the core fold reads Jon 6 6 / Alex 4 3, Final" passed after 2.777 seconds.
+✔ Test "every installed project and every installed record is flagged Sample, byte for byte as shipped" passed after 2.777 seconds.
+✔ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" passed after 2.777 seconds.
+✔ Test "locking the installed sample reproduces the shipped lock as revision 2, with the reference's manifest hash" passed after 2.777 seconds.
+✔ Test "fractions compare exactly where binary floating point would not" passed after 2.104 seconds.
+✔ Test "products beyond Int64 stay exact" passed after 2.104 seconds.
+✔ Test "a process killed after the rename has committed the new studio.json" passed after 0.832 seconds.
+✔ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" passed after 0.832 seconds.
+✔ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" passed after 0.831 seconds.
+✔ Test "a corrupted index is rebuilt from the project folders with the same project list" passed after 0.831 seconds.
+✔ Test "the trailing-newline id and hash cases are refused, although Python's re.search accepts them (finding 6)" passed after 2.777 seconds.
+✔ Test "a created project reloads from its folder in a new store with the same kind and no sources" passed after 0.831 seconds.
+✔ Test "a schema version is refused unless it is exactly jovra.<kind>/<positive integer>" with 10 test cases passed after 0.807 seconds.
+✔ Test "the Sample project lock names jovra.project-lock version 1 and is Sample data" passed after 0.806 seconds.
+✔ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" passed after 0.831 seconds.
+✔ Test "a record without a sample flag is not Sample data" passed after 0.701 seconds.
+✔ Test "a record that is not a JSON object with a schemaVersion string is an error" passed after 0.701 seconds.
+✔ Test "an edit plan names version 2 of its contract" passed after 0.701 seconds.
+✔ Suite "Studio fixture locator" passed after 2.779 seconds.
+✔ Suite "Studio project store: the localStudio entitlement" passed after 2.779 seconds.
+✔ Suite "EDL stage allowlist (SD6b)" passed after 2.779 seconds.
+✔ Suite "Studio project store: sources, slots and revisions" passed after 2.779 seconds.
+✔ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" passed after 2.779 seconds.
+✔ Suite "Ledger: RenderJobMachine for local and cloud jobs" passed after 2.779 seconds.
+✔ Suite "Studio sample content: bundled resources" passed after 2.779 seconds.
+✔ Suite "Ledger: QuoteReservation (client quote and consent state)" passed after 2.779 seconds.
+✔ Suite "Keepers: staleness through the project store" passed after 2.779 seconds.
+✔ Suite "Ledger: record rules and the reference's invalid cases" passed after 2.779 seconds.
+✔ Suite "Keepers: parity with keepers.py and staleness.py" passed after 2.779 seconds.
+✔ Suite "Studio contracts: time" passed after 2.779 seconds.
+✔ Suite "Studio sample content" passed after 2.779 seconds.
+✔ Suite "Studio contracts: fixture manifest" passed after 2.780 seconds.
+✔ Suite "Ledger: random retry and redelivery sequences" passed after 2.779 seconds.
+✔ Suite "Studio contracts: schema set" passed after 2.779 seconds.
+✔ Suite "Studio contracts: strict decoding" passed after 2.779 seconds.
+✔ Suite "Keepers: select, exclude, annotate and markBroll" passed after 2.779 seconds.
+✔ Suite "EDL exact arithmetic" passed after 2.779 seconds.
+✔ Suite "Studio project store: durability and the index" passed after 2.779 seconds.
+✔ Suite "Studio record header" passed after 2.779 seconds.
+✔ Suite "EDL validator: parity with edl.py" passed after 2.780 seconds.
+  refused edit-plan.court-memories-storyboard.invalid.json#model-guessed-reframe: schema: $.segments[1]: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].framing: matches 0 of oneOf (exactly 1 required); closest: $.segments[1].
+  refused lesson.2026-10-07.invalid.json#id-trailing-newline: schema: $.lessonId: "lesson-1007\n" does not match ^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$
+  refused observation.estimated-cue.invalid.json#certainty-over-one: schema: $.provenance.confidence: 1.5 > maximum 1
+  refused project-lock.invalid.json#recoloured-brand: schema: $.brand.chartreuse: expected "#D7F56A", got "#00FF00"
+  refused quote.accepted.invalid.json#unbound-quote: schema: $: missing required property "outputSpecSha256"
+  refused quote.accepted.invalid.json#retention-not-offered: schema: $.retentionDays: 14 is not one of the allowed values
+  refused quote.accepted.invalid.json#consent-without-model-field: schema: $.consent: matches 0 of oneOf (exactly 1 required); closest: $.consent: expected type ["null"], got object
+  refused quote.accepted.invalid.json#hash-trailing-newline: schema: $.outputSpecSha256: "8888888888888888888888888888888888888888888888888888888888888888\n" does not match ^[0-9a-f]{64}$
+  refused reference-catalog.invalid.json#value-in-catalog: schema: $.references[0].value: unknown property "value" (additionalProperties is false)
+  refused render-job.ready.invalid.json#resume-to-ready: schema: $.resumeStage: matches 0 of oneOf (exactly 1 required); closest: $.resumeStage: expected type ["null"], got string
+  refused source-manifest.invalid.json#file-path: schema: $.sources[0].original.path: unknown property "path" (additionalProperties is false)
+  refused storage-providers.invalid.json#provider-as-compute: schema: $.providers[0].processing: expected false, got true
+  refused story-brief.progress.invalid.json#score-text-in-brief: schema: $.beats[1].scoreText: unknown property "scoreText" (additionalProperties is false)
+  refused sync-map.invalid.json#validated-map: schema: $.provenance.status: "validated" is not one of the allowed values
+  refused sync-map.invalid.json#certainty-field: schema: $.sources[1].pieces[0].anchors[0].confidencePct: unknown property "confidencePct" (additionalProperties is false)
+  refused sync-map.invalid.json#fit-without-inliers: schema: $.sources[1].pieces[0].fit: matches 0 of oneOf (exactly 1 required); closest: $.sources[1].pieces[0].fit: expected type ["null"], got object
+✔ Test "a primary session with no recorded events is refused with eventLogEmpty, not a schema error" passed after 2.854 seconds.
+✔ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" with 3 test cases passed after 2.881 seconds.
+✔ Suite "Studio project store: delete scopes and films" passed after 2.882 seconds.
+  refused sync-map.invalid.json#failed-piece-claims-coverage: schema: $.sources[2].pieces[1].matchCoverage: expected type ["null"], got object
+  refused sync-map.invalid.json#no-overlap-state: schema: $.sources[2].pieces[0].state: "no-overlap" is not one of the allowed values
+Studio invalid cases (schema layer): 30 refused; unregistered schemas skipped: [(key: "jovra.pts-table/1", value: 5), (key: "jovra.room-transcript/1", value: 4)]
+✔ Test "every schema-layer invalid case of a registered schema is refused" passed after 2.905 seconds.
+✔ Test "create with a primary session seeds the event-log version from that session's log" passed after 3.005 seconds.
+✔ Test "a lock whose primary session was deleted is refused with sessionNotFound" passed after 3.002 seconds.
+✔ Test "a lock on a fresh real project records the primary session's current event revision" passed after 2.935 seconds.
+Studio round-trips: 34 records byte-identical across 19 schemas
+  jovra.broll-catalog/1: 1
+  jovra.camera-invite/1: 1
+  jovra.credit-classes/1: 1
+  jovra.delivered-artifact/1: 1
+  jovra.edit-plan/2: 7
+  jovra.keeper-catalog/1: 1
+  jovra.lesson/1: 3
+  jovra.observation/1: 3
+  jovra.project-lock/1: 1
+  jovra.quote/1: 3
+  jovra.reference-catalog/1: 1
+  jovra.render-job-transitions/1: 1
+  jovra.render-job/1: 2
+  jovra.source-manifest/1: 1
+  jovra.storage-providers/1: 1
+  jovra.story-brief/1: 2
+  jovra.story-profile-catalog/1: 1
+  jovra.sync-map/1: 1
+  jovra.usage-reservation/1: 2
+Studio records without a registered Swift decoder (their pages stay pending): records/pts-table.sample-corner.json (jovra.pts-table/1), records/room-transcript.st23-lobby.json (jovra.room-transcript/1), records/room-transcript.st23-trust.json (jovra.room-transcript/1), records/room-transcript.st24-contact-lost.json (jovra.room-transcript/1), records/room-transcript.st24-director.json (jovra.room-transcript/1)
+✔ Test "every record with a registered decoder decodes and re-encodes byte-identically" passed after 3.171 seconds.
+✔ Suite "Studio contracts: record round-trips" passed after 3.172 seconds.
+✔ Test "the Sample project never reads the core session store: its lock keeps the records' event revision" passed after 2.947 seconds.
+✔ Test "a lock taken after the session gains a correction records the newer revision, never the stale snapshot" passed after 3.200 seconds.
+✔ Suite "Studio project store: the lock's event revision" passed after 3.489 seconds.
+Studio vector cases run by Swift checkers: [(key: "edl-context", value: 4), (key: "job-transitions", value: 32), (key: "keepers", value: 26), (key: "ledger", value: 21), (key: "quote-credits", value: 8), (key: "staleness", value: 9)]
+✔ Test "every registered vector checker runs on at least one case of its kind" passed after 3.586 seconds.
+✔ Suite "Studio contracts: vector consumers" passed after 3.586 seconds.
+✔ Test "the jobstate and ledger pages say swift: consumed, and the manifest fails without LedgerConsumer" passed after 3.674 seconds.
+✔ Suite "Ledger: vector parity with jobstate.py and ledger.py" passed after 3.675 seconds.
+✔ Test "with only real sessions, installing and removing the Studio sample adds no session and changes no number" passed after 4.063 seconds.
+✔ Test "with real and core sample sessions in the library, installing the Studio sample leaves stats and trends unchanged" passed after 4.244 seconds.
+✔ Suite "Studio sample content: the sample-scope rule" passed after 4.245 seconds.
+Studio invalid cases (reference layer): 154 decode (their rules belong to the module tickets); refused as integral floats: ["edit-plan.court-memories-storyboard.invalid.json#integral-float-frame"]
+✔ Test "reference-layer cases pass the Swift decoder unless they carry an integral float" passed after 5.386 seconds.
+✔ Suite "Studio contracts: invalid cases" passed after 5.387 seconds.
+✔ Test run with 144 tests in 29 suites passed after 5.388 seconds.
+
+EXIT 0; elapsed 10.085s

@@ -1,0 +1,110 @@
+Baseline 332082ee with new public tests only; Swift 6.4.2.
+Exit 1: 3 recognized tests, 8 assertion failures.
+Building for debugging...
+[Pre-planning 1 / 211]
+[Planning deferred tasks]
+[56 / 96]
+[57 / 96]
+[59 / 98] StudioConsumerGenerator-product
+[65 / 153]
+[71 / 153]
+[76 / 153]
+[78 / 153]
+[82 / 153]
+[85 / 153]
+[89 / 153]
+[92 / 153]
+[93 / 153]
+[96 / 153] StudioConsumerGenerator-product
+[99 / 153] StudioConsumerGenerator-product
+[102 / 153] JovraCore
+[108 / 153] StudioConsumerGenerator-product
+[110 / 153] JovraCore
+[111 / 153] JovraCore
+[112 / 153] JovraCore
+[113 / 153] JovraCore
+[114 / 153] JovraCore
+[115 / 153] JovraCore
+[116 / 153] JovraCore-product
+[117 / 153] JovraCore-product
+[118 / 153] JovraStudioCore
+[119 / 153] JovraStudioCore
+[121 / 153] JovraCore
+[122 / 153] JovraCore
+[123 / 153] JovraCore
+[123 / 153]
+[124 / 154]
+[126 / 173] JovraStudioCore
+[127 / 173] StudioConsumerGenerator-product
+[129 / 173] JovraStudioCore
+[130 / 173] JovraStudioCore
+[131 / 173] JovraStudioCore
+[139 / 173] JovraStudioCore
+[141 / 173] JovraStudioCore-product
+[143 / 173] JovraStudioCore
+[144 / 173] JovraStudioCore
+[145 / 173] JovraStudioCore
+[146 / 173] JovraStudioCore
+[148 / 173] JovraStudioCore
+[149 / 173] JovraStudioCore
+[150 / 173] JovraStudioCore
+[155 / 173] JovraStudioCore
+[162 / 173] JovraStudioCoreTests-product
+[163 / 174] JovraStudioCoreTests-product
+[164 / 195]
+[168 / 195] JovraStudioCoreTests-product
+[169 / 195] JovraStudioCoreTests-product
+[171 / 195] JovraStudioCoreTests-product
+[177 / 195] JovraStudioCoreTests-product
+[178 / 195] JovraStudioCoreTests-product
+[179 / 195] JovraStudioCoreTests-product
+[180 / 195] JovraStudioCoreTests-product
+[182 / 195] JovraStudioCoreTests-product
+[183 / 195] JovraStudioCoreTests-product
+[184 / 195] JovraStudioCoreTests-product
+[185 / 195] JovraStudioCoreTests-product
+[186 / 195] JovraStudioCoreTests-product
+[187 / 195] JovraStudioCoreTests-product
+[188 / 195] JovraStudioCoreTests-product
+[189 / 195] JovraStudioCoreTests-product
+[191 / 195] JovraStudioCoreTests-product
+Build complete! (27.36 sec)
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Keepers: staleness through the project store" started.
+◇ Test "a real plan cannot be admitted without its authoritative core session store" started.
+◇ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" started.
+◇ Test "interrupted event projection cannot re-admit a stale plan; reopening can retry the event update" started.
+✘ Test "a real plan cannot be admitted without its authoritative core session store" recorded an issue at KeepersStoreStalenessTests.swift:151:15: Expectation failed: an error was expected but none was thrown
+↳ StudioProjectStoreError.self → <not evaluated>
+✘ Test "a real plan cannot be admitted without its authoritative core session store" failed after 0.547 seconds with 1 issue.
+✘ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" recorded an issue at KeepersStoreStalenessTests.swift:133:13: Expectation failed: result.stalePlanIds == ["court-memories-final"]
+↳ result.stalePlanIds == ["court-memories-final"] → false
+↳   result.stalePlanIds → []
+✘ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" recorded an issue at KeepersStoreStalenessTests.swift:134:13: Expectation failed: result.staleFilmIds == [film.artifactId]
+↳ result.staleFilmIds == [film.artifactId] → false
+↳   result.staleFilmIds → []
+↳   [film.artifactId] → ["film-0"]
+✘ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" recorded an issue at KeepersStoreStalenessTests.swift:135:19: Expectation failed: an error was expected but none was thrown
+↳ StudioProjectStoreError.planStale("court-memories-final") → <not evaluated>
+✘ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" recorded an issue at KeepersStoreStalenessTests.swift:133:13: Expectation failed: result.stalePlanIds == ["court-memories-final"]
+↳ result.stalePlanIds == ["court-memories-final"] → false
+↳   result.stalePlanIds → []
+✘ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" recorded an issue at KeepersStoreStalenessTests.swift:134:13: Expectation failed: result.staleFilmIds == [film.artifactId]
+↳ result.staleFilmIds == [film.artifactId] → false
+↳   result.staleFilmIds → []
+↳   [film.artifactId] → ["film-0"]
+✘ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" recorded an issue at KeepersStoreStalenessTests.swift:135:19: Expectation failed: an error was expected but none was thrown
+↳ StudioProjectStoreError.planStale("court-memories-final") → <not evaluated>
+✘ Test "a saved core correction refuses the previous plan before a Studio refresh, including after reopening" failed after 0.663 seconds with 6 issues.
+✘ Test "interrupted event projection cannot re-admit a stale plan; reopening can retry the event update" recorded an issue at KeepersStoreStalenessTests.swift:175:15: Expectation failed: an error was expected but none was thrown
+↳ StudioProjectStoreError.planStale("court-memories-final") → <not evaluated>
+✘ Test "interrupted event projection cannot re-admit a stale plan; reopening can retry the event update" failed after 0.749 seconds with 1 issue.
+✘ Suite "Keepers: staleness through the project store" failed after 0.749 seconds with 8 issues.
+↳ /// SD20 in the project store (S35): a revision the store records runs staleness propagation over the project's stored
+↳ /// plans and films in the same transaction. Real (non-sample) fixture sessions from the shipped core library; the
+↳ /// plan and film are the Sample's court-memories-final plan and film, re-labelled for each real project.
+✘ Test run with 3 tests in 1 suite failed after 0.749 seconds with 8 issues.
+Note: Some test targets reported failures:
+  - JovraStudioCoreTests (Swift Testing)
