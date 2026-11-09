@@ -122,7 +122,7 @@ public final class PlaybackController {
         canPlaySlowForward = item.canPlaySlowForward
     }
 
-    /// Stops playback, removes observers and cancels proxy work. The proxy file stays for next time.
+    /// Stops playback, removes observers and cancels proxy work. An already published proxy stays for next time.
     public func close() {
         isClosed = true
         player.pause()
@@ -270,25 +270,31 @@ public final class PlaybackController {
         let url = url, rate = frameRate, expected = frameCount
         proxyTask = Task { @MainActor [weak self] in
             let encoder = Task.detached(priority: .utility) {
-                try await ProxyBackwardStepper.prepare(original: url, frameRate: rate, proxyDirectory: proxyDirectory,
-                                                       expectedFrameCount: expected)
+                try await ShortGOPProxy.encode(from: url, into: proxyDirectory, frameRate: rate)
             }
             let result = await withTaskCancellationHandler {
                 await encoder.result
             } onCancel: {
                 encoder.cancel()
             }
+            let staged = try? result.get()
+            defer { staged?.discard() }
             guard let self else { return }
             defer { self.proxyTask = nil }
             guard !self.isClosed else {
                 self.proxyState = .none
                 return
             }
-            switch result {
-            case .success(let stepper):
-                self.stepper = stepper
+            guard let staged else {
+                self.proxyState = .failed
+                return
+            }
+            // Publish on the same actor as close(), without suspension between acceptance and rename.
+            do {
+                let proxy = try staged.publish(expectedFrameCount: expected)
+                self.stepper = try ProxyBackwardStepper(proxy: proxy, frameRate: rate)
                 self.proxyState = .ready
-            case .failure:
+            } catch {
                 self.proxyState = .failed
             }
         }
