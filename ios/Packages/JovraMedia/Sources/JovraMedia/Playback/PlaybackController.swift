@@ -70,6 +70,14 @@ public final class PlaybackController {
     /// Opens a local original. Missing files, files without video and variable-rate files are typed errors.
     public static func open(url: URL, proxyDirectory: URL? = nil,
                             slowBackwardStep: Duration = defaultSlowBackwardStep) async throws -> PlaybackController {
+        try await open(url: url, proxyDirectory: proxyDirectory, slowBackwardStep: slowBackwardStep) {
+            try await $0.waitUntilReady()
+        }
+    }
+
+    static func open(url: URL, proxyDirectory: URL? = nil,
+                     slowBackwardStep: Duration = defaultSlowBackwardStep,
+                     awaitReadiness: @MainActor (PlaybackController) async throws -> Void) async throws -> PlaybackController {
         guard url.isFileURL, FileManager.default.fileExists(atPath: url.path) else { throw PlaybackOpenError.missingFile }
         let info: MediaInfo
         do { info = try await MediaProbe.probe(url) } catch { throw PlaybackOpenError.unreadable }
@@ -85,7 +93,7 @@ public final class PlaybackController {
         guard frames > 0 else { throw PlaybackOpenError.noVideo }
         let controller = PlaybackController(url: url, asset: asset, frameRate: rate, frameCount: frames, videoStart: firstVideoTime,
                                             proxyDirectory: proxyDirectory, slowBackwardStep: slowBackwardStep)
-        try await controller.waitUntilReady()
+        try await awaitReadiness(controller)
         if firstVideoTime > .zero, !(await controller.landOriginal(at: 0, precision: .exact)) {
             controller.close()
             throw PlaybackOpenError.unreadable

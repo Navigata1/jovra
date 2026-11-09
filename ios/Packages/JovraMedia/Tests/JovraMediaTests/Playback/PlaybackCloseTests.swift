@@ -89,6 +89,45 @@ struct PlaybackCloseTests {
         #expect(!controller.isPlaying)
     }
 
+    @Test(arguments: [false, true])
+    func failedOrCancelledReadinessLeavesAnInertController(cancelled: Bool) async throws {
+        let url = try fixtureURL()
+        let gate = HeldReadiness()
+        defer { gate.release() }
+        let opening = Task {
+            try await PlaybackController.open(url: url) { controller in
+                await gate.suspend(controller)
+                try Task.checkCancellation()
+                throw PlaybackOpenError.unreadable
+            }
+        }
+        try #require(await waitUntil { gate.controller != nil }, "Readiness reached after controller allocation")
+        let allocated = try #require(gate.controller)
+        defer { allocated.close() }
+        if cancelled { opening.cancel() }
+        gate.release()
+        switch await opening.result {
+        case .success:
+            Issue.record("Readiness must not yield a player")
+        case .failure(let error):
+            if cancelled {
+                #expect(error is CancellationError)
+            } else {
+                #expect(error as? PlaybackOpenError == .unreadable)
+            }
+        }
+
+        let frame = allocated.readout.frame
+        let issued = allocated.seeksIssued
+        allocated.play()
+        #expect(!allocated.isPlaying)
+        #expect(!allocated.setRate(.double))
+        await allocated.seek(toFrame: 20)
+        #expect(allocated.player.rate == 0)
+        #expect(allocated.readout.frame == frame)
+        #expect(allocated.seeksIssued == issued)
+    }
+
     private func waitUntil(_ condition: () -> Bool) async -> Bool {
         let deadline = ContinuousClock.now + .milliseconds(300)
         while !condition(), ContinuousClock.now < deadline {
@@ -114,5 +153,23 @@ private final class HeldSeek {
         let continuation = pending
         pending = nil
         continuation?.resume(returning: succeeded)
+    }
+}
+
+
+@MainActor
+private final class HeldReadiness {
+    private(set) var controller: PlaybackController?
+    private var pending: CheckedContinuation<Void, Never>?
+
+    func suspend(_ controller: PlaybackController) async {
+        self.controller = controller
+        await withCheckedContinuation { pending = $0 }
+    }
+
+    func release() {
+        let continuation = pending
+        pending = nil
+        continuation?.resume()
     }
 }
