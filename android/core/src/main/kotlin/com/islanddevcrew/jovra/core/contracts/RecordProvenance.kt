@@ -72,7 +72,8 @@ data class RecordProvenance(
             "calibrationId", "denominator", "computedAt", "sample",
         )
         private val sourcePattern = Regex("""user|(?:model|rule|sample):[A-Za-z0-9._-]+@[A-Za-z0-9._+-]+|import:[A-Za-z0-9._-]+""")
-        private val capabilityPattern = Regex("""[a-z][a-zA-Z0-9]*(\.[a-z][a-zA-Z0-9]*)*""")
+        // Dots unambiguously separate components, so matching never needs to backtrack across them.
+        private val capabilityPattern = Regex("""[a-z][a-zA-Z0-9]*(?:\.[a-z][a-zA-Z0-9]*)*+""")
         private val dateTimePattern = Regex("""[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{1,3})?Z""")
 
         /** Reads one provenance record within the caller's UTF-8 input byte limit. */
