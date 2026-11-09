@@ -84,8 +84,10 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   A first guarded Gradle attempt stopped before tests at the 9 GiB safety
   buffer protecting the 8 GiB floor. Its last sample was about 8.75 GiB; the
   separately observed system free space subsequently fell below 8 GiB. That
-  initial attempt is not a product result. A later focused shell run passed
-  its two tests; the broader frozen build is in progress.
+  initial attempt is not a product result. The resumed [A02 draft #460](https://github.com/Navigata1/jovra/pull/460)
+  passed 18 Android and 8 JVM tests. Its verified debug APK installed without
+  replacement, launched, and opened five placeholder tabs on Pixel 6 Pro.
+  Foldable hardware, accessibility, full product features and owner gates remain open.
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
   and [#376](https://github.com/Navigata1/jovra/issues/376). Watch foundation
