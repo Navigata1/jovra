@@ -6,18 +6,18 @@ import Testing
 @MainActor
 private final class GatedSeeks {
     var log: [ChaseSeeker.Request] = []
-    private var gates: [CheckedContinuation<Void, Never>] = []
+    private var gates: [CheckedContinuation<Bool, Never>] = []
 
-    func perform(_ time: CMTime, _ precision: SeekPrecision) async {
+    func perform(_ time: CMTime, _ precision: SeekPrecision) async -> Bool {
         log.append(.init(time: time, precision: precision))
-        await withCheckedContinuation { gates.append($0) }
+        return await withCheckedContinuation { gates.append($0) }
     }
 
     var pending: Int { gates.count }
 
-    func finishOne() {
+    func finishOne(succeeded: Bool = true) {
         guard !gates.isEmpty else { return }
-        gates.removeFirst().resume()
+        gates.removeFirst().resume(returning: succeeded)
     }
 }
 
@@ -58,20 +58,51 @@ struct ChaseSeekerTests {
     func failedExactSeekDoesNotLandOrSuppressAnIdenticalRetry() async {
         let time = t(5)
         var outcomes = [false, true]
-        let playerSeek: ChaseSeeker.Perform = { _, _ in
-            _ = outcomes.removeFirst() // The inherited Void bridge loses the player's result.
-        }
+        let playerSeek: ChaseSeeker.Perform = { _, _ in outcomes.removeFirst() }
         let seeker = ChaseSeeker(perform: playerSeek)
-        await seeker.request(time, precision: .exact)
+        let failed = await seeker.request(time, precision: .exact)
+        #expect(!failed)
         #expect(seeker.isIdle)
         #expect(seeker.lastCompleted == nil)
         #expect(seeker.issuedCount == 1)
 
-        await seeker.request(time, precision: .exact)
+        let retried = await seeker.request(time, precision: .exact)
+        #expect(retried)
         #expect(seeker.lastCompleted == .init(time: time, precision: .exact))
         #expect(seeker.issuedCount == 2)
         await seeker.request(time, precision: .exact)
         #expect(seeker.issuedCount == 2, "A successful identical seek is still deduplicated")
+    }
+
+    @Test
+    func aQueuedIdenticalRequestIsIssuedAfterAnInterruptedSeek() async {
+        let seeks = GatedSeeks()
+        let seeker = ChaseSeeker { await seeks.perform($0, $1) }
+        seeker.submit(t(7), precision: .exact)
+        await drain()
+        seeker.submit(t(7), precision: .exact)
+        seeks.finishOne(succeeded: false)
+        await drain()
+        #expect(seeks.log.count == 2)
+        #expect(seeker.lastCompleted == nil)
+        #expect(!seeker.isIdle)
+        seeks.finishOne()
+        await seeker.settled()
+        #expect(seeker.lastCompleted == .init(time: t(7), precision: .exact))
+    }
+
+    @Test
+    func failureInvalidatesAPreviousLanding() async {
+        var outcomes = [true, false, true]
+        let seeker = ChaseSeeker { _, _ in outcomes.removeFirst() }
+        let first = await seeker.request(t(7), precision: .exact)
+        let interrupted = await seeker.request(t(8), precision: .exact)
+        #expect(first)
+        #expect(!interrupted)
+        #expect(seeker.lastCompleted == nil)
+        let restored = await seeker.request(t(7), precision: .exact)
+        #expect(restored)
+        #expect(seeker.issuedCount == 3)
     }
 
     @Test
@@ -80,8 +111,9 @@ struct ChaseSeekerTests {
         let seeker = ChaseSeeker { await seeks.perform($0, $1) }
         var settled = false
         let waiter = Task { @MainActor in
-            await seeker.request(t(5), precision: .exact)
+            let landed = await seeker.request(t(5), precision: .exact)
             settled = true
+            return landed
         }
         await drain()
         #expect(!settled)
@@ -90,8 +122,9 @@ struct ChaseSeekerTests {
         await drain()
         #expect(!settled, "a request waits for the chased target too")
         seeks.finishOne()
-        await waiter.value
+        #expect(!(await waiter.value), "The superseded request cannot claim the later landing")
         #expect(settled)
+        #expect(seeker.lastCompleted == .init(time: t(6), precision: .exact))
         #expect(seeks.log.map(\.time) == [t(5), t(6)])
     }
 
