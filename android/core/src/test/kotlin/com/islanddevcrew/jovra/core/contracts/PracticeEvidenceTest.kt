@@ -85,24 +85,28 @@ class PracticeEvidenceTest {
                 assertRefused(raw(ratio = ratio.replace("\"$name\":$correct", "\"$name\":$token")))
             }
         }
+        assertRefused(raw(ratio = ratio.replace("\"pct\":13", "\"pct\":12")))
+        assertRefused(raw(ratio = ratio.replace("13%", "12%")))
+    }
+
+    @Test
+    fun `nested provenance denominator retains the original exact integer token`() {
         for (token in listOf("744.0", "744e0", "\"744\"")) {
             assertRefused(raw(provenance = provenance.dropLast(1) + ",\"denominator\":$token}"))
         }
-        assertRefused(raw(ratio = ratio.replace("\"pct\":13", "\"pct\":12")))
-        assertRefused(raw(ratio = ratio.replace("13%", "12%")))
         val exact = decode(raw(provenance = provenance.dropLast(1) + ",\"denominator\":9007199254740993}"))
         assertEquals(9_007_199_254_740_993L, exact.provenance.denominator)
     }
 
-    @Test
-    fun `duplicates including escaped names fail independently at every object boundary`() {
-        assertRefused(raw(extra = ""","stat":"secondServeIn""""))
-        assertRefused(raw(extra = ""","\u0073tat":"secondServeIn""""))
-        assertRefused(raw(ratio = ratio.dropLast(1) + ""","n":1}"""))
-        assertRefused(raw(ratio = ratio.dropLast(1) + ""","\u006e":1}"""))
-        assertRefused(raw(provenance = provenance.dropLast(1) + ""","source":"user"}"""))
-        assertRefused(raw(provenance = provenance.dropLast(1) + ""","\u0073ource":"user"}"""))
-    }
+    @TestFactory
+    fun `duplicates including escaped names fail at each object boundary`(): List<DynamicTest> = listOf(
+        "row repeated" to raw(extra = ""","stat":"secondServeIn""""),
+        "row escaped" to raw(extra = ""","\u0073tat":"secondServeIn""""),
+        "ratio repeated" to raw(ratio = ratio.dropLast(1) + ""","n":1}"""),
+        "ratio escaped" to raw(ratio = ratio.dropLast(1) + ""","\u006e":1}"""),
+        "provenance repeated" to raw(provenance = provenance.dropLast(1) + ""","source":"user"}"""),
+        "provenance escaped" to raw(provenance = provenance.dropLast(1) + ""","\u0073ource":"user"}"""),
+    ).map { (name, input) -> dynamicTest(name) { assertRefused(input) } }
 
     @Test
     fun `closed row and nested shapes reject missing unknown invalid and null fields`() {
