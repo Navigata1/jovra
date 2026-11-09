@@ -15,3 +15,15 @@ swift test --package-path ios/Packages/JovraMedia --scratch-path "$PWD/.scratch/
 `results.txt` preserves key lines from the focused red and green runs and the full serial suite. The first shifted-fixture setup probe is retained separately in `.scratch/06-shifted-loop-red.log`; it exposed how AVFoundation counts an empty leading edit and is not the behavioral red. The behavioral red is `.scratch/07-shifted-loop-red.log`.
 
 No simulator, physical device, or current-main integration run was performed. The original PR's accessibility evidence remains separate, including the hosted substitute for its requested VoiceOver XCUITest and the timeline increment gap. This slice does not close issue #16.
+
+## Ordered proxy publication
+
+The boundary correction is tested at `49da8e17793876456a4c069699d7730fdb7aece6`. A 240 fps synthetic encode produced a complete movie while the controller was held on its main actor and still showed `building`. Before the fix, the worker published the movie and Close left it behind. Now the worker returns a temporary movie, and the controller accepts it and atomically renames it on the same actor as Close. Closing before handoff discards the temporary movie. Closing after handoff preserves the same cached bytes.
+
+The final focused macOS run passed 15 Swift Testing tests in two suites and one XCTest timing test. The controller averaged 6.27 ms per backward step. This run covers the controller Close boundary. Standalone proxy builds retain cooperative task cancellation.
+
+```sh
+swift test --package-path ios/Packages/JovraMedia --scratch-path "$PWD/.scratch/media-build" --jobs 2 --no-parallel --filter 'ShortGOPProxyTests|ProxyBackwardStepTimingTests|PlaybackControllerTests'
+```
+
+The full Media and benchmark receipts above remain tied to the earlier source. The first boundary probe, which observed the movie before the worker returned and passed before the fix, is retained as `.scratch/10-proxy-handoff-red.log`. The actual pre-fix failure is `.scratch/11-proxy-handoff-red.log`. The final focused run is `.scratch/13-proxy-handoff-final.log`.

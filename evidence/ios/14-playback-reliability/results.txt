@@ -49,3 +49,17 @@ proxy backward step average per iteration (ms): ["8.71", "8.78", "8.04", "7.61",
 controller proxy backward step average: 0.00691314 seconds
 ✔ Test run with 97 tests in 15 suites passed after 281.882 seconds.
 ✔ Test run with 45 tests in 8 suites passed after 1.714 seconds.
+
+--- 11-proxy-handoff-red.log ---
+✘ Test closingBeforeProxyHandoffDiscardsEvenAFinishedEncode() recorded an issue at ShortGOPProxyTests.swift:168:9: Expectation failed: !prematurePublication
+↳ !prematurePublication → <not evaluated>
+↳ Closing before handoff must leave neither a published proxy nor the encoded partial
+✘ Test run with 1 test in 1 suite failed after 0.540 seconds with 2 issues.
+
+--- 13-proxy-handoff-final.log ---
+Test Suite 'ProxyBackwardStepTimingTests' passed at 2026-11-09 01:17:41.422.
+proxy backward step average per iteration (ms): ["11.56", "15.17", "11.01", "10.66", "11.21", "14.85"]
+✔ Test aSlowBackwardStepStartsTheProxyAndLaterBackwardStepsUseIt() passed after 0.615 seconds.
+✔ Test closingBeforeProxyHandoffDiscardsEvenAFinishedEncode() passed after 1.365 seconds.
+controller proxy backward step average: 0.00627304 seconds
+✔ Test run with 15 tests in 2 suites passed after 18.816 seconds.
