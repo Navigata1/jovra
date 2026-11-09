@@ -1,43 +1,29 @@
 import Foundation
 
-/// A touch makes no seek until it has committed to horizontal scrubbing.
+/// Frame mapping and the last coarse target of the currently accepted pan.
 struct TimelineScrubInteraction {
-    static let dragThreshold: CGFloat = 10
+    private var lastFrame: Int?
 
-    private enum Intent {
-        case undecided
-        case vertical
-        case horizontal(lastFrame: Int)
+    static func hasHorizontalIntent(_ translation: CGPoint) -> Bool {
+        translation.x.isFinite && translation.y.isFinite && abs(translation.x) > abs(translation.y)
     }
 
-    private var intent = Intent.undecided
-
-    mutating func change(translation: CGSize, x: CGFloat, width: CGFloat, frameCount: Int) -> Int? {
-        if case .undecided = intent {
-            let horizontal = abs(translation.width)
-            let vertical = abs(translation.height)
-            guard max(horizontal, vertical) >= Self.dragThreshold else { return nil }
-            if vertical >= horizontal {
-                intent = .vertical
-                return nil
-            }
-        }
-        if case .vertical = intent { return nil }
-        guard let frame = Self.frame(at: x, width: width, frameCount: frameCount) else { return nil }
-        intent = .horizontal(lastFrame: frame)
-        return frame
+    mutating func change(x: CGFloat, width: CGFloat, frameCount: Int) -> Int? {
+        guard let target = Self.frame(at: x, width: width, frameCount: frameCount) else { return nil }
+        lastFrame = target
+        return target
     }
 
     mutating func end(x: CGFloat, width: CGFloat, frameCount: Int) -> Int? {
-        guard let lastFrame = cancel() else { return nil }
-        return Self.frame(at: x, width: width, frameCount: frameCount) ?? lastFrame
+        guard let previous = cancel() else { return nil }
+        return Self.frame(at: x, width: width, frameCount: frameCount) ?? previous
     }
 
-    /// If the system interrupts an accepted drag, land exactly on its last coarse target.
+    /// An interrupted pan lands exactly at its last coarse target and relinquishes it immediately.
+    @discardableResult
     mutating func cancel() -> Int? {
-        defer { intent = .undecided }
-        if case .horizontal(let lastFrame) = intent { return lastFrame }
-        return nil
+        defer { lastFrame = nil }
+        return lastFrame
     }
 
     static func frame(at x: CGFloat, width: CGFloat, frameCount: Int) -> Int? {

@@ -159,11 +159,7 @@ struct VideoLab: View {
                                  currentTimeText: time(controller.currentFrame, controller),
                                  durationText: time(controller.frameCount - 1, controller),
                                  onScrub: { controller.scrub(toFrame: $0) },
-                                 onTap: { frame in
-                                     if controller.isPlaying { controller.pause() }
-                                     Task { await controller.endScrub(atFrame: frame) }
-                                 },
-                                 onScrubEnded: { frame in Task { await controller.endScrub(atFrame: frame) } })
+                                 onScrubEnded: controller.finishScrub(atFrame:))
                 Spacer().frame(height: VideoMetrics.timelineToJogGap)
                 jog(controller)
                 Spacer().frame(height: Space.x3)

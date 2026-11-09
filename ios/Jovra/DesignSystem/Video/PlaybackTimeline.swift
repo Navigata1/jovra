@@ -9,11 +9,7 @@ struct PlaybackTimeline: View {
     var currentTimeText: String
     var durationText: String
     var onScrub: (Int) -> Void
-    var onTap: (Int) -> Void
     var onScrubEnded: (Int) -> Void
-
-    @State private var interaction = TimelineScrubInteraction()
-    @GestureState private var dragInProgress = false
 
     private var progress: CGFloat {
         frameCount > 1 ? CGFloat(frame) / CGFloat(frameCount - 1) : 0
@@ -34,15 +30,13 @@ struct PlaybackTimeline: View {
                 }
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
-                .simultaneousGesture(scrubGesture(width: width))
-                .onChange(of: dragInProgress) { _, inProgress in
-                    guard !inProgress else { return }
-                    // Let a normal end deliver its release coordinate before handling cancellation.
-                    Task { @MainActor in
-                        guard !dragInProgress, let target = interaction.cancel() else { return }
+                .gesture(TimelinePanGesture(width: width, frameCount: frameCount,
+                                            onScrub: onScrub, onScrubEnded: onScrubEnded))
+                .simultaneousGesture(SpatialTapGesture().onEnded { value in
+                    if let target = TimelineScrubInteraction.frame(at: value.location.x, width: width, frameCount: frameCount) {
                         onScrubEnded(target)
                     }
-                }
+                })
             }
             .frame(height: HitTarget.minimum)
             .accessibilityElement()
@@ -72,27 +66,5 @@ struct PlaybackTimeline: View {
             .foregroundStyle(.jovra(.textSecondary))
             .accessibilityHidden(true)
         }
-    }
-
-    private func scrubGesture(width: CGFloat) -> some Gesture {
-        let drag = DragGesture(minimumDistance: TimelineScrubInteraction.dragThreshold)
-            .updating($dragInProgress) { _, inProgress, _ in inProgress = true }
-            .onChanged { value in
-                if let target = interaction.change(translation: value.translation, x: value.location.x,
-                                                   width: width, frameCount: frameCount) {
-                    onScrub(target)
-                }
-            }
-            .onEnded { value in
-                if let target = interaction.end(x: value.location.x, width: width, frameCount: frameCount) {
-                    onScrubEnded(target)
-                }
-            }
-        let tap = SpatialTapGesture().onEnded { value in
-            if let target = TimelineScrubInteraction.frame(at: value.location.x, width: width, frameCount: frameCount) {
-                onTap(target)
-            }
-        }
-        return drag.exclusively(before: tap)
     }
 }
