@@ -1,0 +1,1178 @@
+{
+  "schemaVersion": "jovra.room-transcript/1",
+  "transcriptId": "st23-trust",
+  "sample": true,
+  "screen": "23-camera-lobby",
+  "title": "Camera lobby trust: a reused code, a typed code without channel binding, a man in the middle declined, an expired code, a full slot, revoke, a host restart and a host transfer",
+  "room": {
+    "roomId": "room-court-day",
+    "projectId": "sample-court-day",
+    "hostDeviceId": "device-jon",
+    "hostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+    "hostEpoch": 1,
+    "roomHint": "jovra-k7m2q9x4d1",
+    "maxCameras": 6,
+    "plannedMinutes": 90,
+    "eventRevision": 0,
+    "members": [
+      {
+        "deviceId": "device-jon",
+        "keySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+        "label": "Jon's iPhone",
+        "slot": "near-baseline",
+        "slotRole": "primary",
+        "commandGrants": [
+          "capture-controller",
+          "scorer",
+          "viewer"
+        ],
+        "capabilities": [
+          "record-local",
+          "upload-own-source",
+          "view-own-preview"
+        ]
+      }
+    ]
+  },
+  "steps": [
+    {
+      "step": "invite",
+      "atMs": 1000000,
+      "inviteId": "inv-a",
+      "slot": "far-baseline",
+      "displayCode": "JVR-417",
+      "lifetimeS": 600,
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDE3IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6MjY6NDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LWEiLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMDdUMjA6MTY6NDBaIiwiam9pblRva2VuIjoicXFoeFYyQmFFQURTRm55dm9XOFhMQjZWd21ibzYzeFVVTnBLV3F1MUV0USIsIm5vbmNlIjoidHZENVROVk1WTnRVbjFLemJzMk1KdyIsInNhbXBsZSI6dHJ1ZSwic2NoZW1hVmVyc2lvbiI6ImpvdnJhLnJvb20uaW52aXRhdGlvbi1wYXlsb2FkLzEiLCJzZXNzaW9uSWQiOiJyb29tLWNvdXJ0LWRheSJ9"
+    },
+    {
+      "step": "local",
+      "atMs": 1000000,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 1,
+        "sentMonoNs": 1000000000000,
+        "type": "readiness",
+        "body": {
+          "cameraPermission": "granted",
+          "microphonePermission": "granted",
+          "presetSupported": true,
+          "batteryPct": 78,
+          "charging": false,
+          "lowPowerMode": false,
+          "freeBytes": 149500000000,
+          "minutesLeft": 130,
+          "thermal": "nominal"
+        }
+      }
+    },
+    {
+      "step": "local",
+      "atMs": 1000000,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 2,
+        "sentMonoNs": 1000000000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 78,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 1010000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 245,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-alex",
+        "seq": 1,
+        "sentMonoNs": 8341000000000,
+        "type": "hello",
+        "body": {
+          "role": "guest",
+          "appVersion": "1.0.0",
+          "platform": "android",
+          "protocols": [
+            1
+          ],
+          "roomHint": null
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 1010010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 253,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 3,
+        "sentMonoNs": 1010010000000,
+        "type": "hello",
+        "body": {
+          "role": "host",
+          "appVersion": "1.0.0",
+          "platform": "ios",
+          "protocols": [
+            1
+          ],
+          "roomHint": "jovra-k7m2q9x4d1"
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 1011000,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 655,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-alex",
+        "seq": 2,
+        "sentMonoNs": 8342000000000,
+        "type": "join",
+        "body": {
+          "path": "qr",
+          "inviteId": "inv-a",
+          "displayCode": null,
+          "guestKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+          "guestCommitment": "fc4796ba0684212b17be858c047ae885b1c33bf08e1d6a629b9d936a1dc5784f",
+          "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+          "proof": "37550f00145746b1bcccb8819ba93f3fa4f68843d53093443a8c0ebe45492cc1",
+          "channelBinding": null,
+          "displayName": "Alex's phone",
+          "deviceModel": "Pixel 9",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 1011010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 221,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 4,
+        "sentMonoNs": 1011010000000,
+        "type": "approvalRequest",
+        "body": {
+          "inviteId": "inv-a",
+          "hostNonce": "U15rLHTgrUm0v1VoVOLd9Q"
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 1011200,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 218,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-alex",
+        "seq": 3,
+        "sentMonoNs": 8342200000000,
+        "type": "joinReveal",
+        "body": {
+          "inviteId": "inv-a",
+          "guestNonce": "lvAZ-k2xov8wW_RY0Fay5A"
+        }
+      }
+    },
+    {
+      "step": "comparison",
+      "atMs": 1015000,
+      "inviteId": "inv-a",
+      "hostScreenCode": "125430",
+      "guestScreenCode": "125430",
+      "decision": "allow",
+      "guestView": null
+    },
+    {
+      "step": "out",
+      "atMs": 1015010,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 310,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 5,
+        "sentMonoNs": 1015010000000,
+        "type": "approve",
+        "body": {
+          "inviteId": "inv-a",
+          "deviceId": "device-alex",
+          "guestKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+          "basis": "comparisonCode"
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 1015020,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 307,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 6,
+        "sentMonoNs": 1015020000000,
+        "type": "roleAssigned",
+        "body": {
+          "deviceId": "device-alex",
+          "slot": "far-baseline",
+          "slotRole": "camera",
+          "commandGrants": [
+            "viewer"
+          ],
+          "capabilities": [
+            "record-local",
+            "view-own-preview"
+          ]
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 1020000,
+      "peerKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+      "length": 245,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-stranger",
+        "seq": 1,
+        "sentMonoNs": 1053000000000,
+        "type": "hello",
+        "body": {
+          "role": "guest",
+          "appVersion": "1.0.0",
+          "platform": "ios",
+          "protocols": [
+            1
+          ],
+          "roomHint": null
+        }
+      }
+    },
+    {
+      "note": "reused-code",
+      "step": "in",
+      "atMs": 1020500,
+      "peerKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+      "length": 661,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "inviteUsed"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-stranger",
+        "seq": 2,
+        "sentMonoNs": 1053500000000,
+        "type": "join",
+        "body": {
+          "path": "qr",
+          "inviteId": "inv-a",
+          "displayCode": null,
+          "guestKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+          "guestCommitment": "1e3bab07d4e7f2d4d45ff77da02fb92ec42974f4acfd022dd17754eefbf59e5e",
+          "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+          "proof": "6db2be1e354b7e08029d078b5f6b5a377976d14910fe43190356b203b5caa9c9",
+          "channelBinding": null,
+          "displayName": "Alex's phone",
+          "deviceModel": "iPhone 16",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "step": "invite",
+      "atMs": 1030000,
+      "inviteId": "inv-b",
+      "slot": "near-left-corner",
+      "displayCode": "JVR-482",
+      "lifetimeS": 600,
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNDgyIiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6Mjc6MTBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LWIiLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMDdUMjA6MTc6MTBaIiwiam9pblRva2VuIjoiNHVMdzg2MjN0dTFqU1lxaDB0LXZEaDdwVTlaeEwxVHdhSzRON1kyUmFsUSIsIm5vbmNlIjoiQlJrUGVKWGNseHpxQ0d3NXRoZVAxZyIsInNhbXBsZSI6dHJ1ZSwic2NoZW1hVmVyc2lvbiI6ImpvdnJhLnJvb20uaW52aXRhdGlvbi1wYXlsb2FkLzEiLCJzZXNzaW9uSWQiOiJyb29tLWNvdXJ0LWRheSJ9"
+    },
+    {
+      "step": "in",
+      "atMs": 1031000,
+      "peerKeySha256": "b6457b21efacef1eaa0d1adb4bca3cc185ef757aa1e865ae324721b99b96f791",
+      "length": 244,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-mallory",
+        "seq": 1,
+        "sentMonoNs": 1035000000000,
+        "type": "hello",
+        "body": {
+          "role": "guest",
+          "appVersion": "1.0.0",
+          "platform": "ios",
+          "protocols": [
+            1
+          ],
+          "roomHint": null
+        }
+      }
+    },
+    {
+      "note": "typed-code-unbound",
+      "step": "in",
+      "atMs": 1031500,
+      "peerKeySha256": "b6457b21efacef1eaa0d1adb4bca3cc185ef757aa1e865ae324721b99b96f791",
+      "length": 482,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "typedCodeNeedsChannelBinding"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-mallory",
+        "seq": 2,
+        "sentMonoNs": 1035500000000,
+        "type": "join",
+        "body": {
+          "path": "typedCode",
+          "inviteId": null,
+          "displayCode": "JVR-482",
+          "guestKeySha256": "b6457b21efacef1eaa0d1adb4bca3cc185ef757aa1e865ae324721b99b96f791",
+          "guestCommitment": null,
+          "observedHostKeySha256": null,
+          "proof": null,
+          "channelBinding": null,
+          "displayName": "Sam's phone",
+          "deviceModel": "iPhone 15",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "note": "mitm-join",
+      "step": "in",
+      "atMs": 1032000,
+      "peerKeySha256": "b6457b21efacef1eaa0d1adb4bca3cc185ef757aa1e865ae324721b99b96f791",
+      "length": 492,
+      "transitMs": 40,
+      "exporter": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff",
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-mallory",
+        "seq": 3,
+        "sentMonoNs": 1036000000000,
+        "type": "join",
+        "body": {
+          "path": "typedCode",
+          "inviteId": null,
+          "displayCode": "JVR-482",
+          "guestKeySha256": "b6457b21efacef1eaa0d1adb4bca3cc185ef757aa1e865ae324721b99b96f791",
+          "guestCommitment": null,
+          "observedHostKeySha256": null,
+          "proof": null,
+          "channelBinding": "tls-exporter",
+          "displayName": "Sam's phone",
+          "deviceModel": "iPhone 15",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 1032010,
+      "toPeerKeys": [
+        "b6457b21efacef1eaa0d1adb4bca3cc185ef757aa1e865ae324721b99b96f791"
+      ],
+      "length": 201,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 7,
+        "sentMonoNs": 1032010000000,
+        "type": "approvalRequest",
+        "body": {
+          "inviteId": "inv-b",
+          "hostNonce": null
+        }
+      }
+    },
+    {
+      "note": "mitm-codes-differ",
+      "step": "comparison",
+      "atMs": 1040000,
+      "inviteId": "inv-b",
+      "hostScreenCode": "654318",
+      "guestScreenCode": "032799",
+      "decision": "decline",
+      "guestView": {
+        "hostKeySha256": "99249c4e7115b5402c60286a0cc21f9b8fb8c4bdbc04fff2cd9500420f37d5a2",
+        "guestKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+        "exporter": "ffeeddccbbaa99887766554433221100ffeeddccbbaa99887766554433221100"
+      }
+    },
+    {
+      "note": "mitm-declined",
+      "step": "out",
+      "atMs": 1040010,
+      "toPeerKeys": [
+        "b6457b21efacef1eaa0d1adb4bca3cc185ef757aa1e865ae324721b99b96f791"
+      ],
+      "length": 204,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 8,
+        "sentMonoNs": 1040010000000,
+        "type": "decline",
+        "body": {
+          "inviteId": "inv-b",
+          "reason": "codesDidNotMatch"
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 1050000,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 241,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-sam",
+        "seq": 1,
+        "sentMonoNs": 53054000000000,
+        "type": "hello",
+        "body": {
+          "role": "guest",
+          "appVersion": "1.0.0",
+          "platform": "ios",
+          "protocols": [
+            1
+          ],
+          "roomHint": null
+        }
+      }
+    },
+    {
+      "note": "sam-typed-join",
+      "step": "in",
+      "atMs": 1050500,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 489,
+      "transitMs": 40,
+      "exporter": "f23f795b8fb2ad7f252483f79437c210018a243ea745ed5a3826720ad0dec438",
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-sam",
+        "seq": 2,
+        "sentMonoNs": 53054500000000,
+        "type": "join",
+        "body": {
+          "path": "typedCode",
+          "inviteId": null,
+          "displayCode": "JVR-482",
+          "guestKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+          "guestCommitment": null,
+          "observedHostKeySha256": null,
+          "proof": null,
+          "channelBinding": "tls-exporter",
+          "displayName": "Sam's phone",
+          "deviceModel": "iPhone 15",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 1050510,
+      "toPeerKeys": [
+        "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942"
+      ],
+      "length": 201,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 9,
+        "sentMonoNs": 1050510000000,
+        "type": "approvalRequest",
+        "body": {
+          "inviteId": "inv-b",
+          "hostNonce": null
+        }
+      }
+    },
+    {
+      "note": "sam-codes-match",
+      "step": "comparison",
+      "atMs": 1060000,
+      "inviteId": "inv-b",
+      "hostScreenCode": "461199",
+      "guestScreenCode": "461199",
+      "decision": "allow",
+      "guestView": null
+    },
+    {
+      "note": "sam-approved",
+      "step": "out",
+      "atMs": 1060010,
+      "toPeerKeys": [
+        "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942"
+      ],
+      "length": 314,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 10,
+        "sentMonoNs": 1060010000000,
+        "type": "approve",
+        "body": {
+          "inviteId": "inv-b",
+          "deviceId": "device-sam",
+          "guestKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+          "basis": "channelBindingCode"
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 1060020,
+      "toPeerKeys": [
+        "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942"
+      ],
+      "length": 311,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 11,
+        "sentMonoNs": 1060020000000,
+        "type": "roleAssigned",
+        "body": {
+          "deviceId": "device-sam",
+          "slot": "near-left-corner",
+          "slotRole": "camera",
+          "commandGrants": [
+            "viewer"
+          ],
+          "capabilities": [
+            "record-local",
+            "view-own-preview"
+          ]
+        }
+      }
+    },
+    {
+      "step": "invite",
+      "atMs": 1070000,
+      "inviteId": "inv-c",
+      "slot": "far-right-corner",
+      "displayCode": "JVR-555",
+      "lifetimeS": 600,
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNTU1IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6Mjc6NTBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LWMiLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMDdUMjA6MTc6NTBaIiwiam9pblRva2VuIjoiVHVTbFNsaDA5cXN1dkY0VkFDaWlOYTFwa3d0cWJ3Tkt3RjE3eGhxQktNVSIsIm5vbmNlIjoibnN3QVZ3UmgxeThkM21aMkY1U0hrUSIsInNhbXBsZSI6dHJ1ZSwic2NoZW1hVmVyc2lvbiI6ImpvdnJhLnJvb20uaW52aXRhdGlvbi1wYXlsb2FkLzEiLCJzZXNzaW9uSWQiOiJyb29tLWNvdXJ0LWRheSJ9"
+    },
+    {
+      "note": "expired-code",
+      "step": "in",
+      "atMs": 1670001,
+      "peerKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+      "length": 662,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "inviteExpired"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-stranger",
+        "seq": 3,
+        "sentMonoNs": 1703001000000,
+        "type": "join",
+        "body": {
+          "path": "qr",
+          "inviteId": "inv-c",
+          "displayCode": null,
+          "guestKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+          "guestCommitment": "3da4d402e4ff74e0b0c55b6d16e08ec66acda045965d8cc5507d90a22078e0b2",
+          "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+          "proof": "b6ffd5e51b9cf89e44e9b9a39dc593deb2d95cf65d060f24d6e2f4f531e2d53d",
+          "channelBinding": null,
+          "displayName": "Riley's phone",
+          "deviceModel": "iPhone 16",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "step": "invite",
+      "atMs": 1680000,
+      "inviteId": "inv-d",
+      "slot": "near-right-corner",
+      "displayCode": "JVR-640",
+      "lifetimeS": 600,
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNjQwIiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6Mzg6MDBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LWQiLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMDdUMjA6Mjg6MDBaIiwiam9pblRva2VuIjoiTktDdnhfTFFPaXppY3JNVmR2a25EdWhPVDNha1RCRS1hT1E5QmNvRlk3ayIsIm5vbmNlIjoiV2h6cURzTklrYllLeUZfbUFiajVvdyIsInNhbXBsZSI6dHJ1ZSwic2NoZW1hVmVyc2lvbiI6ImpvdnJhLnJvb20uaW52aXRhdGlvbi1wYXlsb2FkLzEiLCJzZXNzaW9uSWQiOiJyb29tLWNvdXJ0LWRheSJ9"
+    },
+    {
+      "note": "alex-moved",
+      "step": "out",
+      "atMs": 1680100,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 313,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 12,
+        "sentMonoNs": 1680100000000,
+        "type": "roleAssigned",
+        "body": {
+          "deviceId": "device-alex",
+          "slot": "near-right-corner",
+          "slotRole": "camera",
+          "commandGrants": [
+            "viewer"
+          ],
+          "capabilities": [
+            "record-local",
+            "view-own-preview"
+          ]
+        }
+      }
+    },
+    {
+      "note": "slot-full",
+      "step": "in",
+      "atMs": 1681000,
+      "peerKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+      "length": 662,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "slotFull"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-stranger",
+        "seq": 4,
+        "sentMonoNs": 1714000000000,
+        "type": "join",
+        "body": {
+          "path": "qr",
+          "inviteId": "inv-d",
+          "displayCode": null,
+          "guestKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+          "guestCommitment": "b454de51ca1e2aa57f76414b268757dca12168f0c2cf8b2b73e65726ade7e7fc",
+          "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+          "proof": "4aa780d9e14432f99f9f99555947965d6555501b397985ff30e04e060c3224a9",
+          "channelBinding": null,
+          "displayName": "Riley's phone",
+          "deviceModel": "iPhone 16",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "note": "alex-revoked",
+      "step": "out",
+      "atMs": 1690000,
+      "toPeerKeys": [
+        "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4"
+      ],
+      "length": 221,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-jon",
+        "seq": 13,
+        "sentMonoNs": 1690000000000,
+        "type": "revoke",
+        "body": {
+          "deviceId": "device-alex",
+          "inviteId": null,
+          "reason": "hostRemoved"
+        }
+      }
+    },
+    {
+      "note": "revoked-closes",
+      "step": "in",
+      "atMs": 1690500,
+      "peerKeySha256": "5a7a78cca4a0f420d9bc62bb669c3c2759e39f723d3ae10dcbe0f0815a07ecd4",
+      "length": 315,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "revokedPeer"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-alex",
+        "seq": 4,
+        "sentMonoNs": 9021500000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "revoked-code-void",
+      "step": "in",
+      "atMs": 1691000,
+      "peerKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+      "length": 662,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "inviteRevoked"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-stranger",
+        "seq": 5,
+        "sentMonoNs": 1724000000000,
+        "type": "join",
+        "body": {
+          "path": "qr",
+          "inviteId": "inv-a",
+          "displayCode": null,
+          "guestKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+          "guestCommitment": "d55b007735c4879345132380cb0996d4338d21e62891b4a182cc2591a7db0dfd",
+          "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+          "proof": "11814c8c9165bcbe180c263d83ae1290a40503a10e8a186df882d11845abf7c1",
+          "channelBinding": null,
+          "displayName": "Riley's phone",
+          "deviceModel": "iPhone 16",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "step": "invite",
+      "atMs": 1700000,
+      "inviteId": "inv-e",
+      "slot": "far-baseline",
+      "displayCode": "JVR-733",
+      "lifetimeS": 600,
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItNzMzIiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6Mzg6MjBaIiwiaG9zdEVwb2NoIjoxLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LWUiLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMDdUMjA6Mjg6MjBaIiwiam9pblRva2VuIjoiRlpRbGExeXNHWmM2QXkxTnFMUEFnR0JmZkdfcTdicVVFTlRnTEZpMWJaWSIsIm5vbmNlIjoiY2tqbnF3bURsRC1ZdUhRWDVTUFJzUSIsInNhbXBsZSI6dHJ1ZSwic2NoZW1hVmVyc2lvbiI6ImpvdnJhLnJvb20uaW52aXRhdGlvbi1wYXlsb2FkLzEiLCJzZXNzaW9uSWQiOiJyb29tLWNvdXJ0LWRheSJ9"
+    },
+    {
+      "note": "host-restart",
+      "step": "restart",
+      "atMs": 1710000,
+      "kind": "hostRestart",
+      "newHostEpoch": 2,
+      "newHostDeviceId": "device-jon",
+      "newHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3"
+    },
+    {
+      "note": "old-epoch",
+      "step": "in",
+      "atMs": 1711000,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 315,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "staleEpoch"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 1,
+        "deviceId": "device-sam",
+        "seq": 3,
+        "sentMonoNs": 53715000000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "reauth-first",
+      "step": "in",
+      "atMs": 1711500,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 315,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "reauthRequired"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 1,
+        "sentMonoNs": 53715500000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "reauth-hello",
+      "step": "in",
+      "atMs": 1712000,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 241,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 2,
+        "sentMonoNs": 53716000000000,
+        "type": "hello",
+        "body": {
+          "role": "guest",
+          "appVersion": "1.0.0",
+          "platform": "ios",
+          "protocols": [
+            1
+          ],
+          "roomHint": null
+        }
+      }
+    },
+    {
+      "step": "out",
+      "atMs": 1712010,
+      "toPeerKeys": [
+        "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942"
+      ],
+      "length": 253,
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-jon",
+        "seq": 1,
+        "sentMonoNs": 1712010000000,
+        "type": "hello",
+        "body": {
+          "role": "host",
+          "appVersion": "1.0.0",
+          "platform": "ios",
+          "protocols": [
+            1
+          ],
+          "roomHint": "jovra-k7m2q9x4d1"
+        }
+      }
+    },
+    {
+      "step": "in",
+      "atMs": 1712500,
+      "peerKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942",
+      "length": 315,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": true
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-sam",
+        "seq": 3,
+        "sentMonoNs": 53716500000000,
+        "type": "heartbeat",
+        "body": {
+          "captureState": "Ready",
+          "segmentId": null,
+          "savedThroughMs": 0,
+          "segmentIndex": 0,
+          "freeBytes": 150000000000,
+          "batteryPct": 80,
+          "thermal": "nominal",
+          "droppedFrames": 0
+        }
+      }
+    },
+    {
+      "note": "restart-voids-code",
+      "step": "in",
+      "atMs": 1713000,
+      "peerKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+      "length": 662,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "inviteRevoked"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 2,
+        "deviceId": "device-stranger",
+        "seq": 1,
+        "sentMonoNs": 1746000000000,
+        "type": "join",
+        "body": {
+          "path": "qr",
+          "inviteId": "inv-e",
+          "displayCode": null,
+          "guestKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+          "guestCommitment": "09af38bd44a833ffdc2a2a7546f46e95c17c6d61ce1967014e3a4f6f952e0d48",
+          "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+          "proof": "7b1ef8dd3908a3a7f105fab4691a858a4bc48bc5f24db21d03f099eeaa3dd33f",
+          "channelBinding": null,
+          "displayName": "Riley's phone",
+          "deviceModel": "iPhone 16",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    },
+    {
+      "step": "invite",
+      "atMs": 1720000,
+      "inviteId": "inv-f",
+      "slot": "far-baseline",
+      "displayCode": "JVR-808",
+      "lifetimeS": 600,
+      "qr": "jovra-room:1:eyJjYXB0dXJlUm9sZSI6ImNhbWVyYSIsImNvbW1hbmRSb2xlIjoidmlld2VyIiwiZGlzcGxheUNvZGUiOiJKVlItODA4IiwiZW5kcG9pbnRzIjpbeyJpbnN0YW5jZU5hbWUiOiJqb3ZyYS1rN20ycTl4NGQxIiwia2luZCI6ImRuc3NkIiwic2VydmljZVR5cGUiOiJfam92cmEtcm9vbS5fdGNwIn0seyJhZGRyZXNzIjoiMTkyLjE2OC4xLjIwIiwia2luZCI6ImxhbiIsInBvcnQiOjQ3MTAwfV0sImV4cGlyZXNBdCI6IjIwMjYtMTAtMDdUMjA6Mzg6NDBaIiwiaG9zdEVwb2NoIjoyLCJob3N0S2V5U2hhMjU2IjoiNWNkMjUyZmIwY2U4OTMyNDM2ZmFmOGNjZDEwNDA5ODFiODllZTRhZDZiOWZlOWUyYTJiN2U3MWFhY2IyN2NkMyIsImludml0ZUlkIjoiaW52LWYiLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMDdUMjA6Mjg6NDBaIiwiam9pblRva2VuIjoiU091SU5ydFV1anBiMkdBWnlkOTVaZEVmLXBzSWpIZTRjeko1RlZ1UzEyTSIsIm5vbmNlIjoiOXhjSkt4V1ptZlZyTUl1UVJZbU9tQSIsInNhbXBsZSI6dHJ1ZSwic2NoZW1hVmVyc2lvbiI6ImpvdnJhLnJvb20uaW52aXRhdGlvbi1wYXlsb2FkLzEiLCJzZXNzaW9uSWQiOiJyb29tLWNvdXJ0LWRheSJ9"
+    },
+    {
+      "note": "after-restart-screen",
+      "step": "observe",
+      "atMs": 1721000,
+      "display": {
+        "recordingOn": null,
+        "devices": [
+          {
+            "deviceId": "device-jon",
+            "slot": "near-baseline",
+            "freshness": "Local",
+            "contactAgeMs": null,
+            "state": "Ready",
+            "label": null,
+            "ready": true,
+            "stillAgeMs": null
+          },
+          {
+            "deviceId": "device-sam",
+            "slot": "near-left-corner",
+            "freshness": "Delayed",
+            "contactAgeMs": 8500,
+            "state": "Ready",
+            "label": "No contact for 0:08",
+            "ready": null,
+            "stillAgeMs": null
+          }
+        ]
+      }
+    },
+    {
+      "note": "host-transfer",
+      "step": "restart",
+      "atMs": 1730000,
+      "kind": "hostTransfer",
+      "newHostEpoch": 3,
+      "newHostDeviceId": "device-sam",
+      "newHostKeySha256": "bce1f60efddb88a865d063a609df2ef580196cc05a92c541afcb2bf9e0804942"
+    },
+    {
+      "note": "transfer-voids-code",
+      "step": "in",
+      "atMs": 1731000,
+      "peerKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+      "length": 662,
+      "transitMs": 40,
+      "exporter": null,
+      "verdict": {
+        "accepted": false,
+        "code": "inviteRevoked"
+      },
+      "message": {
+        "schemaVersion": "jovra.room/1",
+        "roomId": "room-court-day",
+        "hostEpoch": 3,
+        "deviceId": "device-stranger",
+        "seq": 1,
+        "sentMonoNs": 1764000000000,
+        "type": "join",
+        "body": {
+          "path": "qr",
+          "inviteId": "inv-f",
+          "displayCode": null,
+          "guestKeySha256": "bbc29565cd64a9627f2992ebf7ed4941a8be5aa7b11abde7e2150b12b65b0a50",
+          "guestCommitment": "391521bd87ea0a533a077a337ca3d3fbb31a619b06e44e161088fb5265928d8f",
+          "observedHostKeySha256": "5cd252fb0ce8932436faf8ccd1040981b89ee4ad6b9fe9e2a2b7e71aacb27cd3",
+          "proof": "f2a11bd1967e84396f5b40bcd7c8df10e271bb45ae375a7e074dc48abe8a0d93",
+          "channelBinding": null,
+          "displayName": "Riley's phone",
+          "deviceModel": "iPhone 16",
+          "consent": {
+            "shareCaptureMetadata": true
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "jovra.pts-table/1",
+  "sample": true,
+  "sourceId": "broll-drop",
+  "normalizerVersion": "jovra-normalize@0.1.0",
+  "original": {
+    "timescale": 15360,
+    "nominalFps": {
+      "num": 30,
+      "den": 1
+    },
+    "pts": [
+      {
+        "value": 0,
+        "step": 512,
+        "count": 180
+      }
+    ],
+    "endPts": 92160,
+    "frameCount": 180,
+    "width": 640,
+    "height": 360,
+    "rotationDegrees": 0,
+    "hdr": false,
+    "transfer": "bt709"
+  },
+  "proxy": {
+    "fps": {
+      "num": 30,
+      "den": 1
+    },
+    "timescale": 3000,
+    "frameDurationTicks": 100,
+    "startPts": 0,
+    "frameCount": 180,
+    "width": 640,
+    "height": 360,
+    "rotationAppliedDegrees": 0,
+    "displayRotationDegrees": 0,
+    "transfer": "bt709",
+    "bitDepth": 8,
+    "toneMap": null,
+    "upconverted": false
+  },
+  "runs": [
+    {
+      "proxyFrame": 0,
+      "count": 180,
+      "originalFrame": 0,
+      "originalStep": 1,
+      "originalPts": 0
+    }
+  ]
+}

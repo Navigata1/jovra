@@ -57,6 +57,7 @@ The planning context (planner.md) plus four keys, all built from stored records:
 | `width`, `height` | An even size of the plan's aspect; default below |
 | `planId` | Default `film-<briefId without brief->` |
 | `trims` | `{beatId: {inFrame, outFrame}}`: the player's storyboard trims (ST storyboard `JogStrip`), source frames inside the beat's trusted window; outside it is `trimOutsideWindow` |
+| `transitions` | `{beatId: {type, frames}}`: the player's storyboard transitions, `dissolve` or `dip` (to forest), each the incoming transition of that beat's segment (below) |
 
 Any other key is `unknownField`.
 
@@ -82,6 +83,7 @@ Omission reasons, each listed in `omitted` as `{beatId, op, reason}` (`beatId` n
 | `cleanFrame` | A slow replay whose source fps × speed is below the output fps; `fallback: originalSpeedFallback` (the moment plays at original speed only; ST30) |
 | `originalOmitted` | A replay whose live original is omitted |
 | `coverageIncomplete` | A final score card over a recording gap |
+| `beatOmitted` | A requested transition (`op: transition`) for a beat the film does not show |
 | overlay omissions | `op: overlay` with `overlay: "<kind>:<refId>"` |
 
 A build without `live` or `silence` cannot render any film: `rendererIncomplete`. Omitted title beats are not replaced;
@@ -119,7 +121,14 @@ All boundaries are on real proxy frames and every length is exact on the output 
 - **Card.** 4 s within the profile's `cardMs` (Rally Pulse 1.5 s), rounded half up and kept inside the range. The text
   is the beat's stored note (`textRefs`) or the template's own fixed text; nothing else.
 - **B-roll.** The middle 6 s of the stored item window (the planner's B-roll bound), or the player's trim.
-- **Transitions.** Every boundary is a cut in this version (dissolves and dips are allowed by S1 but not proposed yet).
+- **Transitions.** A boundary is a cut unless the request's `transitions` names the beat whose segment it opens. The
+  compiler never proposes one itself. A requested dissolve or dip on the film's first segment is `badRequest`; one for
+  a beat the film does not show is listed (`beatOmitted`); where the stage or the renderer lacks `transition` the
+  boundary stays a cut and the transition is listed (`notInThisBuild` or `notInThisStage`). Everything else (the
+  profile's allowlist and maximum, source handles inside one coverage interval, protected contact windows) is
+  `edl.validate`'s, which runs on every compiled EDL: a transition that would blend a stored contact or cross a gap is a
+  typed rejection (`contactProtected`, `transitionHandle`), never a silent cut. At a transition the bed pieces either
+  side fade over the transition's frames (the audio dip edl.md requires), never less than 20 ms.
 
 ## Recording gaps (stories 127 and 128)
 
@@ -201,7 +210,10 @@ label dropped, or bound to a stale event revision fails `edl.validate`).
   pinned by the S1 cases and the one-camera recording.
 - **Output fps follows the source, not the profile.** The film-engine time model (§2.1): an output rate above a
   source's is refused, never filled with repeated frames.
-- **Cuts only.** Transitions need handles and contact checks the planner does not propose yet.
+- **Transitions only on request.** The planner proposes none (they need handles and contact checks it does not make);
+  the storyboard's `transitions` request adds them and `edl.validate` checks them. The barcode-court vectors
+  (barcode-court.md) pin dissolves, dips to forest and a refused contact blend; the vectors here have none and are
+  unchanged by the request key.
 - **`card.recording-gap`** is a compiler card, not a planner card: no planner can place or omit it.
 
 ## Findings
@@ -216,7 +228,7 @@ label dropped, or bound to a stale event revision fails `edl.validate`).
 
 ## Not covered yet
 
-- `reframe`, `music` and `narration` (S5); dissolves, dips and J/L cuts; Match Broadcast dead-time compression,
+- `reframe`, `music` and `narration` (S5); J/L cuts; transitions proposed by a planner; Match Broadcast dead-time compression,
   changeover score cards and game chapters; a live keeper split at a restart (such a window is rejected).
 - Hold-bed dead time knows only the keepers; points nobody kept are not in the compile context yet.
 - Real media: nothing here reads footage. Barcode and click verification of a rendered film is the renderer's and the
