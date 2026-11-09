@@ -54,6 +54,8 @@ final class FilesImportUITests: XCTestCase {
         let complete = app.switches["import.match.complete"]
         for _ in 0..<4 where !complete.isHittable { app.swipeUp() }
         XCTAssertTrue(complete.isHittable)
+        XCTAssertTrue(complete.label.hasPrefix("The video I choose"))
+        XCTAssertTrue(app.staticTexts["Six-game sets · Seven-point tiebreak at 6–6 · Let serves"].exists)
         XCTAssertFalse(choose.isEnabled, "A scored match requires confirmation of complete footage")
         complete.tap()
         XCTAssertTrue(choose.isEnabled)

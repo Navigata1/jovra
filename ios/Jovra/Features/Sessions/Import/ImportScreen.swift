@@ -94,14 +94,14 @@ struct ImportScreen: View {
             } label: {
                 Text("Game scoring", tableName: "Sessions.Import")
             }.pickerStyle(.menu).frame(minHeight: 52).accessibilityIdentifier("import.match.scoring")
-            Text("These formats use six-game sets and a seven-point tiebreak at 6–6.", tableName: "Sessions.Import")
+            Text("Six-game sets · Seven-point tiebreak at 6–6 · Let serves", tableName: "Sessions.Import")
                 .fixedSize(horizontal: false, vertical: true)
             sidePicker(String(localized: "First server", table: "Sessions.Import"),
                        selection: $firstServer, identifier: "import.match.firstServer")
             sidePicker(String(localized: "Player at the near end at the start", table: "Sessions.Import"),
                        selection: $nearPlayer, identifier: "import.match.nearPlayer")
             Toggle(isOn: $containsFullMatch) {
-                Text("This video contains every point from the start to the end of the match.", tableName: "Sessions.Import")
+                Text("The video I choose contains every point from the start to the end of the match.", tableName: "Sessions.Import")
                     .fixedSize(horizontal: false, vertical: true)
             }.frame(minHeight: 52).accessibilityIdentifier("import.match.complete")
             Text("Review every point in order to build the score. Import partial footage as practice.", tableName: "Sessions.Import")
