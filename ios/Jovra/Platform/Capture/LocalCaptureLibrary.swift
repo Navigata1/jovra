@@ -123,6 +123,11 @@ actor LocalCaptureLibrary: RecordingSink {
         return SessionID(rawValue: id)
     }
 
+    func importMatch(_ source: URL, setup: FilesImportMatchSetup) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).importMatch(source, setup: setup)
+        return SessionID(rawValue: id)
+    }
+
     func appendReviewedPoint(winner: Side, startMs: Int, endMs: Int, for id: SessionID) async throws -> SessionPointEvent {
         try await store.appendReviewedPoint(winner: winner, startMs: startMs, endMs: endMs, for: id.rawValue)
     }
