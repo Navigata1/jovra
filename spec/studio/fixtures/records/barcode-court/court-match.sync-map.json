@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "jovra.sync-map/1",
+  "projectId": "sample-barcode-court-match",
+  "revision": 1,
+  "sample": true,
+  "sourceManifestRevision": 1,
+  "matchClock": {
+    "unit": "us",
+    "referenceSourceId": "match",
+    "referenceSegmentId": "seg-0",
+    "origin": "earliest-coverage"
+  },
+  "outputFps": {
+    "num": 30,
+    "den": 1
+  },
+  "speedOfSound": {
+    "mmPerSecond": 343000,
+    "temperatureC": null,
+    "method": "default-343"
+  },
+  "placements": [
+    {
+      "sourceId": "match",
+      "slot": "near-baseline",
+      "positionMm": {
+        "xMm": 0,
+        "yMm": -17365,
+        "zMm": 1500
+      },
+      "from": "slot-default"
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "match",
+      "audioLatencyUs": null,
+      "gaps": [],
+      "pieces": [
+        {
+          "segmentId": "seg-0",
+          "sourceDurationUs": 3240000000,
+          "matchCoverage": {
+            "startUs": 0,
+            "endUs": 3240000000
+          },
+          "transform": {
+            "offsetUs": 0,
+            "rate": {
+              "num": 1000000000,
+              "den": 1000000000
+            }
+          },
+          "fit": null,
+          "anchors": [],
+          "state": "reference",
+          "reasons": [],
+          "checkpoints": [],
+          "reviewedAt": null
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "capabilityId": "studio.multiCameraSync",
+    "method": "jovra-sync",
+    "methodVersion": "0.1",
+    "status": "estimated"
+  }
+}

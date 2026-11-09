@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "jovra.story-brief/1",
+  "briefId": "brief-progress",
+  "projectId": "sample-court-day",
+  "revision": 1,
+  "sample": true,
+  "profile": {
+    "id": "progress-story",
+    "revision": 1
+  },
+  "bindings": {
+    "eventRevision": 3,
+    "syncRevision": 2,
+    "keeperCatalogRevision": 1,
+    "brollCatalogRevision": 1
+  },
+  "planner": {
+    "kind": "heuristic",
+    "modelId": null,
+    "adapterVersion": "jovra-planner@0.1.0"
+  },
+  "durationTargetSeconds": 180,
+  "aspect": "16:9",
+  "primaryAudioPolicy": "continuous-primary-court-audio",
+  "effectIntensity": "low",
+  "privacy": {
+    "venueVisible": false,
+    "faces": "show"
+  },
+  "music": null,
+  "narration": null,
+  "comparisons": [
+    {
+      "comparisonId": "cmp-first-serve",
+      "statId": "stat-first-serve-in",
+      "metricDefinitionId": "first-serve-in-pct",
+      "methodId": "manual-tagging-v1",
+      "selectionRule": "all",
+      "claim": "change",
+      "before": {
+        "date": "2026-09-09",
+        "sessionIds": [
+          "session-0909"
+        ],
+        "numerator": 12,
+        "denominator": 30,
+        "provenance": "reviewed"
+      },
+      "after": {
+        "date": "2026-10-07",
+        "sessionIds": [
+          "session-1007"
+        ],
+        "numerator": 18,
+        "denominator": 30,
+        "provenance": "reviewed"
+      },
+      "display": {
+        "before": "12 / 30 · 40%",
+        "after": "18 / 30 · 60%",
+        "delta": "+20 percentage points"
+      }
+    }
+  ],
+  "omitted": [],
+  "unresolved": [],
+  "feelingKey": "feeling.growing-game",
+  "audience": "self",
+  "cleanAlternate": false,
+  "beats": [
+    {
+      "beatId": "b01",
+      "role": "goal",
+      "treatment": "title-card",
+      "keeperId": null,
+      "brollId": null,
+      "angle": null,
+      "replaySpeedDen": null,
+      "overlays": [],
+      "noteId": "note-goal",
+      "templateId": "card.goal",
+      "reasonForReview": "Dated starting goal."
+    },
+    {
+      "beatId": "b02",
+      "role": "early-evidence",
+      "treatment": "live",
+      "keeperId": "k-02",
+      "brollId": null,
+      "angle": null,
+      "replaySpeedDen": null,
+      "overlays": [
+        {
+          "kind": "metric",
+          "refId": "stat-first-serve-in"
+        }
+      ],
+      "noteId": null,
+      "templateId": null,
+      "reasonForReview": "September evidence, reviewed."
+    },
+    {
+      "beatId": "b03",
+      "role": "lesson",
+      "treatment": "title-card",
+      "keeperId": null,
+      "brollId": null,
+      "angle": null,
+      "replaySpeedDen": null,
+      "overlays": [],
+      "noteId": "note-lesson-2",
+      "templateId": "card.lesson",
+      "reasonForReview": "Lesson 2 milestone from the journal."
+    },
+    {
+      "beatId": "b04",
+      "role": "recent-evidence",
+      "treatment": "replay",
+      "keeperId": "k-04",
+      "brollId": null,
+      "angle": null,
+      "replaySpeedDen": 2,
+      "overlays": [],
+      "noteId": null,
+      "templateId": null,
+      "reasonForReview": "October serve at half speed."
+    },
+    {
+      "beatId": "b05",
+      "role": "next-goal",
+      "treatment": "title-card",
+      "keeperId": null,
+      "brollId": null,
+      "angle": null,
+      "replaySpeedDen": null,
+      "overlays": [],
+      "noteId": "note-next",
+      "templateId": "card.next-goal",
+      "reasonForReview": "Next practice goal."
+    }
+  ]
+}
