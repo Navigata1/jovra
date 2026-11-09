@@ -36,6 +36,14 @@ public struct CalibrationCheck: Hashable, Sendable {
         }
     }
 
+    init(recordedRMSEPx: Decimal, frameHeight: Int) {
+        thresholdPx = Self.thresholdPx(frameHeight: frameHeight)
+        // Compare the stored decimal before conversion so rounding cannot turn a poor fit into a pass.
+        let fits = recordedRMSEPx >= 0 && recordedRMSEPx * 1080 <= Decimal(frameHeight) * Decimal(Self.poorFitPxAt1080p)
+        verdict = fits ? .good : .poor
+        rmsePx = NSDecimalNumber(decimal: recordedRMSEPx).doubleValue
+    }
+
     public static func thresholdPx(frameHeight: Int) -> Double {
         poorFitPxAt1080p * Double(frameHeight) / 1080
     }
@@ -70,6 +78,7 @@ public struct CameraBinding: Hashable, Sendable {
 public enum CalibrationValidity: Hashable, Sendable {
     public enum Reason: Hashable, Sendable {
         case lensChanged, formatChanged, zoomChanged, poorFit
+        case recordedInvalid, needsReview, cameraMoved
         /// The camera moved: stale from this session time ("stale from mm:ss").
         case stale(fromMs: Int)
 
@@ -79,6 +88,9 @@ public enum CalibrationValidity: Hashable, Sendable {
             case .formatChanged: "formatChanged"
             case .zoomChanged: "zoomChanged"
             case .poorFit: "poorFit"
+            case .recordedInvalid: "recordedInvalid"
+            case .needsReview: "needsReview"
+            case .cameraMoved: "cameraMoved"
             case .stale: "stale"
             }
         }
@@ -119,6 +131,7 @@ public struct CourtCalibration: Hashable, Sendable {
     public var staleFromMs: Int?
     /// The latest reprojection check, when line pixels were measured.
     public var check: CalibrationCheck?
+    private var recordedStatus: SessionCalibrationStatus?
 
     public init(imagePoints: [VideoPixel], courtPoints: [CourtPoint], camera: CameraBinding?, staleFromMs: Int? = nil) throws(CalibrationError) {
         self.imagePoints = imagePoints
@@ -144,6 +157,10 @@ public struct CourtCalibration: Hashable, Sendable {
         try self.init(imagePoints: image, courtPoints: court,
                       camera: CameraBinding(lens: camera.lens, width: camera.width, height: camera.height, zoomFactor: zoom),
                       staleFromMs: record.staleFromMs)
+        recordedStatus = record.status
+        if let residual = record.residualPx {
+            check = CalibrationCheck(recordedRMSEPx: residual, frameHeight: camera.height)
+        }
     }
 
     public func project(_ point: CourtPoint) -> VideoPixel? { homography.project(point) }
@@ -159,8 +176,16 @@ public struct CourtCalibration: Hashable, Sendable {
     /// Usable at `atMs` with the camera configured as `current`? A calibration with no recorded binding can only be
     /// judged on fit and staleness.
     public func validity(atMs: Int, current: CameraBinding) -> CalibrationValidity {
-        CalibrationValidity.evaluate(binding: camera ?? current, current: current, checkVerdict: check?.verdict,
-                                     staleFromMs: staleFromMs, atMs: atMs)
+        let evaluated = CalibrationValidity.evaluate(binding: camera ?? current, current: current, checkVerdict: check?.verdict,
+                                                      staleFromMs: staleFromMs, atMs: atMs)
+        guard evaluated == .valid else { return evaluated }
+        // A successful refit cannot silently turn an unusable stored calibration into a valid one.
+        switch recordedStatus {
+        case .invalid: return .invalid(.recordedInvalid)
+        case .needsReview: return .invalid(.needsReview)
+        case .cameraMoved where staleFromMs == nil: return .invalid(.cameraMoved)
+        default: return .valid
+        }
     }
 
     private static func double(_ value: Decimal) -> Double { NSDecimalNumber(decimal: value).doubleValue }
