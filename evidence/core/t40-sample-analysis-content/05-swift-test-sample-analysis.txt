@@ -1,0 +1,40 @@
+$ cd ios/Packages/JovraCore && swift test --filter <the T40 analysis tests, the T09 install/reset tests and the fixture-manifest runner> (macOS, Apple Swift 6.4.2)
+◇ Test run started.
+Consumed jovra.archiveManifest: 2 fixtures
+Consumed jovra.benchmarkBindings: 1 fixtures
+Consumed jovra.benchmarkRecord: 3 fixtures
+Consumed jovra.csvContract: 2 fixtures
+Consumed jovra.fixture.canonical: 1 fixtures
+Consumed jovra.capabilityRegistry: 1 fixtures
+Consumed jovra.equipment: 2 fixtures
+Consumed jovra.export: 2 fixtures
+✔ Test withoutTheOverlaysTheLibraryHasNoAnalysisAndTheSummaryIsEmpty() passed after 1.443 seconds.
+✔ Test anOverlayThatIsNotFlaggedSampleIsRefused() passed after 2.329 seconds.
+✔ Test anOverlayRepeatingAnIDTheSessionAlreadyHasIsRefused() passed after 2.407 seconds.
+✔ Test anOverlayForASessionOutsideTheLibraryIsRefused() passed after 2.421 seconds.
+✔ Test movingOnePlacementInACopyOfTheFixtureChangesTheOracleFractions() passed after 2.484 seconds.
+✔ Test installedLibrarySummaryEqualsTheReferenceLibraryOracle() passed after 5.177 seconds.
+✔ Test installCreatesEightSampleSessionsPlusTheEquipmentAndPracticePlan() passed after 6.018 seconds.
+✔ Test everyServeMarkIsWithinOneFrameOfTheRenderedServe() passed after 6.158 seconds.
+✔ Test theInstalledSampleSummarisesToTheReferenceAnalysisOracle() passed after 9.719 seconds.
+✔ Test resetRestoresAnEditedSampleDocumentByteForByte() passed after 9.947 seconds.
+✔ Test theInstalledSampleCarriesTheBriefsForehandPlacementsAndTwelveServeMarks() passed after 10.840 seconds.
+✔ Test resetRestoresTheAnalysisRecordsAndRemoveTakesThemAway() passed after 11.518 seconds.
+Consumed jovra.groundTruth: 50 fixtures
+Consumed jovra.fixture.pct: 1 fixtures
+Consumed jovra.practicePlan: 3 fixtures
+Consumed jovra.fixture.rally: 5 fixtures
+Consumed jovra.sampleAnalysis: 3 fixtures
+Consumed jovra.fixture.sampleAnalysis: 1 fixtures
+Consumed jovra.fixture.sampleLibrary: 1 fixtures
+Consumed jovra.sampleMediaManifest: 1 fixtures
+Consumed jovra.fixture.sample: 1 fixtures
+Consumed jovra.fixture.scoring: 111 fixtures
+Consumed jovra.session: 12 fixtures
+Consumed jovra.fixture.stats: 3 fixtures
+Consumed jovra.fixture.trend: 1 fixtures
+Consumed jovra.fixture.units: 1 fixtures
+Pending fixture kinds: 
+✔ Test allDiscoveredRunnerFixturesPass() passed after 17.305 seconds.
+✔ Test run with 13 tests in 0 suites passed after 17.306 seconds.
+Full JovraCore suite (swift test, committed tree 368ba95): ✔ Test run with 120 tests in 6 suites passed after 17.061 seconds.

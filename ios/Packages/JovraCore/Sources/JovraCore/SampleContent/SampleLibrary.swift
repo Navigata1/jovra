@@ -11,7 +11,9 @@ public enum SampleContentError: Error, Equatable, Sendable {
 }
 
 /// The demo library as shipped (spec/fixtures/sample/library, bundled by the app): eight Sample sessions, the
-/// sample equipment and the sample practice plan, validated against the sample media manifest.
+/// sample equipment and the sample practice plan, validated against the sample media manifest. With the analysis
+/// overlays (spec/fixtures/sample/analysis, T40) the sessions carry their stroke tags, placements, calibrations,
+/// serve marks, swings and comparisons, and that is what SampleContent installs and resets to.
 public struct SampleLibrary: Equatable, Sendable {
     public static let sessionsFolder = "sessions"
     public static let equipmentFile = "equipment.json"
@@ -23,7 +25,7 @@ public struct SampleLibrary: Equatable, Sendable {
     public let mediaManifest: SampleMediaManifest
 
     public init(sessions: [SessionDocument], equipment: EquipmentDocument, practicePlan: PracticePlanDocument,
-                mediaManifest: SampleMediaManifest) throws {
+                mediaManifest: SampleMediaManifest, analysis: [SampleAnalysisRecord] = []) throws {
         guard !sessions.isEmpty, Set(sessions.map(\.id)).count == sessions.count else {
             throw SampleContentError.invalidLibrary("sessions must be non-empty with unique ids")
         }
@@ -37,14 +39,15 @@ public struct SampleLibrary: Equatable, Sendable {
         }
         guard equipment.sample != nil else { throw SampleContentError.notSample("equipment") }
         guard practicePlan.sample == true else { throw SampleContentError.notSample(practicePlan.id) }
-        self.sessions = sessions
+        self.sessions = try Self.applying(analysis, to: sessions)
         self.equipment = equipment
         self.practicePlan = practicePlan
         self.mediaManifest = mediaManifest
     }
 
-    /// Reads `sessions/*.session.json`, `equipment.json` and `practice-plan.json` from `directory`.
-    public static func load(from directory: URL, mediaManifest: URL) throws -> SampleLibrary {
+    /// Reads `sessions/*.session.json`, `equipment.json` and `practice-plan.json` from `directory`, and the analysis
+    /// overlays `sessions/*.analysis.json` from `analysis` when given.
+    public static func load(from directory: URL, mediaManifest: URL, analysis: URL? = nil) throws -> SampleLibrary {
         let folder = directory.appendingPathComponent(sessionsFolder, isDirectory: true)
         let files = try FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)
             .filter { $0.lastPathComponent.hasSuffix(".session.json") }
@@ -56,6 +59,24 @@ public struct SampleLibrary: Equatable, Sendable {
                                             from: Data(contentsOf: directory.appendingPathComponent(equipmentFile))),
             practicePlan: ContractCodec.decode(PracticePlanDocument.self,
                                                from: Data(contentsOf: directory.appendingPathComponent(practicePlanFile))),
-            mediaManifest: ContractCodec.decode(SampleMediaManifest.self, from: Data(contentsOf: mediaManifest)))
+            mediaManifest: ContractCodec.decode(SampleMediaManifest.self, from: Data(contentsOf: mediaManifest)),
+            analysis: try analysis.map(SampleAnalysisRecord.loadAll(from:)) ?? [])
+    }
+
+    /// Each overlay applied to its session; one naming no library session, or a comparison side naming none, is
+    /// refused so an installed comparison can always open both recordings.
+    private static func applying(_ analysis: [SampleAnalysisRecord], to sessions: [SessionDocument]) throws -> [SessionDocument] {
+        var out = sessions
+        for record in analysis {
+            guard let index = out.firstIndex(where: { $0.id == record.sessionId }) else {
+                throw SampleContentError.invalidLibrary("analysis names no library session: \(record.sessionId)")
+            }
+            out[index] = try record.applied(to: out[index])
+        }
+        let ids = Set(out.map(\.id))
+        for side in out.flatMap({ $0.comparisons ?? [] }).flatMap({ [$0.left, $0.right] }) where !ids.contains(side.sessionId) {
+            throw SampleContentError.invalidLibrary("comparison names no library session: \(side.sessionId)")
+        }
+        return out
     }
 }

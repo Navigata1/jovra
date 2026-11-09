@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA sample analysis overlay",
+  "description": "T40. The analysis records of one sample session (spec/fixtures/sample/analysis/sessions): per-shot stroke tags and placements, 4-tap calibrations, serve marks, studied swings with key moments and comparison projects. SampleContent appends them to the named library session when it installs the demo library, so no byte of the library changes. Each item is the session document's own record type; ids must not repeat the session's. Written by jovra_ref/sample_match.py (analysis section) from the rendered ground truth.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "sessionId", "sample", "shots", "calibrations", "serveMarks", "swings", "comparisons"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.sampleAnalysis"},
+    "sessionId": {"$ref": "common.schema.json#/$defs/id", "description": "The library session these records belong to."},
+    "sample": {"$ref": "session.schema.json#/$defs/sampleInfo"},
+    "shots": {"type": "array", "items": {"$ref": "session.schema.json#/$defs/shot"}},
+    "calibrations": {"type": "array", "items": {"$ref": "session.schema.json#/$defs/calibration"}},
+    "serveMarks": {"type": "array", "items": {"$ref": "session.schema.json#/$defs/serveMark"}},
+    "swings": {"type": "array", "items": {"$ref": "session.schema.json#/$defs/swing"}},
+    "comparisons": {"type": "array", "items": {"$ref": "session.schema.json#/$defs/comparison"}}
+  }
+}
