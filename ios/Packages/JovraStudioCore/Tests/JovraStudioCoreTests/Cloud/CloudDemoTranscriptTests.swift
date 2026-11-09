@@ -161,6 +161,16 @@ struct CloudDemoTranscriptTests {
         #expect(try await DemoCloudClient(scenario: .queue).deleteCloudCopies(projectId: "sample-court-day").status == .nothingToDelete)
     }
 
+    @Test("demo deletion progress belongs only to the Sample project",
+          arguments: [DemoCloudScenario.deletionRunning, .deletionFailed])
+    func deletionDoesNotClaimCopiesForOtherProjects(scenario: DemoCloudScenario) async throws {
+        let client = try DemoCloudClient(scenario: scenario)
+        let result = try await client.deleteCloudCopies(projectId: "other-project")
+        #expect(result.scope == "project:other-project")
+        #expect(result.sample)
+        #expect(result.status == .nothingToDelete)
+    }
+
     @Test("an unknown scenario name or a missing value is refused; no argument is the queue")
     func launchArgumentParsing() throws {
         #expect(try DemoCloudScenario(launchArguments: []) == .queue)
