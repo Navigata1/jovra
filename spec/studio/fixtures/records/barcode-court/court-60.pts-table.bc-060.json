@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "jovra.pts-table/1",
+  "sample": true,
+  "sourceId": "bc-060",
+  "normalizerVersion": "jovra-normalize@0.1.0",
+  "original": {
+    "timescale": 15360,
+    "nominalFps": {
+      "num": 60,
+      "den": 1
+    },
+    "pts": [
+      {
+        "value": 0,
+        "step": 256,
+        "count": 600
+      }
+    ],
+    "endPts": 153600,
+    "frameCount": 600,
+    "width": 1280,
+    "height": 720,
+    "rotationDegrees": 0,
+    "hdr": false,
+    "transfer": "bt709"
+  },
+  "proxy": {
+    "fps": {
+      "num": 60,
+      "den": 1
+    },
+    "timescale": 3000,
+    "frameDurationTicks": 50,
+    "startPts": 0,
+    "frameCount": 600,
+    "width": 1280,
+    "height": 720,
+    "rotationAppliedDegrees": 0,
+    "displayRotationDegrees": 0,
+    "transfer": "bt709",
+    "bitDepth": 8,
+    "toneMap": null,
+    "upconverted": false
+  },
+  "runs": [
+    {
+      "proxyFrame": 0,
+      "count": 600,
+      "originalFrame": 0,
+      "originalStep": 1,
+      "originalPts": 0
+    }
+  ]
+}

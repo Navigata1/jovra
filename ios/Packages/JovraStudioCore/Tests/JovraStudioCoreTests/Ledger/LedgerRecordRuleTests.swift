@@ -62,7 +62,7 @@ struct LedgerRecordRuleTests {
     func storedRecordsPass() throws {
         let folder = try StudioFixtures.url("records")
         var checked: [String] = []
-        for name in try FileManager.default.contentsOfDirectory(atPath: folder.path).sorted() {
+        for name in try FileManager.default.contentsOfDirectory(atPath: folder.path).filter({ $0.hasSuffix(".json") }).sorted() {
             let data = try StudioFixtures.data("records/\(name)")
             guard case .string(let version)? = try StudioJSONParser.parse(data)["schemaVersion"], Self.versions.contains(version) else { continue }
             try Self.checkRecord(version: version, data)

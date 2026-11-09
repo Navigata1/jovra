@@ -8,7 +8,7 @@ compile_plan(profiles, plan, context, request) -> {"edl", "sha256", "omitted", "
     `plan` is a jovra.story-brief/1 StoryPlan (any planner). It first passes planner.check and the grammar lint (an
     untrusted or stale plan is a typed rejection, story 148). `context` is the planning context plus the compile keys
     (`edl`, `media`, `stage`, `renderer`); every one comes from stored records, never from the plan. `request` holds
-    the player's output choices: `fps`, `width`/`height`, `planId` and storyboard `trims`.
+    the player's output choices: `fps`, `width`/`height`, `planId`, storyboard `trims` and storyboard `transitions`.
 
 The compiler never invents material. A beat it cannot make honestly is omitted and listed with its reason (an operation
 the stage has not enabled, one the renderer does not support, a replay that would need interpolated frames, a final
@@ -36,7 +36,8 @@ STAGES = {
 }
 REQUIRED_OPS = ("live", "silence")                 # a build without these cannot render any film
 TREATMENT_OP = {"live": "live", "replay": "replay", "freeze": "freeze", "title-card": "card", "broll": "broll"}
-REQUEST_KEYS = ("fps", "width", "height", "planId", "trims")
+REQUEST_KEYS = ("fps", "width", "height", "planId", "trims", "transitions")
+TRANSITION_TYPES = ("dissolve", "dip")             # a dip goes through forest (#092A25), film-engine 3.6
 CONTEXT_KEYS = ("edl", "media", "stage", "renderer")
 GAP_TEMPLATE = "card.recording-gap"                # slot: the gap's length, derived from the coverage
 FINAL_TEMPLATE = "card.final-score"
@@ -179,6 +180,7 @@ def compile_plan(profiles: dict, plan: dict, context: dict, request: dict) -> di
     refusal = _range_refusal(c, total, fps)
     if refusal:
         return {"refusal": refusal}
+    _transitions(c, items, omitted)
     doc = _assemble(c, items, fps, size, total, omitted)
     result = validate(doc, profiles, c.edl)
     return {"edl": doc, "sha256": canonical_sha256(doc), "omitted": omitted,
@@ -479,6 +481,35 @@ def _range_refusal(c: Ctx, total: int, fps: Fraction):
     return None
 
 
+# ----- storyboard transitions --------------------------------------------------------------------------------------
+
+def _transitions(c: Ctx, items: list, omitted: list) -> None:
+    """The player's storyboard transitions (`request.transitions`: {beatId: {type, frames}}), each the incoming
+    transition of that beat's segment. Only a dissolve or a dip, never on the film's first segment; where the stage or
+    the renderer lacks `transition`, the boundary stays a cut and the transition is listed. A requested transition for
+    a beat the film does not show is listed as `beatOmitted`. Everything else (the profile's allowlist and maximum,
+    source handles inside one coverage interval, protected contact windows) is edl.validate's, which runs on every
+    compiled EDL, so a transition that would blend a contact or cross a gap is a typed rejection, never a silent cut."""
+    wanted = c.request.get("transitions") or {}
+    require(isinstance(wanted, dict), "badRequest", "transitions are {beatId: {type, frames}}")
+    shown = {item["beat"]["beatId"]: n for n, item in enumerate(items) if item["beat"] is not None}
+    for beat_id in sorted(wanted):
+        tr = wanted[beat_id]
+        require(isinstance(tr, dict) and set(tr) == {"type", "frames"} and tr["type"] in TRANSITION_TYPES
+                and type(tr["frames"]) is int, "badRequest",
+                f"{beat_id}: a transition is {{type: dissolve|dip, frames}}")
+        n = shown.get(beat_id)
+        if n is None:
+            _omit(omitted, {"beatId": beat_id}, "transition", "beatOmitted")
+            continue
+        require(n > 0, "badRequest", f"{beat_id}: the film's first segment starts with a cut")
+        why = c.available("transition")
+        if why:
+            _omit(omitted, {"beatId": beat_id}, "transition", why)
+            continue
+        items[n]["transition"] = {"type": tr["type"], "frames": tr["frames"]}
+
+
 # ----- the document ------------------------------------------------------------------------------------------------
 
 def _court_bed_wanted(c: Ctx) -> bool:
@@ -523,7 +554,8 @@ def _assemble(c: Ctx, items: list, fps: Fraction, size: tuple, total: int, omitt
 
 def _segment(c: Ctx, item: dict, size: tuple) -> dict:
     head = {"id": item["id"], "op": "title-card" if item["op"] == "card" else item["op"],
-            "outputInFrame": item["o_in"], "outputOutFrame": item["o_out"], "transitionIn": dict(CUT)}
+            "outputInFrame": item["o_in"], "outputOutFrame": item["o_out"],
+            "transitionIn": dict(item.get("transition") or CUT)}
     if item["op"] == "card":
         return dict(head, templateId=item["template"], textRefs=list(item["textRefs"]), overlayRefs=item["overlays"])
     src = c.sources[item["sid"]]
@@ -569,7 +601,7 @@ def _audio(c: Ctx, items: list, fps: Fraction, omitted: list) -> dict:
     """One route per output frame. primary-bed only under live play, in sync through the session clock; hold-bed
     continues it without a jump under a replay, pause or card over real dead time; alt-bed (B-roll's own sound, or a
     reviewed angle where the primary does not cover a live moment) only where the stage enables it; silence otherwise.
-    Every change of source sits on a segment boundary (all cuts) with 20 ms fades."""
+    Every change of source sits on a segment boundary with 20 ms fades (longer across a requested transition)."""
     court = _court_bed_wanted(c)
     if court and c.available("primary-bed"):
         _omit(omitted, None, "primary-bed", c.available("primary-bed"))
@@ -589,9 +621,27 @@ def _audio(c: Ctx, items: list, fps: Fraction, omitted: list) -> dict:
             pieces[-1]["outputOutFrame"] = item["o_out"]
             continue
         pieces.append(piece)
+    _transition_fades(items, pieces, fps)
     sounding = any(p["route"] != "silence" for p in pieces)
     return {"primarySourceId": c.primary_id if sounding else None, "bed": [_strip(p) for p in pieces],
             "narration": None, "music": None}
+
+
+def _transition_fades(items: list, pieces: list, fps: Fraction) -> None:
+    """At a dissolve or dip the bed switch is an audio dip across the picture transition: the piece that ends on the
+    boundary fades out over the transition frames before it, the piece that starts there fades in over the frames
+    after it (never shorter than the 20 ms cut fade), so two beds never play at once."""
+    for item in items:
+        tr = item.get("transition")
+        if not tr:
+            continue
+        h_out = tr["frames"] // 2
+        h_in = tr["frames"] - h_out
+        for p in pieces:
+            if p["outputOutFrame"] == item["o_in"]:
+                p["fadeOutMs"] = max(FADE_MS, (Fraction(h_in * 1000) / fps).__ceil__())
+            if p["outputInFrame"] == item["o_in"]:
+                p["fadeInMs"] = max(FADE_MS, (Fraction(h_out * 1000) / fps).__ceil__())
 
 
 def _piece(route, sid, s_in, item) -> dict:

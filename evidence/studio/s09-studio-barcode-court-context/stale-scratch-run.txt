@@ -1,0 +1,28 @@
+$ sed -i "" "s/^CLICK_LEAD = 48 /CLICK_LEAD = 96 /" scripts/media/studio/jovra_studio_media/sets/barcode_sources.py   # scratch copy only
+30:CLICK_LEAD = 96     # each click starts 1 ms after its frame's presentation time, so its frame is unambiguous
+$ python3 scripts/media/studio/barcode_court.py --check
+==> ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers
+  barcodeSources/bc-060                  sha256 b99315c2e6990ef84f8b6d9ce564bc009bdc637a7bd976571ecb6d128c1b6a6b
+  match/match-jon-vs-alex                sha256 81d40dab5522e217f0ea6fde65d3d1cdcc0581629001b2327a319c7728fed4fd
+  broll/broll-court-push                 sha256 4ffebf3f34f88d97b76c7758ebd60846b695583c955dfa69103fd4b47d5b932e
+  broll/broll-ball-drop                  sha256 1aaf932cf0be514384dc8ae6864baf1c6e06b25d6e36c46e124c5682056c200b
+  broll/broll-sideline-pan               sha256 84f105ea14ed8f4ad6318323fdfc0e80664bda261e3e81fc4cec570b5365a53f
+FAIL barcodeSources/bc-060: stale, measured from generator source f26ae914a4f4464d, the generator is now c917b35b21e28cf5
+FAIL barcodeSources/bc-060: stale, the regenerated file's sha256 differs from the context's (b99315c2e6990ef84f8b6d9ce564bc009bdc637a7bd976571ecb6d128c1b6a6b in the context, 576a44828b60b2a6d9a9242b8e9ceab52a63f6493f0896f6dd635928f687197d regenerated)
+FAIL barcodeSources/bc-060: stale, the regenerated file's sizeBytes differs from the context's (218312 in the context, 218489 regenerated)
+barcode-court media: STALE
+exit=1
+$ JOVRA_STUDIO_MEDIA=1 python3 scripts/spec/validate_studio.py | grep -i "barcode-court\|RESULT"
+FAIL spec/studio/fixtures/vectors/barcode-court.json#media: the barcode-court context is stale: barcodeSources/bc-060 was measured from generator source f26ae914a4f4464d, the S08 generator is now c917b35b21e28cf5; run scripts/media/studio/barcode_court.py --measure
+FAIL barcode-court media: barcodeSources/bc-060: stale, measured from generator source f26ae914a4f4464d, the generator is now c917b35b21e28cf5
+FAIL barcode-court media: barcodeSources/bc-060: stale, the regenerated file's sha256 differs from the context's (b99315c2e6990ef84f8b6d9ce564bc009bdc637a7bd976571ecb6d128c1b6a6b in the context, 576a44828b60b2a6d9a9242b8e9ceab52a63f6493f0896f6dd635928f687197d regenerated)
+FAIL barcode-court media: barcodeSources/bc-060: stale, the regenerated file's sizeBytes differs from the context's (218312 in the context, 218489 regenerated)
+FAIL determinism: vectors/barcode-court.json is stale; run spec/reference/studio/generate_studio_fixtures.py
+barcode-court vectors (context)                                                                                           2
+barcode-court vectors (compiled, validated, frame map consistent)                                                         5
+barcode-court frame maps checked frame by frame                                                                           10
+barcode-court vectors (reject)                                                                                            1
+coverage  card.recording-gap               NOT COVERED (barcode-court.md)                                                 1
+barcode-court records valid (schema, reference, cross-record)                                                             15
+barcode-court mutations caught                                                                                            3
+RESULT: FAIL
