@@ -17,6 +17,13 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   save and replay test passed. The original first save attempt failed because
   the test did not dismiss the camera permission explanation. No loss bound,
   call/alarm interruption, thermal, power-loss or endurance gate has passed.
+- iPhone 15 Pro Max / iOS 27.0.1 on product source `0706e4c`: live capture
+  passed a Home-background, return, resume, save and Replay test (1/1).
+  Saved metadata shows two camera segments, an `interruption` gap and
+  `savedWithGaps`; both segments decoded through the end (279 and 360 frames).
+  The signed test build used unchanged product source with a separate XCTest.
+  Private receipt: `device-background-main.xcresult` under the local evidence
+  directory below. Calls, alarms, resets, crash-loss bounds and endurance remain open.
 - iPad Pro simulator CoreFlow on main failed the Replay Pause Dynamic Type
   audit. Proposed source `725c0a3` passed its AX5 transport test; the unchanged
   CoreFlow audit then timed out twice on iOS 27.2, including an isolated rerun.
@@ -69,7 +76,10 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   final correction has 15 focused tests and one timing test. Full T14 remains
   open for wider acceptance and integration.
 - Lesson relationship fence [#459](https://github.com/Navigata1/jovra/pull/459)
-  is independently reviewed. Real media custody and transaction durability remain open.
+  and actual-media custody draft [#461](https://github.com/Navigata1/jovra/pull/461)
+  have independent bounded reviews. #461 checks on-disk originals and the recording
+  snapshot (157 StudioCore and six StudioMedia tests). The proof is point-in-time;
+  cross-store atomicity, native wiring and full S36 acceptance remain open.
 - [#443](https://github.com/Navigata1/jovra/pull/443) remains blocked on
   stale-plan, privacy and crash consistency. Draft [#447](https://github.com/Navigata1/jovra/pull/447)
   protects the live event-admission seam; 144 StudioCore tests passed on its
