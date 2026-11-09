@@ -6,10 +6,11 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Current evidence
 
+- Main `97319ca2101add644fb0b07bcb7d5fa839f14986`: full CoreFlow passed 1/1 on the owned iPhone simulator, including Replay and Export audits and relaunch. The actual synthetic session and export passed schema, references, canonical JSON and exact points/stats CSV checks. The pre/post original hash matched and both original and export decoded through their ends; export has 30 ordered frames. Full Core 12 XCTest and 122 Swift Testing, 209 shared spec documents, 82 native conformance outputs, two exports and two bundles passed. Private SSD receipts are in `JOVRA-Review-97319ca.PxV5Ep` and `JOVRA-Core-97319ca-hahwlrk7` under `/Volumes/JovraA02-F46A6DA7`. Signed physical tests on this new source remain open.
 - On product source `0706e4c1f031a6648b48b13d5fbbd5aec2b56c76`: dedicated iPhone
   simulator CoreFlow passed 1/1 after rendering the 11 sample media files and
   matching their decoded-frame hashes. Its iOS and spec trees match the tested
-  checkout, but subsequent recovery changes require a new run. Independently checked the actual
+  checkout; the later recovery change was re-tested on main as noted above. Independently checked the actual
   synthetic session and export JSON, canonical encoding, corrected scoring
   CSV, stats CSV and one-second 30-frame decoded clip.
 - iPhone 15 Pro Max on earlier main product source `d1f13ab`: a live-camera recording
@@ -50,7 +51,7 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Review and fixes
 
-- Partial startup recovery [#463](https://github.com/Navigata1/jovra/pull/463) adopts verified playable footage when another segment is damaged or missing. On tested source `176db13`, 78 Media and 45 benchmark tests passed, along with 2/2 app-hosted startup tests using an isolated simulator host ID. The latter exercises the recovery summary and Library model, not rendered UI or a cold relaunch. Source files, marks and edits are preserved; an external writer after the witness check and physical crash-loss remain open. Refresh PR status before claiming integration and rerun current-main gates afterward.
+- Partial startup recovery [#463](https://github.com/Navigata1/jovra/pull/463), merged as `97319ca`, adopts verified playable footage when another segment is damaged or missing. On tested source `176db13`, 78 Media and 45 benchmark tests passed, along with 2/2 app-hosted startup tests using an isolated simulator host ID. The latter exercises the recovery summary and Library model, not rendered UI or a cold relaunch. The damaged original, journal, marks and edits are preserved; recovery may truncate a verified torn segment to its playable prefix. An external writer after the witness check and physical crash-loss remain open. The full current-main Core and CoreFlow gates passed afterward; signed-device gates remain open.
 - Android A03 helper remains local and on hold: fake-SDK review reproduced first-creation directory redirection and a late emulator-lock release race. Do not run it on real AVDs. Its tracked issue is #181.
 - Match-import opt-in [#457](https://github.com/Navigata1/jovra/pull/457)
   merged as `0706e4c`. Reviewed head `6926587` passed six hosted and two UI
@@ -61,9 +62,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 - Watch simulator safety follow-up [#455](https://github.com/Navigata1/jovra/pull/455)
   is a reviewed draft. The prior alert acknowledgment test passed 1/1 on a
   newly created Apple Watch Ultra 3 / iPhone simulator pair. A subsequent
-  full watch suite was interrupted at the disk floor. The test-owned pair and
-  iPad simulators were removed after receipts were retained. Companion install,
-  real watch validation and W03 owner decisions stay open.
+  full watch suite was interrupted at the disk floor. A later fresh Ultra 3 /
+  iPhone pair ran the full suite on `59e89ed` and passed 19/19 (9 fake-bridge,
+  10 harness); its private receipt is under `/Volumes/JovraA02-F46A6DA7/JOVRA-W03-59e89ed-ay6eq_2o`. Only test-owned pairs and simulators were removed. Companion install, live WatchConnectivity, real watches, Series/SE matrix and W03 owner decisions stay open.
 - Studio demo boundary follow-up [#454](https://github.com/Navigata1/jovra/pull/454)
   has passed 171 macOS package tests and its corrected-head Linux Studio job.
   Full S14 acceptance and parent integration remain open.
@@ -100,6 +101,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   passed 18 Android and 8 JVM tests. Its verified debug APK installed without
   replacement, launched, and opened five placeholder tabs on Pixel 6 Pro.
   Foldable hardware, accessibility, full product features and owner gates remain open.
+- Files duplicate service [#466](https://github.com/Navigata1/jovra/pull/466) is a reviewed draft with focused tests. The separate UX work is held on a cancellation race; native simulator picker selection and cancellation attempts failed, so do not claim provider acceptance. The broad Media run was interrupted.
+- iPad remainder-mask-only fresh diagnostics `d3a13e7` passed at top and recorded bottom viewports. They do not explain or clear the earlier full `.all` timeout. Private receipts are under `/Volumes/JovraA02-F46A6DA7/JOVRA-iPad-d3a13e7-k7qcvxi6`.
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
   and [#376](https://github.com/Navigata1/jovra/issues/376). Watch foundation
@@ -110,7 +113,7 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 ## Immediate continuation
 
 1. Finish diagnosing iOS 27.2 Replay audit timeouts. CoreFlow on product source
-   `0706e4c` passed on the iPhone simulator; rerun after product changes. The contrast-first probe
+   `97319ca` passed on the iPhone simulator after recovery integration. The contrast-first probe
    passed and the all-types-first probe timed out. Preserve all prior failures
    and keep the original full audit as the acceptance gate.
 2. Continue T26 Photos, batches, duplicate handling, provider and interruption
