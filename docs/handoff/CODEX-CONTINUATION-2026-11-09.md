@@ -81,8 +81,11 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   compiler results. Renderer parity and oversized inherited scope remain open.
 - The unsigned Android owner proposal is draft [#451](https://github.com/Navigata1/jovra/pull/451).
 - A02 shell work is underway in an isolated APFS image on Extreme SSD.
-  A first guarded Gradle attempt stopped before tests when internal free space
-  dropped below the 8 GiB floor. The initial attempt is not a product result.
+  A first guarded Gradle attempt stopped before tests at the 9 GiB safety
+  buffer protecting the 8 GiB floor. Its last sample was about 8.75 GiB; the
+  separately observed system free space subsequently fell below 8 GiB. That
+  initial attempt is not a product result. A later focused shell run passed
+  its two tests; the broader frozen build is in progress.
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
   and [#376](https://github.com/Navigata1/jovra/issues/376). Watch foundation
