@@ -1,0 +1,51 @@
+Extracts from retained local SwiftPM stdout; full logs stay in this worktree’s .scratch.
+
+--- 02-stale-still-red.log ---
+✘ Test aNewPositionNeverShowsTheOldBackwardStepStill(scrub:) recorded an issue with 1 argument scrub → false at ShortGOPProxyTests.swift:125:9: Expectation failed: controller.still == nil
+↳       index → 399
+✘ Test aNewPositionNeverShowsTheOldBackwardStepStill(scrub:) recorded an issue with 1 argument scrub → true at ShortGOPProxyTests.swift:125:9: Expectation failed: controller.still == nil
+↳       index → 399
+✘ Test aNewPositionNeverShowsTheOldBackwardStepStill(scrub:) with 2 test cases failed after 1.276 seconds with 2 issues.
+✘ Test run with 1 test in 1 suite failed after 1.276 seconds with 2 issues.
+
+--- 04-proxy-close-red.log ---
+✘ Test closingDuringProxyBuildDoesNotPublishOrLeaveTemporaryMedia() recorded an issue at ShortGOPProxyTests.swift:142:9: Expectation failed: try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty
+↳ Closing before publication must leave neither a final proxy nor a partial copy
+✘ Test run with 1 test in 1 suite failed after 0.593 seconds with 1 issue.
+
+--- 07-shifted-loop-red.log ---
+✘ Test aShiftedVideoTrackLoopsOnItsOwnClock() recorded an issue at PlaybackControllerTests.swift:167:9: Expectation failed: controller.player.currentItem?.forwardPlaybackEndTime == CMTime(value: 55, timescale: 60)
+↳   controller.player.currentItem?.forwardPlaybackEndTime → CMTime(value: 25, timescale: 60, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0)
+✘ Test aShiftedVideoTrackLoopsOnItsOwnClock() recorded an issue at PlaybackControllerTests.swift:144:6: Caught error: .noPixelBuffer(__C.CMTime(value: 6, timescale: 60, flags: __C.CMTimeFlags(rawValue: 1), epoch: 0))
+✘ Test run with 1 test in 1 suite failed after 1.419 seconds with 2 issues.
+
+--- 03-stale-still-green.log ---
+✔ Test aSlowBackwardStepStartsTheProxyAndLaterBackwardStepsUseIt() passed after 0.627 seconds.
+✔ Test aNewPositionNeverShowsTheOldBackwardStepStill(scrub:) with 2 test cases passed after 0.759 seconds.
+✔ Suite "Short-GOP proxy" passed after 1.387 seconds.
+✔ Test run with 2 tests in 1 suite passed after 1.387 seconds.
+
+--- 05-proxy-close-green.log ---
+✔ Test aSlowBackwardStepStartsTheProxyAndLaterBackwardStepsUseIt() passed after 0.808 seconds.
+✔ Test aNewPositionNeverShowsTheOldBackwardStepStill(scrub:) with 2 test cases passed after 0.734 seconds.
+✔ Test closingDuringProxyBuildDoesNotPublishOrLeaveTemporaryMedia() passed after 0.032 seconds.
+✔ Suite "Short-GOP proxy" passed after 1.575 seconds.
+✔ Test run with 3 tests in 1 suite passed after 1.575 seconds.
+
+--- 08-shifted-loop-green.log ---
+✔ Test aShiftedVideoTrackLoopsOnItsOwnClock() passed after 0.546 seconds.
+✔ Test anABLoopRepeatsWithinOneFrameOfAAndB() passed after 0.616 seconds.
+✔ Suite "PlaybackController on the frame-counter fixtures" passed after 1.163 seconds.
+✔ Test run with 2 tests in 1 suite passed after 1.163 seconds.
+
+--- 09-full-media.log ---
+	 Executed 1 test, with 0 failures (0 unexpected) in 3.723 (3.723) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 3.723 (3.723) seconds
+	 Executed 1 test, with 0 failures (0 unexpected) in 3.723 (3.724) seconds
+proxy backward step average per iteration (ms): ["8.71", "8.78", "8.04", "7.61", "8.49", "8.65"]
+✔ Test aShiftedVideoTrackLoopsOnItsOwnClock() passed after 0.372 seconds.
+✔ Test aNewPositionNeverShowsTheOldBackwardStepStill(scrub:) with 2 test cases passed after 0.763 seconds.
+✔ Test closingDuringProxyBuildDoesNotPublishOrLeaveTemporaryMedia() passed after 0.040 seconds.
+controller proxy backward step average: 0.00691314 seconds
+✔ Test run with 97 tests in 15 suites passed after 281.882 seconds.
+✔ Test run with 45 tests in 8 suites passed after 1.714 seconds.
