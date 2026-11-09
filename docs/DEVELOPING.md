@@ -348,3 +348,13 @@ android/gradlew -p android clean                        # at the end of every An
   start below 8 GB free. No SDK packages, system images or AVDs are installed by a ticket without its named gate.
 - **CI:** `.github/workflows/android.yml`, job `android-core` (required): temurin 17 with the runner's Android SDK
   moved out of reach, then the JVM module tests, the boundary check and the build-logic tests.
+
+### Android test tooling for A03
+
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s android/scripts/test -v` exercises private AVD acquisition with a fake SDK and temporary directories. It provisions the four API 35 profiles by allowlist and checks generated cold-boot, snapshot, RAM and data-partition settings. Wear still follows G-WEARIMG. This tracer supplies neither an operational `avd.sh` nor a real SDK adapter.
+
+The acquisition boundary expects a fixed private control root shared by cooperating JOVRA callers under one OS account and a separate private AVD registry. Each acquisition reserves a unique namespace. The adapter receives private SDK user directories, including the fallback `HOME`. The module checks directory and file identity before publishing its fixture receipt. Ambiguous acquisitions retain the lease and its files. The lease coordinates callers of this tool. An external command launched with the default Android environment uses its usual directories. A command deliberately pointed into a private namespace by the same OS account can bypass the lease.
+
+Keep [#181](https://github.com/Navigata1/jovra/issues/181) open until the operational CLI, fixed account control path, stopped-process ownership, release, deletion, and safe reacquisition are tested. The draft uses a private `.jovra-lock` under the supplied control root rather than the ticket’s shared `~/.android/avd` path. It configures fresh isolated files and requires 8 GiB free internally and 12 GiB free on the managed volume, including a 4 GiB reservation. Release below 8 GiB and the ticket’s 6 GB projected floor remain outside this slice. A real adapter must first verify the installed tool’s empty-target rules and keep SDK-generated staging files separate from the anchored publication tree.
+
+Use Robolectric `sdk=34` locally on JDK 17. JDK 21 is gated for local SDK 36 tests. The planned Roborazzi round trip is to download the `roborazzi-record` artifact, review and commit its goldens, then verify them in `android-unit`. Under 14 GiB internal free space, schedule at most two Android Gradle tickets, one emulator ticket and one iOS `xcodebuild` ticket. Record `df -h /` before the ticket and after the existing Gradle clean command. The fake-only tracer runs neither Gradle nor SDK tools from the installed environment.
