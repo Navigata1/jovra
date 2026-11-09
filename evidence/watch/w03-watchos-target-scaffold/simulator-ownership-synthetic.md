@@ -30,3 +30,11 @@ This correction was tested at `d66e1a40e3989355f198b46b903fc5f471490b17` against
 The helper now rejects shared custody paths and checks that the receipt belongs to the canonical checkout that allocated the watches. The corrected test verifies that the second worktree cannot reuse a shared or copied receipt. The original worktree can still resolve its watches, and the inventory and original receipt remain byte-for-byte unchanged after the refusals.
 
 The final focused gate passed 14 tests. Localization checks passed 32 localization tool tests and 26 iOS script tests, with zero literal violations and zero copy findings. Shell syntax and diff checks passed. The raw pre-fix and final output is retained in `.scratch/08-watch-shared-custody-red.log`, `.scratch/11-watch-shared-custody-final.log` and `.scratch/12-watch-shared-custody-final-l10n.log`. All simulator calls were synthetic.
+
+## Safe receipt publication
+
+This correction was tested at `1fe54da58c280db7577c7e24c1e1d43dbef289bd` against `1b26ffcd4420b0ff1d6484879afcf47125340808`. A public `watch-sim.sh create` with fake `xcrun` previously returned PASS while overwriting an external sentinel through a stale `owned.tmp` symlink. An independent control blocked the receipt destination and found that the old source leaked its temporary file.
+
+The corrected helper writes through the file descriptor of an exclusively allocated temporary file in the receipt directory. It atomically replaces the receipt and cleans up its temporary path on failure. The final create control preserved both the external sentinel bytes and the stale symlink, committed all three synthetic device identities, and left no new temporary file. The blocked-destination control preserved the blocker, removed the newly allocated temporary file, and returned failure.
+
+The final focused gate passed 16 tests. Localization checks passed 32 localization tool tests and 28 iOS script tests, with zero literal violations and zero copy findings. Shell syntax and diff checks passed. The raw pre-fix and final output is retained in `.scratch/13-watch-receipt-temp-red.log`, `.scratch/14-watch-receipt-temp-cleanup-red.log`, `.scratch/15-watch-receipt-temp-final.log` and `.scratch/16-watch-receipt-temp-final-l10n.log`. All simulator calls were synthetic.
