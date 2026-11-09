@@ -9,7 +9,7 @@ let package = Package(
         .library(name: "JovraCore", targets: ["JovraCore"]),
     ],
     targets: [
-        .target(name: "JovraCore", resources: [.process("Export/Contracts")]),
+        .target(name: "JovraCore", resources: [.process("Export/Contracts"), .process("Capabilities/Contracts")]),
         .testTarget(name: "JovraCoreTests", dependencies: ["JovraCore"], plugins: ["FixtureDiscoveryPlugin"]),
         .executableTarget(name: "FixtureRunnerGenerator", path: "Tools/FixtureRunnerGenerator"),
         .plugin(name: "FixtureDiscoveryPlugin", capability: .buildTool(), dependencies: ["FixtureRunnerGenerator"]),

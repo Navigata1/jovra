@@ -1,0 +1,47 @@
+==> render media fixtures (check against committed ground truth)
+==> ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers
+==> set fixtureCamera (renderer hash 8710c28d160f8765)
+==> set frameCounter (renderer hash 68a198241bee4053)
+==> set harness (renderer hash 4d9c18d5b3e4de4c)
+==> set import (renderer hash c057f208a9012761)
+==> 19 clips, total rendered size 1,068,590 bytes (1.02 MiB)
+==> swift test (JovraCore)
+	 Executed 12 tests, with 0 failures (0 unexpected) in 265.489 (265.492) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 265.489 (265.492) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 265.489 (265.493) seconds
+✔ Test run with 69 tests in 6 suites passed after 8.280 seconds.
+==> swift test (JovraMedia)
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+✔ Test run with 56 tests in 9 suites passed after 211.770 seconds.
+✔ Test run with 37 tests in 7 suites passed after 5.276 seconds.
+==> xcodebuild test (JovraTests) on 1DBB8575-5C5D-47B0-97F0-0B361E863E7D
+==> JovraTests summary
+Test class                                                                     passed  failed  skipped  expected
+JovraTests/CapturePhasePresentationTests                                            1       0        0         0
+JovraTests/CaptureSetupChoicesTests                                                 2       0        0         0
+JovraTests/AppPreferencesTests (App preferences and the data eraser)               10       0        0         0
+JovraTests/CaptureTextBoundaryTests                                                 3       0        0         0
+JovraTests/AppRouterTests (App router)                                             21       0        0         0
+JovraTests/FilesImportTests                                                         5       0        0         0
+JovraTests/AssetCatalogScanTests (Asset catalog scan)                               4       0        0         0
+JovraTests/LocalCaptureLibraryTests                                                 4       0        0         0
+JovraTests/CapabilityDetailPresentationTests (Capability detail presentation)       5       0        0         0
+JovraTests/NativeCaptureCoordinatorTests                                            1       0        0         0
+JovraTests/ColorRoleContrastTests (Semantic colour contrast)                       10       0        0         0
+JovraTests/NativeExportModelTests                                                   1       0        0         0
+JovraTests/DriveClientConfigurationTests (Drive client configuration)               7       0        0         0
+JovraTests/ReplayPlaybackModelTests                                                 2       0        0         0
+JovraTests/FractionPresentationTests (Fraction presentation)                        4       0        0         0
+JovraTests/ReviewedPointModelTests                                                  1       0        0         0
+JovraTests/JovraFormatTests (Locale formatting)                                     8       0        0         0
+JovraTests/StartupRecoveryTests                                                     1       0        0         0
+JovraTests/LaunchConfigurationTests (Launch configuration)                          7       0        0         0
+JovraTests/MotionTests (Motion and haptics)                                         4       0        0         0
+JovraTests/PermissionsCenterTests (Permissions center)                              7       0        0         0
+JovraTests/ServiceRegistrationTests (Service registration seam)                     3       0        0         0
+JovraTests/StudioWiringTests (Studio wiring)                                        4       0        0         0
+JovraTests/ToastCenterTests (Toast and UndoBar)                                     3       0        0         0
+Total: 118 passed, 0 failed, 0 skipped, 0 expected failure(s) in 24 classes (xcresult summary: 118 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T12 1DBB8575-5C5D-47B0-97F0-0B361E863E7D (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: /Users/IDC2.5/jv/.claude/worktrees/t12-design-system-extensions/.derivedData/unit-tests-20261108-160720.xcresult
