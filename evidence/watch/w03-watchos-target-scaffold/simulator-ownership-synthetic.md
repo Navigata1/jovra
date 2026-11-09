@@ -38,3 +38,13 @@ This correction was tested at `1fe54da58c280db7577c7e24c1e1d43dbef289bd` against
 The corrected helper writes through the file descriptor of an exclusively allocated temporary file in the receipt directory. It atomically replaces the receipt and cleans up its temporary path on failure. The final create control preserved both the external sentinel bytes and the stale symlink, committed all three synthetic device identities, and left no new temporary file. The blocked-destination control preserved the blocker, removed the newly allocated temporary file, and returned failure.
 
 The final focused gate passed 16 tests. Localization checks passed 32 localization tool tests and 28 iOS script tests, with zero literal violations and zero copy findings. Shell syntax and diff checks passed. The raw pre-fix and final output is retained in `.scratch/13-watch-receipt-temp-red.log`, `.scratch/14-watch-receipt-temp-cleanup-red.log`, `.scratch/15-watch-receipt-temp-final.log` and `.scratch/16-watch-receipt-temp-final-l10n.log`. All simulator calls were synthetic.
+
+## Pair recheck and safe evidence reports
+
+The final script and tests are bound to `e74c4f2771bce6c3628582085824972b7947547a`, based on `312cc34eb4494bec42aab464f42cb74993736415`. The fake simulator adds a pair during shutdown. The previous helper still issued delete and returned PASS. The corrected helper observes the new pair, refuses deletion, and preserves all recorded identities and receipt bytes.
+
+The report control covers both successful create and refused delete. The previous helper followed the report symlink in both paths and overwrote the external sentinel. The corrected helper uses the existing exclusive temporary-file and atomic replacement pattern for both reports and ownership receipts. A stale final report symlink is replaced by a regular report and its external target stays byte-identical. The existing test still verifies that a refused delete replaces a regular prior PASS report with FAIL.
+
+Cleanup checks identity and pairing again after shutdown. The checkout lock cannot coordinate external pairing commands, so a pair change between the final query and delete remains possible. A simulator allocated before a failed ownership receipt publication remains an unrecorded collision. This evidence covers synthetic calls only.
+
+[Command excerpts](pair-report-synthetic-results.txt) record three expected failures across two new controls on the previous source, then 18 focused tests passing on the corrected source. The repository script gate passed 32 localization tool tests and 30 iOS script tests, with zero literal, copy, or catalog-ownership findings. Shell syntax and diff checks passed. Full local receipts are in `/tmp/jovra-w03-pair-report.Jte0bE`.

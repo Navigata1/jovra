@@ -1,0 +1,26 @@
+W03 pair and evidence report checks. All simctl commands use the synthetic inventory.
+
+--- Exact-base RED (exit 1) ---
+FAIL: test_refuses_delete_when_a_watch_is_paired_during_shutdown (test_watch_sim.WatchSimTests.test_refuses_delete_when_a_watch_is_paired_during_shutdown)
+AssertionError: 0 == 0 :    deleted  JOVRA Watch Ultra 3 49mm (9B8E2C11-5362-4186-9AF5-CEF65904B6BD)
+FAIL: test_evidence_publication_does_not_follow_stale_report_symlinks (test_watch_sim.WatchSimTests.test_evidence_publication_does_not_follow_stale_report_symlinks) (operation='create')
+AssertionError: b'watch-sim.sh create: simctl list before/a[397 chars]))\n' != b'external evidence sentinel\x00\xff\n' :    created  JOVRA Watch Ultra 3 49mm (DEDEF0D0-43A4-46EA-92C5-17871F47E415)
+FAIL: test_evidence_publication_does_not_follow_stale_report_symlinks (test_watch_sim.WatchSimTests.test_evidence_publication_does_not_follow_stale_report_symlinks) (operation='delete')
+AssertionError: b'watch-sim.sh delete\nFAIL refusing to del[53 chars]IL\n' != b'external evidence sentinel\x00\xff\n' :
+Ran 2 tests in 1.242s
+FAILED (failures=3)
+
+--- Frozen focused GREEN (exit 0) ---
+test_evidence_publication_does_not_follow_stale_report_symlinks (tests.test_watch_sim.WatchSimTests.test_evidence_publication_does_not_follow_stale_report_symlinks) ... ok
+test_refuses_delete_when_a_watch_is_paired_during_shutdown (tests.test_watch_sim.WatchSimTests.test_refuses_delete_when_a_watch_is_paired_during_shutdown) ... ok
+Ran 18 tests in 5.892s
+OK
+
+--- Frozen repository script gate (exit 0) ---
+Ran 32 tests in 0.363s
+OK
+Ran 30 tests in 5.903s
+OK
+literal lint: 0 violation(s) in 101 Swift file(s)
+copy lint: 0 finding(s) in 16 catalog(s) and 101 Swift file(s)
+catalog ownership: 0 changed catalog(s) on codex/w03-pair-report-safety (ticket none), 0 problem(s)
