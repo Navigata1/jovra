@@ -12,7 +12,7 @@ public struct FilesImportDuplicateCandidate: Equatable, Sendable {
 
 public enum FilesImportCommit: Sendable {
     case published
-    case possibleDuplicate(FilesImportDuplicateCandidate)
+    case possibleDuplicates([FilesImportDuplicateCandidate])
 }
 
 extension SessionStore {
@@ -43,6 +43,7 @@ extension SessionStore {
     }
 
     /// Publish the original and its session together via a same-volume directory rename.
+    /// Duplicate arbitration is serialized among callers sharing this app's SessionStore actor.
     /// Once renamed, a failed sync is unacknowledged but the completed folder is retained.
     public func commitFilesImport(_ document: SessionDocument, id: UUID, allowDuplicate: Bool = false,
                                   verifyOriginal: @Sendable (URL) throws -> Void) throws -> FilesImportCommit {
@@ -74,10 +75,10 @@ extension SessionStore {
         try write(document, to: staging)
         try Task.checkCancellation()
         try DurableDirectory.synchronize(staging, matching: stagingIdentity)
-        let duplicate = allowDuplicate ? nil : try filesImportDuplicate(matching: segment.file)
+        let duplicates = allowDuplicate ? [] : try filesImportDuplicates(matching: segment.file)
         try Task.checkCancellation()
         try verifyOriginal(staging)
-        if let duplicate { return .possibleDuplicate(duplicate) }
+        if !duplicates.isEmpty { return .possibleDuplicates(duplicates) }
         try Task.checkCancellation()
         guard rename(staging.path, destination.path) == 0 else { throw SessionStoreError.renameFailed(errno) }
         activeFilesImports.remove(id)
@@ -97,7 +98,8 @@ extension SessionStore {
         try verifyOriginal(try folder(candidate.sessionID))
     }
 
-    private func filesImportDuplicate(matching selected: RecordFileReference) throws -> FilesImportDuplicateCandidate? {
+    private func filesImportDuplicates(matching selected: RecordFileReference) throws -> [FilesImportDuplicateCandidate] {
+        var candidates: [FilesImportDuplicateCandidate] = []
         let entries = try FileManager.default.contentsOfDirectory(at: sessions, includingPropertiesForKeys: nil)
         for entry in entries.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
             try Task.checkCancellation()
@@ -108,9 +110,9 @@ extension SessionStore {
             catch is DecodingError { continue }
             guard let file = filesImportOriginal(document), file.sha256 == selected.sha256,
                   file.bytes == selected.bytes else { continue }
-            return FilesImportDuplicateCandidate(sessionID: document.id, file: file)
+            candidates.append(FilesImportDuplicateCandidate(sessionID: document.id, file: file))
         }
-        return nil
+        return candidates
     }
 
     private func filesImportOriginal(_ document: SessionDocument) -> RecordFileReference? {

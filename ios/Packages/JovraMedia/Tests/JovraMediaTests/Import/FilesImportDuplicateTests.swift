@@ -123,6 +123,25 @@ struct FilesImportDuplicateTests {
         #expect(try stagedImports(in: root).isEmpty)
     }
 
+    @Test func anInvalidEarlierCandidateDoesNotMaskAHealthyDuplicate() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        let service = FilesImportService(store: store)
+        let first = try await service.importVideo(fixture, playerName: "First")
+        let receipt = try await findDuplicate(service, from: fixture)
+        let second = try await service.importVideo(fixture, playerName: "Second", importingAgain: receipt.fingerprint)
+        let ordered = [first, second].sorted()
+        let missingFolder = try await store.sessionDirectory(ordered[0])
+        try FileManager.default.removeItem(at: missingFolder.appendingPathComponent("originals/source.mp4"))
+
+        let duplicate = try await findDuplicate(service, from: fixture)
+        #expect(duplicate.sessionID == ordered[1])
+        #expect(try await service.verifyExistingDuplicate(duplicate) == ordered[1])
+        #expect(try await store.list().map(\.id).sorted() == ordered)
+        #expect(try stagedImports(in: root).isEmpty)
+    }
+
     @Test func trashedAndSampleImportsAreNeverOfferedForOpening() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }

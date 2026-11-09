@@ -106,11 +106,16 @@ public struct FilesImportService: Sendable {
                                                     verifyOriginal: witness.verify) {
             case .published:
                 return id.uuidString
-            case .possibleDuplicate(let candidate):
+            case .possibleDuplicates(let candidates):
                 try await store.discardFilesImport(id)
-                let duplicate = FilesImportDuplicate(candidate: candidate, fingerprint: fingerprint)
-                try await confirmDuplicate(duplicate)
-                throw FilesImportError.duplicate(duplicate)
+                for candidate in candidates {
+                    let duplicate = FilesImportDuplicate(candidate: candidate, fingerprint: fingerprint)
+                    do { try await confirmDuplicate(duplicate) }
+                    catch FilesImportError.duplicateUnverified(_) { continue }
+                    throw FilesImportError.duplicate(duplicate)
+                }
+                try Task.checkCancellation()
+                throw FilesImportError.duplicateUnverified(fingerprint)
             }
         } catch {
             try? await store.discardFilesImport(id)
