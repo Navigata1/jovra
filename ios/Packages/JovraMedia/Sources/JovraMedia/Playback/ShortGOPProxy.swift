@@ -138,9 +138,9 @@ public struct ShortGOPProxy: Sendable {
             if writer.status == .writing { writer.cancelWriting() }
             throw error
         }
-        let output = try ProxyMovie(retiring: movie, in: scratch)
+        let sealedMovie = try ProxyMovie(retiring: movie, in: scratch)
         try Task.checkCancellation()
-        return Staged(movie: output, receiver: receiver, finalName: "\(job).proxy.mov", frameCount: written)
+        return Staged(movie: sealedMovie, receiver: receiver, finalName: "\(job).proxy.mov", frameCount: written)
     }
 }
 
