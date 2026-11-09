@@ -100,9 +100,13 @@ final class PlaybackCoreUITests: XCTestCase {
         XCTAssertTrue(timeline.isHittable)
         XCTAssertTrue(waitForReadout(app, frame: 0))
         let before = timeline.frame.minY
+        let viewport = app.windows.firstMatch.frame.intersection(scroll.frame).insetBy(dx: 12, dy: 28)
         let start = timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
-        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: 110)))
-        XCTAssertGreaterThan(timeline.frame.minY, before + 10, "the enclosing page scrolls")
+        let end = start.withOffset(CGVector(dx: 0, dy: -110))
+        XCTAssertTrue(viewport.contains(start.screenPoint) && viewport.contains(end.screenPoint),
+                      "both vertical drag endpoints are inside the scroll viewport")
+        start.press(forDuration: 0.05, thenDragTo: end)
+        XCTAssertLessThan(timeline.frame.minY, before - 10, "the enclosing page scrolls")
         XCTAssertEqual(readoutFrame(app), 0, "a vertical swipe does not seek near the 80% position")
         XCTAssertEqual(element(app, "transport.playPause").label, "Play")
     }

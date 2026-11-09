@@ -231,10 +231,14 @@ struct JogStripAccessibilityTests {
         ])
         controller.player.currentItem?.add(output)
 
-        func verify(_ expected: Int, adjust: (NSObject) -> Void) async throws {
+        func verify(_ expected: Int, shouldPause: Bool = false, adjust: (NSObject) -> Void) async throws {
             let element = try #require(find("playback.timeline", in: root))
             #expect(element.accessibilityTraits.contains(.adjustable))
             adjust(element)
+            if shouldPause {
+                await waitFor { !controller.isPlaying }
+                try #require(!controller.isPlaying, "an active accessibility seek must pause and hold its exact target")
+            }
             await waitFor { controller.currentFrame == expected }
             await controller.settle()
             #expect(controller.currentFrame == expected)
@@ -262,6 +266,24 @@ struct JogStripAccessibilityTests {
         }
         try await verify(last) { $0.accessibilityIncrement() }
         try await verify(last - 1) { $0.accessibilityDecrement() }
+
+        // Start from the beginning so an unpaused control can't pass by naturally reaching the end.
+        await controller.seek(toFrame: 0)
+        try #require(controller.setRate(.quarter))
+        controller.play()
+        await waitFor { controller.player.rate > 0 }
+        try #require(controller.isPlaying && controller.player.rate > 0)
+        var announcedFrame: Int?
+        await waitFor {
+            let frame = controller.currentFrame
+            let prefix = "Frame \(JovraFormat.count(frame)),"
+            guard find("playback.timeline", in: root)?.accessibilityValue?.hasPrefix(prefix) == true else { return false }
+            announcedFrame = frame
+            return true
+        }
+        let from = try #require(announcedFrame)
+        try await verify(from + 1, shouldPause: true) { $0.accessibilityIncrement() }
+        #expect(controller.player.rate == 0)
     }
 
 }
