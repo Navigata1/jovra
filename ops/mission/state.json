@@ -17,9 +17,9 @@
   },
   "policies": {
     "merge": "auto",
-    "branchPrefix": "codex/",
+    "branchPrefix": "ticket/",
     "maxPrLines": 400,
-    "notes": "One feature per PR. Approximately400manual source/test lines per slice; generated concrete models, fixtures and retained evidence counted separately. T08 atomic/query/custody are separate slices; unused Trash stays pending. T15 journal, writer contracts, sources, engine and operational controls form five buildable PRs. T04 models, value-state policy and full fold form three native slices. Merge only after independent review and fresh green CI."
+    "notes": "Direction since 2026-11-09 (ADR-0031, docs/reports/2026-11-09/REASSESSMENT.md): iPhone ships first; automatic analysis is in v1 as estimated, benchmark-gated capabilities (V track, docs/spec/vision-tickets.md). One vertical slice per pull request based on main, never stacked more than two deep. Evidence goes in the pull request that changes the code; no standalone 'Record ...' commits. The ios-app workflow builds the app and runs unit tests automatically on pull requests touching ios/, spec/ or scripts/media/. Merge only after verification and fresh green CI. No new Android, watch or Studio ticket starts until the iPhone loop and V01-V05 pass a signed run on a physical iPhone."
   },
   "phases": [
     {
@@ -306,7 +306,7 @@
             "url": "https://github.com/Navigata1/jovra/pull/370",
             "mergedAt": "2026-10-12T00:29:20Z"
           },
-          "notes": "Bounded native capture/library/replay/reviewed-score/export integration merged throughPR365\u2013370. Complete iOS tree equals historical tested73, native4PASS retained. Full feature tickets remain open and fresh current-main integration/device evidence remains separate."
+          "notes": "Bounded native capture/library/replay/reviewed-score/export integration merged throughPR365–370. Complete iOS tree equals historical tested73, native4PASS retained. Full feature tickets remain open and fresh current-main integration/device evidence remains separate."
         },
         {
           "id": "P4-EXPORT",
@@ -912,25 +912,60 @@
       "url": "https://github.com/Navigata1/jovra/pull/499",
       "phase": "P4",
       "mergedAt": "2026-11-09T17:35:55Z"
+    },
+    {
+      "number": 519,
+      "title": "Disambiguate two Media expressions for hosted Swift compilation",
+      "url": "https://github.com/Navigata1/jovra/pull/519",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T21:33:29Z"
+    },
+    {
+      "number": 523,
+      "title": "docs: whole-project reassessment and path to completion",
+      "url": "https://github.com/Navigata1/jovra/pull/523",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T21:45:13Z"
+    },
+    {
+      "number": 535,
+      "title": "docs: V track tickets for the analysis engine and the first Vision spike",
+      "url": "https://github.com/Navigata1/jovra/pull/535",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T21:55:43Z"
+    },
+    {
+      "number": 524,
+      "title": "ci: build and test the iOS app automatically on app changes",
+      "url": "https://github.com/Navigata1/jovra/pull/524",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T22:18:00Z"
+    },
+    {
+      "number": 512,
+      "title": "T14: compose reviewed playback foundation on current main",
+      "url": "https://github.com/Navigata1/jovra/pull/512",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T22:29:43Z"
+    },
+    {
+      "number": 538,
+      "title": "T14: playback timeline with directional scrub on the merged foundation",
+      "url": "https://github.com/Navigata1/jovra/pull/538",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T23:13:27Z"
     }
   ],
   "resume": {
     "activePhase": "P4",
     "nextActions": [
-      "Continue current-main signed-device and real-camera recovery tests; isolated synthetic cold-relaunch passed, but physical crash-loss remains open.",
-      "Continue T26 after the full real-match Files import and verified retained hash; cover remaining Photos, duplicates and provider criteria.",
-      "Continue iPad iOS 27.2 diagnosis from #453/#456. A distinct alternate-app Xcode run passed five geometry stations and captured-bundle custody; the earlier fingerprint failure remains unexplained. Programmatic positioning differs from the original gesture; no original audit or cause is established.",
-      "Review draft #474 at exact current head atop #449: five focused simulator tests passed, while actual cancellation delivery, physical VoiceOver, Replay wiring and full T14 acceptance remain open. Preserve the two earlier native RED results.",
-      "Keep #494 adoption held: exact manual hosted iOS run 42657948112 failed during JovraMedia compilation. Review compatibility draft #498 and await its exact-head hosted run 42662558038; rebind/re-review to live main and preserve #495 dependency before any integration.",
-      "Review draft #476 at its exact current head atop #474. Eight focused simulator tests passed on c9352e2; the archive-only points timeline, actually correcting a point, native menu activation for healthy-later selection, and full T28 remain open; draft #478 covers selector discovery and model-level selection.",
-      "Review draft #478 at its exact current head atop #476. Nine focused simulator tests passed on 52fdbcc; a separate generated alternate-app XCUITest selected the actual menu and stepped to frame 1. A checked-in guarded runner, integration into main, confirmed-active interruption, physical devices and full T28 remain open.",
-      "Review and integrate stacked draft #482/#483 against current parents: a clean-archive generated alternate app at 8e4240a passed the single simulator menu/f1 test and postflight, but the operator-reviewed runner is external and production launcher and physical devices remain untested.",
-      "Review and integrate bounded #448, #449 and #447 with their parent branches; keep full acceptance criteria open.",
-      "Continue native iOS, Android, watch and Studio through the live ticket DAG and recorded owner gates.",
-      "Review and continue A02 draft #460 after its Pixel placeholder-shell test; preserve A01 owner ADR gates and disk floor.",
-      "Review draft #461 against #444; point-in-time media proof does not complete atomic receipt/lesson publication or native wiring.",
-      "Review fake-only Android acquisition draft #471; the prior local operational helper remains unsafe and must not run on real AVDs. CLI, real SDK adapter and lifecycle remain open.",
-      "Continue reviewed duplicate Files drafts #466/#470. Physical wrong-file rejection/copy passed; native Cancel and swipe failed. User-assisted dismissal was observed and native picker reopened, but exact folder verification failed. The user clarified they saw the picker reopen and closed it again; automation did not complete its final exact-folder verification. Preserve original JOVRA and all seven alternate app/runner pairs; do not infer a full pass."
+      "Ticket pipeline v5 is running core T tickets and analysis V tickets only (three lanes). First wave: T13, T17, T21, T27, V01, T20, T18, T19.",
+      "T14 playback foundation (#512, bc2229e) and timeline (#538, f33f58b) are merged. Issue #16 stays open for production Replay wiring, the video-only fallback (#536) and physical-iPhone playback.",
+      "T26 Files duplicates draft #517 fails one app unit test on hosted macOS (importMatch has no duplicate decision). T26 returns to the pipeline, carrying #517's reviewed work forward.",
+      "Founder step: label the three recordings with the V01 tool once it merges (agents may not view those frames). The label set gates V02-V07.",
+      "Run UI gates on a freshly booted simulator. A simulator booted about 38 hours lost its audio service and failed two playback tests; audit error -56 is an audit timeout under machine load, not a finding.",
+      "Owner-review gates W03 #407, A14 #374 and A01 #378 (ADR #375/#376) are unanswered and are paused by the iPhone-first decision.",
+      "Hardware not yet rerun on current main: signed iPhone CoreFlow, live camera, interruptions, crash-loss bound."
     ],
     "blockers": [
       "Live calls, alarm, thermal, crash-loss bound and power-loss evidence remain incomplete. The match imported as a practice video.",
