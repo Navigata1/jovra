@@ -149,6 +149,15 @@ class RecordProvenanceTest {
     }
 
     @Test
+    fun `long dotted capability IDs stay within the caller byte bound`() {
+        val id = "pose" + ".a1".repeat(10_000)
+        val record = decode(record(extra = ",\"capabilityId\":" + quote(id)))
+        assertEquals(id, record.capabilityId)
+        assertCanonical(record, """{"capabilityId":"$id","source":"user","status":"manual"}""")
+        assertRefused(record(extra = ",\"capabilityId\":" + quote("$id.1invalid")))
+    }
+
+    @Test
     fun `closed provenance input and byte limits refuse malformed input`() {
         for (raw in listOf(
             """{}""", """{"status":"manual"}""", """{"source":"user"}""",
