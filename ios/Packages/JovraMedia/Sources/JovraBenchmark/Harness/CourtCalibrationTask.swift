@@ -23,6 +23,9 @@ public struct CourtCalibrationDraw: Codable, Hashable, Sendable {
 /// the player did not tap. Pooled over every clip and draw:
 /// - `intersections within 0.10 m`: share of untapped line intersections within 100 mm of their ITF position;
 /// - `intersection MSE` (mm2): their mean squared on-court error;
+/// - `near-half …` and `far-half …`: the same two for the six intersections on each side of the net, each with its
+///   `worst squared error` (mm2). A pixel spans far more court at the far baseline, so the research gate
+///   (technical-feasibility §8) bounds the near half and has the far half reported separately;
 /// - `bounces within 0.10 m` and `bounce MSE` (mm2): the same for serve bounces against the renderer's truth.
 /// Exact rationals throughout; same rule as `spec/reference/jovra_ref/benchmark.py` `score_court_calibration`.
 /// The RMSE is the square root of an MSE (the record keeps exact values only).
@@ -51,38 +54,50 @@ public struct CourtCalibrationTask: BenchmarkTask {
     }
 
     public func score(truths: [GroundTruth], outputs: [[CourtCalibrationDraw]]) throws -> [MetricResult] {
-        var intersections = Pool(), bounces = Pool()
+        var intersections = Pool(), near = Pool(), far = Pool(), bounces = Pool()
+        let truthIntersections = Self.untapped.map { Self.millimetres($0.point) }
         for (truth, draws) in zip(truths, outputs) {
             let serves = try ServeTruth.load(truth, catalog: catalog)
-            let truthIntersections = Self.untapped.map { Self.millimetres($0.point) }
             for draw in draws {
-                try intersections.add(estimates: draw.intersectionsMm, truths: truthIntersections, what: "intersection")
-                try bounces.add(estimates: draw.bouncesMm, truths: serves.map(\.bounceCourtMm), what: "bounce")
+                guard draw.intersectionsMm.count == truthIntersections.count else {
+                    throw TaskError.outputCount(what: "intersection", expected: truthIntersections.count, got: draw.intersectionsMm.count)
+                }
+                for (estimate, expected) in zip(draw.intersectionsMm, truthIntersections) {
+                    intersections.add(estimate, expected)
+                    if expected[1] < 0 { near.add(estimate, expected) } else { far.add(estimate, expected) }
+                }
+                guard draw.bouncesMm.count == serves.count else {
+                    throw TaskError.outputCount(what: "bounce", expected: serves.count, got: draw.bouncesMm.count)
+                }
+                for (estimate, serve) in zip(draw.bouncesMm, serves) { bounces.add(estimate, serve.bounceCourtMm) }
             }
         }
+        func share(_ pool: Pool, _ name: String) throws -> MetricResult { try MetricResult(name: name, exact: pool.withinShare, places: 4) }
+        func square(_ value: Rational?, _ name: String) throws -> MetricResult { try MetricResult(name: name, unit: "mm2", exact: value, places: 3) }
         return [
-            try MetricResult(name: "intersections within 0.10 m", exact: intersections.withinShare, places: 4),
-            try MetricResult(name: "intersection MSE", unit: "mm2", exact: intersections.meanSquare, places: 3),
-            try MetricResult(name: "bounces within 0.10 m", exact: bounces.withinShare, places: 4),
-            try MetricResult(name: "bounce MSE", unit: "mm2", exact: bounces.meanSquare, places: 3),
+            try share(intersections, "intersections within 0.10 m"), try square(intersections.meanSquare, "intersection MSE"),
+            try share(near, "near-half intersections within 0.10 m"), try square(near.meanSquare, "near-half intersection MSE"),
+            try square(near.worstSquare, "near-half worst squared error"),
+            try share(far, "far-half intersections within 0.10 m"), try square(far.meanSquare, "far-half intersection MSE"),
+            try square(far.worstSquare, "far-half worst squared error"),
+            try share(bounces, "bounces within 0.10 m"), try square(bounces.meanSquare, "bounce MSE"),
         ]
     }
 
     struct Pool {
-        var count: Int64 = 0, within: Int64 = 0, squares: Int64 = 0
+        var count: Int64 = 0, within: Int64 = 0, squares: Int64 = 0, worst: Int64 = 0
 
-        mutating func add(estimates: [[Int64]], truths: [[Int64]], what: String) throws {
-            guard estimates.count == truths.count else { throw TaskError.outputCount(what: what, expected: truths.count, got: estimates.count) }
-            for (e, t) in zip(estimates, truths) {
-                let dx = e[0] - t[0], dy = e[1] - t[1], square = dx * dx + dy * dy
-                count += 1
-                squares += square
-                if square <= CourtCalibrationTask.withinMm * CourtCalibrationTask.withinMm { within += 1 }
-            }
+        mutating func add(_ estimate: [Int64], _ truth: [Int64]) {
+            let dx = estimate[0] - truth[0], dy = estimate[1] - truth[1], square = dx * dx + dy * dy
+            count += 1
+            squares += square
+            worst = max(worst, square)
+            if square <= CourtCalibrationTask.withinMm * CourtCalibrationTask.withinMm { within += 1 }
         }
 
         var withinShare: Rational? { count > 0 ? Rational(within, count) : nil }
         var meanSquare: Rational? { count > 0 ? Rational(squares, count) : nil }
+        var worstSquare: Rational? { count > 0 ? Rational(worst) : nil }
     }
 
     public enum TaskError: Error, Equatable, CustomStringConvertible {

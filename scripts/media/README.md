@@ -164,10 +164,18 @@ Task `courtCalibration` 1.0.0 (`JovraBenchmark/Harness/CourtCalibrationTask.swif
 at 1080p (scaled to the clip's height), fits the homography with JovraCore and reads back, in integer millimetres,
 the 12 untapped line intersections (seen at the renderer camera's true pixels) and every serve bounce (at its
 rendered pixel). Metrics: the share within 0.10 m and the mean squared error (mm², RMSE is its square root) for
-intersections and for bounces. `court.calibration` is manual and ungated, so the record names no capability and
-promotes nothing; its floor `t13CourtCalibration` is the ticket's claim (every untapped intersection within 0.10 m).
-The committed run (`spec/benchmarks/court-calibration/fourTap.gate.json`, held-out serves s221 and s222) fails that
-floor at the far baseline, where one pixel spans about 0.10 m of depth; see
+intersections and for bounces, and the same for the six intersections on each side of the net with each half's
+worst squared error. `court.calibration` is manual and ungated, so the records name no capability and promote
+nothing. Two runs on held-out serves s221 and s222 are committed under `spec/benchmarks/court-calibration/`:
+
+| Record | Floor | Verdict |
+|---|---|---|
+| `fourTap.gate.json` | `t13CourtCalibration`: the ticket's claim, every untapped intersection within 0.10 m | fails: 92.19% within, far half worst 0.173 m |
+| `fourTap.nearHalf.gate.json` | `courtCalibrationNearHalf`: the shape of the research gate (technical-feasibility §8), near half within 0.10 m, far half reported | passes: near half 100% within, worst 0.058 m |
+
+On this camera one pixel spans 0.018 m of depth at the near baseline and 0.102 m at the far baseline, so a far
+corner tapped 2 px off is itself 0.20 m off on court. No fit of four taps can hold 0.10 m there; the taps would have
+to be within about 1 px. The per-intersection table is in
 `evidence/ios/13-court-calibration-diagrams/04-benchmark-court-calibration.txt`.
 
 ```sh
@@ -175,4 +183,7 @@ python3 scripts/media/render.py --set corpus
 swift run --package-path ios/Packages/JovraMedia jovra-benchmark run --estimator courtCalibration.fourTap \
   --clip corpus/serves-s221 --clip corpus/serves-s222 --mode gate --floor t13CourtCalibration \
   --run-id court-calibration-fourtap-gate-t13 --out spec/benchmarks/court-calibration/fourTap.gate.json
+swift run --package-path ios/Packages/JovraMedia jovra-benchmark run --estimator courtCalibration.fourTap \
+  --clip corpus/serves-s221 --clip corpus/serves-s222 --mode gate --floor courtCalibrationNearHalf \
+  --run-id court-calibration-fourtap-nearhalf-gate-t13 --out spec/benchmarks/court-calibration/fourTap.nearHalf.gate.json
 ```

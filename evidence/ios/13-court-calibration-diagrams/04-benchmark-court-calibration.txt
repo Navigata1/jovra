@@ -1,26 +1,56 @@
 $ swift run --package-path ios/Packages/JovraMedia jovra-benchmark run --estimator courtCalibration.fourTap --clip corpus/serves-s221 --clip corpus/serves-s222 --mode gate --floor t13CourtCalibration --run-id court-calibration-fourtap-gate-t13 --out spec/benchmarks/court-calibration/fourTap.gate.json
-metrics: intersections within 0.10 m 0.9219, intersection MSE 2615.497 mm2, bounces within 0.10 m 0.8177, bounce MSE 5402.737 mm2
+wrote spec/benchmarks/court-calibration/fourTap.gate.json: courtCalibration.fourTap 1.0.0, gate on corpus/serves-s221, corpus/serves-s222
+metrics: intersections within 0.10 m 0.9219, intersection MSE 2615.497 mm2, near-half intersections within 0.10 m 1.0000, near-half intersection MSE 555.469 mm2, near-half worst squared error 3380.000 mm2, far-half intersections within 0.10 m 0.8438, far-half intersection MSE 4675.526 mm2, far-half worst squared error 30082.000 mm2, bounces within 0.10 m 0.8177, bounce MSE 5402.737 mm2
   FAIL intersections within 0.10 m 0.9219 >= 1
-verdict: FAILED the floor (T13 acceptance claim ...; promotes nothing)
+verdict: FAILED the floor (T13 acceptance claim (untapped intersections within 0.10 m with taps up to 2 px off at 1080p; court.calibration is manual and ungated, promotes nothing))
+(exit 3: written, gate failed)
 
-RMSE (square root of the recorded exact MSE): intersections 0.0511 m, bounces 0.0735 m
-32 draws (16 per held-out clip), taps jittered inside a 2 px disc at 1080p (0.667 px at the clips 360p), 12 untapped intersections and 12 serve bounces per draw
+$ swift run --package-path ios/Packages/JovraMedia jovra-benchmark run --estimator courtCalibration.fourTap --clip corpus/serves-s221 --clip corpus/serves-s222 --mode gate --floor courtCalibrationNearHalf --run-id court-calibration-fourtap-nearhalf-gate-t13 --out spec/benchmarks/court-calibration/fourTap.nearHalf.gate.json
+wrote spec/benchmarks/court-calibration/fourTap.nearHalf.gate.json: courtCalibration.fourTap 1.0.0, gate on corpus/serves-s221, corpus/serves-s222
+metrics: intersections within 0.10 m 0.9219, intersection MSE 2615.497 mm2, near-half intersections within 0.10 m 1.0000, near-half intersection MSE 555.469 mm2, near-half worst squared error 3380.000 mm2, far-half intersections within 0.10 m 0.8438, far-half intersection MSE 4675.526 mm2, far-half worst squared error 30082.000 mm2, bounces within 0.10 m 0.8177, bounce MSE 5402.737 mm2
+  PASS near-half intersections within 0.10 m 1.0000 >= 1
+verdict: PASSED the floor (technical-feasibility §8 gate shape, synthetic frame only (near-half untapped intersections within 0.10 m, taps up to 2 px off at 1080p; far half reported, not gated; promotes nothing))
+(exit 0)
 
-Per untapped intersection (draws over 0.10 m, worst error):
-  nearLeftSingles     0/32  worst 0.036 m
-  nearRightSingles    0/32  worst 0.036 m
-  farRightSingles    13/32  worst 0.164 m
-  farLeftSingles      6/32  worst 0.173 m
-  nearLeftService     0/32  worst 0.058 m
-  nearRightService    0/32  worst 0.050 m
-  farRightService     5/32  worst 0.123 m
-  farLeftService      3/32  worst 0.113 m
-  nearServiceT        0/32  worst 0.050 m
-  farServiceT         1/32  worst 0.107 m
-  nearCentreMark      0/32  worst 0.053 m
-  farCentreMark       2/32  worst 0.166 m
+RMSE (square root of the recorded exact MSE):
+  all untapped intersections 0.0511 m   near half 0.0236 m   far half 0.0684 m   serve bounces 0.0735 m
+Worst (square root of the recorded worst squared error): near half 0.0581 m, far half 0.1734 m
+32 draws (16 per held-out clip), taps jittered inside a 2 px disc at 1080p (0.667 px at the clips' 360p),
+12 untapped intersections and 12 serve bounces per draw. Serve bounces land in the far service boxes.
 
-$ python3 scripts/spec/validate.py  (re-scores the record in Python)
-benchmark records                  4
+Per untapped intersection over 32 draws (draws over 0.10 m, median and worst error):
+  nearLeftSingles     0/32  median 0.018 m  worst 0.036 m
+  nearRightSingles    0/32  median 0.015 m  worst 0.036 m
+  nearLeftService     0/32  median 0.022 m  worst 0.058 m
+  nearRightService    0/32  median 0.020 m  worst 0.050 m
+  nearServiceT        0/32  median 0.020 m  worst 0.050 m
+  nearCentreMark      0/32  median 0.019 m  worst 0.053 m
+  near half pooled: 192/192 within 0.10 m, median 0.019 m, worst 0.058 m
+  farRightSingles    13/32  median 0.086 m  worst 0.164 m
+  farLeftSingles      6/32  median 0.058 m  worst 0.173 m
+  farRightService     5/32  median 0.058 m  worst 0.123 m
+  farLeftService      3/32  median 0.044 m  worst 0.113 m
+  farServiceT         1/32  median 0.032 m  worst 0.107 m
+  farCentreMark       2/32  median 0.050 m  worst 0.166 m
+  far half pooled: 162/192 within 0.10 m, median 0.048 m, worst 0.173 m
+
+Ground distance one pixel spans on the synthetic camera at 1080p (centre line), from jovra_ref.sample_match.project:
+  near baseline      depth 0.018 m/px  across 0.008 m/px
+  near service line  depth 0.031 m/px  across 0.011 m/px
+  net                depth 0.051 m/px  across 0.014 m/px
+  far service line   depth 0.077 m/px  across 0.017 m/px
+  far baseline       depth 0.102 m/px  across 0.019 m/px
+A far corner tapped 2 px off in depth is itself 0.20 m off on court, so no fit of those four taps can keep the
+untapped far-baseline points within 0.10 m. That bound needs taps within about 1 px on this camera.
+
+$ python3 scripts/spec/validate.py  (re-scores both records in Python)
+benchmark records                  5
 jovra.fixture.calibration checks   9
 RESULT: PASS
+
+$ swift test --package-path ios/Packages/JovraMedia --filter CourtCalibrationTaskTests
+✔ Test "the untapped intersections split six and six across the net" passed
+✔ Test "scoring is exact and split by half: 100 mm off counts as within, 101 mm does not" passed
+✔ Test "a draw with the wrong number of estimates is refused" passed
+✔ Test "the committed record is reproduced by the harness" passed
+✔ Test "the near-half record is reproduced and passes; the far half is reported, not gated" passed

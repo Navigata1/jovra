@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "spec" / "reference"))
 
-from jovra_ref import court, sample_match  # noqa: E402
+from jovra_ref import benchmark, court, sample_match  # noqa: E402
 
 
 def camera(p, w=1920, h=1080):
@@ -117,6 +117,28 @@ class MappingAndWordsTests(unittest.TestCase):
         self.assertEqual((line[2], line[3]), ((0.0, -6.40), (0.0, 6.40)))
         kinds = [l[1] for l in court.LINES]
         self.assertEqual(kinds.count("doublesSideline"), 2)
+
+
+class BenchmarkScorerTests(unittest.TestCase):
+    def test_court_calibration_is_scored_exactly_and_split_by_half(self):
+        est = [list(p) for p in benchmark.UNTAPPED_INTERSECTIONS_MM]
+        est[0] = [est[0][0] + 60, est[0][1] + 80]    # near half, 100 mm: within
+        est[1] = [est[1][0], est[1][1] + 101]        # near half, 101 mm: outside
+        est[2] = [est[2][0], est[2][1] - 150]        # far half, 150 mm: outside
+        record = {"clips": [{"truthId": "t", "outputs": [{"intersectionsMm": est, "bouncesMm": [[10, -20]]}]}]}
+        truths = {"t": {"serves": [{"bounce": {"courtMm": {"x": 10, "y": 11885 - 20}}}]}}
+        got = {m["name"]: (m["exact"], m.get("unit"), m["value"]) for m in benchmark.score_court_calibration(record, truths)}
+        self.assertEqual(list(got), [name for name, _ in benchmark.TASK_METRICS[benchmark.TASK_COURT_CALIBRATION]])
+        self.assertEqual(got["intersections within 0.10 m"], ({"n": 5, "d": 6}, None, "0.8333"))
+        self.assertEqual(got["intersection MSE"], ({"n": 42701, "d": 12}, "mm2", "3558.417"))
+        self.assertEqual(got["near-half intersections within 0.10 m"][0], {"n": 5, "d": 6})
+        self.assertEqual(got["near-half intersection MSE"][0], {"n": 20201, "d": 6})
+        self.assertEqual(got["near-half worst squared error"], ({"n": 10201, "d": 1}, "mm2", "10201.000"))
+        self.assertEqual(got["far-half intersections within 0.10 m"][0], {"n": 5, "d": 6})
+        self.assertEqual(got["far-half intersection MSE"][0], {"n": 3750, "d": 1})
+        self.assertEqual(got["far-half worst squared error"][0], {"n": 22500, "d": 1})
+        self.assertEqual(got["bounces within 0.10 m"][0], {"n": 1, "d": 1})
+        self.assertEqual(got["bounce MSE"][0], {"n": 0, "d": 1})
 
 
 if __name__ == "__main__":
