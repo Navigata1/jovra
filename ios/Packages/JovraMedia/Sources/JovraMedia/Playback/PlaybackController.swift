@@ -251,9 +251,29 @@ public final class PlaybackController {
         seeker.submit(time(of: currentFrame), precision: .coarse)
     }
 
-    /// The finger lifted: land exactly.
+    /// Submit an exact, paused target in gesture order without waiting for the decoder.
+    public func finishScrub(atFrame frame: Int) {
+        guard let request = submitFinalScrub(atFrame: frame) else { return }
+        let generation = stillRequest
+        Task { @MainActor [weak self] in
+            await self?.waitForOriginalLanding(request, generation: generation)
+        }
+    }
+
+    /// Submit an exact, paused target and wait for the seek queue to drain.
     public func endScrub(atFrame frame: Int) async {
-        await seek(toFrame: frame, precision: .exact)
+        guard let request = submitFinalScrub(atFrame: frame) else { return }
+        await waitForOriginalLanding(request, generation: stillRequest)
+    }
+
+    private func submitFinalScrub(atFrame frame: Int) -> ChaseSeeker.Request? {
+        guard !isClosed else { return nil }
+        if isPlaying { pause() }
+        invalidateStill()
+        currentFrame = clamp(frame)
+        let request = ChaseSeeker.Request(time: time(of: currentFrame), precision: .exact)
+        seeker.submit(request.time, precision: request.precision)
+        return request
     }
 
     /// Steps whole frames (negative is backward), pausing playback first. Clamped to the clip.
@@ -398,9 +418,16 @@ public final class PlaybackController {
 
     @discardableResult
     private func landOriginal(at target: Int, precision: SeekPrecision) async -> Bool {
-        let generation = stillRequest
-        let landed = await seeker.request(time(of: target), precision: precision)
+        let request = ChaseSeeker.Request(time: time(of: target), precision: precision)
+        seeker.submit(request.time, precision: request.precision)
+        return await waitForOriginalLanding(request, generation: stillRequest)
+    }
+
+    @discardableResult
+    private func waitForOriginalLanding(_ request: ChaseSeeker.Request, generation: Int) async -> Bool {
+        await seeker.settled()
         guard !isClosed, stillRequest == generation else { return false }
+        let landed = seeker.lastCompleted == request
         if !landed { currentFrame = clamp(frame(at: player.currentTime())) }
         return landed
     }
