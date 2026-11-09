@@ -219,7 +219,12 @@ struct PlaybackSeekOutcomeTests {
         defer { controller.close() }
         await controller.seek(toFrame: 12)
         let gate = GatedOriginalSeek(frame: 42)
-        controller.seekPlayer = { await gate.perform($0, time: $1, tolerance: $2) }
+        var returnedFrames: [Int] = []
+        controller.seekPlayer = { player, time, tolerance in
+            let succeeded = await gate.perform(player, time: time, tolerance: tolerance)
+            returnedFrames.append(time.frameIndex(at: .fps60))
+            return succeeded
+        }
         defer { gate.finish(false) }
 
         controller.finishScrub(atFrame: 42)
@@ -234,6 +239,8 @@ struct PlaybackSeekOutcomeTests {
         controller.finishScrub(atFrame: 74)
         await controller.endScrub(atFrame: 86)
         await controller.settle()
+        try await waitUntil("the rejected original seek actually returned after close") { !returnedFrames.isEmpty }
+        #expect(returnedFrames == [42])
         #expect(closedFrame == 56)
         #expect(controller.readout.frame == closedFrame)
         #expect(controller.player.currentTime() == closedTime)
