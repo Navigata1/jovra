@@ -24,7 +24,10 @@ struct LessonsScratch {
 
     func journal(_ projectId: String) -> LessonJournal {
         LessonJournal(store: store, projectId: projectId, sessions: sessions, now: { ProjectScratch.fixedNow },
-                      makeID: LessonsIDs().next)
+                      makeID: LessonsIDs().next, verifyMedia: { [sessions] expected, segments in
+                          let directory = try await sessions.sessionDirectory(expected.id)
+                          return try segments.map { try StudioSHA256.hex(Data(contentsOf: directory.appendingPathComponent($0.file.path))) }
+                      })
     }
 
     /// A real practice or match session with one recorded original whose SHA-256 is that of `bytes`, written into the
@@ -48,7 +51,10 @@ struct LessonsScratch {
                            width: 1920, height: 1080, codec: .hevc, hasAudio: false, finalized: true),
         ]
         document.original = SessionOriginalState(state: .saved)
-        try await CoreFixtureSessions.install(document, bytes: bytes, in: sessions)
+        let file = try await CoreFixtureSessions.install(document, bytes: bytes, in: sessions)
+        if file.lastPathComponent != fileName {
+            try FileManager.default.moveItem(at: file, to: file.deletingLastPathComponent().appendingPathComponent(fileName))
+        }
         return document
     }
 }
