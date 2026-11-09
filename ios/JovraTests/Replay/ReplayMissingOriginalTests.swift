@@ -48,24 +48,67 @@ final class ReplayMissingOriginalTests: XCTestCase {
         XCTAssertNil(find("replay.error", in: view), "the card replaces the generic error")
     }
 
-    func testSavedMetadataWithAnAbsentLocalOriginalShowsTheMissingVideoCard() async throws {
+    func testUnverifiedLookupFailureDoesNotClaimVideoIsMissing() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }
         let store = try SessionStore(root: root)
         let id = SessionID(rawValue: UUID().uuidString)
-        var session = archiveSession(id: id, segmentPath: "originals/segment-000.mp4")
+        let path = "originals/segment-000.mp4"
+        try await store.create(onDeviceSession(id: id, path: path))
+        let library = try LocalCaptureLibrary(root: root)
+        do {
+            _ = try await library.fileURL(id, relativePath: path)
+            XCTFail("test fixture must reach the library lookup failure")
+        } catch {
+            XCTAssertEqual(error as? MediaLibraryError, .notFound)
+        }
+        try await assertOriginalUnavailable(id, library: library)
+    }
+
+    func testUnfinishedRecordingDoesNotClaimVideoIsMissing() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        let id = SessionID(rawValue: UUID().uuidString)
+        var session = onDeviceSession(id: id, path: "originals/segment-000.mp4")
+        session.recording = .init(mode: .simulatorFixture, segments: [], gaps: [],
+                                  microphone: .notRequested, mediaAvailable: false)
+        session.original = .init(state: .recording)
+        try await store.create(session)
+        try await assertOriginalUnavailable(id, library: LocalCaptureLibrary(root: root))
+    }
+
+    func testDirectoryAtOriginalPathIsUnavailableAndDoesNotCreateAPlayer() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        let id = SessionID(rawValue: UUID().uuidString)
+        let path = "originals/segment-000.mp4"
+        try await store.create(onDeviceSession(id: id, path: path))
+        let leaf = root.appendingPathComponent("sessions").appendingPathComponent(id.rawValue).appendingPathComponent(path)
+        try FileManager.default.createDirectory(at: leaf, withIntermediateDirectories: true)
+        let library = try LocalCaptureLibrary(root: root)
+        let resolved = try await library.fileURL(id, relativePath: path)
+        XCTAssertEqual(try FileManager.default.attributesOfItem(atPath: resolved.path)[.type] as? FileAttributeType, .typeDirectory)
+        try await assertOriginalUnavailable(id, library: library)
+    }
+
+    private func onDeviceSession(id: SessionID, path: String) -> SessionDocument {
+        var session = archiveSession(id: id, segmentPath: path)
         session.recording.mediaAvailable = true
         session.original = .init(state: .saved)
         session.storage.originals = .onDevice
         session.archive = .init(state: .localOnly)
-        try await store.create(session)
-        let library = try LocalCaptureLibrary(root: root)
+        return session
+    }
+
+    private func assertOriginalUnavailable(_ id: SessionID, library: LocalCaptureLibrary) async throws {
         let window = try mount(ReplayRequest(session: id, point: nil, filter: nil), library: library)
         defer { window.isHidden = true }
         let view = try XCTUnwrap(window.rootViewController?.view)
-        let state = await waitFor("video.state", in: view)
-        XCTAssertNotNil(state)
-        XCTAssertNil(find("replay.error", in: view))
+        let issue = await waitFor("replay.error", in: view)
+        XCTAssertEqual(issue?.accessibilityLabel, "The original isn't available on this iPhone.")
+        XCTAssertNil(find("video.state", in: view))
         XCTAssertNil(find("replay.play", in: view))
     }
 
