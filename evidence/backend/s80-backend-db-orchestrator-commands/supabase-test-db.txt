@@ -1,4 +1,4 @@
-# CI run 42541166673 (backend-db), step "supabase test db"
+# CI run 42544227085 (backend-db), step "supabase test db"
 psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .................................. ok
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ......................... ok
@@ -12,6 +12,7 @@ psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.t
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_orchestrator_02_stages.test.sql .............. ok
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_orchestrator_03_leases.test.sql .............. ok
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_orchestrator_04_plan_keys_deletion.test.sql .. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_orchestrator_05_attempt_io.test.sql .......... ok
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql .......................... ok
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql ...................... ok
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ........................... ok
@@ -22,5 +23,5 @@ psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.t
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/money_01_catalog.test.sql ............................. ok
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/money_02_roles.test.sql ............................... ok
 /home/runner/work/jovra/jovra/backend/supabase/tests/database/money_03_integrity.test.sql ........................... ok
-Files=22, Tests=979,  1 wallclock secs ( 0.07 usr  0.03 sys +  0.12 cusr  0.10 csys =  0.32 CPU)
+Files=23, Tests=1029,  1 wallclock secs ( 0.08 usr  0.04 sys +  0.13 cusr  0.11 csys =  0.36 CPU)
 Result: PASS
