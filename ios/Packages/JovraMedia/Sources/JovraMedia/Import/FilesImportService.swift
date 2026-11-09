@@ -4,8 +4,22 @@ import Darwin
 import Foundation
 import JovraCore
 
+public struct FilesImportFingerprint: Equatable, Sendable {
+    public let sha256: String
+    public let bytes: Int
+}
+
+public struct FilesImportDuplicate: Equatable, Sendable {
+    fileprivate let candidate: FilesImportDuplicateCandidate
+    public let fingerprint: FilesImportFingerprint
+    public var sessionID: String { candidate.sessionID }
+}
+
 public enum FilesImportError: Error, Equatable, Sendable {
     case invalidPlayer, invalidMatchSetup, unsupportedFile, unsupportedVideo, unreadableSource
+    case duplicate(FilesImportDuplicate)
+    case duplicateUnverified(FilesImportFingerprint)
+    case differentDuplicateSelection
 }
 
 /// One local Files selection. Copy without re-encoding, then verify the retained copy before publication.
@@ -13,22 +27,31 @@ public struct FilesImportService: Sendable {
     private let store: SessionStore
     public init(store: SessionStore) { self.store = store }
 
-    public func importVideo(_ source: URL, playerName: String) async throws -> String {
+    public func importVideo(_ source: URL, playerName: String,
+                            importingAgain permission: FilesImportFingerprint? = nil) async throws -> String {
         try Task.checkCancellation()
         let name = playerName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty, name.unicodeScalars.count <= 60 else { throw FilesImportError.invalidPlayer }
         let player = SessionPlayer(id: "player", displayName: name, handedness: .unknown, backhand: .unknown, isSelf: false)
-        return try await importVideo(source, players: [player], scoring: nil)
+        return try await importVideo(source, players: [player], scoring: nil, importingAgain: permission)
     }
 
-    public func importMatch(_ source: URL, setup: FilesImportMatchSetup) async throws -> String {
+    public func importMatch(_ source: URL, setup: FilesImportMatchSetup,
+                            importingAgain permission: FilesImportFingerprint? = nil) async throws -> String {
         try Task.checkCancellation()
         let scoring = try setup.scoringInput()
         _ = try ScoringEngine.fold(scoring)
-        return try await importVideo(source, players: scoring.players, scoring: scoring)
+        return try await importVideo(source, players: scoring.players, scoring: scoring, importingAgain: permission)
     }
 
-    private func importVideo(_ source: URL, players: [SessionPlayer], scoring: ScoringInput?) async throws -> String {
+    /// Revalidate the original if the player chooses to open it after a duplicate prompt.
+    public func verifyExistingDuplicate(_ duplicate: FilesImportDuplicate) async throws -> String {
+        try await confirmDuplicate(duplicate)
+        return duplicate.sessionID
+    }
+
+    private func importVideo(_ source: URL, players: [SessionPlayer], scoring: ScoringInput?,
+                             importingAgain permission: FilesImportFingerprint?) async throws -> String {
         let ext = source.pathExtension.lowercased()
         guard source.isFileURL, ["mov", "mp4"].contains(ext) else { throw FilesImportError.unsupportedFile }
 
@@ -43,7 +66,9 @@ public struct FilesImportService: Sendable {
             try DurableDirectory.create(at: originals)
             try excludeFromBackup(originals)
             let (file, identity) = try copy(source, to: original, relativePath: relative)
-            let witness = MediaAdoptionWitness(directory: stagingIdentity, files: [relative: identity])
+            guard let digest = file.sha256, let bytes = file.bytes else { throw FilesImportError.unreadableSource }
+            let fingerprint = FilesImportFingerprint(sha256: digest, bytes: bytes)
+            guard permission == nil || permission == fingerprint else { throw FilesImportError.differentDuplicateSelection }
             let info = try await MediaProbe.probe(original)
             guard let video = info.video, video.isDecodable, let rate = video.frameRate,
                   video.codedWidth > 0, video.codedHeight > 0 else { throw FilesImportError.unsupportedVideo }
@@ -75,11 +100,61 @@ public struct FilesImportService: Sendable {
                 analysis: .init(state: .notRequested, runs: []), review: .init(state: .notStarted),
                 archive: .init(state: .localOnly), storage: .init(originals: .onDevice, includeInDeviceBackup: false),
                 original: .init(state: .saved))
-            try await store.commitFilesImport(document, id: id, verifyOriginal: witness.verify)
-            return id.uuidString
+            let finalIdentity = try refreshStagedIdentity(file, in: staging, copied: identity)
+            let witness = MediaAdoptionWitness(directory: stagingIdentity, files: [relative: finalIdentity])
+            switch try await store.commitFilesImport(document, id: id, allowDuplicate: permission != nil,
+                                                    verifyOriginal: witness.verify) {
+            case .published:
+                return id.uuidString
+            case .possibleDuplicate(let candidate):
+                try await store.discardFilesImport(id)
+                let duplicate = FilesImportDuplicate(candidate: candidate, fingerprint: fingerprint)
+                try await confirmDuplicate(duplicate)
+                throw FilesImportError.duplicate(duplicate)
+            }
         } catch {
             try? await store.discardFilesImport(id)
             throw error
+        }
+    }
+
+    /// AVFoundation or the filesystem may update metadata after the copy without changing the bytes.
+    /// Rebind a ctime-only change to the same inode only after re-reading and matching the exact copied fingerprint.
+    private func refreshStagedIdentity(_ file: RecordFileReference, in folder: URL,
+                                       copied: MediaFileIdentity) throws -> MediaFileIdentity {
+        let files = RecoveryFiles(folder: folder)
+        let path = try files.url(file.path)
+        var status = stat()
+        guard lstat(path.path, &status) == 0, status.st_mode & S_IFMT == S_IFREG else { throw RecoveryError.changedFile }
+        let current = MediaFileIdentity(status)
+        if current == copied { return current }
+        guard current.device == copied.device, current.inode == copied.inode, current.bytes == copied.bytes,
+              current.modifiedSeconds == copied.modifiedSeconds, current.modifiedNanos == copied.modifiedNanos else {
+            throw RecoveryError.changedFile
+        }
+        let (fingerprint, _, identity) = try files.readOwnedOriginal(file.path)
+        guard identity == current, fingerprint.sha256 == file.sha256, fingerprint.bytes == file.bytes else {
+            throw RecoveryError.changedFile
+        }
+        return identity
+    }
+
+    private func confirmDuplicate(_ duplicate: FilesImportDuplicate) async throws {
+        let candidate = duplicate.candidate
+        do {
+            try Task.checkCancellation()
+            let directory = try await store.sessionDirectory(candidate.sessionID)
+            let identity = try DurableDirectory.identity(of: directory)
+            let (fingerprint, _, fileIdentity) = try RecoveryFiles(folder: directory).readOwnedOriginal(candidate.file.path)
+            guard fingerprint.sha256 == candidate.file.sha256, fingerprint.bytes == candidate.file.bytes else {
+                throw RecoveryError.changedFile
+            }
+            let witness = MediaAdoptionWitness(directory: identity, files: [candidate.file.path: fileIdentity])
+            try await store.confirmFilesImportDuplicate(candidate, verifyOriginal: witness.verify)
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            throw FilesImportError.duplicateUnverified(duplicate.fingerprint)
         }
     }
 
