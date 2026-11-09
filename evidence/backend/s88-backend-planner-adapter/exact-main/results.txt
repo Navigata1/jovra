@@ -1,0 +1,52 @@
+Exact-main S88 command excerpts. Source and scratch commits are recorded in README.md.
+
+--- Runtime ---
+v24.15.0
+11.12.1
+
+--- Typecheck (exit 0) ---
+
+> @jovra/planner@0.1.0 typecheck
+> tsc -p tsconfig.json
+
+
+--- npm test (exit 0) ---
+ℹ tests 185
+ℹ suites 0
+ℹ pass 185
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 277.595917
+
+--- Parity (exit 0) ---
+director (spec/studio/fixtures/vectors/director.json): 58/58 byte-identical, plus 1 base context case(s); results {"brief":16,"refusal":9,"reject":10,"templates":1,"findings":22}
+planner (spec/studio/fixtures/vectors/planner.json): 46/46 byte-identical, plus 1 base context case(s); results {"plan":23,"refusal":3,"check":4,"reject":16}
+compile (spec/studio/fixtures/vectors/compile.json): 39/39 byte-identical, plus 5 base context case(s); results {"edl":28,"refusal":6,"reject":5}
+TOTAL: 143/143 reference vectors reproduced byte for byte (canonical JSON).
+
+--- Current-main Python Studio validator (exit 0) ---
+RESULT: PASS
+
+--- Local scratch test and parity ---
+npm test exit 1
+npm run --silent parity exit 1
+✖ a planner vector: moving one keeper window changes the output hash and the estimate (2.661583ms)
+✖ planner plan coach-cut-3min (0.431583ms)
+ℹ tests 185
+ℹ pass 182
+ℹ fail 3
+ℹ skipped 0
+✖ a planner vector: moving one keeper window changes the output hash and the estimate (2.661583ms)
+✖ planner plan coach-cut-3min (0.431583ms)
+director (spec/studio/fixtures/vectors/director.json): 58/58 byte-identical, plus 1 base context case(s); results {"brief":16,"refusal":9,"reject":10,"templates":1,"findings":22}
+planner (spec/studio/fixtures/vectors/planner.json): 45/46 byte-identical, plus 1 base context case(s); results {"plan":23,"refusal":3,"check":4,"reject":16}
+compile (spec/studio/fixtures/vectors/compile.json): 39/39 byte-identical, plus 5 base context case(s); results {"edl":28,"refusal":6,"reject":5}
+TOTAL: 142/143 reference vectors reproduced byte for byte (canonical JSON).
+
+--- Restored parity (exit 0) ---
+director (spec/studio/fixtures/vectors/director.json): 58/58 byte-identical, plus 1 base context case(s); results {"brief":16,"refusal":9,"reject":10,"templates":1,"findings":22}
+planner (spec/studio/fixtures/vectors/planner.json): 46/46 byte-identical, plus 1 base context case(s); results {"plan":23,"refusal":3,"check":4,"reject":16}
+compile (spec/studio/fixtures/vectors/compile.json): 39/39 byte-identical, plus 5 base context case(s); results {"edl":28,"refusal":6,"reject":5}
+TOTAL: 143/143 reference vectors reproduced byte for byte (canonical JSON).
