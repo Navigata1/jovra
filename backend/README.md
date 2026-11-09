@@ -11,7 +11,7 @@ Design: `docs/backend/architecture.md` (layout §1.2, local test strategy §12, 
 
 | Folder | What | Test command | CI workflow | Status |
 |---|---|---|---|---|
-| `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migrations 1 (S76 / B-03), 2 (S77 / B-04) and 3 (S78 / B-05); gateway commands (S79 / B-06) |
+| `supabase/` | Local Supabase project: config, migrations, seed testers, pgTAP suite | `supabase test db` (see below) | `.github/workflows/backend-db.yml` | Scaffold (S75 / B-02); migrations 1 (S76 / B-03), 2 (S77 / B-04) and 3 (S78 / B-05); gateway commands (S79 / B-06); orchestrator commands (S80 / B-06) |
 | `gateway/` | Cloudflare signing gateway Worker | — | — | Not started (B-07) |
 | `render/` | Render-host image | — | — | Not started (B-13) |
 | `contracts/` | Gateway and queue JSON Schemas | See `contracts/README.md` | `.github/workflows/backend-contracts.yml` | Implemented contract/checker foundation (S81 / B-01); gateway/render runtime remains separate |
@@ -266,9 +266,62 @@ output-hash vectors from `spec/reference/studio/core.py`) and `commands_gateway_
 two real concurrent transactions, which one pgTAP session cannot open, so it is `scripts/concurrent_accept_smoke.py`,
 run by CI after the pgTAP suite.
 
-Not covered here (later tickets): the orchestrator commands (`set_job_state`, `reserve_stage`, `claim_attempt`,
-`finish_attempt`, the `*_for_attempt` upload variants, `audit_denial_for_attempt`) are S80; `cancel_job`,
+Not covered here (later tickets): the orchestrator commands are S80 (below); the `*_for_attempt` upload variants; `cancel_job`,
 `pause_job`, `resume_job` and `retry` belong with the state machine there too. The gateway Worker that calls these
 commands, mints the bearer tokens, verifies device-key signatures and nonces and writes `idempotency_records` is
 S83 onward. The no-audio share-link variant waits for S80's `remux_no_audio` (until then such a link is
 `P0409 audio_variant_pending`). The rate card is INFERRED and refreshed at activation.
+
+## Orchestrator commands (S80 / B-06, orchestrator half)
+
+`migrations/20261008050000_orchestrator_commands.sql` (architecture §4.3, §7.1-§7.6, §10; security-model §4.1, §8.4,
+§13.1, §13.6, §13.7, §13.9 (b); finding 13's database half):
+
+- The commands `jovra-internal` calls as `jovra_orchestrator`, and nobody else: `set_job_state`, `reserve_stage`,
+  `claim_attempt`, `heartbeat_attempt`, `finish_attempt`, `mark_artifact_verified`, `expire_attempt_leases`,
+  `delete_lesson_rows` and `audit_denial_for_attempt`. Each is volatile, security definer, `search_path = ''`, owned by
+  `jovra_owner` and executable by `jovra_orchestrator` only; the §13.1 lint (no `app_gateway` function executable by both
+  command roles) returns zero rows (T-DB-53, T-DB-57).
+- `set_job_state` is a compare-and-set against the SQL copy of `spec/studio/contracts/render-job-transitions.v1.json`
+  (`app_private.job_transition_allowed`); a redelivered step replays; `render_jobs.resume_state` stores where a paused,
+  retryable or budget-stopped job returns to; `ready` still needs a verified delivered film (`b10_check_job_state`); a
+  terminal state cancels open attempts and settles (ready) or releases the hold.
+- `reserve_stage` prices the stage in SQL from a versioned rate card (`app_ops.rate_cards`, `app_ops.stage_rates`, seeded
+  with `rates-v0-inferred`; every stage floor is positive, so a zero estimate is impossible) and the quote's inputs; it
+  refuses beyond the hold's cap or the environment ceiling (`P0402`), lists as `input_refs` only the quote's sources that
+  are still verified in the current manifest plus this job's verified artifacts (`P0409 inputs_changed` when a source
+  changed), stores an output plan with a byte cap per output, and writes `planner_budget` for the plan stage from what
+  the reservation covers: the first model call and its repair, else no repair, else a zero budget (heuristic fallback).
+  It is idempotent on `(job, stage, attempt)` and replays the charged attempt for a stage already charged.
+- `claim_attempt` mints the `jvl_` lease token and stores only its SHA-256; `heartbeat_attempt` and `finish_attempt`
+  are fenced by that hash and `leased_until` (`P0409 stale_lease` / `lease_expired`); `expire_attempt_leases` is the
+  reconciler's sweep. The hold's reserved total is what is committed now (charged stages plus open stage
+  reservations): a success turns its stage reservation into one charge (at most the reservation; one succeeded attempt
+  per `(job, stage)`, unique index), a failure or an expiry returns it, an actual cost above it is committed as
+  `stage_overrun` and stops the job at `budget_exceeded`. Outputs are registered as `verifying` artifacts under
+  server-generated keys, only when they are in the attempt's output plan and within their caps, with their sources in
+  `artifact_sources`. The plan stage of plan-by-job work moves the job and its hold to `(plan, V, hash of V)` in the same
+  transaction (`P0409 requote_conflict` if another hold owns that key).
+- `mark_artifact_verified` belongs to the `verify_output` stage, under its own lease.
+- `delete_lesson_rows` is the row step of a lesson-scope deletion: Progress plans keep their other lessons, their
+  versions become invalid and stale, and the request reaches `done` (T-DB-73).
+- Two fixes to S79's money commands found by the ledger replay: a redelivered acceptance replays after a top-up
+  superseded its quote, and `commit_spend` refuses every commitment in the `live` environment
+  (`P0409 live_charging_not_activated`, ADR-0013).
+
+Tests: `commands_orchestrator_01_catalog` (T-DB-04, T-DB-53, T-DB-57, the §4.1 template, rate-card guards),
+`commands_orchestrator_02_stages` (T-DB-36, T-DB-53 ready, T-DB-55, T-DB-72 SQL half, the transition table, one charge per
+stage), `commands_orchestrator_03_leases` (T-DB-37, claims, heartbeats, expiry, failures, redeliveries, cancel,
+`audit_denial_for_attempt`, T-DB-47 for the lease token) and `commands_orchestrator_04_plan_keys_deletion` (T-DB-68,
+T-DB-73). `scripts/ledger_vector_replay.py` (CI step after T-DB-71) replays every sequence of
+`spec/studio/fixtures/vectors/ledger.json` through the SQL commands and compares the balances read from
+`usage_reservations`, and checks the SQL transition table against the contract for every pair of job states. The
+script's docstring lists the few vector rules it enforces itself because they have no separate database request
+(a reservation below the quote's cap, non-integer amounts, a refused acceptance, job naming) and the ones that live in
+the gateway or the app (demo identities, illustrative quotes).
+
+Not covered here (later tickets): the `*_for_attempt` upload and read variants (`authorize_output_upload_for_attempt`,
+`record_part_for_attempt`, `complete_upload_check_for_attempt`, `authorize_attempt_input`) and the gateway Worker that
+calls these commands (S82 onward); the deletion Workflow that deletes objects before `delete_lesson_rows` (S94);
+`cancel_job`, `pause_job`, `resume_job` and `retry` as user commands; the planner fixture half of T-DB-72 (S88/S89).
+The rate cards are INFERRED and refreshed at activation.
