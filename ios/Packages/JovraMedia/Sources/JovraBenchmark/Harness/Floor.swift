@@ -59,7 +59,15 @@ public struct Floor: Codable, Hashable, Sendable {
         ]
     )
 
-    public static let builtIn: [String: Floor] = ["harnessSelfTest": harnessSelfTest]
+    /// T13's acceptance claim for the 4-tap calibration: with corners tapped up to 2 px off at 1080p, every
+    /// untapped line intersection lands within 0.10 m of its ITF position. court.calibration is a manual,
+    /// ungated capability, so this floor names no capability and promotes nothing (ADR-0004).
+    public static let t13CourtCalibration = Floor(
+        source: "T13 acceptance claim (untapped intersections within 0.10 m with taps up to 2 px off at 1080p; court.calibration is manual and ungated, promotes nothing)",
+        metrics: [Metric(name: "intersections within 0.10 m", comparator: .atLeast, threshold: "1")]
+    )
+
+    public static let builtIn: [String: Floor] = ["harnessSelfTest": harnessSelfTest, "t13CourtCalibration": t13CourtCalibration]
 
     /// Applies the floor to exact metric values. An undefined or missing metric fails (so does an unparsable
     /// threshold, which decoding already refuses).

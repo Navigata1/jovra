@@ -155,3 +155,24 @@ Exit status 0 means written (a tuning run, or a gate that passed), 3 means writt
 
 Records here are synthetic-band harness self-tests. They promote nothing (ADR-0004): no capability's
 `lastBenchmark` may point at an oracle or null record.
+
+## Court calibration benchmark (T13)
+
+Task `courtCalibration` 1.0.0 (`JovraBenchmark/Harness/CourtCalibrationTask.swift`, Python scorer
+`score_court_calibration` in `spec/reference/jovra_ref/benchmark.py`) measures the 4-tap calibration: the candidate
+`courtCalibration.fourTap` taps the four doubles corners of a behind-baseline clip 16 times, each tap up to 2 px off
+at 1080p (scaled to the clip's height), fits the homography with JovraCore and reads back, in integer millimetres,
+the 12 untapped line intersections (seen at the renderer camera's true pixels) and every serve bounce (at its
+rendered pixel). Metrics: the share within 0.10 m and the mean squared error (mm², RMSE is its square root) for
+intersections and for bounces. `court.calibration` is manual and ungated, so the record names no capability and
+promotes nothing; its floor `t13CourtCalibration` is the ticket's claim (every untapped intersection within 0.10 m).
+The committed run (`spec/benchmarks/court-calibration/fourTap.gate.json`, held-out serves s221 and s222) fails that
+floor at the far baseline, where one pixel spans about 0.10 m of depth; see
+`evidence/ios/13-court-calibration-diagrams/04-benchmark-court-calibration.txt`.
+
+```sh
+python3 scripts/media/render.py --set corpus
+swift run --package-path ios/Packages/JovraMedia jovra-benchmark run --estimator courtCalibration.fourTap \
+  --clip corpus/serves-s221 --clip corpus/serves-s222 --mode gate --floor t13CourtCalibration \
+  --run-id court-calibration-fourtap-gate-t13 --out spec/benchmarks/court-calibration/fourTap.gate.json
+```

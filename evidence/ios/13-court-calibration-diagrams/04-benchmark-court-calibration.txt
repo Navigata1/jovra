@@ -1,0 +1,26 @@
+$ swift run --package-path ios/Packages/JovraMedia jovra-benchmark run --estimator courtCalibration.fourTap --clip corpus/serves-s221 --clip corpus/serves-s222 --mode gate --floor t13CourtCalibration --run-id court-calibration-fourtap-gate-t13 --out spec/benchmarks/court-calibration/fourTap.gate.json
+metrics: intersections within 0.10 m 0.9219, intersection MSE 2615.497 mm2, bounces within 0.10 m 0.8177, bounce MSE 5402.737 mm2
+  FAIL intersections within 0.10 m 0.9219 >= 1
+verdict: FAILED the floor (T13 acceptance claim ...; promotes nothing)
+
+RMSE (square root of the recorded exact MSE): intersections 0.0511 m, bounces 0.0735 m
+32 draws (16 per held-out clip), taps jittered inside a 2 px disc at 1080p (0.667 px at the clips 360p), 12 untapped intersections and 12 serve bounces per draw
+
+Per untapped intersection (draws over 0.10 m, worst error):
+  nearLeftSingles     0/32  worst 0.036 m
+  nearRightSingles    0/32  worst 0.036 m
+  farRightSingles    13/32  worst 0.164 m
+  farLeftSingles      6/32  worst 0.173 m
+  nearLeftService     0/32  worst 0.058 m
+  nearRightService    0/32  worst 0.050 m
+  farRightService     5/32  worst 0.123 m
+  farLeftService      3/32  worst 0.113 m
+  nearServiceT        0/32  worst 0.050 m
+  farServiceT         1/32  worst 0.107 m
+  nearCentreMark      0/32  worst 0.053 m
+  farCentreMark       2/32  worst 0.166 m
+
+$ python3 scripts/spec/validate.py  (re-scores the record in Python)
+benchmark records                  4
+jovra.fixture.calibration checks   9
+RESULT: PASS

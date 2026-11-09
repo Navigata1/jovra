@@ -99,11 +99,56 @@ def score_event_times(record: dict, truths: dict[str, dict]) -> list[dict]:
     ]
 
 
-SCORERS = {TASK_EVENT_TIMES: score_event_times}
+TASK_COURT_CALIBRATION = "courtCalibration"
+# The untapped intersections in the order the estimator writes them (CourtIntersection.allCases minus the four
+# doubles corners), as ITF millimetres from the net centre.
+_D, _S, _L, _SV = 5485, 4115, 11885, 6400
+UNTAPPED_INTERSECTIONS_MM = [(-_S, -_L), (_S, -_L), (_S, _L), (-_S, _L), (-_S, -_SV), (_S, -_SV), (_S, _SV), (-_S, _SV),
+                             (0, -_SV), (0, _SV), (0, -_L), (0, _L)]
+WITHIN_MM = 100
+
+
+def score_court_calibration(record: dict, truths: dict[str, dict]) -> list[dict]:
+    """Task ``courtCalibration`` 1.0.0 (T13). Each clip's outputs are draws of a 4-tap calibration; every draw lists
+    the 12 untapped intersections and every serve bounce read back on court in integer millimetres (origin the net
+    centre). Pooled over clips and draws: the share within 100 mm of the truth and the mean squared error (mm^2),
+    for intersections (truth: ITF positions) and bounces (truth: the renderer's serves[].bounce.courtMm, whose
+    origin is the near baseline centre). Exact integers and rationals."""
+    pools = {"intersection": [0, 0, 0], "bounce": [0, 0, 0]}   # count, within, sum of squares
+
+    def add(kind: str, estimates: list, expected: list) -> None:
+        if len(estimates) != len(expected):
+            raise ValueError(f"expected {len(expected)} {kind} estimates per draw, got {len(estimates)}")
+        pool = pools[kind]
+        for (ex, ey), (tx, ty) in zip(estimates, expected):
+            sq = (ex - tx) ** 2 + (ey - ty) ** 2
+            pool[0] += 1
+            pool[1] += sq <= WITHIN_MM * WITHIN_MM
+            pool[2] += sq
+
+    for clip in record["clips"]:
+        truth = truths[clip["truthId"]]
+        bounces = [(s["bounce"]["courtMm"]["x"], s["bounce"]["courtMm"]["y"] - _L) for s in truth.get("serves", [])]
+        for draw in clip["outputs"]:
+            add("intersection", draw["intersectionsMm"], UNTAPPED_INTERSECTIONS_MM)
+            add("bounce", draw["bouncesMm"], bounces)
+    out = []
+    for kind, label in (("intersection", "intersections"), ("bounce", "bounces")):
+        n, within, squares = pools[kind]
+        share = Fraction(within, n) if n else None
+        mse = Fraction(squares, n) if n else None
+        out.append({"name": f"{label} within 0.10 m", "exact": _fraction(share), "value": None if share is None else half_up(share, 4)})
+        out.append({"name": f"{kind} MSE", "unit": "mm2", "exact": _fraction(mse), "value": None if mse is None else half_up(mse, 3)})
+    return out
+
+
+SCORERS = {TASK_EVENT_TIMES: score_event_times, TASK_COURT_CALIBRATION: score_court_calibration}
 
 # Each task's version and the (name, unit) of every metric its scorer emits, in order.
-TASK_VERSIONS = {TASK_EVENT_TIMES: "1.0.0"}
-TASK_METRICS = {TASK_EVENT_TIMES: [("precision", None), ("recall", None), ("onset MAE", "ms")]}
+TASK_VERSIONS = {TASK_EVENT_TIMES: "1.0.0", TASK_COURT_CALIBRATION: "1.0.0"}
+TASK_METRICS = {TASK_EVENT_TIMES: [("precision", None), ("recall", None), ("onset MAE", "ms")],
+                TASK_COURT_CALIBRATION: [("intersections within 0.10 m", None), ("intersection MSE", "mm2"),
+                                         ("bounces within 0.10 m", None), ("bounce MSE", "mm2")]}
 
 
 def gate_metrics(metrics: list[dict], binding: dict) -> list[dict]:
