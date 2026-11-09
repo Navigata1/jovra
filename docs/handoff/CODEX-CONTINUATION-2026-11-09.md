@@ -18,8 +18,12 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   call/alarm interruption, thermal, power-loss or endurance gate has passed.
 - iPad Pro simulator CoreFlow on main failed the Replay Pause Dynamic Type
   audit. Proposed source `725c0a3` passed its AX5 transport test; the unchanged
-  CoreFlow audit then timed out twice, including an isolated rerun, leaving
-  the original audit unresolved. Receipts remain in `/private/tmp/jovra-nov09/` on this Mac.
+  CoreFlow audit then timed out twice on iOS 27.2, including an isolated rerun.
+  On iOS 26.5 it passed Replay but failed an unbound Export accessibility
+  finding. Draft [#453](https://github.com/Navigata1/jovra/pull/453) preserves
+  the proposed Replay fix; a separate Export hypothesis is being tested.
+  Raw receipts are retained locally in
+  `/Users/IDC2.5/JOVRA-media/codex-evidence/2026-11-09`.
 - The supplied private media is described in `docs/fixtures/real-footage.md`.
   The original February match and two-minute excerpt matched their recorded
   hashes. The full match imported through Files and opened in Replay on iPhone.
