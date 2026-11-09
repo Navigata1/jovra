@@ -34,7 +34,7 @@ data class MediaTime(val value: Long, val timescale: Int) {
         /** Decodes the original integer tokens within an explicit caller input limit. */
         fun decodeJson(bytes: ByteArray, maxInputBytes: Int): MediaTime {
             val input = CanonicalJson.decodeJsonInput(bytes, maxInputBytes)
-            CanonicalJson.validateFlatNumberObject(input)
+            CanonicalJson.validateFlatObject(input)
             return Json.decodeFromString(MediaTimeSerializer, input)
         }
     }
