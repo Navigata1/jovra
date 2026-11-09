@@ -88,8 +88,9 @@ point-correction UI in Replay still edits raw milliseconds in text fields.
   #517's manual run.
 - **No server-side protection on main.** The merge policy in ADR-0006 is a
   convention only.
-- **Disk.** About 190 local worktrees (roughly 47 GB) on a machine with 20 GB
-  free. Low disk is already blocking the iPad audit run.
+- **Disk.** 120 git worktrees of this repository exist across the internal
+  disk, a temp folder and external volumes, on a machine with 20 GB free. Low
+  disk is already blocking the iPad audit run.
 
 ### 2.4 Breadth
 
@@ -158,6 +159,10 @@ Android (phone first), then the watch remote, then Studio. Each starts when
 the iPhone phase it mirrors has passed its device gate.
 
 ## 5. Decisions only the founder can make
+
+**Answered 2026-11-09:** the founder said yes to A and B. They are recorded in
+[ADR-0031](../../adr/0031-automatic-analysis-in-v1-and-iphone-first.md). C is
+still open.
 
 - **A. Reverse D10** and add the V track, so that automatic analysis is in v1
   as `estimated` capabilities behind benchmark gates.
