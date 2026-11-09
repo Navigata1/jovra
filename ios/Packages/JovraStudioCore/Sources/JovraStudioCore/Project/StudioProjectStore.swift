@@ -24,6 +24,10 @@ public enum StudioProjectStoreError: Error, Equatable, Sendable {
     case ownerMissing(String)
     /// A lock outside demo needs the signed-in identity.
     case identityRequired
+    /// A film is built from recorded events (the lock's `eventRevision` is at least 1); the primary session has none.
+    case eventLogEmpty
+    /// The primary source kept changing while a lock read its session; nothing was locked. Retry the lock.
+    case primaryChanged
     /// A film record with this id already exists; older versions are kept, never overwritten (story 163).
     case filmExists(String)
     /// A record is not a Studio record for this project, or breaks its contract.
@@ -100,11 +104,12 @@ public actor StudioProjectStore {
     // MARK: Projects
 
     /// Starts a project. With `primarySession` it holds that session as `camera-1`, the primary: one phone is a
-    /// complete path (story 22). Refused when `localStudio` is off.
+    /// complete path (story 22), and the event-log version starts at that session's. Refused when `localStudio` is off.
     public func create(kind: StudioProjectKind, primarySession: String? = nil,
                        segmentIds: [String] = []) async throws -> StudioProject {
         try requireLocalStudio()
-        if let primarySession { try await requireSession(primarySession) }
+        var primaryDocument: SessionDocument?
+        if let primarySession { primaryDocument = try await loadSession(primarySession) }
         let id = UUID().uuidString.lowercased()
         var project = StudioProject(projectId: id, kind: kind, sample: false, createdAt: timestamp(),
                                     environment: environment)
@@ -113,6 +118,7 @@ public actor StudioProjectStore {
                                                    segmentIds: segmentIds, slot: nil)]
             project.primarySourceId = "camera-1"
             project.revisions.sourceManifestRevision = 1
+            project.revisions.eventLogVersion = primaryDocument.map(Self.eventLogVersion) ?? 0
         }
         try insert(project)
         return project
@@ -230,14 +236,12 @@ public actor StudioProjectStore {
         try advance(projectId) { $0.eventLogVersion = try Self.monotonic($0.eventLogVersion, version) }
     }
 
-    /// Reads the primary session's event-log version (its highest event `seq`) from the core session store.
+    /// Reads the primary session's event-log version (its highest event `seq`) from the core session store. Without
+    /// a session store, a primary, or for the Sample (which never reads the core store), the snapshot stands.
     @discardableResult
     public func refreshEventLogVersion(for projectId: String) async throws -> StudioProjectRevisions {
-        guard let sessions, let sessionId = try project(projectId).primarySource?.sessionId else {
-            return try revisions(projectId)
-        }
-        let document = try await sessions.load(sessionId)
-        return try recordEventLogVersion(document.match?.log.map(\.seq).max() ?? 0, for: projectId)
+        guard let live = try await liveEventLogVersion(of: project(projectId)) else { return try revisions(projectId) }
+        return try recordEventLogVersion(live.version, for: projectId)
     }
 
     // MARK: Records
@@ -308,10 +312,18 @@ public actor StudioProjectStore {
     /// Freezes what a film is built from (story 162): the source manifest (revision and canonical SHA-256), the
     /// event-log version, the sync revision, the profile and the output. Each lock is a new revision, kept in
     /// `locks/project-lock.r<n>.json`. Refused when `localStudio` is off.
+    ///
+    /// With the core session store attached, the event revision is the primary session's log as it is now (read at
+    /// lock time, and the project's snapshot advanced to it), never an older snapshot: a film locked after a
+    /// correction records the corrected revision. Without a store, or for the Sample, the stored snapshot is used.
     public func lock(profile: ProjectLockProfile, output: ProjectLockOutput, identity: ProjectLockIdentity? = nil,
-                     in projectId: String) throws -> ProjectLock {
+                     in projectId: String) async throws -> ProjectLock {
         try requireLocalStudio()
-        var project = try project(projectId)
+        let (read, live) = try await projectWithLiveEventLog(projectId)
+        var project = read
+        if let live {
+            project.revisions.eventLogVersion = try Self.monotonic(project.revisions.eventLogVersion, live.version)
+        }
         guard let manifestBytes = try record(named: "source-manifest.json", in: .manifests, of: projectId) else {
             throw StudioProjectStoreError.manifestMissing
         }
@@ -321,6 +333,7 @@ public actor StudioProjectStore {
         guard manifest.revision == project.revisions.sourceManifestRevision else {
             throw StudioProjectStoreError.manifestStale(manifest: manifest.revision, project: project.revisions.sourceManifestRevision)
         }
+        guard project.revisions.eventLogVersion >= 1 else { throw StudioProjectStoreError.eventLogEmpty }
         // Rights cover the match angles; b-roll clips carry their rights in the b-roll catalog.
         let rights = try project.sources.filter { $0.role == .match }.map { source -> ProjectLockSourceRight in
             guard let owner = source.ownerParticipantId else { throw StudioProjectStoreError.ownerMissing(source.sourceId) }
@@ -412,11 +425,56 @@ public actor StudioProjectStore {
     }
 
     private func requireSession(_ id: String) async throws {
+        _ = try await loadSession(id)
+    }
+
+    /// The core session `id`, or `nil` when no session store is attached; a missing session is `sessionNotFound`.
+    private func loadSession(_ id: String) async throws -> SessionDocument? {
         guard StudioPath.isValidID(id) else { throw StudioProjectStoreError.invalidID }
-        guard let sessions else { return }
-        do { _ = try await sessions.load(id) }
+        guard let sessions else { return nil }
+        do { return try await sessions.load(id) }
         catch SessionStoreError.notFound { throw StudioProjectStoreError.sessionNotFound(id) }
     }
+
+    /// A session's event-log version: its highest event `seq` (0 for an empty log or a session without a match), the
+    /// same value core exports record.
+    private static func eventLogVersion(_ document: SessionDocument) -> Int {
+        document.match?.log.map(\.seq).max() ?? 0
+    }
+
+    /// The primary session's event-log version as stored in the core session store now.
+    private struct LiveEventLog: Equatable {
+        let sessionId: String
+        let version: Int
+    }
+
+    /// The session the event-log version is read from: the primary's, when a session store is attached and the
+    /// project is real. The Sample never reads the core session store (StudioSampleContent, story 15).
+    private func eventLogSource(of project: StudioProject) -> String? {
+        guard sessions != nil, !project.sample else { return nil }
+        return project.primarySource?.sessionId
+    }
+
+    private func liveEventLogVersion(of project: StudioProject) async throws -> LiveEventLog? {
+        guard let sessionId = eventLogSource(of: project),
+              let document = try await loadSession(sessionId) else { return nil }
+        return LiveEventLog(sessionId: sessionId, version: Self.eventLogVersion(document))
+    }
+
+    /// Reading the session suspends, and another call on this actor may move the primary meanwhile, so the project
+    /// is read again afterwards and the read repeated until both name the same session.
+    private func projectWithLiveEventLog(_ projectId: String) async throws -> (StudioProject, LiveEventLog?) {
+        var live = try await liveEventLogVersion(of: project(projectId))
+        for _ in 0..<Self.maxPrimaryReads {
+            let current = try project(projectId)
+            if eventLogSource(of: current) == live?.sessionId { return (current, live) }
+            live = try await liveEventLogVersion(of: current)
+        }
+        throw StudioProjectStoreError.primaryChanged
+    }
+
+    /// How many times a lock re-reads the primary session while the primary keeps moving under it.
+    private static let maxPrimaryReads = 3
 
     private func requireFree(_ slot: StudioPlacementSlot, in project: StudioProject, except sourceId: String?) throws {
         guard slot != .custom else { return }

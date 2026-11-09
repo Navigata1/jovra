@@ -1,84 +1,94 @@
-# swift test --filter Project (macOS 27.2, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1))
-[Computing dependencies]
-[1 / 1]
-[2 / 13] JovraStudioCore
-[4 / 15] JovraStudioCore
-[9 / 18] JovraStudioCore
-[11 / 17] JovraStudioCoreTests-product
-[12 / 18] JovraStudioCoreTests-product
-[16 / 22] JovraStudioCoreTests-product
-[22 / 28] JovraStudioCoreTests-product
-[27 / 31] JovraStudioCoreTests-product
-[29 / 31] JovraStudioCoreTests-product
-Build complete! (6.26 sec)
+# swift test --filter Project (macOS 27.2, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)), round 1 2026-11-09T00:39:44Z
+Building for debugging...
+[Using on-disk description]
+[2 / 6] JovraStudioCore
+[3 / 7] JovraStudioCore
+[7 / 11] JovraStudioCore
+[10 / 11] JovraStudioCoreTests-product
+[13 / 13] JovraStudioCore-product
+Build complete! (3.85 sec)
 ◇ Test run started.
 ↳ Testing Library Version: 2403
 ↳ Target Platform: arm64e-apple-macos14.0
-◇ Suite "Studio project store: durability and the index" started.
 ◇ Suite "Studio fixture locator" started.
 ◇ Suite "Studio project store: the localStudio entitlement" started.
-◇ Suite "Studio project store: delete scopes and films" started.
-◇ Suite "Studio project store: sources, slots and revisions" started.
 ◇ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" started.
-◇ Test "a created project reloads from its folder in a new store with the same kind and no sources" started.
-◇ Test "a process killed after the rename has committed the new studio.json" started.
-◇ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" started.
-◇ Test "a corrupted index is rebuilt from the project folders with the same project list" started.
-◇ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" started.
-◇ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" started.
+◇ Suite "Studio sample content" started.
+◇ Suite "Studio project store: the lock's event revision" started.
+◇ Suite "Studio project store: sources, slots and revisions" started.
+◇ Suite "Studio project store: delete scopes and films" started.
+◇ Suite "Studio project store: durability and the index" started.
 ◇ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" started.
 ◇ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" started.
 ◇ Test "with localStudio off, creating a Studio film project is refused with the stated reason" started.
-◇ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" started.
-◇ Test "with localStudio off, a film already made, the original, its export and the core library stay available" started.
 ◇ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" started.
-◇ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
-◇ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" started.
-◇ Suite "Studio sample content" started.
-◇ Test "with the core session store attached, a source must be an existing session, and the event-log version is read from it" started.
-◇ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" started.
-◇ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" started.
-◇ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" started.
-◇ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" started.
-◇ Test "one phone is a complete project: create with a primary session holds it as the primary camera-1" started.
-◇ Test "a source is a reference: no file of the original appears in the project folder" started.
-◇ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" started.
+◇ Test "with localStudio off, a film already made, the original, its export and the core library stay available" started.
 ◇ Test "finding 8: a plan naming another project is refused against this project's records" started.
-◇ Test case passing 1 argument scope → .derived to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
-◇ Test case passing 1 argument scope → .project to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
-◇ Test case passing 1 argument scope → .cloudCopies to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
-✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 0.095 seconds.
-✔ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" passed after 0.103 seconds.
 ◇ Test "the match project's revisions, slots and owners come from the stored sample records" started.
+◇ Test "create with a primary session seeds the event-log version from that session's log" started.
+◇ Test "a lock taken after the session gains a correction records the newer revision, never the stale snapshot" started.
+◇ Test "the Sample project never reads the core session store: its lock keeps the records' event revision" started.
 ◇ Test "removing deletes every Sample project in one call and leaves real projects untouched" started.
-✔ Test "with localStudio off, creating a Studio film project is refused with the stated reason" passed after 0.103 seconds.
-✔ Test "one phone is a complete project: create with a primary session holds it as the primary camera-1" passed after 0.103 seconds.
-✔ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" passed after 0.103 seconds.
-✔ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" passed after 0.103 seconds.
-✔ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" passed after 0.103 seconds.
-✔ Test "a process killed after the rename has committed the new studio.json" passed after 0.103 seconds.
-✔ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" passed after 0.103 seconds.
-✔ Suite "Studio fixture locator" passed after 0.108 seconds.
-✔ Test "a corrupted index is rebuilt from the project folders with the same project list" passed after 0.107 seconds.
-✔ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" passed after 0.122 seconds.
-✔ Test "a created project reloads from its folder in a new store with the same kind and no sources" passed after 0.122 seconds.
-✔ Suite "Studio project store: durability and the index" passed after 0.123 seconds.
-✔ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" passed after 0.134 seconds.
-✔ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" passed after 0.135 seconds.
-✔ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" passed after 0.143 seconds.
-✔ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" passed after 0.153 seconds.
-✔ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" passed after 0.413 seconds.
-✔ Test "finding 8: a plan naming another project is refused against this project's records" passed after 0.532 seconds.
-✔ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" passed after 0.533 seconds.
-✔ Test "the match project's revisions, slots and owners come from the stored sample records" passed after 0.956 seconds.
-✔ Test "a source is a reference: no file of the original appears in the project folder" passed after 1.105 seconds.
-✔ Test "removing deletes every Sample project in one call and leaves real projects untouched" passed after 1.090 seconds.
-✔ Suite "Studio sample content" passed after 1.194 seconds.
-✔ Test "with the core session store attached, a source must be an existing session, and the event-log version is read from it" passed after 1.318 seconds.
-✔ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" passed after 1.319 seconds.
-✔ Suite "Studio project store: sources, slots and revisions" passed after 1.321 seconds.
-✔ Test "with localStudio off, a film already made, the original, its export and the core library stay available" passed after 1.459 seconds.
-✔ Suite "Studio project store: the localStudio entitlement" passed after 1.460 seconds.
-✔ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" with 3 test cases passed after 1.464 seconds.
-✔ Suite "Studio project store: delete scopes and films" passed after 1.465 seconds.
-✔ Test run with 25 tests in 7 suites passed after 1.465 seconds.
+◇ Test "a primary session with no recorded events is refused with eventLogEmpty, not a schema error" started.
+◇ Test "a source is a reference: no file of the original appears in the project folder" started.
+◇ Test "one phone is a complete project: create with a primary session holds it as the primary camera-1" started.
+◇ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" started.
+◇ Test "with the core session store attached, a source must be an existing session, and the event-log version is read from it" started.
+◇ Test "a lock on a fresh real project records the primary session's current event revision" started.
+◇ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" started.
+◇ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" started.
+◇ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" started.
+◇ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test "a lock whose primary session was deleted is refused with sessionNotFound" started.
+◇ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" started.
+◇ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" started.
+◇ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" started.
+◇ Test "a corrupted index is rebuilt from the project folders with the same project list" started.
+◇ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" started.
+◇ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" started.
+◇ Test "a process killed after the rename has committed the new studio.json" started.
+◇ Test "a created project reloads from its folder in a new store with the same kind and no sources" started.
+◇ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" started.
+◇ Test case passing 1 argument scope → .derived to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test case passing 1 argument scope → .cloudCopies to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+◇ Test case passing 1 argument scope → .project to "each delete scope leaves every original's bytes and SHA-256 unchanged" started.
+✔ Test "localStudio is true in this build unless it is the explicit JOVRA_STUDIO_LOCAL_OFF scratch build" passed after 0.557 seconds.
+✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed after 0.557 seconds.
+✔ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" passed after 0.557 seconds.
+✔ Test "with localStudio off, creating a Studio film project is refused with the stated reason" passed after 0.557 seconds.
+✔ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" passed after 0.557 seconds.
+✔ Test "one phone is a complete project: create with a primary session holds it as the primary camera-1" passed after 0.557 seconds.
+✔ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" passed after 0.557 seconds.
+✔ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" passed after 0.557 seconds.
+✔ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" passed after 0.557 seconds.
+✔ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" passed after 0.557 seconds.
+✔ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" passed after 0.557 seconds.
+✔ Test "a corrupted index is rebuilt from the project folders with the same project list" passed after 0.557 seconds.
+✔ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" passed after 0.557 seconds.
+✔ Test "a process killed after the rename has committed the new studio.json" passed after 0.557 seconds.
+✔ Test "a created project reloads from its folder in a new store with the same kind and no sources" passed after 0.557 seconds.
+✔ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" passed after 0.557 seconds.
+✔ Suite "Studio fixture locator" passed after 0.558 seconds.
+✔ Suite "Studio project store: durability and the index" passed after 0.558 seconds.
+✔ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" passed after 0.881 seconds.
+✔ Test "finding 8: a plan naming another project is refused against this project's records" passed after 1.063 seconds.
+✔ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" passed after 1.063 seconds.
+✔ Test "the match project's revisions, slots and owners come from the stored sample records" passed after 1.389 seconds.
+✔ Test "removing deletes every Sample project in one call and leaves real projects untouched" passed after 1.448 seconds.
+✔ Suite "Studio sample content" passed after 1.449 seconds.
+✔ Test "a primary session with no recorded events is refused with eventLogEmpty, not a schema error" passed after 1.759 seconds.
+✔ Test "a source is a reference: no file of the original appears in the project folder" passed after 1.909 seconds.
+✔ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" passed after 2.066 seconds.
+✔ Test "with the core session store attached, a source must be an existing session, and the event-log version is read from it" passed after 2.177 seconds.
+✔ Suite "Studio project store: sources, slots and revisions" passed after 2.178 seconds.
+✔ Test "create with a primary session seeds the event-log version from that session's log" passed after 2.180 seconds.
+✔ Test "a lock whose primary session was deleted is refused with sessionNotFound" passed after 2.191 seconds.
+✔ Test "a lock on a fresh real project records the primary session's current event revision" passed after 2.310 seconds.
+✔ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" with 3 test cases passed after 2.335 seconds.
+✔ Suite "Studio project store: delete scopes and films" passed after 2.335 seconds.
+✔ Test "with localStudio off, a film already made, the original, its export and the core library stay available" passed after 2.368 seconds.
+✔ Suite "Studio project store: the localStudio entitlement" passed after 2.369 seconds.
+✔ Test "the Sample project never reads the core session store: its lock keeps the records' event revision" passed after 2.485 seconds.
+✔ Test "a lock taken after the session gains a correction records the newer revision, never the stale snapshot" passed after 2.612 seconds.
+✔ Suite "Studio project store: the lock's event revision" passed after 2.612 seconds.
+✔ Test run with 31 tests in 8 suites passed after 2.613 seconds.
