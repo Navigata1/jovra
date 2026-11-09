@@ -11,10 +11,11 @@ spec/
   contracts/    shipped data both apps read: capability-registry.v1.json, csv/points.v1.json, csv/stats.v1.json
   reference/    Python 3 standard-library reference engine + fixture generator (cases/ = one module per source)
   fixtures/     golden cases: scoring/ (S01-S64, E01-E10), stats/ (T01-T04), units/ (U01), sample/, records/,
-                rally/ (R01-R05 segmentation and rally-only plan vectors, session.rolls.json; T32),
-                labels/ (L01-L02 label scoring vectors; V01)
-  benchmarks/   corpus/manifest.json (the synthetic corpus, T11) and labels/ (the label set on real recordings and
-                its sealed label files, V01)
+                rally/ (R01-R05 segmentation and rally-only plan vectors, session.rolls.json; T32)
+  benchmarks/   corpus/manifest.json (the synthetic corpus, T11), labels/ (the label set on real recordings and its
+                sealed label files, V01) and scoring/ (L01-L02 label scoring vectors, V01). The label scorer is
+                benchmark tooling in JovraBenchmark, not a JovraCore domain module, so its vectors live here and
+                JovraBenchmarkTests consumes them; JovraCore's fixture runners cover fixtures/ and contracts/
 scripts/spec/validate.py          validates everything and re-runs the engine; non-zero exit on any mismatch
 scripts/spec/test_contracts.py    tests of the contract tooling itself (plumbing by convention, closed objects, T02)
 ```
@@ -101,7 +102,7 @@ The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) a
 | `benchmark-labels.schema.json` | `benchmarks/labels/rec-<hash>.labels.json` (V01) | Labels a person marked on one real recording, keyed by its SHA-256: hits (time, near or far player, stroke type), bounces (time, image point, in play), rally boundaries, court corners per camera position, and the audio hit candidates the tool offered. Times and points only: no frame, no audio, no file name, no person's name. Carries the recording's hash-fixed tuning / held-out split (`jovra.hashWindows.v1`), which the validator re-derives. How-to: `docs/fixtures/labelling.md` |
 | `benchmark-observations.schema.json` | a stage's output for `jovra-benchmark score` (V01) | Hits, bounces, rallies, court corners and analysed ranges, whichever the stage produces. An omitted kind is not scored; an empty list is scored as finding nothing |
 | `benchmark-label-set.schema.json` | `benchmarks/labels/manifest.json` (V01) | The label set that gates V02-V07: the founder's recordings by hash with their label targets, and each sealed label file with the SHA-256 of its bytes, its split and its counts. The validator re-hashes, re-derives and re-counts every file and requires `status` to be `complete` exactly when the targets are met; it is `founderPending` until then |
-| `fixture-label-scoring.schema.json` | `fixtures/labels/L*.json` (V01) | Synthetic labels, a stage's observations and the rows the label scorer prints for the tuning and the held-out windows, worked by hand (`worked`); reference `jovra_ref/labels.py`, re-run by the `CHECKS` in `cases/label_scoring_cases.py`; the Swift twin is `JovraBenchmark.LabelScorer` |
+| `fixture-label-scoring.schema.json` | `benchmarks/scoring/L*.json` (V01) | Synthetic labels, a stage's observations and the rows the label scorer prints for the tuning and the held-out windows, worked by hand (`worked`); reference `jovra_ref/labels.py`, re-run by the `CHECKS` in `cases/label_scoring_cases.py`; the Swift twin is `JovraBenchmark.LabelScorer` |
 
 No schema has an `$id`: references are relative file references (`common.schema.json#/$defs/id`), so any 2020-12
 validator resolves them when loading from disk, and no URL appears before it resolves (IDC domain rule 1).

@@ -2,7 +2,7 @@
 
 Build Mac, macOS 27.2, Xcode 27.2, 2026-11-09. This ticket adds no iPhone screen, so no simulator was used. Every
 image and number here comes from synthetic material: the rendered sample video ("Sample video (synthetic)") and the
-hand-written fixtures in `spec/fixtures/labels`. The founder's recordings were not opened; one test reads the sound
+hand-written fixtures in `spec/benchmarks/scoring`. The founder's recordings were not opened; one test reads the sound
 of a private excerpt on this Mac and prints a count (see `tests.txt`).
 
 | File | What it shows |

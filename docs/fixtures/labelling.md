@@ -107,7 +107,7 @@ held-out windows side by side and never combined:
 A matched pair belongs to the split of its label, an unmatched observation to the split of its own time, so nothing
 is counted in both. Tolerances default to 100 ms for hits and bounces and 1 s for rally boundaries
 (`--hit-tolerance`, `--bounce-tolerance`, `--boundary-tolerance`, as `VALUE/TIMESCALE`); `--json` prints the rows as
-JSON. The rule is written out in `spec/reference/jovra_ref/labels.py`, and `spec/fixtures/labels/L01` and `L02` are
+JSON. The rule is written out in `spec/reference/jovra_ref/labels.py`, and `spec/benchmarks/scoring/L01` and `L02` are
 worked by hand: both the Python reference and the Swift scorer must reproduce them.
 
 Placement error is in pixels here. Metres on the court need the court model and a homography, which V02 and V07 add.

@@ -1,4 +1,8 @@
-"""Label scoring fixtures (V01): jovra.fixture.labelScoring, spec/fixtures/labels/L*.json.
+"""Label scoring fixtures (V01): jovra.fixture.labelScoring, spec/benchmarks/scoring/L*.json.
+
+They sit under spec/benchmarks, not spec/fixtures: the label scorer is benchmark tooling (JovraBenchmark), not a
+domain module both apps port, so JovraBenchmarkTests consumes these vectors and JovraCore's fixture runners,
+which claim every kind under spec/fixtures, are not involved.
 
 Each fixture is a synthetic label document, a stage's observations and the rows the label scorer must print
 for the tuning and the held-out windows. Every expected value below was worked by hand from the rules in
@@ -328,7 +332,7 @@ def generate(ctx) -> int:
         problems = fixture_problems(doc)
         if problems:
             raise ValueError(f"{fixture_id}: " + "; ".join(problems))
-        ctx.write_json(ctx.fixtures / "labels" / f"{fixture_id}.json", doc)
+        ctx.write_json(ctx.spec / "benchmarks" / "scoring" / f"{fixture_id}.json", doc)
     return len(FIXTURES)
 
 

@@ -14,7 +14,7 @@ public enum LabelScoringError: Error, Equatable, CustomStringConvertible {
 
 /// Task `labelScoring` 1.0.0: scores what a stage observed against a person's labels, separately for the
 /// tuning and the held-out windows. The rule, with the reasons, is the docstring of
-/// `spec/reference/jovra_ref/labels.py`; `spec/fixtures/labels/L*.json` are the hand-computed vectors both
+/// `spec/reference/jovra_ref/labels.py`; `spec/benchmarks/scoring/L*.json` are the hand-computed vectors both
 /// implementations reproduce.
 ///
 /// In short: each kind is matched over the whole recording with the eventTimes rule (nearest unmatched

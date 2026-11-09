@@ -2,7 +2,7 @@ import Foundation
 import JovraBenchmark
 import Testing
 
-/// `spec/fixtures/labels/L*.json`: synthetic labels, a stage's observations and the rows worked by hand. The
+/// `spec/benchmarks/scoring/L*.json`: synthetic labels, a stage's observations and the rows worked by hand. The
 /// Swift scorer must print exactly those rows (the Python reference is spec/reference/jovra_ref/labels.py).
 @Suite("Label scorer reproduces the hand-computed fixtures")
 struct LabelScoringFixtureTests {
@@ -14,7 +14,7 @@ struct LabelScoringFixtureTests {
         let expected: LabelScoreReport
     }
 
-    static let folder = MediaFixtureCatalog.repository().root.appendingPathComponent("spec/fixtures/labels")
+    static let folder = MediaFixtureCatalog.repository().root.appendingPathComponent("spec/benchmarks/scoring")
 
     static var files: [String] {
         ((try? FileManager.default.contentsOfDirectory(atPath: folder.path)) ?? []).filter { $0.hasPrefix("L") && $0.hasSuffix(".json") }.sorted()

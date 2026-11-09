@@ -45,22 +45,25 @@ public enum OnsetCandidateFinder {
                 AVFormatIDKey: kAudioFormatLinearPCM, AVLinearPCMBitDepthKey: 32, AVLinearPCMIsFloatKey: true,
                 AVLinearPCMIsBigEndianKey: false, AVLinearPCMIsNonInterleaved: false, AVNumberOfChannelsKey: 1,
             ])
-            output.alwaysCopiesSampleData = false
             reader.add(output)
             guard reader.startReading() else { throw reader.error ?? RecordingError.unreadable("the audio could not be read") }
             var envelope = Envelope(sampleRate: sampleRate, highPassHz: parameters.highPassHz)
             var firstTime: CMTime?
+            var samples: [Float] = []
             while let buffer = output.copyNextSampleBuffer() {
                 try Task.checkCancellation()
                 if firstTime == nil { firstTime = CMSampleBufferGetPresentationTimeStamp(buffer) }
                 guard let block = CMSampleBufferGetDataBuffer(buffer) else { continue }
-                var length = 0
-                var pointer: UnsafeMutablePointer<CChar>?
-                guard CMBlockBufferGetDataPointer(block, atOffset: 0, lengthAtOffsetOut: nil, totalLengthOut: &length, dataPointerOut: &pointer) == kCMBlockBufferNoErr,
-                      let pointer else { continue }
-                pointer.withMemoryRebound(to: Float.self, capacity: length / MemoryLayout<Float>.size) { samples in
-                    envelope.append(UnsafeBufferPointer(start: samples, count: length / MemoryLayout<Float>.size))
+                // Copy the bytes out: a block buffer need not be one contiguous run of memory, so a pointer
+                // into it is only good for part of its length.
+                let count = CMBlockBufferGetDataLength(block) / MemoryLayout<Float>.size
+                guard count > 0 else { continue }
+                if samples.count < count { samples = [Float](repeating: 0, count: count) }
+                let status = samples.withUnsafeMutableBytes { bytes in
+                    CMBlockBufferCopyDataBytes(block, atOffset: 0, dataLength: count * MemoryLayout<Float>.size, destination: bytes.baseAddress!)
                 }
+                guard status == kCMBlockBufferNoErr else { continue }
+                samples.withUnsafeBufferPointer { envelope.append(UnsafeBufferPointer(rebasing: $0[0..<count])) }
             }
             if reader.status == .failed { throw reader.error ?? RecordingError.unreadable("the audio could not be read") }
             let start = firstTime.flatMap { $0.isNumeric ? $0.seconds : nil } ?? 0

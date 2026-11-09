@@ -14,7 +14,7 @@ on:
       - "ios/Packages/JovraMedia/Sources/JovraBenchmark/**"
       - "ios/Packages/JovraMedia/Tests/JovraBenchmarkTests/Labels/**"
       - "spec/schemas/benchmark-*.json"
-      - "spec/fixtures/labels/**"
+      - "spec/benchmarks/scoring/**"
       - "spec/benchmarks/labels/**"
       - ".github/workflows/label-tool.yml"
   push:
@@ -42,17 +42,27 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install ffmpeg and XcodeGen
         run: brew install ffmpeg xcodegen
+      # The sample set includes the 54:00 sample match and takes about a quarter of an hour to render on a
+      # hosted Mac, so the rendered media is saved straight after rendering, whatever the tests then do.
       - name: Restore rendered media
-        uses: actions/cache@v4
+        id: media
+        uses: actions/cache/restore@v4
         with:
           path: .cache/media
           key: label-tool-media-${{ runner.os }}-${{ hashFiles('scripts/media/**/*.py', 'spec/fixtures/sample/media-manifest.json', 'spec/fixtures/sample/jon-vs-alex.points.csv') }}
       - name: Render the synthetic sample video (and the silent frame-counter clips)
         run: python3 scripts/media/render.py --check --set sample --set frameCounter
+      - name: Save rendered media
+        if: steps.media.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/media
+          key: ${{ steps.media.outputs.cache-primary-key }}
       - name: Label format, split and scorer tests (JovraBenchmark)
         run: swift test --package-path ios/Packages/JovraMedia --filter 'LabelScoringFixtureTests|LabelSplitTests|BenchmarkLabelsTests|BenchmarkLabelSetTests'
       - name: Label tool tests (the founder flow through the real window, in-process)
-        run: swift test --package-path tools/label-tool
+        # One test at a time, so the log names the test that was running if the process dies.
+        run: swift test --package-path tools/label-tool --no-parallel
       - name: XCUITest on the built app
         run: scripts/benchmarks/label-tool-ui-test.sh
       - name: Keep the UI test result bundle

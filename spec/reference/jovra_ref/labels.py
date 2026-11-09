@@ -1,7 +1,7 @@
 """Reference for benchmark labels (V01): the hash-fixed tuning / held-out split and the label scorer.
 
 The Swift twin is JovraBenchmark (``Labels/LabelSplit.swift``, ``Labels/LabelScorer.swift``); both must
-reproduce ``spec/fixtures/labels/L*.json`` exactly.
+reproduce ``spec/benchmarks/scoring/L*.json`` exactly.
 
 Split ``jovra.hashWindows.v1``. The recording's timeline is cut into windows of ``windowMs`` (the last one
 may be shorter): n = ceil(durationMs / windowMs). Window i has the key SHA-256("jovra.hashWindows.v1\n" +

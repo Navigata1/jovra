@@ -17,7 +17,7 @@ from jsonschema_subset import SchemaSet  # noqa: E402
 from cases import label_scoring_cases as cases  # noqa: E402
 from jovra_ref import labels  # noqa: E402
 
-FIXTURES = ROOT / 'spec/fixtures/labels'
+FIXTURES = ROOT / 'spec/benchmarks/scoring'
 SCHEMAS = SchemaSet(ROOT / 'spec/schemas')
 
 
