@@ -240,6 +240,9 @@ select is(pg_temp.orch(pg_temp.finish_sql(pg_temp.got('n1', 'attemptId'), pg_tem
   'measurements are non-negative integers only');
 select is((select count(*)::int from public.artifacts where job_id = pg_temp.job('j1')), 0,
   'no artifact is registered by a refused result');
+-- The host writes the output through the lease-fenced upload commands first (migration 20261008051000).
+select tests.write_attempt_output(pg_temp.got('n1', 'attemptId')::uuid, pg_temp.got('c_n1', 'leaseToken'),
+                                  'analysis-proxy-1', 1000, sha256('p'::bytea));
 select is(pg_temp.keep('f_n1', pg_temp.orch(pg_temp.finish_sql(pg_temp.got('n1', 'attemptId'),
             pg_temp.got('c_n1', 'leaseToken'), 'succeeded',
             jsonb_build_array(jsonb_build_object('outputRef', 'analysis-proxy-1', 'bytes', 1000,
@@ -360,6 +363,10 @@ update app_ops.spend_limits set daily_ceiling_micro_usd = 50000000 where scope =
 -- T-DB-53 (SQL half): ready needs a verified film; the verify stage verifies it; ready settles the hold -------------
 select is(pg_temp.keep('c_r1', pg_temp.orch(pg_temp.claim_sql(pg_temp.got('r1', 'attemptId')))) ->> 'leaseToken' ~ '^jvl_',
   true, 'the final render is claimed');
+select tests.write_attempt_output(pg_temp.got('r1', 'attemptId')::uuid, pg_temp.got('c_r1', 'leaseToken'), 'film',
+                                  5000, sha256('film'::bytea));
+select tests.write_attempt_output(pg_temp.got('r1', 'attemptId')::uuid, pg_temp.got('c_r1', 'leaseToken'),
+                                  'thumbnail', 500, sha256('t'::bytea));
 select is(pg_temp.keep('f_r1', pg_temp.orch(pg_temp.finish_sql(pg_temp.got('r1', 'attemptId'),
             pg_temp.got('c_r1', 'leaseToken'), 'succeeded',
             jsonb_build_array(jsonb_build_object('outputRef', 'film', 'bytes', 5000, 'sha256', pg_temp.sha('film')),

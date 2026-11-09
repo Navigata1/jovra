@@ -193,6 +193,8 @@ select is(pg_temp.orch(format('select app_gateway.mark_artifact_verified(%L, sha
                               'gen_random_uuid(), ''{"decoded": true}'', gen_random_uuid())',
                               pg_temp.got('a3', 'attemptId'), pg_temp.got('c3', 'leaseToken'))) ->> 'message',
   'not_verify_stage', 'only the verify_output stage may mark an artifact verified');
+select tests.write_attempt_output(pg_temp.got('a3', 'attemptId')::uuid, pg_temp.got('c3', 'leaseToken'),
+                                  'analysis-proxy-1', 1000, sha256('proxy'::bytea));
 select is(pg_temp.finish('a3', pg_temp.got('c3', 'leaseToken'), 'succeeded', pg_temp.proxy_output(), pg_temp.m(30000))
           ->> 'state', 'succeeded', 'attempt 3 succeeds');
 select is(pg_temp.finish('a3', pg_temp.got('c3', 'leaseToken'), 'succeeded', pg_temp.proxy_output(), pg_temp.m(30000))

@@ -15,6 +15,8 @@
 --     outputs registered as `verifying` artifacts only when they are in the attempt's output plan and within their
 --     caps, and the plan stage of plan-by-job work moving the job and its hold to (plan, V, hash of V) in the same
 --     transaction (T-DB-68);
+--   * finish_attempt registers only outputs the attempt wrote through the lease-fenced upload commands of migration
+--     20261008051000, and every attempt that ends (finished, lease expired, canceled) leaves no upload open;
 --   * mark_artifact_verified: only the verify_output stage, under its lease;
 --   * delete_lesson_rows: the lesson-scope deletion step on the server path keeps Progress plans consistent (T-DB-73);
 --   * audit_denial_for_attempt: the orchestrator-only twin of audit_denial for refused host-route calls.
@@ -33,6 +35,17 @@ alter table public.render_attempts add column charged_cost_micro_usd bigint
   check (charged_cost_micro_usd is null or charged_cost_micro_usd >= 0);
 -- Consumption once per (job, stage): at most one succeeded attempt of a stage (architecture §7.4).
 create unique index render_attempts_one_success on public.render_attempts (job_id, stage) where state = 'succeeded';
+
+-- A render output's upload session names the attempt that opened it and the output-plan entry it writes
+-- (architecture §6.1; migration 20261008051000). One session per (attempt, output ref): a failed upload is resumed by
+-- re-sending parts, and a closed one is retried by the next attempt of the stage, which has its own keys.
+alter table app_ops.upload_sessions
+  add column attempt_id uuid references public.render_attempts (id) on delete cascade,
+  add column output_ref text check (output_ref ~ '^[a-z][a-z0-9-]{0,47}$');
+alter table app_ops.upload_sessions add constraint upload_sessions_output_of_attempt
+  check ((attempt_id is not null) = (artifact_id is not null) and (output_ref is not null) = (artifact_id is not null));
+create unique index upload_sessions_one_per_output on app_ops.upload_sessions (attempt_id, output_ref)
+  where attempt_id is not null;
 
 -- Orchestrator rows name their own actor kinds: 'orchestrator' (Workflow, reconciler and deletion steps) and
 -- 'render_attempt' (host-route refusals recorded by audit_denial_for_attempt, security-model §4.1).
@@ -317,6 +330,18 @@ begin
 end
 $$;
 
+-- An attempt that ends (finished, lease expired or canceled) leaves no upload open: its open sessions are aborted and
+-- the outputs it began but did not report are failed. The reconciler aborts their R2 multipart uploads.
+create function app_private.close_attempt_uploads(p_job uuid, p_attempt uuid) returns void
+language plpgsql volatile security definer set search_path = '' as $$
+begin
+  update app_ops.upload_sessions set state = 'aborted'
+   where attempt_id = p_attempt and state in ('opening', 'open', 'completing');
+  update public.artifacts set state = 'failed'
+   where job_id = p_job and attempt_id = p_attempt and state = 'writing';
+end
+$$;
+
 -- The rate card the hold's current quote names (a top-up moves the quote, never the work).
 create function app_private.hold_rate_card(p_hold public.usage_reservations) returns app_ops.rate_cards
 language plpgsql stable security definer set search_path = '' as $$
@@ -439,6 +464,8 @@ begin
          error_code = case when p_new in ('failed_retryable', 'failed_terminal', 'budget_exceeded') then p_error_code end
    where id = v_job.id;   -- b10_check_job_state refuses ready without a verified film (P0409 artifact_not_verified)
   if p_new in ('ready', 'canceled', 'failed_terminal', 'deleted') then
+    perform app_private.close_attempt_uploads(v_job.id, a.id) from public.render_attempts a
+      where a.job_id = v_job.id and a.state in ('reserved', 'dispatched', 'running');
     update public.render_attempts set state = 'canceled', finished_at = now()
      where job_id = v_job.id and state in ('reserved', 'dispatched', 'running');
     update public.usage_reservations
@@ -680,6 +707,7 @@ declare
   v_rev    int;
   v_vstate text;
   v_hash   bytea;
+  v_same   boolean;
 begin
   -- 1. fencing: only the current lease of this attempt (T-DB-37)
   v_try := app_private.lock_attempt(p_attempt, p_lease_hash);
@@ -740,6 +768,7 @@ begin
     update public.usage_reservations
        set reserved_cost_micro_usd = reserved_cost_micro_usd - v_try.reserved_cost_micro_usd
      where id = v_hold.id;
+    perform app_private.close_attempt_uploads(v_job.id, v_try.id);
     perform app_private.write_audit('orchestrator', null, v_job.project_id, 'attempt.finish', 'render_attempt',
                                     v_try.id, 'allowed', null, p_request_id,
                                     pg_catalog.jsonb_build_object('outcome', 'failed', 'errorCode', p_error_code));
@@ -762,18 +791,31 @@ begin
          consumed_cost_micro_usd = consumed_cost_micro_usd + v_charge
    where id = v_hold.id;
 
-  -- 5. outputs: registered as verifying, never ready, under server-generated keys; their sources are recorded so a
-  -- source-scope deletion finds them (security-model §13.9 (a)); a film's thumbnail, captions and chapters are its
-  -- children (§13.9 (f))
+  -- 5. outputs: each reported output is one this attempt wrote through the lease-fenced upload commands (migration
+  -- 20261008051000), with the bytes and SHA-256 it declared there; it moves from writing to verifying, never to ready,
+  -- under the server-generated key it was written to. Its sources are recorded so a source-scope deletion finds it
+  -- (security-model §13.9 (a)); a film's thumbnail, captions and chapters are its children (§13.9 (f)). Anything the
+  -- attempt began and did not report is failed and its session aborted.
   for v_out in select x from pg_catalog.jsonb_array_elements(p_outputs) x loop
     v_kind := (select e ->> 'kind' from pg_catalog.jsonb_array_elements(v_try.output_plan) e
                 where e ->> 'outputRef' = v_out ->> 'outputRef');
-    v_art := gen_random_uuid();
-    insert into public.artifacts (id, project_id, job_id, attempt_id, kind, bucket_class, r2_key, bytes, sha256, state,
-                                  sample)
-    values (v_art, v_job.project_id, v_job.id, v_try.id, v_kind::public.artifact_kind, app_private.output_bucket(v_kind),
-            app_private.output_r2_key(v_kind, v_job.project_id, v_job.id, v_try.id, v_out ->> 'outputRef', v_art),
-            (v_out ->> 'bytes')::bigint, pg_catalog.decode(v_out ->> 'sha256', 'hex'), 'verifying', v_job.sample);
+    v_art := null;
+    select u.artifact_id, u.expected_bytes = (v_out ->> 'bytes')::bigint
+                          and u.expected_sha256 = pg_catalog.decode(v_out ->> 'sha256', 'hex')
+      into v_art, v_same
+      from app_ops.upload_sessions u
+     where u.attempt_id = v_try.id and u.output_ref = v_out ->> 'outputRef' and u.state = 'completed';
+    if v_art is null then
+      raise exception using errcode = 'P0409', message = 'output_not_written';
+    end if;
+    if not v_same then
+      raise exception using errcode = 'P0409', message = 'output_mismatch';
+    end if;
+    update public.artifacts set state = 'verifying'
+     where id = v_art and job_id = v_job.id and attempt_id = v_try.id and state = 'writing';
+    if not found then
+      raise exception using errcode = 'P0409', message = 'output_not_written';
+    end if;
     insert into public.artifact_sources (artifact_id, project_id, source_id)
     select v_art, v_job.project_id, (e ->> 'id')::uuid
       from pg_catalog.jsonb_array_elements(v_try.input_refs) e
@@ -788,6 +830,7 @@ begin
      where attempt_id = v_try.id and job_id = v_job.id and kind in ('thumbnail', 'captions', 'chapters');
   end if;
   update public.render_attempts set output_refs = v_refs where id = v_try.id;
+  perform app_private.close_attempt_uploads(v_job.id, v_try.id);
 
   -- 6. the plan stage of plan-by-job work moves the job and its hold from (plan, NULL, hash of the unplanned output) to
   -- (plan, V, hash of V) in this same transaction (security-model §13.6, T-DB-68)
@@ -886,6 +929,7 @@ begin
     update public.render_attempts
        set state = 'lease_expired', error_code = 'lease_expired', retryable = true, finished_at = now()
      where id = v_try.id;
+    perform app_private.close_attempt_uploads(v_try.job_id, v_try.id);
     update public.usage_reservations r
        set reserved_cost_micro_usd = r.reserved_cost_micro_usd - v_try.reserved_cost_micro_usd
       from public.render_jobs j
@@ -1117,6 +1161,7 @@ revoke all on function
   app_private.measurements_are_valid(jsonb), app_private.attempt_actual_cost(app_ops.rate_cards, jsonb),
   app_private.planner_call_cost(app_ops.rate_cards), app_private.attempt_outputs_are_valid(jsonb, jsonb),
   app_private.lock_attempt(uuid, bytea), app_private.hold_rate_card(public.usage_reservations),
+  app_private.close_attempt_uploads(uuid, uuid),
   app_gateway.set_job_state(uuid, public.job_state, public.job_state, text, uuid),
   app_gateway.reserve_stage(uuid, public.job_stage, int, uuid),
   app_gateway.claim_attempt(uuid, text, text, uuid),
@@ -1156,6 +1201,7 @@ alter function app_private.planner_call_cost(app_ops.rate_cards) owner to jovra_
 alter function app_private.attempt_outputs_are_valid(jsonb, jsonb) owner to jovra_owner;
 alter function app_private.lock_attempt(uuid, bytea) owner to jovra_owner;
 alter function app_private.hold_rate_card(public.usage_reservations) owner to jovra_owner;
+alter function app_private.close_attempt_uploads(uuid, uuid) owner to jovra_owner;
 alter function app_gateway.set_job_state(uuid, public.job_state, public.job_state, text, uuid) owner to jovra_owner;
 alter function app_gateway.reserve_stage(uuid, public.job_stage, int, uuid) owner to jovra_owner;
 alter function app_gateway.claim_attempt(uuid, text, text, uuid) owner to jovra_owner;

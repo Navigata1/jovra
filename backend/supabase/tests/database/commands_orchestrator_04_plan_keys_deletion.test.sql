@@ -95,6 +95,9 @@ declare
   v_claim   jsonb := pg_temp.orch(format(
                        'select app_gateway.claim_attempt(%L, ''host-1'', ''local-test'', gen_random_uuid())', v_attempt));
 begin
+  -- the edit manifest finish_plan reports, written through the lease-fenced upload commands
+  perform tests.write_attempt_output(v_attempt::uuid, v_claim ->> 'leaseToken', 'edit-manifest', 2048,
+                                     sha256(p_key::bytea));
   return pg_temp.keep(p_key, jsonb_build_object('attemptId', v_attempt, 'leaseToken', v_claim ->> 'leaseToken'));
 end $$;
 create function pg_temp.finish_plan(p_key text, p_version uuid) returns jsonb language sql as $$

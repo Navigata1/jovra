@@ -1,10 +1,11 @@
 -- Orchestrator command catalog (S80 / B-06): the orchestration commands exist, are jovra_orchestrator's alone and
 -- follow the §4.1 template. T-DB-53 (the gateway role is refused every orchestration command), T-DB-57 (no function is
 -- executable by both command roles; the §13.1 lint returns zero rows; every *_for_attempt function is refused to the
--- gateway), T-DB-04 for the new commands, T-DB-55 catalog half (every stage of the rate card has a positive floor and a
--- zero floor cannot be stored) and the new app_ops tables' guards. Rolls back.
+-- gateway, and there are seven of them: the render host's upload and read twins exist), T-DB-04 for the new commands,
+-- T-DB-55 catalog half (every stage of the rate card has a positive floor and a zero floor cannot be stored) and the
+-- new app_ops tables' guards. Rolls back.
 begin;
-select plan(24);
+select plan(25);
 
 create temp table t_orch (sig regprocedure primary key, args text not null);
 insert into t_orch values
@@ -20,9 +21,25 @@ insert into t_orch values
   ('app_gateway.expire_attempt_leases(uuid)', $$gen_random_uuid()$$),
   ('app_gateway.delete_lesson_rows(uuid, uuid)', $$gen_random_uuid(), gen_random_uuid()$$),
   ('app_gateway.audit_denial_for_attempt(uuid, text, text, uuid)',
-   $$gen_random_uuid(), 'attempt.result', 'stale_lease', gen_random_uuid()$$);
+   $$gen_random_uuid(), 'attempt.result', 'stale_lease', gen_random_uuid()$$),
+  ('app_gateway.authorize_output_upload_for_attempt(uuid, bytea, text, bigint, bytea, uuid)',
+   $$gen_random_uuid(), sha256('x'::bytea), 'film', 1000, sha256('f'::bytea), gen_random_uuid()$$),
+  ('app_gateway.attach_upload_id_for_attempt(uuid, bytea, uuid, text, uuid)',
+   $$gen_random_uuid(), sha256('x'::bytea), gen_random_uuid(), 'upload-1', gen_random_uuid()$$),
+  ('app_gateway.record_part_for_attempt(uuid, bytea, uuid, int, int, text, bytea, bytea, uuid)',
+   $$gen_random_uuid(), sha256('x'::bytea), gen_random_uuid(), 1, 1000, 'etag-1', sha256('p'::bytea),
+     sha256('p'::bytea), gen_random_uuid()$$),
+  ('app_gateway.complete_upload_check_for_attempt(uuid, bytea, uuid, jsonb, uuid)',
+   $$gen_random_uuid(), sha256('x'::bytea), gen_random_uuid(), '[]', gen_random_uuid()$$),
+  ('app_gateway.mark_output_written_for_attempt(uuid, bytea, uuid, bigint, uuid)',
+   $$gen_random_uuid(), sha256('x'::bytea), gen_random_uuid(), 1000, gen_random_uuid()$$),
+  ('app_gateway.authorize_attempt_input(uuid, bytea, uuid, uuid)',
+   $$gen_random_uuid(), sha256('x'::bytea), gen_random_uuid(), gen_random_uuid()$$),
+  ('app_gateway.authorize_artifact_read_for_attempt(uuid, bytea, uuid, uuid)',
+   $$gen_random_uuid(), sha256('x'::bytea), gen_random_uuid(), gen_random_uuid()$$);
 
-select is((select count(*)::int from pg_temp.t_orch), 9, 'the S80 orchestration command list has 9 functions');
+select is((select count(*)::int from pg_temp.t_orch), 16,
+  'the S80 orchestration command list has 16 functions (9 stage and lease commands, 7 host reads and writes)');
 
 -- T-DB-04: no client role reaches them ------------------------------------------------------------------------------
 select is_empty($$
@@ -53,7 +70,7 @@ $$, 'T-DB-57: the §13.1 lint query returns zero rows (no function executable by
 select ok((select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
             where n.nspname = 'app_gateway' and has_function_privilege('jovra_gateway', p.oid, 'execute')) >= 27
           and (select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-                where n.nspname = 'app_gateway' and has_function_privilege('jovra_orchestrator', p.oid, 'execute')) >= 9,
+                where n.nspname = 'app_gateway' and has_function_privilege('jovra_orchestrator', p.oid, 'execute')) >= 16,
   'T-DB-57: both roles hold commands, so the zero-row lint above is not vacuous');
 select is_empty($$
   select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
@@ -61,6 +78,13 @@ select is_empty($$
      and (has_function_privilege('jovra_gateway', p.oid, 'execute')
           or not has_function_privilege('jovra_orchestrator', p.oid, 'execute'))
 $$, 'T-DB-57: every *_for_attempt function is executable by jovra_orchestrator and never by jovra_gateway');
+select is((select array_agg(p.proname::text order by p.proname) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+            where n.nspname = 'app_gateway' and p.proname like '%\_for\_attempt'),
+  array['attach_upload_id_for_attempt', 'audit_denial_for_attempt', 'authorize_artifact_read_for_attempt',
+        'authorize_output_upload_for_attempt', 'complete_upload_check_for_attempt', 'mark_output_written_for_attempt',
+        'record_part_for_attempt'],
+  'T-DB-57 is not vacuous: the render-host upload and read twins exist (security-model §4.1), so the check above '
+  'covers all seven *_for_attempt functions');
 select is_empty($$
   select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'app_gateway'
@@ -111,11 +135,16 @@ select is_empty($$
                    'app_private.hold_rate_card(public.usage_reservations)'::regprocedure,
                    'app_private.attempt_actual_cost(app_ops.rate_cards, jsonb)'::regprocedure,
                    'app_private.attempt_outputs_are_valid(jsonb, jsonb)'::regprocedure,
-                   'app_private.stage_output_plan(public.job_stage, int)'::regprocedure)
+                   'app_private.stage_output_plan(public.job_stage, int)'::regprocedure,
+                   'app_private.close_attempt_uploads(uuid, uuid)'::regprocedure,
+                   'app_private.lock_running_attempt(uuid, bytea)'::regprocedure,
+                   'app_private.lock_attempt_session(uuid, uuid)'::regprocedure,
+                   'app_private.check_upload_parts(app_ops.upload_sessions, jsonb)'::regprocedure,
+                   'app_private.output_session_json(app_ops.upload_sessions, text, boolean)'::regprocedure)
      and (has_function_privilege('authenticated', p.oid, 'execute')
           or has_function_privilege('jovra_gateway', p.oid, 'execute')
           or has_function_privilege('jovra_orchestrator', p.oid, 'execute'))
-$$, 'the transition table, lease lock, rate-card and output helpers run only inside definer commands');
+$$, 'the transition table, lease lock, rate-card, output and upload helpers run only inside definer commands');
 
 -- New columns and the one-success index --------------------------------------------------------------------------
 select has_column('public', 'render_jobs', 'resume_state', 'render_jobs.resume_state exists');

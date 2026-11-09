@@ -287,6 +287,24 @@ class Case:
         for state in self.tr.path(self.job_state(job), goal) or []:
             self.set_state(job, state)
 
+    def write_output(self, attempt_id: str, ref: str, size: int, sha_hex: str) -> None:
+        """The host writes one planned output through the lease-fenced upload commands, in one part (the outputs
+        here are a few bytes; parts are 32 MiB)."""
+        assert 0 < size <= 33554432, size
+        lease = f"decode({lit(hashlib.sha256(self.tokens[attempt_id].encode()).hexdigest())}, 'hex')"
+        head = f"{lit(attempt_id)}, {lease}"
+        opened = self.db.call("jovra_orchestrator", f"app_gateway.authorize_output_upload_for_attempt({head}, "
+                              f"{lit(ref)}, {size}, decode({lit(sha_hex)}, 'hex'), gen_random_uuid())")
+        session = lit(opened["sessionId"])
+        part = "sha256('ledger-part'::bytea)"
+        for expr in (f"attach_upload_id_for_attempt({head}, {session}, 'ledger-upload', gen_random_uuid())",
+                     f"record_part_for_attempt({head}, {session}, 1, {size}, 'ledger-etag', {part}, {part}, "
+                     "gen_random_uuid())",
+                     f"complete_upload_check_for_attempt({head}, {session}, "
+                     "'[{\"n\": 1, \"etag\": \"ledger-etag\"}]'::jsonb, gen_random_uuid())",
+                     f"mark_output_written_for_attempt({head}, {session}, {size}, gen_random_uuid())"):
+            self.db.call("jovra_orchestrator", f"app_gateway.{expr}")
+
     def run_stage(self, job: str, stage: str, attempt: int, cost: int, outputs: list | None = None) -> dict:
         """reserve_stage, claim_attempt (when the attempt is new) and finish_attempt('succeeded')."""
         reserved = self.db.call("jovra_orchestrator", f"app_gateway.reserve_stage({lit(job)}, {lit(stage)}, {attempt}, "
@@ -296,6 +314,8 @@ class Case:
             claim = self.db.call("jovra_orchestrator", f"app_gateway.claim_attempt({lit(attempt_id)}, 'ledger-host', "
                                  "'cf-container', gen_random_uuid())")
             self.tokens[attempt_id] = claim["leaseToken"]
+            for output in outputs or []:
+                self.write_output(attempt_id, output["outputRef"], output["bytes"], output["sha256"])
         measurements = {"wallMs": cost, "cpuMs": 0, "bytesIn": 0, "bytesOut": 0}   # 1,000 micro-USD per second
         token_hash = hashlib.sha256(self.tokens.get(attempt_id, "jvl_unknown").encode()).hexdigest()
         finished = self.db.call("jovra_orchestrator", f"app_gateway.finish_attempt({lit(attempt_id)}, "
