@@ -18,4 +18,16 @@ android/gradlew -p android --offline --no-daemon --max-workers=1 --no-parallel \
 
 The SSD workspace used a dedicated 24 GiB APFS sparse bundle and its own Gradle cache, debug Android user directory and temporary paths. The first attempt stopped at the proactive 9 GiB buffer before the compiler ran. After free space recovered, the lowest sampled internal free space was 16.65 GiB and the run finished with 17 GiB free. Build outputs are retained for review. [Receipts](results.txt) summarize the local logs, which are in `/Volumes/JovraA02-F46A6DA7/receipts`.
 
-Physical device, emulator, full accessibility and hosted gates remain open. This slice carries no owner approval or merge.
+## Pixel launch and navigation
+
+The APK with the SHA-256 above was tested on a Pixel 6 Pro running Android API 37. The test operator verified that
+`com.islanddevcrew.jovra` was absent and used an explicit no-replacement install (`-R`) for the selected Android user.
+Android reported `Status: ok` when launching `MainActivity`. Device UI taps opened Home, Sessions, Record, Insights
+and Profile, and the expected placeholder title appeared after each tap.
+
+This verifies install, launch and five-destination navigation on one phone. The 360 and 840 dp bar and rail results
+come from the separate Robolectric tests. Recording, analysis, adaptive hardware, full accessibility, Wear,
+emulator and hosted checks remain open. [A01](https://github.com/Navigata1/jovra/issues/179) and
+[A02](https://github.com/Navigata1/jovra/issues/180) remain open, with owner ADR decisions
+[#375](https://github.com/Navigata1/jovra/issues/375) and [#376](https://github.com/Navigata1/jovra/issues/376)
+still pending.
