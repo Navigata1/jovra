@@ -5,6 +5,10 @@ plugins {
     alias(libs.plugins.jovra.android.compose)
 }
 
+android {
+    sourceSets.named("main") { kotlin.directories.add("theme") }
+}
+
 dependencies {
     api(project(":core"))
     api(libs.androidx.compose.material3)
