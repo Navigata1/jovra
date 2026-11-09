@@ -54,6 +54,10 @@ object CanonicalJson {
         }
     }
 
+    internal fun validateObject(text: String) {
+        require(Parser(text, OutputBudget(Int.MAX_VALUE)).parse() is ObjectValue) { "Expected a JSON object" }
+    }
+
     private fun canonicalize(text: String, maxOutputBytes: Int): ByteArray {
         val budget = OutputBudget(maxOutputBytes)
         val value = Parser(text, budget).parse()

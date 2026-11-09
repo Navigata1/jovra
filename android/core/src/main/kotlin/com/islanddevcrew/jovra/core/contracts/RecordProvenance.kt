@@ -75,19 +75,20 @@ data class RecordProvenance(
     /** Encodes exact confidence text without allocating its expanded decimal beyond the caller limit. */
     fun encodeJson(maxOutputBytes: Int): ByteArray {
         require(maxOutputBytes >= 0) { "Provenance output limit must be non-negative" }
-        val fields = buildJsonObject {
-            put("status", status.wireName)
-            put("source", source)
-            capabilityId?.let { put("capabilityId", it) }
-            capabilityVersion?.let { put("capabilityVersion", it) }
-            confidence?.let { put("confidence", confidenceToken(it, maxOutputBytes)) }
-            calibrationId?.let { put("calibrationId", it.value) }
-            denominator?.let { put("denominator", it) }
-            computedAt?.let { put("computedAt", it) }
-            sample?.let { put("sample", it) }
-        }
-        val input = fields.toString().encodeToByteArray()
+        val input = toJsonObject(maxOutputBytes).toString().encodeToByteArray()
         return CanonicalJson.canonicalize(input, CanonicalJson.Limits(input.size, maxOutputBytes))
+    }
+
+    internal fun toJsonObject(maxOutputBytes: Int): JsonObject = buildJsonObject {
+        put("status", status.wireName)
+        put("source", source)
+        capabilityId?.let { put("capabilityId", it) }
+        capabilityVersion?.let { put("capabilityVersion", it) }
+        confidence?.let { put("confidence", confidenceToken(it, maxOutputBytes)) }
+        calibrationId?.let { put("calibrationId", it.value) }
+        denominator?.let { put("denominator", it) }
+        computedAt?.let { put("computedAt", it) }
+        sample?.let { put("sample", it) }
     }
 
     companion object {
@@ -104,7 +105,10 @@ data class RecordProvenance(
         fun decodeJson(bytes: ByteArray, maxInputBytes: Int): RecordProvenance {
             val input = CanonicalJson.decodeJsonInput(bytes, maxInputBytes)
             CanonicalJson.validateFlatObject(input)
-            val fields = Json.parseToJsonElement(input) as JsonObject
+            return fromJsonObject(Json.parseToJsonElement(input) as JsonObject)
+        }
+
+        internal fun fromJsonObject(fields: JsonObject): RecordProvenance {
             require(fields.keys.all { it in fieldNames }) { "Unknown provenance field" }
             val status = fields.requireString("status")
             return RecordProvenance(

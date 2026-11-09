@@ -63,14 +63,15 @@ data class RateRatio(val n: Long, val d: Long) {
 
     /** Encodes the canonical, locale-independent wire display within the caller's output limit. */
     fun encodeJson(maxOutputBytes: Int): ByteArray {
-        val fields = buildJsonObject {
-            put("n", n)
-            put("d", d)
-            put("pct", pct?.let(::JsonPrimitive) ?: JsonNull)
-            put("display", display)
-        }
-        val input = fields.toString().encodeToByteArray()
+        val input = toJsonObject().toString().encodeToByteArray()
         return CanonicalJson.canonicalize(input, CanonicalJson.Limits(input.size, maxOutputBytes))
+    }
+
+    internal fun toJsonObject(): JsonObject = buildJsonObject {
+        put("n", n)
+        put("d", d)
+        put("pct", pct?.let(::JsonPrimitive) ?: JsonNull)
+        put("display", display)
     }
 
     companion object {
@@ -80,7 +81,10 @@ data class RateRatio(val n: Long, val d: Long) {
         fun decodeJson(bytes: ByteArray, maxInputBytes: Int): RateRatio {
             val input = CanonicalJson.decodeJsonInput(bytes, maxInputBytes)
             CanonicalJson.validateFlatObject(input)
-            val fields = Json.parseToJsonElement(input) as JsonObject
+            return fromJsonObject(Json.parseToJsonElement(input) as JsonObject)
+        }
+
+        internal fun fromJsonObject(fields: JsonObject): RateRatio {
             require(fields.keys == wireFields) { "Expected exactly n, d, pct and display" }
             val ratio = RateRatio(fields["n"].requireStrictLong(), fields["d"].requireStrictLong())
             val percentToken = fields.getValue("pct")
