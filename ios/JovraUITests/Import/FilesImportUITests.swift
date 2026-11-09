@@ -44,20 +44,40 @@ final class FilesImportUITests: XCTestCase {
             let field = app.textFields[id]
             XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(name + "\n")
         }
+        XCTAssertTrue(app.staticTexts["Six-game sets · Seven-point tiebreak at 6–6 · Let serves"].exists)
         for (id, option) in [("import.match.format", "Best of one set"), ("import.match.scoring", "No-ad"),
                              ("import.match.firstServer", "Player B"), ("import.match.nearPlayer", "Player A")] {
             let picker = app.buttons[id]
-            for _ in 0..<4 where !picker.isHittable { app.swipeUp() }
-            XCTAssertTrue(picker.isHittable)
-            picker.tap(); app.buttons[option].tap()
+            revealInImportViewport(picker, in: app)
+            picker.tap()
+            let item = app.buttons[option]
+            XCTAssertTrue(item.waitForExistence(timeout: 5), app.debugDescription)
+            item.tap()
+            XCTAssertTrue(app.buttons["import.back"].exists, "Selecting a match option stays in Import")
         }
         let complete = app.switches["import.match.complete"]
-        for _ in 0..<4 where !complete.isHittable { app.swipeUp() }
-        XCTAssertTrue(complete.isHittable)
+        revealInImportViewport(complete, in: app)
         XCTAssertTrue(complete.label.hasPrefix("The video I choose"))
-        XCTAssertTrue(app.staticTexts["Six-game sets · Seven-point tiebreak at 6–6 · Let serves"].exists)
         XCTAssertFalse(choose.isEnabled, "A scored match requires confirmation of complete footage")
         complete.tap()
         XCTAssertTrue(choose.isEnabled)
+    }
+
+    @MainActor
+    private func revealInImportViewport(_ control: XCUIElement, in app: XCUIApplication) {
+        let scroll = app.scrollViews.firstMatch
+        let tabBar = app.otherElements["tabBar"]
+        for _ in 0..<4 {
+            let frame = control.frame
+            let viewport = scroll.frame
+            let bottom = tabBar.exists ? min(viewport.maxY, tabBar.frame.minY) : viewport.maxY
+            if control.isHittable, !frame.isEmpty, frame.minY >= viewport.minY, frame.maxY <= bottom { return }
+            if !frame.isEmpty, frame.minY < viewport.minY {
+                scroll.swipeDown()
+            } else {
+                scroll.swipeUp()
+            }
+        }
+        XCTFail("Import control is not fully visible above the tab bar: \(control.identifier)")
     }
 }
