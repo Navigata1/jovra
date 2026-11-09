@@ -166,6 +166,34 @@ Services read `@Environment(\.launchConfiguration)`; the fake/live switch is the
 - **Preferences and erasers.** `AppPreferences` declares every v1 preference key; each store registers a `DataEraser`
   in `DataEraserRegistry.shared` when its live instance is created.
 
+## Capture route (T17)
+
+`CaptureScreen` (`ios/Jovra/Features/Capture/`) is the container of the full-screen capture route. It owns the
+`NativeCaptureCoordinator`, derives `CaptureRoutePhase` (`framing`, `recording`, `saved`) from the engine's confirmed
+status and the library's acknowledgment, and shows that phase's view. A capture ticket fills its slot and does not
+edit the container:
+
+| Slot or seam | File | Filled by | Until then |
+|---|---|---|---|
+| Framing guidance | `Framing/CaptureFramingSlot.swift` | T23 | guidance text only: no court overlay and no court check |
+| Score overlay | `Scoring/CaptureScoreOverlaySlot.swift` | T24 | draws nothing (no card, no score) |
+| `MarkPointAction` | `Scoring/CaptureScoreOverlaySlot.swift` | T24 | `EngineMarkPointAction`, the engine's bookmark |
+| Court mode | `CourtMode/CaptureCourtModeSlot.swift` | T25 | covers the preview only when the engine asks for court mode |
+| `CaptureConfig` (`\.captureConfig`) | `CaptureConfig.swift` | T58 | `competitionMode` off, no `onConsentWithdrawn` hook |
+
+- **Recording phase.** `Recording/` holds the S06 layout (`CaptureRecordingPhase`), its controls and pills, the question
+  sheets (`CaptureDecisionSheet`) and every sentence it says (`CaptureRecordingCopy`). `CaptureRecordingState` reads only
+  the engine's confirmed `CaptureStatus`: the REC timer leaves gaps out, "Saved through" and gaps use session time.
+- **The session is created when recording starts**, not while framing, so opening and closing the route leaves nothing
+  in the library. "Delete this recording" stops the engine and removes the session folder through the store's Trash
+  and confirmed purge, then calls `CaptureConfig.onConsentWithdrawn`.
+- **Recovered-recording sheet.** `AppRoot` presents `Relaunch/RecoveredRecordingSheet.swift` from
+  `LocalCaptureLibrary.reconcileAtStartup().reports`, once, at the launch that adopted the recovery. It waits while a
+  full-screen route or another sheet is up, so the two presentations never collide.
+- **Simulator.** The route records through the labelled "Simulator fixture camera". A DEBUG "Simulate interruption"
+  control drives `CaptureEngine.interrupt`, the path a camera interruption takes. `CaptureRecordingUITests` reaches every
+  state with the real engine, including a killed process and a segment replaced by undecodable bytes.
+
 ## Localization
 
 English ships; Spanish is the first translation and ships after native review (story 382).

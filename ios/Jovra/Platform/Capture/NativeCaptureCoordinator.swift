@@ -20,11 +20,16 @@ final class NativeCaptureCoordinator {
     private var engine: CaptureEngine?
     private let subscription = CaptureStatusSubscription()
     private var folder: URL?
+    /// The singles draft the session document is minted from when recording starts, not before, so
+    /// framing and closing without recording leave nothing in the library.
+    private(set) var seed: CaptureSessionSeed?
     private(set) var sessionID: SessionID?
     private(set) var status: CaptureStatus?
     private(set) var preflight: PreflightReport?
     private(set) var savedRecording: SessionRecording?
     private(set) var isWorking = false
+    /// The player confirmed Delete this recording and the session folder is gone.
+    private(set) var isDeleted = false
 
     var isFixture: Bool { source.mode == .simulatorFixture }
     var previewSession: AVCaptureSession? { (source as? CameraSource)?.previewSession }
@@ -40,9 +45,7 @@ final class NativeCaptureCoordinator {
         let candidate = CaptureEngine(source: source, clock: clock, sink: library)
         do {
             let report = try await candidate.prepare(preset, microphone: microphone)
-            let id = try await library.createCapture(seed, mode: source.mode)
-            let location = try await library.recordingFolder(id)
-            sessionID = id; folder = location; engine = candidate; preflight = report
+            self.seed = seed; engine = candidate; preflight = report
             status = candidate.status
             subscription.task = Task { [weak self, candidate] in
                 for await status in candidate.statuses {
@@ -56,21 +59,45 @@ final class NativeCaptureCoordinator {
         }
     }
 
+    /// Match details edited while framing; refused once the session exists.
+    func updateSeed(_ seed: CaptureSessionSeed) throws {
+        guard sessionID == nil, engine != nil else { throw CaptureError.invalidState }
+        self.seed = seed
+    }
+
     func start() async throws {
-        guard let sessionID, let folder else { throw CaptureError.invalidState }
-        try await transition { try await $0.start(sessionID: sessionID.rawValue, folder: folder) }
+        guard let seed, sessionID == nil else { throw CaptureError.invalidState }
+        try await transition { engine in
+            let id = try await self.library.createCapture(seed, mode: self.source.mode)
+            let location = try await self.library.recordingFolder(id)
+            self.sessionID = id; self.folder = location
+            try await engine.start(sessionID: id.rawValue, folder: location)
+        }
     }
 
     func pause() async throws { try await transition { try await $0.pause() } }
+    /// The same path a camera interruption takes (the fixture's debug control and the backgrounded scene).
+    func interrupt(reason: SessionGapReason) async throws { try await transition { try await $0.interrupt(reason: reason) } }
     func resume() async throws { try await transition { try await $0.resume() } }
 
     func stop() async throws {
         try await transition { self.savedRecording = try await $0.stop() }
     }
 
-    func markPoint() throws {
+    @discardableResult func markPoint() throws -> JovraCore.MediaTime {
         guard !isWorking, let engine else { throw CaptureError.invalidState }
-        _ = try engine.markPoint()
+        return try engine.markPoint()
+    }
+
+    /// Ends the recording and removes its session folder, originals included, after the player confirmed.
+    /// A failed final save does not keep the footage: the player asked for it to be gone.
+    func deleteRecording() async throws {
+        guard !isWorking, let engine, let sessionID else { throw CaptureError.invalidState }
+        isWorking = true
+        defer { isWorking = false; status = engine.status }
+        if engine.status.phase == .recording || engine.status.phase == .paused { _ = try? await engine.stop() }
+        try await library.deleteCapture(sessionID)
+        savedRecording = nil; isDeleted = true
     }
 
     /// Leaving framing releases the camera. An interrupted active recording is retained by the
