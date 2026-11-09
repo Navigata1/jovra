@@ -48,6 +48,30 @@ data class RecordProvenance(
         require(computedAt == null || dateTimePattern.matches(computedAt)) { "Invalid provenance timestamp spelling" }
     }
 
+    // BigDecimal equality includes scale, while provenance confidence has numeric value semantics.
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        return other is RecordProvenance &&
+            status == other.status && source == other.source && capabilityId == other.capabilityId &&
+            capabilityVersion == other.capabilityVersion &&
+            confidence?.stripTrailingZeros() == other.confidence?.stripTrailingZeros() &&
+            calibrationId == other.calibrationId && denominator == other.denominator &&
+            computedAt == other.computedAt && sample == other.sample
+    }
+
+    override fun hashCode(): Int {
+        var result = status.hashCode()
+        result = 31 * result + source.hashCode()
+        result = 31 * result + capabilityId.hashCode()
+        result = 31 * result + capabilityVersion.hashCode()
+        result = 31 * result + confidence?.stripTrailingZeros().hashCode()
+        result = 31 * result + calibrationId.hashCode()
+        result = 31 * result + denominator.hashCode()
+        result = 31 * result + computedAt.hashCode()
+        result = 31 * result + sample.hashCode()
+        return result
+    }
+
     /** Encodes exact confidence text without allocating its expanded decimal beyond the caller limit. */
     fun encodeJson(maxOutputBytes: Int): ByteArray {
         require(maxOutputBytes >= 0) { "Provenance output limit must be non-negative" }
