@@ -17,17 +17,26 @@ struct PlaybackCloseTests {
 
     @Test
     func closedTransportCannotRestartOrChangePosition() async throws {
-        let controller = try await PlaybackController.open(url: fixtureURL())
+        let truth = try catalog.truth(id: "frameCounter/fc-060")
+        let controller = try await PlaybackController.open(url: catalog.mediaURL(for: truth))
         defer { controller.close() }
+        let displayed = DisplayedFrame(controller, truth: truth)
         await controller.seek(toFrame: 20)
+        try #require(controller.setRate(.quarter))
+        let timebase = try #require(controller.player.currentItem?.timebase)
         controller.play()
-        try #require(await waitUntil { controller.player.rate > 0 }, "The real player started")
+        try #require(await waitUntil {
+            controller.player.rate > 0 && CMTimebaseGetRate(timebase) > 0
+        }, "The real player and its clock started")
         controller.close()
+        try #require(await waitUntil {
+            controller.player.rate == 0 && CMTimebaseGetRate(timebase) == 0
+        }, "The active clock stopped before sampling the exact paused timestamp")
         let frame = controller.readout.frame
         let issued = controller.seeksIssued
         let rate = controller.rate
-        let itemTime = controller.player.currentTime()
-        #expect(controller.player.rate == 0)
+        let itemTime = CMTimebaseGetTime(timebase)
+        let decodedFrame = itemTime.frameIndex(at: .fps60)
 
         controller.play()
         #expect(!controller.isPlaying)
@@ -48,7 +57,9 @@ struct PlaybackCloseTests {
         #expect(controller.rate == rate)
         #expect(controller.loop == nil)
         #expect(controller.readout.frame == frame)
-        #expect(controller.player.currentTime() == itemTime)
+        #expect(CMTimebaseGetRate(timebase) == 0)
+        #expect(CMTimebaseGetTime(timebase) == itemTime)
+        #expect(try await displayed.code(controller) == decodedFrame)
         #expect(controller.seeksIssued == issued)
     }
 
