@@ -10,7 +10,7 @@
     "northStar": "Complete a trustworthy native iOS tennis product; preserve the local core while advancing the recorded Studio and native-platform roadmap through explicit evidence gates.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-11-09T09:16:44Z",
+    "updated": "2026-11-09T09:18:19Z",
     "sessionCount": 3,
     "assessmentReport": "docs/reports/2026-11-02/JOVRA-State-of-the-Union-v1-2026-11-02.html",
     "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md"
@@ -182,7 +182,7 @@
           "status": "passed",
           "evidence": "/Volumes/JovraA02-F46A6DA7/JOVRA-Core-97319ca-hahwlrk7/run-status.json",
           "lastRun": "2026-11-09T08:55:22Z",
-          "notes": "On main 97319ca: 12 XCTest and 122 Swift Testing passed, plus 209 spec documents, 82 native conformance outputs, two native exports and two bundles. Runtime evidence is local to the mounted SSD."
+          "notes": "On main 97319ca: 12 XCTest and 122 Swift Testing passed, plus 209 spec documents, 82 native conformance outputs, two native exports and two bundles. Runtime evidence is local to the mounted SSD. Main 2bc30a6 added only the independently reviewed synthetic host helper; iOS and spec trees remain identical."
         },
         {
           "id": "P4-G2",
@@ -191,16 +191,16 @@
           "status": "passed",
           "evidence": "/Volumes/JovraA02-F46A6DA7/JOVRA-Review-97319ca.PxV5Ep/CoreFlow.xcresult",
           "lastRun": "2026-11-09T09:00:58Z",
-          "notes": "Main 97319ca full CoreFlow 1/1 passed on iPhone simulator, including Replay and Export audits and relaunch. Actual synthetic schema, references, canonical JSON, corrected points and stats CSV passed; pre/post original hash matched and original/export decoded through end, including 30 ordered export frames."
+          "notes": "Main 97319ca full CoreFlow 1/1 passed on iPhone simulator, including Replay and Export audits and relaunch. Actual synthetic schema, references, canonical JSON, corrected points and stats CSV passed; pre/post original hash matched and original/export decoded through end, including 30 ordered export frames. Main 2bc30a6 added only the separate host test helper; tested iOS/spec and CoreFlow script remain unchanged."
         },
         {
           "id": "P4-G3",
           "title": "Latest recorded required hosted checks and core dependency merges",
-          "command": "gh pr checks 463 --repo Navigata1/jovra",
+          "command": "gh pr checks 468 --repo Navigata1/jovra",
           "status": "passed",
           "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
-          "lastRun": "2026-11-09T08:51:02Z",
-          "notes": "PR #463 exact bc12c57 passed all triggered hosted checks before merge as 97319ca. Manual iOS was skipped; simulator and physical evidence are recorded separately."
+          "lastRun": "2026-11-09T09:17:55Z",
+          "notes": "PR #468 exact 6f72f99 passed all triggered hosted checks and merged as 2bc30a6. Manual iOS was skipped; simulator and physical evidence remain separate."
         },
         {
           "id": "P4-G4",
@@ -793,6 +793,13 @@
       "url": "https://github.com/Navigata1/jovra/pull/463",
       "phase": "P4",
       "mergedAt": "2026-11-09T08:51:02Z"
+    },
+    {
+      "number": 468,
+      "title": "Add guarded synthetic partial-recovery fixture helper",
+      "url": "https://github.com/Navigata1/jovra/pull/468",
+      "phase": "P4",
+      "mergedAt": "2026-11-09T09:17:55Z"
     }
   ],
   "resume": {
