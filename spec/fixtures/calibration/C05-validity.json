@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.calibration",
+  "id": "C05-validity",
+  "title": "Validity is bound to lens, format, zoom and the stale-from time",
+  "cases": [
+    {
+      "op": "validity",
+      "name": "same camera, good fit, no camera move: valid",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": {"verdict": "good"},
+      "expected": {"status": "valid"}
+    },
+    {
+      "op": "validity",
+      "name": "not measured is still usable (the check reports it)",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": {"verdict": "notMeasurable"},
+      "expected": {"status": "valid"}
+    },
+    {
+      "op": "validity",
+      "name": "before the camera moved: valid",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": 120000,
+      "atMs": 119999,
+      "check": null,
+      "expected": {"status": "valid"}
+    },
+    {
+      "op": "validity",
+      "name": "from the moment the camera moved: stale",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": 120000,
+      "atMs": 120000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "stale", "staleFromMs": 120000}
+    },
+    {
+      "op": "validity",
+      "name": "a poor fit is invalid",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": {"verdict": "poor"},
+      "expected": {"status": "invalid", "reason": "poorFit"}
+    },
+    {
+      "op": "validity",
+      "name": "another lens",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "ultraWide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "lensChanged"}
+    },
+    {
+      "op": "validity",
+      "name": "another format",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 3840, "height": 2160, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "formatChanged"}
+    },
+    {
+      "op": "validity",
+      "name": "another zoom",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "2.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "zoomChanged"}
+    },
+    {
+      "op": "validity",
+      "name": "the same zoom written differently",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.00"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": null,
+      "expected": {"status": "valid"}
+    },
+    {
+      "op": "validity",
+      "name": "lens is reported before a stale time",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "telephoto", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": 0,
+      "atMs": 60000,
+      "check": {"verdict": "poor"},
+      "expected": {"status": "invalid", "reason": "lensChanged"}
+    }
+  ]
+}

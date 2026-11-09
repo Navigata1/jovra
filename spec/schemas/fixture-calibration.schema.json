@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA court geometry and calibration conformance vectors",
+  "description": "T13 (ios-v1-spec CourtCalibration, screens.md S05/S11/S12, technical-feasibility §8). fit: four or more video-pixel taps and their court points to the homography court metres -> video pixels (normalized DLT; exact through four points, least squares through more), checked by projecting every line intersection and unprojecting the untapped ones; a record case fits a session calibration record (normalized image points times its camera format). check: the reprojection RMSE of untapped court points against where they are seen, poor above 3 px at 1080p scaled by frame height, notMeasurable with no observations. validity: lens, format, zoom, poor fit and stale-from, first failing reason wins. viewToVideo / videoToView: taps in view points to video pixels under aspect fit or fill. geometry, classify, describe: the ITF court model, depth bins, service zones and the placement words VoiceOver reads. Court points are metres with the origin at the net centre (common point2); pixels have a top-left origin. Floats carry the tolerance a platform compares with. Reference: spec/reference/jovra_ref/court.py.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "title", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.fixture.calibration"},
+    "id": {"type": "string", "pattern": "^C[0-9]{2}-[a-z0-9-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"oneOf": [
+        {"$ref": "#/$defs/fitCase"}, {"$ref": "#/$defs/checkCase"}, {"$ref": "#/$defs/validityCase"},
+        {"$ref": "#/$defs/mapCase"}, {"$ref": "#/$defs/geometryCase"}, {"$ref": "#/$defs/classifyCase"},
+        {"$ref": "#/$defs/describeCase"}
+      ]}
+    }
+  },
+  "$defs": {
+    "xy": {
+      "type": "object",
+      "required": ["x", "y"],
+      "additionalProperties": false,
+      "properties": {"x": {"type": "number"}, "y": {"type": "number"}}
+    },
+    "xyOrNull": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/xy"}]},
+    "points": {"type": "array", "items": {"$ref": "#/$defs/xy"}},
+    "size": {
+      "type": "object",
+      "required": ["width", "height"],
+      "additionalProperties": false,
+      "properties": {"width": {"type": "number", "exclusiveMinimum": 0}, "height": {"type": "number", "exclusiveMinimum": 0}}
+    },
+    "tolerance": {
+      "type": "object",
+      "required": ["px"],
+      "additionalProperties": false,
+      "properties": {
+        "px": {"type": "number", "exclusiveMinimum": 0},
+        "m": {"type": "number", "exclusiveMinimum": 0},
+        "homographyRelative": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "errorCode": {
+      "description": "Why a fit is refused, the same code on both platforms: fewer than four pairs, unequal lists, or points that do not fix a homography (collinear or repeated taps).",
+      "enum": ["tooFewPoints", "countMismatch", "degenerate"]
+    },
+    "fitCase": {
+      "type": "object",
+      "required": ["op", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"const": "fit"},
+        "name": {"type": "string", "minLength": 1},
+        "record": {"$ref": "session.schema.json#/$defs/calibration"},
+        "imagePoints": {"$ref": "#/$defs/points"},
+        "courtPoints": {"$ref": "#/$defs/points"},
+        "expectedError": {"$ref": "#/$defs/errorCode"},
+        "expected": {
+          "type": "object",
+          "required": ["homography", "project", "unproject"],
+          "additionalProperties": false,
+          "properties": {
+            "homography": {"type": "array", "minItems": 9, "maxItems": 9, "items": {"type": "number"}, "description": "Row major, H[2][2] = 1, court metres -> video pixels."},
+            "project": {"type": "array", "items": {
+              "type": "object", "required": ["id", "court", "pixel"], "additionalProperties": false,
+              "properties": {"id": {"type": "string"}, "court": {"$ref": "#/$defs/xy"}, "pixel": {"$ref": "#/$defs/xyOrNull"}}
+            }},
+            "unproject": {"type": "array", "items": {
+              "type": "object", "required": ["id", "pixel", "court", "truth", "errorM", "withinTenCm"], "additionalProperties": false,
+              "description": "An untapped intersection seen at its true pixel (the synthetic camera), unprojected through the fit; errorM is its distance from the truth on court.",
+              "properties": {
+                "id": {"type": "string"}, "pixel": {"$ref": "#/$defs/xy"}, "court": {"$ref": "#/$defs/xyOrNull"},
+                "truth": {"$ref": "#/$defs/xy"}, "errorM": {"type": "number", "minimum": 0}, "withinTenCm": {"type": "boolean"}
+              }
+            }}
+          }
+        },
+        "tolerance": {"$ref": "#/$defs/tolerance"}
+      },
+      "oneOf": [
+        {"required": ["record", "expected", "tolerance"]},
+        {"required": ["imagePoints", "courtPoints", "expected", "tolerance"]},
+        {"required": ["imagePoints", "courtPoints", "expectedError"]}
+      ]
+    },
+    "checkCase": {
+      "type": "object",
+      "required": ["op", "name", "imagePoints", "courtPoints", "frameHeight", "observations", "expected", "tolerance"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"const": "check"},
+        "name": {"type": "string", "minLength": 1},
+        "imagePoints": {"$ref": "#/$defs/points"},
+        "courtPoints": {"$ref": "#/$defs/points"},
+        "frameHeight": {"type": "integer", "minimum": 1},
+        "observations": {"type": "array", "items": {
+          "type": "object", "required": ["court", "pixel"], "additionalProperties": false,
+          "properties": {"court": {"$ref": "#/$defs/xy"}, "pixel": {"$ref": "#/$defs/xy"}}
+        }},
+        "expected": {
+          "type": "object",
+          "required": ["verdict", "rmsePx", "thresholdPx"],
+          "additionalProperties": false,
+          "properties": {
+            "verdict": {"enum": ["good", "poor", "notMeasurable"]},
+            "rmsePx": {"oneOf": [{"type": "null"}, {"type": "number", "minimum": 0}]},
+            "thresholdPx": {"type": "number", "exclusiveMinimum": 0}
+          }
+        },
+        "tolerance": {"$ref": "#/$defs/tolerance"}
+      }
+    },
+    "binding": {
+      "type": "object",
+      "required": ["lens", "width", "height", "zoomFactor"],
+      "additionalProperties": false,
+      "properties": {
+        "lens": {"enum": ["ultraWide", "wide", "telephoto", "front", "external", "unknown"]},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "zoomFactor": {"$ref": "common.schema.json#/$defs/decimalString"}
+      }
+    },
+    "validityCase": {
+      "type": "object",
+      "required": ["op", "name", "binding", "current", "staleFromMs", "atMs", "check", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"const": "validity"},
+        "name": {"type": "string", "minLength": 1},
+        "binding": {"$ref": "#/$defs/binding"},
+        "current": {"$ref": "#/$defs/binding"},
+        "staleFromMs": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]},
+        "atMs": {"type": "integer", "minimum": 0},
+        "check": {"oneOf": [{"type": "null"}, {
+          "type": "object", "required": ["verdict"], "additionalProperties": false,
+          "properties": {"verdict": {"enum": ["good", "poor", "notMeasurable"]}}
+        }]},
+        "expected": {
+          "type": "object",
+          "required": ["status"],
+          "additionalProperties": false,
+          "properties": {
+            "status": {"enum": ["valid", "invalid"]},
+            "reason": {"enum": ["lensChanged", "formatChanged", "zoomChanged", "poorFit", "stale"]},
+            "staleFromMs": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "mapCase": {
+      "type": "object",
+      "required": ["op", "name", "gravity", "view", "video", "point", "expected", "tolerance"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"enum": ["viewToVideo", "videoToView"]},
+        "name": {"type": "string", "minLength": 1},
+        "gravity": {"enum": ["resizeAspect", "resizeAspectFill"]},
+        "view": {"$ref": "#/$defs/size"},
+        "video": {"$ref": "#/$defs/size"},
+        "point": {"$ref": "#/$defs/xy"},
+        "expected": {"$ref": "#/$defs/xyOrNull"},
+        "tolerance": {"$ref": "#/$defs/tolerance"}
+      }
+    },
+    "geometryCase": {
+      "type": "object",
+      "required": ["op", "name", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"const": "geometry"},
+        "name": {"type": "string", "minLength": 1},
+        "expected": {
+          "type": "object",
+          "required": ["lines", "intersections", "tappedCorners", "depthBins"],
+          "additionalProperties": false,
+          "properties": {
+            "lines": {"type": "array", "items": {
+              "type": "object", "required": ["id", "kind", "from", "to"], "additionalProperties": false,
+              "properties": {
+                "id": {"type": "string"},
+                "kind": {"enum": ["baseline", "doublesSideline", "singlesSideline", "serviceLine", "centreServiceLine", "centreMark", "net"]},
+                "from": {"$ref": "#/$defs/xy"}, "to": {"$ref": "#/$defs/xy"}
+              }
+            }},
+            "intersections": {"type": "array", "items": {
+              "type": "object", "required": ["id", "point"], "additionalProperties": false,
+              "properties": {"id": {"type": "string"}, "point": {"$ref": "#/$defs/xy"}}
+            }},
+            "tappedCorners": {
+              "type": "object", "required": ["doubles", "singles"], "additionalProperties": false,
+              "properties": {
+                "doubles": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "string"}},
+                "singles": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "string"}}
+              }
+            },
+            "depthBins": {"type": "array", "items": {
+              "type": "object", "required": ["id", "fromM", "toM"], "additionalProperties": false,
+              "properties": {"id": {"enum": ["short", "deep"]}, "fromM": {"type": "number"}, "toM": {"type": "number"}}
+            }}
+          }
+        }
+      }
+    },
+    "classifyCase": {
+      "type": "object",
+      "required": ["op", "name", "point", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"const": "classify"},
+        "name": {"type": "string", "minLength": 1},
+        "point": {"$ref": "#/$defs/xy"},
+        "expected": {
+          "type": "object",
+          "required": ["depth", "serviceZone", "serviceBox", "inSingles", "inDoubles"],
+          "additionalProperties": false,
+          "properties": {
+            "depth": {"enum": ["short", "deep", "long"]},
+            "serviceZone": {"enum": ["t", "body", "wide"]},
+            "serviceBox": {"enum": ["deuce", "ad"]},
+            "inSingles": {"type": "boolean"},
+            "inDoubles": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "describeCase": {
+      "type": "object",
+      "required": ["op", "name", "landing", "hitterX", "result", "doubles", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "op": {"const": "describe"},
+        "name": {"type": "string", "minLength": 1},
+        "landing": {"$ref": "#/$defs/xy"},
+        "hitterX": {"oneOf": [{"type": "null"}, {"type": "number"}]},
+        "result": {"enum": ["in", "out", "needsReview"]},
+        "doubles": {"type": "boolean"},
+        "expected": {
+          "type": "object",
+          "required": ["depth", "direction", "wide", "result", "english"],
+          "additionalProperties": false,
+          "properties": {
+            "depth": {"enum": ["short", "deep", "long"]},
+            "direction": {"enum": ["crossCourt", "downTheLine", "middle", "left", "right"]},
+            "wide": {"type": "boolean"},
+            "result": {"enum": ["in", "out", "needsReview"]},
+            "english": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  }
+}

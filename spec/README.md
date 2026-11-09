@@ -11,7 +11,9 @@ spec/
   contracts/    shipped data both apps read: capability-registry.v1.json, csv/points.v1.json, csv/stats.v1.json
   reference/    Python 3 standard-library reference engine + fixture generator (cases/ = one module per source)
   fixtures/     golden cases: scoring/ (S01-S64, E01-E10), stats/ (T01-T04), units/ (U01), sample/, records/,
-                rally/ (R01-R05 segmentation and rally-only plan vectors, session.rolls.json; T32)
+                rally/ (R01-R05 segmentation and rally-only plan vectors, session.rolls.json; T32),
+                calibration/ (C01-C09 court geometry, homography fits, the reprojection check, validity, tap
+                mapping and placement words; T13)
 scripts/spec/validate.py          validates everything and re-runs the engine; non-zero exit on any mismatch
 scripts/spec/test_contracts.py    tests of the contract tooling itself (plumbing by convention, closed objects, T02)
 ```
@@ -95,6 +97,7 @@ The capability registry contract is at `registryVersion` 2: `lineSnap` (gated) a
 | `engine-output.schema.json` | fold and stats outputs | the exact shape both platforms must produce |
 | `fixture-*.schema.json` | the fixtures themselves | |
 | `fixture-rally.schema.json` | `fixtures/rally/R*.json` (T32) | RallySegmenter `segment` and `RallyOnlyPlan.build` vectors with shared error codes; reference `jovra_ref/rally.py`, re-run by the `CHECKS` in `cases/rally_cases.py`. Gaps keep their duration and their GapChip label (`+0:42`, whole seconds truncated) |
+| `fixture-calibration.schema.json` | `fixtures/calibration/C*.json` (T13) | CourtGeometry and CourtCalibration vectors: `fit` (normalized DLT, exact through four taps, least squares through more; every intersection projected, untapped ones unprojected with their on-court error against the synthetic behind-baseline camera), `check` (reprojection RMSE, poor above 3 px at 1080p scaled by height, `notMeasurable` with nothing measured), `validity` (lens, format, zoom, poor fit, stale-from), `viewToVideo`/`videoToView` (taps to video pixels), `geometry`, `classify` (depth bins, service zones and boxes) and `describe` (the placement words VoiceOver reads). Floats carry their tolerance; reference `jovra_ref/court.py`, re-run by the `CHECKS` in `cases/calibration_cases.py` |
 
 No schema has an `$id`: references are relative file references (`common.schema.json#/$defs/id`), so any 2020-12
 validator resolves them when loading from disk, and no URL appears before it resolves (IDC domain rule 1).
