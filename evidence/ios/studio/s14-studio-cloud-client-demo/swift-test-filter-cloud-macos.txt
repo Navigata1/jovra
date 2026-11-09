@@ -1,0 +1,195 @@
+$ swift test --filter Cloud   # 2026-11-09T02:26:33Z, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1), macOS 27.2, commit base f398b12
+◇ Test run started.
+◇ Suite "Cloud: embedded Sample records" started.
+◇ Suite "Cloud: demo jobs replay through RenderJobMachine" started.
+◇ Test "each embedded record equals its file in spec/studio/fixtures/records" started.
+◇ Suite "Cloud: mode from configuration" started.
+◇ Suite "Cloud: the demo has no network" started.
+◇ Test "pause, resume and cancel on the demo job go through the machine and stay replayable" started.
+◇ Test "the delivered scenarios show the committed render-job.ready.json" started.
+◇ Suite "Cloud: demo quotes are Sample and never reserve" started.
+◇ Test "a JobSnapshot has no whole-job percentage to show" started.
+◇ Suite "Ledger: RenderJobMachine for local and cloud jobs" started.
+◇ Test "the queue sample ends exactly at the committed render-job.queue-sample.json" started.
+◇ Test "Live is unavailable in every configuration of this ticket, even with the activation flag and settings" started.
+◇ Test "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Suite "Cloud: demo transcripts by launch argument" started.
+◇ Test "ST38: Upload complete (3 sources), Align angles complete and reviewed, Build film 42% of its stage, Verify export queued" started.
+◇ Test "an unknown environment name is unavailable, never silently the demo or Live" started.
+◇ Test "a Test configuration never reaches a demo or test client when STUDIO_ENVIRONMENT is demo or live" started.
+◇ Test "an unavailable client refuses every cloud action with its reason and keeps no job" started.
+◇ Test "STUDIO_ENVIRONMENT=test with no URL is unavailable: Test backend not configured" started.
+◇ Test "an unexpanded build setting or a URL with no host is not a configuration" started.
+◇ Test "no STUDIO_ENVIRONMENT at all is the demo (the committed default)" started.
+◇ Test "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test "no file of the demo client names a networking type, a request header or a token" started.
+◇ Test "STUDIO_ENVIRONMENT=demo gives the demo mode, labelled Local demo" started.
+◇ Test "each missing or unusable Test setting alone keeps Test unavailable" started.
+◇ Test "the Studio Info.plist key is the one Studio.xcconfig feeds" started.
+◇ Test "a complete Test configuration still has no HTTP client in this build (S97), so it says so" started.
+◇ Test "the demo quote is the illustrative Sample quote: Sample quote $4 – $8, spending limit $12, charging off" started.
+◇ Test "the demo identity is the demo profile: no account reference and no credential" started.
+◇ Test "the quote state machine that accept() runs keeps a demo quote in demoDisabled and refuses consent" started.
+◇ Test "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .canceled to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test case passing 1 argument scenario → .terminal to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test case passing 1 argument scenario → .retryable to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test case passing 1 argument scenario → .queue to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "upload, share and account actions are refused in demo with the demo message" started.
+◇ Test case passing 1 argument scenario → .paused to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test case passing 1 argument scenario → .budgetExhausted to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .quoteExpired to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument scenario → .notSignedIn to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" started.
+◇ Test case passing 1 argument scenario → .aboveCap to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "terminal: the job cannot be resumed, paused or retried; nothing was charged beyond the Sample reservation" started.
+◇ Test case passing 1 argument scenario → .partialUpload to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test case passing 1 argument scenario → .expiredLink to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "an unknown scenario name or a missing value is refused; no argument is the queue" started.
+◇ Test case passing 1 argument scenario → .revokedAccess to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "paused: the upload stage is paused at 2.1 of 10.8 GB, and Resume upload returns it to In progress" started.
+◇ Test case passing 1 argument scenario → .deletionRunning to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "canceled: Film canceled, then Removing temporary copies, then Temporary copies removed" started.
+◇ Test case passing 1 argument scenario → .deletionFailed to "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" started.
+◇ Test "budget exhausted: stopped at the Sample reservation's 4-credit cap; it resumes only through a new quote" started.
+◇ Test "every committed transcript names a scenario, and every scenario has one" started.
+◇ Test "quote expired, not signed in and above cap are quote states; local options never depend on them" started.
+◇ Test "partial upload: two of three sources confirmed; camera 3 resumes after part 40 and never re-sends one" started.
+◇ Test "expired link and revoked access are states of the delivered film's link; revoked access refuses the download" started.
+◇ Test "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test "deletion running and failed report progress over the four cloud copies; the demo otherwise has none" started.
+◇ Test "retryable: Trying again, then the retry runs as attempt 2 of 3" started.
+◇ Test case passing 1 argument scenario → .queue to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument scenario → .paused to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .retryable to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument key → "JovraStudioTestGatewayURL" to "each missing or unusable Test setting alone keeps Test unavailable" started.
+◇ Test case passing 1 argument scenario → .terminal to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument key → "JovraStudioTestIssuer" to "each missing or unusable Test setting alone keeps Test unavailable" started.
+◇ Test case passing 1 argument scenario → .canceled to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .budgetExhausted to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .quoteExpired to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .notSignedIn to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .aboveCap to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .partialUpload to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .expiredLink to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument key → "JovraStudioTestPublishableKey" to "each missing or unusable Test setting alone keeps Test unavailable" started.
+◇ Test case passing 1 argument scenario → .revokedAccess to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .deletionRunning to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .deletionFailed to "every snapshot of every scenario is a record the job machine replays to its stored state" started.
+◇ Test case passing 1 argument scenario → .queue to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .paused to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .retryable to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .terminal to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .canceled to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .budgetExhausted to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .quoteExpired to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .notSignedIn to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .aboveCap to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .partialUpload to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .expiredLink to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .revokedAccess to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .deletionRunning to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+◇ Test case passing 1 argument scenario → .deletionFailed to "in every scenario a quote, when there is one, is Sample with charging disabled" started.
+✔ Test "an unknown environment name is unavailable, never silently the demo or Live" passed after 0.286 seconds.
+◇ Test case passing 1 argument scenario → .queue to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .paused to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .retryable to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .terminal to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .canceled to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+✔ Test "an unexpanded build setting or a URL with no host is not a configuration" passed after 0.307 seconds.
+◇ Test case passing 1 argument scenario → .budgetExhausted to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .quoteExpired to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .notSignedIn to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .aboveCap to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .partialUpload to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .expiredLink to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .revokedAccess to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .deletionRunning to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument scenario → .deletionFailed to "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" started.
+◇ Test case passing 1 argument state → .budgetExceeded to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .consented to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .queued to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .quoteExpired to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .quoted to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .uploadPending to "a local job never enters a cloud-only state" started.
+◇ Test case passing 1 argument state → .uploading to "a local job never enters a cloud-only state" started.
+✔ Test "STUDIO_ENVIRONMENT=test with no URL is unavailable: Test backend not configured" passed after 0.349 seconds.
+✔ Test "Live is unavailable in every configuration of this ticket, even with the activation flag and settings" passed after 0.349 seconds.
+✔ Test "each embedded record equals its file in spec/studio/fixtures/records" passed after 0.350 seconds.
+✔ Test "an unavailable client refuses every cloud action with its reason and keeps no job" passed after 0.349 seconds.
+✔ Test "a JobSnapshot has no whole-job percentage to show" passed after 0.350 seconds.
+✔ Test "a percentage only ever sits on the one stage in progress, in every snapshot of every scenario" with 14 test cases passed after 0.350 seconds.
+✔ Test "ST38: Upload complete (3 sources), Align angles complete and reviewed, Build film 42% of its stage, Verify export queued" passed after 0.351 seconds.
+◇ Test case passing 1 argument scenario → .queue to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .paused to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .retryable to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .terminal to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .canceled to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .budgetExhausted to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .quoteExpired to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .notSignedIn to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .aboveCap to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .partialUpload to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .expiredLink to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .revokedAccess to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .deletionRunning to "the scenario's snapshots and call results equal its committed transcript" started.
+◇ Test case passing 1 argument scenario → .deletionFailed to "the scenario's snapshots and call results equal its committed transcript" started.
+✔ Test "a Test configuration never reaches a demo or test client when STUDIO_ENVIRONMENT is demo or live" passed after 0.426 seconds.
+◇ Test case passing 1 argument expected → queue to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → paused to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → retryable to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → terminal to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → canceled to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → budgetExhausted to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → quoteExpired to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → notSignedIn to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → aboveCap to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → partialUpload to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → expiredLink to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → revokedAccess to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → deletionRunning to "each launch argument lands on the state its screen describes" started.
+◇ Test case passing 1 argument expected → deletionFailed to "each launch argument lands on the state its screen describes" started.
+✔ Test "the queue sample ends exactly at the committed render-job.queue-sample.json" passed after 0.474 seconds.
+✔ Test "each missing or unusable Test setting alone keeps Test unavailable" with 3 test cases passed after 0.474 seconds.
+✔ Test "pause, resume and cancel on the demo job go through the machine and stay replayable" passed after 0.474 seconds.
+✔ Test "no file of the demo client names a networking type, a request header or a token" passed after 0.474 seconds.
+✔ Test "no STUDIO_ENVIRONMENT at all is the demo (the committed default)" passed after 0.474 seconds.
+✔ Test "the Studio Info.plist key is the one Studio.xcconfig feeds" passed after 0.474 seconds.
+✔ Test "a complete Test configuration still has no HTTP client in this build (S97), so it says so" passed after 0.474 seconds.
+✔ Test "every snapshot of every scenario is a record the job machine replays to its stored state" with 14 test cases passed after 0.474 seconds.
+✔ Test "the quote state machine that accept() runs keeps a demo quote in demoDisabled and refuses consent" passed after 0.474 seconds.
+✔ Test "STUDIO_ENVIRONMENT=demo gives the demo mode, labelled Local demo" passed after 0.474 seconds.
+✔ Test "in every scenario a quote, when there is one, is Sample with charging disabled" with 14 test cases passed after 0.474 seconds.
+✔ Test "the demo quote is the illustrative Sample quote: Sample quote $4 – $8, spending limit $12, charging off" passed after 0.474 seconds.
+✔ Test "the demo identity is the demo profile: no account reference and no credential" passed after 0.474 seconds.
+✔ Test "upload, share and account actions are refused in demo with the demo message" passed after 0.474 seconds.
+✔ Test "a local job never enters a cloud-only state" with 7 test cases passed after 0.474 seconds.
+✔ Test "a local job runs draft -> normalizing -> ... -> ready with no quote, upload or reservation" passed after 0.474 seconds.
+✔ Test "an unknown scenario name or a missing value is refused; no argument is the queue" passed after 0.399 seconds.
+✔ Test "accept() in demo returns demoDisabled with no reservation, whatever the scenario, key or cap" with 14 test cases passed after 0.474 seconds.
+✔ Test "every committed transcript names a scenario, and every scenario has one" passed after 0.350 seconds.
+✔ Test "the delivered scenarios show the committed render-job.ready.json" passed after 0.475 seconds.
+✔ Test "paused: the upload stage is paused at 2.1 of 10.8 GB, and Resume upload returns it to In progress" passed after 0.355 seconds.
+✔ Test "canceled: Film canceled, then Removing temporary copies, then Temporary copies removed" passed after 0.351 seconds.
+✔ Test "terminal: the job cannot be resumed, paused or retried; nothing was charged beyond the Sample reservation" passed after 0.474 seconds.
+✔ Test "partial upload: two of three sources confirmed; camera 3 resumes after part 40 and never re-sends one" passed after 0.350 seconds.
+✔ Test "budget exhausted: stopped at the Sample reservation's 4-credit cap; it resumes only through a new quote" passed after 0.350 seconds.
+✔ Test "retryable: Trying again, then the retry runs as attempt 2 of 3" passed after 0.349 seconds.
+✔ Test "the scenario's snapshots and call results equal its committed transcript" with 14 test cases passed after 0.349 seconds.
+✔ Test "expired link and revoked access are states of the delivered film's link; revoked access refuses the download" passed after 0.350 seconds.
+✔ Suite "Cloud: mode from configuration" passed after 0.475 seconds.
+✔ Suite "Cloud: embedded Sample records" passed after 0.475 seconds.
+✔ Suite "Ledger: RenderJobMachine for local and cloud jobs" passed after 0.475 seconds.
+✔ Suite "Cloud: demo quotes are Sample and never reserve" passed after 0.475 seconds.
+✔ Suite "Cloud: demo jobs replay through RenderJobMachine" passed after 0.475 seconds.
+◇ Test "the trap catches a real request, then sees none while every demo scenario runs every call" started.
+✔ Test "quote expired, not signed in and above cap are quote states; local options never depend on them" passed after 0.381 seconds.
+✔ Test "each launch argument lands on the state its screen describes" with 14 test cases passed after 0.380 seconds.
+✔ Test "deletion running and failed report progress over the four cloud copies; the demo otherwise has none" passed after 0.402 seconds.
+✔ Suite "Cloud: demo transcripts by launch argument" passed after 0.527 seconds.
+✔ Test "the trap catches a real request, then sees none while every demo scenario runs every call" passed after 0.329 seconds.
+✔ Suite "Cloud: the demo has no network" passed after 0.804 seconds.
+✔ Test run with 42 tests in 7 suites passed after 0.804 seconds.

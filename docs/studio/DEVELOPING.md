@@ -82,6 +82,24 @@ a secret (CLAUDE.md rule 5, user story 245). Check with
 `grep -nEi "https?://|key *=" ios/Config/Studio.xcconfig` (no output). Test and Live configuration, when they arrive,
 come from configuration outside source control.
 
+### Cloud mode (S14)
+
+`CloudClients.make(configuration: .main, launchArguments:)` (`JovraStudioCore/Cloud`) is the one place a cloud client is
+chosen, from the Info.plist keys:
+
+| Key | Meaning |
+|---|---|
+| `JovraStudioEnvironment` | `$(STUDIO_ENVIRONMENT)`: `demo` (also when empty), `test` or `live`; anything else is unavailable |
+| `JovraStudioTestGatewayURL`, `JovraStudioTestIssuer`, `JovraStudioTestPublishableKey` | Test only, from configuration outside source control (S97); any one missing, blank or an unexpanded `$(...)` gives "Test backend not configured" |
+| `JovraStudioLiveActivated` | Live's activation flag; Live stays unavailable while `LiveCloudClient.recordedGates` is empty |
+
+The demo is `DemoCloudClient`: deterministic Sample transcripts with no network, account or charge. A failure state is
+injected with `-studioCloudScenario <name>` (`DemoCloudScenario`: `paused`, `retryable`, `terminal`, `canceled`,
+`budgetExhausted`, `quoteExpired`, `notSignedIn`, `aboveCap`, `partialUpload`, `expiredLink`, `revokedAccess`,
+`deletionRunning`, `deletionFailed`; no argument is the normal `queue`). The committed transcripts are
+`Tests/JovraStudioCoreTests/Cloud/Transcripts/<scenario>.json`; after an intended change rewrite them with
+`JOVRA_RECORD_CLOUD_TRANSCRIPTS=1 swift test --filter Cloud` and review the diff.
+
 ## Commands
 
 | Command | What it does |
@@ -116,8 +134,8 @@ ios/JovraUITests/Studio/           Studio UI tests (see its README)
 can be made a required check:
 
 - `studio-contracts` (Ubuntu): `python3 scripts/spec/validate_studio.py`.
-- `jovra-studio-core` (Ubuntu, `swift:6.1` container): the Apple-only import grep, then `swift test` for
-  JovraStudioCore.
+- `jovra-studio-core` (Ubuntu, `swift:6.1` container): the Apple-only import grep, the no-networking grep over
+  `Cloud/Demo` (S14), `swift test --filter Cloud`, then `swift test` for JovraStudioCore.
 
 JovraStudioMedia and the app are tested on the build Mac; attach that evidence to the pull request. The core
 `ci.yml` is never edited by a Studio ticket.

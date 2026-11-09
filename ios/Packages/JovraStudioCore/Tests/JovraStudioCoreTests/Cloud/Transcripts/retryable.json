@@ -1,0 +1,505 @@
+{
+  "accept" : {
+    "ok" : {
+      "_0" : {
+        "demoDisabled" : {
+          "sampleJob" : "job-queue-38"
+        }
+      }
+    }
+  },
+  "artifacts" : {
+    "ok" : {
+      "_0" : [
+
+      ]
+    }
+  },
+  "deleteAccount" : {
+    "error" : {
+      "_0" : {
+        "demoDisabled" : {
+
+        }
+      }
+    }
+  },
+  "deleteCloudCopies" : {
+    "ok" : {
+      "_0" : {
+        "requestId" : "deletion-sample-01",
+        "sample" : true,
+        "scope" : "project:sample-court-day",
+        "status" : {
+          "nothingToDelete" : {
+
+          }
+        }
+      }
+    }
+  },
+  "exportMyData" : {
+    "ok" : {
+      "_0" : {
+        "requestId" : "export-sample-01",
+        "sample" : true,
+        "status" : {
+          "nothingInCloud" : {
+
+          }
+        }
+      }
+    }
+  },
+  "history" : [
+    {
+      "at" : "2026-10-07T22:44:00Z",
+      "reason" : "created",
+      "seq" : 0,
+      "to" : "draft"
+    },
+    {
+      "at" : "2026-10-07T22:45:00Z",
+      "from" : "draft",
+      "reason" : "preflight",
+      "seq" : 1,
+      "to" : "quoted"
+    },
+    {
+      "at" : "2026-10-07T22:50:00Z",
+      "from" : "quoted",
+      "reason" : "owner-accepted",
+      "seq" : 2,
+      "to" : "consented"
+    },
+    {
+      "at" : "2026-10-07T22:50:05Z",
+      "from" : "consented",
+      "reason" : "reserved",
+      "seq" : 3,
+      "to" : "upload_pending"
+    },
+    {
+      "at" : "2026-10-07T22:51:00Z",
+      "from" : "upload_pending",
+      "reason" : "upload-started",
+      "seq" : 4,
+      "to" : "uploading"
+    },
+    {
+      "at" : "2026-10-07T23:03:00Z",
+      "from" : "uploading",
+      "reason" : "sources-verified",
+      "seq" : 5,
+      "to" : "queued"
+    },
+    {
+      "at" : "2026-10-07T23:04:00Z",
+      "from" : "queued",
+      "reason" : "stage-start",
+      "seq" : 6,
+      "to" : "normalizing"
+    },
+    {
+      "at" : "2026-10-07T23:08:00Z",
+      "from" : "normalizing",
+      "reason" : "stage-start",
+      "seq" : 7,
+      "to" : "syncing"
+    },
+    {
+      "at" : "2026-10-07T23:12:00Z",
+      "from" : "syncing",
+      "reason" : "analysis-unavailable-manual-fallback",
+      "seq" : 8,
+      "to" : "planning"
+    },
+    {
+      "at" : "2026-10-07T23:13:00Z",
+      "from" : "planning",
+      "reason" : "plan-valid",
+      "seq" : 9,
+      "to" : "preview_rendering"
+    },
+    {
+      "at" : "2026-10-07T23:16:00Z",
+      "from" : "preview_rendering",
+      "reason" : "lease-lost",
+      "seq" : 10,
+      "to" : "failed_retryable"
+    },
+    {
+      "at" : "2026-10-07T23:17:00Z",
+      "from" : "failed_retryable",
+      "reason" : "retry",
+      "seq" : 11,
+      "to" : "preview_rendering"
+    }
+  ],
+  "identity" : {
+    "ok" : {
+      "_0" : {
+        "demoProfile" : {
+
+        }
+      }
+    }
+  },
+  "jobId" : "job-queue-38",
+  "launchArguments" : [
+    "-studioCloudScenario",
+    "retryable"
+  ],
+  "mode" : {
+    "demo" : {
+
+    }
+  },
+  "quote" : {
+    "ok" : {
+      "_0" : {
+        "chargingEnabled" : false,
+        "condition" : {
+          "open" : {
+
+          }
+        },
+        "environment" : "demo",
+        "illustrative" : true,
+        "limit" : "$12",
+        "quoteId" : "quote-sample-37",
+        "range" : "$4 – $8",
+        "sample" : true,
+        "title" : "Sample quote"
+      }
+    }
+  },
+  "scenario" : "retryable",
+  "snapshots" : [
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "seq" : 3,
+      "stages" : [
+        {
+          "bytesDone" : 0,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 0,
+          "stage" : "upload",
+          "status" : "inProgress"
+        },
+        {
+          "stage" : "alignAngles",
+          "status" : "queued"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "queued"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "upload_pending"
+    },
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "seq" : 4,
+      "stages" : [
+        {
+          "bytesDone" : 0,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 0,
+          "stage" : "upload",
+          "status" : "inProgress"
+        },
+        {
+          "stage" : "alignAngles",
+          "status" : "queued"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "queued"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "uploading"
+    },
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "seq" : 5,
+      "stages" : [
+        {
+          "bytesDone" : 10800000000,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 3,
+          "stage" : "upload",
+          "status" : "complete"
+        },
+        {
+          "stage" : "alignAngles",
+          "status" : "inProgress"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "queued"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "queued"
+    },
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "seq" : 6,
+      "stages" : [
+        {
+          "bytesDone" : 10800000000,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 3,
+          "stage" : "upload",
+          "status" : "complete"
+        },
+        {
+          "stage" : "alignAngles",
+          "status" : "inProgress"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "queued"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "normalizing"
+    },
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "seq" : 7,
+      "stages" : [
+        {
+          "bytesDone" : 10800000000,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 3,
+          "stage" : "upload",
+          "status" : "complete"
+        },
+        {
+          "stage" : "alignAngles",
+          "status" : "inProgress"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "queued"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "syncing"
+    },
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "seq" : 8,
+      "stages" : [
+        {
+          "bytesDone" : 10800000000,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 3,
+          "stage" : "upload",
+          "status" : "complete"
+        },
+        {
+          "reviewed" : true,
+          "stage" : "alignAngles",
+          "status" : "complete"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "inProgress"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "planning"
+    },
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "seq" : 9,
+      "stageProgress" : "preview_rendering 42% Sample",
+      "stages" : [
+        {
+          "bytesDone" : 10800000000,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 3,
+          "stage" : "upload",
+          "status" : "complete"
+        },
+        {
+          "reviewed" : true,
+          "stage" : "alignAngles",
+          "status" : "complete"
+        },
+        {
+          "percent" : 42,
+          "stage" : "buildFilm",
+          "status" : "inProgress"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "preview_rendering"
+    },
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "resumeStage" : "preview_rendering",
+      "seq" : 10,
+      "stages" : [
+        {
+          "bytesDone" : 10800000000,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 3,
+          "stage" : "upload",
+          "status" : "complete"
+        },
+        {
+          "reviewed" : true,
+          "stage" : "alignAngles",
+          "status" : "complete"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "retrying"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "failed_retryable"
+    },
+    {
+      "attempt" : 2,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0001",
+      "seq" : 11,
+      "stages" : [
+        {
+          "bytesDone" : 10800000000,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 3,
+          "stage" : "upload",
+          "status" : "complete"
+        },
+        {
+          "reviewed" : true,
+          "stage" : "alignAngles",
+          "status" : "complete"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "inProgress"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "preview_rendering"
+    }
+  ],
+  "transcript" : "jovra.demo-cloud-transcript/1 (test golden file, not a shared contract)",
+  "uploads" : [
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    },
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    },
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    }
+  ]
+}
