@@ -90,6 +90,28 @@ struct VideoLabPlaybackTests {
     }
 
     @Test(arguments: [false, true])
+    func cancellationDoesNotSurfaceFailureFromTheCurrentRequest(generic: Bool) async throws {
+        let fixture = try Sources()
+        defer { fixture.remove() }
+        let gate = LoadGate()
+        let playback = VideoLabPlayback { _, _ in
+            await gate.hold()
+            if generic { throw DecoderFailure.refused }
+            throw PlaybackOpenError.missingFile
+        }
+        defer { playback.close() }
+        let pending = Task { await playback.load(fixture.latest) }
+        defer { pending.cancel(); gate.release() }
+        try await gate.requireHeld()
+        pending.cancel()
+        gate.release()
+        await pending.value
+
+        #expect(playback.controller == nil)
+        #expect(playback.error == nil)
+    }
+
+    @Test(arguments: [false, true])
     func aCurrentFailureRemainsVisible(generic: Bool) async throws {
         let fixture = try Sources()
         defer { fixture.remove() }
