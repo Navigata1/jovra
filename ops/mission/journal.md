@@ -114,3 +114,17 @@ Steps1–3 complete; step4 remains in progress. T03/330, order amendment332, loc
 - Handoff #496 merged as bb16f07. Strict iPad geometry probe f949f55 failed before its first station: an in-bounds 17-point drag preceded a 127-point view shift, cause unproven. No audit/comparison ran; owned simulator removed. Original full iPad audit remains failed/open.
 - Handoff #497 merged as f729e9c. Alternate iPad geometry XCTest passed 1/1 but supervisor failed installed-bundle fingerprint postflight; cause and custody unproven, original audit open. Manual hosted iOS run 42657948112 failed compiling JovraMedia; reviewed compatibility draft #498 passed 11 local focused tests and exact hosted run 42662558038 is pending. Keep playback adoption held.
 - Handoff #499 merged as 63fd69b. A distinct alternate iPad Xcode run passed strict geometry and separately verified captured bundle custody; earlier fingerprint failure remains unresolved, and original gesture/full audit and cause remain open. No real footage was used.
+
+## 2026-11-09T23:20:00+00:00 — reassessment, direction change and Phase 0
+
+- Founder asked for the whole project to be reconsidered. Findings are in `docs/reports/2026-11-09/REASSESSMENT.md`: the v1 spec excluded automatic analysis (D10), 14 of 23 feature folders were placeholders, 54 of 63 open pull requests were drafts, and automatic CI never built the app.
+- Founder decided: automatic analysis is in v1 and iPhone ships first. Recorded as ADR-0031. V track tickets V00–V08 are issues #526–#534 under #525.
+- Analysis spike 1 (local, one recording, no labels): built-in pose holds the near player in 88.7% of frames; no built-in model finds the far player; built-in trajectory detection is noise on match footage. Details in `docs/research/vision-spike-2026-11-09.md`.
+- Merged: #519 compiler fix (88a579c), #524 automatic `ios-app` workflow (9cdbf59), #512 playback foundation (bc2229e), #538 playback timeline (f33f58b).
+- #512 on head 8001099: two playback UI tests failed on a simulator whose audio service had died after about 38 hours booted; after a reboot, with no code change, playback passed 9/9. CoreFlow failed once with audit timeout −56 under load and passed on rerun. Product gap filed as #536.
+- #538 on head 0352d75: hosted `ios-app` green; simulator CoreFlow 1/1 and playback 11/11 on the first run.
+- #517 Files duplicates: hosted app test `testExplicitMatchImportReopensAndFoldsReviewedCorrections` fails because `importMatch` cannot carry a duplicate decision. Left open; T26 returns to the pipeline.
+- Closed as superseded, branches kept: #493, #494, #495, #498, #501, #514, #537.
+- Pipeline v5 started on core T and V tickets only, three lanes.
+- Not run today: any physical iPhone test on current main.
+- Process change: evidence now goes in the pull request that changes the code. This is the last standalone journal-only entry of its kind; later entries ride with product pull requests.
