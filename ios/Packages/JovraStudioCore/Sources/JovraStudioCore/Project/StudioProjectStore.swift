@@ -32,6 +32,11 @@ public enum StudioProjectStoreError: Error, Equatable, Sendable {
     case filmExists(String)
     /// A record is not a Studio record for this project, or breaks its contract.
     case invalidRecord(String)
+    /// The project's plans and films cannot be judged for staleness (a plan bound ahead of the project, a revision
+    /// that does not increase); nothing was written. The code is StudioStaleness's.
+    case stalenessRefused(String)
+    /// A plan made before a correction is never rendered as current (story 233); rebuild it first.
+    case planStale(String)
     /// A real project already uses this id.
     case idInUse(String)
 }
@@ -81,7 +86,7 @@ public actor StudioProjectStore {
     private let sessions: SessionStore?
     private let environment: StudioEnvironment
     private let now: @Sendable () -> Date
-    private let atomic: StudioAtomicFile
+    let atomic: StudioAtomicFile
 
     /// - Parameters:
     ///   - sessions: the core session store; when given, every source's session must exist there.
@@ -220,20 +225,25 @@ public actor StudioProjectStore {
         try project(projectId).revisions
     }
 
-    /// Records a newer sync map revision; an older one is refused, the same one is a no-op.
+    /// Records a newer sync map revision; an older one is refused, the same one is a no-op. Without the changed
+    /// sources every plan that cuts or plays any source is stale (SD20; `recordSyncRevision(_:changedSources:for:)`).
     @discardableResult
     public func recordSyncRevision(_ revision: Int, for projectId: String) throws -> StudioProjectRevisions {
-        try advance(projectId) { $0.syncRevision = try Self.monotonic($0.syncRevision, revision) }
+        try advance(projectId, .sync, to: revision, named: nil)
     }
 
+    /// Records a newer keeper-catalog revision. Without the changed keepers every plan that uses a keeper is stale
+    /// (SD20; `recordKeeperRevision(_:changedKeepers:for:)`).
     @discardableResult
     public func recordKeeperRevision(_ revision: Int, for projectId: String) throws -> StudioProjectRevisions {
-        try advance(projectId) { $0.keeperRevision = try Self.monotonic($0.keeperRevision, revision) }
+        try advance(projectId, .keepers, to: revision, named: nil)
     }
 
+    /// Records a newer event-log version: every plan of the project is stale and its films "Made before a correction"
+    /// (SD20), in the same transaction.
     @discardableResult
     public func recordEventLogVersion(_ version: Int, for projectId: String) throws -> StudioProjectRevisions {
-        try advance(projectId) { $0.eventLogVersion = try Self.monotonic($0.eventLogVersion, version) }
+        try advance(projectId, .event, to: version, named: [])
     }
 
     /// Reads the primary session's event-log version (its highest event `seq`) from the core session store. Without
@@ -241,7 +251,8 @@ public actor StudioProjectStore {
     @discardableResult
     public func refreshEventLogVersion(for projectId: String) async throws -> StudioProjectRevisions {
         guard let live = try await liveEventLogVersion(of: project(projectId)) else { return try revisions(projectId) }
-        return try recordEventLogVersion(live.version, for: projectId)
+        let changed = try await recalculatedPointIds(sessionId: live.sessionId, since: revisions(projectId).eventLogVersion)
+        return try advance(projectId, .event, to: live.version, named: changed)
     }
 
     // MARK: Records
@@ -321,8 +332,13 @@ public actor StudioProjectStore {
         try requireLocalStudio()
         let (read, live) = try await projectWithLiveEventLog(projectId)
         var project = read
+        var correction: StudioStalenessUpdate?
         if let live {
             project.revisions.eventLogVersion = try Self.monotonic(project.revisions.eventLogVersion, live.version)
+            if project.revisions.eventLogVersion > read.revisions.eventLogVersion {
+                // a correction found at lock time stales what was built before it, in this transaction (SD20)
+                correction = try stalenessUpdate(for: read, .event, to: live.version, named: [])
+            }
         }
         guard let manifestBytes = try record(named: "source-manifest.json", in: .manifests, of: projectId) else {
             throw StudioProjectStoreError.manifestMissing
@@ -356,6 +372,7 @@ public actor StudioProjectStore {
             privacy: project.privacy, quoteAuthorization: .null, brand: ProjectLockBrand())
         let bytes: Data
         do { bytes = try StudioContractCodec.encode(lock) } catch { throw StudioProjectStoreError.invalidRecord("project-lock: \(error)") }
+        if let correction { try commit(correction) }
         try atomic.write(bytes, named: "project-lock.r\(lock.revision).json", in: subfolder(.locks, of: projectId))
         project.lockRevision = lock.revision
         try save(project)
@@ -429,7 +446,7 @@ public actor StudioProjectStore {
     }
 
     /// The core session `id`, or `nil` when no session store is attached; a missing session is `sessionNotFound`.
-    private func loadSession(_ id: String) async throws -> SessionDocument? {
+    func loadSession(_ id: String) async throws -> SessionDocument? {
         guard StudioPath.isValidID(id) else { throw StudioProjectStoreError.invalidID }
         guard let sessions else { return nil }
         do { return try await sessions.load(id) }
@@ -483,19 +500,9 @@ public actor StudioProjectStore {
         }
     }
 
-    private static func monotonic(_ current: Int, _ offered: Int) throws -> Int {
+    static func monotonic(_ current: Int, _ offered: Int) throws -> Int {
         guard offered >= current else { throw StudioProjectStoreError.revisionRegressed(current: current, offered: offered) }
         return offered
-    }
-
-    private func advance(_ projectId: String, _ change: (inout StudioProjectRevisions) throws -> Void) throws -> StudioProjectRevisions {
-        var project = try project(projectId)
-        var revisions = project.revisions
-        try change(&revisions)
-        guard revisions != project.revisions else { return revisions }
-        project.revisions = revisions
-        try save(project)
-        return revisions
     }
 
     private func insert(_ project: StudioProject) throws {
@@ -514,7 +521,7 @@ public actor StudioProjectStore {
         writeIndex()
     }
 
-    private func save(_ project: StudioProject) throws {
+    func save(_ project: StudioProject) throws {
         try atomic.write(CanonicalJSON.encode(project), named: "studio.json", in: projectFolder(project.projectId))
     }
 
@@ -525,13 +532,13 @@ public actor StudioProjectStore {
         return url
     }
 
-    private func projectFolder(_ id: String) throws -> URL {
+    func projectFolder(_ id: String) throws -> URL {
         let url = try folder(id)
         guard FileManager.default.fileExists(atPath: url.path) else { throw StudioProjectStoreError.notFound }
         return url
     }
 
-    private func subfolder(_ folder: StudioProjectFolder, of projectId: String) throws -> URL {
+    func subfolder(_ folder: StudioProjectFolder, of projectId: String) throws -> URL {
         let url = try projectFolder(projectId).appendingPathComponent(folder.rawValue, isDirectory: true)
         try StudioPath.refuseSymbolicLink(url)
         if !FileManager.default.fileExists(atPath: url.path) { try DurableDirectory.create(at: url) }
