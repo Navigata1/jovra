@@ -1,4 +1,6 @@
+@preconcurrency import AVFoundation
 import CoreGraphics
+import CoreVideo
 import Darwin
 import Foundation
 import JovraCore
@@ -110,6 +112,19 @@ struct JogStripAccessibilityTests {
         }
     }
 
+    private struct TimelineHarness: View {
+        let controller: PlaybackController
+
+        var body: some View {
+            PlaybackTimeline(frame: controller.currentFrame, frameCount: controller.frameCount,
+                             currentTimeText: ReadoutFormat.time(seconds: controller.readout.seconds),
+                             durationText: ReadoutFormat.time(seconds: 2),
+                             onScrub: { controller.scrub(toFrame: $0) },
+                             onScrubEnded: controller.finishScrub(atFrame:))
+                .padding()
+        }
+    }
+
     /// SwiftUI builds its accessibility tree only when an assistive technology asks for it. As the
     /// AccessibilitySnapshot project does for its SwiftUI snapshots, turn application accessibility on for this
     /// test process (test-only; the app never does this).
@@ -121,16 +136,41 @@ struct JogStripAccessibilityTests {
         return true
     }()
 
-    nonisolated private static func frameCounter60(filePath: String = #filePath) -> URL? {
+    private struct CounterFixture {
+        let url: URL
+        let frameCount: Int
+    }
+
+    nonisolated private static func frameCounter(_ id: String, filePath: String = #filePath) -> CounterFixture? {
         var root = URL(fileURLWithPath: filePath).deletingLastPathComponent()
         while root.path != "/" && !FileManager.default.fileExists(atPath: root.appendingPathComponent("spec/fixtures/media").path) {
             root.deleteLastPathComponent()
         }
-        guard let data = try? Data(contentsOf: root.appendingPathComponent("spec/fixtures/media/frameCounter/fc-060.truth.json")),
+        guard let data = try? Data(contentsOf: root.appendingPathComponent("spec/fixtures/media/frameCounter/\(id).truth.json")),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let media = json["media"] as? [String: Any], let path = media["path"] as? String else { return nil }
+              let media = json["media"] as? [String: Any], let path = media["path"] as? String,
+              let video = json["video"] as? [String: Any], let frameCount = video["frameCount"] as? Int else { return nil }
         let url = root.appendingPathComponent(path)
-        return FileManager.default.fileExists(atPath: url.path) ? url : nil
+        return FileManager.default.fileExists(atPath: url.path) ? CounterFixture(url: url, frameCount: frameCount) : nil
+    }
+
+    /// Independent of the player readout and production decoder: read the centers of the 16 top-row
+    /// cells in the committed 640×360 frame-counter fixture. The cells are 40×40, high bit first.
+    private func burnedFrameCode(_ pixel: CVPixelBuffer) throws -> Int {
+        try #require(CVPixelBufferGetPixelFormatType(pixel) == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+        try #require(CVPixelBufferLockBaseAddress(pixel, .readOnly) == kCVReturnSuccess)
+        defer { CVPixelBufferUnlockBaseAddress(pixel, .readOnly) }
+        try #require(CVPixelBufferGetWidthOfPlane(pixel, 0) == 640 && CVPixelBufferGetHeightOfPlane(pixel, 0) == 360)
+        let stride = CVPixelBufferGetBytesPerRowOfPlane(pixel, 0)
+        try #require(stride >= 640)
+        let base = try #require(CVPixelBufferGetBaseAddressOfPlane(pixel, 0))
+        var code = 0
+        for column in 0..<16 {
+            let luma = base.load(fromByteOffset: 20 * stride + column * 40 + 20, as: UInt8.self)
+            try #require(luma <= 112 || luma >= 144, "a frame-code cell cannot be ambiguous")
+            code = (code << 1) | (luma >= 144 ? 1 : 0)
+        }
+        return code
     }
 
     private static func identifier(of element: NSObject) -> String? {
@@ -158,12 +198,12 @@ struct JogStripAccessibilityTests {
         for _ in 0..<200 where !condition() { try? await Task.sleep(for: .milliseconds(10)) }
     }
 
-    @Test(.enabled(if: frameCounter60() != nil, "Frame-counter fixtures are not rendered"))
+    @Test(.enabled(if: frameCounter("fc-060") != nil, "Frame-counter fixtures are not rendered"))
     func anIncrementMovesExactlyOneFrameAndTheReadoutSaysSo() async throws {
         // T10's rendered fixture, read from the host's git-ignored cache (media is never committed or bundled).
-        let url = try #require(Self.frameCounter60(), "render it: python3 scripts/media/render.py --set frameCounter")
+        let fixture = try #require(Self.frameCounter("fc-060"), "render it: python3 scripts/media/render.py --set frameCounter")
         #expect(Self.accessibilityEnabled)
-        let controller = try await PlaybackController.open(url: url)
+        let controller = try await PlaybackController.open(url: fixture.url)
         defer { controller.close() }
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 300))
         window.rootViewController = UIHostingController(rootView: Harness(controller: controller))
@@ -195,4 +235,99 @@ struct JogStripAccessibilityTests {
         await waitFor { find("playback.jog", in: root)?.accessibilityValue?.hasPrefix("Frame 2,") == true }
         #expect(find("playback.jog", in: root)?.accessibilityValue?.hasPrefix("Frame 2,") == true)
     }
+
+    @Test
+    func interruptedPanResolvesExactlyOnceAndCannotConsumeTheNextDrag() {
+        #expect(!TimelineScrubInteraction.hasHorizontalIntent(.zero))
+        #expect(!TimelineScrubInteraction.hasHorizontalIntent(CGPoint(x: 5, y: 22)))
+        #expect(!TimelineScrubInteraction.hasHorizontalIntent(CGPoint(x: 15, y: 15)))
+        #expect(TimelineScrubInteraction.hasHorizontalIntent(CGPoint(x: -22, y: 5)))
+        var pan = TimelineScrubInteraction()
+        #expect(pan.change(x: 70, width: 100, frameCount: 101) == 70)
+        #expect(pan.cancel() == 70)
+        #expect(pan.end(x: 20, width: 100, frameCount: 101) == nil)
+        #expect(pan.change(x: 10, width: 100, frameCount: 101) == 10)
+        #expect(pan.end(x: 25, width: 100, frameCount: 101) == 25)
+        #expect(pan.cancel() == nil)
+    }
+
+    @Test(arguments: ["fc-060", "fc-240"])
+    func timelineAdjustmentMovesTheDecodedPictureOneFrameAndClampsAtEachEnd(id: String) async throws {
+        let fixture = try #require(Self.frameCounter(id), "render it: python3 scripts/media/render.py --set frameCounter")
+        let controller = try await PlaybackController.open(url: fixture.url)
+        defer { controller.close() }
+        #expect(Self.accessibilityEnabled)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 300))
+        window.rootViewController = UIHostingController(rootView: TimelineHarness(controller: controller))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let root = try #require(window.rootViewController?.view)
+        await waitFor { find("playback.timeline", in: root) != nil }
+        let output = AVPlayerItemVideoOutput(pixelBufferAttributes: [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange,
+        ])
+        controller.player.currentItem?.add(output)
+
+        func verify(_ expected: Int, shouldPause: Bool = false, adjust: (NSObject) -> Void) async throws {
+            let element = try #require(find("playback.timeline", in: root))
+            #expect(element.accessibilityTraits.contains(.adjustable))
+            adjust(element)
+            if shouldPause {
+                await waitFor { !controller.isPlaying }
+                try #require(!controller.isPlaying, "an active accessibility seek must pause and hold its exact target")
+            }
+            await waitFor { controller.currentFrame == expected }
+            await controller.settle()
+            #expect(controller.currentFrame == expected)
+            let time = controller.player.currentTime()
+            var pixel: CVPixelBuffer?
+            await waitFor {
+                pixel = output.copyPixelBuffer(forItemTime: time, itemTimeForDisplay: nil)
+                return pixel != nil
+            }
+            let buffer = try #require(pixel)
+            #expect(try burnedFrameCode(buffer) == expected)
+            let spokenFrame = "Frame \(JovraFormat.count(expected)),"
+            await waitFor { find("playback.timeline", in: root)?.accessibilityValue?.hasPrefix(spokenFrame) == true }
+            #expect(find("playback.timeline", in: root)?.accessibilityValue?.hasPrefix(spokenFrame) == true)
+        }
+
+        try await verify(0) { $0.accessibilityDecrement() }
+        try await verify(1) { $0.accessibilityIncrement() }
+        try await verify(2) { $0.accessibilityIncrement() }
+        try await verify(1) { $0.accessibilityDecrement() }
+        let last = fixture.frameCount - 1
+        await controller.seek(toFrame: last)
+        await waitFor {
+            find("playback.timeline", in: root)?.accessibilityValue?.hasPrefix("Frame \(JovraFormat.count(last)),") == true
+        }
+        try await verify(last) { $0.accessibilityIncrement() }
+        try await verify(last - 1) { $0.accessibilityDecrement() }
+
+        // Start from the beginning so an unpaused control can't pass by naturally reaching the end.
+        await controller.seek(toFrame: 0)
+        try #require(controller.setRate(.quarter))
+        controller.play()
+        await waitFor { controller.player.rate > 0 }
+        try #require(controller.isPlaying && controller.player.rate > 0)
+        var announcedFrame: Int?
+        await waitFor {
+            let frame = controller.currentFrame
+            let prefix = "Frame \(JovraFormat.count(frame)),"
+            guard find("playback.timeline", in: root)?.accessibilityValue?.hasPrefix(prefix) == true else { return false }
+            announcedFrame = frame
+            return true
+        }
+        let from = try #require(announcedFrame)
+        try await verify(from + 1, shouldPause: true) { $0.accessibilityIncrement() }
+        #expect(controller.player.rate == 0)
+
+        // An interrupted drag's exact target arrives before the next drag in the same event turn.
+        try await verify(12) { _ in
+            controller.finishScrub(atFrame: 70)
+            controller.scrub(toFrame: 10)
+            controller.finishScrub(atFrame: 12)
+        }
+    }
+
 }
