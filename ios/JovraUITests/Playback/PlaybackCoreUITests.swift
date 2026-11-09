@@ -3,9 +3,11 @@ import XCTest
 /// T14: the shared player, video surface, jog strip and transport, driven through the DEBUG video lab on the
 /// bundled frame-counter fixtures and the synthetic sample match.
 final class PlaybackCoreUITests: XCTestCase {
-    override func setUp() {
+    override func setUpWithError() throws {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .portrait
+        try XCTSkipIf(FrameCounterFixtures.directory() == nil,
+                      "Frame-counter fixtures are not rendered: python3 scripts/media/render.py --set frameCounter")
     }
 
     override func tearDown() {
@@ -17,6 +19,7 @@ final class PlaybackCoreUITests: XCTestCase {
                            appearance: LaunchConfiguration.Appearance = .light) -> XCUIApplication {
         let app = XCUIApplication.jovra(contentSize: contentSize) { $0.appearance = appearance }
         app.launchEnvironment["JOVRA_VIDEO_LAB"] = source
+        if let counters = FrameCounterFixtures.directory() { app.launchEnvironment["JOVRA_FRAME_COUNTER_DIR"] = counters.path }
         app.launch()
         XCTAssertTrue(app.staticTexts["screen.title"].waitForExistence(timeout: 10))
         return app

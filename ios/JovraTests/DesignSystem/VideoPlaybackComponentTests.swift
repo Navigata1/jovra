@@ -121,6 +121,18 @@ struct JogStripAccessibilityTests {
         return true
     }()
 
+    nonisolated private static func frameCounter60(filePath: String = #filePath) -> URL? {
+        var root = URL(fileURLWithPath: filePath).deletingLastPathComponent()
+        while root.path != "/" && !FileManager.default.fileExists(atPath: root.appendingPathComponent("spec/fixtures/media").path) {
+            root.deleteLastPathComponent()
+        }
+        guard let data = try? Data(contentsOf: root.appendingPathComponent("spec/fixtures/media/frameCounter/fc-060.truth.json")),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let media = json["media"] as? [String: Any], let path = media["path"] as? String else { return nil }
+        let url = root.appendingPathComponent(path)
+        return FileManager.default.fileExists(atPath: url.path) ? url : nil
+    }
+
     private static func identifier(of element: NSObject) -> String? {
         if let id = (element as? UIAccessibilityIdentification)?.accessibilityIdentifier { return id }
         guard element.responds(to: NSSelectorFromString("accessibilityIdentifier")) else { return nil }
@@ -146,10 +158,10 @@ struct JogStripAccessibilityTests {
         for _ in 0..<200 where !condition() { try? await Task.sleep(for: .milliseconds(10)) }
     }
 
-    @Test
+    @Test(.enabled(if: frameCounter60() != nil, "Frame-counter fixtures are not rendered"))
     func anIncrementMovesExactlyOneFrameAndTheReadoutSaysSo() async throws {
-        let url = try #require(Bundle.main.url(forResource: "frame-counter-060fps", withExtension: "mp4"),
-                               "the 60 fps frame-counter fixture is bundled for the video lab")
+        // T10's rendered fixture, read from the host's git-ignored cache (media is never committed or bundled).
+        let url = try #require(Self.frameCounter60(), "render it: python3 scripts/media/render.py --set frameCounter")
         #expect(Self.accessibilityEnabled)
         let controller = try await PlaybackController.open(url: url)
         defer { controller.close() }

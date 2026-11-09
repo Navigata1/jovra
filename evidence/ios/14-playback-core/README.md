@@ -14,4 +14,10 @@ All runs were on 2026-11-08, on the build Mac. The simulator was JOVRA-T14 (`B7D
 
 ## Fixtures
 
-The bundled frame-counter fixtures are copies of the T10 renders `frameCounter/fc-060` and `frameCounter/fc-240`. They live in `ios/Jovra/Resources/Fixtures/frame-counter-0{6,24}0fps.mp4`, and their decoded-frame signatures match the committed ground truth (`render.py --check` PASS). Every clip in the lab is synthetic.
+Media is never committed. The `studio-media` guard refuses media outside `StudioSampleMedia/`. The video lab therefore reads T10's rendered frame counters, `frameCounter/fc-060` and `frameCounter/fc-240`, from the git-ignored `.cache/media`.
+
+- The simulator reads them through `JOVRA_FRAME_COUNTER_DIR`.
+- `JovraUITests/Support/FrameCounterFixtures` locates them from the committed ground truth.
+- Tests that need them skip cleanly when the fixtures have not been rendered.
+
+The sample match is the bundled T11 synthetic sample media. Every clip is synthetic.

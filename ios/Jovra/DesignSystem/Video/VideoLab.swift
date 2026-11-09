@@ -6,7 +6,8 @@ import SwiftUI
 
 /// The playback gallery: the frame-counter fixtures and the synthetic sample match on the shared player,
 /// surface, timeline, jog strip and transport. `JOVRA_VIDEO_LAB=<source>` (fc-060, fc-240, sample, missing)
-/// replaces the app's root with it (see `CoreComponentsGalleryHarness`). Every clip here is synthetic and badged.
+/// replaces the app's root with it (see `CoreComponentsGalleryHarness`); simulator only for the counters, which are
+/// read from `JOVRA_FRAME_COUNTER_DIR`. Every clip here is synthetic and badged.
 struct VideoLab: View {
     enum Source: String, CaseIterable, Identifiable, Hashable {
         case fc060 = "fc-060", fc240 = "fc-240", sample, missing
@@ -21,14 +22,18 @@ struct VideoLab: View {
             }
         }
 
+        /// The frame counters are T10's rendered fixtures, never committed or bundled (media stays in the
+        /// git-ignored cache): the simulator reads them from the folder the test passes in
+        /// `JOVRA_FRAME_COUNTER_DIR`. The sample match is the bundled synthetic sample media.
         var url: URL {
-            let bundled: URL? = switch self {
-            case .fc060: Bundle.main.url(forResource: "frame-counter-060fps", withExtension: "mp4")
-            case .fc240: Bundle.main.url(forResource: "frame-counter-240fps", withExtension: "mp4")
+            let counters = ProcessInfo.processInfo.environment["JOVRA_FRAME_COUNTER_DIR"].map { URL(fileURLWithPath: $0) }
+            let located: URL? = switch self {
+            case .fc060: counters?.appendingPathComponent("frame-counter-060fps.mp4")
+            case .fc240: counters?.appendingPathComponent("frame-counter-240fps.mp4")
             case .sample: Bundle.main.url(forResource: "sample-jon-vs-alex", withExtension: "mp4", subdirectory: "SampleMedia")
             case .missing: nil
             }
-            return bundled ?? FileManager.default.temporaryDirectory.appendingPathComponent("not-on-this-iphone-\(rawValue).mp4")
+            return located ?? FileManager.default.temporaryDirectory.appendingPathComponent("not-on-this-iphone-\(rawValue).mp4")
         }
     }
 
