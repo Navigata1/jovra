@@ -97,6 +97,7 @@ extension WatchAppModel {
 extension WatchSnapshotReceiver {
     /// The production receiver: the continuous clock (keeps counting in sleep) and this process's baseline.
     static func live() -> WatchSnapshotReceiver {
-        WatchSnapshotReceiver(clock: ContinuousMonotonicClock(), baselineId: ProcessBaseline.current)
+        WatchSnapshotReceiver(clock: ContinuousMonotonicClock(), baselineId: ProcessBaseline.current,
+                              pairedPhoneId: nil)
     }
 }
