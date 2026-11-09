@@ -128,7 +128,9 @@ public final class LabelSession {
                 loaded = try BenchmarkLabels(recording: fingerprint.recording, labelledBy: .init(method: .human, tool: Self.tool))
             }
             phase = .opening("Preparing the first frame…")
-            try await player.load(url, rotationDegrees: fingerprint.rotationDegrees)
+            let length = fingerprint.recording.duration
+            await player.load(url, duration: CMTime(value: length.value, timescale: CMTimeScale(clamping: length.timescale)),
+                              rotationDegrees: fingerprint.rotationDegrees)
             videoURL = url
             labelsURL = target
             document = LabelDocument(labels: loaded)

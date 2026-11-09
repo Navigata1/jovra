@@ -1,6 +1,7 @@
 import AVFoundation
 import Foundation
 import JovraBenchmark
+import JovraMedia
 
 /// Finds sharp sounds in a recording's audio and offers them as hit candidates (`jovra.audioOnsets.v1`), so
 /// the labeller confirms or rejects instead of searching.
@@ -34,11 +35,9 @@ public enum OnsetCandidateFinder {
     /// Reads the first audio track and returns its onsets, or `.noAudio` when the file has none.
     public static func find(in url: URL, parameters: Parameters = Parameters()) async throws -> Outcome {
         let asset = AVURLAsset(url: url)
-        guard let track = try await asset.loadTracks(withMediaType: .audio).first else { return .noAudio }
-        let descriptions = try await track.load(.formatDescriptions)
-        guard let basic = descriptions.first.flatMap({ CMAudioFormatDescriptionGetStreamBasicDescription($0)?.pointee }),
-              basic.mSampleRate > 0 else { return .noAudio }
-        let sampleRate = basic.mSampleRate
+        guard let track = try await AssetLoading.tracks(of: asset, mediaType: .audio).first,
+              let audio = try await MediaProbe.probe(url).audio, audio.sampleRate > 0 else { return .noAudio }
+        let sampleRate = Double(audio.sampleRate)
         return try await Task.detached(priority: .utility) {
             let reader = try AVAssetReader(asset: asset)
             let output = AVAssetReaderTrackOutput(track: track, outputSettings: [

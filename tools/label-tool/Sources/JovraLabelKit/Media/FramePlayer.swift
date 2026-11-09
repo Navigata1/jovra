@@ -34,10 +34,10 @@ public final class FramePlayer {
         player.automaticallyWaitsToMinimizeStalling = false
     }
 
-    public func load(_ url: URL, rotationDegrees: Int) async throws {
+    public func load(_ url: URL, duration: CMTime, rotationDegrees: Int) async {
         stop()
         let asset = AVURLAsset(url: url)
-        duration = try await asset.load(.duration)
+        self.duration = duration
         self.rotationDegrees = rotationDegrees
         let item = AVPlayerItem(asset: asset)
         item.audioTimePitchAlgorithm = .timeDomain
@@ -94,7 +94,7 @@ public final class FramePlayer {
     /// Shows the frame on screen at `time` (the last frame that starts at or before it).
     public func seek(to time: CMTime) async {
         let target = CMTimeClampToRange(time, range: CMTimeRange(start: .zero, duration: duration.isNumeric ? duration : .positiveInfinity))
-        await player.seek(to: target, toleranceBefore: .zero, toleranceAfter: .zero)
+        await AssetLoading.seek(player, to: target)
     }
 
     public func currentTime() -> CMTime {
