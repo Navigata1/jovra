@@ -135,7 +135,7 @@ public enum OnsetCandidateFinder {
             guard level >= parameters.floor, level >= parameters.ratio * background[k / stride] else { continue }
             let low = max(k - reach, 0), high = min(k + reach, coarseCount - 1)
             // The loudest step of its neighbourhood; of two equal steps the earlier one wins.
-            guard !coarse[low..<k].contains(where: { $0 >= level }), !coarse[(k + 1)...high].contains(where: { $0 > level }) else { continue }
+            guard !coarse[low..<k].contains(where: { $0 >= level }), !coarse[(k + 1)..<(high + 1)].contains(where: { $0 > level }) else { continue }
             let last = k * group + group - 1, first = max(k * group - 15, 0)
             let peak = fine[first...last].max() ?? level
             let onset = (first...last).first { fine[$0] >= peak / 2 } ?? k * group

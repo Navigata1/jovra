@@ -40,6 +40,10 @@ struct OnsetCandidateFinderTests {
         let found = onsets(clicked)
         #expect(found.count == 1)
         #expect(abs(Double(found.first ?? 0) / sampleRate - 1.0) <= 0.004)
+        // A click in the very last 10 ms of the sound is still found (the neighbourhood ends with the audio).
+        var late = noise
+        for i in 0..<240 { late[96_000 - 240 + i] += (i % 2 == 0 ? 0.6 : -0.6) }
+        #expect(onsets(late).count == 1)
     }
 
     @Test("a file without sound reports that, instead of zero candidates")
