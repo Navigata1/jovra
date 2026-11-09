@@ -65,7 +65,10 @@ data class SessionPlayer(
         fun decodeJson(bytes: ByteArray, maxInputBytes: Int): SessionPlayer {
             val input = CanonicalJson.decodeJsonInput(bytes, maxInputBytes)
             CanonicalJson.validateFlatObject(input)
-            val fields = Json.parseToJsonElement(input) as JsonObject
+            return fromJsonObject(Json.parseToJsonElement(input) as JsonObject)
+        }
+
+        internal fun fromJsonObject(fields: JsonObject): SessionPlayer {
             require(fields.keys.all { it in fieldNames }) { "Unknown player field" }
 
             val hand = fields.requireString("handedness")
