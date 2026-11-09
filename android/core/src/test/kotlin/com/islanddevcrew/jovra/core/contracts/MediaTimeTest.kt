@@ -45,8 +45,8 @@ class MediaTimeTest {
     fun `integer tokens retain exact signed Long precision and the original rational pair`() {
         assertTime("""{"value":744,"timescale":240}""", 744, 240)
         assertTime("""{"timescale":30000,"value":46046000}""", 46046000, 30000)
-        assertTime("""{"value":9007199254740993,"timescale":2147483648}""", 9007199254740993, 2147483648)
-        assertTime("""{"value":9223372036854775807,"timescale":9223372036854775807}""", Long.MAX_VALUE, Long.MAX_VALUE)
+        assertTime("""{"value":9007199254740993,"timescale":2147483647}""", 9007199254740993, 2147483647)
+        assertTime("""{"value":9223372036854775807,"timescale":1}""", Long.MAX_VALUE, 1)
         assertTime("""{"\u0076alue":-0,"timescale":1}""", 0, 1)
     }
 
@@ -100,6 +100,13 @@ class MediaTimeTest {
     }
 
     @Test
+    fun `timescale fits the positive signed 32 bit native range`() {
+        assertTime("""{"value":744,"timescale":2147483647}""", 744, 2147483647)
+        assertRefused("""{"value":744,"timescale":2147483648}""")
+        assertRefused("""{"value":744,"timescale":9223372036854775807}""")
+    }
+
+    @Test
     fun `explicit byte limit rejects before UTF-8 decoding`() {
         val input = """{"value":744,"timescale":240}""".encodeToByteArray()
         assertEquals(MediaTime(744, 240), MediaTime.decodeJson(input, input.size))
@@ -117,7 +124,8 @@ class MediaTimeTest {
     private fun assertTime(input: String, value: Long, scale: Long) {
         val bytes = input.encodeToByteArray()
         val time = MediaTime.decodeJson(bytes, bytes.size)
-        assertEquals(MediaTime(value, scale), time)
+        assertEquals(value, time.value)
+        assertEquals(scale, time.timescale.toLong())
         val expected = """{"timescale":$scale,"value":$value}""".encodeToByteArray()
         assertArrayEquals(expected, time.encodeJson())
     }
