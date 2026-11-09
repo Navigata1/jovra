@@ -1,0 +1,236 @@
+{
+  "schemaVersion": "jovra.studio-multiangle-rig/1",
+  "id": "multiangle/rig",
+  "sample": true,
+  "description": "The six club-fence phone placements of the synthetic multi-angle rig and the sound travel from the multicam research 4.4 table events to each (343 m/s, impact 1.0 m, phones 1.5 m).",
+  "speedOfSound": {
+    "mmPerSecond": 343000,
+    "temperatureC": null,
+    "method": "default-343"
+  },
+  "placements": [
+    {
+      "code": "BS",
+      "slot": "near-baseline",
+      "name": "Baseline",
+      "positionMm": {
+        "xMm": 0,
+        "yMm": -17365,
+        "zMm": 1500
+      },
+      "picture": "angle-baseline"
+    },
+    {
+      "code": "BN",
+      "slot": "far-baseline",
+      "name": "Far baseline",
+      "positionMm": {
+        "xMm": 0,
+        "yMm": 17365,
+        "zMm": 1500
+      },
+      "picture": "angle-far-baseline"
+    },
+    {
+      "code": "CSW",
+      "slot": "near-left-corner",
+      "name": "Near left",
+      "positionMm": {
+        "xMm": -8535,
+        "yMm": -17365,
+        "zMm": 1500
+      },
+      "picture": "angle-near-left"
+    },
+    {
+      "code": "CSE",
+      "slot": "near-right-corner",
+      "name": "Near right",
+      "positionMm": {
+        "xMm": 8535,
+        "yMm": -17365,
+        "zMm": 1500
+      },
+      "picture": "angle-near-right"
+    },
+    {
+      "code": "CNW",
+      "slot": "far-left-corner",
+      "name": "Far left",
+      "positionMm": {
+        "xMm": -8535,
+        "yMm": 17365,
+        "zMm": 1500
+      },
+      "picture": "angle-far-left"
+    },
+    {
+      "code": "CNE",
+      "slot": "far-right-corner",
+      "name": "Far right",
+      "positionMm": {
+        "xMm": 8535,
+        "yMm": 17365,
+        "zMm": 1500
+      },
+      "picture": "angle-far-right"
+    }
+  ],
+  "soundDelayTable": {
+    "source": "docs/research/studio/multicam-sync.md section 4.4 (club fence)",
+    "rows": [
+      {
+        "id": "south-baseline-centre",
+        "event": "South baseline, centre",
+        "positionMm": {
+          "xMm": 0,
+          "yMm": -11885,
+          "zMm": 1000
+        },
+        "delaysUs": {
+          "BS": 16043,
+          "BN": 85289,
+          "CSW": 29607,
+          "CSE": 29607,
+          "CNW": 88845,
+          "CNE": 88845
+        }
+      },
+      {
+        "id": "south-baseline-wide",
+        "event": "South baseline, wide (singles sideline)",
+        "positionMm": {
+          "xMm": 4115,
+          "yMm": -11885,
+          "zMm": 1000
+        },
+        "delaysUs": {
+          "BS": 20033,
+          "BN": 86129,
+          "CSW": 40219,
+          "CSE": 20578,
+          "CNW": 92922,
+          "CNE": 86257
+        }
+      },
+      {
+        "id": "south-service-t",
+        "event": "South service T",
+        "positionMm": {
+          "xMm": 0,
+          "yMm": -6400,
+          "zMm": 1000
+        },
+        "delaysUs": {
+          "BS": 32001,
+          "BN": 69301,
+          "CSW": 40537,
+          "CSE": 40537,
+          "CNW": 73633,
+          "CNE": 73633
+        }
+      },
+      {
+        "id": "net-centre",
+        "event": "Net centre",
+        "positionMm": {
+          "xMm": 0,
+          "yMm": 0,
+          "zMm": 1000
+        },
+        "delaysUs": {
+          "BS": 50648,
+          "BN": 50648,
+          "CSW": 56430,
+          "CSE": 56430,
+          "CNW": 56430,
+          "CNE": 56430
+        }
+      },
+      {
+        "id": "north-service-t",
+        "event": "North service T",
+        "positionMm": {
+          "xMm": 0,
+          "yMm": 6400,
+          "zMm": 1000
+        },
+        "delaysUs": {
+          "BS": 69301,
+          "BN": 32001,
+          "CSW": 73633,
+          "CSE": 73633,
+          "CNW": 40537,
+          "CNE": 40537
+        }
+      },
+      {
+        "id": "north-baseline-centre",
+        "event": "North baseline, centre",
+        "positionMm": {
+          "xMm": 0,
+          "yMm": 11885,
+          "zMm": 1000
+        },
+        "delaysUs": {
+          "BS": 85289,
+          "BN": 16043,
+          "CSW": 88845,
+          "CSE": 88845,
+          "CNW": 29607,
+          "CNE": 29607
+        }
+      }
+    ]
+  },
+  "pairwiseBiasTable": {
+    "rule": "(d_A - d_B) / c, the bias an uncorrected audio lag adds to the clock offset",
+    "pairs": [
+      "BS-BN",
+      "BS-CSE",
+      "BS-CNE"
+    ],
+    "rows": [
+      {
+        "id": "south-baseline-centre",
+        "biasUs": {
+          "BS-BN": -69246,
+          "BS-CSE": -13564,
+          "BS-CNE": -72802
+        }
+      },
+      {
+        "id": "south-service-t",
+        "biasUs": {
+          "BS-BN": -37300,
+          "BS-CSE": -8536,
+          "BS-CNE": -41632
+        }
+      },
+      {
+        "id": "net-centre",
+        "biasUs": {
+          "BS-BN": 0,
+          "BS-CSE": -5782,
+          "BS-CNE": -5782
+        }
+      },
+      {
+        "id": "north-service-t",
+        "biasUs": {
+          "BS-BN": 37300,
+          "BS-CSE": -4332,
+          "BS-CNE": 28764
+        }
+      },
+      {
+        "id": "north-baseline-centre",
+        "biasUs": {
+          "BS-BN": 69246,
+          "BS-CSE": -3556,
+          "BS-CNE": 55682
+        }
+      }
+    ]
+  }
+}

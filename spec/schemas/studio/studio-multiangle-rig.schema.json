@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio synthetic multi-angle rig (jovra.studio-multiangle-rig/1)",
+  "description": "The six club-fence phone placements the synthetic multi-angle generator (S58) records from, and the sound travel from the multicam research 4.4 table events to each placement in whole microseconds (spec/reference/studio/syncfit.py sound_delay_us, 343 m/s). The pairwise bias rows are (d_A - d_B), the offset an uncorrected audio lag would add. All content is synthetic and labelled Sample.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "sample", "description", "speedOfSound", "placements", "soundDelayTable", "pairwiseBiasTable"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.studio-multiangle-rig/1"},
+    "id": {"const": "multiangle/rig"},
+    "sample": {"const": true},
+    "description": {"type": "string", "minLength": 1, "maxLength": 300},
+    "speedOfSound": {
+      "type": "object",
+      "required": ["mmPerSecond", "temperatureC", "method"],
+      "additionalProperties": false,
+      "properties": {"mmPerSecond": {"const": 343000}, "temperatureC": {"type": "null"}, "method": {"const": "default-343"}}
+    },
+    "placements": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["code", "slot", "name", "positionMm", "picture"],
+        "additionalProperties": false,
+        "properties": {
+          "code": {"enum": ["BS", "BN", "CSW", "CSE", "CNW", "CNE"]},
+          "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+          "name": {"type": "string", "minLength": 1, "maxLength": 32},
+          "positionMm": {"$ref": "studio-common.schema.json#/$defs/positionMm"},
+          "picture": {"type": "string", "pattern": "^angle-[a-z-]+$"}
+        }
+      }
+    },
+    "soundDelayTable": {
+      "type": "object",
+      "required": ["source", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "rows": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["id", "event", "positionMm", "delaysUs"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "studio-common.schema.json#/$defs/id"},
+              "event": {"type": "string", "minLength": 1},
+              "positionMm": {"$ref": "studio-common.schema.json#/$defs/positionMm"},
+              "delaysUs": {"$ref": "#/$defs/perPlacement"}
+            }
+          }
+        }
+      }
+    },
+    "pairwiseBiasTable": {
+      "type": "object",
+      "required": ["rule", "pairs", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "rule": {"type": "string", "minLength": 1},
+        "pairs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z]{2,3}-[A-Z]{2,3}$"}},
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "biasUs"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "studio-common.schema.json#/$defs/id"},
+              "biasUs": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer"}}
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "perPlacement": {
+      "type": "object",
+      "required": ["BS", "BN", "CSW", "CSE", "CNW", "CNE"],
+      "additionalProperties": false,
+      "properties": {
+        "BS": {"type": "integer", "minimum": 0}, "BN": {"type": "integer", "minimum": 0},
+        "CSW": {"type": "integer", "minimum": 0}, "CSE": {"type": "integer", "minimum": 0},
+        "CNW": {"type": "integer", "minimum": 0}, "CNE": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}
