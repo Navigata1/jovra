@@ -65,6 +65,9 @@ final class CoreFlowUITests: XCTestCase {
         attachScreenshot(app, name: "core-flow-export-finished")
         try auditScreen(app, scrollIdentifier: "export.scroll")
         app.buttons["sheet.close"].tap()
+        let restoredScore = app.staticTexts["review.scoreBefore"]
+        XCTAssertTrue(restoredScore.waitForExistence(timeout: 10))
+        XCTAssertTrue(restoredScore.label.contains("0–15"), "Closing Export keeps the selected point in Replay")
         app.buttons["replay.close"].tap(); app.terminate(); app.launch()
         app.buttons["tab.sessions"].tap()
         XCTAssertTrue(row.waitForExistence(timeout: 10)); row.tap()
