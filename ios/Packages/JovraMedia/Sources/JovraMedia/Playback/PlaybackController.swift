@@ -178,23 +178,32 @@ public final class PlaybackController {
 
     /// Moves the playhead to `frame` and returns once the player has landed (or a later request has).
     public func seek(toFrame frame: Int, precision: SeekPrecision = .exact) async {
-        invalidateStill()
-        let target = clamp(frame)
-        currentFrame = target
-        await seeker.request(time(of: target), precision: precision)
+        submitSeek(toFrame: frame, precision: precision)
+        await seeker.settled()
     }
 
     /// A drag position: the readout follows at once, the player chases with a coarse seek.
     public func scrub(toFrame frame: Int) {
         if isPlaying { pause() }
-        invalidateStill()
-        currentFrame = clamp(frame)
-        seeker.submit(time(of: currentFrame), precision: .coarse)
+        submitSeek(toFrame: frame, precision: .coarse)
     }
 
-    /// The finger lifted: land exactly.
+    /// Submit an exact, paused target in gesture event order without waiting for the decoder.
+    public func finishScrub(atFrame frame: Int) {
+        if isPlaying { pause() }
+        submitSeek(toFrame: frame, precision: .exact)
+    }
+
+    /// The finger lifted: land exactly and return once the seeker has settled.
     public func endScrub(atFrame frame: Int) async {
-        await seek(toFrame: frame, precision: .exact)
+        finishScrub(atFrame: frame)
+        await seeker.settled()
+    }
+
+    private func submitSeek(toFrame frame: Int, precision: SeekPrecision) {
+        invalidateStill()
+        currentFrame = clamp(frame)
+        seeker.submit(time(of: currentFrame), precision: precision)
     }
 
     /// Steps whole frames (negative is backward), pausing playback first. Clamped to the clip.

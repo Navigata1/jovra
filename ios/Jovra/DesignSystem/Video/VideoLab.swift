@@ -156,11 +156,10 @@ struct VideoLab: View {
         if let controller {
             VStack(alignment: .leading, spacing: 0) {
                 PlaybackTimeline(frame: controller.currentFrame, frameCount: controller.frameCount,
-                                 adjustStep: max(1, controller.frameRate.frames / controller.frameRate.perSeconds),
                                  currentTimeText: time(controller.currentFrame, controller),
                                  durationText: time(controller.frameCount - 1, controller),
                                  onScrub: { controller.scrub(toFrame: $0) },
-                                 onScrubEnded: { frame in Task { await controller.endScrub(atFrame: frame) } })
+                                 onScrubEnded: controller.finishScrub(atFrame:))
                 Spacer().frame(height: VideoMetrics.timelineToJogGap)
                 jog(controller)
                 Spacer().frame(height: Space.x3)
