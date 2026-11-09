@@ -1,0 +1,40 @@
+S09 compiler tracer command excerpts.
+
+--- Parent RED (exit 1) ---
+✖ S09 compile result matches the Python reference: rally-60-portrait (2.407708ms)
+✖ S09 compile result matches the Python reference: rally-60-s41 (0.633792ms)
+✖ S09 compile result matches the Python reference: coach-court (1.945417ms)
+✖ S09 compile result matches the Python reference: memories-court (1.20225ms)
+✖ S09 compile result matches the Python reference: broadcast-court (2.379208ms)
+✖ S09 compile result matches the Python reference: contact-blend-refused (0.328541ms)
+ℹ tests 12
+ℹ pass 1
+ℹ fail 11
+ℹ skipped 0
+
+--- Frozen Node runtime and tests (exit 0) ---
+v24.15.0
+✔ S09 compile result matches the Python reference: rally-60-portrait (29.780291ms)
+✔ S09 compile result matches the Python reference: rally-60-s41 (7.429583ms)
+✔ S09 compile result matches the Python reference: coach-court (14.4845ms)
+✔ S09 compile result matches the Python reference: memories-court (18.266041ms)
+✔ S09 compile result matches the Python reference: broadcast-court (11.796083ms)
+✔ S09 compile result matches the Python reference: contact-blend-refused (1.066167ms)
+ℹ tests 197
+ℹ pass 197
+ℹ fail 0
+ℹ skipped 0
+
+--- Frozen S06/S07 parity (exit 0) ---
+director (spec/studio/fixtures/vectors/director.json): 58/58 byte-identical, plus 1 base context case(s); results {"brief":16,"refusal":9,"reject":10,"templates":1,"findings":22}
+planner (spec/studio/fixtures/vectors/planner.json): 46/46 byte-identical, plus 1 base context case(s); results {"plan":23,"refusal":3,"check":4,"reject":16}
+compile (spec/studio/fixtures/vectors/compile.json): 39/39 byte-identical, plus 5 base context case(s); results {"edl":28,"refusal":6,"reject":5}
+TOTAL: 143/143 reference vectors reproduced byte for byte (canonical JSON).
+
+--- Frozen Python controls and Studio validator (exit 0) ---
+renderer without transition: three ordered omissions and all cuts
+unshown beats: two ordered omissions including constructor
+first shown beat: badRequest
+seven malformed maps/entries: badRequest
+largest safe integer frame span: transitionTooLong
+RESULT: PASS
