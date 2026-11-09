@@ -198,10 +198,10 @@ struct ShortGOPProxyTests {
         }
         let build = Task { await controller.buildProxy() }
         let deadline = ContinuousClock.now + .seconds(3)
-        var held = entered.wait(timeout: .now()) == .success
+        var held = consumeSignaledCheckpoint(entered)
         while !held, ContinuousClock.now < deadline {
             try await Task.sleep(for: .milliseconds(1))
-            held = entered.wait(timeout: .now()) == .success
+            held = consumeSignaledCheckpoint(entered)
         }
         try #require(held)
         #expect(controller.proxyState == .building)
@@ -242,6 +242,11 @@ struct ShortGOPProxyTests {
         await controller.settle()
         #expect(try await displayed.code(controller) == 420, "the original caught up on the same frame")
     }
+}
+
+/// Polls an already signaled checkpoint without blocking an asynchronous test.
+private func consumeSignaledCheckpoint(_ semaphore: DispatchSemaphore) -> Bool {
+    semaphore.wait(timeout: .now()) == .success
 }
 
 /// AVAssetWriter finishes this MOV by appending a complete top-level movie atom.
