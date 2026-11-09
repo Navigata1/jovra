@@ -1,23 +1,30 @@
-# Linux: CI job jovra-studio-core (swift:6.1 container, full swift test), run 42535975863 job 128900232167, commit fff977f
-# Lines for the S13 suites (Studio project store, Studio sample content) and the run total:
-jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T23:37:54.0488556Z ✔ Test run with 95 tests passed after 7.154 seconds.
+# Linux: CI job jovra-studio-core (swift:6.1 container, full swift test), run 42541559793 job 128917410125, commit 59e525c
+# Lines for the S13 suites (Studio project store, its lock event revision, Studio sample content) and the run total:
+jovra-studio-core	swift test (JovraStudioCore)	2026-11-09T00:43:18.5110162Z ✔ Test run with 101 tests passed after 12.152 seconds.
 ✔ Test "a corrupted index is rebuilt from the project folders with the same project list" passed
+✔ Test "a created project reloads from its folder in a new store with the same kind and no sources" passed
 ✔ Test "a freed slot can be taken, custom may be held twice, and re-assigning a source its own slot is a no-op" passed
+✔ Test "a lock on a fresh real project records the primary session's current event revision" passed
+✔ Test "a lock taken after the session gains a correction records the newer revision, never the stale snapshot" passed
+✔ Test "a lock whose primary session was deleted is refused with sessionNotFound" passed
 ✔ Test "a missing index, or one that names a folder that is gone, is rebuilt from folders" passed
 ✔ Test "a missing or an extra file in the bundled copy fails the check" passed
+✔ Test "a primary session with no recorded events is refused with eventLogEmpty, not a schema error" passed
 ✔ Test "a process killed after the rename has committed the new studio.json" passed
 ✔ Test "a process killed after the temporary write and before the rename leaves the previous studio.json loadable" passed
 ✔ Test "a rebuilt film is kept beside the older version, never overwriting it, and both are listed" passed
-✔ Test "a record that is not a JSON object with a schemaVersion string is an error" passed
 ✔ Test "a record that is not flagged Sample is refused, and so is a missing one" passed
-✔ Test "a record without a sample flag is not Sample data" passed
+✔ Test "a source is a reference: no file of the original appears in the project folder" passed
 ✔ Test "a store reading this build's entitlement creates a project, unless this is the localStudio-off scratch build" passed
+✔ Test "an unknown project id is refused, and a path-like id never reaches the filesystem" passed
 ✔ Test "assigning an occupied slot throws slotTaken naming the source that holds it, and changes nothing" passed
 ✔ Test "changing one byte in a scratch copy of the bundled records fails the check, naming the file" passed
+✔ Test "create with a primary session seeds the event-log version from that session's log" passed
 ✔ Test "derived removes films and proxies only; cloudCopies removes the cloud record only; project removes the folder" passed
 ✔ Test "each delete scope leaves every original's bytes and SHA-256 unchanged" passed
 ✔ Test "each identity is made of records of the sample project, and the identities do not share a record" passed
 ✔ Test "every installed project and every installed record is flagged Sample, byte for byte as shipped" passed
+✔ Test "finding 8: a plan naming another project is refused against this project's records" passed
 ✔ Test "finds the shared Sample project lock in spec/studio/fixtures, not a copy inside the package" passed
 ✔ Test "installing twice keeps the installed sample; a real project holding a sample id is never overwritten" passed
 ✔ Test "installing yields a match project whose score from the core fold reads Jon 6 6 / Alex 4 3, Final" passed
@@ -27,8 +34,9 @@ jovra-studio-core	swift test (JovraStudioCore)	2026-11-08T23:37:54.0488556Z ✔ 
 ✔ Test "removing deletes every Sample project in one call and leaves real projects untouched" passed
 ✔ Test "sync, keeper and event-log revisions only grow: an older value is refused, the same value changes nothing" passed
 ✔ Test "the SHA-256 here agrees with the published test vectors and with the system tool" passed
-✔ Test "the Sample project lock names jovra.project-lock version 1 and is Sample data" passed
+✔ Test "the Sample project never reads the core session store: its lock keeps the records' event revision" passed
 ✔ Test "the bundled sample records are byte-identical to spec/studio/fixtures/records (sha256 equality)" passed
+✔ Test "the entitlement source holds no DEBUG or RELEASE condition, so every build configuration reads the same value" passed
 ✔ Test "the first match source becomes the primary; setPrimary moves it and bumps the manifest revision" passed
 ✔ Test "the match project's revisions, slots and owners come from the stored sample records" passed
 ✔ Test "with localStudio off, a film already made, the original, its export and the core library stay available" passed
