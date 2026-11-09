@@ -18,7 +18,8 @@ enum WatchHarness {
             throw WatchRecordLibrary.LoadError.missing("records")
         }
         let receiver = WatchSnapshotReceiver(clock: FrozenMonotonicClock(ms: 1_000_000),
-                                             baselineId: "pb-harness-\(state.id.surface.rawValue)")
+                                             baselineId: "pb-harness-\(state.id.surface.rawValue)",
+                                             pairedPhoneId: WatchStateRegistry.samplePairedPhoneId)
         let bridge = FakeWatchBridge()
         let model = WatchAppModel(mode: .harness(state.id), receiver: receiver, bridge: bridge,
                                   reduceMotionOverride: reduceMotionOverride)

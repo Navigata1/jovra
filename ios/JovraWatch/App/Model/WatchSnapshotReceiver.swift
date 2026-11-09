@@ -13,22 +13,20 @@ struct WatchHealthBoard: Equatable, Sendable {
 @MainActor
 @Observable
 final class WatchSnapshotReceiver: WatchBridgeSink {
-    enum Outcome: Equatable, Sendable {
-        case accepted
-        case replayOrOutOfOrder
-    }
-
     private(set) var snapshot: WatchBridgeSnapshot?
     private(set) var observation: ReceiverObservation?
-    private(set) var outcomes: [Outcome] = []
-    var lastOutcome: Outcome? { outcomes.last }
+    private(set) var outcomes: [BridgeVerdict] = []
+    var lastOutcome: BridgeVerdict? { outcomes.last }
 
     @ObservationIgnored private let clock: any MonotonicClock
+    @ObservationIgnored private var admission: BridgeReceiver?
     private(set) var baselineId: String
 
-    init(clock: any MonotonicClock, baselineId: String) {
+    /// The expected phone comes from the caller's pairing context, independent of any delivered snapshot.
+    init(clock: any MonotonicClock, baselineId: String, pairedPhoneId: String?) {
         self.clock = clock
         self.baselineId = baselineId
+        admission = pairedPhoneId.map { BridgeReceiver(pairedPhoneId: $0) }
     }
 
     /// True while the cached snapshot cannot make anything fresh: it came by the queued path (unbounded transit) or
@@ -69,25 +67,20 @@ final class WatchSnapshotReceiver: WatchBridgeSink {
         return WatchHealthBoard(rows: rows, counts: counts)
     }
 
-    /// Accepts the delivery unless it is a replay or arrives out of order within the same bridge instance (a
-    /// re-delivered payload is never a refresh). A new bridge instance (the phone app restarted) starts its own
-    /// sequence. The full BridgeReceiver rules (paired phone, retired instances, epochs) arrive with W02.
+    /// Only an accepted paired snapshot can replace the visible state or earn a new clock observation.
     func bridge(didDeliver delivery: BridgeDelivery) {
-        let incoming = delivery.snapshot.bridge
-        if let current = snapshot?.bridge, current.bridgeInstanceId == incoming.bridgeInstanceId,
-           incoming.bridgeSeq <= current.bridgeSeq {
-            outcomes.append(.replayOrOutOfOrder)
-            return
+        let verdict = admission?.accept(delivery.snapshot) ?? .notPairedBridge
+        if verdict == .accepted {
+            snapshot = delivery.snapshot
+            observation = ReceiverObservation(transitBounded: delivery.path.transitBoundMs != nil,
+                                              transitMs: delivery.path.transitBoundMs, processBaselineId: baselineId,
+                                              acceptedAtMonoMs: clock.nowMs())
         }
-        snapshot = delivery.snapshot
-        observation = ReceiverObservation(transitBounded: delivery.path.transitBoundMs != nil,
-                                          transitMs: delivery.path.transitBoundMs, processBaselineId: baselineId,
-                                          acceptedAtMonoMs: clock.nowMs())
-        outcomes.append(.accepted)
+        outcomes.append(verdict)
     }
 
-    /// A restarted watch process keeps the cached snapshot (shown with every row Unknown) but measures on a new
-    /// baseline, so nothing it cached can read as fresh until the phone answers again.
+    /// The fake restart preserves in-memory replay marks and cached rows, but changes the freshness baseline.
+    /// Restoring persisted marks in an actual watch process belongs to the paired bridge integration.
     func bridgeReceiverDidRestart() {
         baselineId = "pb-" + UUID().uuidString.lowercased()
     }

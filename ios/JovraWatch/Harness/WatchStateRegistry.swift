@@ -64,6 +64,8 @@ struct WatchHarnessState: Sendable {
 struct WatchStateRegistry: Sendable {
     let states: [WatchHarnessState]
 
+    // The fake pairing is configured before the harness reads a delivered record.
+    static let samplePairedPhoneId = "sample-bridge-phone"
     static let sampleRecord = "watch-bridge.sample"
     static let serveRecord = "watch-bridge.with-serve"
 
