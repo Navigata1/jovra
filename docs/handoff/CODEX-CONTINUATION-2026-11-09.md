@@ -6,9 +6,10 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Current evidence
 
-- Main `d1f13ab87fb5ac129506de1e8ff5e746cac0fd76`: dedicated iPhone
+- Main `0706e4c1f031a6648b48b13d5fbbd5aec2b56c76`: dedicated iPhone
   simulator CoreFlow passed 1/1 after rendering the 11 sample media files and
-  matching their decoded-frame hashes. Independently checked the actual
+  matching their decoded-frame hashes. Its iOS and spec trees match the tested
+  checkout. Independently checked the actual
   synthetic session and export JSON, canonical encoding, corrected scoring
   CSV, stats CSV and one-second 30-frame decoded clip.
 - iPhone 15 Pro Max on the same product source: a live-camera recording
@@ -83,8 +84,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Immediate continuation
 
-1. Finish the running full CoreFlow on current main `0706e4c`, which includes
-   #457. Then finish diagnosing iOS 27.2 Replay audit timeouts. A contrast-first probe
+1. Finish diagnosing iOS 27.2 Replay audit timeouts. CoreFlow on current main
+   `0706e4c` has passed on the iPhone simulator. A contrast-first probe
    passed; an all-types-first probe is running. Preserve all prior failures
    and keep the original full audit as the acceptance gate.
 2. Continue T26 Photos, batches, duplicate handling, provider and interruption

@@ -10,7 +10,7 @@
     "northStar": "Complete a trustworthy native iOS tennis product; preserve the local core while advancing the recorded Studio and native-platform roadmap through explicit evidence gates.",
     "status": "active",
     "started": "2026-10-09",
-    "updated": "2026-11-09T08:00:11Z",
+    "updated": "2026-11-09T08:04:50Z",
     "sessionCount": 3,
     "assessmentReport": "docs/reports/2026-11-02/JOVRA-State-of-the-Union-v1-2026-11-02.html",
     "nextSessionHandoff": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md"
@@ -188,10 +188,10 @@
           "id": "P4-G2",
           "title": "Dedicated simulator core flow and export evidence",
           "command": "xcodebuild test (CoreFlowUITests, FilesImportUITests, ScrollViewportAuditTests, FilesImportTests and StartupRecoveryTests) and independent JSON/CSV/FFmpeg artifact checks",
-          "status": "pending",
+          "status": "passed",
           "evidence": "docs/handoff/CODEX-CONTINUATION-2026-11-09.md",
-          "lastRun": "2026-11-09T07:10:42Z",
-          "notes": "Current main d1f13ab: simulator CoreFlow 1/1 and independently checked actual synthetic JSON, CSV, and decoded 30-frame clip. This does not establish physical or iPad acceptance. Match-import #457 has since changed main to 0706e4c; rerun CoreFlow on the new main for the phase gate."
+          "lastRun": "2026-11-09T08:04:50Z",
+          "notes": "Current-main 0706e4c iOS and spec trees: CoreFlow 1/1 on iPhone simulator; actual synthetic session/export schema, canonical bytes, corrected scoring and stats CSV, and full 30-frame clip decode independently passed. No separately sampled pre-export original hash for this rerun."
         },
         {
           "id": "P4-G3",
@@ -763,7 +763,6 @@
   "resume": {
     "activePhase": "P4",
     "nextActions": [
-      "Run full CoreFlow on new main 0706e4c after #457 merge, with current sample fixtures.",
       "Continue T26 after the full real-match Files import and verified retained hash; cover remaining Photos, duplicates and provider criteria.",
       "Diagnose iOS 27.2 Replay audit timeouts. Contrast-first probe passed and all-types-first diagnostic is running; keep original full audit.",
       "Review and integrate bounded #448, #449 and #447 with their parent branches; keep full acceptance criteria open.",
