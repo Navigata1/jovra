@@ -69,9 +69,10 @@ struct CourtCalibrationTests {
         #expect(throws: CalibrationError.degenerate) { try CourtCalibration(record: record) }
     }
 
-    @Test(arguments: ["5.44", "3.00000000000000000001"])
+    @Test(arguments: ["5.44", "3.00000000000000000001", "1e127"])
     func aRecordedPoorFitRemainsInvalidAfterReopening(_ residual: String) throws {
-        let reopened = try reopen(status: .valid, residualPx: Decimal(string: residual))
+        let residualPx = try #require(Decimal(string: residual))
+        let reopened = try reopen(status: .valid, residualPx: residualPx)
         #expect(reopened.validity(atMs: 0, current: Self.binding) == .invalid(.poorFit))
         #expect(reopened.check?.verdict == .poor)
     }

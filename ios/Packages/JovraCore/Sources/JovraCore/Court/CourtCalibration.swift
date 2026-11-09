@@ -38,8 +38,10 @@ public struct CalibrationCheck: Hashable, Sendable {
 
     init(recordedRMSEPx: Decimal, frameHeight: Int) {
         thresholdPx = Self.thresholdPx(frameHeight: frameHeight)
-        // Compare the stored decimal before conversion so rounding cannot turn a poor fit into a pass.
-        let fits = recordedRMSEPx >= 0 && recordedRMSEPx * 1080 <= Decimal(frameHeight) * Decimal(Self.poorFitPxAt1080p)
+        // Compare the stored decimal before conversion. Decimal overflow can produce NaN, which compares below finite values.
+        let scaledResidual = recordedRMSEPx * 1080
+        let scaledLimit = Decimal(frameHeight) * Decimal(Self.poorFitPxAt1080p)
+        let fits = !scaledResidual.isNaN && recordedRMSEPx >= 0 && scaledResidual <= scaledLimit
         verdict = fits ? .good : .poor
         rmsePx = NSDecimalNumber(decimal: recordedRMSEPx).doubleValue
     }
