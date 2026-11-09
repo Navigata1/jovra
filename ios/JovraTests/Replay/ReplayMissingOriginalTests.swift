@@ -1,5 +1,6 @@
 import Darwin
 import JovraCore
+import JovraMedia
 import SwiftUI
 import UIKit
 import XCTest
@@ -12,7 +13,7 @@ final class ReplayMissingOriginalTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         let store = try SessionStore(root: root)
         let id = SessionID(rawValue: UUID().uuidString)
-        let segmentPath = "recording/segment-000.mp4"
+        let segmentPath = "originals/segment-000.mp4"
         try await store.create(archiveSession(id: id, segmentPath: segmentPath))
         let point = try await store.appendReviewedPoint(winner: .a, startMs: 100, endMs: 500, for: id.rawValue)
         let library = try LocalCaptureLibrary(root: root)
@@ -25,6 +26,12 @@ final class ReplayMissingOriginalTests: XCTestCase {
         let original = folder.appendingPathComponent(segmentPath)
         let before = try Data(contentsOf: document)
         XCTAssertFalse(FileManager.default.fileExists(atPath: original.path))
+        do {
+            _ = try await library.fileURL(id, relativePath: segmentPath)
+            XCTFail("archive-only fixture unexpectedly has a local original")
+        } catch {
+            XCTAssertEqual(error as? MediaLibraryError, .notFound)
+        }
 
         let window = try mount(ReplayRequest(session: id, point: PointID(rawValue: point.id), filter: nil), library: library)
         defer { window.isHidden = true }
@@ -39,6 +46,27 @@ final class ReplayMissingOriginalTests: XCTestCase {
         let state = await waitFor("video.state", in: view)
         XCTAssertNotNil(state, "archive-only Replay uses the shared missing-video card")
         XCTAssertNil(find("replay.error", in: view), "the card replaces the generic error")
+    }
+
+    func testSavedMetadataWithAnAbsentLocalOriginalShowsTheMissingVideoCard() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SessionStore(root: root)
+        let id = SessionID(rawValue: UUID().uuidString)
+        var session = archiveSession(id: id, segmentPath: "originals/segment-000.mp4")
+        session.recording.mediaAvailable = true
+        session.original = .init(state: .saved)
+        session.storage.originals = .onDevice
+        session.archive = .init(state: .localOnly)
+        try await store.create(session)
+        let library = try LocalCaptureLibrary(root: root)
+        let window = try mount(ReplayRequest(session: id, point: nil, filter: nil), library: library)
+        defer { window.isHidden = true }
+        let view = try XCTUnwrap(window.rootViewController?.view)
+        let state = await waitFor("video.state", in: view)
+        XCTAssertNotNil(state)
+        XCTAssertNil(find("replay.error", in: view))
+        XCTAssertNil(find("replay.play", in: view))
     }
 
     func testSessionOpenErrorIsNotPresentedAsMissingOriginal() async throws {

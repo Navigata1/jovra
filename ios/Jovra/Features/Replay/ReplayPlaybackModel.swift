@@ -7,6 +7,12 @@ import Observation
 /// has been probed and fully decoded; ordinary video playback does not depend on that index.
 @MainActor @Observable
 final class ReplayPlaybackModel {
+    enum OpenIssue: Equatable {
+        case sessionUnavailable
+        case originalMissing
+        case originalUnavailable
+    }
+
     var document: SessionDocument?
     var player: AVPlayer?
     var frame: PlaybackFrame?
@@ -14,7 +20,15 @@ final class ReplayPlaybackModel {
     var selectedSegmentID: String?
     var isWorking = false
     var showStill = false
-    var error: String?
+    private(set) var openIssue: OpenIssue?
+    var error: String? {
+        switch openIssue {
+        case .sessionUnavailable: String(localized: "Couldn't open the session. Try again.", table: "Replay")
+        case .originalMissing, .originalUnavailable:
+            String(localized: "The original isn't available on this iPhone.", table: "Replay")
+        case nil: nil
+        }
+    }
     var frameStatus = String(localized: "Reading frames…", table: "Replay")
     @ObservationIgnored private var library: LocalCaptureLibrary?
     @ObservationIgnored private var session: SessionID?
@@ -34,19 +48,20 @@ final class ReplayPlaybackModel {
             guard generation == token else { return }
             document = loaded
             guard let first = segments.first, loaded.recording.mediaAvailable else {
-                error = String(localized: "The original isn't available on this iPhone.", table: "Replay"); return
+                openIssue = .originalMissing
+                return
             }
             await selectSegment(first.id)
         } catch {
             guard generation == token else { return }
-            self.error = String(localized: "Couldn't open the session. Try again.", table: "Replay")
+            openIssue = .sessionUnavailable
         }
     }
 
     func selectSegment(_ id: String) async {
         guard !isWorking, let library, let session, let segment = segments.first(where: { $0.id == id }) else { return }
         player?.pause(); player = nil; playback = nil; frameRate = nil; frame = nil; frameCount = 0; showStill = false
-        selectedSegmentID = id; error = nil; frameStatus = String(localized: "Reading frames…", table: "Replay"); isWorking = true
+        selectedSegmentID = id; openIssue = nil; frameStatus = String(localized: "Reading frames…", table: "Replay"); isWorking = true
         let token = generation
         defer { if generation == token { isWorking = false } }
         do {
@@ -74,7 +89,7 @@ final class ReplayPlaybackModel {
             }
         } catch {
             guard generation == token else { return }
-            self.error = String(localized: "The original isn't available on this iPhone.", table: "Replay")
+            openIssue = (error as? MediaLibraryError) == .notFound ? .originalMissing : .originalUnavailable
         }
     }
 
@@ -108,6 +123,6 @@ final class ReplayPlaybackModel {
     func close() {
         generation = UUID(); player?.pause(); player = nil; playback = nil; frameRate = nil
         frame = nil; frameCount = 0; isWorking = false; showStill = false
-        selectedSegmentID = nil; error = nil; document = nil
+        selectedSegmentID = nil; openIssue = nil; document = nil
     }
 }
