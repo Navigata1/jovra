@@ -166,8 +166,9 @@ struct ShortGOPProxyTests {
         }
         let receipt = try #require(gate.receipt, "The real detached encode reached its handoff")
         let writerDirectory = receipt.retiredWriter.deletingLastPathComponent()
-        let systemTemporary = FileManager.default.temporaryDirectory.resolvingSymlinksInPath()
-        #expect(writerDirectory.deletingLastPathComponent().path == systemTemporary.path)
+        let expectedRoot = try DurableDirectory.identity(of: FileManager.default.temporaryDirectory)
+        let writerRoot = try DurableDirectory.identity(of: writerDirectory.deletingLastPathComponent())
+        #expect(writerRoot == expectedRoot)
         try #require(hasCompleteMovieAtom(in: receipt.bytes))
         #expect(!FileManager.default.fileExists(atPath: writerDirectory.path))
         #expect(controller.proxyState == .building)
