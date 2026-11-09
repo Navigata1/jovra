@@ -9,7 +9,7 @@ import unittest
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from private_avd import AcquisitionError, acquire
+from private_avd import AcquisitionError, acquire, require_binding
 
 PHONE = "jovra_phone_p9_api35"
 FOLD = "jovra_fold_p9pf_api35"
@@ -149,6 +149,61 @@ class PrivateAVDTests(unittest.TestCase):
             transplanted = Path(args[args.index("--path") + 1]) / "config.ini"
             self.assertEqual((transplanted.read_bytes(), transplanted.stat().st_ino), original)
         self.assertFalse(self.receipt.exists())
+
+    def test_late_config_swap_preserves_the_foreign_inode_and_refuses_acquisition(self):
+        original = self.sentinel.read_bytes(), self.sentinel.stat().st_ino
+        checks = 0
+        swaps = []
+
+        def swap_after_binding(parent, name, fd):
+            nonlocal checks
+            require_binding(parent, name, fd)
+            if name != "config.ini":
+                return
+            checks += 1
+            # Interrupt the last successful binding check before writing the config.
+            if checks == 3:
+                args = self.calls()[0]["args"]
+                config = Path(args[args.index("--path") + 1]) / name
+                config.rename(config.with_suffix(".retained"))
+                self.sentinel.rename(config)
+                swaps.append(config)
+
+        with patch("private_avd.require_binding", side_effect=swap_after_binding):
+            try:
+                with self.assertRaisesRegex(AcquisitionError, r"managed entry changed: config\.ini"):
+                    self.acquire()
+            finally:
+                config, = swaps
+                self.assertEqual((config.read_bytes(), config.stat().st_ino), original)
+        self.assertFalse(self.receipt.exists())
+
+    def test_late_receipt_swap_preserves_foreign_bytes_and_refuses_acquisition(self):
+        original = self.sentinel.read_bytes(), self.sentinel.stat().st_ino
+        real_sync = os.fsync
+        swaps = []
+
+        def swap_after_receipt_sync(fd):
+            real_sync(fd)
+            written = os.fstat(fd)
+            for candidate in (self.receipt.with_name("pending.json"), self.receipt):
+                if candidate.is_file() and not candidate.is_symlink():
+                    current = candidate.stat()
+                    if (written.st_dev, written.st_ino) == (current.st_dev, current.st_ino):
+                        candidate.rename(candidate.with_name("retained.json"))
+                        candidate.symlink_to(self.sentinel)
+                        swaps.append(candidate)
+                        break
+
+        with patch("private_avd.os.fsync", side_effect=swap_after_receipt_sync):
+            try:
+                with self.assertRaisesRegex(AcquisitionError, r"managed entry changed: owner\.json"):
+                    self.acquire()
+            finally:
+                swapped, = swaps
+                self.assertTrue((swapped.parent / "retained.json").is_file())
+                self.assertEqual((self.sentinel.read_bytes(), self.sentinel.stat().st_ino), original)
+        self.assertTrue(self.receipt.parent.is_dir())
 
     def test_invalid_names_and_low_disk_refuse_before_any_sdk_call(self):
         for name in ("OlamyPixel", "other", "jovra_wear_xlround_api36", "jovra_wear_smallround_api36"):

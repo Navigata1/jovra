@@ -20,6 +20,7 @@ PROFILES = {
 IMAGE = "system-images;android-35;google_apis;arm64-v8a"
 GIB = 1024 ** 3
 DIRECTORY = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+NEW_FILE = os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
 LEASE = ".jovra-lock"
 
 
@@ -55,7 +56,9 @@ def identity(metadata):
 
 
 def require_binding(parent, name, fd):
-    if identity(os.stat(name, dir_fd=parent, follow_symlinks=False)) != identity(os.fstat(fd)):
+    metadata = os.fstat(fd)
+    current = os.stat(name, dir_fd=parent, follow_symlinks=False)
+    if identity(current) != identity(metadata) or (stat.S_ISREG(metadata.st_mode) and metadata.st_nlink != 1):
         raise AcquisitionError(f"managed entry changed: {name}")
 
 
@@ -64,16 +67,6 @@ def create_dir(stack, parent, name):
     fd = stack.enter_context(opened(name, DIRECTORY, parent=parent))
     os.fsync(parent)
     return fd
-
-
-@contextmanager
-def regular_file(parent, name):
-    flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
-    with opened(name, flags, parent=parent) as fd:
-        metadata = os.fstat(fd)
-        if not stat.S_ISREG(metadata.st_mode) or metadata.st_uid != os.geteuid() or metadata.st_nlink != 1:
-            raise AcquisitionError(f"unexpected file type or ownership: {name}")
-        yield fd
 
 
 def properties(fd):
@@ -93,12 +86,13 @@ def properties(fd):
     return entries
 
 
-def write_new(parent, name, data):
-    with opened(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, parent=parent) as fd:
-        with os.fdopen(os.dup(fd), "wb") as out:
-            out.write(data)
-            out.flush()
-        os.fsync(fd)
+def write_contents(fd, data):
+    with os.fdopen(os.dup(fd), "wb") as out:
+        out.seek(0)
+        out.write(data)
+        out.flush()
+        out.truncate()
+    os.fsync(fd)
 
 
 def free_bytes(volume):
@@ -159,10 +153,8 @@ def acquire(name, *, control: Path, registry: Path, sdk: Path,
             index_name = name + ".ini"
             destination = avds / data_name
             data_fd = create_dir(stack, avds_fd, data_name)
-            write_new(avds_fd, index_name, b"")
-            write_new(data_fd, "config.ini", b"")
-            index_fd = stack.enter_context(regular_file(avds_fd, index_name))
-            config_fd = stack.enter_context(regular_file(data_fd, "config.ini"))
+            index_fd = stack.enter_context(opened(index_name, NEW_FILE, parent=avds_fd))
+            config_fd = stack.enter_context(opened("config.ini", NEW_FILE, parent=data_fd))
             bindings = [(control_fd, LEASE, lease_fd), (registry_fd, slot, slot_fd), (slot_fd, "home", home_fd),
                         (home_fd, ".android", user_fd), (user_fd, "avd", avds_fd), (avds_fd, data_name, data_fd),
                         (avds_fd, index_name, index_fd)]
@@ -192,22 +184,22 @@ def acquire(name, *, control: Path, registry: Path, sdk: Path,
                            "fastboot.forceChosenSnapshotBoot": "no", "hw.ramSize": "4096", "snapshot.present": "false"})
             if name == "jovra_compact360_api35":
                 config.update({"hw.lcd.width": "1080", "hw.lcd.height": "2340", "hw.lcd.density": "480"})
-            write_new(data_fd, ".jovra-config.tmp", "".join(f"{key}={value}\n" for key, value in config.items()).encode())
-            final_config_fd = stack.enter_context(regular_file(data_fd, ".jovra-config.tmp"))
+            contents = "".join(f"{key}={value}\n" for key, value in config.items()).encode()
             require_binding(data_fd, "config.ini", config_fd)
-            os.replace(".jovra-config.tmp", "config.ini", src_dir_fd=data_fd, dst_dir_fd=data_fd)
+            write_contents(config_fd, contents)
             os.fsync(data_fd)
             os.fsync(index_fd)
             os.fsync(avds_fd)
 
-            bindings.append((data_fd, "config.ini", final_config_fd))
+            bindings.append((data_fd, "config.ini", config_fd))
             verify_custody()
             receipt = {"phase": "fixtureAcquired", "name": name, "slot": slot, "registry": str(registry),
                        "entries": {entry: identity(os.fstat(fd)) for _, entry, fd in bindings}}
-            write_new(lease_fd, "pending.json", (json.dumps(receipt) + "\n").encode())
-            os.link("pending.json", "owner.json", src_dir_fd=lease_fd, dst_dir_fd=lease_fd, follow_symlinks=False)
-            os.unlink("pending.json", dir_fd=lease_fd)
+            owner_fd = stack.enter_context(opened("owner.json", NEW_FILE, parent=lease_fd))
+            write_contents(owner_fd, (json.dumps(receipt) + "\n").encode())
             os.fsync(lease_fd)
+            verify_custody()
+            require_binding(lease_fd, "owner.json", owner_fd)
             return destination
     except (OSError, subprocess.CalledProcessError, UnicodeError) as error:
         raise AcquisitionError(f"managed acquisition failed ({type(error).__name__})") from error
