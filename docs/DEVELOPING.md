@@ -338,6 +338,11 @@ The checkout lock cannot coordinate external pairing commands, which can still c
 last check. The before/after check verifies every other simulator's identity by UUID. Use `--evidence` to save
 the result. The report replaces its destination atomically, including when an old report path is a symlink.
 
+The watch UI runner requires at least 8 GiB free on the internal volume and the DerivedData volume
+before project generation and each destination. If either measurement fails or falls below the
+floor, the runner reports `not run (disk)` and keeps existing test receipts. Free space can still
+change during a running test.
+
 Harness states run on a frozen receiver clock so screenshots are stable. `FakeWatchBridgeTests` covers growing ages.
 
 Watch copy goes through `String(localized:table: "Watch")` and `Text(_:tableName: "Watch")`; there is no watch String

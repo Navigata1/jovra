@@ -47,7 +47,27 @@ device_name() {
 TICKET="${TICKET:-$(git -C "$ROOT" rev-parse --abbrev-ref HEAD | sed -E 's#^ticket/##')}"
 EVIDENCE="$ROOT/evidence/watch/$TICKET"
 STAMP="$(date +%Y%m%d-%H%M%S)"
-mkdir -p "$EVIDENCE"
+
+disk_has_headroom() {
+  LC_ALL=C df -Pk "$1" | awk '
+    NR == 2 && NF >= 6 && $4 ~ /^[0-9]+$/ { available = $4 }
+    END { exit !(NR == 2 && available >= 8 * 1024 * 1024) }
+  '
+}
+
+require_disk_headroom() {
+  local stage=$1 volume=$DERIVED_DATA
+  if ! disk_has_headroom /; then
+    echo "$stage: not run (disk): cannot verify 8 GiB free on /" >&2
+    return 1
+  fi
+  [[ "$volume" == /* ]] || volume="$PWD/$volume"
+  while [[ ! -e "$volume" && ! -L "$volume" ]]; do volume=$(dirname "$volume"); done
+  if ! volume=$(cd -P "$volume" 2>/dev/null && pwd -P) || ! disk_has_headroom "$volume"; then
+    echo "$stage: not run (disk): cannot verify 8 GiB free for DerivedData at $DERIVED_DATA" >&2
+    return 1
+  fi
+}
 
 export_screenshots() { # <result-bundle> <file-prefix>
   local export_dir
@@ -67,11 +87,14 @@ PY
   rm -rf "$export_dir"
 }
 
+require_disk_headroom "Watch project generation"
+mkdir -p "$EVIDENCE"
 "$(dirname "$0")/generate.sh"
 
 status=0
 for tag in "${TAGS[@]}"; do
   name="$(device_name "$tag")"
+  require_disk_headroom "Watch UI tests ($tag)"
   id="$("$(dirname "$0")/watch-sim.sh" udid "$name")" || {
     echo "$name does not exist: run scripts/ios/watch-sim.sh create" >&2; exit 1; }
   bundle="$DERIVED_DATA/watch-tests-$tag-$STAMP.xcresult"
