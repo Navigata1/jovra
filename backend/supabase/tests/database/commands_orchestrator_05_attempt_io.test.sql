@@ -235,8 +235,9 @@ select is(pg_temp.host('mark_output_written_for_attempt', 'a1', format('%L, 6999
 select ok((pg_temp.host('mark_output_written_for_attempt', 'a1', format('%L, 70000000', pg_temp.got('s1', 'sessionId')))
            ->> 'state') = 'writing'
           and (pg_temp.sess('s1')).state = 'completed'
-          and (select a.state = 'writing' and a.bytes = 70000000 and a.sha256 = sha256('ap'::bytea)
-                 from public.artifacts a where a.id = pg_temp.got('s1', 'artifactId')::uuid),
+          and (pg_temp.art(pg_temp.got('s1', 'artifactId'))).state = 'writing'
+          and (pg_temp.art(pg_temp.got('s1', 'artifactId'))).bytes = 70000000
+          and (pg_temp.art(pg_temp.got('s1', 'artifactId'))).sha256 = sha256('ap'::bytea),
   'the written output keeps state writing, now with its bytes and declared SHA-256, until finish_attempt reports it');
 select is(pg_temp.authorize('a1', 'analysis-proxy-1', 70000000, 'ap') ->> 'message', 'output_already_written',
   'a written output cannot be authorized again within the attempt');
