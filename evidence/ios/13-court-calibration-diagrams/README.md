@@ -2,7 +2,7 @@
 
 Branch `ticket/t13-court-calibration-diagrams`, simulator `JOVRA-T13` (iPhone 17 Pro, iOS Simulator 27.2,
 `EC62AF47-253F-497F-B735-233029F969BA`). No physical device was used. The files were refreshed on 2026-11-09 after
-merging `origin/main` at `1d41080`.
+merging `origin/main` through `bc2229e`.
 
 | File | What it shows |
 |---|---|

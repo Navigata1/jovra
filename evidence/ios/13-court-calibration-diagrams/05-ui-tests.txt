@@ -3,17 +3,23 @@ Test class                           passed  failed  skipped  expected
 JovraUITests/CourtComponentsUITests       5       0        0         0
 Total: 5 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 5 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-T13 EC62AF47-253F-497F-B735-233029F969BA (iPhone 17 Pro, iOS Simulator 27.2)
-  Passed testCourtComponentsInLightDarkAndAX5() 4m 53s     (performAccessibilityAudit, every type, each scenario scrolled)
-  Passed testDraggingACornerOffTheCourtFailsTheReprojectionCheck() 9s
-  Passed testFiveMarkerShapesEachNamedByShapeAndMeaning() 6s
-  Passed testPoorFitAndLoupeStates() 31s
-  Passed testVoiceOverDescribesAPlacementInWords() 6s
+  Passed testCourtComponentsInLightDarkAndAX5()     (performAccessibilityAudit, every type, each scenario scrolled)
+  Passed testDraggingACornerOffTheCourtFailsTheReprojectionCheck()
+  Passed testFiveMarkerShapesEachNamedByShapeAndMeaning()
+  Passed testPoorFitAndLoupeStates()
+  Passed testVoiceOverDescribesAPlacementInWords()
 
-The audit failed twice on the way here and each failure changed the component, not the test:
+Run on the tree with origin/main merged through bc2229e (#512) and 9cdbf59 (#524).
+
+The audit failed three times on the way here and each failure changed the app code, not what is audited:
   1. "Potentially inaccessible text": the serve-zone words were drawn in the canvas. They are now real text
      VoiceOver can reach (court.zone.wide / body / t).
   2. "Dynamic Type font sizes are partially unsupported": a size cap on those words. The cap is gone; at
      accessibility sizes a word reads up its zone from the net instead.
+  3. "Contrast failed" with no element, about one AX5 launch in eight: a gallery cell that merged a marker glyph
+     with its word sat under the home indicator, and the audit could not place a merged node. The tests now wait
+     for the page to settle after launch, which made the failure happen on every launch (8 of 8); the gallery
+     cells then became plain text elements, and the same probe passed 6 of 6.
 
 $ xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -only-testing:JovraTests -destination id=EC62AF47-253F-497F-B735-233029F969BA -derivedDataPath .derivedData
 ✔ Suite "Loupe placement" passed after 0.001 seconds.
@@ -22,8 +28,8 @@ $ xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -only-testing:Jovra
 ✔ Test "with no room above it moves beside the finger, towards the middle of the frame, never below it" passed
 ✔ Test "everywhere in a phone-width 16:9 frame the loupe is whole and clear of the finger" passed
 ✔ Test "a frame smaller than the loupe centres it instead of trapping" passed
-✔ Test run with 102 tests in 15 suites passed after 0.696 seconds.
-	 Executed 24 tests, with 1 test skipped and 0 failures (0 unexpected) in 7.549 (7.559) seconds
+✔ Test run with 114 tests in 19 suites passed after 2.591 seconds.
+	 Executed 24 tests, with 1 test skipped and 0 failures (0 unexpected) in 6.787 (6.797) seconds
 ** TEST SUCCEEDED **
 (LoupePlacementTests was written before LoupePlacement existed; its red state was the missing symbol.)
 

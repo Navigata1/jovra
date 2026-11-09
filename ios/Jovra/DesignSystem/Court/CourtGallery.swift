@@ -27,7 +27,7 @@ struct CourtGallery: View {
     static let fullCourtHeight: CGFloat = 440
 
     var scenario: Scenario
-    @State private var corners: [VideoPixel] = SyntheticCourtFrame.trueCorners
+    @State private var corners: [VideoPixel] = SyntheticCourtCamera.trueCorners
     @State private var deuce = true
     @Environment(\.dynamicTypeSize) private var typeSize
 
@@ -143,7 +143,6 @@ struct CourtGallery: View {
                             .foregroundStyle(.jovra(.textPrimary))
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    .accessibilityElement(children: .combine)
                 }
             }
             .jovraCard()
@@ -154,16 +153,16 @@ struct CourtGallery: View {
         let cell = typeSize.isAccessibilitySize ? AnyLayout(HStackLayout(spacing: Space.x2)) : AnyLayout(VStackLayout(spacing: Space.x1))
         return cell {
             CourtMarker(kind: kind, size: 28)
+            // The glyph is decorative, so the word is the element: plain text the audit can place and measure.
             Text(kind.title)
                 .font(.jovraCaption)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.jovra(.textOnEditorial))
                 .fixedSize(horizontal: false, vertical: true)
+                .accessibilityLabel(Text(kind.spokenLegend))
+                .accessibilityIdentifier("court.markerKind.\(kind.rawValue)")
         }
         .frame(maxWidth: .infinity, alignment: typeSize.isAccessibilitySize ? .leading : .center)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text(kind.spokenLegend))
-        .accessibilityIdentifier("court.markerKind.\(kind.rawValue)")
     }
 
     // MARK: - Guide
@@ -171,9 +170,9 @@ struct CourtGallery: View {
     private var guide: some View {
         let check = CalibrationCheck(homography: (try? Homography.fit(image: corners, court: CourtGeometry.doublesCorners.map(\.point)))
                                         ?? Homography(matrix: [1, 0, 0, 0, 1, 0, 0, 0, 1]),
-                                     observations: SyntheticCourtFrame.untappedObservations, frameHeight: 1080)
+                                     observations: SyntheticCourtCamera.untappedObservations, frameHeight: 1080)
         return VStack(alignment: .leading, spacing: Space.x2) {
-            PerspectiveCourtGuide(videoSize: SyntheticCourtFrame.size, corners: $corners, defaults: SyntheticCourtFrame.trueCorners,
+            PerspectiveCourtGuide(videoSize: SyntheticCourtCamera.size, corners: $corners, defaults: SyntheticCourtCamera.trueCorners,
                                   pinnedLoupe: scenario == .guideLoupe ? 2 : nil) {
                 SyntheticCourtFrame()
             }
@@ -245,10 +244,11 @@ enum SamplePlacements {
     ]
 }
 
-/// A vector stand-in for a recorded frame: the court as the renderer's behind-baseline camera sees it at 1080p
-/// (scripts/media/jovra_media/court3d.py; eye 15 m behind the near baseline, 7.5 m up, aimed at the far service
-/// line). It is the synthetic calibrated frame of spec/fixtures/calibration, so the true corners are exact.
-struct SyntheticCourtFrame: View {
+/// The renderer's behind-baseline camera at 1080p (scripts/media/jovra_media/court3d.py; eye 15 m behind the near
+/// baseline, 7.5 m up, aimed at the far service line): the synthetic calibrated frame of spec/fixtures/calibration,
+/// so the true corners are exact. Plain geometry outside any view, so drawing code and constant tables can call it
+/// without actor isolation.
+enum SyntheticCourtCamera {
     static let size = CGSize(width: 1920, height: 1080)
 
     static func project(_ p: CourtPoint) -> VideoPixel {
@@ -266,16 +266,19 @@ struct SyntheticCourtFrame: View {
     static let trueCorners = CourtGeometry.doublesCorners.map { project($0.point) }
     static let untappedObservations = CourtIntersection.allCases.filter { !CourtGeometry.doublesCorners.contains($0) }
         .map { CalibrationObservation(court: $0.point, pixel: project($0.point)) }
+}
 
+/// A vector stand-in for a recorded frame: the court as `SyntheticCourtCamera` sees it. Not footage.
+struct SyntheticCourtFrame: View {
     var body: some View {
         GeometryReader { proxy in
             let mapping = VideoFrameMapping(viewSize: PlaneSize(width: proxy.size.width, height: proxy.size.height),
-                                            videoSize: PlaneSize(width: Self.size.width, height: Self.size.height))
+                                            videoSize: PlaneSize(width: SyntheticCourtCamera.size.width, height: SyntheticCourtCamera.size.height))
             Canvas { context, _ in
                 func quad(_ points: [CourtPoint]) -> Path {
                     var path = Path()
                     for (i, p) in points.enumerated() {
-                        let v = mapping.viewPoint(fromVideo: Self.project(p))
+                        let v = mapping.viewPoint(fromVideo: SyntheticCourtCamera.project(p))
                         i == 0 ? path.move(to: CGPoint(x: v.x, y: v.y)) : path.addLine(to: CGPoint(x: v.x, y: v.y))
                     }
                     path.closeSubpath()
@@ -294,14 +297,14 @@ struct SyntheticCourtFrame: View {
                              with: .color(Color(red: 0.20, green: 0.38, blue: 0.56)))
                 for line in CourtGeometry.lines where line.kind != .net {
                     var path = Path()
-                    let a = mapping.viewPoint(fromVideo: Self.project(line.from)), b = mapping.viewPoint(fromVideo: Self.project(line.to))
+                    let a = mapping.viewPoint(fromVideo: SyntheticCourtCamera.project(line.from)), b = mapping.viewPoint(fromVideo: SyntheticCourtCamera.project(line.to))
                     path.move(to: CGPoint(x: a.x, y: a.y))
                     path.addLine(to: CGPoint(x: b.x, y: b.y))
                     context.stroke(path, with: .color(.white.opacity(0.8)), lineWidth: 1.2)
                 }
-                let left = mapping.viewPoint(fromVideo: Self.project(CourtPoint(x: -6.4, y: 0)))
-                let right = mapping.viewPoint(fromVideo: Self.project(CourtPoint(x: 6.4, y: 0)))
-                let netHeight = (mapping.viewPoint(fromVideo: Self.project(CourtPoint(x: 0, y: -0.9))).y - left.y) * 0.9
+                let left = mapping.viewPoint(fromVideo: SyntheticCourtCamera.project(CourtPoint(x: -6.4, y: 0)))
+                let right = mapping.viewPoint(fromVideo: SyntheticCourtCamera.project(CourtPoint(x: 6.4, y: 0)))
+                let netHeight = (mapping.viewPoint(fromVideo: SyntheticCourtCamera.project(CourtPoint(x: 0, y: -0.9))).y - left.y) * 0.9
                 context.fill(Path(CGRect(x: left.x, y: left.y - netHeight, width: right.x - left.x, height: netHeight)),
                              with: .color(Color(red: 0.12, green: 0.16, blue: 0.2).opacity(0.75)))
                 context.stroke(Path { $0.move(to: CGPoint(x: left.x, y: left.y - netHeight)); $0.addLine(to: CGPoint(x: right.x, y: right.y - netHeight)) },

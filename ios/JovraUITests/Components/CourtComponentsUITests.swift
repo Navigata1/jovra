@@ -10,8 +10,26 @@ final class CourtComponentsUITests: XCTestCase {
         let app = XCUIApplication.jovra(contentSize: size) { $0.appearance = appearance }
         app.launchEnvironment["JOVRA_COURT_GALLERY"] = scenario
         app.launch()
-        XCTAssertTrue(app.heading("Court components").waitForExistence(timeout: 8))
+        let heading = app.heading("Court components")
+        XCTAssertTrue(heading.waitForExistence(timeout: 8))
+        waitForLayoutToSettle(heading)
         return app
+    }
+
+    /// At an accessibility text size the first frame can be laid out before the size arrives, and an audit taken
+    /// then samples nodes that are gone a moment later ("Contrast failed" with no element, about one launch in
+    /// eight). The page counts as laid out when its heading's frame holds across two reads, the same rule the
+    /// shared audit applies after a scroll.
+    @MainActor
+    private func waitForLayoutToSettle(_ marker: XCUIElement) {
+        var previous = marker.frame
+        for _ in 0..<AccessibilityAudit.settleChecks {
+            Thread.sleep(forTimeInterval: AccessibilityAudit.settleInterval)
+            let current = marker.frame
+            if current == previous { return }
+            previous = current
+        }
+        XCTFail("The court gallery did not settle after launch")
     }
 
     @MainActor
