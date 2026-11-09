@@ -82,6 +82,7 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   corrects stale frames, shifted loops and close-vs-proxy publication. The
   final correction has 15 focused tests and one timing test. Full T14 remains
   open for wider acceptance and integration.
+- Playback timeline follow-up [#474](https://github.com/Navigata1/jovra/pull/474) is a draft on #449 at `616101e`, independently reviewed for its bounded source change. An initial RED drag ended offscreen; a corrected on-screen RED reproduced vertical scrolling failure and failure to pause active playback for one-frame accessibility adjustment. Both results are retained. On a fresh iPhone simulator the exact draft passed 5/5 focused tests: vertical scrolling, tap/horizontal drag, existing jog, active-playback one-frame adjustments at 60 and 240 fps with decoded-pixel verification, and ordered seek/cancel controls. Private receipt: `/Volumes/JOVRA-iPad-CB-T5j7rayT/T14-Timeline-GREEN-616101e.4qWoIx8q/Timeline.xcresult`. Actual UIKit cancellation delivery, physical VoiceOver, production Replay integration and full T14 acceptance remain open.
 - Lesson relationship fence [#459](https://github.com/Navigata1/jovra/pull/459)
   and actual-media custody draft [#461](https://github.com/Navigata1/jovra/pull/461)
   have independent bounded reviews. #461 checks on-disk originals and the recording
