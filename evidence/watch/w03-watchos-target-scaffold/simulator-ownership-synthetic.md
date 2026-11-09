@@ -22,3 +22,11 @@ scripts/l10n/check.sh
 The focused run passed 13 tests. Localization checks passed 32 localization tool tests and 25 iOS script tests, with zero literal violations and zero copy findings. The exact-base failures and final outputs are retained locally in `.scratch/03-exact-head-ownership-red.log`, `.scratch/06-watch-final-l10n.log` and `.scratch/07-watch-final-controls.log`.
 
 This evidence covers script behavior with synthetic inventories. The real simulator lifecycle and the clean alert acknowledgement rerun are still pending. The core-owner review of the project configuration and the decision on companion embedding (#419) remain open.
+
+## Cross-checkout custody
+
+This correction was tested at `d66e1a40e3989355f198b46b903fc5f471490b17` against `110fb1b9d4007558560f3873637b78f9c3547270`. The control creates two Git worktrees in a temporary repository and uses one fake simulator inventory. With a symlinked cache, the previous source let the second worktree resolve the first worktree's UUIDs, reuse them during create, and delete them. Copying the first checkout's receipt into an ordinary local directory also let the second checkout delete them. All four expectations failed on the previous source.
+
+The helper now rejects shared custody paths and checks that the receipt belongs to the canonical checkout that allocated the watches. The corrected test verifies that the second worktree cannot reuse a shared or copied receipt. The original worktree can still resolve its watches, and the inventory and original receipt remain byte-for-byte unchanged after the refusals.
+
+The final focused gate passed 14 tests. Localization checks passed 32 localization tool tests and 26 iOS script tests, with zero literal violations and zero copy findings. Shell syntax and diff checks passed. The raw pre-fix and final output is retained in `.scratch/08-watch-shared-custody-red.log`, `.scratch/11-watch-shared-custody-final.log` and `.scratch/12-watch-shared-custody-final-l10n.log`. All simulator calls were synthetic.
