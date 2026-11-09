@@ -18,8 +18,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   call/alarm interruption, thermal, power-loss or endurance gate has passed.
 - iPad Pro simulator CoreFlow on main failed the Replay Pause Dynamic Type
   audit. Proposed source `725c0a3` passed its AX5 transport test; the unchanged
-  CoreFlow audit then timed out, leaving the original audit unresolved.
-  Receipts remain in `/private/tmp/jovra-nov09/` on this Mac.
+  CoreFlow audit then timed out twice, including an isolated rerun, leaving
+  the original audit unresolved. Receipts remain in `/private/tmp/jovra-nov09/` on this Mac.
 - The supplied private media is described in `docs/fixtures/real-footage.md`.
   The original February match and two-minute excerpt matched their recorded
   hashes. The full match imported through Files and opened in Replay on iPhone.
@@ -28,7 +28,8 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   A temporary Files-enabled build was used and the standard build restored.
   One picker probe was interrupted and a second failed to start import before
   selecting the actual file cell succeeded. The temporary Documents source
-  copy remains on the phone. Keep video and device diagnostics out of GitHub.
+  copy was hash-checked and removed from Documents. The imported original
+  remains in the JOVRA session. Keep video and device diagnostics out of GitHub.
 
 ## Review and fixes
 
@@ -50,6 +51,7 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 - The verified S88 planner continuation [#452](https://github.com/Navigata1/jovra/pull/452)
   remains draft on current main. S06/S07 parity is covered, while S09 transition
   parity and the oversized inherited scope still need work.
+- The unsigned Android owner proposal is draft [#451](https://github.com/Navigata1/jovra/pull/451).
 - Android foundation [#378](https://github.com/Navigata1/jovra/pull/378)
   has owner-gated ADR issues [#375](https://github.com/Navigata1/jovra/issues/375)
   and [#376](https://github.com/Navigata1/jovra/issues/376). Watch foundation
@@ -59,9 +61,9 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
 
 ## Immediate continuation
 
-1. Finish the unchanged iPad CoreFlow audit against the proposed fix without
-   concurrent device/build activity. Preserve both earlier failures. Do not
-   weaken the audit.
+1. Diagnose the iPad CoreFlow accessibility audit timeout against the proposed
+   fix. Preserve the main failure and both candidate timeouts. Do not weaken
+   the audit.
 2. Continue T26 Photos, batches, duplicate handling, provider and interruption
    criteria. The full match is already imported as a practice video and verified.
 3. Re-query PR heads and gates, finish independent reviews, and integrate
