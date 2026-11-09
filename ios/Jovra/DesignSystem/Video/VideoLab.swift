@@ -38,8 +38,9 @@ struct VideoLab: View {
     }
 
     @State var source: Source
-    @State private var controller: PlaybackController?
-    @State private var openError: PlaybackOpenError?
+    @State private var playback = VideoLabPlayback()
+    private var controller: PlaybackController? { playback.controller }
+    private var openError: PlaybackOpenError? { playback.error }
     @State private var zoom = VideoZoom()
     @State private var surfaceSize = CGSize(width: 320, height: 180)
     @State private var pendingLoopStart: Int?
@@ -60,7 +61,7 @@ struct VideoLab: View {
         }
         .background(Color.jovra(.background).ignoresSafeArea())
         .task(id: source) { await open(source) }
-        .onDisappear { controller?.close() }
+        .onDisappear { playback.close() }
     }
 
     // MARK: Layouts
@@ -286,22 +287,11 @@ struct VideoLab: View {
     }
 
     private func open(_ source: Source) async {
-        controller?.close()
-        controller = nil
-        openError = nil
         zoom.reset()
         pendingLoopStart = nil
         let proxies = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask,
                                                    appropriateFor: nil, create: true)
-        do {
-            let opened = try await PlaybackController.open(url: source.url, proxyDirectory: proxies)
-            guard !Task.isCancelled else { opened.close(); return }
-            controller = opened
-        } catch let error as PlaybackOpenError {
-            openError = error
-        } catch {
-            openError = .unreadable
-        }
+        await playback.load(source.url, proxyDirectory: proxies)
     }
 }
 #endif
