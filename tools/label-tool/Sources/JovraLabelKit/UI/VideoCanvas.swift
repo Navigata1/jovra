@@ -160,6 +160,9 @@ final class PointerCatcherView: NSView {
     override var isFlipped: Bool { true }
     override var acceptsFirstResponder: Bool { false }
 
+    // A geometry marker, not a control: assistive technologies read the picture's own element instead.
+    override func isAccessibilityElement() -> Bool { false }
+
     /// The normalized image point under a window location, or nil when it is outside the picture.
     func imagePoint(atWindowLocation location: NSPoint) -> ImagePoint? {
         guard bounds.width > 0, bounds.height > 0 else { return nil }

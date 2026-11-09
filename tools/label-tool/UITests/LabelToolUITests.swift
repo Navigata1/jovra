@@ -59,9 +59,15 @@ final class LabelToolUITests: XCTestCase {
         XCTFail("\(identifier) says \"\(text(identifier))\", expected it to contain \"\(expected)\"", file: file, line: line)
     }
 
-    /// Clicks the picture: `x` and `y` are fractions of the window, inside the picture area on its left.
+    /// Clicks the window at fractions of its size. The picture is on its left; the key legend on its right.
     private func clickWindow(x: CGFloat, y: CGFloat) {
         app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: x, dy: y)).click()
+    }
+
+    /// Moves the pointer there without clicking.
+    private func hoverWindow(x: CGFloat, y: CGFloat) {
+        app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: x, dy: y)).hover()
+        RunLoop.current.run(until: Date().addingTimeInterval(0.3))
     }
 
     func testFounderLabelsTheSyntheticSampleVideo() throws {
@@ -87,18 +93,22 @@ final class LabelToolUITests: XCTestCase {
         app.typeKey(.leftArrow, modifierFlags: [])
         expect("time", says: "0:01.500")
 
-        // B, then a click on the picture: a bounce with its image point.
+        // Point at the ball's contact and press B: one key, no click.
+        hoverWindow(x: 0.35, y: 0.45)
         app.typeKey("b", modifierFlags: [])
-        XCTAssertTrue(element("placement-prompt").waitForExistence(timeout: 10), "B asks for the point")
-        clickWindow(x: 0.35, y: 0.45)
         expect("count-bounces", says: "1")
 
-        // C and a click, four times: the court corners.
-        for (x, y) in [(0.25, 0.36), (0.50, 0.36), (0.60, 0.62), (0.08, 0.62)] as [(CGFloat, CGFloat)] {
+        // The same for three court corners: point and press C.
+        for (index, (x, y)) in ([(0.25, 0.36), (0.50, 0.36), (0.60, 0.62)] as [(CGFloat, CGFloat)]).enumerated() {
+            hoverWindow(x: x, y: y)
             app.typeKey("c", modifierFlags: [])
-            XCTAssertTrue(element("placement-prompt").waitForExistence(timeout: 10), "C asks for the corner")
-            clickWindow(x: x, y: y)
+            expect("count-corners", says: "\(index + 1)")
         }
+        // With the pointer off the picture, C asks for the point and a click gives it.
+        hoverWindow(x: 0.90, y: 0.50)
+        app.typeKey("c", modifierFlags: [])
+        XCTAssertTrue(element("placement-prompt").waitForExistence(timeout: 10), "C asks for the corner when the pointer is elsewhere")
+        clickWindow(x: 0.08, y: 0.62)
         expect("count-corners", says: "4")
 
         // Undo takes the last corner back; redo restores it.
@@ -140,8 +150,10 @@ final class LabelToolUITests: XCTestCase {
         app.launch()
         expect("time", says: "0:00.000", timeout: 60)
         try app.performAccessibilityAudit(for: [.sufficientElementDescription]) { issue in
+            let element = issue.element
+            print("AUDIT ISSUE: \(issue.compactDescription) | type \(element?.elementType.rawValue ?? 0) | id \(element?.identifier ?? "-") | label \(element?.label ?? "-") | frame \(element?.frame ?? .zero)")
             // The window's own close, minimise and zoom buttons belong to AppKit.
-            issue.element?.elementType == .window || issue.element == nil
+            return element?.elementType == .window || element == nil
         }
     }
 }

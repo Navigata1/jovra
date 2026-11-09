@@ -129,6 +129,8 @@ struct Sidebar: View {
                 }
             }
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Keys")
         .accessibilityIdentifier("key-legend")
     }
 }
