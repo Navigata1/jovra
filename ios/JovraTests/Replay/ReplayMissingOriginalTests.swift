@@ -316,8 +316,7 @@ final class ReplayMissingOriginalTests: XCTestCase {
     private func waitForSegmentPicker(in root: NSObject) async -> NSObject? {
         for _ in 0..<200 {
             if let picker = find(in: root, matching: { item in
-                item.accessibilityLabel == "Recording segment"
-                    || (item.accessibilityLabel == "Segment 1" && item.accessibilityTraits.contains(.button))
+                item.accessibilityLabel == "Recording segment, Segment 1" && item.accessibilityTraits.contains(.button)
             }) { return picker }
             try? await Task.sleep(for: .milliseconds(10))
         }
