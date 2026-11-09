@@ -26,6 +26,7 @@ public final class ChaseSeeker {
     private var inFlight: Request?
     private var queued: Request?
     private var waiters: [CheckedContinuation<Void, Never>] = []
+    private var isClosed = false
 
     /// The last successful landing, invalidated by an unsuccessful attempt or playback movement.
     public private(set) var lastCompleted: Request?
@@ -39,6 +40,7 @@ public final class ChaseSeeker {
 
     /// Asks for a seek without waiting for it.
     public func submit(_ time: CMTime, precision: SeekPrecision) {
+        guard !isClosed else { return }
         let request = Request(time: time, precision: precision)
         if inFlight != nil {
             queued = request
@@ -60,22 +62,33 @@ public final class ChaseSeeker {
         lastCompleted = nil
     }
 
-    /// Waits for the queue to drain. Idle alone does not establish a successful landing.
+    /// Waits for the queue to drain or close. Idle alone does not establish a successful landing.
     public func settled() async {
         guard inFlight != nil else { return }
         await withCheckedContinuation { waiters.append($0) }
     }
 
+    /// Ends this seeker, drops queued work and releases waiting callers. The owner cancels its backend.
+    public func close() {
+        guard !isClosed else { return }
+        isClosed = true
+        queued = nil
+        lastCompleted = nil
+        becomeIdle()
+    }
+
     private func start(_ request: Request) {
         inFlight = request
-        issuedCount += 1
         Task { @MainActor in
+            guard !isClosed else { return }
+            issuedCount += 1
             let succeeded = await perform(request.time, request.precision)
             finish(request, succeeded: succeeded)
         }
     }
 
     private func finish(_ request: Request, succeeded: Bool) {
+        guard !isClosed else { return }
         lastCompleted = succeeded ? request : nil
         if let next = queued {
             queued = nil
@@ -84,6 +97,10 @@ public final class ChaseSeeker {
                 return
             }
         }
+        becomeIdle()
+    }
+
+    private func becomeIdle() {
         inFlight = nil
         let resumed = waiters
         waiters = []
