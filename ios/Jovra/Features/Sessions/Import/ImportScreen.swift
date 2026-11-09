@@ -139,6 +139,7 @@ struct ImportScreen: View {
         issue = nil; imported = nil
         let name = playerName
         let setup = kind == .match ? matchSetup : nil
+        if setup != nil { containsFullMatch = false }
         work = Task {
             defer { work = nil; cancelling = false }
             do {
