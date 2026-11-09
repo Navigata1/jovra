@@ -268,6 +268,18 @@ public actor StudioProjectStore {
         return FileManager.default.fileExists(atPath: url.path) ? try Data(contentsOf: url) : nil
     }
 
+    /// Read-modify-write of one record with no suspension between the read and the write, so two callers never lose
+    /// each other's change (LessonJournal, S36). `change` gets the stored bytes (or `nil`) and returns the bytes to
+    /// store; it returns `nil` to leave the record as it is. The new bytes pass the same checks as `writeRecord`.
+    @discardableResult
+    public func updateRecord(named name: String, in folder: StudioProjectFolder, of projectId: String,
+                             _ change: @Sendable (Data?) throws -> Data?) throws -> Data? {
+        let current = try record(named: name, in: folder, of: projectId)
+        guard let bytes = try change(current) else { return current }
+        try writeRecord(bytes, named: name, in: folder, of: projectId)
+        return bytes
+    }
+
     /// Names of the records in `folder`, sorted.
     public func recordNames(in folder: StudioProjectFolder, of projectId: String) throws -> [String] {
         _ = try project(projectId)

@@ -4,7 +4,7 @@ reference: [spec/reference/studio/progress.py]
 cases: [spec/reference/studio/cases/progress_cases.py]
 kinds: [progress-comparison]
 coverage: covered
-swift: pending
+swift: consumed
 kotlin: pending
 ---
 

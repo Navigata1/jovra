@@ -1,0 +1,36 @@
+# swift test (whole JovraStudioCore package) — macOS — 2026-11-09T03:11:57Z
+Studio fixture manifest: 42 kinds; consumers: ["ContractsConsumer", "EDLConsumer", "LedgerConsumer", "LessonsProgressConsumer"]
+  progress-comparison page=progress swift=consumed consumed=true files=1
+✔ Suite "Studio contracts: strict decoding" passed after 3.909 seconds.
+✔ Suite "Lessons: journal" passed after 3.909 seconds.
+✔ Suite "Studio project store: the localStudio entitlement" passed after 3.910 seconds.
+✔ Suite "Studio sample content" passed after 3.910 seconds.
+✔ Suite "Ledger: record rules and the reference's invalid cases" passed after 3.909 seconds.
+✔ Suite "EDL validator: review findings 0, 1, 2, 7 and 8" passed after 3.909 seconds.
+✔ Suite "Studio fixture locator" passed after 3.910 seconds.
+✔ Suite "Studio project store: durability and the index" passed after 3.910 seconds.
+✔ Suite "Studio contracts: record round-trips" passed after 3.910 seconds.
+✔ Suite "Studio project store: sources, slots and revisions" passed after 3.910 seconds.
+✔ Suite "Studio contracts: time" passed after 3.910 seconds.
+✔ Suite "Ledger: QuoteReservation (client quote and consent state)" passed after 3.910 seconds.
+✔ Suite "Studio project store: delete scopes and films" passed after 3.910 seconds.
+✔ Suite "Studio sample content: bundled resources" passed after 3.910 seconds.
+✔ Suite "Lessons: record rules" passed after 3.910 seconds.
+✔ Suite "Studio record header" passed after 3.912 seconds.
+✔ Suite "EDL stage allowlist (SD6b)" passed after 3.913 seconds.
+✔ Suite "Lessons: insights follow corrections" passed after 3.912 seconds.
+✔ Suite "EDL exact arithmetic" passed after 3.912 seconds.
+✔ Suite "Studio contracts: schema set" passed after 3.912 seconds.
+✔ Suite "Ledger: RenderJobMachine for local and cloud jobs" passed after 3.912 seconds.
+✔ Suite "EDL validator: parity with edl.py" passed after 4.117 seconds.
+✔ Suite "Ledger: random retry and redelivery sequences" passed after 4.130 seconds.
+Studio vector cases run by Swift checkers: [(key: "edl-context", value: 4), (key: "job-transitions", value: 32), (key: "ledger", value: 21), (key: "progress-comparison", value: 20), (key: "quote-credits", value: 8)]
+✔ Suite "Studio contracts: vector consumers" passed after 4.236 seconds.
+✔ Suite "Studio project store: the lock's event revision" passed after 4.271 seconds.
+✔ Suite "Studio contracts: fixture manifest" passed after 4.748 seconds.
+✔ Suite "Lessons: missing clips and Find the video" passed after 4.997 seconds.
+✔ Suite "Ledger: vector parity with jobstate.py and ledger.py" passed after 5.197 seconds.
+✔ Suite "Studio sample content: the sample-scope rule" passed after 5.589 seconds.
+✔ Suite "Lessons: Progress Story comparisons" passed after 6.068 seconds.
+✔ Suite "Studio contracts: invalid cases" passed after 6.443 seconds.
+✔ Test run with 152 tests in 31 suites passed after 6.444 seconds.
