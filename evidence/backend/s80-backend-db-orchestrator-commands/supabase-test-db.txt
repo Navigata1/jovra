@@ -1,0 +1,26 @@
+# CI run 42541166673 (backend-db), step "supabase test db"
+psql:/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql:15: NOTICE:  extension "pgtap" already exists, skipping
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/000_harness.test.sql .................................. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/001_harness_selftest.test.sql ......................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/010_tester_signup_lock.test.sql ....................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_01_catalog.test.sql .................. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_02_uploads_cameras.test.sql .......... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_03_grants_links_deletion.test.sql .... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_04_money.test.sql .................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_gateway_05_actor_audit.test.sql .............. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_orchestrator_01_catalog.test.sql ............. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_orchestrator_02_stages.test.sql .............. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_orchestrator_03_leases.test.sql .............. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/commands_orchestrator_04_plan_keys_deletion.test.sql .. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_01_catalog.test.sql .......................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_02_role_matrix.test.sql ...................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/identity_03_guards.test.sql ........................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_01_catalog.test.sql ............................. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_02_sources_events.test.sql ...................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_03_lessons_clips.test.sql ....................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/media_04_quotas.test.sql .............................. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/money_01_catalog.test.sql ............................. ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/money_02_roles.test.sql ............................... ok
+/home/runner/work/jovra/jovra/backend/supabase/tests/database/money_03_integrity.test.sql ........................... ok
+Files=22, Tests=979,  1 wallclock secs ( 0.07 usr  0.03 sys +  0.12 cusr  0.10 csys =  0.32 CPU)
+Result: PASS

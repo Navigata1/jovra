@@ -1,0 +1,114 @@
+# CI run 42541166673 (backend-db), step "Ledger vectors replayed through the SQL commands (S80 adapter test)"
+PASS  job_transition_allowed equals the contract for all 400 pairs of job states (with and without a stored resume state)
+PASS  setup: the ledger rate card (2-credit stage floors, 1,000 micro-USD per container second) and the command-role grants
+PASS  happy-path-idempotent step 1 accept: {}
+PASS  happy-path-idempotent step 2 reserve: {"balance": 6, "replayed": false, "reservationId": "res-0001"}
+PASS  happy-path-idempotent step 3 reserve: {"balance": 6, "replayed": true, "reservationId": "res-0001"}
+PASS  happy-path-idempotent step 4 consume: {"consumedCredits": 1, "replayed": false}
+PASS  happy-path-idempotent step 5 consume: {"consumedCredits": 1, "replayed": true}
+PASS  happy-path-idempotent step 6 consume: {"consumedCredits": 3, "replayed": false}
+PASS  happy-path-idempotent step 7 release: {"balance": 7, "releasedCredits": 1, "replayed": false}
+PASS  happy-path-idempotent step 8 release: {"balance": 7, "releasedCredits": 1, "replayed": true}
+PASS  happy-path-idempotent: final balances from usage_reservations
+PASS  same-key-different-terms step 1 accept: {}
+PASS  same-key-different-terms step 2 reserve: {"balance": 6, "replayed": false, "reservationId": "res-0001"}
+PASS  same-key-different-terms step 3 reserve: refused by sql as idempotencyConflict  (P0409 already_accepted)
+PASS  same-key-different-terms step 4 consume: {"consumedCredits": 1}
+PASS  same-key-different-terms step 5 consume: refused by sql as idempotencyConflict  (P0409 already_finished)
+PASS  same-key-different-terms: final balances from usage_reservations
+PASS  budget-exceeded-then-failed step 1 accept: {}
+PASS  budget-exceeded-then-failed step 2 reserve: {"balance": 8, "reservationId": "res-0001"}
+PASS  budget-exceeded-then-failed step 3 consume: {"consumedCredits": 2}
+PASS  budget-exceeded-then-failed step 4 consume: refused by sql as budgetExceeded  (P0402 budget_exceeded)
+PASS  budget-exceeded-then-failed step 5 release: {"balance": 8, "releasedCredits": 0}
+PASS  budget-exceeded-then-failed: final balances from usage_reservations
+PASS  failure-returns-unconsumed step 1 accept: {}
+PASS  failure-returns-unconsumed step 2 reserve: {"balance": 6, "replayed": false, "reservationId": "res-0001"}
+PASS  failure-returns-unconsumed step 3 consume: {"consumedCredits": 1}
+PASS  failure-returns-unconsumed step 4 release: {"balance": 9, "releasedCredits": 3}
+PASS  failure-returns-unconsumed step 5 consume: refused by sql as reservationClosed  (P0409 reservation_closed)
+PASS  failure-returns-unconsumed: final balances from usage_reservations
+PASS  expired-quote step 1 accept: refused by sql as quoteExpired  (P0410 quote_expired)
+PASS  expired-quote step 2 reserve: refused by adapter as quoteNotAccepted  (the acceptance was refused, so there is nothing to reserve)
+PASS  expired-quote: final balances from usage_reservations
+PASS  no-consent step 1 accept: refused by sql as consentMissing  (P0422 invalid_value:consent)
+PASS  no-consent: final balances from usage_reservations
+PASS  illustrative-never-accepted step 1 accept: refused by app as illustrativeQuote  (an illustrative Sample quote is never stored)
+PASS  illustrative-never-accepted: final balances from usage_reservations
+PASS  demo-never-reserves step 1 accept: {}
+PASS  demo-never-reserves step 2 reserve: refused by gateway as demoNeverReserves  (demo identities never reach the database (T-GW-03))
+PASS  demo-never-reserves: final balances from usage_reservations
+PASS  live-not-activated step 1 accept: {}
+PASS  live-not-activated step 2 reserve: refused by sql as liveChargingNotActivated  (P0409 live_charging_not_activated)
+PASS  live-not-activated: final balances from usage_reservations
+PASS  new-revision-new-reservation step 1 accept: {}
+PASS  new-revision-new-reservation step 2 accept: {}
+PASS  new-revision-new-reservation step 3 reserve: {"balance": 6, "replayed": false, "reservationId": "res-0001"}
+PASS  new-revision-new-reservation step 4 reserve: {"balance": 2, "replayed": false, "reservationId": "res-0002"}
+PASS  new-revision-new-reservation: final balances from usage_reservations
+PASS  cap-and-balance step 1 accept: {}
+PASS  cap-and-balance step 2 reserve: refused by adapter as overCap  (a reservation above the quote's cap (SQL holds exactly the cap))
+PASS  cap-and-balance step 3 reserve: refused by sql as insufficientCredits  (P0402 budget_exceeded)
+PASS  cap-and-balance step 4 reserve: {"balance": 0, "reservationId": "res-0001"}
+PASS  cap-and-balance: final balances from usage_reservations
+PASS  quote-for-another-revision step 1 accept: {}
+PASS  quote-for-another-revision step 2 reserve: refused by sql as quoteMismatch  (P0409 inputs_changed)
+PASS  quote-for-another-revision: final balances from usage_reservations
+PASS  one-accepted-quote-one-hold step 1 accept: {}
+PASS  one-accepted-quote-one-hold step 2 reserve: {"balance": 6, "replayed": false, "reservationId": "res-0001"}
+PASS  one-accepted-quote-one-hold step 3 reserve: refused by sql as quoteMismatch  (P0409 already_accepted)
+PASS  one-accepted-quote-one-hold: final balances from usage_reservations
+PASS  budget-exceeded-topup-resumes step 1 accept: {}
+PASS  budget-exceeded-topup-resumes step 2 reserve: {"balance": 8, "reservationId": "res-0001"}
+PASS  budget-exceeded-topup-resumes step 3 consume: {"consumedCredits": 2}
+PASS  budget-exceeded-topup-resumes step 4 consume: refused by sql as budgetExceeded  (P0402 budget_exceeded)
+PASS  budget-exceeded-topup-resumes step 5 accept: {}
+PASS  budget-exceeded-topup-resumes step 6 reserve: refused by adapter as idempotencyConflict  (a second quote on a held key is a top-up request)
+PASS  budget-exceeded-topup-resumes step 7 topup: {"balance": 5, "reservationId": "res-0001", "reservedCredits": 5}
+PASS  budget-exceeded-topup-resumes step 8 consume: {"consumedCredits": 3, "replayed": false}
+PASS  budget-exceeded-topup-resumes step 9 consume: {"consumedCredits": 3, "replayed": true}
+PASS  budget-exceeded-topup-resumes step 10 release: {"balance": 7, "releasedCredits": 2}
+PASS  budget-exceeded-topup-resumes: final balances from usage_reservations
+PASS  retries-after-topup-replay step 1 accept: {}
+PASS  retries-after-topup-replay step 2 reserve: {"balance": 8, "reservationId": "res-0001"}
+PASS  retries-after-topup-replay step 3 consume: {"consumedCredits": 2}
+PASS  retries-after-topup-replay step 4 accept: {}
+PASS  retries-after-topup-replay step 5 topup: {"balance": 5, "replayed": false, "reservedCredits": 5}
+PASS  retries-after-topup-replay step 6 reserve: {"balance": 5, "replayed": true, "reservationId": "res-0001"}
+PASS  retries-after-topup-replay step 7 topup: {"balance": 5, "replayed": true, "reservedCredits": 5}
+PASS  retries-after-topup-replay step 8 reserve: refused by adapter as idempotencyConflict  (a second quote on a held key is a top-up request)
+PASS  retries-after-topup-replay: final balances from usage_reservations
+PASS  retry-not-charged-twice step 1 accept: {}
+PASS  retry-not-charged-twice step 2 reserve: {"balance": 6, "replayed": false, "reservationId": "res-0001"}
+PASS  retry-not-charged-twice step 3 consume: {"consumedCredits": 1, "replayed": false}
+PASS  retry-not-charged-twice step 4 consume: {"consumedCredits": 1, "replayed": true}
+PASS  retry-not-charged-twice step 5 consume: refused by sql as idempotencyConflict  (P0409 already_finished)
+PASS  retry-not-charged-twice: final balances from usage_reservations
+PASS  fractional-second-expiry step 1 accept: refused by sql as quoteExpired  (P0410 quote_expired)
+PASS  fractional-second-expiry step 2 reserve: refused by adapter as quoteNotAccepted  (the acceptance was refused, so there is nothing to reserve)
+PASS  fractional-second-expiry: final balances from usage_reservations
+PASS  consume-bound-to-job-and-stage step 1 accept: {}
+PASS  consume-bound-to-job-and-stage step 2 reserve: {"balance": 6, "replayed": false, "reservationId": "res-0001"}
+PASS  consume-bound-to-job-and-stage step 3 consume: {"consumedCredits": 1, "replayed": false}
+PASS  consume-bound-to-job-and-stage step 4 consume: refused by sql as unknownStage  (22P02 invalid input value for enum job_stage: "Final_Rendering")
+PASS  consume-bound-to-job-and-stage step 5 consume: refused by sql as jobMismatch  (P0404 not_found)
+PASS  consume-bound-to-job-and-stage step 6 consume: refused by sql as unknownStage  (22P02 invalid input value for enum job_stage: "not_a_stage")
+PASS  consume-bound-to-job-and-stage step 7 attachJob: refused by adapter as jobMismatch  (the hold already funds another job)
+PASS  consume-bound-to-job-and-stage step 8 attachJob: {"jobId": "job-1", "replayed": true}
+PASS  consume-bound-to-job-and-stage: final balances from usage_reservations
+PASS  job-attached-after-reserve step 1 accept: {}
+PASS  job-attached-after-reserve step 2 reserve: {"balance": 6, "replayed": false, "reservationId": "res-0001"}
+PASS  job-attached-after-reserve step 3 consume: refused by adapter as jobMismatch  (the vector has not named the hold's job yet)
+PASS  job-attached-after-reserve step 4 attachJob: {"jobId": "job-1", "replayed": false}
+PASS  job-attached-after-reserve step 5 consume: {"consumedCredits": 1, "replayed": false}
+PASS  job-attached-after-reserve: final balances from usage_reservations
+PASS  topup-from-initial-quote-refused step 1 accept: {}
+PASS  topup-from-initial-quote-refused step 2 reserve: {"balance": 8, "reservationId": "res-0001"}
+PASS  topup-from-initial-quote-refused step 3 topup: refused by sql as idempotencyConflict  (P0409 already_accepted)
+PASS  topup-from-initial-quote-refused: final balances from usage_reservations
+PASS  boolean-credits-refused step 1 accept: {}
+PASS  boolean-credits-refused step 2 reserve: refused by adapter as badAmount  (credits are integers (the gateway's JSON Schema))
+PASS  boolean-credits-refused: final balances from usage_reservations
+PASS  cleanup: users (cascading projects, quotes, holds, jobs), rate card, environment
+ledger vectors: 21 cases; step outcomes decided by adapter 10, app 1, gateway 2, sql 74
+ledger vectors: all checks passed
