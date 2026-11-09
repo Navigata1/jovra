@@ -79,16 +79,28 @@ data class RecordProvenance(
         return CanonicalJson.canonicalize(input, CanonicalJson.Limits(input.size, maxOutputBytes))
     }
 
-    internal fun toJsonObject(maxOutputBytes: Int): JsonObject = buildJsonObject {
-        put("status", status.wireName)
-        put("source", source)
-        capabilityId?.let { put("capabilityId", it) }
-        capabilityVersion?.let { put("capabilityVersion", it) }
-        confidence?.let { put("confidence", confidenceToken(it, maxOutputBytes)) }
-        calibrationId?.let { put("calibrationId", it.value) }
-        denominator?.let { put("denominator", it) }
-        computedAt?.let { put("computedAt", it) }
-        sample?.let { put("sample", it) }
+    internal fun toJsonObject(maxOutputBytes: Int): JsonObject {
+        val normalized = confidence?.stripTrailingZeros()
+        // These are the only unbounded fields. Source and capability ID are ASCII, and a
+        // normalized fraction has "0." followed by exactly scale fractional digits.
+        val confidenceWidth = when {
+            normalized == null -> 0L
+            normalized.scale() == 0 -> 1L
+            else -> 2L + normalized.scale()
+        }
+        val minimumBytes = source.length.toLong() + (capabilityId?.length ?: 0) + confidenceWidth
+        if (minimumBytes > maxOutputBytes) throw CanonicalJson.LimitExceeded(CanonicalJson.Limit.OUTPUT, maxOutputBytes)
+        return buildJsonObject {
+            put("status", status.wireName)
+            put("source", source)
+            capabilityId?.let { put("capabilityId", it) }
+            capabilityVersion?.let { put("capabilityVersion", it) }
+            normalized?.let { put("confidence", Json.parseToJsonElement(it.toPlainString())) }
+            calibrationId?.let { put("calibrationId", it.value) }
+            denominator?.let { put("denominator", it) }
+            computedAt?.let { put("computedAt", it) }
+            sample?.let { put("sample", it) }
+        }
     }
 
     companion object {
@@ -133,12 +145,5 @@ data class RecordProvenance(
                 .stripTrailingZeros()
         }
 
-        private fun confidenceToken(value: BigDecimal, maxOutputBytes: Int): JsonElement {
-            val normalized = value.stripTrailingZeros()
-            // For a fraction between zero and one, plain text has "0." and exactly scale fractional digits.
-            val length = if (normalized.scale() == 0) 1L else 2L + normalized.scale()
-            if (length > maxOutputBytes) throw CanonicalJson.LimitExceeded(CanonicalJson.Limit.OUTPUT, maxOutputBytes)
-            return Json.parseToJsonElement(normalized.toPlainString())
-        }
     }
 }

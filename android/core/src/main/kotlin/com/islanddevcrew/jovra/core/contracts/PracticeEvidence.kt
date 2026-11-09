@@ -63,12 +63,13 @@ class PracticeEvidence(
 
     companion object {
         private const val MAX_POINT_IDS = 50
+        private const val WIRE_DEPTH = 3 // Row, nested object or point IDs array, scalar.
         private val fieldNames = setOf("sessionId", "stat", "value", "provenance", "availability", "side", "text", "pointIds")
 
         /** Validates original JSON grammar and duplicate keys before reading nested typed values. */
         fun decodeJson(bytes: ByteArray, maxInputBytes: Int): PracticeEvidence {
             val input = CanonicalJson.decodeJsonInput(bytes, maxInputBytes)
-            CanonicalJson.validateObject(input)
+            CanonicalJson.validateObject(input, WIRE_DEPTH)
             val fields = Json.parseToJsonElement(input) as JsonObject
             require(fields.keys.all { it in fieldNames }) { "Unknown practice evidence field" }
             val availability = fields.requireString("availability")

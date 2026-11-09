@@ -7,6 +7,7 @@ import java.math.BigInteger
 import java.nio.file.Path
 import kotlin.io.path.readText
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -107,7 +108,7 @@ class PracticeEvidenceTest {
     fun `closed row and nested shapes reject missing unknown invalid and null fields`() {
         for (field in listOf("sessionId", "stat", "value", "provenance", "availability")) {
             val obj = Json.parseToJsonElement(raw()).jsonObject
-            assertRefused(kotlinx.serialization.json.JsonObject(obj - field).toString())
+            assertRefused(JsonObject(obj - field).toString())
         }
         for (field in listOf("side", "text", "pointIds")) assertRefused(raw(extra = ",\"$field\":null"))
         for (invalid in listOf(
@@ -174,9 +175,11 @@ class PracticeEvidenceTest {
         assertThrows(IllegalArgumentException::class.java) { PracticeEvidence.decodeJson(invalid, invalid.size) }
         val precise = decode(raw(provenance = provenance.dropLast(1) + ",\"confidence\":1e-10000}"))
         val largeSource = "import:" + "x".repeat(8192)
+        val longMetadata = PracticeEvidence(row.sessionId, row.stat, row.value,
+            row.provenance.copy(source = largeSource, capabilityId = "a".repeat(8192)), row.availability)
         val huge = PracticeEvidence(row.sessionId, row.stat, row.value,
             row.provenance.copy(confidence = BigDecimal(BigInteger.ONE, Int.MAX_VALUE), source = largeSource), row.availability)
-        for (oversize in listOf(precise, huge)) {
+        for (oversize in listOf(precise, huge, longMetadata)) {
             assertEquals(CanonicalJson.Limit.OUTPUT, assertThrows(CanonicalJson.LimitExceeded::class.java) {
                 oversize.encodeJson(256)
             }.limit)
