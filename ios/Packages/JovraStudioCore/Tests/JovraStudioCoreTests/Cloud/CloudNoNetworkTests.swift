@@ -47,7 +47,7 @@ struct CloudNoNetworkTests {
 
     @Test("the trap catches a real request, then sees none while every demo scenario runs every call")
     func urlProtocolTrap() async throws {
-        URLProtocol.registerClass(Trap.self)
+        _ = URLProtocol.registerClass(Trap.self)
         defer { URLProtocol.unregisterClass(Trap.self) }
         Trap.reset()
         try await Self.selfCheck()
