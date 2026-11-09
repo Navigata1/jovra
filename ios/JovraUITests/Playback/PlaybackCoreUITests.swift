@@ -88,6 +88,42 @@ final class PlaybackCoreUITests: XCTestCase {
         // XCUITest on iOS has no API to send an accessibility increment to an adjustable element.
     }
 
+    @MainActor
+    func testTimelineVerticalDragScrollsWithoutSeekingOrStartingPlayback() throws {
+        let app = launchLab(contentSize: .accessibility5)
+        let timeline = element(app, "playback.timeline")
+        XCTAssertTrue(timeline.waitForExistence(timeout: 10))
+        let scroll = app.scrollViews["videoLab.scroll"]
+        XCTAssertTrue(scroll.exists)
+        let gutter = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: 0.65))
+        gutter.press(forDuration: 0.05, thenDragTo: gutter.withOffset(CGVector(dx: 0, dy: -150)))
+        XCTAssertTrue(timeline.isHittable)
+        XCTAssertTrue(waitForReadout(app, frame: 0))
+        let before = timeline.frame.minY
+        let start = timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: 110)))
+        XCTAssertGreaterThan(timeline.frame.minY, before + 10, "the enclosing page scrolls")
+        XCTAssertEqual(readoutFrame(app), 0, "a vertical swipe does not seek near the 80% position")
+        XCTAssertEqual(element(app, "transport.playPause").label, "Play")
+    }
+
+    @MainActor
+    func testTimelineTapAndHorizontalDragStillSeek() throws {
+        let app = launchLab()
+        let timeline = element(app, "playback.timeline")
+        XCTAssertTrue(timeline.waitForExistence(timeout: 10))
+        XCTAssertTrue(timeline.isHittable)
+        timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.5)).tap()
+        let tapped = try XCTUnwrap(readoutFrame(app))
+        XCTAssertTrue((27...33).contains(tapped), "quarter of the 120-frame fixture: \(tapped)")
+
+        let start = timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.5))
+        let end = timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5))
+        start.press(forDuration: 0.05, thenDragTo: end)
+        let dragged = try XCTUnwrap(readoutFrame(app))
+        XCTAssertTrue((86...92).contains(dragged), "three quarters of the fixture: \(dragged)")
+    }
+
     // MARK: Keyboard
 
     @MainActor

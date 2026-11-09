@@ -1,6 +1,9 @@
+@preconcurrency import AVFoundation
 import CoreGraphics
+import CoreVideo
 import Darwin
 import Foundation
+import JovraBenchmark
 import JovraCore
 import JovraMedia
 import SwiftUI
@@ -110,6 +113,20 @@ struct JogStripAccessibilityTests {
         }
     }
 
+    private struct TimelineHarness: View {
+        let controller: PlaybackController
+
+        var body: some View {
+            PlaybackTimeline(frame: controller.currentFrame, frameCount: controller.frameCount,
+                             currentTimeText: ReadoutFormat.time(seconds: controller.readout.seconds),
+                             durationText: ReadoutFormat.time(seconds: 2),
+                             onScrub: { controller.scrub(toFrame: $0) },
+                             onTap: { _ in Issue.record("an accessibility action is not a tap") },
+                             onScrubEnded: { frame in Task { await controller.endScrub(atFrame: frame) } })
+                .padding()
+        }
+    }
+
     /// SwiftUI builds its accessibility tree only when an assistive technology asks for it. As the
     /// AccessibilitySnapshot project does for its SwiftUI snapshots, turn application accessibility on for this
     /// test process (test-only; the app never does this).
@@ -195,4 +212,56 @@ struct JogStripAccessibilityTests {
         await waitFor { find("playback.jog", in: root)?.accessibilityValue?.hasPrefix("Frame 2,") == true }
         #expect(find("playback.jog", in: root)?.accessibilityValue?.hasPrefix("Frame 2,") == true)
     }
+
+    @Test(arguments: ["frameCounter/fc-060", "frameCounter/fc-240"])
+    func timelineAdjustmentMovesTheDecodedPictureOneFrameAndClampsAtEachEnd(id: String) async throws {
+        let catalog = MediaFixtureCatalog.repository(filePath: #filePath)
+        let truth = try catalog.truth(id: id)
+        let controller = try await PlaybackController.open(url: catalog.mediaURL(for: truth))
+        defer { controller.close() }
+        #expect(Self.accessibilityEnabled)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 300))
+        window.rootViewController = UIHostingController(rootView: TimelineHarness(controller: controller))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let root = try #require(window.rootViewController?.view)
+        await waitFor { find("playback.timeline", in: root) != nil }
+        let output = AVPlayerItemVideoOutput(pixelBufferAttributes: [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange,
+        ])
+        controller.player.currentItem?.add(output)
+
+        func verify(_ expected: Int, adjust: (NSObject) -> Void) async throws {
+            let element = try #require(find("playback.timeline", in: root))
+            #expect(element.accessibilityTraits.contains(.adjustable))
+            adjust(element)
+            await waitFor { controller.currentFrame == expected }
+            await controller.settle()
+            #expect(controller.currentFrame == expected)
+            let time = controller.player.currentTime()
+            var pixel: CVPixelBuffer?
+            await waitFor {
+                pixel = output.copyPixelBuffer(forItemTime: time, itemTimeForDisplay: nil)
+                return pixel != nil
+            }
+            let buffer = try #require(pixel)
+            #expect(try FrameCode.read(from: LumaPlane(pixelBuffer: buffer), truth: truth) == expected)
+            let spokenFrame = "Frame \(JovraFormat.count(expected)),"
+            await waitFor { find("playback.timeline", in: root)?.accessibilityValue?.hasPrefix(spokenFrame) == true }
+            #expect(find("playback.timeline", in: root)?.accessibilityValue?.hasPrefix(spokenFrame) == true)
+        }
+
+        try await verify(0) { $0.accessibilityDecrement() }
+        try await verify(1) { $0.accessibilityIncrement() }
+        try await verify(2) { $0.accessibilityIncrement() }
+        try await verify(1) { $0.accessibilityDecrement() }
+        let last = truth.video.frameCount - 1
+        await controller.seek(toFrame: last)
+        await waitFor {
+            find("playback.timeline", in: root)?.accessibilityValue?.hasPrefix("Frame \(JovraFormat.count(last)),") == true
+        }
+        try await verify(last) { $0.accessibilityIncrement() }
+        try await verify(last - 1) { $0.accessibilityDecrement() }
+    }
+
 }
