@@ -382,9 +382,11 @@ it when you finish a ticket: `rm -rf .derivedData`.
   Catalog ownership check against the base branch.
 - `media-fixtures`: on Ubuntu, `render.py --check` (renders with apt's ffmpeg and requires the committed
   decoded-frame hashes) and `scripts/spec/validate.py`.
-- `ios-app (manual)`: `workflow_dispatch` only. On macOS it runs both package test suites, generates
-  the project, builds the app and runs `JovraTests`. Simulator UI suites run on the build Mac, and
-  their evidence goes on the PR (ADR-0006).
+- `ios-app` (its own workflow, `.github/workflows/ios-app.yml`): runs by itself on every pull request
+  and main push that touches `ios/`, `spec/` or `scripts/media/`, and on `workflow_dispatch`. On macOS
+  it runs both package test suites, generates the project, builds the app and runs `JovraTests`. It is
+  path-filtered, so it must not be made a required check. Simulator UI suites run on the build Mac,
+  and their evidence goes on the PR (ADR-0006).
 
 ## Evidence
 
