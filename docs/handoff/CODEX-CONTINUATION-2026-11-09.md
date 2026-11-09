@@ -12,7 +12,7 @@ open PRs before acting. Preserve Claude's worktrees and the private media.
   checkout. Independently checked the actual
   synthetic session and export JSON, canonical encoding, corrected scoring
   CSV, stats CSV and one-second 30-frame decoded clip.
-- iPhone 15 Pro Max on the same product source: a live-camera recording
+- iPhone 15 Pro Max on earlier main product source `d1f13ab`: a live-camera recording
   reopened after the test terminated the app, and a separate pause/resume,
   save and replay test passed. The original first save attempt failed because
   the test did not dismiss the camera permission explanation. No loss bound,
