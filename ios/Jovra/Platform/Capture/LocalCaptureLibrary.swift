@@ -123,13 +123,18 @@ actor LocalCaptureLibrary: RecordingSink {
         return try await store.needsCaptureRecovery(id)
     }
 
-    func importFile(_ source: URL, playerName: String) async throws -> SessionID {
-        let id = try await FilesImportService(store: store).importVideo(source, playerName: playerName)
+    func importFile(_ source: URL, playerName: String, importingAgain permission: FilesImportFingerprint? = nil) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).importVideo(source, playerName: playerName, importingAgain: permission)
         return SessionID(rawValue: id)
     }
 
-    func importMatch(_ source: URL, setup: FilesImportMatchSetup) async throws -> SessionID {
-        let id = try await FilesImportService(store: store).importMatch(source, setup: setup)
+    func importMatch(_ source: URL, setup: FilesImportMatchSetup, importingAgain permission: FilesImportFingerprint? = nil) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).importMatch(source, setup: setup, importingAgain: permission)
+        return SessionID(rawValue: id)
+    }
+
+    func verifyExistingDuplicate(_ duplicate: FilesImportDuplicate) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).verifyExistingDuplicate(duplicate)
         return SessionID(rawValue: id)
     }
 
