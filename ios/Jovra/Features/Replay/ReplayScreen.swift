@@ -8,6 +8,7 @@ struct ReplayScreen: View {
     var request: ReplayRequest
     @Environment(AppRouter.self) private var router
     @Environment(\.localCaptureLibrary) private var library
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var playback = ReplayPlaybackModel()
     @State private var review = ReviewedPointModel()
     @State private var startText = JovraFormat.count(0)
@@ -82,13 +83,20 @@ struct ReplayScreen: View {
                 Text("f \(JovraFormat.count(frame.index)) · \(JovraFormat.clock(seconds: frame.time.seconds))", tableName: "Replay")
                     .monospacedDigit().accessibilityIdentifier("replay.frame")
             }
+            transportControls.disabled(playback.isWorking)
+        } else if playback.isWorking {
+            ProgressView(String(localized: "Opening the original…", table: "Replay"))
+        }
+    }
+
+    @ViewBuilder private var transportControls: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack { transport }
+        } else {
             ViewThatFits(in: .horizontal) {
                 HStack { transport }
                 VStack { transport }
             }
-            .disabled(playback.isWorking)
-        } else if playback.isWorking {
-            ProgressView(String(localized: "Opening the original…", table: "Replay"))
         }
     }
 
