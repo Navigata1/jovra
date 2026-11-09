@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "jovra.source-manifest/1",
+  "projectId": "sample-barcode-court-60",
+  "revision": 1,
+  "sample": true,
+  "createdAt": "2026-11-08T00:00:00Z",
+  "sources": [
+    {
+      "sourceId": "bc-060",
+      "role": "match",
+      "slot": "near-baseline",
+      "isPrimary": true,
+      "deviceLabel": "Sample Barcode source, 60 fps (synthetic)",
+      "original": {
+        "sha256": "b99315c2e6990ef84f8b6d9ce564bc009bdc637a7bd976571ecb6d128c1b6a6b",
+        "sizeBytes": 218312,
+        "container": "mp4",
+        "durationUs": 10000000,
+        "timescale": 15360,
+        "startPts": {
+          "value": 0,
+          "timescale": 15360
+        },
+        "frameCount": 600,
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "vfr": false,
+        "video": {
+          "codec": "h264",
+          "width": 1280,
+          "height": 720,
+          "rotationDegrees": 0,
+          "pixelAspect": {
+            "num": 1,
+            "den": 1
+          }
+        },
+        "colour": {
+          "primaries": "bt709",
+          "transfer": "bt709",
+          "matrix": "bt709",
+          "range": "limited",
+          "bitDepth": 8,
+          "hdr": false
+        },
+        "audio": {
+          "codec": "aac",
+          "sampleRate": 48000,
+          "channels": 1
+        }
+      },
+      "lens": {
+        "kind": "unknown",
+        "zoomFactor": null
+      },
+      "captureHints": {
+        "wallClockStart": null,
+        "wallClockSource": "none",
+        "roomOffsetUs": null,
+        "roomRoundTripUs": null
+      },
+      "segments": [
+        {
+          "segmentId": "seg-0",
+          "index": 0,
+          "reason": "import",
+          "fileZeroHostNs": null,
+          "startPts": {
+            "value": 0,
+            "timescale": 15360
+          },
+          "durationUs": 10000000,
+          "frameCount": 600
+        }
+      ],
+      "proxies": [
+        {
+          "class": "render",
+          "sha256": "b99315c2e6990ef84f8b6d9ce564bc009bdc637a7bd976571ecb6d128c1b6a6b",
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "width": 1280,
+          "height": 720,
+          "frameCount": 600,
+          "ptsTableSha256": "f5d2dedde69e768ec75355a26f02deaf60c5a5ffca3b8191112ac83ef87bc391",
+          "normalizerVersion": "jovra-normalize@0.1.0",
+          "rotationApplied": false,
+          "toneMapped": false
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "method": "sha256-full-read-device",
+        "verifiedAt": "2026-11-08T00:00:00Z"
+      }
+    }
+  ]
+}

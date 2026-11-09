@@ -5,6 +5,7 @@ edit it by hand. A new page appears here when the generator runs. Each page's fr
 `coverage`, `swift`, `kotlin`) is checked by `scripts/spec/validate_studio.py`, and
 `python3 scripts/spec/validate_studio.py --list` prints every registered kind with its module and status.
 
+- [barcode-court](barcode-court.md)
 - [bundle](bundle.md)
 - [compile](compile.md)
 - [core](core.md)
