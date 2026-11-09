@@ -22,7 +22,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-COPIED = ("scripts/spec", "spec", "design-reference/studio/brief")
+# scripts/media: the media-fixtures cases module recomputes its manifests from the Studio media generator (S08).
+COPIED = ("scripts/spec", "spec", "design-reference/studio/brief", "scripts/media")
 
 TEMP_CASES = '''\
 """A temporary cases module (test only)."""
@@ -263,7 +264,7 @@ class StudioPlumbingTest(unittest.TestCase):
         rows = {line.split()[0]: line.split() for line in result.stdout.splitlines() if line.strip()}
         # kind, type, count, invalid, module, coverage, swift, kotlin
         self.assertEqual(rows["quote-credits"][1:3], ["vector", str(self.box.vector_cases("quote-credits"))])
-        self.assertEqual(rows["quote-credits"][4:7], ["ledger", "covered", "pending"])
+        self.assertEqual(rows["quote-credits"][4:7], ["ledger", "covered", "consumed"])  # Swift consumer since S12
         self.assertEqual(rows["sync-fit"][4], "sync")
         self.assertEqual(rows["jovra.edit-plan/2"][1], "schema")
         self.assertEqual(rows["normalization"][1:], ["vector", str(self.box.vector_cases("normalization")), "-",

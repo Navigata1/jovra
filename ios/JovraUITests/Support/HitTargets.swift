@@ -19,9 +19,12 @@ enum HitTarget {
 extension XCTestCase {
     /// Asserts that every hittable button, link, switch, slider, text field and segmented control
     /// on screen is at least 44 × 44 pt. `exempt` lists accessibility identifiers allowed to be
-    /// smaller, each with the reason in the caller.
+    /// smaller, each with the reason in the caller. A screen that may legitimately show no control
+    /// (a read-only page, or one scrolled past its controls at accessibility sizes) passes
+    /// `requiresControls: false`.
     @MainActor
-    func assertHitTargets(in app: XCUIApplication, exempt: Set<String> = [], file: StaticString = #filePath, line: UInt = #line) {
+    func assertHitTargets(in app: XCUIApplication, exempt: Set<String> = [], requiresControls: Bool = true,
+                          file: StaticString = #filePath, line: UInt = #line) {
         let queries = [app.buttons, app.links, app.switches, app.sliders, app.textFields, app.segmentedControls]
         var controls: [HitTarget.Control] = []
         for query in queries {
@@ -30,7 +33,9 @@ extension XCTestCase {
                 controls.append(.init(description: "\(element.elementType.rawValue) “\(name)”", frame: element.frame))
             }
         }
-        XCTAssertFalse(controls.isEmpty, "no controls found on screen", file: file, line: line)
+        if requiresControls {
+            XCTAssertFalse(controls.isEmpty, "no controls found on screen", file: file, line: line)
+        }
         for control in HitTarget.undersized(controls) {
             XCTFail("\(control.description) is \(control.frame.width) × \(control.frame.height) pt, under 44 × 44", file: file, line: line)
         }

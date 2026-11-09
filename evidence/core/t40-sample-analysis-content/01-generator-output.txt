@@ -1,0 +1,19 @@
+$ python3 spec/reference/generate_fixtures.py
+scoring_cases 79, order_cases 30, rally_cases 8, log_safety_cases 1, stats_cases 4, trend_cases 1, units_cases 1, canonical_cases 1, sample_cases 12, sample_analysis_cases 4, records 5, sample_media 1, contract_examples 4
+$ git status --short spec/fixtures   # after regenerating every fixture
+?? spec/fixtures/sample/analysis/
+$ (reference analysis oracle, from spec/fixtures/sample/analysis/analysis.expected.json)
+S11 Jon forehands (Jon vs Alex): tagged 133, placed 50: deep 31/50 62%, short 12/50 24%, out 7/50 14%, needs review 1
+S12 Jon first serves in, deuce: placed 13: wide 7 54%, body 4 31%, T 2 15%
+S12 Jon first serves in, ad: placed 20: wide 7 35%, body 10 50%, T 3 15%
+S12 Oct 4 serve marks: 12 marked, 12 complete, deuce 6, ad 6
+S12 fastest marked serve (reference estimator): 117 mph (105-129), of 12; all: [95, 89, 107, 105, 104, 102, 99, 109, 86, 117, 96, 103]
+Serve-mark offsets from the rendered frames (contact, bounce): [(-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (0, 1), (0, 0), (0, 0), (-1, 1), (0, 0), (-1, 1), (-1, 0)]
+calibration c215c71a-9d07-5aaa-b4ab-411ce6639476 vs sample/2026-10-04-behind-baseline-12-serves: max re-projection error 0.643 px
+calibration c16a681b-df92-5f02-a371-041d729ccebc vs sample/2026-10-04-behind-baseline-12-serves: max re-projection error 0.643 px
+S13 key moments, session c80aad59-ede9-5b4b-9672-57f157bd3a92: 12 swings, moments ['tossPeak', 'contact']
+S13 key moments, session c47f4d6a-6fb8-5a0f-b9da-65d10f8b7886: 9 swings, moments ['ready', 'unitTurn', 'racketDrop', 'contact', 'finish']
+S14 comparison: 2026-10-06 sample-media.jon-vs-alex@1206345ms vs 2026-09-28 sample-media.2026-09-28-serve-clip@3000ms, synced at contact, note 'Keep the toss position consistent.'
+brief S11: '62% deep / 24% short / 14% out, 50 forehands of 133' -> '62% deep / 24% short / 14% out, 50 forehands of 133' equal=True
+brief S12: '13 / 8 / 4 of 25 deuce first serves (52% wide / 32% body / 16% T)' -> '7 / 4 / 2 of 13 deuce first serves (54% wide / 31% body / 15% T)' equal=False (Jon vs Alex has 20 deuce first serves in, so 25 cannot be placed; the placed subset is the rendered deuce first serves nearest the brief's split.)
+brief S12: '104 mph (94–114), fastest of 12 marked serves' -> '117 mph (105–129), fastest of 12 marked serves' equal=False (T11 rendered the 12 serves at 150-190 km/h; with every mark within 1 frame of the rendered contact and bounce the fastest cannot read 104 mph.)

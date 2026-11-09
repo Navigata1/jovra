@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.sampleAnalysis",
+  "id": "SAMPLE-analysis",
+  "title": "Sample analysis content: stroke tags, placements, calibrations, serve marks, key moments and a comparison (Sample, synthetic)",
+  "covers": [
+    "screen 11 Shot placement",
+    "screen 12 Serve Lab",
+    "screen 13 Stroke Lab",
+    "screen 14 Video comparison",
+    "screens.md §0.6 sample literals"
+  ],
+  "libraryFixture": "../library/library.expected.json",
+  "analysisFiles": [
+    "sessions/jon-vs-alex.analysis.json",
+    "sessions/2026-10-04-serve-practice.analysis.json",
+    "sessions/2026-10-02-forehand-session.analysis.json"
+  ],
+  "mediaManifest": "../media-manifest.json",
+  "seed": 20261040,
+  "expected": {
+    "sample": true,
+    "shotPlacement": [
+      {"sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a", "hitter": "e75faf7e-1ce8-5d45-b003-af3f331b1082", "stroke": "forehand", "tagged": 133, "placed": 50, "deep": {"n": 31, "d": 50, "pct": 62, "display": "62%"}, "short": {"n": 12, "d": 50, "pct": 24, "display": "24%"}, "out": {"n": 7, "d": 50, "pct": 14, "display": "14%"}, "needsReview": 1, "percentagesRounded": false}
+    ],
+    "servePlacement": [
+      {"sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a", "server": "e75faf7e-1ce8-5d45-b003-af3f331b1082", "serve": "first", "deuce": {"placed": 13, "wide": {"n": 7, "d": 13, "pct": 54, "display": "54%"}, "body": {"n": 4, "d": 13, "pct": 31, "display": "31%"}, "t": {"n": 2, "d": 13, "pct": 15, "display": "15%"}}, "ad": {"placed": 20, "wide": {"n": 7, "d": 20, "pct": 35, "display": "35%"}, "body": {"n": 10, "d": 20, "pct": 50, "display": "50%"}, "t": {"n": 3, "d": 20, "pct": 15, "display": "15%"}}}
+    ],
+    "serveMarks": [
+      {"sessionId": "c80aad59-ede9-5b4b-9672-57f157bd3a92", "marked": 12, "complete": 12, "deuce": 6, "ad": 6, "calibrationIds": ["c16a681b-df92-5f02-a371-041d729ccebc"]}
+    ],
+    "keyMoments": [
+      {"sessionId": "c80aad59-ede9-5b4b-9672-57f157bd3a92", "swings": [{"id": "8e44ac1e-1302-5206-a085-46c7e8245cd3", "kind": "serve", "stroke": "serve", "serveMarkId": "4c104beb-483a-5327-8bbd-5fbd94934141", "moments": [{"name": "tossPeak", "time": {"value": 18224, "timescale": 60}}, {"name": "contact", "time": {"value": 18239, "timescale": 60}}]}, {"id": "07936a62-b1cc-58d3-b24a-515a43081608", "kind": "serve", "stroke": "serve", "serveMarkId": "4cee3321-876b-5764-bb21-958e78244588", "moments": [{"name": "tossPeak", "time": {"value": 18794, "timescale": 60}}, {"name": "contact", "time": {"value": 18809, "timescale": 60}}]}, {"id": "4203973d-7c26-5483-b7ef-a9378b42c20c", "kind": "serve", "stroke": "serve", "serveMarkId": "54eaf6df-8642-5dfa-9ef8-d7dc9be6641b", "moments": [{"name": "tossPeak", "time": {"value": 19364, "timescale": 60}}, {"name": "contact", "time": {"value": 19379, "timescale": 60}}]}, {"id": "3555d3f0-ad54-5da1-99da-ff50a4d111ce", "kind": "serve", "stroke": "serve", "serveMarkId": "08ee5c0a-a412-5d3c-9ad8-0ca4efd98b73", "moments": [{"name": "tossPeak", "time": {"value": 19934, "timescale": 60}}, {"name": "contact", "time": {"value": 19949, "timescale": 60}}]}, {"id": "f24b2585-a465-5602-90ee-39c8591149a5", "kind": "serve", "stroke": "serve", "serveMarkId": "8e05ea79-e417-5bbb-b5f4-b2c29cf52c12", "moments": [{"name": "tossPeak", "time": {"value": 20504, "timescale": 60}}, {"name": "contact", "time": {"value": 20519, "timescale": 60}}]}, {"id": "ee1976b1-7cae-5122-932d-b6f0c030bc6b", "kind": "serve", "stroke": "serve", "serveMarkId": "5c8e96bb-510b-52aa-92e6-9aa9f1e37fe3", "moments": [{"name": "tossPeak", "time": {"value": 21074, "timescale": 60}}, {"name": "contact", "time": {"value": 21090, "timescale": 60}}]}, {"id": "c46ca459-b410-5ee4-b730-74d57a493347", "kind": "serve", "stroke": "serve", "serveMarkId": "286d5a18-8744-5965-a9be-892a0fcd47c7", "moments": [{"name": "tossPeak", "time": {"value": 21644, "timescale": 60}}, {"name": "contact", "time": {"value": 21660, "timescale": 60}}]}, {"id": "2ccf3fa6-1c71-5a17-856e-bfa2edb4320f", "kind": "serve", "stroke": "serve", "serveMarkId": "82ac4003-f646-5f78-9707-5f2ff0357681", "moments": [{"name": "tossPeak", "time": {"value": 22214, "timescale": 60}}, {"name": "contact", "time": {"value": 22230, "timescale": 60}}]}, {"id": "53117d4d-df7b-5472-be3a-433e74cc2f30", "kind": "serve", "stroke": "serve", "serveMarkId": "8d22b7af-1aa1-57f6-9c4d-7f90dc21b94e", "moments": [{"name": "tossPeak", "time": {"value": 22784, "timescale": 60}}, {"name": "contact", "time": {"value": 22799, "timescale": 60}}]}, {"id": "545a4235-13f5-5f59-9f52-1530f1a8af86", "kind": "serve", "stroke": "serve", "serveMarkId": "0b304d0a-2b33-50a7-bcf3-82dc03a6465f", "moments": [{"name": "tossPeak", "time": {"value": 23354, "timescale": 60}}, {"name": "contact", "time": {"value": 23370, "timescale": 60}}]}, {"id": "a74694d6-565b-5e72-97d7-39d890eac604", "kind": "serve", "stroke": "serve", "serveMarkId": "d461b1ce-bff5-54e5-92b0-8c0d0681f5d5", "moments": [{"name": "tossPeak", "time": {"value": 23924, "timescale": 60}}, {"name": "contact", "time": {"value": 23939, "timescale": 60}}]}, {"id": "17f6c17f-c6c2-5d5e-8bfa-26b88d9d0526", "kind": "serve", "stroke": "serve", "serveMarkId": "7f046037-8727-5fd0-829c-1dcc976d5d5c", "moments": [{"name": "tossPeak", "time": {"value": 24494, "timescale": 60}}, {"name": "contact", "time": {"value": 24509, "timescale": 60}}]}]},
+      {"sessionId": "c47f4d6a-6fb8-5a0f-b9da-65d10f8b7886", "swings": [{"id": "a4bc6211-235a-57af-b970-9f8766f4e805", "kind": "stroke", "stroke": "forehand", "shotId": "d74a7641-d2de-531c-a318-1c316b5e8c66", "moments": [{"name": "ready", "time": {"value": 144216, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 144288, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 144384, "timescale": 240}}, {"name": "contact", "time": {"value": 144432, "timescale": 240}}, {"name": "finish", "time": {"value": 144516, "timescale": 240}}]}, {"id": "146d7562-37f4-5879-b233-bf43d9d44a3a", "kind": "stroke", "stroke": "forehand", "shotId": "f2695b94-d140-5876-b8fe-6dd1f635bf36", "moments": [{"name": "ready", "time": {"value": 144912, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 144984, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 145080, "timescale": 240}}, {"name": "contact", "time": {"value": 145128, "timescale": 240}}, {"name": "finish", "time": {"value": 145212, "timescale": 240}}]}, {"id": "09b7820c-4fc9-5612-96af-e373447975cd", "kind": "stroke", "stroke": "forehand", "shotId": "6125f964-f71d-51f3-a067-b4bdacc101ed", "moments": [{"name": "ready", "time": {"value": 145607, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 145680, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 145775, "timescale": 240}}, {"name": "contact", "time": {"value": 145824, "timescale": 240}}, {"name": "finish", "time": {"value": 145907, "timescale": 240}}]}, {"id": "3e963f34-541a-5131-b8ce-dfb0f7197bd0", "kind": "stroke", "stroke": "forehand", "shotId": "bccbfcc4-cb48-5416-8cbe-9626e6e3dae9", "moments": [{"name": "ready", "time": {"value": 146304, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 146376, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 146472, "timescale": 240}}, {"name": "contact", "time": {"value": 146520, "timescale": 240}}, {"name": "finish", "time": {"value": 146604, "timescale": 240}}]}, {"id": "3f2a77c2-50df-567a-8530-8b98840eae5f", "kind": "stroke", "stroke": "forehand", "shotId": "2c6cdb4e-fe4f-5422-a09a-50234aeb2c9c", "moments": [{"name": "ready", "time": {"value": 147000, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 147072, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 147168, "timescale": 240}}, {"name": "contact", "time": {"value": 147216, "timescale": 240}}, {"name": "finish", "time": {"value": 147300, "timescale": 240}}]}, {"id": "070f203c-6329-5afb-8487-171ada4aec4a", "kind": "stroke", "stroke": "forehand", "shotId": "321655b6-3b37-5710-8709-7e8c5040f0b3", "moments": [{"name": "ready", "time": {"value": 147696, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 147768, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 147864, "timescale": 240}}, {"name": "contact", "time": {"value": 147912, "timescale": 240}}, {"name": "finish", "time": {"value": 147996, "timescale": 240}}]}, {"id": "b66c05e3-7cd5-54f7-8084-0eca1e2d3e41", "kind": "stroke", "stroke": "forehand", "shotId": "570fadce-0534-5953-b0da-966e9cb927a5", "moments": [{"name": "ready", "time": {"value": 148392, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 148463, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 148560, "timescale": 240}}, {"name": "contact", "time": {"value": 148608, "timescale": 240}}, {"name": "finish", "time": {"value": 148692, "timescale": 240}}]}, {"id": "e99f4d50-22d0-5ffb-b960-b85c30422eeb", "kind": "stroke", "stroke": "forehand", "shotId": "79d355b9-a727-5bdd-a5ab-fa45c128ea2a", "moments": [{"name": "ready", "time": {"value": 149088, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 149160, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 149256, "timescale": 240}}, {"name": "contact", "time": {"value": 149304, "timescale": 240}}, {"name": "finish", "time": {"value": 149388, "timescale": 240}}]}, {"id": "2268d51b-4ad6-589c-98e3-b3390c92f9ec", "kind": "stroke", "stroke": "forehand", "shotId": "2a03fd49-ee86-5a37-bd68-45d8317d6881", "moments": [{"name": "ready", "time": {"value": 149784, "timescale": 240}}, {"name": "unitTurn", "time": {"value": 149856, "timescale": 240}}, {"name": "racketDrop", "time": {"value": 149952, "timescale": 240}}, {"name": "contact", "time": {"value": 150000, "timescale": 240}}, {"name": "finish", "time": {"value": 150084, "timescale": 240}}]}]}
+    ],
+    "comparisons": [
+      {"id": "016102ad-998a-5d57-b4c0-cbe3f245451a", "sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a", "syncedAt": "contact", "note": "Keep the toss position consistent.", "left": {"sessionId": "b75c57d3-04df-5b4d-b969-32ed5cbfd97a", "date": "2026-10-06", "syncTimeMs": 1206345, "mediaId": "sample-media.jon-vs-alex", "offsetMs": 1206345}, "right": {"sessionId": "6b8ca17b-856b-5644-b9aa-f1254551cd2d", "date": "2026-09-28", "syncTimeMs": 1803000, "mediaId": "sample-media.2026-09-28-serve-clip", "offsetMs": 3000}}
+    ]
+  },
+  "reference": {
+    "serveSpeeds": {
+      "sessionId": "c80aad59-ede9-5b4b-9672-57f157bd3a92",
+      "unit": "mph",
+      "marks": [
+        {"serveMarkId": "4c104beb-483a-5327-8bbd-5fbd94934141", "mph": 95, "kmh": 153, "range": {"low": 86, "high": 105, "pct": 10}, "frames": 25},
+        {"serveMarkId": "4cee3321-876b-5764-bb21-958e78244588", "mph": 89, "kmh": 143, "range": {"low": 80, "high": 98, "pct": 10}, "frames": 27},
+        {"serveMarkId": "54eaf6df-8642-5dfa-9ef8-d7dc9be6641b", "mph": 107, "kmh": 173, "range": {"low": 96, "high": 118, "pct": 10}, "frames": 22},
+        {"serveMarkId": "08ee5c0a-a412-5d3c-9ad8-0ca4efd98b73", "mph": 105, "kmh": 168, "range": {"low": 95, "high": 116, "pct": 10}, "frames": 23},
+        {"serveMarkId": "8e05ea79-e417-5bbb-b5f4-b2c29cf52c12", "mph": 104, "kmh": 168, "range": {"low": 94, "high": 114, "pct": 10}, "frames": 23},
+        {"serveMarkId": "5c8e96bb-510b-52aa-92e6-9aa9f1e37fe3", "mph": 102, "kmh": 164, "range": {"low": 92, "high": 112, "pct": 10}, "frames": 23},
+        {"serveMarkId": "286d5a18-8744-5965-a9be-892a0fcd47c7", "mph": 99, "kmh": 159, "range": {"low": 89, "high": 109, "pct": 10}, "frames": 25},
+        {"serveMarkId": "82ac4003-f646-5f78-9707-5f2ff0357681", "mph": 109, "kmh": 176, "range": {"low": 98, "high": 120, "pct": 10}, "frames": 22},
+        {"serveMarkId": "8d22b7af-1aa1-57f6-9c4d-7f90dc21b94e", "mph": 86, "kmh": 138, "range": {"low": 77, "high": 95, "pct": 10}, "frames": 27},
+        {"serveMarkId": "0b304d0a-2b33-50a7-bcf3-82dc03a6465f", "mph": 117, "kmh": 188, "range": {"low": 105, "high": 129, "pct": 10}, "frames": 21},
+        {"serveMarkId": "d461b1ce-bff5-54e5-92b0-8c0d0681f5d5", "mph": 96, "kmh": 155, "range": {"low": 86, "high": 106, "pct": 10}, "frames": 25},
+        {"serveMarkId": "7f046037-8727-5fd0-829c-1dcc976d5d5c", "mph": 103, "kmh": 165, "range": {"low": 93, "high": 113, "pct": 10}, "frames": 23}
+      ],
+      "fastest": {
+        "serveMarkId": "0b304d0a-2b33-50a7-bcf3-82dc03a6465f",
+        "value": 117,
+        "unit": "mph",
+        "range": {"low": 105, "high": 129, "pct": 10},
+        "of": 12
+      }
+    },
+    "serveMarkTruth": [
+      {"serveMarkId": "4c104beb-483a-5327-8bbd-5fbd94934141", "truthServe": 0, "truthFrames": {"contact": 240, "bounce": 264}, "offsetFrames": {"contact": -1, "bounce": 0}},
+      {"serveMarkId": "4cee3321-876b-5764-bb21-958e78244588", "truthServe": 1, "truthFrames": {"contact": 810, "bounce": 836}, "offsetFrames": {"contact": -1, "bounce": 0}},
+      {"serveMarkId": "54eaf6df-8642-5dfa-9ef8-d7dc9be6641b", "truthServe": 2, "truthFrames": {"contact": 1380, "bounce": 1401}, "offsetFrames": {"contact": -1, "bounce": 0}},
+      {"serveMarkId": "08ee5c0a-a412-5d3c-9ad8-0ca4efd98b73", "truthServe": 3, "truthFrames": {"contact": 1950, "bounce": 1972}, "offsetFrames": {"contact": -1, "bounce": 0}},
+      {"serveMarkId": "8e05ea79-e417-5bbb-b5f4-b2c29cf52c12", "truthServe": 4, "truthFrames": {"contact": 2520, "bounce": 2542}, "offsetFrames": {"contact": -1, "bounce": 0}},
+      {"serveMarkId": "5c8e96bb-510b-52aa-92e6-9aa9f1e37fe3", "truthServe": 5, "truthFrames": {"contact": 3090, "bounce": 3112}, "offsetFrames": {"contact": 0, "bounce": 1}},
+      {"serveMarkId": "286d5a18-8744-5965-a9be-892a0fcd47c7", "truthServe": 6, "truthFrames": {"contact": 3660, "bounce": 3685}, "offsetFrames": {"contact": 0, "bounce": 0}},
+      {"serveMarkId": "82ac4003-f646-5f78-9707-5f2ff0357681", "truthServe": 7, "truthFrames": {"contact": 4230, "bounce": 4252}, "offsetFrames": {"contact": 0, "bounce": 0}},
+      {"serveMarkId": "8d22b7af-1aa1-57f6-9c4d-7f90dc21b94e", "truthServe": 8, "truthFrames": {"contact": 4800, "bounce": 4825}, "offsetFrames": {"contact": -1, "bounce": 1}},
+      {"serveMarkId": "0b304d0a-2b33-50a7-bcf3-82dc03a6465f", "truthServe": 9, "truthFrames": {"contact": 5370, "bounce": 5391}, "offsetFrames": {"contact": 0, "bounce": 0}},
+      {"serveMarkId": "d461b1ce-bff5-54e5-92b0-8c0d0681f5d5", "truthServe": 10, "truthFrames": {"contact": 5940, "bounce": 5963}, "offsetFrames": {"contact": -1, "bounce": 1}},
+      {"serveMarkId": "7f046037-8727-5fd0-829c-1dcc976d5d5c", "truthServe": 11, "truthFrames": {"contact": 6510, "bounce": 6532}, "offsetFrames": {"contact": -1, "bounce": 0}}
+    ],
+    "calibrationTruth": [
+      {"calibrationId": "c215c71a-9d07-5aaa-b4ab-411ce6639476", "truth": "sample/2026-10-04-behind-baseline-12-serves", "maxErrorPx": 0.643},
+      {"calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc", "truth": "sample/2026-10-04-behind-baseline-12-serves", "maxErrorPx": 0.643}
+    ],
+    "brief": [
+      {"screen": "S11", "literal": "62% deep / 24% short / 14% out, 50 forehands of 133", "computed": "62% deep / 24% short / 14% out, 50 forehands of 133", "equal": true},
+      {"screen": "S12", "literal": "13 / 8 / 4 of 25 deuce first serves (52% wide / 32% body / 16% T)", "computed": "7 / 4 / 2 of 13 deuce first serves (54% wide / 31% body / 15% T)", "equal": false, "why": "Jon vs Alex has 20 deuce first serves in, so 25 cannot be placed; the placed subset is the rendered deuce first serves nearest the brief's split."},
+      {"screen": "S12", "literal": "104 mph (94–114), fastest of 12 marked serves", "computed": "117 mph (105–129), fastest of 12 marked serves", "equal": false, "why": "T11 rendered the 12 serves at 150-190 km/h; with every mark within 1 frame of the rendered contact and bounce the fastest cannot read 104 mph."}
+    ]
+  }
+}

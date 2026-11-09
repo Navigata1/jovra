@@ -1,0 +1,29 @@
+==> ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers
+==> studio media generator 1.0.0
+==> set angles (source hash 26e3b735a5678bf8)
+  rendered angles/studio-angle-baseline.mp4            2,921,242 B   793.3 s  frames 38880 barcodes 0/38880  clicks 0 (max 0 frame, 0 samples off)  sha256 cc21e247fd407bede95701b24402da9228eb500e13bef8510adcb843f676b3f3
+  rendered angles/studio-angle-far-baseline.mp4        2,931,061 B   797.8 s  frames 38880 barcodes 0/38880  clicks 0 (max 0 frame, 0 samples off)  sha256 7e465d27f0b92964902b480fcf864131c3269fcdb8052b01b2c5f2d0aac8ed98
+  rendered angles/studio-angle-near-left.mp4           3,953,602 B   799.0 s  frames 38880 barcodes 0/38880  clicks 0 (max 0 frame, 0 samples off)  sha256 edf8d0892059ca898ad6b124b519f194c1f3488bea7b8119e6d6199d5b9cbe79
+  rendered angles/studio-angle-near-right.mp4          3,879,714 B   799.4 s  frames 38880 barcodes 0/38880  clicks 0 (max 0 frame, 0 samples off)  sha256 202a624fee52bf36b573a7b69f40821eccdda980c8fb59f1d3dff9f5701767f9
+  rendered angles/studio-angle-far-left.mp4            3,602,598 B   795.7 s  frames 38880 barcodes 0/38880  clicks 0 (max 0 frame, 0 samples off)  sha256 4c05c05a6201658bafefad7c59a15d44efb5e9bdd85509dd40307325c6f23960
+  rendered angles/studio-angle-far-right.mp4           3,717,680 B   797.2 s  frames 38880 barcodes 0/38880  clicks 0 (max 0 frame, 0 samples off)  sha256 299f3982f719f6cec655a2f9627e0d265b9c7641dcac850dcfa13c6765b13683
+==> set angles: 6 files, 21,005,897 bytes (21.01 MB)
+==> set barcodeSources (source hash f26ae914a4f4464d)
+  rendered barcodeSources/bc-024.mp4                             166,023 B    23.5 s  frames 240 barcodes 240/240  clicks 8 (max 0 frame, 1 samples off)  sha256 ff14b258adddb1506f71e22f09130d9281b70a7ec214ce6abcec90edea6f4290
+  rendered barcodeSources/bc-030.mp4                             177,470 B    35.4 s  frames 300 barcodes 300/300  clicks 8 (max 0 frame, 0 samples off)  sha256 9164b25a69a4cf25a50b0981bf8bd839222f1394b214bda6e38e3998cb4df089
+  rendered barcodeSources/bc-060.mp4                             218,312 B    77.1 s  frames 600 barcodes 600/600  clicks 8 (max 0 frame, 1 samples off)  sha256 b99315c2e6990ef84f8b6d9ce564bc009bdc637a7bd976571ecb6d128c1b6a6b
+  rendered barcodeSources/bc-030-restart-seg0.mp4                 90,125 B    19.3 s  frames 150 barcodes 150/150  clicks 3 (max 0 frame, 1 samples off)  sha256 74e6f3b32acf4c5b72c0862d55cebd53001e3669d459ba3f94eb647e963c2876
+  rendered barcodeSources/bc-030-restart-seg1.mp4                 90,189 B    18.0 s  frames 150 barcodes 150/150  clicks 3 (max 0 frame, 0 samples off)  sha256 0391c9b42d325cf1259e3c3febbead54925aa5f2517e8f71b0d4667fa186f9e4
+  rendered barcodeSources/bc-030-silent.mp4                       48,605 B    62.6 s  frames 300 barcodes 300/300  clicks 0 (max 0 frame, 0 samples off)  sha256 8864953ea773e97187c460e758310072df0a6096c0ca77754425b487213536b8
+==> set barcodeSources: 6 files, 790,724 bytes (0.79 MB)
+==> set broll (source hash c631433c6aad4a10)
+  rendered broll/broll-court-push.mp4                   208,708 B     8.4 s  frames 180 barcodes 180/180  clicks 0 (max 0 frame, 0 samples off)  sha256 4ffebf3f34f88d97b76c7758ebd60846b695583c955dfa69103fd4b47d5b932e
+  rendered broll/broll-ball-drop.mp4                    161,621 B    37.2 s  frames 180 barcodes 180/180  clicks 6 (max 0 frame, 1 samples off)  sha256 1aaf932cf0be514384dc8ae6864baf1c6e06b25d6e36c46e124c5682056c200b
+  rendered broll/broll-sideline-pan.mp4                 346,202 B    44.0 s  frames 180 barcodes 180/180  clicks 0 (max 0 frame, 0 samples off)  sha256 84f105ea14ed8f4ad6318323fdfc0e80664bda261e3e81fc4cec570b5365a53f
+==> set broll: 3 files, 716,531 bytes (0.72 MB)
+==> set match (source hash 2402b00311d3b34a)
+  rendered match/match-jon-vs-alex-360p30.mp4        64,032,279 B  1020.1 s  frames 97200 barcodes 97200/97200  clicks 440 (max 0 frame, 4 samples off)  sha256 81d40dab5522e217f0ea6fde65d3d1cdcc0581629001b2327a319c7728fed4fd
+==> set match: 1 files, 64,032,279 bytes (64.03 MB)
+==> demo subset: 21,005,897 bytes (21.01 MB of 25 MB, within)
+studio media check: PASS (16 files verified, manifests match)
+python3 scripts/media/studio/render_studio.py --force --check --sha256-log   1484.42s user 169.94s system 161% cpu 17:01.64 total

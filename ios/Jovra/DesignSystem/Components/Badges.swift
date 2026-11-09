@@ -8,6 +8,17 @@ struct ProvenanceBadge: View {
     enum Kind: Hashable {
         case sample
         case provenance(Provenance)
+
+        /// The badge a capability's registry status earns (ADR-0004). Disabled and unsupported
+        /// capabilities produce no value, so they have no provenance badge; views never hard-code one.
+        init?(status: CapabilityCapabilityStatus) {
+            switch status {
+            case .manual: self = .provenance(.manual)
+            case .estimated: self = .provenance(.estimated)
+            case .validated: self = .provenance(.validated)
+            case .disabled, .unsupported: return nil
+            }
+        }
     }
 
     var kind: Kind
@@ -79,7 +90,11 @@ struct SampleBadge: View {
 /// Only the camera adapter chooses when this badge is shown (ADR-0012).
 struct FixtureBadge: View {
     var body: some View {
-        Text(String(localized: "Simulator fixture camera", table: "DesignSystem.Components"))
+        Label {
+            Text(String(localized: "Simulator fixture camera", table: "DesignSystem.Components"))
+        } icon: {
+            Image(systemName: "video.badge.ellipsis").accessibilityHidden(true)
+        }
             .font(.caption.weight(.semibold))
             .foregroundStyle(.jovra(.textPrimary))
             .fixedSize(horizontal: false, vertical: true)
@@ -89,32 +104,53 @@ struct FixtureBadge: View {
                 RoundedRectangle(cornerRadius: Radius.control)
                     .strokeBorder(Color.jovra(.textPrimary), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("Simulator fixture camera", tableName: "DesignSystem.Components"))
+            .accessibilityAddTraits(.isStaticText)
     }
 }
 
-/// A short status with an icon and text ("On device · Backed up", "Needs review").
+/// A short status with an icon and text ("On device · Backed up", "Needs review", "Uploading 62%").
+/// Tone is carried by the symbol and the words, the tint only reinforces it.
 struct StatusPill: View {
     enum Tone {
         case positive, attention, neutral
+        /// Work with real progress; pass `progress` (0...1) and say the number in `text`.
+        case inProgress
     }
 
     var text: String
     var tone: Tone
+    /// Determinate progress for `.inProgress`, drawn as a ring.
+    var progress: Double?
+    /// Overrides the tone's symbol ("iphone", "icloud").
+    var symbol: String?
 
     var body: some View {
         Label {
-            Text(text).foregroundStyle(.jovra(tone == .attention ? .attentionInk : .textPrimary))
+            Text(text)
+                .foregroundStyle(.jovra(tone == .attention ? .attentionInk : .textPrimary))
+                .fixedSize(horizontal: false, vertical: true)
         } icon: {
-            Image(systemName: symbol).foregroundStyle(iconColor)
+            if tone == .inProgress, let progress {
+                ProgressRing(progress: progress)
+            } else {
+                Image(systemName: symbol ?? defaultSymbol).foregroundStyle(iconColor)
+            }
         }
         .font(.subheadline.weight(.medium))
+        .padding(.horizontal, Space.x1 + 2)
+        .padding(.vertical, Space.half + 1)
+        .background(fill, in: Capsule())
+        .accessibilityElement(children: .combine)
     }
 
-    private var symbol: String {
+    private var defaultSymbol: String {
         switch tone {
         case .positive: "checkmark.circle.fill"
         case .attention: "exclamationmark.circle.fill"
         case .neutral: "circle.dotted"
+        case .inProgress: "arrow.up.circle"
         }
     }
 
@@ -122,7 +158,33 @@ struct StatusPill: View {
         switch tone {
         case .positive: .jovra(.positiveInk)
         case .attention: .jovra(.attentionInk)
-        case .neutral: .jovra(.textSecondary)
+        case .neutral, .inProgress: .jovra(.textSecondary)
         }
+    }
+
+    private var fill: Color {
+        switch tone {
+        case .positive: .jovra(.positiveFill)
+        case .attention: .jovra(.attentionFill)
+        case .neutral, .inProgress: .jovra(.surfaceSunken)
+        }
+    }
+}
+
+/// A small determinate ring sized to the text; decorative, because the pill's words state the number.
+private struct ProgressRing: View {
+    var progress: Double
+    @ScaledMetric(relativeTo: .subheadline) private var size: CGFloat = 15
+
+    var body: some View {
+        ZStack {
+            Circle().stroke(Color.jovra(.separator), lineWidth: 2.5)
+            Circle()
+                .trim(from: 0, to: min(max(progress, 0), 1))
+                .stroke(Color.jovra(.positiveInk), style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+        }
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
     }
 }

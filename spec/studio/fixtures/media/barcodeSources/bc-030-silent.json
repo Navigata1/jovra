@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "jovra.studio-media-truth/1",
+  "id": "barcodeSources/bc-030-silent",
+  "set": "barcodeSources",
+  "role": "barcodeSource",
+  "description": "Barcode source at 30 fps, 10 s, with no audio track at all.",
+  "sample": true,
+  "band": "synthetic",
+  "generator": {
+    "script": "scripts/media/studio/render_studio.py",
+    "version": "1.0.0",
+    "sourceHash": "f26ae914a4f4464d660bae1e95f378c38532356a694de127e9c307b8b8ea411d"
+  },
+  "media": {
+    "path": ".cache/media/studio/barcodeSources-f26ae914a4f4464d/bc-030-silent.mp4",
+    "fileName": "bc-030-silent.mp4",
+    "container": "mp4",
+    "bundled": false
+  },
+  "video": {
+    "codec": "h264",
+    "width": 1280,
+    "height": 720,
+    "frameRate": {
+      "num": 30,
+      "den": 1
+    },
+    "frameCount": 300,
+    "duration": {
+      "value": 10,
+      "timescale": 1
+    }
+  },
+  "audio": null,
+  "barcode": {
+    "method": "jovra.frame-barcode/1",
+    "bits": 40,
+    "rect": {
+      "x": 0,
+      "y": 640,
+      "width": 1280,
+      "height": 80
+    },
+    "fields": {
+      "start": 1,
+      "source": 7,
+      "segment": 3,
+      "frame": 20,
+      "crc8": 8,
+      "stop": 1
+    },
+    "one": {
+      "y": 235
+    },
+    "zero": {
+      "y": 16
+    },
+    "threshold": {
+      "y": 128
+    },
+    "sourceId": 5,
+    "segment": 0,
+    "frameMap": [
+      {
+        "frame": 0,
+        "frameId": 0,
+        "count": 300
+      }
+    ],
+    "frameMapSha256": "68713d0ae47de8b3cc91bff46053588217caaa4962b26f790beeb7ce977c2dc7"
+  },
+  "clicks": null,
+  "labels": [],
+  "hashes": {
+    "renderedWithSourceHash": "f26ae914a4f4464d660bae1e95f378c38532356a694de127e9c307b8b8ea411d",
+    "sourceFramesSha256": "98d19940d2d60b9a22757cd14a027ccb49ce3be4d83192f274657b92febe2aae",
+    "decodedSignature": {
+      "method": "jovra.cellLuma.v1",
+      "sha256": "bbd405943a6d30e71b42aaa49cb38d1cd2f45c0642753f5c92e9c924c5461131"
+    },
+    "pcmSha256": null
+  }
+}

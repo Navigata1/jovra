@@ -39,8 +39,12 @@ public struct FragmentedMovieLayout: Equatable, Sendable {
                 guard length - offset >= 16 else { incomplete = true; break }
                 size = integer(try read(handle, count: 8)[...]); headerSize = 16
             }
-            // Zero means extends to EOF: no independently confirmed fragment boundary exists.
-            guard size >= headerSize else { throw FragmentedMovieLayoutError.malformedContainer }
+            // Zero means extends to EOF: no independently confirmed fragment boundary exists. After a saved
+            // fragment, an impossible header is a torn tail (power loss can leave a zero-filled extent).
+            guard size >= headerSize else {
+                if sawMovie, !ends.isEmpty { incomplete = true; break }
+                throw FragmentedMovieLayoutError.malformedContainer
+            }
             guard size <= length - offset else { incomplete = true; break }
             switch kind {
             case "ftyp":

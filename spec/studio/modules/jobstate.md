@@ -4,7 +4,7 @@ reference: [spec/reference/studio/jobstate.py]
 cases: [spec/reference/studio/cases/jobstate_cases.py]
 kinds: [jovra.render-job/1, jovra.render-job-transitions/1, job-transitions]
 coverage: covered
-swift: pending
+swift: consumed
 kotlin: pending
 ---
 

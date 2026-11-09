@@ -3,7 +3,8 @@ import SwiftUI
 import UIKit
 
 extension SRGBColor {
-    var uiColor: UIColor { UIColor(red: red, green: green, blue: blue, alpha: 1) }
+    var uiColor: UIColor { uiColor(alpha: 1) }
+    func uiColor(alpha: Double) -> UIColor { UIColor(red: red, green: green, blue: blue, alpha: alpha) }
 }
 
 extension ColorRole {
@@ -11,7 +12,8 @@ extension ColorRole {
     var uiColor: UIColor {
         UIColor { traits in
             let appearance: Appearance = traits.userInterfaceStyle == .dark ? .dark : .light
-            return color(in: appearance, highContrast: traits.accessibilityContrast == .high).uiColor
+            let highContrast = traits.accessibilityContrast == .high
+            return color(in: appearance, highContrast: highContrast).uiColor(alpha: opacity(highContrast: highContrast))
         }
     }
 }
