@@ -81,6 +81,7 @@ struct Chip: View {
         .foregroundStyle(emphasised ? palette.onAccent : palette.text)
         .background(emphasised ? palette.accent : palette.raised, in: Capsule())
         .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isStaticText)
     }
 }
 

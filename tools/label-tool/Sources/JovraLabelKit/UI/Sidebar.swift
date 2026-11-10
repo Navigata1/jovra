@@ -68,6 +68,7 @@ struct Sidebar: View {
                 .accessibilityIdentifier(id)
         }
         .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isStaticText)
         .accessibilityLabel(title)
         .accessibilityValue("\(value)")
     }
@@ -124,6 +125,7 @@ struct Sidebar: View {
                             Spacer(minLength: 0)
                         }
                         .accessibilityElement(children: .ignore)
+                        .accessibilityAddTraits(.isStaticText)
                         .accessibilityLabel("\(binding.title): \(binding.stroke.spoken)")
                     }
                 }

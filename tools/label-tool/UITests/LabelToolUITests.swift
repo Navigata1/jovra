@@ -149,11 +149,15 @@ final class LabelToolUITests: XCTestCase {
     func testEveryControlHasADescription() throws {
         app.launch()
         expect("time", says: "0:00.000", timeout: 60)
+        // Collect every issue instead of stopping at the first, so one run shows the whole list.
+        var issues: [String] = []
         try app.performAccessibilityAudit(for: [.sufficientElementDescription]) { issue in
             let element = issue.element
-            print("AUDIT ISSUE: \(issue.compactDescription) | type \(element?.elementType.rawValue ?? 0) | id \(element?.identifier ?? "-") | label \(element?.label ?? "-") | frame \(element?.frame ?? .zero)")
             // The window's own close, minimise and zoom buttons belong to AppKit.
-            return element?.elementType == .window || element == nil
+            if element == nil || element?.elementType == .window { return true }
+            issues.append("\(issue.compactDescription): \(element?.identifier ?? "") \"\(element?.label ?? "")\" type \(element?.elementType.rawValue ?? 0) at \(element?.frame ?? .zero)")
+            return true
         }
+        XCTAssertEqual(issues, [], "elements without a description or a role")
     }
 }
