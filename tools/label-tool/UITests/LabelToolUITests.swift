@@ -151,14 +151,16 @@ final class LabelToolUITests: XCTestCase {
         expect("time", says: "0:00.000", timeout: 60)
         // Collect every issue instead of stopping at the first, so one run shows the whole list.
         var issues: [String] = []
+        // The audit covers the tool's own content: the window below its title bar. The title bar and the system
+        // containers at the top of the screen (the hosted Mac reports one of type 81 there, with no description)
+        // are AppKit's, not the tool's.
         let window = app.windows.firstMatch.frame
+        let content = CGRect(x: window.minX, y: window.minY + 28, width: window.width, height: window.height - 28)
+        let systemTypes: Set<XCUIElement.ElementType> = [.window, .menuBar, .menuBarItem, .touchBar]
         try app.performAccessibilityAudit(for: [.sufficientElementDescription]) { issue in
-            let element = issue.element
-            // The window's own close, minimise and zoom buttons belong to AppKit, and so does everything
-            // outside the window: the menu bar's container has no description in any Mac app.
-            if element == nil || element?.elementType == .window { return true }
-            if let frame = element?.frame, !window.intersects(frame) { return true }
-            issues.append("\(issue.compactDescription): \(element?.identifier ?? "") \"\(element?.label ?? "")\" type \(element?.elementType.rawValue ?? 0) at \(element?.frame ?? .zero)")
+            guard let element = issue.element else { return true }
+            if systemTypes.contains(element.elementType) || !content.intersects(element.frame) { return true }
+            issues.append("\(issue.compactDescription): \(element.identifier) \"\(element.label)\" type \(element.elementType.rawValue) at \(element.frame)")
             return true
         }
         XCTAssertEqual(issues, [], "elements without a description or a role")
