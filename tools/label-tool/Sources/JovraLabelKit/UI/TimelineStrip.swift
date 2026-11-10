@@ -65,9 +65,13 @@ struct TimelineStrip: View {
             })
         }
         .frame(height: 44)
-        .accessibilityElement()
-        .accessibilityLabel("Timeline")
-        .accessibilityValue("\(session.displayedTime.clock) of \(document?.labels.recording.duration.clock ?? "0:00.000")")
-        .accessibilityIdentifier("timeline")
+        // To assistive technologies the strip is what it behaves like: a slider over the recording.
+        .accessibilityRepresentation {
+            Slider(value: Binding(get: { min(max(now, 0), total) },
+                                  set: { session.seek(to: RationalTime(value: Int64(($0 * 1000).rounded()), timescale: 1000)) }),
+                   in: 0...total) { Text("Timeline") }
+                .accessibilityValue("\(session.displayedTime.clock) of \(document?.labels.recording.duration.clock ?? "0:00.000")")
+                .accessibilityIdentifier("timeline")
+        }
     }
 }
