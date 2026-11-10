@@ -26,6 +26,61 @@ final class CaptureRecordingPresentationTests: XCTestCase {
         XCTAssertEqual(CaptureRecordingCopy.pillAccessibilityLabel(state), "Paused, 12 minutes, 46 seconds recorded")
     }
 
+    func testAStoppingOrStoppedEngineIsNeverDrawnAsRecording() {
+        for phase: CapturePhase in [.stopping, .stopped] {
+            let state = CaptureRecordingState(phase: phase, sessionTimeMs: 4_000, savedThroughMs: 4_000)
+            XCTAssertEqual(state.pill, .stopped, "\(phase): no REC dot")
+            XCTAssertEqual(CaptureRecordingCopy.pillText(state), "Stopped 0:04")
+            XCTAssertEqual(CaptureRecordingCopy.pillAccessibilityLabel(state), "Stopped, 4 seconds recorded")
+        }
+        XCTAssertEqual(CaptureRecordingState(phase: .recording, sessionTimeMs: 0, savedThroughMs: nil).pill, .recording)
+        XCTAssertEqual(CaptureRecordingState(phase: .pausing, sessionTimeMs: 0, savedThroughMs: nil).pill, .paused)
+        XCTAssertEqual(CaptureRecordingCopy.stoppedBanner, "Stopped · Not recording")
+        XCTAssertFalse(CaptureRecordingCopy.stoppedBanner.contains("Saved"))
+    }
+
+    func testAStoppedEngineWithNothingInFlightAndNoSaveIsAFailedStop() {
+        let stopped = CaptureRecordingState(phase: .stopped, sessionTimeMs: 4_000, savedThroughMs: 4_000)
+        XCTAssertNil(stopped.stopFailure(isWorking: true, recorded: nil), "still saving: not yet a failure")
+        XCTAssertEqual(stopped.stopFailure(isWorking: false, recorded: nil), .saveFailed, "however the engine got here")
+        XCTAssertEqual(stopped.stopFailure(isWorking: false, recorded: .deleteFailed), .deleteFailed)
+        XCTAssertEqual(stopped.stopFailure(isWorking: true, recorded: .deleteFailed), .deleteFailed,
+                       "the failure stays on screen while its retry runs")
+        for phase: CapturePhase in [.recording, .pausing, .paused, .stopping] {
+            let state = CaptureRecordingState(phase: phase, sessionTimeMs: 4_000, savedThroughMs: 4_000)
+            XCTAssertNil(state.stopFailure(isWorking: false, recorded: .saveFailed), "\(phase)")
+        }
+    }
+
+    func testAFailedStopSaysWhatFailedAndWhatIsStillOnThisIPhone() {
+        XCTAssertEqual(CaptureRecordingCopy.stopFailureTitle(.saveFailed), "JOVRA could not finish saving this recording")
+        XCTAssertEqual(CaptureRecordingCopy.stopFailureMessage(.saveFailed, savedThroughMs: at4112),
+                       "Video up to 41:12 is on this iPhone. JOVRA will look for it the next time it opens.")
+        for nothing in [nil, 0] as [Int?] {
+            XCTAssertEqual(CaptureRecordingCopy.stopFailureMessage(.saveFailed, savedThroughMs: nothing),
+                           "Nothing from this recording was confirmed as saved on this iPhone.", "no time is invented")
+        }
+        XCTAssertEqual(CaptureRecordingCopy.stopFailureTitle(.deleteFailed), "This recording could not be deleted")
+        XCTAssertEqual(CaptureRecordingCopy.stopFailureMessage(.deleteFailed, savedThroughMs: at4112),
+                       "It is still on this iPhone. Try deleting it again.")
+        XCTAssertEqual(CaptureRecordingCopy.stopFailureAnnouncement(.saveFailed), "Recording stopped. JOVRA could not finish saving it.")
+        XCTAssertEqual(CaptureRecordingCopy.stopFailureAnnouncement(.deleteFailed),
+                       "Recording stopped. It could not be deleted and is still on this iPhone.")
+    }
+
+    func testAnAutomaticStopIsExplainedOnlyFromStoredCaptureEvents() {
+        func recording(_ events: [SessionCaptureEvent]?) -> SessionRecording {
+            SessionRecording(mode: .simulatorFixture, durationMs: at4112, segments: [], gaps: [], microphone: .notRequested,
+                             mediaAvailable: true, captureEvents: events)
+        }
+        XCTAssertNil(CaptureRecordingCopy.automaticStopReason(recording(nil)), "the player's own Stop needs no reason")
+        XCTAssertNil(CaptureRecordingCopy.automaticStopReason(recording([.init(tMs: 10, kind: .courtModeOn)])))
+        XCTAssertEqual(CaptureRecordingCopy.automaticStopReason(recording([.init(tMs: at4112, kind: .lowStorageStop)])),
+                       "Storage full. Everything up to 41:12 is saved.")
+        XCTAssertEqual(CaptureRecordingCopy.automaticStopReason(recording([.init(tMs: at4112, kind: .lowBatteryStop)])),
+                       "Battery almost empty. Everything up to 41:12 is saved.")
+    }
+
     func testAnInterruptedPauseIsNotThePlayersPause() {
         let state = CaptureRecordingState(phase: .paused, sessionTimeMs: at4112, savedThroughMs: at4112,
                                           interruption: CaptureInterruption(startMs: at4112, reason: .interruption))

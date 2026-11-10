@@ -29,6 +29,26 @@ struct CaptureRecordingState: Equatable {
         max(0, sessionTimeMs - gaps.reduce(0) { $0 + max(0, $1.endMs - $1.startMs) })
     }
 
+    /// What the status pill draws. The red dot belongs to `recording` alone: a stopping or stopped engine
+    /// is never shown as recording.
+    enum Pill: Equatable { case recording, paused, stopped }
+
+    var pill: Pill {
+        switch phase {
+        case .idle, .ready, .recording: .recording
+        case .pausing, .paused: .paused
+        case .stopping, .stopped: .stopped
+        }
+    }
+
+    /// Why this screen is still up after the engine stopped, or nil while recording, paused, or stopping
+    /// and saving. A failure the coordinator recorded stands while its retry runs. Without one, a stopped
+    /// engine with nothing in flight and no acknowledged save can only be a save that did not finish.
+    func stopFailure(isWorking: Bool, recorded: CaptureStopFailure?) -> CaptureStopFailure? {
+        guard phase == .stopped else { return nil }
+        return recorded ?? (isWorking ? nil : .saveFailed)
+    }
+
     var isPaused: Bool { phase == .paused || phase == .pausing }
     var isRecording: Bool { phase == .recording }
     /// Paused by the player rather than by a call, the camera or heat.
@@ -50,16 +70,22 @@ enum CaptureRecordingCopy {
         return Duration.seconds(seconds).formatted(.units(allowed: [.hours, .minutes, .seconds], width: .wide))
     }
 
-    /// "REC 12:46" / "Paused 12:46" as drawn.
+    /// "REC 12:46" / "Paused 12:46" / "Stopped 12:46" as drawn.
     static func pillText(_ state: CaptureRecordingState) -> String {
-        state.isPaused ? String(localized: "Paused \(clock(state.recordedMs))", table: "Capture")
-            : String(localized: "REC \(clock(state.recordedMs))", table: "Capture")
+        switch state.pill {
+        case .recording: String(localized: "REC \(clock(state.recordedMs))", table: "Capture")
+        case .paused: String(localized: "Paused \(clock(state.recordedMs))", table: "Capture")
+        case .stopped: String(localized: "Stopped \(clock(state.recordedMs))", table: "Capture")
+        }
     }
 
     /// "Recording, 12 minutes, 46 seconds" for VoiceOver (screen spec S06, Accessibility).
     static func pillAccessibilityLabel(_ state: CaptureRecordingState) -> String {
-        state.isPaused ? String(localized: "Paused, \(spoken(state.recordedMs)) recorded", table: "Capture")
-            : String(localized: "Recording, \(spoken(state.recordedMs))", table: "Capture")
+        switch state.pill {
+        case .recording: String(localized: "Recording, \(spoken(state.recordedMs))", table: "Capture")
+        case .paused: String(localized: "Paused, \(spoken(state.recordedMs)) recorded", table: "Capture")
+        case .stopped: String(localized: "Stopped, \(spoken(state.recordedMs)) recorded", table: "Capture")
+        }
     }
 
     static let savedOnDevice = String(localized: "Video saved on this iPhone", table: "Capture")
@@ -70,6 +96,49 @@ enum CaptureRecordingCopy {
     }
 
     static let pausedBanner = String(localized: "Paused · Not recording", table: "Capture")
+    static let stoppedBanner = String(localized: "Stopped · Not recording", table: "Capture")
+
+    // MARK: A stop that did not end as a saved recording
+
+    /// What failed (screen spec, Error state: what failed, what is still safe, and a way on).
+    static func stopFailureTitle(_ failure: CaptureStopFailure) -> String {
+        switch failure {
+        case .saveFailed: String(localized: "JOVRA could not finish saving this recording", table: "Capture")
+        case .deleteFailed: String(localized: "This recording could not be deleted", table: "Capture")
+        }
+    }
+
+    /// What is still on this iPhone. `savedThroughMs` is the journal's confirmed time, never a guess, and
+    /// "will look for it" is what the next launch's recovery scan does; it is not a promise of the result.
+    static func stopFailureMessage(_ failure: CaptureStopFailure, savedThroughMs: Int?) -> String {
+        switch failure {
+        case .saveFailed:
+            guard let saved = savedThroughMs, saved > 0 else {
+                return String(localized: "Nothing from this recording was confirmed as saved on this iPhone.", table: "Capture")
+            }
+            return String(localized: "Video up to \(clock(saved)) is on this iPhone. JOVRA will look for it the next time it opens.", table: "Capture")
+        case .deleteFailed:
+            return String(localized: "It is still on this iPhone. Try deleting it again.", table: "Capture")
+        }
+    }
+
+    /// Spoken politely when the stop lands in the failed state.
+    static func stopFailureAnnouncement(_ failure: CaptureStopFailure) -> String {
+        switch failure {
+        case .saveFailed: String(localized: "Recording stopped. JOVRA could not finish saving it.", table: "Capture")
+        case .deleteFailed: String(localized: "Recording stopped. It could not be deleted and is still on this iPhone.", table: "Capture")
+        }
+    }
+
+    /// Why the engine stopped by itself, read from the capture events stored with the recording
+    /// (screen spec S06, Low storage and Low battery); nil when the player stopped it.
+    static func automaticStopReason(_ recording: SessionRecording) -> String? {
+        guard let kind = recording.captureEvents?.last(where: { $0.kind == .lowStorageStop || $0.kind == .lowBatteryStop })?.kind else { return nil }
+        let end = clock(recording.durationMs ?? recording.segments.map { $0.startMs + $0.durationMs }.max() ?? 0)
+        return kind == .lowStorageStop
+            ? String(localized: "Storage full. Everything up to \(end) is saved.", table: "Capture")
+            : String(localized: "Battery almost empty. Everything up to \(end) is saved.", table: "Capture")
+    }
 
     static func reason(_ reason: SessionGapReason) -> String {
         switch reason {

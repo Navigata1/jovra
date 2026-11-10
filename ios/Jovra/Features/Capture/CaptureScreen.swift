@@ -35,6 +35,12 @@ struct CaptureScreen: View {
 
     private var isSupported: Bool { setup?.kind == nil || setup?.kind == .singlesMatch }
 
+    /// Set once the engine has stopped with nothing saved: the recording phase then shows what failed.
+    private var stopFailure: CaptureStopFailure? {
+        guard let coordinator, let status = coordinator.status, coordinator.savedRecording == nil else { return nil }
+        return CaptureRecordingState(status).stopFailure(isWorking: coordinator.isSettling, recorded: coordinator.stopFailure)
+    }
+
     var body: some View {
         Group {
             if phase == .recording, isSupported, let coordinator, let status = coordinator.status {
@@ -59,8 +65,17 @@ struct CaptureScreen: View {
             guard let interruption else { if sheet == .interruption { sheet = nil }; return }
             interrupted(interruption)
         }
-        .onChange(of: coordinator?.savedRecording != nil) { _, saved in
-            if saved { PoliteAnnouncer().announce(CaptureRecordingCopy.savedAnnouncement) }
+        .onChange(of: coordinator?.savedRecording) { _, saved in
+            guard let saved else { return }
+            PoliteAnnouncer().announce(CaptureRecordingCopy.automaticStopReason(saved) ?? CaptureRecordingCopy.savedAnnouncement)
+        }
+        .onChange(of: stopFailure) { _, failure in
+            if let failure { toasts.dismiss(); PoliteAnnouncer().announce(CaptureRecordingCopy.stopFailureAnnouncement(failure)) }
+        }
+        // Battery, storage and heat are read again for as long as the recording phase is up; the task
+        // ends with the phase. The engine's own stop at low storage or battery lands like the player's.
+        .task(id: phase) {
+            if phase == .recording { await coordinator?.keepBudgetCurrent() }
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase != .active { keepAwake.release() } else { keepAwake.update(for: coordinator?.status?.phase) }
@@ -119,7 +134,7 @@ struct CaptureScreen: View {
                     .tint(.jovra(.textPrimary)).foregroundStyle(.jovra(.textPrimary))
             }
         }
-        if failed {
+        if failed, coordinator?.savedRecording == nil {
             StateCard(symbol: "exclamationmark.triangle", title: String(localized: "Recording unavailable", table: "Capture"),
                       message: String(localized: "Your existing footage stays on this iPhone. Close this screen and try again.", table: "Capture"))
         }
@@ -133,13 +148,16 @@ struct CaptureScreen: View {
         return CaptureRecordingPhase(
             state: CaptureRecordingState(status), previewSession: coordinator.previewSession,
             fixture: coordinator.isFixture ? fixtureURL : nil, isFixture: coordinator.isFixture,
-            batteryFraction: status.budget?.batteryFraction, previewMode: status.previewMode,
-            isWorking: coordinator.isWorking, failed: failed, competitionMode: config.competitionMode, isObscured: sheet != nil,
+            batteryFraction: coordinator.batteryFraction, previewMode: status.previewMode,
+            isWorking: coordinator.isWorking, failed: failed, stopFailure: stopFailure,
+            competitionMode: config.competitionMode, isObscured: sheet != nil,
             actions: .init(markPoint: { markPoint(coordinator) },
                            pause: { perform { try await coordinator.pause() } },
                            resume: { perform { try await coordinator.resume() } },
                            stop: { sheet = .stopConfirmation },
                            delete: { sheet = .deleteConfirmation },
+                           retryDelete: { delete() },
+                           close: { router.dismissFullScreen() },
                            simulateInterruption: simulate))
     }
 

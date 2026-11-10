@@ -105,6 +105,121 @@ final class CaptureRecordingUITests: XCTestCase {
         XCTAssertFalse(row.waitForExistence(timeout: 3), "the deleted session is not in the library")
     }
 
+    // MARK: A stop that does not end as a saved recording
+
+    @MainActor
+    func testAStopWhoseSaveFailsSaysStoppedOffersCloseAndIsRecoveredAtTheNextLaunch() throws {
+        let title = "T17 unsaved " + UUID().uuidString.prefix(6)
+        var app = XCUIApplication.launchJovra { $0.demo = .off; $0.startRoute = "capture" }
+        let parked = try recordThenFailTheFinalSave(app, title: title)
+        try assertFailedStop(app, name: "dark")
+        app.buttons["capture.close"].tap()
+        XCTAssertTrue(app.otherElements["tabBar"].waitForExistence(timeout: 15), "Close leaves the stopped route")
+
+        // The screen said JOVRA would look for the video at the next launch. The library can read the
+        // session again, and the relaunch recovers the recording from its journal.
+        app.terminate()
+        try parked.restore()
+        app = XCUIApplication.launchJovra { $0.demo = .off; $0.appearance = .dark }
+        let sheet = app.staticTexts["recovery.title"]
+        XCTAssertTrue(sheet.waitForExistence(timeout: 30))
+        XCTAssertEqual(sheet.label, "Recording recovered")
+        XCTAssertTrue(app.staticTexts[title].exists)
+        waitForSheetToSettle()
+        app.buttons["recovery.done"].tap()
+    }
+
+    @MainActor
+    func testTheFailedStopStatePassesTheAccessibilityAuditAtAX5() throws {
+        let app = XCUIApplication.launchJovra(contentSize: .accessibility5) { $0.demo = .off; $0.startRoute = "capture" }
+        // The default draft is recorded as it is (retitling it at AX5 is not what this test is about), so
+        // the recording is found as the newest one still in progress.
+        let parked = try recordThenFailTheFinalSave(app, title: nil)
+        try assertFailedStop(app, name: "ax5")
+        app.buttons["capture.close"].tap()
+        XCTAssertTrue(app.otherElements["tabBar"].waitForExistence(timeout: 15))
+        try parked.discardRecording()   // Nothing is left for a later launch to recover over another test.
+    }
+
+    @MainActor
+    func testAFailedDeleteSaysTheRecordingIsStillHereAndCanBeRetried() throws {
+        let title = "T17 undeleted " + UUID().uuidString.prefix(6)
+        let app = XCUIApplication.launchJovra { $0.demo = .off; $0.startRoute = "capture" }
+        try startRecording(app, title: title)
+        waitForSavedThrough(app, seconds: 2)
+        let parked = try parkSessionDocument(ofSessionTitled: title)   // The store can no longer trash the session.
+        app.buttons["capture.more"].tap()
+        XCTAssertTrue(app.buttons["capture.delete"].waitForExistence(timeout: 5))
+        app.buttons["capture.delete"].tap()
+        XCTAssertTrue(app.buttons["capture.confirmDelete"].waitForExistence(timeout: 5))
+        waitForSheetToSettle()
+        app.buttons["capture.confirmDelete"].tap()
+
+        let failure = app.descendants(matching: .any)["capture.stopFailure"]
+        XCTAssertTrue(failure.waitForExistence(timeout: 30), "a failed deletion is not a dead end")
+        XCTAssertTrue(failure.label.hasPrefix("This recording could not be deleted"), failure.label)
+        XCTAssertTrue(failure.label.contains("It is still on this iPhone"), failure.label)
+        XCTAssertEqual(app.descendants(matching: .any)["capture.stoppedBanner"].label, "Stopped · Not recording")
+        XCTAssertTrue(app.descendants(matching: .any)["capture.recPill"].label.hasPrefix("Stopped, "))
+        let retry = app.buttons["capture.retryDelete"]
+        XCTAssertTrue(retry.isHittable)
+        XCTAssertTrue(app.buttons["capture.close"].isHittable)
+        attachScreenshot(app, name: "s06-dark-delete-failed")
+        try auditScreen(app)
+
+        try parked.restore()
+        retry.tap()
+        XCTAssertTrue(app.otherElements["tabBar"].waitForExistence(timeout: 15), "the retried deletion closes the route")
+        app.buttons["tab.sessions"].tap()
+        XCTAssertTrue(app.heading("Your sessions").waitForExistence(timeout: 5))
+        let row = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'library.session.' AND label CONTAINS %@", title)).firstMatch
+        XCTAssertFalse(row.waitForExistence(timeout: 3), "the deleted session is not in the library")
+    }
+
+    /// Records, then makes the library unable to acknowledge the final save, and confirms Stop.
+    @MainActor
+    private func recordThenFailTheFinalSave(_ app: XCUIApplication, title: String?) throws -> ParkedSessionDocument {
+        try startRecording(app, title: title)
+        waitForSavedThrough(app, seconds: 2)
+        let parked = try parkSessionDocument(ofSessionTitled: title)
+        app.buttons["capture.stop"].tap()
+        let confirm = app.buttons["capture.confirmStop"]
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        waitForSheetToSettle()
+        confirm.tap()
+        return parked
+    }
+
+    /// The stopped state says it is stopped, says what is still on the iPhone, and has a way out.
+    @MainActor
+    private func assertFailedStop(_ app: XCUIApplication, name: String) throws {
+        let banner = app.descendants(matching: .any)["capture.stoppedBanner"]
+        XCTAssertTrue(banner.waitForExistence(timeout: 30), "a stop whose save failed is not left reading REC")
+        XCTAssertEqual(banner.label, "Stopped · Not recording")
+        let pill = app.descendants(matching: .any)["capture.recPill"]
+        XCTAssertTrue(pill.label.hasPrefix("Stopped, "), pill.label)
+        XCTAssertFalse(pill.label.contains("Recording"), pill.label)
+        let failure = app.descendants(matching: .any)["capture.stopFailure"]
+        XCTAssertTrue(failure.label.hasPrefix("JOVRA could not finish saving this recording"), failure.label)
+        XCTAssertTrue(failure.label.contains("is on this iPhone"), "what is still safe: \(failure.label)")
+        XCTAssertFalse(app.staticTexts["capture.saved"].exists, "nothing is claimed as saved")
+        for id in ["capture.markPoint", "capture.stop", "capture.pause", "capture.resume", "capture.more"] {
+            XCTAssertFalse(app.buttons[id].exists, "\(id) cannot act on a stopped engine, so it is not shown")
+        }
+        for orientation in [UIDeviceOrientation.portrait, .landscapeLeft] {
+            XCUIDevice.shared.orientation = orientation
+            let close = app.buttons["capture.close"]
+            XCTAssertTrue(close.waitForExistence(timeout: 5))
+            XCTAssertTrue(close.isHittable, "the way out is on screen in \(orientation.isLandscape ? "landscape" : "portrait")")
+            XCTAssertGreaterThanOrEqual(close.frame.height, 44)
+            Thread.sleep(forTimeInterval: 1)
+            shot(app, "s06-\(name)\(orientation.isLandscape ? "-landscape" : "")-save-failed")
+            try auditScreen(app)
+        }
+        XCUIDevice.shared.orientation = .portrait
+        XCTAssertTrue(app.buttons["capture.close"].waitForExistence(timeout: 5))
+    }
+
     // MARK: Crash and relaunch
 
     @MainActor
@@ -365,25 +480,48 @@ final class CaptureRecordingUITests: XCTestCase {
     /// that did not survive: it finds this test's own recording by its unique title and replaces the first
     /// segment with bytes no decoder accepts. Only synthetic fixture-camera media is ever touched.
     private func damageFirstSegment(ofSessionTitled title: String) throws {
+        let originals = try fixtureSessionFolder(titled: title).appendingPathComponent("originals")
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: originals.path).sorted(), ["segment-0.mp4", "segment-1.mp4"])
+        try Data("JOVRA synthetic damaged segment".utf8).write(to: originals.appendingPathComponent("segment-0.mp4"), options: .atomic)
+    }
+
+    /// Moves this test's own session document out of the library, so the store can neither acknowledge a
+    /// final save nor trash the session: the two failures the stopped state exists for. `restore()` puts
+    /// it back untouched.
+    private func parkSessionDocument(ofSessionTitled title: String?) throws -> ParkedSessionDocument {
+        let document = try fixtureSessionFolder(titled: title).appendingPathComponent("session.json")
+        let parked = FileManager.default.temporaryDirectory.appendingPathComponent("parked-\(UUID().uuidString).json")
+        try FileManager.default.moveItem(at: document, to: parked)
+        return ParkedSessionDocument(home: document, parked: parked)
+    }
+
+    /// The folder of the fixture-camera recording with this unique title, in this simulator's app container.
+    /// Without a title: the newest fixture recording that is still in progress, which is the one the
+    /// running test just started.
+    private func fixtureSessionFolder(titled title: String?) throws -> URL {
         #if targetEnvironment(simulator)
         let files = FileManager.default
         let applications = URL(fileURLWithPath: NSHomeDirectory()).deletingLastPathComponent()
+        var inProgress: [(createdAt: String, folder: URL)] = []
         for container in try files.contentsOfDirectory(at: applications, includingPropertiesForKeys: nil) {
             let sessions = container.appendingPathComponent("Library/Application Support/JOVRA/sessions")
             for folder in (try? files.contentsOfDirectory(at: sessions, includingPropertiesForKeys: nil)) ?? [] {
                 guard let data = try? Data(contentsOf: folder.appendingPathComponent("session.json")),
                       let document = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                      document["title"] as? String == title,
                       (document["recording"] as? [String: Any])?["mode"] as? String == "simulatorFixture" else { continue }
-                let originals = folder.appendingPathComponent("originals")
-                XCTAssertEqual(try files.contentsOfDirectory(atPath: originals.path).sorted(), ["segment-0.mp4", "segment-1.mp4"])
-                try Data("JOVRA synthetic damaged segment".utf8).write(to: originals.appendingPathComponent("segment-0.mp4"), options: .atomic)
-                return
+                if let title {
+                    if document["title"] as? String == title { return folder }
+                } else if (document["original"] as? [String: Any])?["state"] as? String == "recording",
+                          let createdAt = document["createdAt"] as? String {
+                    inProgress.append((createdAt, folder))
+                }
             }
         }
-        XCTFail("no fixture recording titled \(title) in this simulator")
+        if let newest = inProgress.max(by: { $0.createdAt < $1.createdAt })?.folder { return newest }
+        XCTFail("no fixture recording \(title.map { "titled \($0)" } ?? "in progress") in this simulator")
+        throw CocoaError(.fileNoSuchFile)
         #else
-        throw XCTSkip("Damaging a segment from the test runner needs the simulator's shared data volume.")
+        throw XCTSkip("Reaching a recording from the test runner needs the simulator's shared data volume.")
         #endif
     }
 
@@ -416,5 +554,19 @@ final class CaptureRecordingUITests: XCTestCase {
             for term in banned { XCTAssertFalse(label.contains(term), "“\(label)” shows \(term)") }
             XCTAssertFalse(["in", "out", "fault"].contains(label.trimmingCharacters(in: .whitespaces)), "“\(label)” looks like a line call")
         }
+    }
+}
+
+/// A session document the test runner moved aside, and where it goes back.
+private struct ParkedSessionDocument {
+    let home: URL
+    let parked: URL
+
+    func restore() throws { try FileManager.default.moveItem(at: parked, to: home) }
+
+    /// Removes the parked document and the test's own synthetic recording it belonged to.
+    func discardRecording() throws {
+        try FileManager.default.removeItem(at: parked)
+        try FileManager.default.removeItem(at: home.deletingLastPathComponent())
     }
 }

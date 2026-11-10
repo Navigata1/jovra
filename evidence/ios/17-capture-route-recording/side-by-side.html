@@ -51,6 +51,14 @@
     <p class="review"><strong>Reviewer:</strong> Claude (T17 agent) — relaunch after a killed recording: &#x27;Recording recovered&#x27;, the session title, saved-through time and every gap (a gap shorter than a second reads &#x27;Stopped at m:ss · not saved&#x27;); no partial report because every segment decoded; not a reference-06 state (S03 Home banner in the spec; the ticket asks for a sheet); landscape: trailing 112 pt control rail with Mark point, Stop, Pause and &#x27;•••&#x27;, status card bottom leading (S06 landscape); AX5: text wraps without clipping, capture captions move to the Large Content Viewer so the 64/76 pt controls keep their size, the lockup is dropped</p>
   </section>
   <section>
+    <h2>Screen 06 · s06-ax5-landscape-save-failed</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/06-live-capture.png" alt="Reference 06"><figcaption>Reference: 06-live-capture.png</figcaption></figure>
+      <figure><img src="s06-ax5-landscape-save-failed.jpg" alt="Simulator s06-ax5-landscape-save-failed"><figcaption>Simulator: s06-ax5-landscape-save-failed.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T17 agent, review round 1) — a Stop whose final save failed (the test runner moved the session document out of the library, so the store refused the save): the pill reads &#x27;Stopped m:ss&#x27; with the stop glyph and no red dot, &#x27;Stopped · Not recording&#x27; banner, what failed (&#x27;JOVRA could not finish saving this recording&#x27;) and what is still safe (&#x27;Video up to m:ss is on this iPhone. JOVRA will look for it the next time it opens.&#x27;), and Close in place of Mark point / Stop / Pause / overflow; nothing is shown as saved; not a reference-06 state (screen spec Error state: what failed, what is still safe, a way on); AX5 landscape: the words scroll in the forest column and Close stays pinned and on screen; the banner wraps to four lines at this size</p>
+  </section>
+  <section>
     <h2>Screen 06 · s06-ax5-landscape-stop-confirmation</h2>
     <div class="pair">
       <figure><img src="../../../design-reference/screens/06-live-capture.png" alt="Reference 06"><figcaption>Reference: 06-live-capture.png</figcaption></figure>
@@ -83,6 +91,14 @@
     <p class="review"><strong>Reviewer:</strong> Claude (T17 agent) — relaunch after a killed recording: &#x27;Recording recovered&#x27;, the session title, saved-through time and every gap (a gap shorter than a second reads &#x27;Stopped at m:ss · not saved&#x27;); no partial report because every segment decoded; not a reference-06 state (S03 Home banner in the spec; the ticket asks for a sheet); AX5: text wraps without clipping, capture captions move to the Large Content Viewer so the 64/76 pt controls keep their size, the lockup is dropped</p>
   </section>
   <section>
+    <h2>Screen 06 · s06-ax5-save-failed</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/06-live-capture.png" alt="Reference 06"><figcaption>Reference: 06-live-capture.png</figcaption></figure>
+      <figure><img src="s06-ax5-save-failed.jpg" alt="Simulator s06-ax5-save-failed"><figcaption>Simulator: s06-ax5-save-failed.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T17 agent, review round 1) — a Stop whose final save failed (the test runner moved the session document out of the library, so the store refused the save): the pill reads &#x27;Stopped m:ss&#x27; with the stop glyph and no red dot, &#x27;Stopped · Not recording&#x27; banner, what failed (&#x27;JOVRA could not finish saving this recording&#x27;) and what is still safe (&#x27;Video up to m:ss is on this iPhone. JOVRA will look for it the next time it opens.&#x27;), and Close in place of Mark point / Stop / Pause / overflow; nothing is shown as saved; not a reference-06 state (screen spec Error state: what failed, what is still safe, a way on); AX5: the words scroll inside the panel (up to half the screen) and Close stays pinned below them at its full height</p>
+  </section>
+  <section>
     <h2>Screen 06 · s06-ax5-slot-framing-empty</h2>
     <div class="pair">
       <figure><img src="../../../design-reference/screens/06-live-capture.png" alt="Reference 06"><figcaption>Reference: 06-live-capture.png</figcaption></figure>
@@ -113,6 +129,14 @@
       <figure><img src="s06-dark-delete-confirmation.jpg" alt="Simulator s06-dark-delete-confirmation"><figcaption>Simulator: s06-dark-delete-confirmation.jpg</figcaption></figure>
     </div>
     <p class="review"><strong>Reviewer:</strong> Claude (T17 agent) — Delete this recording (story 89, overflow per S06): &#x27;Delete this recording?&#x27; with what is removed and that it cannot be undone, destructive &#x27;Delete recording&#x27; and &#x27;Keep recording&#x27;</p>
+  </section>
+  <section>
+    <h2>Screen 06 · s06-dark-delete-failed</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/06-live-capture.png" alt="Reference 06"><figcaption>Reference: 06-live-capture.png</figcaption></figure>
+      <figure><img src="s06-dark-delete-failed.jpg" alt="Simulator s06-dark-delete-failed"><figcaption>Simulator: s06-dark-delete-failed.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T17 agent, review round 1) — a failed &#x27;Delete this recording&#x27; (the store could not trash the session): &#x27;Stopped&#x27; pill with no red dot, &#x27;Stopped · Not recording&#x27;, &#x27;This recording could not be deleted&#x27; / &#x27;It is still on this iPhone. Try deleting it again.&#x27;, primary &#x27;Try deleting again&#x27; (no second confirmation) and outlined Close; the pill shows 1:00 because the fixture clip ran its full 60 s while the test runner waited on the open overflow menu; not a reference-06 state</p>
   </section>
   <section>
     <h2>Screen 06 · s06-dark-interrupted</h2>
@@ -155,6 +179,14 @@
     <p class="review"><strong>Reviewer:</strong> Claude (T17 agent) — relaunch after a killed recording: &#x27;Recording recovered&#x27;, the session title, saved-through time and every gap (a gap shorter than a second reads &#x27;Stopped at m:ss · not saved&#x27;); no partial report because every segment decoded; not a reference-06 state (S03 Home banner in the spec; the ticket asks for a sheet); landscape: the sheet fills the screen and scrolls to its two answers</p>
   </section>
   <section>
+    <h2>Screen 06 · s06-dark-landscape-save-failed</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/06-live-capture.png" alt="Reference 06"><figcaption>Reference: 06-live-capture.png</figcaption></figure>
+      <figure><img src="s06-dark-landscape-save-failed.jpg" alt="Simulator s06-dark-landscape-save-failed"><figcaption>Simulator: s06-dark-landscape-save-failed.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T17 agent, review round 1) — a Stop whose final save failed (the test runner moved the session document out of the library, so the store refused the save): the pill reads &#x27;Stopped m:ss&#x27; with the stop glyph and no red dot, &#x27;Stopped · Not recording&#x27; banner, what failed (&#x27;JOVRA could not finish saving this recording&#x27;) and what is still safe (&#x27;Video up to m:ss is on this iPhone. JOVRA will look for it the next time it opens.&#x27;), and Close in place of Mark point / Stop / Pause / overflow; nothing is shown as saved; not a reference-06 state (screen spec Error state: what failed, what is still safe, a way on); landscape: the control rail&#x27;s place is taken by a forest column with the words scrolling above a pinned Close</p>
+  </section>
+  <section>
     <h2>Screen 06 · s06-dark-landscape-stop-confirmation</h2>
     <div class="pair">
       <figure><img src="../../../design-reference/screens/06-live-capture.png" alt="Reference 06"><figcaption>Reference: 06-live-capture.png</figcaption></figure>
@@ -185,6 +217,14 @@
       <figure><img src="s06-dark-recovered-sheet.jpg" alt="Simulator s06-dark-recovered-sheet"><figcaption>Simulator: s06-dark-recovered-sheet.jpg</figcaption></figure>
     </div>
     <p class="review"><strong>Reviewer:</strong> Claude (T17 agent) — relaunch after a killed recording: &#x27;Recording recovered&#x27;, the session title, saved-through time and every gap (a gap shorter than a second reads &#x27;Stopped at m:ss · not saved&#x27;); no partial report because every segment decoded; not a reference-06 state (S03 Home banner in the spec; the ticket asks for a sheet)</p>
+  </section>
+  <section>
+    <h2>Screen 06 · s06-dark-save-failed</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/06-live-capture.png" alt="Reference 06"><figcaption>Reference: 06-live-capture.png</figcaption></figure>
+      <figure><img src="s06-dark-save-failed.jpg" alt="Simulator s06-dark-save-failed"><figcaption>Simulator: s06-dark-save-failed.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T17 agent, review round 1) — a Stop whose final save failed (the test runner moved the session document out of the library, so the store refused the save): the pill reads &#x27;Stopped m:ss&#x27; with the stop glyph and no red dot, &#x27;Stopped · Not recording&#x27; banner, what failed (&#x27;JOVRA could not finish saving this recording&#x27;) and what is still safe (&#x27;Video up to m:ss is on this iPhone. JOVRA will look for it the next time it opens.&#x27;), and Close in place of Mark point / Stop / Pause / overflow; nothing is shown as saved; not a reference-06 state (screen spec Error state: what failed, what is still safe, a way on)</p>
   </section>
   <section>
     <h2>Screen 06 · s06-dark-saved-phase</h2>

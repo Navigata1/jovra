@@ -184,6 +184,19 @@ edit the container:
 - **Recording phase.** `Recording/` holds the S06 layout (`CaptureRecordingPhase`), its controls and pills, the question
   sheets (`CaptureDecisionSheet`) and every sentence it says (`CaptureRecordingCopy`). `CaptureRecordingState` reads only
   the engine's confirmed `CaptureStatus`: the REC timer leaves gaps out, "Saved through" and gaps use session time.
+- **Stopped without a saved recording.** A Stop whose final save fails, the engine's own stop at low storage or
+  battery whose save fails, and a failed "Delete this recording" all leave the engine stopped. The coordinator records
+  which (`NativeCaptureCoordinator.stopFailure`), and the recording phase then shows `Recording/CaptureStoppedState.swift`
+  instead of its controls: a "Stopped" pill with no red dot, "Stopped · Not recording", what failed, what is still on
+  this iPhone, Close, and for a failed deletion "Try deleting again". Nothing is shown as saved unless the library
+  acknowledged it. The journal and closed segments stay on disk, so the next launch's recovery scan finds them.
+- **Live budget.** While the recording phase is up, `CaptureScreen` runs `NativeCaptureCoordinator.keepBudgetCurrent()`,
+  which calls `CaptureEngine.refreshBudget()` every `budgetRefreshInterval` (10 s). The battery pill and the court-mode
+  slot read that live reading; if a read fails the pill is hidden rather than showing an old level. When the engine
+  stops by itself (storage or battery nearly gone) the route lands on the saved phase with the reason from the stored
+  capture events, or on the stopped state above if that save fails. The simulator reports no battery level and
+  stays at nominal heat, so these are tested with `FakeDeviceBudget` (`CaptureStopFailureAndBudgetTests`) and are
+  device-pending on hardware.
 - **The session is created when recording starts**, not while framing, so opening and closing the route leaves nothing
   in the library. "Delete this recording" stops the engine and removes the session folder through the store's Trash
   and confirmed purge, then calls `CaptureConfig.onConsentWithdrawn`.

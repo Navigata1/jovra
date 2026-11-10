@@ -6,7 +6,8 @@ import SwiftUI
 /// S06, the recording phase: the full-bleed preview with the REC and battery pills, the score overlay and
 /// court-mode slots, and an opaque forest control panel (portrait) or a trailing control rail (landscape).
 /// The phase shows only what the engine confirmed. There is no live ball speed, body tracking or call on
-/// whether a ball was in; the phone's job here is to keep the video safe.
+/// whether a ball was in; the phone's job here is to keep the video safe. When the engine has stopped
+/// without a saved recording (`stopFailure`), the controls give way to what failed and the ways out.
 struct CaptureRecordingPhase: View {
     struct Actions {
         var markPoint: () -> Void
@@ -14,6 +15,10 @@ struct CaptureRecordingPhase: View {
         var resume: () -> Void
         var stop: () -> Void
         var delete: () -> Void
+        /// A deletion that failed, tried again without a second confirmation.
+        var retryDelete: () -> Void
+        /// Leaves the route once the engine has stopped without a saved recording.
+        var close: () -> Void
         var simulateInterruption: (() -> Void)?
     }
 
@@ -25,6 +30,8 @@ struct CaptureRecordingPhase: View {
     var previewMode: CapturePreviewMode
     var isWorking: Bool
     var failed: Bool
+    /// The engine stopped and nothing was acknowledged as saved: say so, and offer the ways out.
+    var stopFailure: CaptureStopFailure?
     var competitionMode: Bool
     /// A question sheet is up: the chrome over the video steps back so the sheet is the only thing to read.
     var isObscured = false
@@ -57,7 +64,8 @@ struct CaptureRecordingPhase: View {
                 .scrollBounceBehavior(.basedOnSize)
             }
             .frame(maxHeight: .infinity)
-            panel(statusLimit: geometry.size.height * 0.34)
+            // Stopped, the words matter more than the preview: they get half the screen before scrolling.
+            panel(statusLimit: geometry.size.height * (stopFailure == nil ? 0.34 : 0.5))
         }
     }
 
@@ -68,28 +76,54 @@ struct CaptureRecordingPhase: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: Space.x2) {
                         overlays
-                        Spacer(minLength: Space.x2)
-                        statusBlock.padding(Space.x2)
-                            .frame(maxWidth: 460, alignment: .leading)
-                            .background(Color.jovra(.background), in: RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
+                        if stopFailure == nil {
+                            Spacer(minLength: Space.x2)
+                            statusBlock.padding(Space.x2)
+                                .frame(maxWidth: 460, alignment: .leading)
+                                .background(Color.jovra(.background), in: RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
+                        }
                     }
                     .padding(Space.x2)
                     .frame(minHeight: geometry.size.height, alignment: .top)
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }
-            ScrollView {
-                VStack(spacing: Space.x3) {
-                    controls(axis: .vertical)
-                    moreMenu
+            if let stopFailure {
+                stoppedColumn(stopFailure)
+                    .frame(width: min(max(geometry.size.width * 0.44, 300), 440))
+                    .background(Color.jovra(.background).ignoresSafeArea())
+            } else {
+                ScrollView {
+                    VStack(spacing: Space.x3) {
+                        controls(axis: .vertical)
+                        moreMenu
+                    }
+                    .padding(.vertical, Space.x2)
+                    .frame(minHeight: geometry.size.height)
                 }
-                .padding(.vertical, Space.x2)
-                .frame(minHeight: geometry.size.height)
+                .scrollBounceBehavior(.basedOnSize)
+                .frame(width: 112)
+                .background(Color.jovra(.background).ignoresSafeArea())
             }
-            .scrollBounceBehavior(.basedOnSize)
-            .frame(width: 112)
-            .background(Color.jovra(.background).ignoresSafeArea())
         }
+    }
+
+    /// Landscape, stopped: the rail's place is taken by what failed, with the ways out pinned under it so
+    /// they stay on screen however long the words run at large text sizes.
+    private func stoppedColumn(_ failure: CaptureStopFailure) -> some View {
+        VStack(spacing: Space.x2) {
+            ScrollView { statusBlock }
+                .scrollBounceBehavior(.basedOnSize)
+            exits(failure)
+        }
+        .padding(Space.x2)
+    }
+
+    private func exits(_ failure: CaptureStopFailure) -> some View {
+        // Never squeezed by the preview or the scrolling words above: at the largest text sizes a
+        // compressed button would let its label spill out of its capsule.
+        CaptureStoppedExits(failure: failure, isWorking: isWorking, retryDelete: actions.retryDelete, close: actions.close)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     // MARK: Pieces
@@ -97,8 +131,11 @@ struct CaptureRecordingPhase: View {
     private var preview: some View {
         ZStack {
             Color.black
-            CapturePreview(session: previewSession, fixture: fixture)
-                .accessibilityHidden(true)
+            // Court mode says the preview is off, so the preview is removed, not only covered.
+            if previewMode != .courtMode {
+                CapturePreview(session: previewSession, fixture: fixture)
+                    .accessibilityHidden(true)
+            }
             CaptureCourtModeSlot(previewMode: previewMode)
         }
         .ignoresSafeArea(edges: verticalSizeClass == .compact ? [.leading, .vertical] : .top)
@@ -134,12 +171,21 @@ struct CaptureRecordingPhase: View {
         .accessibilityHidden(isObscured)
     }
 
-    private var statusBlock: some View {
+    @ViewBuilder private var statusBlock: some View {
+        if let stopFailure {
+            CaptureStoppedStatus(failure: stopFailure, savedThroughMs: state.savedThroughMs)
+        } else {
+            liveStatus
+        }
+    }
+
+    private var liveStatus: some View {
         VStack(alignment: .leading, spacing: Space.x1 + Space.half) {
-            if state.isPlayerPause { CapturePausedBanner() }
+            if state.isPlayerPause { CaptureNotRecordingBanner.paused }
             CaptureSaveStatus(state: state)
             CaptureGapList(gaps: state.gaps)
-            if state.phase == .stopping {
+            // Stopped with the save still in flight is the same moment to the player as stopping.
+            if state.pill == .stopped {
                 Label {
                     Text("Stopping and saving", tableName: "Capture")
                 } icon: {
@@ -175,9 +221,9 @@ struct CaptureRecordingPhase: View {
                 .scrollBounceBehavior(.basedOnSize)
                 .frame(height: min(max(statusHeight, HitTarget.minimum), statusLimit))
                 .onPreferenceChange(StatusHeightKey.self) { statusHeight = $0 }
-                if !overflowJoinsControls { moreMenu }
+                if stopFailure == nil, !overflowJoinsControls { moreMenu }
             }
-            controls(axis: .horizontal)
+            if let stopFailure { exits(stopFailure) } else { controls(axis: .horizontal) }
         }
         .padding(.horizontal, Space.screenMargin)
         .padding(.top, Space.x3)

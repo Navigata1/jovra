@@ -2,17 +2,20 @@ import JovraCore
 import JovraMedia
 import SwiftUI
 
-/// "● REC 12:46" / "❙❙ Paused 12:46" over the preview (screen spec S06, RecordingStatusPill). The red dot
-/// is never the only signal: the words change with it.
+/// "● REC 12:46" / "❙❙ Paused 12:46" / "■ Stopped 12:46" over the preview (screen spec S06,
+/// RecordingStatusPill). The red dot is never the only signal: the words change with it.
 struct RecordingStatusPill: View {
     var state: CaptureRecordingState
 
     var body: some View {
         HStack(spacing: Space.x1) {
-            if state.isPaused {
-                Image(systemName: "pause.fill").accessibilityHidden(true)
-            } else {
+            switch state.pill {
+            case .recording:
                 Circle().fill(Color.jovra(.recording)).frame(width: 12, height: 12).accessibilityHidden(true)
+            case .paused:
+                Image(systemName: "pause.fill").accessibilityHidden(true)
+            case .stopped:
+                Image(systemName: "stop.fill").accessibilityHidden(true)
             }
             Text(verbatim: CaptureRecordingCopy.pillText(state))
                 .monospacedDigit()
@@ -175,13 +178,20 @@ struct CaptureGapList: View {
     }
 }
 
-/// "Paused · Not recording" across the panel while paused (screen spec S06, Paused).
-struct CapturePausedBanner: View {
+/// "Paused · Not recording" (screen spec S06, Paused) or "Stopped · Not recording" across the panel.
+struct CaptureNotRecordingBanner: View {
+    var text: String
+    var symbol: String
+    var identifier: String
+
+    static var paused: Self { .init(text: CaptureRecordingCopy.pausedBanner, symbol: "pause.circle.fill", identifier: "capture.pausedBanner") }
+    static var stopped: Self { .init(text: CaptureRecordingCopy.stoppedBanner, symbol: "stop.circle.fill", identifier: "capture.stoppedBanner") }
+
     var body: some View {
         Label {
-            Text(verbatim: CaptureRecordingCopy.pausedBanner).fixedSize(horizontal: false, vertical: true)
+            Text(verbatim: text).fixedSize(horizontal: false, vertical: true)
         } icon: {
-            Image(systemName: "pause.circle.fill").accessibilityHidden(true)
+            Image(systemName: symbol).accessibilityHidden(true)
         }
         .font(.body.weight(.semibold))
         .foregroundStyle(.jovra(.textOnEditorial))
@@ -189,7 +199,7 @@ struct CapturePausedBanner: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.jovra(.surfaceSunken), in: RoundedRectangle(cornerRadius: Radius.control, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("capture.pausedBanner")
+        .accessibilityIdentifier(identifier)
     }
 }
 

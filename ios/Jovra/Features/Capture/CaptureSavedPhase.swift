@@ -27,6 +27,15 @@ struct CaptureSavedPhase: View {
                         .foregroundStyle(.jovra(.textPrimary))
                         .accessibilityIdentifier("capture.saved.duration")
                 }
+                // The engine stopped by itself (storage or battery): say why, from the stored capture events.
+                if let reason = CaptureRecordingCopy.automaticStopReason(recording) {
+                    Text(verbatim: reason)
+                        .font(.jovraBody.weight(.semibold))
+                        .monospacedDigit()
+                        .foregroundStyle(.jovra(.textPrimary))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("capture.saved.reason")
+                }
                 Text(recording.gaps.isEmpty ? String(localized: "Saved in one piece. Nothing is missing.", table: "Capture")
                      : String(localized: "Saved with gaps. Everything outside these gaps is in your video.", table: "Capture"))
                     .font(.jovraBody)
