@@ -1,0 +1,66 @@
+# XcodeGen spec for the JOVRA Label app bundle and its XCUITest target. The sources are the Swift package in
+# this folder; this file only wraps them in an .app so XCUITest can launch it.
+# Generate and run through scripts/benchmarks/label.sh and scripts/benchmarks/label-tool-ui-test.sh; the
+# generated JovraLabel.xcodeproj is never committed.
+name: JovraLabel
+options:
+  bundleIdPrefix: com.islanddevcrew.jovra
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+packages:
+  JovraLabelTool:
+    path: .
+targets:
+  JovraLabel:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/jovra-label
+    dependencies:
+      - package: JovraLabelTool
+        product: JovraLabelKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra.label
+        PRODUCT_NAME: JOVRA Label
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: JOVRA Label
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        INFOPLIST_KEY_NSHighResolutionCapable: YES
+        ENABLE_HARDENED_RUNTIME: NO
+        ENABLE_APP_SANDBOX: NO
+  JovraLabelUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: JovraLabel
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra.label.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: JovraLabel
+schemes:
+  JovraLabel:
+    build:
+      targets:
+        JovraLabel: all
+        JovraLabelUITests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - JovraLabelUITests

@@ -11,6 +11,12 @@
 // `jovra-benchmark list` prints the registered estimators and floors.
 // Exit status: 0 record written (tuning run, or gate passed); 3 record written and the gate FAILED;
 // 2 refused or invalid (no record written).
+//
+// Labels on real recordings (V01, LabelCommands.swift):
+//   jovra-benchmark score --labels FILE --observations FILE     precision, recall, timing and placement error,
+//                                                               tuning beside held-out
+//   jovra-benchmark labels seal FILE                            record a label file's hash and split in the label set
+//   jovra-benchmark labels status                               what is labelled against each target
 
 import Foundation
 import JovraBenchmark
@@ -88,6 +94,15 @@ case "run":
     } catch {
         fail("\(error)")
     }
+case "score", "labels":
+    do {
+        let status = try LabelCommands.run(Array(arguments))
+        if status != 0 { exit(status) }
+    } catch let error as LabelCommands.Failure {
+        fail(error.message)
+    } catch {
+        fail("\(error)")
+    }
 default:
-    fail("usage: jovra-benchmark run --estimator ID --clip SET/ID [--clip ...] --mode gate|tuning [--floor NAME] --out PATH | list")
+    fail("usage: jovra-benchmark run --estimator ID --clip SET/ID [--clip ...] --mode gate|tuning [--floor NAME] --out PATH | list\n" + LabelCommands.usage)
 }
