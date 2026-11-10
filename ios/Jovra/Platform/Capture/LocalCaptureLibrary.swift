@@ -18,6 +18,31 @@ struct StartupRecoverySummary: Equatable, Sendable {
     var partiallyRecovered = 0
     var refused = 0
     var scanFailed = false
+    /// What each recording adopted at this launch kept and lost, for the recovered-recording sheet.
+    var reports: [RecoveredCaptureReport] = []
+}
+
+/// One recording reconciled after the app stopped unexpectedly: what was saved, the gaps the journal and the
+/// scanner recorded, and, for a partial recovery, every segment that could not be kept and why.
+struct RecoveredCaptureReport: Equatable, Sendable, Identifiable {
+    var id: String
+    var title: String
+    var savedThroughMs: Int
+    var gaps: [SessionGap]
+    var outcome: SessionRecoveryReportOutcome
+    var unrecoverable: [SessionRecoveryReportUnrecoverableItem]
+    var truncatedSegments: Int
+
+    init?(_ document: SessionDocument) {
+        guard let report = document.recording.recovery else { return nil }
+        id = document.id
+        title = document.title
+        savedThroughMs = report.savedThroughMs ?? document.recording.segments.map { $0.startMs + $0.durationMs }.max() ?? 0
+        gaps = document.recording.gaps
+        outcome = report.outcome
+        unrecoverable = report.unrecoverable ?? []
+        truncatedSegments = report.truncatedSegmentIds?.count ?? 0
+    }
 }
 
 /// One app-local service owns one SessionStore actor. Reopening with a root is a system-boundary
@@ -107,6 +132,9 @@ actor LocalCaptureLibrary: RecordingSink {
                         } else {
                             summary.recovered += 1
                         }
+                        if let report = try? await RecoveredCaptureReport(store.load(candidate.sessionID)) {
+                            summary.reports.append(report)
+                        }
                     }
                 } catch {
                     summary.refused += 1
@@ -121,6 +149,14 @@ actor LocalCaptureLibrary: RecordingSink {
     private func isStartupRecoveryCandidate(_ id: String) async throws -> Bool {
         guard !capturesStartedHere.contains(id) else { return false }
         return try await store.needsCaptureRecovery(id)
+    }
+
+    /// Withdrawn consent or a discarded take: the player confirmed, so the whole session folder, originals
+    /// and journal included, goes through the store's own Trash and confirmed purge.
+    func deleteCapture(_ id: SessionID) async throws {
+        try await store.trash(id.rawValue)
+        let confirmation = try await store.purgeConfirmation(for: id.rawValue)
+        try await store.purge(id.rawValue, confirmation: confirmation)
     }
 
     func importFile(_ source: URL, playerName: String) async throws -> SessionID {
