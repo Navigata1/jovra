@@ -79,8 +79,93 @@ struct CourtCalibrationTests {
         #expect(check.verdict == .poor)
         #expect(check.rmsePx == nil, "no residual is invented for a line that has no pixel")
         #expect(checked.validity(atMs: 0, current: Self.binding) == .invalid(.poorFit))
-        // Nothing measured stays the only way to read notMeasurable, however twisted the fit.
-        #expect(twisted.checked(against: []).check?.verdict == .notMeasurable)
+    }
+
+    /// The doubles corners as a camera behind the near baseline sees them: a trapezoid, near side 1120 px wide
+    /// along y = 1000, far side 480 px wide along y = 300, in `CourtGeometry.doublesCorners` order.
+    static let trapezoid = [VideoPixel(x: 400, y: 1000), VideoPixel(x: 1520, y: 1000), VideoPixel(x: 1200, y: 300), VideoPixel(x: 720, y: 300)]
+
+    /// Each set of taps is a quad no camera looking at a flat court can produce: two crossing sides (a bow tie) or
+    /// a corner inside the triangle of the other three ((900, 800) is inside the two near corners and the far left one).
+    static let twistedTaps: [String: [VideoPixel]] = {
+        let t = trapezoid
+        return [
+            "far brackets swapped": [t[0], t[1], t[3], t[2]],
+            "near brackets swapped": [t[1], t[0], t[2], t[3]],
+            "far right bracket inside the other three": [t[0], t[1], VideoPixel(x: 900, y: 800), t[3]],
+        ]
+    }()
+
+    @Test func theTrapezoidItselfIsNotTwisted() throws {
+        let c = try CourtCalibration(doublesCorners: Self.trapezoid, camera: Self.binding)
+        #expect(!c.isTwisted)
+        #expect(c.validity(atMs: 0, current: Self.binding) == .valid)
+        #expect(c.checked(against: []).check?.verdict == .notMeasurable)
+        // By symmetry the centre mark of each baseline is midway between its corners.
+        let mark = try #require(c.project(CourtIntersection.farCentreMark.point))
+        #expect(abs(mark.x - 960) < 1e-9 && abs(mark.y - 300) < 1e-9)
+    }
+
+    /// On a camera looking straight down (the affine one above) a swapped pair of brackets puts the court centre
+    /// exactly on the fit's horizon, so no homography with H[2][2] = 1 exists: refused outright, never valid either.
+    @Test func aBowTieCentredOnTheCourtIsRefused() {
+        let t = CourtGeometry.doublesCorners.map { Self.pixel($0.point) }
+        #expect(throws: CalibrationError.degenerate) { try CourtCalibration(doublesCorners: [t[0], t[1], t[3], t[2]], camera: Self.binding) }
+    }
+
+    /// No line detector exists until V02, so nothing is measured for any calibration the app makes today. A
+    /// twisted quad has to be caught from the taps alone: never valid, checked or not.
+    @Test(arguments: twistedTaps.keys.sorted())
+    func aTwistedCalibrationWithNothingMeasuredIsNotValid(_ name: String) throws {
+        let taps = try #require(Self.twistedTaps[name])
+        let twisted = try CourtCalibration(doublesCorners: taps, camera: Self.binding)
+        #expect(CourtGeometry.doublesCorners.contains { twisted.project($0.point) == nil },
+                "premise: the fit cannot place one of its own tapped corners")
+        #expect(twisted.isTwisted)
+        #expect(twisted.check == nil, "premise: nothing was checked")
+        #expect(twisted.validity(atMs: 0, current: Self.binding) == .invalid(.poorFit))
+
+        let unmeasured = twisted.checked(against: [])
+        #expect(unmeasured.check?.verdict == .poor, "a twisted fit is poor before any line is measured")
+        #expect(unmeasured.check?.rmsePx == nil, "no residual is invented")
+        #expect(unmeasured.validity(atMs: 0, current: Self.binding) == .invalid(.poorFit))
+    }
+
+    /// A record stored `valid`, even with a good stored residual, does not outrank its own taps when reopened.
+    @Test(arguments: twistedTaps.keys.sorted())
+    func aStoredValidRecordWithTwistedTapsReopensInvalid(_ name: String) throws {
+        let taps = try #require(Self.twistedTaps[name])
+        for residual in [nil, Decimal(string: "0.4")] {
+            let reopened = try reopen(status: .valid, residualPx: residual, taps: taps)
+            #expect(reopened.isTwisted)
+            #expect(reopened.validity(atMs: 0, current: Self.binding) == .invalid(.poorFit))
+        }
+    }
+
+    /// The limit of the rule, stated: brackets one place round, or mirrored left to right, still make a convex
+    /// quad whose homography places every court point. Only measured lines catch these.
+    @Test func rotatedAndMirroredCornerOrdersAreOutOfReachOfTheTwistRule() throws {
+        let t = CourtGeometry.doublesCorners.map { Self.pixel($0.point) }
+        for taps in [[t[1], t[2], t[3], t[0]], [t[1], t[0], t[3], t[2]]] {
+            let c = try CourtCalibration(doublesCorners: taps, camera: Self.binding)
+            #expect(!c.isTwisted)
+            #expect(c.validity(atMs: 0, current: Self.binding) == .valid)
+            #expect(c.checked(against: []).check?.verdict == .notMeasurable)
+            #expect(c.checked(against: untapped()).validity(atMs: 0, current: Self.binding) == .invalid(.poorFit))
+        }
+    }
+
+    /// w = 1 - 0.1 y puts the horizon 10 m beyond the net: the far baseline has no pixel although the four near-half
+    /// points are in front of it. A fit that cannot place a court line is twisted whatever was tapped.
+    @Test func aFitThatPutsACourtLineBeyondItsHorizonIsTwisted() {
+        let tapped = [CourtIntersection.nearLeftSingles, .nearRightSingles, .nearRightService, .nearLeftService].map(\.point)
+        let tilted = Homography(matrix: [1, 0, 0, 0, 1, 0, 0, -0.1, 1])
+        #expect(tapped.allSatisfy { tilted.project($0) != nil })
+        #expect(tilted.project(CourtIntersection.farCentreMark.point) == nil)
+        #expect(tilted.isTwisted(tapped: tapped))
+        let level = Homography(matrix: [1, 0, 0, 0, 1, 0, 0, -0.05, 1])   // horizon at y = 20
+        #expect(!level.isTwisted(tapped: tapped))
+        #expect(level.isTwisted(tapped: tapped.dropLast() + [CourtPoint(x: 0, y: 25)]))
     }
 
     @Test func aRecordWithoutACameraFormatIsRefused() throws {
@@ -110,12 +195,14 @@ struct CourtCalibrationTests {
         #expect(reopened.validity(atMs: 120_000, current: Self.binding) == .invalid(.stale(fromMs: 120_000)))
     }
 
+    /// `taps` are 1080p video pixels, stored the way a session record stores them: normalized by the frame.
     private func reopen(status: SessionCalibrationStatus, residualPx: Decimal? = nil,
-                        staleFromMs: Int? = nil) throws -> CourtCalibration {
-        let record = SessionCalibration(id: "recorded-court", method: .value, frameMs: 0, imagePoints: [
-            .init(x: 0.125, y: 0.875), .init(x: 0.875, y: 0.875),
-            .init(x: 0.875, y: 0.125), .init(x: 0.125, y: 0.125)
-        ], courtPoints: CourtGeometry.doublesCorners.map { .init(x: Decimal($0.point.x), y: Decimal($0.point.y)) },
+                        staleFromMs: Int? = nil, taps: [VideoPixel]? = nil) throws -> CourtCalibration {
+        let normalized: [(Double, Double)] = taps?.map { ($0.x / 1920, $0.y / 1080) }
+            ?? [(0.125, 0.875), (0.875, 0.875), (0.875, 0.125), (0.125, 0.125)]
+        let record = SessionCalibration(id: "recorded-court", method: .value, frameMs: 0,
+                                        imagePoints: normalized.map { .init(x: Decimal($0.0), y: Decimal($0.1)) },
+                                        courtPoints: CourtGeometry.doublesCorners.map { .init(x: Decimal($0.point.x), y: Decimal($0.point.y)) },
             residualPx: residualPx, status: status, staleFromMs: staleFromMs,
             camera: .init(lens: .wide, width: 1920, height: 1080, zoomFactor: "1"),
             provenance: .init(status: .manual, source: "user"))

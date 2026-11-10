@@ -87,6 +87,17 @@ public struct Homography: Hashable, Sendable {
         return CourtPoint(x: x / w, y: y / w)
     }
 
+    /// True when the fit puts a court point it was fitted through, or a line intersection of the court, on or beyond
+    /// its own horizon, where it has no pixel. A camera looking at a flat court sees every court point in front of
+    /// it, so the four tapped corners, taken in the court points' order, make a convex quad. Brackets dragged
+    /// across each other (a bow tie) or inside the triangle of the other three still fix a homography, but a
+    /// twisted one: for four taps this is exactly a tapped quad that is not convex in that order. It needs no
+    /// measured line. Out of reach: brackets one corner round, or mirrored left to right, make a convex quad and
+    /// a homography that places every court point; only measured lines catch those.
+    public func isTwisted(tapped: [CourtPoint]) -> Bool {
+        (tapped + CourtIntersection.allCases.map(\.point)).contains { project($0) == nil }
+    }
+
     private var rows: [[Double]] { [Array(matrix[0..<3]), Array(matrix[3..<6]), Array(matrix[6..<9])] }
 
     // MARK: - Linear algebra (same order of operations as the Python reference)

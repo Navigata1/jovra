@@ -22,13 +22,23 @@ all be collinear. Fewer than four pairs is `tooFewPoints`; unequal lists
 
 The check that can fail: `reprojection_rmse` projects court points the player did not tap (line intersections) and
 compares them with where those lines are seen; a fit is poor above 3 px at 1080p, scaled by the frame height
-(2 px at 720p). A fit so twisted that a measured court point falls on or beyond its horizon (a bracket dragged
-across the court) has no residual to state and is poor too. Only with nothing measured is the check
+(2 px at 720p). A measured court point the fit puts on or beyond its horizon has no residual to state and makes
+the fit poor too.
+
+Twisted fits need no measurement. A camera looking at a flat court sees every court point in front of it, so the
+four tapped corners, taken in the court points' order, make a convex quad. Brackets dragged across each other (a
+bow tie) or inside the triangle of the other three still fix a homography, but one that puts some of its own
+tapped court points on or beyond its horizon (w <= 0), where they have no pixel. `is_twisted` is that test, extended to every
+line intersection of the court, so a fit that cannot place a painted line is caught whatever was tapped. A twisted
+fit is poor with nothing measured, and invalid (`poorFit`) even when it was never checked. Out of reach: brackets
+on the corners one place round, or mirrored left to right, make a convex quad and a homography that places every
+court point; only measured lines catch those. With an untwisted fit and nothing measured the check is
 `notMeasurable`, and that is never a pass.
 
 Validity binds a calibration to one lens, format (width x height) and zoom, and to the time the camera moved
-("stale from mm:ss"). Reasons are reported in this order: lensChanged, formatChanged, zoomChanged, poorFit, stale,
-then the status a reopened record was stored with (recordedInvalid, needsReview, cameraMoved).
+("stale from mm:ss"). Reasons are reported in this order: lensChanged, formatChanged, zoomChanged, poorFit (a
+twisted fit or a poor check), stale, then the status a reopened record was stored with (recordedInvalid,
+needsReview, cameraMoved).
 
 Taps are converted to video pixels before fitting, never fitted in view points: `view_to_video` undoes the
 aspect-fit (or aspect-fill) placement of the video in its view.
@@ -297,12 +307,22 @@ def poor_fit_threshold_px(frame_height: int) -> float:
     return POOR_FIT_PX_AT_1080P * frame_height / 1080
 
 
-def fit_check(h, observations, frame_height: int) -> dict:
-    """The verdict on a fit. `notMeasurable` only when nothing was measured. With measurements, a court point the
-    fit cannot project (on or beyond its horizon) makes the fit poor with no RMSE: the line was seen in the frame
-    and the fit puts it nowhere, which is worse than any pixel distance. No residual is invented for it."""
+def is_twisted(h, tapped: list[tuple[float, float]]) -> bool:
+    """True when the fit puts a court point it was fitted through, or a line intersection of the court, on or
+    beyond its own horizon (`project` is None). For four taps that is exactly a tapped quad that is not convex
+    when taken in the court points' order; no camera looking at a flat court produces one."""
+    return any(project(h, p) is None for p in [*tapped, *(p for _, p in INTERSECTIONS)])
+
+
+def fit_check(h, observations, frame_height: int, tapped: list[tuple[float, float]] | None = None) -> dict:
+    """The verdict on a fit through the court points `tapped`. A twisted fit is poor whatever was measured, even
+    nothing. With measurements, a court point the fit cannot project (on or beyond its horizon) makes the fit poor
+    with no RMSE: the line was seen in the frame and the fit puts it nowhere, which is worse than any pixel
+    distance. No residual is invented for it. `notMeasurable` only for an untwisted fit with nothing measured."""
     rmse = reprojection_rmse(h, observations)
     threshold = poor_fit_threshold_px(frame_height)
+    if is_twisted(h, tapped or []):
+        return {"verdict": "poor", "rmsePx": rmse, "thresholdPx": threshold}
     if not observations:
         return {"verdict": "notMeasurable", "rmsePx": None, "thresholdPx": threshold}
     if rmse is None:
@@ -316,8 +336,11 @@ RECORDED_STATUS_REASONS = {"invalid": "recordedInvalid", "needsReview": "needsRe
 
 
 def validity(binding: dict, current: dict, stale_from_ms: int | None, at_ms: int, check: dict | None,
-             recorded_status: str | None = None) -> dict:
+             recorded_status: str | None = None, twisted: bool = False) -> dict:
     """Is a calibration usable at `at_ms` with the camera configured as `current`? First failing reason wins.
+
+    `twisted` is `is_twisted` of the calibration's own fit and taps. It needs no measurement, so a twisted
+    calibration is a poor fit even when it was never checked, and a stored status or residual does not outrank it.
 
     `recorded_status` is the status a reopened session record carries (session.schema.json calibration.status).
     After the camera, fit and stale-time reasons, a record stored `invalid` or `needsReview` stays unusable, and one
@@ -329,7 +352,7 @@ def validity(binding: dict, current: dict, stale_from_ms: int | None, at_ms: int
         return {"status": "invalid", "reason": "formatChanged"}
     if Decimal(binding["zoomFactor"]) != Decimal(current["zoomFactor"]):
         return {"status": "invalid", "reason": "zoomChanged"}
-    if check is not None and check["verdict"] == "poor":
+    if twisted or (check is not None and check["verdict"] == "poor"):
         return {"status": "invalid", "reason": "poorFit"}
     if stale_from_ms is not None and at_ms >= stale_from_ms:
         return {"status": "invalid", "reason": "stale", "staleFromMs": stale_from_ms}

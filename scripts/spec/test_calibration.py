@@ -93,9 +93,77 @@ class CheckTests(unittest.TestCase):
                 got = court.fit_check(h, observed, 1080)
                 self.assertEqual((got["verdict"], got["rmsePx"]), ("poor", None))
                 self.assertEqual(court.validity(bind, bind, None, 0, got), {"status": "invalid", "reason": "poorFit"})
-        # Nothing measured is still the only way to read notMeasurable, however twisted the fit.
-        h = court.fit(twisted["far brackets swapped"], corners)
-        self.assertEqual(court.fit_check(h, [], 1080)["verdict"], "notMeasurable")
+
+    BIND = {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"}
+
+    def twisted_taps(self) -> dict:
+        t = [camera(court.POINTS[n]) for n in court.DOUBLES_CORNERS]
+        return {
+            "far right bracket dragged to the middle of the court": t[:2] + [(960.0, 600.0)] + t[3:],
+            "far brackets swapped": t[:2] + [t[3], t[2]],
+            "near brackets swapped": [t[1], t[0]] + t[2:],
+            "far right bracket dragged below the near baseline": t[:2] + [(t[2][0], 1000.0)] + t[3:],
+        }
+
+    def test_a_twisted_fit_is_poor_and_invalid_with_nothing_measured(self):
+        # No line detector exists yet, so nothing is measured for any calibration the app makes. A quad no camera
+        # can produce must be caught from the taps alone: the fit puts its own tapped corners beyond its horizon.
+        corners = [court.POINTS[n] for n in court.DOUBLES_CORNERS]
+        for name, taps in self.twisted_taps().items():
+            with self.subTest(name):
+                h = court.fit(taps, corners)
+                self.assertTrue(any(court.project(h, c) is None for c in corners), "premise: a tapped corner has no pixel")
+                self.assertTrue(court.is_twisted(h, corners))
+                got = court.fit_check(h, [], 1080, corners)
+                self.assertEqual((got["verdict"], got["rmsePx"]), ("poor", None))
+                self.assertEqual(court.validity(self.BIND, self.BIND, None, 0, got), {"status": "invalid", "reason": "poorFit"})
+                # Never checked at all (the app today): the twist alone makes it unusable.
+                self.assertEqual(court.validity(self.BIND, self.BIND, None, 0, None, twisted=court.is_twisted(h, corners)),
+                                 {"status": "invalid", "reason": "poorFit"})
+                # A record stored valid with a good residual does not outrank its own taps.
+                self.assertEqual(court.validity(self.BIND, self.BIND, None, 0, {"verdict": "good"}, "valid", twisted=True),
+                                 {"status": "invalid", "reason": "poorFit"})
+
+    def test_the_true_point_reads_back_wrong_under_a_twisted_fit(self):
+        # Why it matters: with the far brackets swapped the true court point (2, 4) reads back about 31 m away.
+        corners = [court.POINTS[n] for n in court.DOUBLES_CORNERS]
+        h = court.fit(self.twisted_taps()["far brackets swapped"], corners)
+        x, y = court.unproject(h, camera((2.0, 4.0)))
+        self.assertGreater(math.hypot(x - 2.0, y - 4.0), 10)
+
+    def test_an_untwisted_fit_with_nothing_measured_stays_not_measurable_and_usable(self):
+        corners = [court.POINTS[n] for n in court.DOUBLES_CORNERS]
+        h = court.fit([camera(c) for c in corners], corners)
+        self.assertFalse(court.is_twisted(h, corners))
+        got = court.fit_check(h, [], 1080, corners)
+        self.assertEqual(got["verdict"], "notMeasurable")
+        self.assertEqual(court.validity(self.BIND, self.BIND, None, 0, got, twisted=False), {"status": "valid"})
+
+    def test_rotated_and_mirrored_corner_orders_are_out_of_reach_of_the_twist_rule(self):
+        # The limit of the rule, stated: brackets put on the corners one place round, or mirrored left to right,
+        # still make a convex quad with a homography that places every court point. Only measured lines catch these.
+        corners = [court.POINTS[n] for n in court.DOUBLES_CORNERS]
+        t = [camera(c) for c in corners]
+        observed = [(p, camera(p)) for n, p in court.INTERSECTIONS if n not in court.DOUBLES_CORNERS]
+        for name, taps in {"rotated one place": t[1:] + t[:1], "mirrored": [t[1], t[0], t[3], t[2]]}.items():
+            with self.subTest(name):
+                h = court.fit(taps, corners)
+                self.assertFalse(court.is_twisted(h, corners))
+                self.assertEqual(court.fit_check(h, [], 1080, corners)["verdict"], "notMeasurable")
+                self.assertEqual(court.fit_check(h, observed, 1080, corners)["verdict"], "poor")
+
+    def test_a_fit_that_puts_a_court_line_beyond_its_horizon_is_twisted_whatever_was_tapped(self):
+        # w = 1 - 0.1 y: the horizon crosses the court 10 m beyond the net, so the far baseline has no pixel although
+        # the four tapped near-half points (y <= -6.4) are all in front of it.
+        h = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, -0.1, 1.0]]
+        tapped = [court.POINTS[n] for n in ("nearLeftSingles", "nearRightSingles", "nearRightService", "nearLeftService")]
+        self.assertTrue(all(court.project(h, p) is not None for p in tapped))
+        self.assertIsNone(court.project(h, court.POINTS["farCentreMark"]))
+        self.assertTrue(court.is_twisted(h, tapped))
+        # And a tapped point beyond the horizon is twisted even when every court line is in front of it.
+        level = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, -0.05, 1.0]]    # horizon at y = 20
+        self.assertFalse(court.is_twisted(level, tapped))
+        self.assertTrue(court.is_twisted(level, tapped[:3] + [(0.0, 25.0)]))
 
 
 class ValidityTests(unittest.TestCase):

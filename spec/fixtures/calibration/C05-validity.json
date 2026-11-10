@@ -16,13 +16,57 @@
     },
     {
       "op": "validity",
-      "name": "not measured is still usable (the check reports it)",
+      "name": "an untwisted fit with nothing measured is still usable (the check reports it)",
       "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
       "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
       "staleFromMs": null,
       "atMs": 60000,
       "check": {"verdict": "notMeasurable"},
       "expected": {"status": "valid"}
+    },
+    {
+      "op": "validity",
+      "name": "a twisted fit that was never checked is a poor fit",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "poorFit"},
+      "twisted": true
+    },
+    {
+      "op": "validity",
+      "name": "a twisted fit checked with nothing measured is a poor fit",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": {"verdict": "poor"},
+      "expected": {"status": "invalid", "reason": "poorFit"},
+      "twisted": true
+    },
+    {
+      "op": "validity",
+      "name": "a twisted fit is a poor fit before the camera moved, too",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": 120000,
+      "atMs": 0,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "poorFit"},
+      "twisted": true
+    },
+    {
+      "op": "validity",
+      "name": "a camera reason is reported before a twisted fit",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "ultraWide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "lensChanged"},
+      "twisted": true
     },
     {
       "op": "validity",
@@ -180,6 +224,30 @@
       "check": {"verdict": "poor"},
       "expected": {"status": "invalid", "reason": "poorFit"},
       "recordedStatus": "needsReview"
+    },
+    {
+      "op": "validity",
+      "name": "a record stored valid with twisted taps reopens as a poor fit",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": null,
+      "expected": {"status": "invalid", "reason": "poorFit"},
+      "recordedStatus": "valid",
+      "twisted": true
+    },
+    {
+      "op": "validity",
+      "name": "a good stored residual does not outrank twisted taps",
+      "binding": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "current": {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"},
+      "staleFromMs": null,
+      "atMs": 60000,
+      "check": {"verdict": "good"},
+      "expected": {"status": "invalid", "reason": "poorFit"},
+      "recordedStatus": "valid",
+      "twisted": true
     }
   ]
 }

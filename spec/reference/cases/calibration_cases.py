@@ -8,9 +8,9 @@ against an independent source. Jittered taps come from a seeded SplitMix64 in wh
 
 Floats are rounded to 9 decimal places so the bytes are the same on every machine; each case states the tolerance
 a platform compares with. The generator refuses to write a case whose hand-stated facts do not hold (an exact
-four-point solve reproduces its taps within 1e-6 px; a perturbed fit reads poor; a twisted fit whose measured lines
-fall beyond its horizon reads poor with no RMSE; past staleFromMs reads stale), and CHECKS re-runs every case in the
-validator.
+four-point solve reproduces its taps within 1e-6 px; a perturbed fit reads poor; a twisted fit reads poor with or
+without measured lines and a fit stated untwisted is not; past staleFromMs reads stale), and CHECKS re-runs every
+case in the validator.
 """
 
 from __future__ import annotations
@@ -165,30 +165,40 @@ def c03() -> tuple:
 
 def check_case(name: str, image: list[dict], cpts_names: list[str], observed: list[str], height: int,
                expect: str, scale_from: int = HEIGHT, twisted: bool = False) -> dict:
-    """`twisted` states by hand that the fit cannot project every court point (some lie on or beyond its horizon);
-    the generator refuses the case when the engine disagrees, in either direction."""
+    """`twisted` states by hand that the taps are a quad no camera can produce (two sides cross, or one corner lies
+    inside the triangle of the other three). The generator refuses the case when the engine disagrees in either
+    direction: `court.is_twisted`, the fit failing to project one of its own tapped corners, and a poor verdict
+    all have to hold for a twisted case, with or without measured lines."""
     cpts = [court.POINTS[n] for n in cpts_names]
     h = court.fit([tup(p) for p in image], cpts)
     obs = [(court.POINTS[n], tuple(v * height / scale_from for v in camera(court.POINTS[n]))) for n in observed]
-    result = court.fit_check(h, obs, height)
+    result = court.fit_check(h, obs, height, cpts)
     if result["verdict"] != expect:
         raise ValueError(f"{name}: expected {expect}, engine says {result['verdict']} ({result['rmsePx']})")
-    if twisted != any(court.project(h, p) is None for _, p in court.INTERSECTIONS):
-        raise ValueError(f"{name}: twisted is stated {twisted}, the engine's projections disagree")
-    if obs and twisted and (result["verdict"], result["rmsePx"]) != ("poor", None):
-        raise ValueError(f"{name}: measured lines beyond the horizon must read poor with no RMSE, got {result}")
+    if twisted != court.is_twisted(h, cpts) or twisted != any(court.project(h, c) is None for c in cpts):
+        raise ValueError(f"{name}: twisted is stated {twisted}, the engine's projections of the tapped corners disagree")
+    if twisted and result["verdict"] != "poor":
+        raise ValueError(f"{name}: a twisted fit must read poor, measured or not, got {result}")
+    if not obs and result["rmsePx"] is not None:
+        raise ValueError(f"{name}: nothing was measured, so there is no RMSE to state, got {result}")
     return {"op": "check", "name": name, "imagePoints": image, "courtPoints": [pt(c) for c in cpts],
             "frameHeight": height,
             "observations": [{"court": pt(c), "pixel": pt(p)} for c, p in obs],
             "expected": {"verdict": result["verdict"],
                          "rmsePx": None if result["rmsePx"] is None else r9(result["rmsePx"]),
-                         "thresholdPx": r9(result["thresholdPx"])},
+                         "thresholdPx": r9(result["thresholdPx"]),
+                         "twisted": twisted},
             "tolerance": {"px": TOL_PX}}
 
 
 UNTAPPED = [n for n, _ in court.INTERSECTIONS if n not in court.DOUBLES_CORNERS]
-# The doubles corners with the two far brackets on each other's corner: the taps cross, a bow tie.
+# The doubles corners with the two far (or near) brackets on each other's corner: the taps cross, a bow tie.
 FAR_SWAPPED = [court.DOUBLES_CORNERS[i] for i in (0, 1, 3, 2)]
+NEAR_SWAPPED = [court.DOUBLES_CORNERS[i] for i in (1, 0, 2, 3)]
+# Wrong corners that still make a convex quad: every bracket one corner round, and left swapped with right at both
+# ends. These fix a homography that places every court point, so only measured lines tell them from a true fit.
+ROTATED = [court.DOUBLES_CORNERS[i] for i in (1, 2, 3, 0)]
+MIRRORED = [court.DOUBLES_CORNERS[i] for i in (1, 0, 3, 2)]
 
 
 def scaled_taps(names: list[str], height: int, offsets: dict | None = None, moved: dict | None = None) -> list[dict]:
@@ -230,31 +240,66 @@ def c04() -> tuple:
                    court.DOUBLES_CORNERS, UNTAPPED, 1080, "poor", twisted=True),
         check_case("the same twisted taps at 720p: poor at every frame size",
                    scaled_taps(FAR_SWAPPED, 720), court.DOUBLES_CORNERS, UNTAPPED, 720, "poor", twisted=True),
-        check_case("a twisted fit with no line pixels measured: only an absent measurement is not measurable",
-                   scaled_taps(FAR_SWAPPED, 1080), court.DOUBLES_CORNERS, [], 1080, "notMeasurable", twisted=True),
+        # No line detector exists until V02, so the app measures nothing today. A twisted quad is caught from the
+        # taps alone: the fit puts its own tapped corners beyond its horizon, and that is poor before any line is seen.
+        check_case("the far brackets swapped with no line pixels measured: poor, nothing needs measuring",
+                   scaled_taps(FAR_SWAPPED, 1080), court.DOUBLES_CORNERS, [], 1080, "poor", twisted=True),
+        check_case("the near brackets swapped with no line pixels measured: poor",
+                   scaled_taps(NEAR_SWAPPED, 1080), court.DOUBLES_CORNERS, [], 1080, "poor", twisted=True),
+        check_case("the far right bracket dragged to the middle of the court with no line pixels measured: poor",
+                   scaled_taps(court.DOUBLES_CORNERS, 1080, moved={"farRightDoubles": (960.0, 600.0)}),
+                   court.DOUBLES_CORNERS, [], 1080, "poor", twisted=True),
+        check_case("the far right bracket dragged below the near baseline with no line pixels measured: poor",
+                   scaled_taps(court.DOUBLES_CORNERS, 1080,
+                               moved={"farRightDoubles": (camera(court.POINTS["farRightDoubles"])[0], 1000.0)}),
+                   court.DOUBLES_CORNERS, [], 1080, "poor", twisted=True),
+        # The limit of the twist rule, stated: wrong corners in a convex order are a homography like any other.
+        check_case("every bracket one corner round (a convex quad) with no line pixels measured: not twisted, not measurable",
+                   scaled_taps(ROTATED, 1080), court.DOUBLES_CORNERS, [], 1080, "notMeasurable"),
+        check_case("every bracket one corner round with the lines measured: poor by its residual",
+                   scaled_taps(ROTATED, 1080), court.DOUBLES_CORNERS, UNTAPPED, 1080, "poor"),
+        check_case("left and right brackets swapped at both ends (a mirrored quad), nothing measured: not twisted, not measurable",
+                   scaled_taps(MIRRORED, 1080), court.DOUBLES_CORNERS, [], 1080, "notMeasurable"),
     ])
 
 
 def validity_case(name: str, current: dict | None = None, stale: int | None = None, at: int = 60_000,
-                  check: str | None = None, expect: dict | None = None, recorded: str | None = None) -> dict:
+                  check: str | None = None, expect: dict | None = None, recorded: str | None = None,
+                  twisted: bool = False) -> dict:
+    """`twisted` is the fact C04 states per fit (`expected.twisted`); a twisted fit never pairs with a check that is
+    good or not measurable, because the check reads poor for it (`court.fit_check`), except for a reopened record,
+    whose stored residual was measured by whoever wrote it."""
     binding = {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"}
     cur = {**binding, **(current or {})}
     chk = None if check is None else {"verdict": check}
-    got = court.validity(binding, cur, stale, at, chk, recorded)
+    if twisted and check in ("good", "notMeasurable") and recorded is None:
+        raise ValueError(f"{name}: a twisted fit's own check is poor, never {check}")
+    got = court.validity(binding, cur, stale, at, chk, recorded, twisted)
     if got != expect:
         raise ValueError(f"{name}: expected {expect}, engine says {got}")
     case = {"op": "validity", "name": name, "binding": binding, "current": cur, "staleFromMs": stale, "atMs": at,
             "check": chk, "expected": got}
     if recorded is not None:
         case["recordedStatus"] = recorded
+    if twisted:
+        case["twisted"] = True
     return case
 
 
 def c05() -> tuple:
     return ("C05-validity", "Validity is bound to lens, format, zoom and the stale-from time", [
         validity_case("same camera, good fit, no camera move: valid", check="good", expect={"status": "valid"}),
-        validity_case("not measured is still usable (the check reports it)", check="notMeasurable",
-                      expect={"status": "valid"}),
+        validity_case("an untwisted fit with nothing measured is still usable (the check reports it)",
+                      check="notMeasurable", expect={"status": "valid"}),
+        # A twisted fit needs no measurement to be unusable (C04 states which fits are twisted).
+        validity_case("a twisted fit that was never checked is a poor fit", twisted=True,
+                      expect={"status": "invalid", "reason": "poorFit"}),
+        validity_case("a twisted fit checked with nothing measured is a poor fit", check="poor", twisted=True,
+                      expect={"status": "invalid", "reason": "poorFit"}),
+        validity_case("a twisted fit is a poor fit before the camera moved, too", stale=120_000, at=0, twisted=True,
+                      expect={"status": "invalid", "reason": "poorFit"}),
+        validity_case("a camera reason is reported before a twisted fit", {"lens": "ultraWide"}, twisted=True,
+                      expect={"status": "invalid", "reason": "lensChanged"}),
         validity_case("before the camera moved: valid", stale=120_000, at=119_999, expect={"status": "valid"}),
         validity_case("from the moment the camera moved: stale", stale=120_000, at=120_000,
                       expect={"status": "invalid", "reason": "stale", "staleFromMs": 120_000}),
@@ -280,6 +325,10 @@ def c05() -> tuple:
                       expect={"status": "invalid", "reason": "stale", "staleFromMs": 120_000}),
         validity_case("a stored poor fit is reported before the stored status", check="poor", recorded="needsReview",
                       expect={"status": "invalid", "reason": "poorFit"}),
+        validity_case("a record stored valid with twisted taps reopens as a poor fit", recorded="valid", twisted=True,
+                      expect={"status": "invalid", "reason": "poorFit"}),
+        validity_case("a good stored residual does not outrank twisted taps", check="good", recorded="valid",
+                      twisted=True, expect={"status": "invalid", "reason": "poorFit"}),
     ])
 
 
@@ -410,15 +459,23 @@ def _rerun(case: dict) -> list[str]:
                 problems.append(f"{case['name']}: {p['id']} unprojects to {got}")
     elif op == "check":
         h = court.fit([tup(p) for p in case["imagePoints"]], [tup(p) for p in case["courtPoints"]])
-        got = court.fit_check(h, [(tup(o["court"]), tup(o["pixel"])) for o in case["observations"]], case["frameHeight"])
+        cpts = [tup(p) for p in case["courtPoints"]]
+        got = court.fit_check(h, [(tup(o["court"]), tup(o["pixel"])) for o in case["observations"]], case["frameHeight"],
+                              cpts)
         exp = case["expected"]
         if got["verdict"] != exp["verdict"] or not _close(got["rmsePx"], exp["rmsePx"], TOL_PX):
             problems.append(f"{case['name']}: check {got}")
+        if court.is_twisted(h, cpts) != exp["twisted"]:
+            problems.append(f"{case['name']}: twisted is stated {exp['twisted']}")
+        if exp["twisted"] and exp["verdict"] != "poor":
+            problems.append(f"{case['name']}: a twisted fit is stated {exp['verdict']}")
     elif op == "validity":
         got = court.validity(case["binding"], case["current"], case["staleFromMs"], case["atMs"], case["check"],
-                             case.get("recordedStatus"))
+                             case.get("recordedStatus"), case.get("twisted", False))
         if got != case["expected"]:
             problems.append(f"{case['name']}: validity {got}")
+        if case.get("twisted") and got["status"] == "valid":
+            problems.append(f"{case['name']}: a twisted fit is stated valid")
     elif op in ("viewToVideo", "videoToView"):
         fn = court.view_to_video if op == "viewToVideo" else court.video_to_view
         v, s = case["view"], case["video"]

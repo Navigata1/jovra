@@ -16,7 +16,7 @@ struct CalibrationRunner: FixtureRunner {
     struct Unprojected: Decodable { var id: String; var pixel: XY; var court: XY?; var truth: XY; var errorM: Double; var withinTenCm: Bool }
     struct FitExpected: Decodable { var homography: [Double]; var project: [Projected]; var unproject: [Unprojected] }
     struct Observation: Decodable { var court: XY; var pixel: XY }
-    struct CheckExpected: Decodable { var verdict: String; var rmsePx: Double?; var thresholdPx: Double }
+    struct CheckExpected: Decodable { var verdict: String; var rmsePx: Double?; var thresholdPx: Double; var twisted: Bool }
     struct Binding: Decodable { var lens: SessionCalibrationCameraLens; var width: Int; var height: Int; var zoomFactor: String }
     struct CheckRef: Decodable { var verdict: String }
     struct ValidityExpected: Decodable { var status: String; var reason: String?; var staleFromMs: Int? }
@@ -45,6 +45,7 @@ struct CalibrationRunner: FixtureRunner {
         var staleFromMs: Int?
         var atMs: Int?
         var recordedStatus: SessionCalibrationStatus?
+        var twisted: Bool?
         var check: CheckRef?
         // mapping
         var gravity: VideoGravity?
@@ -65,7 +66,7 @@ struct CalibrationRunner: FixtureRunner {
 
         enum CodingKeys: String, CodingKey {
             case op, name, record, imagePoints, courtPoints, expectedError, tolerance, frameHeight, observations, binding,
-                 current, staleFromMs, atMs, recordedStatus, check, gravity, view, video, point, landing, hitterX, result, doubles, expected
+                 current, staleFromMs, atMs, recordedStatus, twisted, check, gravity, view, video, point, landing, hitterX, result, doubles, expected
         }
 
         init(from decoder: Decoder) throws {
@@ -84,6 +85,7 @@ struct CalibrationRunner: FixtureRunner {
             staleFromMs = try c.decodeIfPresent(Int.self, forKey: .staleFromMs)
             atMs = try c.decodeIfPresent(Int.self, forKey: .atMs)
             recordedStatus = try c.decodeIfPresent(SessionCalibrationStatus.self, forKey: .recordedStatus)
+            twisted = try c.decodeIfPresent(Bool.self, forKey: .twisted)
             check = try c.decodeIfPresent(CheckRef.self, forKey: .check)
             gravity = try c.decodeIfPresent(VideoGravity.self, forKey: .gravity)
             view = try c.decodeIfPresent(Size.self, forKey: .view)
@@ -125,8 +127,16 @@ struct CalibrationRunner: FixtureRunner {
                 let observations = try #require(c.observations).map {
                     CalibrationObservation(court: CourtPoint(x: $0.court.x, y: $0.court.y), pixel: VideoPixel(x: $0.pixel.x, y: $0.pixel.y))
                 }
-                let result = CalibrationCheck(homography: homography, observations: observations, frameHeight: try #require(c.frameHeight))
+                let result = CalibrationCheck(homography: homography, tapped: court, observations: observations,
+                                              frameHeight: try #require(c.frameHeight))
+                #expect(homography.isTwisted(tapped: court) == expected.twisted, "\(label): twisted")
                 #expect(result.verdict.rawValue == expected.verdict, "\(label)")
+                // The value type a screen holds agrees with the vector: a twisted fit is never valid, checked or not.
+                if let camera = c.frameHeight.map({ CameraBinding(lens: .wide, width: $0 * 16 / 9, height: $0, zoomFactor: 1) }) {
+                    let calibration = try CourtCalibration(imagePoints: image, courtPoints: court, camera: camera)
+                    #expect(calibration.isTwisted == expected.twisted, "\(label): calibration twisted")
+                    #expect((calibration.validity(atMs: 0, current: camera) == .invalid(.poorFit)) == expected.twisted, "\(label): unchecked validity")
+                }
                 #expect(close(result.rmsePx, expected.rmsePx, try #require(c.tolerance).px), "\(label): RMSE \(String(describing: result.rmsePx))")
                 #expect(abs(result.thresholdPx - expected.thresholdPx) <= 1e-9, "\(label)")
             case ("validity", .validity(let expected)?):
@@ -135,7 +145,7 @@ struct CalibrationRunner: FixtureRunner {
                 let validity = CalibrationValidity.evaluate(
                     binding: CameraBinding(lens: b.lens, width: b.width, height: b.height, zoomFactor: try #require(Decimal(string: b.zoomFactor))),
                     current: CameraBinding(lens: now.lens, width: now.width, height: now.height, zoomFactor: try #require(Decimal(string: now.zoomFactor))),
-                    checkVerdict: verdict, staleFromMs: c.staleFromMs, atMs: try #require(c.atMs),
+                    twisted: c.twisted ?? false, checkVerdict: verdict, staleFromMs: c.staleFromMs, atMs: try #require(c.atMs),
                     recordedStatus: c.recordedStatus)
                 #expect(validity.status == expected.status, "\(label)")
                 #expect(validity.reasonCode == expected.reason, "\(label)")

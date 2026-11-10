@@ -34,7 +34,7 @@
         {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.0, "y": 866.918918919}},
         {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.0, "y": 313.674257396}}
       ],
-      "expected": {"verdict": "good", "rmsePx": 0.0, "thresholdPx": 3.0},
+      "expected": {"verdict": "good", "rmsePx": 0.0, "thresholdPx": 3.0, "twisted": false},
       "tolerance": {"px": 1e-06}
     },
     {
@@ -67,7 +67,7 @@
         {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.0, "y": 866.918918919}},
         {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.0, "y": 313.674257396}}
       ],
-      "expected": {"verdict": "poor", "rmsePx": 5.443457562, "thresholdPx": 3.0},
+      "expected": {"verdict": "poor", "rmsePx": 5.443457562, "thresholdPx": 3.0, "twisted": false},
       "tolerance": {"px": 1e-06}
     },
     {
@@ -100,7 +100,7 @@
         {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 640.0, "y": 577.945945946}},
         {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 640.0, "y": 209.116171597}}
       ],
-      "expected": {"verdict": "poor", "rmsePx": 3.628971708, "thresholdPx": 2.0},
+      "expected": {"verdict": "poor", "rmsePx": 3.628971708, "thresholdPx": 2.0, "twisted": false},
       "tolerance": {"px": 1e-06}
     },
     {
@@ -133,7 +133,7 @@
         {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.0, "y": 866.918918919}},
         {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.0, "y": 313.674257396}}
       ],
-      "expected": {"verdict": "good", "rmsePx": 0.894707586, "thresholdPx": 3.0},
+      "expected": {"verdict": "good", "rmsePx": 0.894707586, "thresholdPx": 3.0, "twisted": false},
       "tolerance": {"px": 1e-06}
     },
     {
@@ -153,7 +153,7 @@
       ],
       "frameHeight": 1080,
       "observations": [],
-      "expected": {"verdict": "notMeasurable", "rmsePx": null, "thresholdPx": 3.0},
+      "expected": {"verdict": "notMeasurable", "rmsePx": null, "thresholdPx": 3.0, "twisted": false},
       "tolerance": {"px": 1e-06}
     },
     {
@@ -186,7 +186,7 @@
         {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.0, "y": 866.918918919}},
         {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.0, "y": 313.674257396}}
       ],
-      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0},
+      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0, "twisted": true},
       "tolerance": {"px": 1e-06}
     },
     {
@@ -219,7 +219,7 @@
         {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.0, "y": 866.918918919}},
         {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.0, "y": 313.674257396}}
       ],
-      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0},
+      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0, "twisted": true},
       "tolerance": {"px": 1e-06}
     },
     {
@@ -252,7 +252,7 @@
         {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.0, "y": 866.918918919}},
         {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.0, "y": 313.674257396}}
       ],
-      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0},
+      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0, "twisted": true},
       "tolerance": {"px": 1e-06}
     },
     {
@@ -285,12 +285,12 @@
         {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 640.0, "y": 577.945945946}},
         {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 640.0, "y": 209.116171597}}
       ],
-      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 2.0},
+      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 2.0, "twisted": true},
       "tolerance": {"px": 1e-06}
     },
     {
       "op": "check",
-      "name": "a twisted fit with no line pixels measured: only an absent measurement is not measurable",
+      "name": "the far brackets swapped with no line pixels measured: poor, nothing needs measuring",
       "imagePoints": [
         {"x": 292.029424176, "y": 866.918918919},
         {"x": 1627.970575824, "y": 866.918918919},
@@ -305,7 +305,140 @@
       ],
       "frameHeight": 1080,
       "observations": [],
-      "expected": {"verdict": "notMeasurable", "rmsePx": null, "thresholdPx": 3.0},
+      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0, "twisted": true},
+      "tolerance": {"px": 1e-06}
+    },
+    {
+      "op": "check",
+      "name": "the near brackets swapped with no line pixels measured: poor",
+      "imagePoints": [
+        {"x": 1627.970575824, "y": 866.918918919},
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 1241.781999318, "y": 313.674257396},
+        {"x": 678.218000682, "y": 313.674257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "frameHeight": 1080,
+      "observations": [],
+      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0, "twisted": true},
+      "tolerance": {"px": 1e-06}
+    },
+    {
+      "op": "check",
+      "name": "the far right bracket dragged to the middle of the court with no line pixels measured: poor",
+      "imagePoints": [
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 1627.970575824, "y": 866.918918919},
+        {"x": 960.0, "y": 600.0},
+        {"x": 678.218000682, "y": 313.674257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "frameHeight": 1080,
+      "observations": [],
+      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0, "twisted": true},
+      "tolerance": {"px": 1e-06}
+    },
+    {
+      "op": "check",
+      "name": "the far right bracket dragged below the near baseline with no line pixels measured: poor",
+      "imagePoints": [
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 1627.970575824, "y": 866.918918919},
+        {"x": 1241.781999318, "y": 1000.0},
+        {"x": 678.218000682, "y": 313.674257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "frameHeight": 1080,
+      "observations": [],
+      "expected": {"verdict": "poor", "rmsePx": null, "thresholdPx": 3.0, "twisted": true},
+      "tolerance": {"px": 1e-06}
+    },
+    {
+      "op": "check",
+      "name": "every bracket one corner round (a convex quad) with no line pixels measured: not twisted, not measurable",
+      "imagePoints": [
+        {"x": 1627.970575824, "y": 866.918918919},
+        {"x": 1241.781999318, "y": 313.674257396},
+        {"x": 678.218000682, "y": 313.674257396},
+        {"x": 292.029424176, "y": 866.918918919}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "frameHeight": 1080,
+      "observations": [],
+      "expected": {"verdict": "notMeasurable", "rmsePx": null, "thresholdPx": 3.0, "twisted": false},
+      "tolerance": {"px": 1e-06}
+    },
+    {
+      "op": "check",
+      "name": "every bracket one corner round with the lines measured: poor by its residual",
+      "imagePoints": [
+        {"x": 1627.970575824, "y": 866.918918919},
+        {"x": 1241.781999318, "y": 313.674257396},
+        {"x": 678.218000682, "y": 313.674257396},
+        {"x": 292.029424176, "y": 866.918918919}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "frameHeight": 1080,
+      "observations": [
+        {"court": {"x": -4.115, "y": -11.885}, "pixel": {"x": 458.869841474, "y": 866.918918919}},
+        {"court": {"x": 4.115, "y": -11.885}, "pixel": {"x": 1461.130158526, "y": 866.918918919}},
+        {"court": {"x": 4.115, "y": 11.885}, "pixel": {"x": 1171.400715988, "y": 313.674257396}},
+        {"court": {"x": -4.115, "y": 11.885}, "pixel": {"x": 748.599284012, "y": 313.674257396}},
+        {"court": {"x": -4.115, "y": -6.4}, "pixel": {"x": 579.274984967, "y": 637.00268302}},
+        {"court": {"x": 4.115, "y": -6.4}, "pixel": {"x": 1340.725015033, "y": 637.00268302}},
+        {"court": {"x": 4.115, "y": 6.4}, "pixel": {"x": 1203.945582905, "y": 375.819387433}},
+        {"court": {"x": -4.115, "y": 6.4}, "pixel": {"x": 716.054417095, "y": 375.819387433}},
+        {"court": {"x": 0.0, "y": -6.4}, "pixel": {"x": 960.0, "y": 637.00268302}},
+        {"court": {"x": 0.0, "y": 6.4}, "pixel": {"x": 960.0, "y": 375.819387433}},
+        {"court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.0, "y": 866.918918919}},
+        {"court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.0, "y": 313.674257396}}
+      ],
+      "expected": {"verdict": "poor", "rmsePx": 545.617140319, "thresholdPx": 3.0, "twisted": false},
+      "tolerance": {"px": 1e-06}
+    },
+    {
+      "op": "check",
+      "name": "left and right brackets swapped at both ends (a mirrored quad), nothing measured: not twisted, not measurable",
+      "imagePoints": [
+        {"x": 1627.970575824, "y": 866.918918919},
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 678.218000682, "y": 313.674257396},
+        {"x": 1241.781999318, "y": 313.674257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "frameHeight": 1080,
+      "observations": [],
+      "expected": {"verdict": "notMeasurable", "rmsePx": null, "thresholdPx": 3.0, "twisted": false},
       "tolerance": {"px": 1e-06}
     }
   ]

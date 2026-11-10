@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "JOVRA court geometry and calibration conformance vectors",
-  "description": "T13 (ios-v1-spec CourtCalibration, screens.md S05/S11/S12, technical-feasibility §8). fit: four or more video-pixel taps and their court points to the homography court metres -> video pixels (normalized DLT; exact through four points, least squares through more), checked by projecting every line intersection and unprojecting the untapped ones; a record case fits a session calibration record (normalized image points times its camera format). check: the reprojection RMSE of untapped court points against where they are seen, poor above 3 px at 1080p scaled by frame height, poor with a null rmsePx when the fit puts an observed court point on or beyond its horizon (a twisted quad), notMeasurable only with no observations. validity: lens, format, zoom, poor fit and stale-from, first failing reason wins. viewToVideo / videoToView: taps in view points to video pixels under aspect fit or fill. geometry, classify, describe: the ITF court model, depth bins, service zones and the placement words VoiceOver reads. Court points are metres with the origin at the net centre (common point2); pixels have a top-left origin. Floats carry the tolerance a platform compares with. Reference: spec/reference/jovra_ref/court.py.",
+  "description": "T13 (ios-v1-spec CourtCalibration, screens.md S05/S11/S12, technical-feasibility §8). fit: four or more video-pixel taps and their court points to the homography court metres -> video pixels (normalized DLT; exact through four points, least squares through more), checked by projecting every line intersection and unprojecting the untapped ones; a record case fits a session calibration record (normalized image points times its camera format). check: the reprojection RMSE of untapped court points against where they are seen, poor above 3 px at 1080p scaled by frame height, poor with a null rmsePx when the fit puts an observed court point on or beyond its horizon; a twisted fit (expected.twisted: it puts one of its own tapped court points, or a line intersection of the court, on or beyond its horizon, which for four taps is a tapped quad that is not convex when taken in the court points' order: two sides cross, or one corner lies inside the triangle of the other three) is poor whether or not anything was measured; notMeasurable only for an untwisted fit with no observations. validity: lens, format, zoom, poor fit (a twisted fit, checked or not, or a poor check) and stale-from, then the status a reopened record was stored with; first failing reason wins. viewToVideo / videoToView: taps in view points to video pixels under aspect fit or fill. geometry, classify, describe: the ITF court model, depth bins, service zones and the placement words VoiceOver reads. Court points are metres with the origin at the net centre (common point2); pixels have a top-left origin. Floats carry the tolerance a platform compares with. Reference: spec/reference/jovra_ref/court.py.",
   "type": "object",
   "required": ["schemaVersion", "kind", "id", "title", "cases"],
   "additionalProperties": false,
@@ -104,12 +104,13 @@
         }},
         "expected": {
           "type": "object",
-          "required": ["verdict", "rmsePx", "thresholdPx"],
+          "required": ["verdict", "rmsePx", "thresholdPx", "twisted"],
           "additionalProperties": false,
           "properties": {
             "verdict": {"enum": ["good", "poor", "notMeasurable"]},
             "rmsePx": {"oneOf": [{"type": "null"}, {"type": "number", "minimum": 0}]},
-            "thresholdPx": {"type": "number", "exclusiveMinimum": 0}
+            "thresholdPx": {"type": "number", "exclusiveMinimum": 0},
+            "twisted": {"type": "boolean", "description": "The fit puts one of its own tapped court points, or a line intersection of the court, on or beyond its horizon (court.is_twisted, Homography.isTwisted). A twisted fit's verdict is poor with or without observations."}
           }
         },
         "tolerance": {"$ref": "#/$defs/tolerance"}
@@ -138,6 +139,7 @@
         "staleFromMs": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0}]},
         "atMs": {"type": "integer", "minimum": 0},
         "recordedStatus": {"enum": ["valid", "needsReview", "invalid", "cameraMoved"], "description": "The status a reopened session record was stored with (session.schema.json calibration.status); absent for a calibration fitted just now."},
+        "twisted": {"const": true, "description": "The calibration's own fit is twisted (checkCase expected.twisted): a poor fit even when it was never checked. Absent for an untwisted fit."},
         "check": {"oneOf": [{"type": "null"}, {
           "type": "object", "required": ["verdict"], "additionalProperties": false,
           "properties": {"verdict": {"enum": ["good", "poor", "notMeasurable"]}}

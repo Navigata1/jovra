@@ -213,8 +213,8 @@ struct CourtGallery: View {
 }
 
 /// What the gallery says under the framing guide for the current brackets (story 66). Only a good check reads as
-/// the good state. A fit that is refused, or one so twisted that it puts measured lines beyond its own horizon, has
-/// no residual: it says so in words and never prints 0.0 px.
+/// the good state. A fit that is refused, or one so twisted that it puts court lines beyond its own horizon, has
+/// no residual: it says so in words and never prints 0.0 px. A twisted fit reads that way with nothing measured too.
 struct CourtGuideReadout: Equatable {
     /// Where the `guide-twisted` scenario puts the far right bracket: the middle of the court in the 1080p frame.
     static let twistedFarRight = VideoPixel(x: 960, y: 600)
@@ -224,12 +224,13 @@ struct CourtGuideReadout: Equatable {
 
     init(corners: [VideoPixel], observations: [CalibrationObservation] = SyntheticCourtCamera.untappedObservations,
          frameHeight: Int = 1080) {
-        guard let homography = try? Homography.fit(image: corners, court: CourtGeometry.doublesCorners.map(\.point)) else {
+        let tapped = CourtGeometry.doublesCorners.map(\.point)
+        guard let homography = try? Homography.fit(image: corners, court: tapped) else {
             passes = false
             residual = "Untapped lines: no fit through these corners"
             return
         }
-        let check = CalibrationCheck(homography: homography, observations: observations, frameHeight: frameHeight)
+        let check = CalibrationCheck(homography: homography, tapped: tapped, observations: observations, frameHeight: frameHeight)
         passes = check.verdict == .good
         let limit = String(format: "limit %.0f px", check.thresholdPx)
         switch (check.verdict, check.rmsePx) {

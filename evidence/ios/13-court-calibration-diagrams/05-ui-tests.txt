@@ -4,16 +4,16 @@ JovraUITests/CourtComponentsUITests       6       0        0         0
 Total: 6 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 6 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-T13 EC62AF47-253F-497F-B735-233029F969BA (iPhone 17 Pro, iOS Simulator 27.2)
   Passed testCourtComponentsInLightDarkAndAX5()     (performAccessibilityAudit, every type, each scenario scrolled)
-  Passed testDraggingABracketAcrossTheCourtIsNeverTheGoodState()     (new: reads "Untapped lines: beyond the horizon, limit 3 px")
+  Passed testDraggingABracketAcrossTheCourtIsNeverTheGoodState()     (reads "Untapped lines: beyond the horizon, limit 3 px")
   Passed testDraggingACornerOffTheCourtFailsTheReprojectionCheck()
   Passed testFiveMarkerShapesEachNamedByShapeAndMeaning()
-  Passed testPoorFitAndLoupeStates()     (now also audits the guide-twisted scenario)
+  Passed testPoorFitAndLoupeStates()     (also audits the guide-twisted scenario)
   Passed testVoiceOverDescribesAPlacementInWords()
 
-Run on 2026-11-09 with the round 1 review fixes on top of 5819b8c (origin/main merged through c9021f5, #540).
-The run re-exported every screenshot. Only the two new ones were committed (t13-dark-guide-twisted.jpg,
-t13-light-guide-dragged-across.jpg); the other 19 show screens this update did not change and are kept from the
-run one merge earlier (main through bc2229e).
+Run again on 2026-11-09 with the twist rule on top of 3844615 (origin/main merged through c9021f5, #540): the
+gallery readout now passes its tapped corners to the check, and no screen changed. The run re-exported every
+screenshot and none was committed: the two twisted-guide screenshots are from the run at 3844615 and the other 19
+from the run one merge earlier (main through bc2229e).
 
 The audit failed three times on the way here and each failure changed the app code, not what is audited:
   1. "Potentially inaccessible text": the serve-zone words were drawn in the canvas. They are now real text
@@ -26,19 +26,22 @@ The audit failed three times on the way here and each failure changed the app co
      cells then became plain text elements, and the same probe passed 6 of 6.
 
 $ JOVRA_SKIP_SAMPLE_MEDIA=YES xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -only-testing:JovraTests -destination id=EC62AF47-253F-497F-B735-233029F969BA -derivedDataPath .derivedData
-✔ Suite "Loupe placement" passed after 0.001 seconds.
 ✔ Test "brackets on the true corners pass with a 0.0 px residual" passed after 0.001 seconds.
 ✔ Test "a far corner 11 px off is a poor fit with its residual" passed after 0.001 seconds.
-✔ Test "a bracket dragged across the court never reads as the good state or as 0.0 px" with 2 test cases passed after 0.001 seconds.
+✔ Test "a bracket dragged across the court never reads as the good state or as 0.0 px" with 2 test cases passed after 0.002 seconds.
 ✔ Test "the far brackets swapped read the same" passed after 0.001 seconds.
+✔ Test "a twisted fit needs no measured line to be caught: never 'not measured', never a pass" with 2 test cases passed after 0.001 seconds.
 ✔ Test "four brackets on one spot are no fit, not a pass" passed after 0.001 seconds.
 ✔ Test "with no line pixels measured nothing passes" passed after 0.001 seconds.
-✔ Suite "Court guide readout" passed after 0.002 seconds.
-✔ Test run with 122 tests in 20 suites passed after 3.184 seconds.
-	 Executed 24 tests, with 1 test skipped and 0 failures (0 unexpected) in 6.882 (6.895) seconds
+✔ Suite "Court guide readout" passed after 0.003 seconds.
+✔ Suite "Loupe placement" passed after 0.002 seconds.
+✔ Test run with 123 tests in 20 suites passed after 4.356 seconds.
+	 Executed 24 tests, with 1 test skipped and 0 failures (0 unexpected) in 9.683 (9.694) seconds
 ** TEST SUCCEEDED **
+(123 Swift Testing tests, 122 before: the new one is the twisted readout with nothing measured.)
 (LoupePlacementTests was written before LoupePlacement existed; its red state was the missing symbol.
 CourtGuideReadoutTests was written before CourtGuideReadout; that red state, also a missing symbol, was not run.
-The Core rule behind the readout has a recorded red run: 07-core-twisted-fit-caught.txt.)
+The Core rules behind the readout have recorded red runs: 07-core-twisted-fit-caught.txt and
+08-core-twisted-unmeasured-caught.txt.)
 
 The app was built with JOVRA_SKIP_SAMPLE_MEDIA=YES: the court gallery needs no sample video.

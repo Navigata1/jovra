@@ -43,6 +43,14 @@ struct CourtGuideReadoutTests {
         #expect(readout.residual == "Untapped lines: beyond the horizon, limit 3 px")
     }
 
+    @Test("a twisted fit needs no measured line to be caught: never 'not measured', never a pass",
+          arguments: [CourtGuideReadout.twistedFarRight, VideoPixel(x: SyntheticCourtCamera.trueCorners[2].x, y: 1000)])
+    func twistedUnmeasured(farRight: VideoPixel) {
+        let readout = CourtGuideReadout(corners: corners(farRight: farRight), observations: [])
+        #expect(!readout.passes)
+        #expect(readout.residual == "Untapped lines: beyond the horizon, limit 3 px")
+    }
+
     @Test("four brackets on one spot are no fit, not a pass")
     func refused() {
         let readout = CourtGuideReadout(corners: Array(repeating: trueCorners[0], count: 4))
