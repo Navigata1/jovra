@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.calibration",
+  "id": "C09-placement-words",
+  "title": "What VoiceOver says about a placement (story 364)",
+  "cases": [
+    {
+      "op": "describe",
+      "name": "the story's example",
+      "landing": {"x": -3.0, "y": 10.0},
+      "hitterX": 2.0,
+      "result": "in",
+      "doubles": false,
+      "expected": {
+        "depth": "deep",
+        "direction": "crossCourt",
+        "wide": false,
+        "result": "in",
+        "english": "Deep cross-court, in"
+      }
+    },
+    {
+      "op": "describe",
+      "name": "down the line, short",
+      "landing": {"x": 3.0, "y": 4.0},
+      "hitterX": 2.0,
+      "result": "in",
+      "doubles": false,
+      "expected": {
+        "depth": "short",
+        "direction": "downTheLine",
+        "wide": false,
+        "result": "in",
+        "english": "Short down the line, in"
+      }
+    },
+    {
+      "op": "describe",
+      "name": "middle third",
+      "landing": {"x": 0.8, "y": 9.0},
+      "hitterX": -2.5,
+      "result": "needsReview",
+      "doubles": false,
+      "expected": {
+        "depth": "deep",
+        "direction": "middle",
+        "wide": false,
+        "result": "needsReview",
+        "english": "Deep middle, needs review"
+      }
+    },
+    {
+      "op": "describe",
+      "name": "no hitter position: sides as seen from the hitter's end",
+      "landing": {"x": -3.0, "y": 9.0},
+      "hitterX": null,
+      "result": "in",
+      "doubles": false,
+      "expected": {"depth": "deep", "direction": "left", "wide": false, "result": "in", "english": "Deep left, in"}
+    },
+    {
+      "op": "describe",
+      "name": "beyond the baseline",
+      "landing": {"x": 1.0, "y": 12.4},
+      "hitterX": null,
+      "result": "out",
+      "doubles": false,
+      "expected": {
+        "depth": "long",
+        "direction": "middle",
+        "wide": false,
+        "result": "out",
+        "english": "Long middle, out"
+      }
+    },
+    {
+      "op": "describe",
+      "name": "singles: the alley is wide",
+      "landing": {"x": 4.6, "y": 8.0},
+      "hitterX": -1.0,
+      "result": "out",
+      "doubles": false,
+      "expected": {
+        "depth": "deep",
+        "direction": "crossCourt",
+        "wide": true,
+        "result": "out",
+        "english": "Deep cross-court, wide, out"
+      }
+    },
+    {
+      "op": "describe",
+      "name": "doubles: the alley is in",
+      "landing": {"x": 4.6, "y": 8.0},
+      "hitterX": -1.0,
+      "result": "in",
+      "doubles": true,
+      "expected": {
+        "depth": "deep",
+        "direction": "crossCourt",
+        "wide": false,
+        "result": "in",
+        "english": "Deep cross-court, in"
+      }
+    },
+    {
+      "op": "describe",
+      "name": "on the service line is short",
+      "landing": {"x": -2.0, "y": 6.4},
+      "hitterX": null,
+      "result": "in",
+      "doubles": false,
+      "expected": {"depth": "short", "direction": "left", "wide": false, "result": "in", "english": "Short left, in"}
+    }
+  ]
+}

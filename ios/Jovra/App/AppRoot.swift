@@ -30,6 +30,7 @@ struct AppRoot: View {
         }
         #if DEBUG
         .modifier(CoreComponentsGalleryHarness())
+        .modifier(CourtGalleryHarness())
         #endif
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.3), value: router.preShell == nil)
         .environment(router)

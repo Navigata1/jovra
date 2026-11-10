@@ -1,0 +1,380 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.calibration",
+  "id": "C03-jittered-corners",
+  "title": "Corners tapped up to 2 px off: where the untapped intersections land on court",
+  "cases": [
+    {
+      "op": "fit",
+      "name": "doubles corners jittered inside a 2 px disc, draw 1",
+      "imagePoints": [
+        {"x": 293.128424176, "y": 866.914918919},
+        {"x": 1627.776575824, "y": 866.610918919},
+        {"x": 1242.317999318, "y": 315.292257396},
+        {"x": 677.261000682, "y": 315.210257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "expected": {
+        "homography": [
+          72.4232507,
+          32.694359667,
+          960.114181891,
+          0.025930166,
+          -3.056989063,
+          479.295344807,
+          4.8936e-05,
+          0.034085909,
+          1.0
+        ],
+        "project": [
+          {"id": "nearLeftDoubles", "court": {"x": -5.485, "y": -11.885}, "pixel": {"x": 293.128424176, "y": 866.914918919}},
+          {"id": "nearRightDoubles", "court": {"x": 5.485, "y": -11.885}, "pixel": {"x": 1627.776575824, "y": 866.610918919}},
+          {"id": "farRightDoubles", "court": {"x": 5.485, "y": 11.885}, "pixel": {"x": 1242.317999318, "y": 315.292257396}},
+          {"id": "farLeftDoubles", "court": {"x": -5.485, "y": 11.885}, "pixel": {"x": 677.261000682, "y": 315.210257396}},
+          {"id": "nearLeftSingles", "court": {"x": -4.115, "y": -11.885}, "pixel": {"x": 459.939034566, "y": 866.876923568}},
+          {"id": "nearRightSingles", "court": {"x": 4.115, "y": -11.885}, "pixel": {"x": 1461.229217839, "y": 866.648854308}},
+          {"id": "farRightSingles", "court": {"x": 4.115, "y": 11.885}, "pixel": {"x": 1171.773851267, "y": 315.282020163}},
+          {"id": "farLeftSingles", "court": {"x": -4.115, "y": 11.885}, "pixel": {"x": 747.852335807, "y": 315.220501477}},
+          {"id": "nearLeftService", "court": {"x": -4.115, "y": -6.4}, "pixel": {"x": 579.350466406, "y": 638.078591008}},
+          {"id": "nearRightService", "court": {"x": 4.115, "y": -6.4}, "pixel": {"x": 1341.205644646, "y": 638.022871802}},
+          {"id": "farRightService", "court": {"x": 4.115, "y": 6.4}, "pixel": {"x": 1204.398020864, "y": 377.425919309}},
+          {"id": "farLeftService", "court": {"x": -4.115, "y": 6.4}, "pixel": {"x": 715.413208937, "y": 377.375506431}},
+          {"id": "nearServiceT", "court": {"x": 0.0, "y": -6.4}, "pixel": {"x": 960.376165912, "y": 638.05072423}},
+          {"id": "farServiceT", "court": {"x": 0.0, "y": 6.4}, "pixel": {"x": 959.946031593, "y": 377.400717037}},
+          {"id": "nearCentreMark", "court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.753595154, "y": 866.762850337}},
+          {"id": "farCentreMark", "court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 959.84347026, "y": 315.251265228}}
+        ],
+        "unproject": [
+          {"id": "nearLeftSingles", "pixel": {"x": 458.869841474, "y": 866.918918919}, "court": {"x": -4.123602786, "y": -11.885761568}, "truth": {"x": -4.115, "y": -11.885}, "errorM": 0.00863643, "withinTenCm": true},
+          {"id": "nearRightSingles", "pixel": {"x": 1461.130158526, "y": 866.918918919}, "court": {"x": 4.113019919, "y": -11.889927826}, "truth": {"x": 4.115, "y": -11.885}, "errorM": 0.005310762, "withinTenCm": true},
+          {"id": "farRightSingles", "pixel": {"x": 1171.400715988, "y": 313.674257396}, "court": {"x": 4.124181902, "y": 12.049341326}, "truth": {"x": 4.115, "y": 11.885}, "errorM": 0.164597627, "withinTenCm": false},
+          {"id": "farLeftSingles", "pixel": {"x": 748.599284012, "y": 313.674257396}, "court": {"x": -4.116169801, "y": 12.043000057}, "truth": {"x": -4.115, "y": 11.885}, "errorM": 0.158004388, "withinTenCm": false},
+          {"id": "nearLeftService", "pixel": {"x": 579.274984967, "y": 637.00268302}, "court": {"x": -4.121888199, "y": -6.366046631}, "truth": {"x": -4.115, "y": -6.4}, "errorM": 0.034645036, "withinTenCm": true},
+          {"id": "nearRightService", "pixel": {"x": 1340.725015033, "y": 637.00268302}, "court": {"x": 4.115594685, "y": -6.367789931}, "truth": {"x": 4.115, "y": -6.4}, "errorM": 0.032215558, "withinTenCm": true},
+          {"id": "farRightService", "pixel": {"x": 1203.945582905, "y": 375.819387433}, "court": {"x": 4.121605344, "y": 6.523360007}, "truth": {"x": 4.115, "y": 6.4}, "errorM": 0.123536722, "withinTenCm": false},
+          {"id": "farLeftService", "pixel": {"x": 716.054417095, "y": 375.819387433}, "court": {"x": -4.117885581, "y": 6.519445068}, "truth": {"x": -4.115, "y": 6.4}, "errorM": 0.119479918, "withinTenCm": false},
+          {"id": "nearServiceT", "pixel": {"x": 960.0, "y": 637.00268302}, "court": {"x": -0.004050711, "y": -6.36691809}, "truth": {"x": 0.0, "y": -6.4}, "errorM": 0.033328982, "withinTenCm": true},
+          {"id": "farServiceT", "pixel": {"x": 960.0, "y": 375.819387433}, "court": {"x": 0.000955487, "y": 6.521402108}, "truth": {"x": 0.0, "y": 6.4}, "errorM": 0.121405868, "withinTenCm": false},
+          {"id": "nearCentreMark", "pixel": {"x": 960.0, "y": 866.918918919}, "court": {"x": -0.006195199, "y": -11.88784424}, "truth": {"x": 0.0, "y": -11.885}, "errorM": 0.006816905, "withinTenCm": true},
+          {"id": "farCentreMark", "pixel": {"x": 960.0, "y": 313.674257396}, "court": {"x": 0.003101467, "y": 12.046169996}, "truth": {"x": 0.0, "y": 11.885}, "errorM": 0.161199834, "withinTenCm": false}
+        ]
+      },
+      "tolerance": {"px": 1e-06, "m": 1e-06, "homographyRelative": 1e-07}
+    },
+    {
+      "op": "fit",
+      "name": "doubles corners jittered inside a 2 px disc, draw 2",
+      "imagePoints": [
+        {"x": 292.351424176, "y": 865.748918919},
+        {"x": 1627.595575824, "y": 867.392918919},
+        {"x": 1241.036999318, "y": 313.510257396},
+        {"x": 677.035000682, "y": 313.142257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "expected": {
+        "homography": [
+          72.218320616,
+          32.750916496,
+          959.117449269,
+          0.023473207,
+          -3.117986875,
+          477.618239066,
+          -7.5624e-05,
+          0.034167239,
+          1.0
+        ],
+        "project": [
+          {"id": "nearLeftDoubles", "court": {"x": -5.485, "y": -11.885}, "pixel": {"x": 292.351424176, "y": 865.748918919}},
+          {"id": "nearRightDoubles", "court": {"x": 5.485, "y": -11.885}, "pixel": {"x": 1627.595575824, "y": 867.392918919}},
+          {"id": "farRightDoubles", "court": {"x": 5.485, "y": 11.885}, "pixel": {"x": 1241.036999318, "y": 313.510257396}},
+          {"id": "farLeftDoubles", "court": {"x": -5.485, "y": 11.885}, "pixel": {"x": 677.035000682, "y": 313.142257396}},
+          {"id": "nearLeftSingles", "court": {"x": -4.115, "y": -11.885}, "pixel": {"x": 458.901067844, "y": 865.953980753}},
+          {"id": "nearRightSingles", "court": {"x": 4.115, "y": -11.885}, "pixel": {"x": 1460.63826245, "y": 867.187355148}},
+          {"id": "farRightSingles", "court": {"x": 4.115, "y": 11.885}, "pixel": {"x": 1170.564639909, "y": 313.464275594}},
+          {"id": "farLeftSingles", "court": {"x": -4.115, "y": 11.885}, "pixel": {"x": 747.434624213, "y": 313.188191739}},
+          {"id": "nearLeftService", "court": {"x": -4.115, "y": -6.4}, "pixel": {"x": 578.696960309, "y": 636.451832538}},
+          {"id": "nearRightService", "court": {"x": 4.115, "y": -6.4}, "pixel": {"x": 1340.160318014, "y": 637.20636678}},
+          {"id": "farRightService", "court": {"x": 4.115, "y": 6.4}, "pixel": {"x": 1203.177015435, "y": 375.718212542}},
+          {"id": "farLeftService", "court": {"x": -4.115, "y": 6.4}, "pixel": {"x": 714.977963495, "y": 375.367897617}},
+          {"id": "nearServiceT", "court": {"x": 0.0, "y": -6.4}, "pixel": {"x": 959.276998145, "y": 636.828949398}},
+          {"id": "farServiceT", "court": {"x": 0.0, "y": 6.4}, "pixel": {"x": 959.015157231, "y": 375.543010352}},
+          {"id": "nearCentreMark", "court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 959.507227515, "y": 866.570344828}},
+          {"id": "farCentreMark", "court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 958.952808275, "y": 313.326203115}}
+        ],
+        "unproject": [
+          {"id": "nearLeftSingles", "pixel": {"x": 458.869841474, "y": 866.918918919}, "court": {"x": -4.111120786, "y": -11.90250411}, "truth": {"x": -4.115, "y": -11.885}, "errorM": 0.017928808, "withinTenCm": true},
+          {"id": "nearRightSingles", "pixel": {"x": 1461.130158526, "y": 866.918918919}, "court": {"x": 4.120195969, "y": -11.880118568}, "truth": {"x": 4.115, "y": -11.885}, "errorM": 0.007129269, "withinTenCm": true},
+          {"id": "farRightSingles", "pixel": {"x": 1171.400715988, "y": 313.674257396}, "court": {"x": 4.129113625, "y": 11.863712584}, "truth": {"x": 4.115, "y": 11.885}, "errorM": 0.025541114, "withinTenCm": true},
+          {"id": "farLeftSingles", "pixel": {"x": 748.599284012, "y": 313.674257396}, "court": {"x": -4.087442438, "y": 11.835684605}, "truth": {"x": -4.115, "y": 11.885}, "errorM": 0.05649272, "withinTenCm": true},
+          {"id": "nearLeftService", "pixel": {"x": 579.274984967, "y": 637.00268302}, "court": {"x": -4.105649387, "y": -6.417277019}, "truth": {"x": -4.115, "y": -6.4}, "errorM": 0.019645085, "withinTenCm": true},
+          {"id": "nearRightService", "pixel": {"x": 1340.725015033, "y": 637.00268302}, "court": {"x": 4.122256589, "y": -6.393585854}, "truth": {"x": 4.115, "y": -6.4}, "errorM": 0.009685007, "withinTenCm": true},
+          {"id": "farRightService", "pixel": {"x": 1203.945582905, "y": 375.819387433}, "court": {"x": 4.12705869, "y": 6.392315064}, "truth": {"x": 4.115, "y": 6.4}, "errorM": 0.014299309, "withinTenCm": true},
+          {"id": "farLeftService", "pixel": {"x": 716.054417095, "y": 375.819387433}, "court": {"x": -4.092898748, "y": 6.365585486}, "truth": {"x": -4.115, "y": 6.4}, "errorM": 0.040900172, "withinTenCm": true},
+          {"id": "nearServiceT", "pixel": {"x": 960.0, "y": 637.00268302}, "court": {"x": 0.007810568, "y": -6.405432856}, "truth": {"x": 0.0, "y": -6.4}, "errorM": 0.009514247, "withinTenCm": true},
+          {"id": "farServiceT", "pixel": {"x": 960.0, "y": 375.819387433}, "court": {"x": 0.01658789, "y": 6.378948675}, "truth": {"x": 0.0, "y": 6.4}, "errorM": 0.026801425, "withinTenCm": true},
+          {"id": "nearCentreMark", "pixel": {"x": 960.0, "y": 866.918918919}, "court": {"x": 0.00404415, "y": -11.891312681}, "truth": {"x": 0.0, "y": -11.885}, "errorM": 0.007497005, "withinTenCm": true},
+          {"id": "farCentreMark", "pixel": {"x": 960.0, "y": 313.674257396}, "court": {"x": 0.02034392, "y": 11.849696917}, "truth": {"x": 0.0, "y": 11.885}, "errorM": 0.04074534, "withinTenCm": true}
+        ]
+      },
+      "tolerance": {"px": 1e-06, "m": 1e-06, "homographyRelative": 1e-07}
+    },
+    {
+      "op": "fit",
+      "name": "doubles corners jittered inside a 2 px disc, draw 3",
+      "imagePoints": [
+        {"x": 292.022424176, "y": 866.126918919},
+        {"x": 1626.632575824, "y": 867.355918919},
+        {"x": 1242.042999318, "y": 315.039257396},
+        {"x": 676.926000682, "y": 312.659257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "expected": {
+        "homography": [
+          72.794375519,
+          32.665994843,
+          960.560005659,
+          0.440037188,
+          -3.142095955,
+          478.321831261,
+          0.00043079,
+          0.034081125,
+          1.0
+        ],
+        "project": [
+          {"id": "nearLeftDoubles", "court": {"x": -5.485, "y": -11.885}, "pixel": {"x": 292.022424176, "y": 866.126918919}},
+          {"id": "nearRightDoubles", "court": {"x": 5.485, "y": -11.885}, "pixel": {"x": 1626.632575824, "y": 867.355918919}},
+          {"id": "farRightDoubles", "court": {"x": 5.485, "y": 11.885}, "pixel": {"x": 1242.042999318, "y": 315.039257396}},
+          {"id": "farLeftDoubles", "court": {"x": -5.485, "y": 11.885}, "pixel": {"x": 676.926000682, "y": 312.659257396}},
+          {"id": "nearLeftSingles", "court": {"x": -4.115, "y": -11.885}, "pixel": {"x": 459.858665881, "y": 866.281473971}},
+          {"id": "nearRightSingles", "court": {"x": 4.115, "y": -11.885}, "pixel": {"x": 1461.113525298, "y": 867.203497695}},
+          {"id": "farRightSingles", "court": {"x": 4.115, "y": 11.885}, "pixel": {"x": 1171.675234805, "y": 314.74290234}},
+          {"id": "farLeftSingles", "court": {"x": -4.115, "y": 11.885}, "pixel": {"x": 747.709223076, "y": 312.95736216}},
+          {"id": "nearLeftService", "court": {"x": -4.115, "y": -6.4}, "pixel": {"x": 579.341228974, "y": 636.604714807}},
+          {"id": "nearRightService", "court": {"x": 4.115, "y": -6.4}, "pixel": {"x": 1341.213296105, "y": 638.345899448}},
+          {"id": "farRightService", "court": {"x": 4.115, "y": 6.4}, "pixel": {"x": 1204.345420929, "y": 377.101584896}},
+          {"id": "farLeftService", "court": {"x": -4.115, "y": 6.4}, "pixel": {"x": 715.317154686, "y": 375.223395779}},
+          {"id": "nearServiceT", "court": {"x": 0.0, "y": -6.4}, "pixel": {"x": 961.140931254, "y": 637.477280958}},
+          {"id": "farServiceT", "court": {"x": 0.0, "y": 6.4}, "pixel": {"x": 960.187123786, "y": 376.163856981}},
+          {"id": "nearCentreMark", "court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 961.977766084, "y": 866.743859465}},
+          {"id": "farCentreMark", "court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 959.95967959, "y": 313.851258623}}
+        ],
+        "unproject": [
+          {"id": "nearLeftSingles", "pixel": {"x": 458.869841474, "y": 866.918918919}, "court": {"x": -4.12036382, "y": -11.896578443}, "truth": {"x": -4.115, "y": -11.885}, "errorM": 0.012760522, "withinTenCm": true},
+          {"id": "nearRightSingles", "pixel": {"x": 1461.130158526, "y": 866.918918919}, "court": {"x": 4.116371429, "y": -11.879802176}, "truth": {"x": 4.115, "y": -11.885}, "errorM": 0.005375703, "withinTenCm": true},
+          {"id": "farRightSingles", "pixel": {"x": 1171.400715988, "y": 313.674257396}, "court": {"x": 4.120580196, "y": 11.993809211}, "truth": {"x": 4.115, "y": 11.885}, "errorM": 0.108952205, "withinTenCm": false},
+          {"id": "farLeftSingles", "pixel": {"x": 748.599284012, "y": 313.674257396}, "court": {"x": -4.090640491, "y": 11.812809095}, "truth": {"x": -4.115, "y": 11.885}, "errorM": 0.076189976, "withinTenCm": true},
+          {"id": "nearLeftService", "pixel": {"x": 579.274984967, "y": 637.00268302}, "court": {"x": -4.11348867, "y": -6.41248228}, "truth": {"x": -4.115, "y": -6.4}, "errorM": 0.012573441, "withinTenCm": true},
+          {"id": "nearRightService", "pixel": {"x": 1340.725015033, "y": 637.00268302}, "court": {"x": 4.117344953, "y": -6.357628747}, "truth": {"x": 4.115, "y": -6.4}, "errorM": 0.042436092, "withinTenCm": true},
+          {"id": "farRightService", "pixel": {"x": 1203.945582905, "y": 375.819387433}, "court": {"x": 4.119611345, "y": 6.498143032}, "truth": {"x": 4.115, "y": 6.4}, "errorM": 0.098251306, "withinTenCm": true},
+          {"id": "farLeftService", "pixel": {"x": 716.054417095, "y": 375.819387433}, "court": {"x": -4.097482866, "y": 6.354856416}, "truth": {"x": -4.115, "y": 6.4}, "errorM": 0.048423064, "withinTenCm": true},
+          {"id": "nearServiceT", "pixel": {"x": 960.0, "y": 637.00268302}, "court": {"x": -0.012314061, "y": -6.385150429}, "truth": {"x": 0.0, "y": -6.4}, "errorM": 0.019291082, "withinTenCm": true},
+          {"id": "farServiceT", "pixel": {"x": 960.0, "y": 375.819387433}, "court": {"x": -0.003130346, "y": 6.426252204}, "truth": {"x": 0.0, "y": 6.4}, "errorM": 0.026438179, "withinTenCm": true},
+          {"id": "nearCentreMark", "pixel": {"x": 960.0, "y": 866.918918919}, "court": {"x": -0.016258876, "y": -11.88821936}, "truth": {"x": 0.0, "y": -11.885}, "errorM": 0.016574538, "withinTenCm": true},
+          {"id": "farCentreMark", "pixel": {"x": 960.0, "y": 313.674257396}, "court": {"x": 0.000795599, "y": 11.902996709}, "truth": {"x": 0.0, "y": 11.885}, "errorM": 0.018014287, "withinTenCm": true}
+        ]
+      },
+      "tolerance": {"px": 1e-06, "m": 1e-06, "homographyRelative": 1e-07}
+    },
+    {
+      "op": "fit",
+      "name": "doubles corners jittered inside a 2 px disc, draw 4",
+      "imagePoints": [
+        {"x": 291.624424176, "y": 865.382918919},
+        {"x": 1628.023575824, "y": 865.796918919},
+        {"x": 1240.950999318, "y": 313.107257396},
+        {"x": 677.662000682, "y": 312.623257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "expected": {
+        "homography": [
+          72.314025544,
+          32.829330509,
+          959.647027631,
+          0.084544997,
+          -3.076658499,
+          476.757302724,
+          7.1817e-05,
+          0.034242078,
+          1.0
+        ],
+        "project": [
+          {"id": "nearLeftDoubles", "court": {"x": -5.485, "y": -11.885}, "pixel": {"x": 291.624424176, "y": 865.382918919}},
+          {"id": "nearRightDoubles", "court": {"x": 5.485, "y": -11.885}, "pixel": {"x": 1628.023575824, "y": 865.796918919}},
+          {"id": "farRightDoubles", "court": {"x": 5.485, "y": 11.885}, "pixel": {"x": 1240.950999318, "y": 313.107257396}},
+          {"id": "farLeftDoubles", "court": {"x": -5.485, "y": 11.885}, "pixel": {"x": 677.662000682, "y": 312.623257396}},
+          {"id": "nearLeftSingles", "court": {"x": -4.115, "y": -11.885}, "pixel": {"x": 458.716167341, "y": 865.434681883}},
+          {"id": "nearRightSingles", "court": {"x": 4.115, "y": -11.885}, "pixel": {"x": 1461.319895384, "y": 865.745276172}},
+          {"id": "farRightSingles", "court": {"x": 4.115, "y": 11.885}, "pixel": {"x": 1170.638524038, "y": 313.04684216}},
+          {"id": "farLeftSingles", "court": {"x": -4.115, "y": 11.885}, "pixel": {"x": 748.043419215, "y": 312.683731871}},
+          {"id": "nearLeftService", "court": {"x": -4.115, "y": -6.4}, "pixel": {"x": 579.032861958, "y": 635.573281614}},
+          {"id": "nearRightService", "court": {"x": 4.115, "y": -6.4}, "pixel": {"x": 1340.480801489, "y": 635.983122326}},
+          {"id": "farRightService", "court": {"x": 4.115, "y": 6.4}, "pixel": {"x": 1203.274579278, "y": 375.100686683}},
+          {"id": "farLeftService", "court": {"x": -4.115, "y": 6.4}, "pixel": {"x": 715.576019743, "y": 374.711715016}},
+          {"id": "nearServiceT", "court": {"x": 0.0, "y": -6.4}, "pixel": {"x": 959.900924201, "y": 635.778279526}},
+          {"id": "farServiceT", "court": {"x": 0.0, "y": 6.4}, "pixel": {"x": 959.484409881, "y": 374.906247994}},
+          {"id": "nearCentreMark", "court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.267847, "y": 865.590056417}},
+          {"id": "farCentreMark", "court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 959.385353908, "y": 312.86532515}}
+        ],
+        "unproject": [
+          {"id": "nearLeftSingles", "pixel": {"x": 458.869841474, "y": 866.918918919}, "court": {"x": -4.107381967, "y": -11.911848158}, "truth": {"x": -4.115, "y": -11.885}, "errorM": 0.027908028, "withinTenCm": true},
+          {"id": "nearRightSingles", "pixel": {"x": 1461.130158526, "y": 866.918918919}, "court": {"x": 4.108376158, "y": -11.906259638}, "truth": {"x": 4.115, "y": -11.885}, "errorM": 0.022267633, "withinTenCm": true},
+          {"id": "farRightSingles", "pixel": {"x": 1171.400715988, "y": 313.674257396}, "court": {"x": 4.123411597, "y": 11.821137849}, "truth": {"x": 4.115, "y": 11.885}, "errorM": 0.064413735, "withinTenCm": true},
+          {"id": "farLeftSingles", "pixel": {"x": 748.599284012, "y": 313.674257396}, "court": {"x": -4.09414682, "y": 11.784254631}, "truth": {"x": -4.115, "y": 11.885}, "errorM": 0.102880924, "withinTenCm": false},
+          {"id": "nearLeftService", "pixel": {"x": 579.274984967, "y": 637.00268302}, "court": {"x": -4.104328426, "y": -6.444811552}, "truth": {"x": -4.115, "y": -6.4}, "errorM": 0.046064712, "withinTenCm": true},
+          {"id": "nearRightService", "pixel": {"x": 1340.725015033, "y": 637.00268302}, "court": {"x": 4.111845052, "y": -6.432004093}, "truth": {"x": 4.115, "y": -6.4}, "errorM": 0.032159224, "withinTenCm": true},
+          {"id": "farRightService", "pixel": {"x": 1203.945582905, "y": 375.819387433}, "court": {"x": 4.119941544, "y": 6.345054607}, "truth": {"x": 4.115, "y": 6.4}, "errorM": 0.055167156, "withinTenCm": true},
+          {"id": "farLeftService", "pixel": {"x": 716.054417095, "y": 375.819387433}, "court": {"x": -4.09720138, "y": 6.315395145}, "truth": {"x": -4.115, "y": 6.4}, "errorM": 0.086456766, "withinTenCm": true},
+          {"id": "nearServiceT", "pixel": {"x": 960.0, "y": 637.00268302}, "court": {"x": 0.00104795, "y": -6.438412047}, "truth": {"x": 0.0, "y": -6.4}, "errorM": 0.03842634, "withinTenCm": true},
+          {"id": "farServiceT", "pixel": {"x": 960.0, "y": 375.819387433}, "court": {"x": 0.008659083, "y": 6.33021509}, "truth": {"x": 0.0, "y": 6.4}, "errorM": 0.070320078, "withinTenCm": true},
+          {"id": "nearCentreMark", "pixel": {"x": 960.0, "y": 866.918918919}, "court": {"x": -0.002212995, "y": -11.909055742}, "truth": {"x": 0.0, "y": -11.885}, "errorM": 0.024157319, "withinTenCm": true},
+          {"id": "farCentreMark", "pixel": {"x": 960.0, "y": 313.674257396}, "court": {"x": 0.011921116, "y": 11.802684071}, "truth": {"x": 0.0, "y": 11.885}, "errorM": 0.083174667, "withinTenCm": true}
+        ]
+      },
+      "tolerance": {"px": 1e-06, "m": 1e-06, "homographyRelative": 1e-07}
+    },
+    {
+      "op": "fit",
+      "name": "doubles corners jittered inside a 2 px disc, draw 5",
+      "imagePoints": [
+        {"x": 292.672424176, "y": 868.739918919},
+        {"x": 1626.691575824, "y": 867.788918919},
+        {"x": 1241.032999318, "y": 315.407257396},
+        {"x": 678.886000682, "y": 315.100257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "expected": {
+        "homography": [
+          72.261498578,
+          32.871592908,
+          960.304051722,
+          0.091127722,
+          -2.996877955,
+          479.202020497,
+          0.000164154,
+          0.034250705,
+          1.0
+        ],
+        "project": [
+          {"id": "nearLeftDoubles", "court": {"x": -5.485, "y": -11.885}, "pixel": {"x": 292.672424176, "y": 868.739918919}},
+          {"id": "nearRightDoubles", "court": {"x": 5.485, "y": -11.885}, "pixel": {"x": 1626.691575824, "y": 867.788918919}},
+          {"id": "farRightDoubles", "court": {"x": 5.485, "y": 11.885}, "pixel": {"x": 1241.032999318, "y": 315.407257396}},
+          {"id": "farLeftDoubles", "court": {"x": -5.485, "y": 11.885}, "pixel": {"x": 678.886000682, "y": 315.100257396}},
+          {"id": "nearLeftSingles", "court": {"x": -4.115, "y": -11.885}, "pixel": {"x": 459.716103762, "y": 868.620836266}},
+          {"id": "nearRightSingles", "court": {"x": 4.115, "y": -11.885}, "pixel": {"x": 1460.533473908, "y": 867.907370258}},
+          {"id": "farRightSingles", "court": {"x": 4.115, "y": 11.885}, "pixel": {"x": 1170.907268856, "y": 315.368960297}},
+          {"id": "farLeftSingles", "court": {"x": -4.115, "y": 11.885}, "pixel": {"x": 749.1689853, "y": 315.138640375}},
+          {"id": "nearLeftService", "court": {"x": -4.115, "y": -6.4}, "pixel": {"x": 580.128435506, "y": 638.372370845}},
+          {"id": "nearRightService", "court": {"x": 4.115, "y": -6.4}, "pixel": {"x": 1340.141792612, "y": 638.228470366}},
+          {"id": "farRightService", "court": {"x": 4.115, "y": 6.4}, "pixel": {"x": 1203.428454725, "y": 377.411703724}},
+          {"id": "farLeftService", "court": {"x": -4.115, "y": 6.4}, "pixel": {"x": 716.705279361, "y": 377.21466171}},
+          {"id": "nearServiceT", "court": {"x": 0.0, "y": -6.4}, "pixel": {"x": 960.46387206, "y": 638.300358359}},
+          {"id": "farServiceT", "court": {"x": 0.0, "y": 6.4}, "pixel": {"x": 960.20170056, "y": 377.313237302}},
+          {"id": "nearCentreMark", "court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.694878988, "y": 868.263696854}},
+          {"id": "farCentreMark", "court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.139359549, "y": 315.253855621}}
+        ],
+        "unproject": [
+          {"id": "nearLeftSingles", "pixel": {"x": 458.869841474, "y": 866.918918919}, "court": {"x": -4.129276342, "y": -11.854142976}, "truth": {"x": -4.115, "y": -11.885}, "errorM": 0.033999557, "withinTenCm": true},
+          {"id": "nearRightSingles", "pixel": {"x": 1461.130158526, "y": 866.918918919}, "court": {"x": 4.12419436, "y": -11.86706517}, "truth": {"x": 4.115, "y": -11.885}, "errorM": 0.020154264, "withinTenCm": true},
+          {"id": "farRightSingles", "pixel": {"x": 1171.400715988, "y": 313.674257396}, "court": {"x": 4.142112254, "y": 12.058705061}, "truth": {"x": 4.115, "y": 11.885}, "errorM": 0.175808198, "withinTenCm": false},
+          {"id": "farLeftSingles", "pixel": {"x": 748.599284012, "y": 313.674257396}, "court": {"x": -4.141124511, "y": 12.034810616}, "truth": {"x": -4.115, "y": 11.885}, "errorM": 0.1520714, "withinTenCm": false},
+          {"id": "nearLeftService", "pixel": {"x": 579.274984967, "y": 637.00268302}, "court": {"x": -4.132002786, "y": -6.356930743}, "truth": {"x": -4.115, "y": -6.4}, "errorM": 0.046303948, "withinTenCm": true},
+          {"id": "nearRightService", "pixel": {"x": 1340.725015033, "y": 637.00268302}, "court": {"x": 4.128317523, "y": -6.361404351}, "truth": {"x": 4.115, "y": -6.4}, "errorM": 0.040828673, "withinTenCm": true},
+          {"id": "farRightService", "pixel": {"x": 1203.945582905, "y": 375.819387433}, "court": {"x": 4.137966177, "y": 6.522447293}, "truth": {"x": 4.115, "y": 6.4}, "errorM": 0.124582442, "withinTenCm": false},
+          {"id": "farLeftService", "pixel": {"x": 716.054417095, "y": 375.819387433}, "court": {"x": -4.138382938, "y": 6.507095502}, "truth": {"x": -4.115, "y": 6.4}, "errorM": 0.109618467, "withinTenCm": false},
+          {"id": "nearServiceT", "pixel": {"x": 960.0, "y": 637.00268302}, "court": {"x": -0.005018012, "y": -6.359165827}, "truth": {"x": 0.0, "y": -6.4}, "errorM": 0.041141343, "withinTenCm": true},
+          {"id": "farServiceT", "pixel": {"x": 960.0, "y": 375.819387433}, "court": {"x": -0.003396095, "y": 6.514765485}, "truth": {"x": 0.0, "y": 6.4}, "errorM": 0.114815722, "withinTenCm": false},
+          {"id": "nearCentreMark", "pixel": {"x": 960.0, "y": 866.918918919}, "court": {"x": -0.005711108, "y": -11.86059911}, "truth": {"x": 0.0, "y": -11.885}, "errorM": 0.025060331, "withinTenCm": true},
+          {"id": "farCentreMark", "pixel": {"x": 960.0, "y": 313.674257396}, "court": {"x": -0.00269915, "y": 12.046748627}, "truth": {"x": 0.0, "y": 11.885}, "errorM": 0.161771147, "withinTenCm": false}
+        ]
+      },
+      "tolerance": {"px": 1e-06, "m": 1e-06, "homographyRelative": 1e-07}
+    },
+    {
+      "op": "fit",
+      "name": "doubles corners jittered inside a 2 px disc, draw 6",
+      "imagePoints": [
+        {"x": 292.492424176, "y": 865.073918919},
+        {"x": 1627.788575824, "y": 868.016918919},
+        {"x": 1243.101999318, "y": 313.558257396},
+        {"x": 678.839000682, "y": 312.323257396}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "expected": {
+        "homography": [
+          72.313299463,
+          32.840358426,
+          960.71873982,
+          0.15765018,
+          -3.148923084,
+          477.388702868,
+          -2e-06,
+          0.034152386,
+          1.0
+        ],
+        "project": [
+          {"id": "nearLeftDoubles", "court": {"x": -5.485, "y": -11.885}, "pixel": {"x": 292.492424176, "y": 865.073918919}},
+          {"id": "nearRightDoubles", "court": {"x": 5.485, "y": -11.885}, "pixel": {"x": 1627.788575824, "y": 868.016918919}},
+          {"id": "farRightDoubles", "court": {"x": 5.485, "y": 11.885}, "pixel": {"x": 1243.101999318, "y": 313.558257396}},
+          {"id": "farLeftDoubles", "court": {"x": -5.485, "y": 11.885}, "pixel": {"x": 678.839000682, "y": 312.323257396}},
+          {"id": "nearLeftSingles", "court": {"x": -4.115, "y": -11.885}, "pixel": {"x": 459.246901137, "y": 865.441446696}},
+          {"id": "nearRightSingles", "court": {"x": 4.115, "y": -11.885}, "pixel": {"x": 1461.023321048, "y": 867.649367388}},
+          {"id": "farRightSingles", "court": {"x": 4.115, "y": 11.885}, "pixel": {"x": 1172.632458335, "y": 313.404021015}},
+          {"id": "farLeftSingles", "court": {"x": -4.115, "y": 11.885}, "pixel": {"x": 749.306617073, "y": 312.477489565}},
+          {"id": "nearLeftService", "court": {"x": -4.115, "y": -6.4}, "pixel": {"x": 579.667410679, "y": 635.874230645}},
+          {"id": "nearRightService", "court": {"x": 4.115, "y": -6.4}, "pixel": {"x": 1341.294528559, "y": 637.548020072}},
+          {"id": "farRightService", "court": {"x": 4.115, "y": 6.4}, "pixel": {"x": 1205.076297655, "y": 375.756367384}},
+          {"id": "farLeftService", "court": {"x": -4.115, "y": 6.4}, "pixel": {"x": 716.674569254, "y": 374.68656342}},
+          {"id": "nearServiceT", "court": {"x": 0.0, "y": -6.4}, "pixel": {"x": 960.476959181, "y": 636.711116545}},
+          {"id": "farServiceT", "court": {"x": 0.0, "y": 6.4}, "pixel": {"x": 960.8737843, "y": 375.221461789}},
+          {"id": "nearCentreMark", "court": {"x": 0.0, "y": -11.885}, "pixel": {"x": 960.128172864, "y": 866.54539175}},
+          {"id": "farCentreMark", "court": {"x": 0.0, "y": 11.885}, "pixel": {"x": 960.968298746, "y": 312.940752578}}
+        ],
+        "unproject": [
+          {"id": "nearLeftSingles", "pixel": {"x": 458.869841474, "y": 866.918918919}, "court": {"x": -4.111739351, "y": -11.911781346}, "truth": {"x": -4.115, "y": -11.885}, "errorM": 0.026979109, "withinTenCm": true},
+          {"id": "nearRightSingles", "pixel": {"x": 1461.130158526, "y": 866.918918919}, "court": {"x": 4.119007718, "y": -11.871732576}, "truth": {"x": 4.115, "y": -11.885}, "errorM": 0.013859522, "withinTenCm": true},
+          {"id": "farRightSingles", "pixel": {"x": 1171.400715988, "y": 313.674257396}, "court": {"x": 4.088307531, "y": 11.857286972}, "truth": {"x": 4.115, "y": 11.885}, "errorM": 0.038477263, "withinTenCm": true},
+          {"id": "farLeftSingles", "pixel": {"x": 748.599284012, "y": 313.674257396}, "court": {"x": -4.116540498, "y": 11.763600946}, "truth": {"x": -4.115, "y": 11.885}, "errorM": 0.121408828, "withinTenCm": false},
+          {"id": "nearLeftService", "pixel": {"x": 579.274984967, "y": 637.00268302}, "court": {"x": -4.112849911, "y": -6.435394522}, "truth": {"x": -4.115, "y": -6.4}, "errorM": 0.035459767, "withinTenCm": true},
+          {"id": "nearRightService", "pixel": {"x": 1340.725015033, "y": 637.00268302}, "court": {"x": 4.111906374, "y": -6.382908679}, "truth": {"x": 4.115, "y": -6.4}, "errorM": 0.017369047, "withinTenCm": true},
+          {"id": "farRightService", "pixel": {"x": 1203.945582905, "y": 375.819387433}, "court": {"x": 4.09537454, "y": 6.395001088}, "truth": {"x": 4.115, "y": 6.4}, "errorM": 0.020252106, "withinTenCm": true},
+          {"id": "farLeftService", "pixel": {"x": 716.054417095, "y": 375.819387433}, "court": {"x": -4.115435295, "y": 6.313632063}, "truth": {"x": -4.115, "y": 6.4}, "errorM": 0.086369034, "withinTenCm": true},
+          {"id": "nearServiceT", "pixel": {"x": 960.0, "y": 637.00268302}, "court": {"x": -0.005147067, "y": -6.409181435}, "truth": {"x": 0.0, "y": -6.4}, "errorM": 0.010525733, "withinTenCm": true},
+          {"id": "farServiceT", "pixel": {"x": 960.0, "y": 375.819387433}, "court": {"x": -0.014689846, "y": 6.3542704}, "truth": {"x": 0.0, "y": 6.4}, "errorM": 0.048031114, "withinTenCm": true},
+          {"id": "nearCentreMark", "pixel": {"x": 960.0, "y": 866.918918919}, "court": {"x": -0.001047923, "y": -11.891779743}, "truth": {"x": 0.0, "y": -11.885}, "errorM": 0.006860252, "withinTenCm": true},
+          {"id": "farCentreMark", "pixel": {"x": 960.0, "y": 313.674257396}, "court": {"x": -0.018769194, "y": 11.810390833}, "truth": {"x": 0.0, "y": 11.885}, "errorM": 0.076933806, "withinTenCm": true}
+        ]
+      },
+      "tolerance": {"px": 1e-06, "m": 1e-06, "homographyRelative": 1e-07}
+    }
+  ]
+}
