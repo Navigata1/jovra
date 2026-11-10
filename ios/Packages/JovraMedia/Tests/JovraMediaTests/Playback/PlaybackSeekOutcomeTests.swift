@@ -160,6 +160,94 @@ struct PlaybackSeekOutcomeTests {
         #expect((80...100).contains(controller.player.currentTime().frameIndex(at: .fps60)))
     }
 
+    @Test
+    func aFailedFinalScrubRestoresThePlayerFrameAndCanRetryTheSameTarget() async throws {
+        let (controller, truth) = try await open()
+        defer { controller.close() }
+        await controller.seek(toFrame: 12)
+        let displayed = DisplayedFrame(controller, truth: truth)
+        try #require(try await displayed.code(controller) == 12)
+        let gate = GatedOriginalSeek(frame: 42)
+        controller.seekPlayer = { await gate.perform($0, time: $1, tolerance: $2) }
+        defer { gate.finish(false) }
+
+        controller.finishScrub(atFrame: 42)
+        try await waitUntil("exact gesture target in flight") { gate.isWaiting }
+        #expect(controller.readout.frame == 42)
+        gate.finish(false)
+        try await waitUntil("failed target reconciles") { controller.readout.frame == 12 }
+        #expect(try await displayed.code(controller) == 12)
+
+        controller.finishScrub(atFrame: 42)
+        try await waitUntil("the identical exact target is retried") { gate.isWaiting }
+        gate.finish(true)
+        await controller.settle()
+        #expect(controller.readout.frame == 42)
+        #expect(try await displayed.code(controller) == 42)
+    }
+
+    @Test
+    func aLaterDragSupersedesAnEarlierFinalScrubInGestureOrder() async throws {
+        let (controller, truth) = try await open()
+        defer { controller.close() }
+        let gate = GatedOriginalSeek(frame: 25)
+        var issued: [Int] = []
+        controller.seekPlayer = { player, time, tolerance in
+            issued.append(time.frameIndex(at: .fps60))
+            return await gate.perform(player, time: time, tolerance: tolerance)
+        }
+        defer { gate.finish(false) }
+
+        controller.scrub(toFrame: 25)
+        try await waitUntil("coarse seek in flight") { gate.isWaiting }
+        controller.finishScrub(atFrame: 40)
+        #expect(controller.readout.frame == 40)
+        controller.scrub(toFrame: 50)
+        gate.finish(false)
+        await controller.settle()
+        #expect(issued == [25, 50])
+        #expect(controller.readout.frame == 50)
+
+        await controller.endScrub(atFrame: 50)
+        #expect(issued == [25, 50, 50])
+        #expect(try await DisplayedFrame(controller, truth: truth).code(controller) == 50)
+    }
+
+    @Test
+    func terminalCloseDropsQueuedFinalScrubsAndFencesTheirCompletion() async throws {
+        let (controller, _) = try await open()
+        defer { controller.close() }
+        await controller.seek(toFrame: 12)
+        let gate = GatedOriginalSeek(frame: 42)
+        var returnedFrames: [Int] = []
+        controller.seekPlayer = { player, time, tolerance in
+            let succeeded = await gate.perform(player, time: time, tolerance: tolerance)
+            returnedFrames.append(time.frameIndex(at: .fps60))
+            return succeeded
+        }
+        defer { gate.finish(false) }
+
+        controller.finishScrub(atFrame: 42)
+        try await waitUntil("exact gesture target in flight") { gate.isWaiting }
+        controller.finishScrub(atFrame: 56)
+        controller.close()
+        let closedFrame = controller.readout.frame
+        let closedTime = controller.player.currentTime()
+        let closedIssued = controller.seeksIssued
+        gate.finish(false)
+
+        controller.finishScrub(atFrame: 74)
+        await controller.endScrub(atFrame: 86)
+        await controller.settle()
+        try await waitUntil("the rejected original seek actually returned after close") { !returnedFrames.isEmpty }
+        #expect(returnedFrames == [42])
+        #expect(closedFrame == 56)
+        #expect(controller.readout.frame == closedFrame)
+        #expect(controller.player.currentTime() == closedTime)
+        #expect(controller.seeksIssued == closedIssued)
+        #expect(controller.player.rate == 0)
+    }
+
     private func gatedLoopPositioning() async throws -> (PlaybackController, GatedOriginalSeek) {
         let (controller, _) = try await open()
         let gate = GatedOriginalSeek(frame: 80)

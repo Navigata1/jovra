@@ -29,7 +29,7 @@ path:
 | ID | Title | Blocked by | Gate to turn the capability on |
 | --- | --- | --- | --- |
 | V00 ([#526](https://github.com/Navigata1/jovra/issues/526)) | `JovraVision` package and the analysis pipeline skeleton | T27 | — |
-| V01 ([#527](https://github.com/Navigata1/jovra/issues/527)) | Benchmark kit: label format, local labelling tool and scorer | — | Label set for the three recordings exists and is hashed |
+| V01 ([#527](https://github.com/Navigata1/jovra/issues/527)) | Benchmark kit: label format, local labelling tool and scorer | — | — (the founder's label set gates V02–V07) |
 | V02 ([#528](https://github.com/Navigata1/jovra/issues/528)) | Automatic court calibration | V00, V01, T13 | Line RMSE ≤ 3 px; near-half ground error ≤ 0.10 m |
 | V03 ([#529](https://github.com/Navigata1/jovra/issues/529)) | Player tracking and pose, near and far | V00, V01 | Near player held ≥ 95% of in-play frames; far player box ≥ 90% |
 | V04 ([#530](https://github.com/Navigata1/jovra/issues/530)) | Ball detection | V00, V01, V02 | Per-shot recall ≥ 0.9 near half, ≥ 0.7 far half; ≤ 5% identity swaps |
@@ -61,8 +61,13 @@ and held-out windows fixed by hash.
 
 Acceptance:
 - The scorer reproduces hand-computed metrics on a synthetic fixture (unit test).
-- Labels exist for the three founder recordings: at least 300 hits and 150 bounces on the match recording, at least
-  100 strokes on the side-view recording. The founder or an agent labels locally; imagery never enters the repository.
+- The labelling tool is usable by the founder without help: open a local file, step frames, mark a hit, bounce,
+  stroke type or court corner with one key each, undo, save. A UI test covers it with the synthetic sample video.
+- **Founder step, not an agent step:** labels for the three founder recordings (target: at least 300 hits and 150
+  bounces on the match recording, at least 100 strokes on the side-view recording). An agent must not view frames of
+  these recordings, because that would send them to a model API (`docs/fixtures/real-footage.md`). V01 can merge
+  before the labels exist; the label set is tracked as `founder-pending` and gates V02–V07, not V01.
+- The tool can pre-fill hit candidates from audio onsets so the founder confirms or rejects instead of searching.
 - Held-out windows are disjoint from tuning windows and the split is recorded with the label file's hash.
 
 ### V02 · Automatic court calibration
