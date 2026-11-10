@@ -99,6 +99,7 @@ public final class LabelWindowController: NSObject, NSWindowDelegate {
         let hosting = NSHostingView(rootView: LabelToolView(session: session).preferredColorScheme(colorScheme))
         // The window owns its size: without this the hosting view grows it to fit the whole key legend.
         hosting.sizingOptions = []
+        hosting.setAccessibilityLabel("Labelling workspace")
         window.contentView = hosting
         window.delegate = self
         window.center()

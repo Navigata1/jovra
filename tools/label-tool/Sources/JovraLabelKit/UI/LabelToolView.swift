@@ -25,6 +25,8 @@ public struct LabelToolView: View {
         }
         .background(palette.background)
         .foregroundStyle(palette.text)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Labelling workspace")
     }
 
     // MARK: Header
