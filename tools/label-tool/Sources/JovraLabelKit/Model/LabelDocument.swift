@@ -26,6 +26,22 @@ public enum LabelSelection: Hashable, Sendable {
         case .hit(let time, _), .bounce(let time), .rally(let time), .cameraPosition(let time): time
         }
     }
+
+    /// Where the label sits among others on its frame: hits (in the order the document keeps them), then the
+    /// bounce, the rally and the camera position.
+    private var rank: String {
+        switch self {
+        case .hit(_, let player): "0 \(player.rawValue)"
+        case .bounce: "1"
+        case .rally: "2"
+        case .cameraPosition: "3"
+        }
+    }
+
+    /// The order `.` and `,` walk the labels in: by time, and on one frame by kind, so every label is reached.
+    func precedes(_ other: LabelSelection) -> Bool {
+        time != other.time ? time < other.time : rank < other.rank
+    }
 }
 
 /// The undoable state of a labelling session: the label document plus the two things in progress that are
@@ -237,6 +253,15 @@ public struct LabelDocument: Hashable, Sendable {
             + labels.bounces.map { .bounce(time: $0.time) }
             + labels.rallies.map { .rally(start: $0.start) }
             + labels.cameraPositions.map { .cameraPosition(from: $0.from) }
-        return all.sorted { $0.time < $1.time }
+        return all.sorted { $0.precedes($1) }
+    }
+
+    /// The label after `label` in walking order. `label` need not exist any more (it may just have been deleted).
+    public func landmark(after label: LabelSelection) -> LabelSelection? {
+        landmarks.first { label.precedes($0) }
+    }
+
+    public func landmark(before label: LabelSelection) -> LabelSelection? {
+        landmarks.last { $0.precedes(label) }
     }
 }

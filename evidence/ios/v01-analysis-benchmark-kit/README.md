@@ -1,15 +1,17 @@
 # V01 evidence: the analysis benchmark kit
 
 Build Mac, macOS 27.2, Xcode 27.2, 2026-11-09. This ticket adds no iPhone screen, so no simulator was used. Every
-image and number here comes from synthetic material: the rendered sample video ("Sample video (synthetic)") and the
-hand-written fixtures in `spec/benchmarks/scoring`. The founder's recordings were not opened; one test reads the sound
+image and number here comes from synthetic material: the rendered sample video ("Sample video (synthetic)"), two short
+clips the tool's tests write themselves, and the hand-written fixtures in `spec/benchmarks/scoring`. The founder's
+recordings were not opened; one test reads the sound
 of a private excerpt on this Mac and prints a count (see `tests.txt`).
 
 | File | What it shows |
 |---|---|
 | `scorer-cli.txt` | `jovra-benchmark score` on fixture L01: precision, recall, timing and placement error, tuning beside held-out. The same run at a 50 ms hit tolerance (different numbers), and observations for another recording refused with exit 2 |
 | `label-set-status.txt` | `jovra-benchmark labels status`: the label set is founder-pending, 0 of each target, exit 4 |
-| `tests.txt` | `validate.py` (2 label scoring fixtures, the label set), the Python tooling tests (20), `swift test` for JovraMedia (125 + 67 tests, the four label suites named) and for the label tool (6 XCTest with the evidence writer skipped, 20 Swift Testing tests) |
+| `tests.txt` | `validate.py` (2 label scoring fixtures, the label set), the Python tooling tests (20), `swift test` for JovraMedia (125 + 67 tests, the four label suites named) and for the label tool (12 XCTest with the evidence writer skipped, 21 Swift Testing tests; rerun after the round 1 fixes) |
+| `navigation-and-undo.txt` | The three defects of the round 1 review, before and after: `.` stuck one frame early on a 1/29589 s time base, `N` stuck on a candidate whose sound starts late in a 30 fps frame, undo wiping the hit candidates. The failing run of the new tests on the unfixed code, the passing run, the reviewer's own reproduction after the fix, and `ffprobe` of the two clips the tests write |
 | `label-tool-{light,dark}-1-empty.jpg` | The window before a recording is open |
 | `label-tool-{light,dark}-2-placing-bounce.jpg` | Frame 115 of the sample video after `B` with the pointer off the picture: the tool asks for the point. A serve is marked, the four corners are placed, a rally is open, 6 hit candidates wait |
 | `label-tool-{light,dark}-3-labelled.jpg` | After the click: the bounce ring on the picture, its badge, and the counts |
@@ -22,8 +24,8 @@ accessibility-text-size image; the window is resizable and the key legend scroll
 
 Reported separately, not merged into one "passed":
 
-- **In-process UI test, build Mac: passed.** `LabelToolWindowTests.testFounderFlowOnTheSyntheticSampleVideo` sends real
-  key-down and mouse-down events to the real window.
+- **In-process UI test, build Mac: passed.** `LabelToolWindowTests.testFounderFlowOnTheSyntheticSampleVideo` and the six
+  `LabelNavigationTests` send real key-down and mouse-down events to the real window.
 - **XCUITest on the built app, build Mac: not run.** This Mac asks for an administrator password before UI automation
   (`automationmodetool`: "requires user authentication"), which an agent must not answer. The app and the UI test
   bundle build here (`xcodebuild build-for-testing`: TEST BUILD SUCCEEDED). The hosted run is the `label-tool` workflow

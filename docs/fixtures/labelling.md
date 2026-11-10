@@ -57,8 +57,14 @@ did, or why it did nothing.
 
 The quick way through a match: **N** jumps to the next sound that might be a hit. If it is one, step to the contact
 frame and press **H** or **J**, then its stroke number; if it is not (a bounce, a footstep, the next court), press
-**R**, which also moves on. Mark bounces as you pass them. Mark the four corners once, and again after **M** wherever
-the camera was moved.
+**R**, which also moves on. **N** again leaves a candidate undecided for later. Mark bounces as you pass them. Mark the
+four corners once, and again after **M** wherever the camera was moved.
+
+**N**, **P**, **.** and **,** go on from the candidate or label they last reached, so pressing one of them several
+times walks the recording without waiting for each frame; **.** and **,** show the labelled frame itself and, where a
+frame carries two labels (a serve and the rally that starts on it), reach each in turn. After you step, jump, play or
+click the timeline, they start from the frame on screen. Hit candidates are found once, when the recording is first
+opened; undo never takes them away.
 
 Edits are saved as you make them; ⌘S saves at once. The tool reads the recording where it is and writes nothing but
 the label file.

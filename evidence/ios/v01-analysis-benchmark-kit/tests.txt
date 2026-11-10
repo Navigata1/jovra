@@ -18,23 +18,27 @@ $ swift test --package-path ios/Packages/JovraMedia --no-parallel   (build Mac, 
 ✔ Suite "Label split: hash-fixed windows" passed after 0.180 seconds.
 ✔ Test run with 67 tests in 12 suites passed after 3.945 seconds.
 
-$ swift test --package-path tools/label-tool   (build Mac, 2026-11-09)
-	 Executed 6 tests, with 1 test skipped and 0 failures (0 unexpected) in 1.943 (1.944) seconds
-	 Executed 6 tests, with 1 test skipped and 0 failures (0 unexpected) in 1.943 (1.945) seconds
-Test Case '-[JovraLabelKitTests.LabelToolWindowTests testALabelFileThatCannotBeTrustedIsLeftUntouched]' passed (0.193 seconds).
-Test Case '-[JovraLabelKitTests.LabelToolWindowTests testFounderFlowOnTheSyntheticSampleVideo]' passed (0.467 seconds).
-Test Case '-[JovraLabelKitTests.LabelToolWindowTests testKeysDoNothingBeforeARecordingIsOpenAndAMissingFileSaysWhy]' passed (0.055 seconds).
-Test Case '-[JovraLabelKitTests.LabelToolWindowTests testPlaybackRunsAndPausesAndTheKeysStillWorkWhileItPlays]' passed (1.012 seconds).
-Test Case '-[JovraLabelKitTests.LabelToolWindowTests testReopeningLoadsTheSavedLabelsAndTheScorerReadsThem]' passed (0.215 seconds).
+$ swift test --package-path tools/label-tool --no-parallel   (build Mac, 2026-11-09, after the round 1 fixes)
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testALabelTimeGoesToThePlayerExactly]' passed (0.063 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testNextAndPreviousLabelReachEveryLabelWhenFrameTimesAreNotWholeNinetyKilohertzTicks]' passed (1.231 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testNextCandidateMovesOnWhenTheSoundStartsLateInItsFrame]' passed (1.219 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testTwoLabelsOnOneFrameAreBothReached]' passed (0.470 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testUndoingAnEditMadeWhileTheToolWasListeningKeepsTheCandidates]' passed (0.144 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testWhileTheRecordingPlaysNextLabelStartsFromTheFrameOnScreen]' passed (1.404 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testALabelFileThatCannotBeTrustedIsLeftUntouched]' passed (0.046 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testFounderFlowOnTheSyntheticSampleVideo]' passed (0.325 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testKeysDoNothingBeforeARecordingIsOpenAndAMissingFileSaysWhy]' passed (0.043 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testPlaybackRunsAndPausesAndTheKeysStillWorkWhileItPlays]' passed (0.988 seconds).
+Test Case '-[JovraLabelKitTests.LabelToolWindowTests testReopeningLoadsTheSavedLabelsAndTheScorerReadsThem]' passed (0.200 seconds).
 Test Case '-[JovraLabelKitTests.LabelToolWindowTests testSnapshotsForEvidence]' skipped (0.001 seconds).
-real excerpt (2 min, sound only): 83 candidates, 41.5 per minute
-◇ Test "real excerpt, sound only: the finder runs and offers a workable number of candidates" started.
-✔ Suite "Hit candidates from audio onsets" passed after 0.270 seconds.
-✔ Suite "Label document edits" passed after 0.002 seconds.
+	 Executed 12 tests, with 1 test skipped and 0 failures (0 unexpected) in 6.134 (6.136) seconds
+✔ Suite "Label document edits" passed after 0.003 seconds.
 ✔ Suite "Label keymap" passed after 0.003 seconds.
-✔ Suite "Label tool menu" passed after 0.086 seconds.
-✔ Test "real excerpt, sound only: the finder runs and offers a workable number of candidates" passed after 0.270 seconds.
-✔ Test run with 20 tests in 4 suites passed after 0.270 seconds.
+✔ Suite "Label tool menu" passed after 0.076 seconds.
+real excerpt (2 min, sound only): 83 candidates, 41.5 per minute
+✔ Test "real excerpt, sound only: the finder runs and offers a workable number of candidates" passed after 0.199 seconds.
+✔ Suite "Hit candidates from audio onsets" passed after 0.305 seconds.
+✔ Test run with 21 tests in 4 suites passed after 0.387 seconds.
 
 $ swift test --package-path ios/Packages/JovraCore   (build Mac, 2026-11-09, after the scoring vectors moved to spec/benchmarks/scoring)
 ✔ Test run with 122 tests in 7 suites passed after 6.906 seconds.

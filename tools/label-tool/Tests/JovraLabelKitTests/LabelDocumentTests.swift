@@ -122,6 +122,27 @@ struct LabelDocumentTests {
         #expect(reopened == document)
     }
 
+    @Test("labels are walked in time order, and on one frame by kind; the walk goes on from a label that was deleted")
+    func landmarks() throws {
+        var document = try Self.empty().markingHit(at: Self.ms(5000), player: .near).markingHit(at: Self.ms(5000), player: .far)
+        document = document.markingBounce(at: Self.ms(5000), point: ImagePoint(x: 0.5, y: 0.5))
+        document = try document.openingRally(at: Self.ms(5000)).closingRally(at: Self.ms(9000))
+        document = try document.startingCameraPosition(at: Self.ms(5000)).markingHit(at: Self.ms(2000), player: .near)
+        let far = LabelSelection.hit(time: Self.ms(5000), player: .far), near = LabelSelection.hit(time: Self.ms(5000), player: .near)
+        let first = LabelSelection.hit(time: Self.ms(2000), player: .near)
+        let walk: [LabelSelection] = [first, far, near, .bounce(time: Self.ms(5000)), .rally(start: Self.ms(5000)), .cameraPosition(from: Self.ms(5000))]
+        #expect(document.landmarks == walk)
+        for (index, label) in walk.enumerated() {
+            #expect(document.landmark(after: label) == (index + 1 < walk.count ? walk[index + 1] : nil))
+            #expect(document.landmark(before: label) == (index > 0 ? walk[index - 1] : nil))
+        }
+        let without = document.deleting(near)
+        #expect(without.landmark(after: near) == .bounce(time: Self.ms(5000)))
+        #expect(without.landmark(before: near) == far)
+        // The same instant written in another time base is the same place in the walk.
+        #expect(document.landmark(after: .hit(time: RationalTime(value: 2, timescale: 1), player: .near)) == far)
+    }
+
     @Test("candidates: a hit confirms the nearest pending one, R rejects it, and deleting the hit makes it pending again")
     func candidates() throws {
         var document = try Self.empty().markingHit(at: Self.ms(1000), player: .near)

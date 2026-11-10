@@ -85,6 +85,16 @@ public final class LabelSession {
     @ObservationIgnored private var candidateTask: Task<Void, Never>?
     @ObservationIgnored private var seekTask: Task<Void, Never>?
     @ObservationIgnored private var videoURL: URL?
+    /// The label or candidate the last `.`, `,`, `N` or `P` went to. The next press goes on from it, not from
+    /// the frame on screen: that frame arrives later, and a candidate's sound starts somewhere inside its frame.
+    /// Moving any other way (stepping, jumping, playing, the timeline) forgets it, and nothing is remembered
+    /// while the recording plays: the picture moves on by itself then.
+    @ObservationIgnored private var walk: Walk?
+
+    private enum Walk {
+        case label(LabelSelection)
+        case candidate(RationalTime)
+    }
 
     static let rates: [Float] = [0.25, 0.5, 1, 2]
 
@@ -110,6 +120,7 @@ public final class LabelSession {
         document = nil
         selection = nil
         placement = nil
+        walk = nil
         frame = nil
         undoStack = []
         redoStack = []
@@ -192,8 +203,12 @@ public final class LabelSession {
                     self.candidateSearch = .noAudio
                 case .found(let times):
                     let end = document.labels.recording.duration
-                    // Not an edit the labeller made, so it does not enter the undo history.
-                    self.document = document.offering(candidates: times.filter { $0 <= end }, method: OnsetCandidateFinder.method)
+                    let offer = { (state: LabelDocument) in state.offering(candidates: times.filter { $0 <= end }, method: OnsetCandidateFinder.method) }
+                    // Not an edit the labeller made, so it adds no undo step. Every state already in the history
+                    // gets the candidates too: undoing an edit made while the search ran must not take them away.
+                    self.document = offer(document)
+                    self.undoStack = self.undoStack.map(offer)
+                    self.redoStack = self.redoStack.map(offer)
                     self.candidateSearch = .found(self.document?.labels.hitCandidates?.items.count ?? 0)
                     self.changed()
                 }
@@ -222,11 +237,14 @@ public final class LabelSession {
         case .open:
             break
         case .playPause:
+            walk = nil
             if isPlaying { player.pause() } else { player.play() }
         case .step(let frames):
+            walk = nil
             player.step(by: frames)
         case .jump(let seconds):
-            seek(toSeconds: time.seconds + Double(seconds))
+            walk = nil
+            go(to: RationalTime(value: time.value + Int64(seconds) * time.timescale, timescale: time.timescale))
         case .slower, .faster:
             let index = Self.rates.firstIndex(of: rate) ?? 2
             rate = Self.rates[max(min(index + (command == .faster ? 1 : -1), Self.rates.count - 1), 0)]
@@ -326,7 +344,8 @@ public final class LabelSession {
 
     /// Shows the frame at a media time (the timeline calls this).
     public func seek(to time: RationalTime) {
-        seek(toSeconds: time.seconds)
+        walk = nil
+        go(to: time)
     }
 
     /// Waits until the last requested seek has reached the player (tests).
@@ -418,39 +437,69 @@ public final class LabelSession {
     private func jumpToCandidate(forward: Bool, quietly: Bool = false) {
         guard let document else { return }
         let pending = (document.labels.hitCandidates?.items ?? []).filter { $0.decision == .pending }
-        let now = displayedTime.seconds, margin = 0.02
-        let target = forward ? pending.first { $0.time.seconds > now + margin } : pending.last { $0.time.seconds < now - margin }
+        // From the candidate last reached, else from the frame on screen. A candidate inside that frame counts as
+        // ahead: its sound starts after the frame does.
+        let from: RationalTime
+        if case .candidate(let reached) = walk, !isPlaying { from = reached } else { from = displayedTime }
+        let target = forward ? pending.first { $0.time > from } : pending.last { $0.time < from }
         guard let target else {
             if !quietly || pending.isEmpty {
                 notice = Notice(kind: .info, text: pending.isEmpty ? Self.noCandidatesText(candidateSearch) : "No more pending candidates \(forward ? "after" : "before") this frame.")
             }
             return
         }
-        seek(to: target.time)
+        walk = isPlaying ? nil : .candidate(target.time)
+        go(to: target.time)
         if !quietly { notice = Notice(kind: .info, text: "Candidate at \(target.time.clock). H or J confirms it as a hit; R rejects it.") }
     }
 
     private func jumpToLabel(forward: Bool) {
         guard let document else { return }
         let now = displayedTime
-        let target = forward ? document.landmarks.first { $0.time > now } : document.landmarks.last { $0.time < now }
+        // From the label last reached, or the selected label when its frame is the one on screen; else from the
+        // frame on screen. Going on from a label also reaches a second label on the same frame.
+        let standing: LabelSelection?
+        if case .label(let reached) = walk, !isPlaying {
+            standing = reached
+        } else {
+            standing = selection.flatMap { $0.time == now && document.contains($0) ? $0 : nil }
+        }
+        let target: LabelSelection?
+        if let standing {
+            target = forward ? document.landmark(after: standing) : document.landmark(before: standing)
+        } else {
+            target = forward ? document.landmarks.first { $0.time > now } : document.landmarks.last { $0.time < now }
+        }
         guard let target else {
             notice = Notice(kind: .info, text: "No label \(forward ? "after" : "before") this frame.")
             return
         }
+        walk = isPlaying ? nil : .label(target)
         selection = target
-        seek(to: target.time)
-        notice = Notice(kind: .info, text: "\(Self.name(of: target).capitalized) at \(target.time.clock).")
+        go(to: target.time)
+        let name = Self.name(of: target)
+        notice = Notice(kind: .info, text: "\(name.prefix(1).uppercased())\(name.dropFirst()) at \(target.time.clock).")
     }
 
-    private func seek(toSeconds seconds: Double) {
-        let total = document?.labels.recording.duration.seconds ?? 0
-        let clamped = min(max(seconds, 0), total)
+    /// Asks the player for the frame on screen at `time`, after any seek already on its way.
+    private func go(to time: RationalTime) {
+        let start = RationalTime(value: 0, timescale: 1)
+        let end = document?.labels.recording.duration ?? start
+        let target = Self.mediaTime(min(max(time, start), end))
         let previous = seekTask
         seekTask = Task { [player] in
             await previous?.value
-            await player.seek(to: CMTime(seconds: clamped, preferredTimescale: 90_000))
+            await player.seek(to: target)
         }
+    }
+
+    /// A media time as the player takes it: the same value in the same time base, so asking for a frame's own
+    /// time shows that frame. (Rounded to another time base it can fall just before the frame starts, and the
+    /// player then shows the frame before.) A time base too wide for the player is rounded up to a nanosecond.
+    static func mediaTime(_ time: RationalTime) -> CMTime {
+        if let timescale = CMTimeScale(exactly: time.timescale) { return CMTime(value: time.value, timescale: timescale) }
+        let nanoseconds = (Double(time.value) / Double(time.timescale) * 1_000_000_000).rounded(.up)
+        return CMTime(value: CMTimeValue(nanoseconds), timescale: 1_000_000_000)
     }
 
     private func show(_ frame: FramePlayer.Frame) {
@@ -458,6 +507,8 @@ public final class LabelSession {
         let time = frame.time
         displayedTime = RationalTime(value: max(time.value, 0), timescale: Int64(max(time.timescale, 1)))
         guard let document else { return }
+        // A label reached with `.` or `,` stays selected whatever frame comes up, so Delete acts on it.
+        if case .label = walk { return }
         // Arriving on a labelled frame selects its label, so the stroke and delete keys act on what is shown.
         if let hit = document.labels.hits.first(where: { $0.time == displayedTime }) {
             selection = .hit(time: hit.time, player: hit.player)

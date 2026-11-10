@@ -11,109 +11,7 @@ import XCTest
 ///
 /// The out-of-process twin is `UITests/LabelToolUITests.swift` (XCUITest on the built app).
 @MainActor
-final class LabelToolWindowTests: XCTestCase {
-    private var scratch: URL!
-    private var controller: LabelWindowController!
-    private var session: LabelSession { controller.session }
-
-    override func setUp() async throws {
-        scratch = try SampleVideo.scratchDirectory()
-        _ = NSApplication.shared
-    }
-
-    override func tearDown() async throws {
-        controller?.window.orderOut(nil)
-        controller = nil
-        try? FileManager.default.removeItem(at: scratch)
-    }
-
-    // MARK: Driving the window
-
-    private func openSample(autosave: Bool = false, findCandidates: Bool = true) async throws {
-        var configuration = LabelSession.Configuration(labelsDirectory: scratch)
-        configuration.autosave = autosave
-        configuration.muted = true
-        configuration.findCandidates = findCandidates
-        controller = LabelWindowController(session: LabelSession(configuration: configuration))
-        controller.window.layoutIfNeeded()
-        await session.open(video: try SampleVideo.url())
-        XCTAssertEqual(session.phase, .ready)
-        try await wait("the first frame") { self.session.frame != nil }
-        await session.candidatesSettled()
-        controller.window.contentView?.layoutSubtreeIfNeeded()
-    }
-
-    private func wait(_ what: String, timeout: TimeInterval = 30, _ condition: @MainActor () -> Bool) async throws {
-        let deadline = Date().addingTimeInterval(timeout)
-        while !condition() {
-            if Date() > deadline {
-                XCTFail("timed out waiting for \(what); frame time is \(session.displayedTime)")
-                throw CancellationError()
-            }
-            try await Task.sleep(nanoseconds: 10_000_000)
-        }
-    }
-
-    private static let keyCodes: [KeyStroke.Key: UInt16] = [.space: 49, .left: 123, .right: 124, .down: 125, .up: 126, .delete: 51, .escape: 53]
-
-    /// Sends one key-down the way AppKit routes it: a Command shortcut to `performKeyEquivalent`, any other key
-    /// to `sendEvent`.
-    private func press(_ key: KeyStroke.Key, shift: Bool = false, command: Bool = false, option: Bool = false) {
-        var flags: NSEvent.ModifierFlags = []
-        if shift { flags.insert(.shift) }
-        if command { flags.insert(.command) }
-        if option { flags.insert(.option) }
-        let characters: String
-        if case .character(let c) = key { characters = String(c) } else { characters = key == .space ? " " : "\u{F700}" }
-        let event = NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: flags, timestamp: ProcessInfo.processInfo.systemUptime,
-                                     windowNumber: controller.window.windowNumber, context: nil, characters: characters,
-                                     charactersIgnoringModifiers: characters, isARepeat: false, keyCode: Self.keyCodes[key] ?? 0)!
-        if command {
-            XCTAssertTrue(controller.window.performKeyEquivalent(with: event), "⌘\(characters) is handled")
-        } else {
-            controller.window.sendEvent(event)
-        }
-    }
-
-    private func press(_ character: Character) {
-        press(.character(character))
-    }
-
-    /// Steps and waits for the frame that lands on screen.
-    private func step(_ frames: Int64, shift: Bool = false, to expected: Int64) async throws {
-        press(frames > 0 ? .right : .left, shift: shift)
-        try await wait("frame \(expected)") { self.session.displayedTime == SampleVideo.frame(expected) }
-    }
-
-    /// Clicks the picture at a normalized image point with a real mouse-down event sent to the window.
-    private func click(x: Double, y: Double) throws {
-        controller.window.contentView?.layoutSubtreeIfNeeded()
-        let picture = try XCTUnwrap(controller.window.picture, "the picture is in the window")
-        XCTAssertGreaterThan(picture.bounds.width, 100)
-        let inWindow = picture.convert(NSPoint(x: picture.bounds.width * x, y: picture.bounds.height * y), to: nil)
-        controller.window.sendEvent(mouse(.leftMouseDown, at: inWindow))
-    }
-
-    private func mouse(_ type: NSEvent.EventType, at location: NSPoint) -> NSEvent {
-        NSEvent.mouseEvent(with: type, location: location, modifierFlags: [], timestamp: ProcessInfo.processInfo.systemUptime,
-                           windowNumber: controller.window.windowNumber, context: nil, eventNumber: 0, clickCount: type == .mouseMoved ? 0 : 1,
-                           pressure: type == .mouseMoved ? 0 : 1)!
-    }
-
-    /// Moves the pointer over the picture (or, outside 0...1, off it).
-    private func hover(x: Double, y: Double) throws {
-        let picture = try XCTUnwrap(controller.window.picture)
-        let inWindow = picture.convert(NSPoint(x: picture.bounds.width * x, y: picture.bounds.height * y), to: nil)
-        controller.window.sendEvent(mouse(.mouseMoved, at: inWindow))
-    }
-
-    private func savedLabels() throws -> BenchmarkLabels {
-        let url = try XCTUnwrap(session.labelsURL)
-        return try JSONDecoder().decode(BenchmarkLabels.self, from: Data(contentsOf: url))
-    }
-
-    // MARK: Tests
-
+final class LabelToolWindowTests: LabelWindowTestCase {
     func testFounderFlowOnTheSyntheticSampleVideo() async throws {
         try await openSample()
         let truth = try SampleVideo.truth()
@@ -232,10 +130,15 @@ final class LabelToolWindowTests: XCTestCase {
         XCTAssertEqual(session.labels?.rallies.count, 1)
         XCTAssertFalse(session.canRedo)
 
-        // Delete removes the selected label; undo brings it back.
+        // Delete removes the selected label; undo brings it back. Frame 151 carries two labels, the rally's start
+        // and the hit: "," reaches the rally first, then the hit, and the status line names the one selected.
         press(",")
         try await wait("the previous label's frame") { self.session.displayedTime == SampleVideo.frame(151) }
+        XCTAssertEqual(session.selection, .rally(start: SampleVideo.frame(151)))
+        XCTAssertEqual(session.notice?.text, "Rally at 0:02.516.")
+        press(",")
         XCTAssertEqual(session.selection, .hit(time: SampleVideo.frame(151), player: .far))
+        XCTAssertEqual(session.notice?.text, "Hit by the far player at 0:02.516.")
         press(.delete)
         XCTAssertEqual(session.labels?.hits.count, 1)
         press(.character("z"), command: true)
