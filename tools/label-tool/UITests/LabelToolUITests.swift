@@ -151,10 +151,13 @@ final class LabelToolUITests: XCTestCase {
         expect("time", says: "0:00.000", timeout: 60)
         // Collect every issue instead of stopping at the first, so one run shows the whole list.
         var issues: [String] = []
+        let window = app.windows.firstMatch.frame
         try app.performAccessibilityAudit(for: [.sufficientElementDescription]) { issue in
             let element = issue.element
-            // The window's own close, minimise and zoom buttons belong to AppKit.
+            // The window's own close, minimise and zoom buttons belong to AppKit, and so does everything
+            // outside the window: the menu bar's container has no description in any Mac app.
             if element == nil || element?.elementType == .window { return true }
+            if let frame = element?.frame, !window.intersects(frame) { return true }
             issues.append("\(issue.compactDescription): \(element?.identifier ?? "") \"\(element?.label ?? "")\" type \(element?.elementType.rawValue ?? 0) at \(element?.frame ?? .zero)")
             return true
         }
