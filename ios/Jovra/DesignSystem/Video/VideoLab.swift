@@ -38,8 +38,14 @@ struct VideoLab: View {
     }
 
     @State var source: Source
-    @State private var controller: PlaybackController?
-    @State private var openError: PlaybackOpenError?
+    @State private var playback = VideoLabPlayback()
+    private var controller: PlaybackController? {
+        playback.requestedSource == source.url ? playback.controller : nil
+    }
+
+    private var openError: PlaybackOpenError? {
+        playback.requestedSource == source.url ? playback.error : nil
+    }
     @State private var zoom = VideoZoom()
     @State private var surfaceSize = CGSize(width: 320, height: 180)
     @State private var pendingLoopStart: Int?
@@ -59,8 +65,8 @@ struct VideoLab: View {
             .ignoresSafeArea(.container, edges: .vertical)
         }
         .background(Color.jovra(.background).ignoresSafeArea())
-        .task(id: source) { await open(source) }
-        .onDisappear { controller?.close() }
+        .task(id: source) { [requested = source] in await open(requested) }
+        .onDisappear { playback.close() }
     }
 
     // MARK: Layouts
@@ -156,11 +162,10 @@ struct VideoLab: View {
         if let controller {
             VStack(alignment: .leading, spacing: 0) {
                 PlaybackTimeline(frame: controller.currentFrame, frameCount: controller.frameCount,
-                                 adjustStep: max(1, controller.frameRate.frames / controller.frameRate.perSeconds),
                                  currentTimeText: time(controller.currentFrame, controller),
                                  durationText: time(controller.frameCount - 1, controller),
                                  onScrub: { controller.scrub(toFrame: $0) },
-                                 onScrubEnded: { frame in Task { await controller.endScrub(atFrame: frame) } })
+                                 onScrubEnded: controller.finishScrub(atFrame:))
                 Spacer().frame(height: VideoMetrics.timelineToJogGap)
                 jog(controller)
                 Spacer().frame(height: Space.x3)
@@ -285,23 +290,13 @@ struct VideoLab: View {
         ReadoutFormat.time(seconds: controller.frameRate.seconds(atFrame: max(0, frame)))
     }
 
-    private func open(_ source: Source) async {
-        controller?.close()
-        controller = nil
-        openError = nil
+    private func open(_ requested: Source) async {
+        guard requested == source, !Task.isCancelled else { return }
         zoom.reset()
         pendingLoopStart = nil
-        let proxies = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("VideoLabProxies", isDirectory: true)
-        do {
-            let opened = try await PlaybackController.open(url: source.url, proxyDirectory: proxies)
-            guard !Task.isCancelled else { opened.close(); return }
-            controller = opened
-        } catch let error as PlaybackOpenError {
-            openError = error
-        } catch {
-            openError = .unreadable
-        }
+        let proxies = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask,
+                                                   appropriateFor: nil, create: true)
+        await playback.load(requested.url, proxyDirectory: proxies)
     }
 }
 #endif

@@ -3,15 +3,15 @@ import XCTest
 /// T14: the shared player, video surface, jog strip and transport, driven through the DEBUG video lab on the
 /// bundled frame-counter fixtures and the synthetic sample match.
 final class PlaybackCoreUITests: XCTestCase {
-    override func setUpWithError() throws {
+    override func setUp() async throws {
         continueAfterFailure = false
-        XCUIDevice.shared.orientation = .portrait
+        await MainActor.run { XCUIDevice.shared.orientation = .portrait }
         try XCTSkipIf(FrameCounterFixtures.directory() == nil,
                       "Frame-counter fixtures are not rendered: python3 scripts/media/render.py --set frameCounter")
     }
 
-    override func tearDown() {
-        XCUIDevice.shared.orientation = .portrait
+    override func tearDown() async throws {
+        await MainActor.run { XCUIDevice.shared.orientation = .portrait }
     }
 
     @MainActor
@@ -86,6 +86,46 @@ final class PlaybackCoreUITests: XCTestCase {
         XCTAssertTrue((jog.value as? String)?.hasPrefix("Frame \(landed),") == true, "VoiceOver hears the frame: \(String(describing: jog.value))")
         // The VoiceOver increment itself (one frame per adjust) is proven in the hosted JogStripAccessibilityTests:
         // XCUITest on iOS has no API to send an accessibility increment to an adjustable element.
+    }
+
+    @MainActor
+    func testTimelineVerticalDragScrollsWithoutSeekingOrStartingPlayback() throws {
+        let app = launchLab(contentSize: .accessibility5)
+        let timeline = element(app, "playback.timeline")
+        XCTAssertTrue(timeline.waitForExistence(timeout: 10))
+        let scroll = app.scrollViews["videoLab.scroll"]
+        XCTAssertTrue(scroll.exists)
+        let gutter = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: 0.65))
+        gutter.press(forDuration: 0.05, thenDragTo: gutter.withOffset(CGVector(dx: 0, dy: -150)))
+        XCTAssertTrue(timeline.isHittable)
+        XCTAssertTrue(waitForReadout(app, frame: 0))
+        let before = timeline.frame.minY
+        let viewport = app.windows.firstMatch.frame.intersection(scroll.frame).insetBy(dx: 12, dy: 28)
+        let start = timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
+        let end = start.withOffset(CGVector(dx: 0, dy: -110))
+        XCTAssertTrue(viewport.contains(start.screenPoint) && viewport.contains(end.screenPoint),
+                      "both vertical drag endpoints are inside the scroll viewport")
+        start.press(forDuration: 0.05, thenDragTo: end)
+        XCTAssertLessThan(timeline.frame.minY, before - 10, "the enclosing page scrolls")
+        XCTAssertEqual(readoutFrame(app), 0, "a vertical swipe does not seek near the 80% position")
+        XCTAssertEqual(element(app, "transport.playPause").label, "Play")
+    }
+
+    @MainActor
+    func testTimelineTapAndHorizontalDragStillSeek() throws {
+        let app = launchLab()
+        let timeline = element(app, "playback.timeline")
+        XCTAssertTrue(timeline.waitForExistence(timeout: 10))
+        XCTAssertTrue(timeline.isHittable)
+        timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.5)).tap()
+        let tapped = try XCTUnwrap(readoutFrame(app))
+        XCTAssertTrue((27...33).contains(tapped), "quarter of the 120-frame fixture: \(tapped)")
+
+        let start = timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.5))
+        let end = timeline.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5))
+        start.press(forDuration: 0.05, thenDragTo: end)
+        let dragged = try XCTUnwrap(readoutFrame(app))
+        XCTAssertTrue((86...92).contains(dragged), "three quarters of the fixture: \(dragged)")
     }
 
     // MARK: Keyboard

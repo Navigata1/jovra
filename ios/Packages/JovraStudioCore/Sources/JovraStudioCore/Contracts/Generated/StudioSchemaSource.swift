@@ -2796,6 +2796,383 @@ extension StudioSchemaSource {
   }
 }
 """#,
+        "studio-multiangle-rig.schema.json": #"""
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio synthetic multi-angle rig (jovra.studio-multiangle-rig/1)",
+  "description": "The six club-fence phone placements the synthetic multi-angle generator (S58) records from, and the sound travel from the multicam research 4.4 table events to each placement in whole microseconds (spec/reference/studio/syncfit.py sound_delay_us, 343 m/s). The pairwise bias rows are (d_A - d_B), the offset an uncorrected audio lag would add. All content is synthetic and labelled Sample.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "sample", "description", "speedOfSound", "placements", "soundDelayTable", "pairwiseBiasTable"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.studio-multiangle-rig/1"},
+    "id": {"const": "multiangle/rig"},
+    "sample": {"const": true},
+    "description": {"type": "string", "minLength": 1, "maxLength": 300},
+    "speedOfSound": {
+      "type": "object",
+      "required": ["mmPerSecond", "temperatureC", "method"],
+      "additionalProperties": false,
+      "properties": {"mmPerSecond": {"const": 343000}, "temperatureC": {"type": "null"}, "method": {"const": "default-343"}}
+    },
+    "placements": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["code", "slot", "name", "positionMm", "picture"],
+        "additionalProperties": false,
+        "properties": {
+          "code": {"enum": ["BS", "BN", "CSW", "CSE", "CNW", "CNE"]},
+          "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+          "name": {"type": "string", "minLength": 1, "maxLength": 32},
+          "positionMm": {"$ref": "studio-common.schema.json#/$defs/positionMm"},
+          "picture": {"type": "string", "pattern": "^angle-[a-z-]+$"}
+        }
+      }
+    },
+    "soundDelayTable": {
+      "type": "object",
+      "required": ["source", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "rows": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["id", "event", "positionMm", "delaysUs"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "studio-common.schema.json#/$defs/id"},
+              "event": {"type": "string", "minLength": 1},
+              "positionMm": {"$ref": "studio-common.schema.json#/$defs/positionMm"},
+              "delaysUs": {"$ref": "#/$defs/perPlacement"}
+            }
+          }
+        }
+      }
+    },
+    "pairwiseBiasTable": {
+      "type": "object",
+      "required": ["rule", "pairs", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "rule": {"type": "string", "minLength": 1},
+        "pairs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z]{2,3}-[A-Z]{2,3}$"}},
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "biasUs"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"$ref": "studio-common.schema.json#/$defs/id"},
+              "biasUs": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer"}}
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "perPlacement": {
+      "type": "object",
+      "required": ["BS", "BN", "CSW", "CSE", "CNW", "CNE"],
+      "additionalProperties": false,
+      "properties": {
+        "BS": {"type": "integer", "minimum": 0}, "BN": {"type": "integer", "minimum": 0},
+        "CSW": {"type": "integer", "minimum": 0}, "CSE": {"type": "integer", "minimum": 0},
+        "CNW": {"type": "integer", "minimum": 0}, "CNE": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}
+"""#,
+        "studio-multiangle-truth.schema.json": #"""
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA Studio synthetic multi-angle ground truth (jovra.studio-multiangle-truth/1)",
+  "description": "The committed ground truth of one profile of the synthetic multi-angle generator (S58, scripts/media/studio/multiangle/generate.py): a rig of up to six cameras recording the same synthetic scene, each with its true clock (offset, drift, restarts, journal), frame timing, orientation, colour, view, microphone, shake stretch, the frame showing each event and each hit's sound arrival. The media is never committed: it is rendered into the git-ignored cache at each file's path. Exact times are rationals in microseconds; *Us integers are the same values rounded half up. Everything but `hashes` is the generator's plan and is recomputed by the Studio validator; `hashes` is what a render proves on any machine. All content is synthetic and labelled Sample.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "profile", "description", "stresses", "sample", "band", "generator", "rig", "matchClock", "speedOfSound", "scene", "cameras", "sharedCoverage", "hashes"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "jovra.studio-multiangle-truth/1"},
+    "id": {"type": "string", "pattern": "^multiangle/[a-z0-9-]+$"},
+    "profile": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "description": {"type": "string", "minLength": 1, "maxLength": 400},
+    "stresses": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["drift", "six-placements", "drift-stress", "restart", "journal", "no-journal", "late-start", "shake", "muted", "mixed-fps", "vfr", "rotated", "hdr", "no-shared-coverage", "audio-only", "opposite-baselines"]}},
+    "sample": {"const": true},
+    "band": {"const": "synthetic"},
+    "generator": {
+      "type": "object",
+      "required": ["script", "version", "sourceHash"],
+      "additionalProperties": false,
+      "properties": {
+        "script": {"const": "scripts/media/studio/multiangle/generate.py"},
+        "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "sourceHash": {"$ref": "studio-common.schema.json#/$defs/sha256"}
+      }
+    },
+    "rig": {"const": "media/multiangle/rig.json"},
+    "matchClock": {
+      "description": "Light time on the reference camera's clock (rate 1), integer microseconds from the scene start.",
+      "type": "object",
+      "required": ["unit", "referenceCameraId", "referenceSegment", "origin", "outputFps", "halfOutputFrameUs"],
+      "additionalProperties": false,
+      "properties": {
+        "unit": {"const": "us"},
+        "referenceCameraId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "referenceSegment": {"const": 0},
+        "origin": {"const": "scene-start"},
+        "outputFps": {"$ref": "studio-common.schema.json#/$defs/fps"},
+        "halfOutputFrameUs": {"$ref": "studio-common.schema.json#/$defs/rational"}
+      }
+    },
+    "speedOfSound": {
+      "type": "object",
+      "required": ["mmPerSecond", "temperatureC", "method"],
+      "additionalProperties": false,
+      "properties": {"mmPerSecond": {"const": 343000}, "temperatureC": {"type": "null"}, "method": {"const": "default-343"}}
+    },
+    "scene": {
+      "type": "object",
+      "required": ["basedOn", "durationUs", "sceneSampleRate", "events"],
+      "additionalProperties": false,
+      "properties": {
+        "basedOn": {
+          "type": "object",
+          "required": ["mediaId", "points", "window"],
+          "additionalProperties": false,
+          "properties": {"mediaId": {"type": "string"}, "points": {"type": "string"}, "window": {"type": "string"}}
+        },
+        "durationUs": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "sceneSampleRate": {"const": 48000},
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "kind", "sceneSample", "lightTimeUs", "positionMm", "end", "audible"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string", "pattern": "^ev-[0-9]{3}$"},
+              "kind": {"enum": ["serveContact", "hit", "bounce"]},
+              "sceneSample": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+              "lightTimeUs": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+              "positionMm": {"$ref": "#/$defs/positionMm"},
+              "end": {"enum": ["south", "north"]},
+              "audible": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "cameras": {"type": "array", "minItems": 2, "maxItems": 6, "items": {"$ref": "#/$defs/camera"}},
+    "sharedCoverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cameras", "matchUs"],
+        "additionalProperties": false,
+        "properties": {
+          "cameras": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "studio-common.schema.json#/$defs/id"}},
+          "matchUs": {"anyOf": [{"type": "null"}, {"type": "array", "minItems": 1, "items": {"$ref": "studio-common.schema.json#/$defs/intervalUs"}}]}
+        }
+      }
+    },
+    "hashes": {
+      "type": "object",
+      "required": ["renderedWithSourceHash", "files"],
+      "additionalProperties": false,
+      "properties": {
+        "renderedWithSourceHash": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+        "files": {
+          "type": "object",
+          "minProperties": 2,
+          "propertyNames": {"pattern": "^[a-z0-9-]+-s[0-7]-(coded|clean)\\.mp4$"},
+          "additionalProperties": {
+            "type": "object",
+            "required": ["sourceFramesSha256", "decodedSignature", "pcmSha256"],
+            "additionalProperties": false,
+            "properties": {
+              "sourceFramesSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+              "decodedSignature": {
+                "type": "object",
+                "required": ["method", "sha256"],
+                "additionalProperties": false,
+                "properties": {"method": {"const": "jovra.cellLuma.v1"}, "sha256": {"$ref": "studio-common.schema.json#/$defs/sha256"}}
+              },
+              "pcmSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"}
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "positionMm": {
+      "description": "Studio court frame (studio-common positionMm); a contact or bounce may be outside the court.",
+      "type": "object",
+      "required": ["xMm", "yMm", "zMm"],
+      "additionalProperties": false,
+      "properties": {"xMm": {"type": "integer"}, "yMm": {"type": "integer"}, "zMm": {"type": "integer", "minimum": 0}}
+    },
+    "camera": {
+      "type": "object",
+      "required": ["cameraId", "reference", "placement", "slot", "name", "positionMm", "view", "sourceId", "codec", "bitDepth", "hdr", "rotation", "width", "height", "frameRate", "frameTiming", "clock", "journal", "audio", "segments", "gaps", "shake", "visualEvents", "audioArrivals"],
+      "additionalProperties": false,
+      "properties": {
+        "cameraId": {"$ref": "studio-common.schema.json#/$defs/id"},
+        "reference": {"type": "boolean"},
+        "placement": {"enum": ["BS", "BN", "CSW", "CSE", "CNW", "CNE"]},
+        "slot": {"$ref": "studio-common.schema.json#/$defs/placementSlot"},
+        "name": {"type": "string", "minLength": 1, "maxLength": 32},
+        "positionMm": {"$ref": "studio-common.schema.json#/$defs/positionMm"},
+        "view": {"enum": ["court", "covered"]},
+        "sourceId": {"type": "integer", "minimum": 64, "maximum": 127},
+        "codec": {"enum": ["h264", "hevc"]},
+        "bitDepth": {"enum": [8, 10]},
+        "hdr": {"enum": [null, "hlg"]},
+        "rotation": {"enum": [0, 90, 180, 270]},
+        "width": {"const": 640},
+        "height": {"const": 360},
+        "frameRate": {"$ref": "studio-common.schema.json#/$defs/fps"},
+        "frameTiming": {
+          "oneOf": [
+            {"type": "object", "required": ["kind"], "additionalProperties": false, "properties": {"kind": {"const": "cfr"}}},
+            {"type": "object", "required": ["kind", "timescale", "cycle"], "additionalProperties": false,
+             "properties": {"kind": {"const": "vfr"}, "timescale": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+                            "cycle": {"type": "array", "minItems": 2, "items": {"$ref": "studio-common.schema.json#/$defs/posInt"}}}}
+          ]
+        },
+        "clock": {
+          "description": "t_match = hostOffsetUs + rate * t_host; driftPpm = (rate - 1) * 1e6.",
+          "type": "object",
+          "required": ["driftPpb", "rate", "hostOffsetUs"],
+          "additionalProperties": false,
+          "properties": {"driftPpb": {"type": "integer"}, "rate": {"$ref": "studio-common.schema.json#/$defs/rate"},
+                         "hostOffsetUs": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"}}
+        },
+        "journal": {
+          "description": "What the capture journal records (each segment's file zero on the host clock); null for an import.",
+          "anyOf": [{"type": "null"}, {
+            "type": "object", "required": ["segments"], "additionalProperties": false,
+            "properties": {"segments": {"type": "array", "minItems": 1, "items": {
+              "type": "object", "required": ["segment", "fileZeroHostUs"], "additionalProperties": false,
+              "properties": {"segment": {"type": "integer", "minimum": 0, "maximum": 7},
+                             "fileZeroHostUs": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"}}}}}}]
+        },
+        "audio": {
+          "type": "object",
+          "required": ["mode", "latencyUs", "sampleRate", "channels"],
+          "additionalProperties": false,
+          "properties": {"mode": {"enum": ["present", "muted"]}, "latencyUs": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+                         "sampleRate": {"const": 48000}, "channels": {"const": 1}}
+        },
+        "segments": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"$ref": "#/$defs/segment"}},
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["afterSegment", "reason", "hostUs", "matchUs"],
+            "additionalProperties": false,
+            "properties": {"afterSegment": {"type": "integer", "minimum": 0}, "reason": {"const": "restart"},
+                           "hostUs": {"$ref": "studio-common.schema.json#/$defs/intervalUs"},
+                           "matchUs": {"$ref": "studio-common.schema.json#/$defs/intervalUs"}}
+          }
+        },
+        "shake": {
+          "description": "A knocked-tripod stretch: file frames [fromFrame, toFrame) are drawn from the nudged views; anchors inside it must be down-weighted.",
+          "anyOf": [{"type": "null"}, {
+            "type": "object",
+            "required": ["segment", "fromFrame", "toFrame", "matchUs", "holdFrames", "nudgesDeg", "settledNudgeDeg"],
+            "additionalProperties": false,
+            "properties": {
+              "segment": {"type": "integer", "minimum": 0}, "fromFrame": {"type": "integer", "minimum": 0},
+              "toFrame": {"type": "integer", "minimum": 1}, "matchUs": {"$ref": "studio-common.schema.json#/$defs/intervalUs"},
+              "holdFrames": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+              "nudgesDeg": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nudge"}},
+              "settledNudgeDeg": {"$ref": "#/$defs/nudge"}
+            }
+          }]
+        },
+        "visualEvents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["eventId", "kind", "segment", "frame", "frameMatchUs", "inShake"],
+            "additionalProperties": false,
+            "properties": {"eventId": {"type": "string"}, "kind": {"enum": ["serveContact", "hit", "bounce"]},
+                           "segment": {"type": "integer", "minimum": 0}, "frame": {"type": "integer", "minimum": 0},
+                           "frameMatchUs": {"type": "integer", "minimum": 0}, "inShake": {"type": "boolean"}}
+          }
+        },
+        "audioArrivals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["eventId", "delayUs", "latencyUs", "arrivalMatchUs", "segment", "sourceSample", "heard", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "eventId": {"type": "string"}, "delayUs": {"type": "integer", "minimum": 0},
+              "latencyUs": {"type": "integer", "minimum": 0}, "arrivalMatchUs": {"type": "integer", "minimum": 0},
+              "segment": {"type": ["integer", "null"]}, "sourceSample": {"type": ["integer", "null"]},
+              "heard": {"type": "boolean"}, "reason": {"enum": [null, "notRecording", "muted", "fileEdge"]}
+            }
+          }
+        }
+      }
+    },
+    "segment": {
+      "type": "object",
+      "required": ["segment", "frameCount", "hostStartUs", "sourceDurationUs", "transform", "matchCoverageUs", "frameTimesSha256", "files"],
+      "additionalProperties": false,
+      "properties": {
+        "segment": {"type": "integer", "minimum": 0, "maximum": 7},
+        "frameCount": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "hostStartUs": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "sourceDurationUs": {"$ref": "studio-common.schema.json#/$defs/rational"},
+        "transform": {
+          "description": "The true piece: t_match = offsetUs + rate * t_source, t_source the file's own presentation time.",
+          "type": "object",
+          "required": ["offsetUs", "rate"],
+          "additionalProperties": false,
+          "properties": {"offsetUs": {"$ref": "studio-common.schema.json#/$defs/rational"}, "rate": {"$ref": "studio-common.schema.json#/$defs/rate"}}
+        },
+        "matchCoverageUs": {"$ref": "studio-common.schema.json#/$defs/intervalUs"},
+        "frameTimesSha256": {"$ref": "studio-common.schema.json#/$defs/sha256"},
+        "files": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/file"}}
+      }
+    },
+    "file": {
+      "type": "object",
+      "required": ["variant", "fileName", "path", "audioSampleCount", "audioSeed", "clickSamples", "barcode", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "variant": {"enum": ["coded", "clean"]},
+        "fileName": {"type": "string", "pattern": "^[a-z0-9-]+-s[0-7]-(coded|clean)\\.mp4$"},
+        "path": {"type": "string", "pattern": "^\\.cache/media/studio/multiangle-[0-9a-f]{16}/[a-z0-9-]+-s[0-7]-(coded|clean)\\.mp4$"},
+        "audioSampleCount": {"$ref": "studio-common.schema.json#/$defs/posInt"},
+        "audioSeed": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"},
+        "clickSamples": {"type": "array", "items": {"$ref": "studio-common.schema.json#/$defs/nonNegInt"}},
+        "barcode": {"anyOf": [{"type": "null"}, {"type": "object", "required": ["method", "rect", "sourceId", "segment", "frameMap", "frameMapSha256"]}]},
+        "labels": {"type": "array", "minItems": 2, "items": {"type": "object", "required": ["kind", "text", "region"]}}
+      }
+    },
+    "nudge": {
+      "type": "object",
+      "required": ["yaw", "pitch"],
+      "additionalProperties": false,
+      "properties": {"yaw": {"type": "integer", "minimum": -2, "maximum": 2}, "pitch": {"type": "integer", "minimum": -2, "maximum": 2}}
+    }
+  }
+}
+"""#,
         "sync-map.schema.json": #"""
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3012,5 +3389,5 @@ extension StudioSchemaSource {
     ]
 
     /// The digest of the embedded files when they were generated.
-    static let generatedDigest = "e8fa1378aefefe03"
+    static let generatedDigest = "439b4b602be6714f"
 }

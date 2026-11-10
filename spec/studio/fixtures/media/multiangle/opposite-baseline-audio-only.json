@@ -1,0 +1,1521 @@
+{
+  "schemaVersion": "jovra.studio-multiangle-truth/1",
+  "id": "multiangle/opposite-baseline-audio-only",
+  "profile": "opposite-baseline-audio-only",
+  "description": "Both baselines with covered lenses: audio anchors only, and every hit's sound reaches the two phones up to 69 ms apart depending on who hit it.",
+  "stresses": [
+    "audio-only",
+    "opposite-baselines"
+  ],
+  "sample": true,
+  "band": "synthetic",
+  "generator": {
+    "script": "scripts/media/studio/multiangle/generate.py",
+    "version": "1.0.0",
+    "sourceHash": "4f41d334fa51d096f51daa4b738340c101098563c7fe6abbcc5fb62cf9f60f72"
+  },
+  "rig": "media/multiangle/rig.json",
+  "matchClock": {
+    "unit": "us",
+    "referenceCameraId": "bs-covered",
+    "referenceSegment": 0,
+    "origin": "scene-start",
+    "outputFps": {
+      "num": 30,
+      "den": 1
+    },
+    "halfOutputFrameUs": {
+      "num": 50000,
+      "den": 3
+    }
+  },
+  "speedOfSound": {
+    "mmPerSecond": 343000,
+    "temperatureC": null,
+    "method": "default-343"
+  },
+  "scene": {
+    "basedOn": {
+      "mediaId": "sample-media.jon-vs-alex",
+      "points": "spec/fixtures/sample/jon-vs-alex.points.csv",
+      "window": "the first 120 s of the sample match (its points 1-6)"
+    },
+    "durationUs": 120000000,
+    "sceneSampleRate": 48000,
+    "events": [
+      {
+        "id": "ev-001",
+        "kind": "serveContact",
+        "sceneSample": 43200,
+        "lightTimeUs": 900000,
+        "positionMm": {
+          "xMm": 852,
+          "yMm": -12135,
+          "zMm": 2750
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-002",
+        "kind": "bounce",
+        "sceneSample": 61721,
+        "lightTimeUs": 1285854,
+        "positionMm": {
+          "xMm": -3112,
+          "yMm": 5614,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-003",
+        "kind": "hit",
+        "sceneSample": 89057,
+        "lightTimeUs": 1855354,
+        "positionMm": {
+          "xMm": -3905,
+          "yMm": 12383,
+          "zMm": 794
+        },
+        "end": "north",
+        "audible": true
+      },
+      {
+        "id": "ev-004",
+        "kind": "bounce",
+        "sceneSample": 123538,
+        "lightTimeUs": 2573708,
+        "positionMm": {
+          "xMm": -578,
+          "yMm": -9566,
+          "zMm": 0
+        },
+        "end": "south",
+        "audible": false
+      },
+      {
+        "id": "ev-005",
+        "kind": "serveContact",
+        "sceneSample": 829920,
+        "lightTimeUs": 17290000,
+        "positionMm": {
+          "xMm": -810,
+          "yMm": -12135,
+          "zMm": 2750
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-006",
+        "kind": "bounce",
+        "sceneSample": 849120,
+        "lightTimeUs": 17690000,
+        "positionMm": {
+          "xMm": 2014,
+          "yMm": 7059,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-007",
+        "kind": "serveContact",
+        "sceneSample": 935520,
+        "lightTimeUs": 19490000,
+        "positionMm": {
+          "xMm": -780,
+          "yMm": -12135,
+          "zMm": 2750
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-008",
+        "kind": "bounce",
+        "sceneSample": 959737,
+        "lightTimeUs": 19994521,
+        "positionMm": {
+          "xMm": 3187,
+          "yMm": 4859,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-009",
+        "kind": "hit",
+        "sceneSample": 985917,
+        "lightTimeUs": 20539938,
+        "positionMm": {
+          "xMm": 3980,
+          "yMm": 12421,
+          "zMm": 1038
+        },
+        "end": "north",
+        "audible": true
+      },
+      {
+        "id": "ev-010",
+        "kind": "bounce",
+        "sceneSample": 1024605,
+        "lightTimeUs": 21345938,
+        "positionMm": {
+          "xMm": 2470,
+          "yMm": -5216,
+          "zMm": 0
+        },
+        "end": "south",
+        "audible": false
+      },
+      {
+        "id": "ev-011",
+        "kind": "serveContact",
+        "sceneSample": 1877568,
+        "lightTimeUs": 39116000,
+        "positionMm": {
+          "xMm": 901,
+          "yMm": -12135,
+          "zMm": 2750
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-012",
+        "kind": "bounce",
+        "sceneSample": 1895332,
+        "lightTimeUs": 39486083,
+        "positionMm": {
+          "xMm": -2458,
+          "yMm": 5822,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-013",
+        "kind": "hit",
+        "sceneSample": 1925154,
+        "lightTimeUs": 40107375,
+        "positionMm": {
+          "xMm": -3130,
+          "yMm": 12796,
+          "zMm": 1094
+        },
+        "end": "north",
+        "audible": true
+      },
+      {
+        "id": "ev-014",
+        "kind": "bounce",
+        "sceneSample": 1955706,
+        "lightTimeUs": 40743875,
+        "positionMm": {
+          "xMm": 2671,
+          "yMm": -9873,
+          "zMm": 0
+        },
+        "end": "south",
+        "audible": false
+      },
+      {
+        "id": "ev-015",
+        "kind": "serveContact",
+        "sceneSample": 2760624,
+        "lightTimeUs": 57513000,
+        "positionMm": {
+          "xMm": -765,
+          "yMm": -12135,
+          "zMm": 2750
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-016",
+        "kind": "bounce",
+        "sceneSample": 2777796,
+        "lightTimeUs": 57870750,
+        "positionMm": {
+          "xMm": 1275,
+          "yMm": 5266,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-017",
+        "kind": "hit",
+        "sceneSample": 2808558,
+        "lightTimeUs": 58511625,
+        "positionMm": {
+          "xMm": 1683,
+          "yMm": 12517,
+          "zMm": 1001
+        },
+        "end": "north",
+        "audible": true
+      },
+      {
+        "id": "ev-018",
+        "kind": "bounce",
+        "sceneSample": 2844090,
+        "lightTimeUs": 59251875,
+        "positionMm": {
+          "xMm": -1532,
+          "yMm": -10234,
+          "zMm": 0
+        },
+        "end": "south",
+        "audible": false
+      },
+      {
+        "id": "ev-019",
+        "kind": "hit",
+        "sceneSample": 2865868,
+        "lightTimeUs": 59705583,
+        "positionMm": {
+          "xMm": -2110,
+          "yMm": -12359,
+          "zMm": 1136
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-020",
+        "kind": "bounce",
+        "sceneSample": 2894241,
+        "lightTimeUs": 60296688,
+        "positionMm": {
+          "xMm": -1017,
+          "yMm": 11751,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-021",
+        "kind": "serveContact",
+        "sceneSample": 3988416,
+        "lightTimeUs": 83092000,
+        "positionMm": {
+          "xMm": 592,
+          "yMm": -12135,
+          "zMm": 2750
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-022",
+        "kind": "bounce",
+        "sceneSample": 4010706,
+        "lightTimeUs": 83556375,
+        "positionMm": {
+          "xMm": -1812,
+          "yMm": 7214,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-023",
+        "kind": "serveContact",
+        "sceneSample": 4094016,
+        "lightTimeUs": 85292000,
+        "positionMm": {
+          "xMm": 473,
+          "yMm": -12135,
+          "zMm": 2750
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-024",
+        "kind": "bounce",
+        "sceneSample": 4116163,
+        "lightTimeUs": 85753396,
+        "positionMm": {
+          "xMm": -492,
+          "yMm": 4644,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-025",
+        "kind": "hit",
+        "sceneSample": 4141268,
+        "lightTimeUs": 86276417,
+        "positionMm": {
+          "xMm": -685,
+          "yMm": 12837,
+          "zMm": 829
+        },
+        "end": "north",
+        "audible": true
+      },
+      {
+        "id": "ev-026",
+        "kind": "bounce",
+        "sceneSample": 4179862,
+        "lightTimeUs": 87080458,
+        "positionMm": {
+          "xMm": -2428,
+          "yMm": -9440,
+          "zMm": 0
+        },
+        "end": "south",
+        "audible": false
+      },
+      {
+        "id": "ev-027",
+        "kind": "hit",
+        "sceneSample": 4203516,
+        "lightTimeUs": 87573250,
+        "positionMm": {
+          "xMm": -2742,
+          "yMm": -12784,
+          "zMm": 821
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-028",
+        "kind": "bounce",
+        "sceneSample": 4241238,
+        "lightTimeUs": 88359125,
+        "positionMm": {
+          "xMm": 129,
+          "yMm": 6711,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-029",
+        "kind": "hit",
+        "sceneSample": 4264358,
+        "lightTimeUs": 88840792,
+        "positionMm": {
+          "xMm": 646,
+          "yMm": 12508,
+          "zMm": 905
+        },
+        "end": "north",
+        "audible": true
+      },
+      {
+        "id": "ev-030",
+        "kind": "bounce",
+        "sceneSample": 4304474,
+        "lightTimeUs": 89676542,
+        "positionMm": {
+          "xMm": -511,
+          "yMm": -5225,
+          "zMm": 0
+        },
+        "end": "south",
+        "audible": false
+      },
+      {
+        "id": "ev-031",
+        "kind": "hit",
+        "sceneSample": 4329062,
+        "lightTimeUs": 90188792,
+        "positionMm": {
+          "xMm": -719,
+          "yMm": -12575,
+          "zMm": 830
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-032",
+        "kind": "bounce",
+        "sceneSample": 4361947,
+        "lightTimeUs": 90873896,
+        "positionMm": {
+          "xMm": 3469,
+          "yMm": 11196,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-033",
+        "kind": "hit",
+        "sceneSample": 4382102,
+        "lightTimeUs": 91293792,
+        "positionMm": {
+          "xMm": 4222,
+          "yMm": 12212,
+          "zMm": 975
+        },
+        "end": "north",
+        "audible": true
+      },
+      {
+        "id": "ev-034",
+        "kind": "bounce",
+        "sceneSample": 4415208,
+        "lightTimeUs": 91983500,
+        "positionMm": {
+          "xMm": 2651,
+          "yMm": -8699,
+          "zMm": 0
+        },
+        "end": "south",
+        "audible": false
+      },
+      {
+        "id": "ev-035",
+        "kind": "hit",
+        "sceneSample": 4435498,
+        "lightTimeUs": 92406208,
+        "positionMm": {
+          "xMm": 2368,
+          "yMm": -12719,
+          "zMm": 976
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-036",
+        "kind": "bounce",
+        "sceneSample": 4474186,
+        "lightTimeUs": 93212208,
+        "positionMm": {
+          "xMm": -1809,
+          "yMm": 6791,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-037",
+        "kind": "serveContact",
+        "sceneSample": 5541120,
+        "lightTimeUs": 115440000,
+        "positionMm": {
+          "xMm": -354,
+          "yMm": -12135,
+          "zMm": 2750
+        },
+        "end": "south",
+        "audible": true
+      },
+      {
+        "id": "ev-038",
+        "kind": "bounce",
+        "sceneSample": 5561041,
+        "lightTimeUs": 115855021,
+        "positionMm": {
+          "xMm": 812,
+          "yMm": 5356,
+          "zMm": 0
+        },
+        "end": "north",
+        "audible": false
+      },
+      {
+        "id": "ev-039",
+        "kind": "hit",
+        "sceneSample": 5593465,
+        "lightTimeUs": 116530521,
+        "positionMm": {
+          "xMm": 1046,
+          "yMm": 13018,
+          "zMm": 1359
+        },
+        "end": "north",
+        "audible": true
+      },
+      {
+        "id": "ev-040",
+        "kind": "bounce",
+        "sceneSample": 5619638,
+        "lightTimeUs": 117075792,
+        "positionMm": {
+          "xMm": -3426,
+          "yMm": -11620,
+          "zMm": 0
+        },
+        "end": "south",
+        "audible": false
+      }
+    ]
+  },
+  "cameras": [
+    {
+      "cameraId": "bs-covered",
+      "reference": true,
+      "placement": "BS",
+      "slot": "near-baseline",
+      "name": "Baseline",
+      "positionMm": {
+        "xMm": 0,
+        "yMm": -17365,
+        "zMm": 1500
+      },
+      "view": "covered",
+      "sourceId": 83,
+      "codec": "h264",
+      "bitDepth": 8,
+      "hdr": null,
+      "rotation": 0,
+      "width": 640,
+      "height": 360,
+      "frameRate": {
+        "num": 30,
+        "den": 1
+      },
+      "frameTiming": {
+        "kind": "cfr"
+      },
+      "clock": {
+        "driftPpb": 0,
+        "rate": {
+          "num": 1000000000,
+          "den": 1000000000
+        },
+        "hostOffsetUs": 0
+      },
+      "journal": {
+        "segments": [
+          {
+            "segment": 0,
+            "fileZeroHostUs": 0
+          }
+        ]
+      },
+      "audio": {
+        "mode": "present",
+        "latencyUs": 0,
+        "sampleRate": 48000,
+        "channels": 1
+      },
+      "segments": [
+        {
+          "segment": 0,
+          "frameCount": 3600,
+          "hostStartUs": 0,
+          "sourceDurationUs": {
+            "num": 120000000,
+            "den": 1
+          },
+          "transform": {
+            "offsetUs": {
+              "num": 0,
+              "den": 1
+            },
+            "rate": {
+              "num": 1000000000,
+              "den": 1000000000
+            }
+          },
+          "matchCoverageUs": {
+            "startUs": 0,
+            "endUs": 120000000
+          },
+          "frameTimesSha256": "afed2dd7f171cd414a370793c5f7cfa6b756a498869a2184fd1700f76c5cfb97",
+          "files": [
+            {
+              "variant": "coded",
+              "fileName": "bs-covered-s0-coded.mp4",
+              "path": ".cache/media/studio/multiangle-4f41d334fa51d096/bs-covered-s0-coded.mp4",
+              "audioSampleCount": 5760000,
+              "audioSeed": 664,
+              "clickSamples": [
+                43962,
+                93257,
+                830681,
+                936280,
+                990123,
+                1878331,
+                1929398,
+                2761384,
+                2812747,
+                2866630,
+                3989173,
+                4094771,
+                4145497,
+                4204269,
+                4268540,
+                4329746,
+                4386284,
+                4436231,
+                5541874,
+                5597719
+              ],
+              "barcode": {
+                "method": "jovra.frame-barcode/1",
+                "bits": 40,
+                "rect": {
+                  "x": 0,
+                  "y": 340,
+                  "width": 640,
+                  "height": 20
+                },
+                "fields": {
+                  "start": 1,
+                  "source": 7,
+                  "segment": 3,
+                  "frame": 20,
+                  "crc8": 8,
+                  "stop": 1
+                },
+                "one": {
+                  "y": 235
+                },
+                "zero": {
+                  "y": 16
+                },
+                "threshold": {
+                  "y": 128
+                },
+                "sourceId": 83,
+                "segment": 0,
+                "frameMap": [
+                  {
+                    "frame": 0,
+                    "frameId": 0,
+                    "count": 3600
+                  }
+                ],
+                "frameMapSha256": "973408104bbf64bc04a2dea7baee553e57aa98f9aa6084d44327862b82f64736"
+              },
+              "labels": [
+                {
+                  "text": "Sample video (synthetic)",
+                  "region": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 288,
+                    "height": 20
+                  },
+                  "ink": {
+                    "y": 230
+                  },
+                  "background": {
+                    "y": 28
+                  },
+                  "kind": "sample",
+                  "cellHeight": 90
+                },
+                {
+                  "kind": "angle",
+                  "text": "Baseline",
+                  "region": {
+                    "x": 536,
+                    "y": 0,
+                    "width": 104,
+                    "height": 20
+                  },
+                  "cellHeight": 90,
+                  "ink": {
+                    "y": 230
+                  },
+                  "background": {
+                    "y": 28
+                  }
+                }
+              ]
+            },
+            {
+              "variant": "clean",
+              "fileName": "bs-covered-s0-clean.mp4",
+              "path": ".cache/media/studio/multiangle-4f41d334fa51d096/bs-covered-s0-clean.mp4",
+              "audioSampleCount": 5760000,
+              "audioSeed": 664,
+              "clickSamples": [
+                43962,
+                93257,
+                830681,
+                936280,
+                990123,
+                1878331,
+                1929398,
+                2761384,
+                2812747,
+                2866630,
+                3989173,
+                4094771,
+                4145497,
+                4204269,
+                4268540,
+                4329746,
+                4386284,
+                4436231,
+                5541874,
+                5597719
+              ],
+              "barcode": null,
+              "labels": [
+                {
+                  "text": "Sample video (synthetic)",
+                  "region": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 288,
+                    "height": 20
+                  },
+                  "ink": {
+                    "y": 230
+                  },
+                  "background": {
+                    "y": 28
+                  },
+                  "kind": "sample",
+                  "cellHeight": 90
+                },
+                {
+                  "kind": "angle",
+                  "text": "Baseline",
+                  "region": {
+                    "x": 536,
+                    "y": 0,
+                    "width": 104,
+                    "height": 20
+                  },
+                  "cellHeight": 90,
+                  "ink": {
+                    "y": 230
+                  },
+                  "background": {
+                    "y": 28
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "gaps": [],
+      "shake": null,
+      "visualEvents": [],
+      "audioArrivals": [
+        {
+          "eventId": "ev-001",
+          "delayUs": 15873,
+          "latencyUs": 0,
+          "arrivalMatchUs": 915873,
+          "segment": 0,
+          "sourceSample": 43962,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-003",
+          "delayUs": 87497,
+          "latencyUs": 0,
+          "arrivalMatchUs": 1942851,
+          "segment": 0,
+          "sourceSample": 93257,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-005",
+          "delayUs": 15854,
+          "latencyUs": 0,
+          "arrivalMatchUs": 17305854,
+          "segment": 0,
+          "sourceSample": 830681,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-007",
+          "delayUs": 15841,
+          "latencyUs": 0,
+          "arrivalMatchUs": 19505841,
+          "segment": 0,
+          "sourceSample": 936280,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-009",
+          "delayUs": 87622,
+          "latencyUs": 0,
+          "arrivalMatchUs": 20627560,
+          "segment": 0,
+          "sourceSample": 990123,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-011",
+          "delayUs": 15896,
+          "latencyUs": 0,
+          "arrivalMatchUs": 39131896,
+          "segment": 0,
+          "sourceSample": 1878331,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-013",
+          "delayUs": 88413,
+          "latencyUs": 0,
+          "arrivalMatchUs": 40195788,
+          "segment": 0,
+          "sourceSample": 1929398,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-015",
+          "delayUs": 15835,
+          "latencyUs": 0,
+          "arrivalMatchUs": 57528835,
+          "segment": 0,
+          "sourceSample": 2761384,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-017",
+          "delayUs": 87270,
+          "latencyUs": 0,
+          "arrivalMatchUs": 58598895,
+          "segment": 0,
+          "sourceSample": 2812747,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-019",
+          "delayUs": 15874,
+          "latencyUs": 0,
+          "arrivalMatchUs": 59721457,
+          "segment": 0,
+          "sourceSample": 2866630,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-021",
+          "delayUs": 15772,
+          "latencyUs": 0,
+          "arrivalMatchUs": 83107772,
+          "segment": 0,
+          "sourceSample": 3989173,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-023",
+          "delayUs": 15738,
+          "latencyUs": 0,
+          "arrivalMatchUs": 85307738,
+          "segment": 0,
+          "sourceSample": 4094771,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-025",
+          "delayUs": 88097,
+          "latencyUs": 0,
+          "arrivalMatchUs": 86364514,
+          "segment": 0,
+          "sourceSample": 4145497,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-027",
+          "delayUs": 15691,
+          "latencyUs": 0,
+          "arrivalMatchUs": 87588941,
+          "segment": 0,
+          "sourceSample": 4204269,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-029",
+          "delayUs": 87131,
+          "latencyUs": 0,
+          "arrivalMatchUs": 88927923,
+          "segment": 0,
+          "sourceSample": 4268540,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-031",
+          "delayUs": 14256,
+          "latencyUs": 0,
+          "arrivalMatchUs": 90203048,
+          "segment": 0,
+          "sourceSample": 4329746,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-033",
+          "delayUs": 87118,
+          "latencyUs": 0,
+          "arrivalMatchUs": 91380910,
+          "segment": 0,
+          "sourceSample": 4386284,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-035",
+          "delayUs": 15280,
+          "latencyUs": 0,
+          "arrivalMatchUs": 92421488,
+          "segment": 0,
+          "sourceSample": 4436231,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-037",
+          "delayUs": 15711,
+          "latencyUs": 0,
+          "arrivalMatchUs": 115455711,
+          "segment": 0,
+          "sourceSample": 5541874,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-039",
+          "delayUs": 88634,
+          "latencyUs": 0,
+          "arrivalMatchUs": 116619155,
+          "segment": 0,
+          "sourceSample": 5597719,
+          "heard": true,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "cameraId": "bn-covered",
+      "reference": false,
+      "placement": "BN",
+      "slot": "far-baseline",
+      "name": "Far baseline",
+      "positionMm": {
+        "xMm": 0,
+        "yMm": 17365,
+        "zMm": 1500
+      },
+      "view": "covered",
+      "sourceId": 84,
+      "codec": "h264",
+      "bitDepth": 8,
+      "hdr": null,
+      "rotation": 0,
+      "width": 640,
+      "height": 360,
+      "frameRate": {
+        "num": 30,
+        "den": 1
+      },
+      "frameTiming": {
+        "kind": "cfr"
+      },
+      "clock": {
+        "driftPpb": 15000,
+        "rate": {
+          "num": 1000015000,
+          "den": 1000000000
+        },
+        "hostOffsetUs": 289000
+      },
+      "journal": {
+        "segments": [
+          {
+            "segment": 0,
+            "fileZeroHostUs": 0
+          }
+        ]
+      },
+      "audio": {
+        "mode": "present",
+        "latencyUs": 1000,
+        "sampleRate": 48000,
+        "channels": 1
+      },
+      "segments": [
+        {
+          "segment": 0,
+          "frameCount": 3570,
+          "hostStartUs": 0,
+          "sourceDurationUs": {
+            "num": 119000000,
+            "den": 1
+          },
+          "transform": {
+            "offsetUs": {
+              "num": 289000,
+              "den": 1
+            },
+            "rate": {
+              "num": 1000015000,
+              "den": 1000000000
+            }
+          },
+          "matchCoverageUs": {
+            "startUs": 289000,
+            "endUs": 119290785
+          },
+          "frameTimesSha256": "0aa6c842d14caafa88709e9789a8cb108afc1c3fb37f2034d4a0c53d03786665",
+          "files": [
+            {
+              "variant": "coded",
+              "fileName": "bn-covered-s0-coded.mp4",
+              "path": ".cache/media/studio/multiangle-4f41d334fa51d096/bn-covered-s0-coded.mp4",
+              "audioSampleCount": 5712000,
+              "audioSeed": 672,
+              "clickSamples": [
+                33509,
+                76123,
+                820217,
+                925816,
+                972969,
+                1867850,
+                1912078,
+                2750892,
+                2795414,
+                2856172,
+                3978665,
+                4084263,
+                4128030,
+                4193867,
+                4251161,
+                4319365,
+                4369148,
+                4425831,
+                5531345,
+                5580183
+              ],
+              "barcode": {
+                "method": "jovra.frame-barcode/1",
+                "bits": 40,
+                "rect": {
+                  "x": 0,
+                  "y": 340,
+                  "width": 640,
+                  "height": 20
+                },
+                "fields": {
+                  "start": 1,
+                  "source": 7,
+                  "segment": 3,
+                  "frame": 20,
+                  "crc8": 8,
+                  "stop": 1
+                },
+                "one": {
+                  "y": 235
+                },
+                "zero": {
+                  "y": 16
+                },
+                "threshold": {
+                  "y": 128
+                },
+                "sourceId": 84,
+                "segment": 0,
+                "frameMap": [
+                  {
+                    "frame": 0,
+                    "frameId": 0,
+                    "count": 3570
+                  }
+                ],
+                "frameMapSha256": "54c68f5d718a62cd071d63c7acd59586cc750842d1dbda6e692e50d657145761"
+              },
+              "labels": [
+                {
+                  "text": "Sample video (synthetic)",
+                  "region": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 288,
+                    "height": 20
+                  },
+                  "ink": {
+                    "y": 230
+                  },
+                  "background": {
+                    "y": 28
+                  },
+                  "kind": "sample",
+                  "cellHeight": 90
+                },
+                {
+                  "kind": "angle",
+                  "text": "Far baseline",
+                  "region": {
+                    "x": 492,
+                    "y": 0,
+                    "width": 148,
+                    "height": 20
+                  },
+                  "cellHeight": 90,
+                  "ink": {
+                    "y": 230
+                  },
+                  "background": {
+                    "y": 28
+                  }
+                }
+              ]
+            },
+            {
+              "variant": "clean",
+              "fileName": "bn-covered-s0-clean.mp4",
+              "path": ".cache/media/studio/multiangle-4f41d334fa51d096/bn-covered-s0-clean.mp4",
+              "audioSampleCount": 5712000,
+              "audioSeed": 672,
+              "clickSamples": [
+                33509,
+                76123,
+                820217,
+                925816,
+                972969,
+                1867850,
+                1912078,
+                2750892,
+                2795414,
+                2856172,
+                3978665,
+                4084263,
+                4128030,
+                4193867,
+                4251161,
+                4319365,
+                4369148,
+                4425831,
+                5531345,
+                5580183
+              ],
+              "barcode": null,
+              "labels": [
+                {
+                  "text": "Sample video (synthetic)",
+                  "region": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 288,
+                    "height": 20
+                  },
+                  "ink": {
+                    "y": 230
+                  },
+                  "background": {
+                    "y": 28
+                  },
+                  "kind": "sample",
+                  "cellHeight": 90
+                },
+                {
+                  "kind": "angle",
+                  "text": "Far baseline",
+                  "region": {
+                    "x": 492,
+                    "y": 0,
+                    "width": 148,
+                    "height": 20
+                  },
+                  "cellHeight": 90,
+                  "ink": {
+                    "y": 230
+                  },
+                  "background": {
+                    "y": 28
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "gaps": [],
+      "shake": null,
+      "visualEvents": [],
+      "audioArrivals": [
+        {
+          "eventId": "ev-001",
+          "delayUs": 86119,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 987119,
+          "segment": 0,
+          "sourceSample": 33509,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-003",
+          "delayUs": 18569,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 1874923,
+          "segment": 0,
+          "sourceSample": 76123,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-005",
+          "delayUs": 86115,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 17377115,
+          "segment": 0,
+          "sourceSample": 820217,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-007",
+          "delayUs": 86113,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 19577113,
+          "segment": 0,
+          "sourceSample": 925816,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-009",
+          "delayUs": 18553,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 20559491,
+          "segment": 0,
+          "sourceSample": 972969,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-011",
+          "delayUs": 86123,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 39203123,
+          "segment": 0,
+          "sourceSample": 1867850,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-013",
+          "delayUs": 16190,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 40124565,
+          "segment": 0,
+          "sourceSample": 1912078,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-015",
+          "delayUs": 86112,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 57600112,
+          "segment": 0,
+          "sourceSample": 2750892,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-017",
+          "delayUs": 15032,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 58527657,
+          "segment": 0,
+          "sourceSample": 2795414,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-019",
+          "delayUs": 86883,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 59793466,
+          "segment": 0,
+          "sourceSample": 2856172,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-021",
+          "delayUs": 86100,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 83179100,
+          "segment": 0,
+          "sourceSample": 3978665,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-023",
+          "delayUs": 86094,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 85379094,
+          "segment": 0,
+          "sourceSample": 4084263,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-025",
+          "delayUs": 13494,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 86290911,
+          "segment": 0,
+          "sourceSample": 4128030,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-027",
+          "delayUs": 88283,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 87662533,
+          "segment": 0,
+          "sourceSample": 4193867,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-029",
+          "delayUs": 14390,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 88856182,
+          "segment": 0,
+          "sourceSample": 4251161,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-031",
+          "delayUs": 87336,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 90277128,
+          "segment": 0,
+          "sourceSample": 4319365,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-033",
+          "delayUs": 19482,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 91314274,
+          "segment": 0,
+          "sourceSample": 4369148,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-035",
+          "delayUs": 87993,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 92495201,
+          "segment": 0,
+          "sourceSample": 4425831,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-037",
+          "delayUs": 86089,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 115527089,
+          "segment": 0,
+          "sourceSample": 5531345,
+          "heard": true,
+          "reason": null
+        },
+        {
+          "eventId": "ev-039",
+          "delayUs": 13042,
+          "latencyUs": 1000,
+          "arrivalMatchUs": 116544563,
+          "segment": 0,
+          "sourceSample": 5580183,
+          "heard": true,
+          "reason": null
+        }
+      ]
+    }
+  ],
+  "sharedCoverage": [
+    {
+      "cameras": [
+        "bs-covered",
+        "bn-covered"
+      ],
+      "matchUs": [
+        {
+          "startUs": 289000,
+          "endUs": 119290785
+        }
+      ]
+    }
+  ],
+  "hashes": {
+    "renderedWithSourceHash": "4f41d334fa51d096f51daa4b738340c101098563c7fe6abbcc5fb62cf9f60f72",
+    "files": {
+      "bn-covered-s0-clean.mp4": {
+        "sourceFramesSha256": "ea85c8b3a1a20125a5c1cda6caf00ea55cc2981052cd99549d35beb22ce750e8",
+        "decodedSignature": {
+          "method": "jovra.cellLuma.v1",
+          "sha256": "58027c6e706b79057a127d77f028639d0687836c2f0ab2d428caa5773b695e7b"
+        },
+        "pcmSha256": "84381d45eab07bc4eebf94169581d64641a56aaff3dc8575e8aa6c161ff8a0ba"
+      },
+      "bn-covered-s0-coded.mp4": {
+        "sourceFramesSha256": "b47f187cd79db6319324c0e6761bc0137526e410ec16456ef13ae537833fd6fb",
+        "decodedSignature": {
+          "method": "jovra.cellLuma.v1",
+          "sha256": "58027c6e706b79057a127d77f028639d0687836c2f0ab2d428caa5773b695e7b"
+        },
+        "pcmSha256": "84381d45eab07bc4eebf94169581d64641a56aaff3dc8575e8aa6c161ff8a0ba"
+      },
+      "bs-covered-s0-clean.mp4": {
+        "sourceFramesSha256": "6b74df223e2bbab8574601d6afac58fd3cdb5612d5a00e2341da94446de09657",
+        "decodedSignature": {
+          "method": "jovra.cellLuma.v1",
+          "sha256": "9202226b0cde5ced65598b6a14f468ec9042a79690e26ac4d7b47b1af9f6b21d"
+        },
+        "pcmSha256": "451f676b451143e170e1d37894889a9c16d5e86e20ad3e4e0f220af41e122d45"
+      },
+      "bs-covered-s0-coded.mp4": {
+        "sourceFramesSha256": "34fcb1b80e3c77e22d1b9a55032d04ec1dc4a5aaf1f1a25870c7d416a500d102",
+        "decodedSignature": {
+          "method": "jovra.cellLuma.v1",
+          "sha256": "9202226b0cde5ced65598b6a14f468ec9042a79690e26ac4d7b47b1af9f6b21d"
+        },
+        "pcmSha256": "451f676b451143e170e1d37894889a9c16d5e86e20ad3e4e0f220af41e122d45"
+      }
+    }
+  }
+}

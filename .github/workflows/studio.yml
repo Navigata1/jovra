@@ -58,6 +58,15 @@ jobs:
         run: python3 scripts/media/studio/render_studio.py --check
       - name: Reader, clicks, labels, demo budget and determinism tests
         run: python3 -m unittest discover -s scripts/media/studio -p 'test_*.py' -v
+      # S58 (spec/studio/modules/multiangle-generator.md): render every camera of the multi-angle rig (coded and clean),
+      # decode each in full and require the committed ground truth to reproduce; then recover every coded frame's match
+      # time from its barcode and the ground truth alone, and run the mutation and two-run tests.
+      - name: Render the multi-angle fixtures and check them against their committed ground truth
+        run: python3 scripts/media/studio/multiangle/generate.py --check
+      - name: Recover every frame's match time from embedded ids and the ground truth
+        run: python3 scripts/media/studio/multiangle/recover.py
+      - name: Multi-angle ground-truth, recovery-mutation and two-run tests
+        run: python3 -m unittest discover -s scripts/media/studio/multiangle -p 'test_*.py' -v
       - name: No media file added outside the bundled demo subset
         if: github.event_name == 'pull_request'
         run: python3 scripts/media/studio/check_added_binaries.py --base ${{ github.event.pull_request.base.sha }}

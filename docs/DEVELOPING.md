@@ -317,6 +317,57 @@ after a scroll step, on `main` as well. The audit had scrolled the page itself w
 repeat-after-move rule above removes those false failures (evidence: `main-baseline-smoke.log`, the
 full class on `main`, against `ui-test-full-suite.log`).
 
+### Opt-in partial recovery process relaunch
+
+Use `PartialRecoveryRelaunchUITests` only on a fresh dedicated iOS simulator named
+`JOVRA-PartialRecovery-<token>`, where the token is 12 lowercase hexadecimal characters. Use
+an isolated generated project spec with only the app target's bundle identifier changed to
+`com.islanddevcrew.jovra.partial-recovery-<token>`. Leave the tracked project spec intact.
+Keep one owned DerivedData directory and separate result bundles for the three phases. Check the
+8 GiB disk floor before building or starting a phase. Use an English simulator and synthetic
+FixtureCamera content. Keep the simulator and isolated app exclusively available to this harness.
+
+Build for testing once, then run each method separately with `test-without-building`,
+`-parallel-testing-enabled NO`, and the dedicated simulator UUID. Pass
+`TEST_RUNNER_JOVRA_PARTIAL_RECOVERY_TOKEN=<token>` to each invocation. Require a Passed receipt
+for the selected method with an executed test. Stop on any setup failure, skip or test failure.
+
+1. Run `testRecordTwoSegmentsAndTerminateBeforeSave`. The app writes and pauses twice, then the
+   test verifies its process stopped before any session save. With that receipt and the app
+   still stopped, record a read-only pending receipt. Keep the app stopped across both commands.
+
+   ```sh
+   python3 scripts/ios/partial_recovery_fixture.py --simulator "$SIMULATOR_ID" \
+     --token "$JOVRA_RECOVERY_TOKEN" --confirmed-stopped pending > "$JOVRA_RECOVERY_RECEIPTS/pending.json"
+   python3 scripts/ios/partial_recovery_fixture.py --simulator "$SIMULATOR_ID" \
+     --token "$JOVRA_RECOVERY_TOKEN" --confirmed-stopped damage \
+     --pending "$JOVRA_RECOVERY_RECEIPTS/pending.json" > "$JOVRA_RECOVERY_RECEIPTS/seed.json"
+   ```
+
+2. Read `sessionID` from the seed receipt and pass it as
+   `TEST_RUNNER_JOVRA_PARTIAL_RECOVERY_SESSION_ID`. Run
+   `testFirstColdLaunchRecoversAndOpensPartialRecording`. After the successful test has
+   stopped the app, take the first host snapshot.
+
+   ```sh
+   python3 scripts/ios/partial_recovery_fixture.py --simulator "$SIMULATOR_ID" \
+     --token "$JOVRA_RECOVERY_TOKEN" --confirmed-stopped snapshot \
+     --seed "$JOVRA_RECOVERY_RECEIPTS/seed.json" > "$JOVRA_RECOVERY_RECEIPTS/adopted.json"
+   ```
+
+3. Run `testNextColdLaunchKeepsPartialRecordingWithoutAnnouncingAgain` with the same
+   token and session ID. After it stops the app, repeat the snapshot command to a new file
+   and compare it byte-for-byte to `adopted.json`.
+
+The host helper accepts only the token-matched simulator and app container, one unacknowledged
+synthetic session and two finalized fixture segments. It keeps verified directories open throughout
+the operation and requires the pre-damage receipt to match the exact files before replacing the
+first segment with fixed synthetic damage. The stopped flag records the operator's confirmation;
+it does not reserve the app process. The snapshots check original bytes, journal, recovered metadata and file
+identity across the launches. Keep these receipts in the private test directory. This procedure
+exercises a real simulator app restart and synthetic recovery. Live camera crash-loss and
+physical-device behavior require separate acceptance.
+
 ## Disk hygiene
 
 The build Mac is short on disk. Always build with `-derivedDataPath .derivedData` (the scripts do),
@@ -331,9 +382,11 @@ it when you finish a ticket: `rm -rf .derivedData`.
   Catalog ownership check against the base branch.
 - `media-fixtures`: on Ubuntu, `render.py --check` (renders with apt's ffmpeg and requires the committed
   decoded-frame hashes) and `scripts/spec/validate.py`.
-- `ios-app (manual)`: `workflow_dispatch` only. On macOS it runs both package test suites, generates
-  the project, builds the app and runs `JovraTests`. Simulator UI suites run on the build Mac, and
-  their evidence goes on the PR (ADR-0006).
+- `ios-app` (its own workflow, `.github/workflows/ios-app.yml`): runs by itself on every pull request
+  and main push that touches `ios/`, `spec/` or `scripts/media/`, and on `workflow_dispatch`. On macOS
+  it runs both package test suites, generates the project, builds the app and runs `JovraTests`. It is
+  path-filtered, so it must not be made a required check. Simulator UI suites run on the build Mac,
+  and their evidence goes on the PR (ADR-0006).
 
 ## Evidence
 

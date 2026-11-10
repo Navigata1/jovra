@@ -108,7 +108,8 @@ that folder (by extension or by its leading bytes); the Studio workflow runs it 
 - Swift and Kotlin do not read these manifests yet (`swift: pending`): S09 builds the barcode-court context over this
   media, S40 (FilmVerifier) and S41/S42 (renderers) read barcodes through a Swift port of the reader, S21 plays the
   bundled angles.
-- Fixtures prove pipeline logic only (film-engine section 7): a VFR, rotated or HDR barcode variant, angle drift and
-  multi-camera sync are later tickets (S58 for multi-angle).
+- Fixtures prove pipeline logic only (film-engine section 7). VFR, rotated and HDR angles, drift, restarts and the
+  other multi-camera conditions are S58's generator ([multiangle-generator](multiangle-generator.md)), built on these
+  tools; its ground truth lives under `spec/studio/fixtures/media/multiangle/` with its own kinds.
 - The bundled subset's install is a script; wiring it into an Xcode build phase is left to the ticket that first plays
   it (S21).

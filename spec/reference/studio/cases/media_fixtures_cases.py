@@ -61,8 +61,9 @@ def fixtures(sample) -> dict:
 
 
 def _manifests() -> list[tuple[str, dict]]:
-    return [(p.relative_to(FIX).as_posix(), json.loads(p.read_text(encoding="utf-8")))
+    docs = [(p.relative_to(FIX).as_posix(), json.loads(p.read_text(encoding="utf-8")))
             for p in sorted((FIX / "media").rglob("*.json")) if p.name != "demo-subset.json"]
+    return [(rel, d) for rel, d in docs if d.get("schemaVersion") == TRUTH]   # S58's multiangle/ has its own kinds
 
 
 def _frame_map_sha256(doc: dict) -> str:

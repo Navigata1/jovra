@@ -9,6 +9,11 @@ struct CaptureRecoveryNotice: View {
                       title: String(localized: "Recording recovered", table: "Capture.Recovery"),
                       message: String(localized: "Verified recordings are ready in your library.", table: "Capture.Recovery"))
         }
+        if summary.partiallyRecovered > 0 {
+            StateCard(symbol: "exclamationmark.triangle",
+                      title: String(localized: "Recording partially recovered", table: "Capture.Recovery"),
+                      message: String(localized: "Playable video is ready in your library. Some footage could not be recovered.", table: "Capture.Recovery"))
+        }
         if summary.refused > 0 || summary.scanFailed {
             StateCard(symbol: "exclamationmark.triangle",
                       title: String(localized: "Recovery needs attention", table: "Capture.Recovery"),

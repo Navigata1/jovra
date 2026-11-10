@@ -140,6 +140,43 @@ struct PlaybackControllerTests {
         #expect(controller.player.rate == 0)
     }
 
+    @available(macOS 15, iOS 18, *)
+    @Test
+    func aShiftedVideoTrackLoopsOnItsOwnClock() async throws {
+        let truth = try catalog.truth(id: "frameCounter/fc-060")
+        let asset = AVURLAsset(url: try catalog.mediaURL(for: truth))
+        let video = try #require(try await asset.loadTracks(withMediaType: .video).first)
+        let composition = AVMutableComposition()
+        let shifted = try #require(composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid))
+        let offset = CMTime(value: 1, timescale: 2)
+        try shifted.insertTimeRange(try await video.load(.timeRange), of: video, at: offset)
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("jovra-loop-\(UUID()).mov")
+        defer { try? FileManager.default.removeItem(at: url) }
+        let exporter = try #require(AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough))
+        try await exporter.export(to: url, as: .mov)
+        let track = try #require(try await AVURLAsset(url: url).loadTracks(withMediaType: .video).first)
+        let edits = try await track.load(.segments)
+        let first = try #require(edits.first(where: { !$0.isEmpty }))
+        try #require(first.timeMapping.target.start == offset, "The written track must retain its leading empty edit")
+
+        let controller = try await PlaybackController.open(url: url)
+        defer { controller.close() }
+        let displayed = DisplayedFrame(controller, truth: truth)
+        #expect(controller.frameCount == truth.video.frameCount)
+        let loop = try #require(FrameLoop(start: 6, end: 24, frameCount: controller.frameCount))
+        controller.setLoop(loop)
+        await controller.settle()
+        #expect(controller.player.currentItem?.forwardPlaybackEndTime == CMTime(value: 55, timescale: 60))
+        #expect(try await displayed.code(controller) == 6)
+        controller.play()
+        let deadline = ContinuousClock.now + .seconds(2)
+        while controller.loopWraps.isEmpty, ContinuousClock.now < deadline { try await Task.sleep(for: .milliseconds(10)) }
+        controller.pause()
+        let wrap = try #require(controller.loopWraps.first)
+        #expect(abs(wrap.endedAt - 24) <= 1)
+        #expect(wrap.restartedAt == 6)
+    }
+
     /// The loop is enforced by the item's forward end time, so playback stops at B before seeking to A.
     @Test
     func anABLoopRepeatsWithinOneFrameOfAAndB() async throws {

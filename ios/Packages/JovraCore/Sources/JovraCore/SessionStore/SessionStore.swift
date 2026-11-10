@@ -173,8 +173,9 @@ public actor SessionStore {
         try persistCapture(recording, marks: marks, original: original, for: id)
     }
 
-    public func needsFinishedCaptureRecovery(_ id: String) throws -> Bool {
-        let document = try load(id)
+    public func needsCaptureRecovery(_ id: String) throws -> Bool { canReconcileCapture(try load(id)) }
+
+    private func canReconcileCapture(_ document: SessionDocument) -> Bool {
         switch document.original?.state {
         case .recording, .recovering, .partial:
             return document.recording.mode == .camera || document.recording.mode == .simulatorFixture
@@ -185,13 +186,22 @@ public actor SessionStore {
 
     /// Recheck eligibility inside the write transaction: a stale scan must never replace a
     /// successful handoff or revive a recording the player already moved to Trash.
-    public func reconcileFinishedCapture(_ recording: SessionRecording, marks: [SessionMark],
+    public func reconcileCaptureRecovery(_ recording: SessionRecording, marks: [SessionMark],
                                          original: SessionOriginalState, for id: String,
                                          verifyOriginals: @Sendable (URL) throws -> Void) throws -> Bool {
-        guard try needsFinishedCaptureRecovery(id) else { return false }
-        guard try load(id).recording.mode == recording.mode,
-              recording.recovery?.outcome == .complete else { throw SessionStoreError.invalidCapture }
+        let document = try load(id)
+        guard canReconcileCapture(document) else { return false }
+        guard document.recording.mode == recording.mode, recording.mediaAvailable,
+              !recording.segments.isEmpty, let report = recording.recovery else { throw SessionStoreError.invalidCapture }
+        switch (report.outcome, original.state) {
+        case (.complete, .saved), (.complete, .savedWithGaps): break
+        case (.partial, .partial) where report.unrecoverable?.isEmpty == false: break
+        default: throw SessionStoreError.invalidCapture
+        }
         try verifyOriginals(folder(id))
+        let existingMarks = Set(document.marks?.map(\.id) ?? [])
+        guard document.recording != recording || document.original != original ||
+              !marks.allSatisfy({ existingMarks.contains($0.id) }) else { return false }
         try applyRecoveredCapture(recording, marks: marks, original: original, for: id)
         return true
     }

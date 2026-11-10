@@ -1,0 +1,62 @@
+name: iOS app
+
+# Builds the app and runs the package and app unit tests on a hosted Mac. It runs by itself on every
+# pull request and main push that touches the app, its packages, the contracts they embed or the media
+# fixtures they read. The repository is public, so hosted macOS minutes are not metered.
+# Simulator UI suites and signed device runs still happen on the build Mac (ADR-0006).
+#
+# This workflow is path-filtered. Do not make `ios-app` a required status check: a pull request that
+# touches none of these paths never reports it and could not merge.
+
+on:
+  pull_request:
+    paths:
+      - "ios/**"
+      - "spec/**"
+      - "scripts/media/**"
+      - ".github/workflows/ios-app.yml"
+  push:
+    branches: [main]
+    paths:
+      - "ios/**"
+      - "spec/**"
+      - "scripts/media/**"
+      - ".github/workflows/ios-app.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ios-app-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ios-app:
+    name: ios-app
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Render media fixtures (JovraMedia tests read them)
+        run: |
+          brew install ffmpeg
+          python3 scripts/media/render.py --check
+      - name: swift test (JovraCore, JovraMedia)
+        run: |
+          swift test --package-path ios/Packages/JovraCore
+          swift test --package-path ios/Packages/JovraMedia --no-parallel
+      - name: Generate project
+        run: xcodegen generate --spec ios/project.yml --project ios
+      - name: Build app and run JovraTests
+        run: |
+          SIM_ID="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; print(next(x["udid"] for k,v in d.items() if "iOS" in k for x in v if x["name"].startswith("iPhone")))')"
+          xcodebuild test \
+            -project ios/Jovra.xcodeproj \
+            -scheme Jovra \
+            -only-testing:JovraTests \
+            -destination "id=$SIM_ID" \
+            -derivedDataPath .derivedData \
+            CODE_SIGNING_ALLOWED=NO

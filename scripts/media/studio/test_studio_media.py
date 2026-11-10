@@ -40,6 +40,7 @@ def manifest(set_name: str, clip_id: str) -> dict:
 
 def manifests(role: str | None = None) -> list[dict]:
     docs = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(MEDIA.rglob("*.json")) if p.name != "demo-subset.json"]
+    docs = [d for d in docs if d.get("schemaVersion") == "jovra.studio-media-truth/1"]   # not S58's multiangle/
     return [d for d in docs if role is None or d["role"] == role]
 
 

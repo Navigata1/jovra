@@ -47,7 +47,9 @@ public final class FixtureCamera: CaptureSource, @unchecked Sendable {
     }
     public func start(at sessionTime: CMTime, onSample: @escaping @Sendable (CaptureSample) throws -> Void,
                       onFailure: @escaping @Sendable (any Error) -> Void) async throws {
-        let (audio, decimation) = lock.withLock { (includeAudio, decimation) }
+        let (audio, decimation): (Bool, (step: Int, frameDuration: CMTime)) = lock.withLock {
+            (includeAudio, self.decimation)
+        }
         let task = Task.detached { [self, url, duration, clock] in
             do {
                 let clockStart = clock.now()
