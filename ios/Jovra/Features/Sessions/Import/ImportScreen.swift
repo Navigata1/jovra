@@ -19,6 +19,9 @@ struct ImportScreen: View {
     @State private var nearPlayer: Side?
     @State private var containsFullMatch = false
     @State private var showPicker = false
+    @State private var pickerRequest: FilesImportRequest?
+    @State private var duplicate: ImportDuplicateDecision?
+    @State private var openingExisting = false
     @State private var work: Task<Void, Never>?
     @State private var cancelling = false
     @State private var imported: SessionID?
@@ -31,29 +34,21 @@ struct ImportScreen: View {
                 .buttonStyle(.jovraSecondary).accessibilityIdentifier("import.back")
             Text("Choose one H.264 or HEVC video in MOV or MP4 format. JOVRA keeps your selected file unchanged.", tableName: "Sessions.Import")
                 .fixedSize(horizontal: false, vertical: true)
-            VStack(alignment: .leading, spacing: Space.x2) {
-                Picker(selection: $kind) {
-                    Text("Practice", tableName: "Sessions.Import").tag(Kind.practice)
-                    Text("Singles match", tableName: "Sessions.Import").tag(Kind.match)
-                } label: {
-                    Text("Import as", tableName: "Sessions.Import")
-                }.pickerStyle(.segmented)
-                if kind == .match {
-                    matchFields
-                } else {
-                    playerField(String(localized: "Player name", table: "Sessions.Import"),
-                                text: $playerName, identifier: "import.player")
+            if let duplicate {
+                duplicateActions(duplicate).disabled(work != nil || pickerRequest != nil)
+            } else {
+                importFields.disabled(work != nil || pickerRequest != nil)
+                if case .unavailable = library {
+                    Text("Local library unavailable", tableName: "Sessions.Library")
                 }
-            }.disabled(work != nil)
-            if case .unavailable = library {
-                Text("Local library unavailable", tableName: "Sessions.Library")
+                Button(String(localized: "Choose video from Files", table: "Sessions.Import")) {
+                    if let intent = importIntent { presentPicker(FilesImportRequest(intent: intent)) }
+                }.buttonStyle(.jovraAccent).disabled(!canChoose).accessibilityIdentifier("import.choose")
             }
-            Button(String(localized: "Choose video from Files", table: "Sessions.Import")) { showPicker = true }
-                .buttonStyle(.jovraAccent).disabled(!canChoose).accessibilityIdentifier("import.choose")
             if work != nil {
-                ProgressView(cancelling ? String(localized: "Cancelling import…", table: "Sessions.Import") :
-                    String(localized: "Copying and checking the video…", table: "Sessions.Import"))
-                Button(String(localized: "Cancel import", table: "Sessions.Import")) {
+                ProgressView(progressTitle)
+                Button(openingExisting ? String(localized: "Cancel", table: "Sessions.Import") :
+                       String(localized: "Cancel import", table: "Sessions.Import")) {
                     cancelling = true
                     work?.cancel()
                 }.buttonStyle(.jovraSecondary).disabled(cancelling)
@@ -66,14 +61,65 @@ struct ImportScreen: View {
                 }.buttonStyle(.jovraSecondary)
             }
         }
-        .fileImporter(isPresented: $showPicker, allowedContentTypes: [.movie]) { result in
-            if case .success(let url) = result {
-                beginImport(url)
-            } else if case .failure(let error) = result, (error as? CocoaError)?.code != .userCancelled {
-                issue = String(localized: "Could not open that file.", table: "Sessions.Import")
+        .fileImporter(isPresented: $showPicker, allowedContentTypes: [.movie], allowsMultipleSelection: false,
+                      onCompletion: finishPicker, onCancellation: { pickerRequest = nil })
+        .onDisappear { work?.cancel() }
+    }
+
+    private var importFields: some View {
+        VStack(alignment: .leading, spacing: Space.x2) {
+            Picker(selection: $kind) {
+                Text("Practice", tableName: "Sessions.Import").tag(Kind.practice)
+                Text("Singles match", tableName: "Sessions.Import").tag(Kind.match)
+            } label: {
+                Text("Import as", tableName: "Sessions.Import")
+            }.pickerStyle(.segmented)
+            if kind == .match {
+                matchFields
+            } else {
+                playerField(String(localized: "Player name", table: "Sessions.Import"),
+                            text: $playerName, identifier: "import.player")
             }
         }
-        .onDisappear { work?.cancel() }
+    }
+
+    private func duplicateActions(_ decision: ImportDuplicateDecision) -> some View {
+        VStack(alignment: .leading, spacing: Space.x2) {
+            if let existing = decision.existing {
+                Text("This video is already in your library", tableName: "Sessions.Import")
+                    .font(.headline).accessibilityAddTraits(.isHeader).accessibilityIdentifier("import.duplicate.title")
+                Text("Open the existing session, or select the same video again to save a separate copy.", tableName: "Sessions.Import")
+                    .fixedSize(horizontal: false, vertical: true)
+                Button(String(localized: "Open Existing", table: "Sessions.Import")) {
+                    openExisting(existing)
+                }.buttonStyle(.jovraAccent).accessibilityIdentifier("import.duplicate.open")
+            } else {
+                Text("The existing copy could not be verified", tableName: "Sessions.Import")
+                    .font(.headline).accessibilityAddTraits(.isHeader).accessibilityIdentifier("import.duplicate.title")
+                Text("Select the same video again to save a separate copy.", tableName: "Sessions.Import")
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            if decision.intent.isMatch {
+                Toggle(isOn: Binding(get: { duplicate?.confirmsFullMatch ?? false },
+                                     set: { duplicate?.confirmsFullMatch = $0 })) {
+                    Text("I confirm the video I select again contains every point of the match.", tableName: "Sessions.Import")
+                        .fixedSize(horizontal: false, vertical: true)
+                }.frame(minHeight: 52).accessibilityIdentifier("import.duplicate.complete")
+            }
+            Button(String(localized: "Import Anyway", table: "Sessions.Import")) {
+                if let request = duplicate?.makeRetryRequest() { presentPicker(request) }
+            }.buttonStyle(.jovraSecondary).disabled(!decision.canRetry).accessibilityIdentifier("import.duplicate.retry")
+            Button(String(localized: "Cancel", table: "Sessions.Import")) {
+                duplicate = nil
+                issue = nil
+            }.buttonStyle(.jovraSecondary).accessibilityIdentifier("import.duplicate.cancel")
+        }
+    }
+
+    private var progressTitle: String {
+        if openingExisting { return String(localized: "Checking the existing video…", table: "Sessions.Import") }
+        if cancelling { return String(localized: "Cancelling import…", table: "Sessions.Import") }
+        return String(localized: "Copying and checking the video…", table: "Sessions.Import")
     }
 
     private var matchFields: some View {
@@ -134,33 +180,94 @@ struct ImportScreen: View {
                      firstServer: firstServer, nearPlayer: nearPlayer, containsFullMatch: containsFullMatch)
     }
 
-    private func beginImport(_ url: URL) {
-        guard canChoose, case .ready(let library) = library else { return }
+    private func presentPicker(_ request: FilesImportRequest) {
+        guard work == nil, pickerRequest == nil, case .ready = library else { return }
+        issue = nil
+        pickerRequest = request
+        showPicker = true
+    }
+
+    private func finishPicker(_ result: Result<[URL], any Error>) {
+        guard let request = pickerRequest else { return }
+        pickerRequest = nil
+        switch result {
+        case .success(let urls) where urls.count == 1:
+            beginImport(urls[0], request: request)
+        case .failure(let error) where (error as? CocoaError)?.code == .userCancelled:
+            break
+        default:
+            issue = String(localized: "Could not open that file.", table: "Sessions.Import")
+        }
+    }
+
+    private func beginImport(_ url: URL, request: FilesImportRequest) {
+        guard work == nil, case .ready(let library) = library else { return }
         issue = nil; imported = nil
-        let name = playerName
-        let setup = kind == .match ? matchSetup : nil
-        if setup != nil { containsFullMatch = false }
+        if request.intent.isMatch { containsFullMatch = false }
         work = Task {
             defer { work = nil; cancelling = false }
-            do {
-                // If publication completed before cancellation, acknowledge the actual saved session.
-                if let setup {
-                    imported = try await library.importMatch(url, setup: setup)
-                } else {
-                    imported = try await library.importFile(url, playerName: name)
+            await completeFilesImport {
+                switch request.intent {
+                case .match(let setup):
+                    return try await library.importMatch(url, setup: setup, importingAgain: request.duplicatePermission)
+                case .practice(let name):
+                    return try await library.importFile(url, playerName: name, importingAgain: request.duplicatePermission)
                 }
-            } catch is CancellationError {
-                return
-            } catch {
-                issue = String(localized: "Import could not be confirmed. Check your library before trying again. Your selected file was not changed.", table: "Sessions.Import")
+            } onPublished: { id in
+                imported = id
+                duplicate = nil
+            } onFailure: { error in
+                presentImportFailure(error, intent: request.intent)
             }
         }
     }
 
-    private var canChoose: Bool {
-        guard case .ready = library, work == nil else { return false }
-        if kind == .match { return matchSetup?.isValid == true }
+    private func presentImportFailure(_ error: any Error, intent: FilesImportIntent) {
+        switch error as? FilesImportError {
+        case .duplicate(let existing):
+            duplicate = .init(intent: intent, fingerprint: existing.fingerprint, existing: existing)
+        case .duplicateUnverified(let fingerprint):
+            duplicate = .init(intent: intent, fingerprint: fingerprint, existing: nil)
+        case .differentDuplicateSelection:
+            issue = String(localized: "That is a different video. Select the same video or cancel to start a new import.", table: "Sessions.Import")
+        default:
+            issue = String(localized: "Import could not be confirmed. Check your library before trying again. Your selected file was not changed.", table: "Sessions.Import")
+        }
+    }
+
+    private func openExisting(_ existing: FilesImportDuplicate) {
+        guard work == nil, pickerRequest == nil, case .ready(let library) = library else { return }
+        issue = nil
+        openingExisting = true
+        work = Task {
+            defer { work = nil; openingExisting = false; cancelling = false }
+            do {
+                let id = try await library.verifyExistingDuplicate(existing)
+                try Task.checkCancellation()
+                duplicate = nil
+                router.present(.replay(.init(session: id, point: nil, filter: .all)))
+            } catch is CancellationError {
+                return
+            } catch {
+                guard !Task.isCancelled else { return }
+                duplicate?.existing = nil
+                duplicate?.confirmsFullMatch = false
+            }
+        }
+    }
+
+    private var importIntent: FilesImportIntent? {
+        if kind == .match {
+            guard let setup = matchSetup, setup.isValid else { return nil }
+            return .match(setup)
+        }
         let name = playerName.trimmingCharacters(in: .whitespacesAndNewlines)
-        return !name.isEmpty && name.unicodeScalars.count <= 60
+        guard !name.isEmpty, name.unicodeScalars.count <= 60 else { return nil }
+        return .practice(playerName: name)
+    }
+
+    private var canChoose: Bool {
+        guard case .ready = library, work == nil, pickerRequest == nil else { return false }
+        return importIntent != nil
     }
 }

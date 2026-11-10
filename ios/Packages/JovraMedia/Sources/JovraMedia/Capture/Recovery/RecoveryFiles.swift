@@ -72,6 +72,28 @@ struct RecoveryFiles {
     func read(_ path: String, retainingUpTo limit: Int? = nil) throws -> (RecoveryFingerprint, Data, MediaFileIdentity) {
         let source = try url(path)
         let descriptor = open(source.path, O_RDONLY | O_NOFOLLOW | O_NONBLOCK)
+        return try read(descriptor, source: source, path: path, retainingUpTo: limit)
+    }
+
+    /// Open the importer-owned directory and original without following either through a link.
+    func readOwnedOriginal(_ path: String) throws -> (RecoveryFingerprint, Data, MediaFileIdentity) {
+        let source = try url(path)
+        let components = path.split(separator: "/")
+        guard components.count == 2, components.first == "originals", let name = components.last else {
+            throw RecoveryError.unsafePath
+        }
+        let root = open(folder.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW)
+        guard root >= 0 else { throw RecoveryError.filesystem(errno) }
+        defer { close(root) }
+        let directory = openat(root, "originals", O_RDONLY | O_DIRECTORY | O_NOFOLLOW)
+        guard directory >= 0 else { throw RecoveryError.filesystem(errno) }
+        defer { close(directory) }
+        let descriptor = openat(directory, String(name), O_RDONLY | O_NOFOLLOW | O_NONBLOCK)
+        return try read(descriptor, source: source, path: path, retainingUpTo: nil, checkingCancellation: true)
+    }
+
+    private func read(_ descriptor: Int32, source: URL, path: String,
+                      retainingUpTo limit: Int?, checkingCancellation: Bool = false) throws -> (RecoveryFingerprint, Data, MediaFileIdentity) {
         guard descriptor >= 0 else { throw RecoveryError.filesystem(errno) }
         let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
         defer { try? handle.close() }
@@ -81,6 +103,7 @@ struct RecoveryFiles {
         if let limit, before.st_size > Int64(limit) { throw RecoveryError.invalidJournal }
         var hash = SHA256(), total = 0, retained = Data()
         while let chunk = try handle.read(upToCount: 1_048_576), !chunk.isEmpty {
+            if checkingCancellation { try Task.checkCancellation() }
             let next = total.addingReportingOverflow(chunk.count)
             guard !next.overflow else { throw RecoveryError.changedFile }; total = next.partialValue
             if let limit {
