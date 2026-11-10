@@ -8,8 +8,9 @@ against an independent source. Jittered taps come from a seeded SplitMix64 in wh
 
 Floats are rounded to 9 decimal places so the bytes are the same on every machine; each case states the tolerance
 a platform compares with. The generator refuses to write a case whose hand-stated facts do not hold (an exact
-four-point solve reproduces its taps within 1e-6 px; a perturbed fit reads poor; past staleFromMs reads stale), and
-CHECKS re-runs every case in the validator.
+four-point solve reproduces its taps within 1e-6 px; a perturbed fit reads poor; a twisted fit whose measured lines
+fall beyond its horizon reads poor with no RMSE; past staleFromMs reads stale), and CHECKS re-runs every case in the
+validator.
 """
 
 from __future__ import annotations
@@ -163,13 +164,19 @@ def c03() -> tuple:
 
 
 def check_case(name: str, image: list[dict], cpts_names: list[str], observed: list[str], height: int,
-               expect: str, scale_from: int = HEIGHT) -> dict:
+               expect: str, scale_from: int = HEIGHT, twisted: bool = False) -> dict:
+    """`twisted` states by hand that the fit cannot project every court point (some lie on or beyond its horizon);
+    the generator refuses the case when the engine disagrees, in either direction."""
     cpts = [court.POINTS[n] for n in cpts_names]
     h = court.fit([tup(p) for p in image], cpts)
     obs = [(court.POINTS[n], tuple(v * height / scale_from for v in camera(court.POINTS[n]))) for n in observed]
     result = court.fit_check(h, obs, height)
     if result["verdict"] != expect:
         raise ValueError(f"{name}: expected {expect}, engine says {result['verdict']} ({result['rmsePx']})")
+    if twisted != any(court.project(h, p) is None for _, p in court.INTERSECTIONS):
+        raise ValueError(f"{name}: twisted is stated {twisted}, the engine's projections disagree")
+    if obs and twisted and (result["verdict"], result["rmsePx"]) != ("poor", None):
+        raise ValueError(f"{name}: measured lines beyond the horizon must read poor with no RMSE, got {result}")
     return {"op": "check", "name": name, "imagePoints": image, "courtPoints": [pt(c) for c in cpts],
             "frameHeight": height,
             "observations": [{"court": pt(c), "pixel": pt(p)} for c, p in obs],
@@ -180,12 +187,16 @@ def check_case(name: str, image: list[dict], cpts_names: list[str], observed: li
 
 
 UNTAPPED = [n for n, _ in court.INTERSECTIONS if n not in court.DOUBLES_CORNERS]
+# The doubles corners with the two far brackets on each other's corner: the taps cross, a bow tie.
+FAR_SWAPPED = [court.DOUBLES_CORNERS[i] for i in (0, 1, 3, 2)]
 
 
-def scaled_taps(names: list[str], height: int, offsets: dict | None = None) -> list[dict]:
+def scaled_taps(names: list[str], height: int, offsets: dict | None = None, moved: dict | None = None) -> list[dict]:
+    """Taps on the true pixels of `names`. `offsets` nudges a tap by 1080p pixels; `moved` puts it at an absolute
+    1080p pixel instead (a bracket dragged somewhere else entirely)."""
     out = []
     for n in names:
-        u, v = camera(court.POINTS[n])
+        u, v = (moved or {}).get(n) or camera(court.POINTS[n])
         du, dv = (offsets or {}).get(n, (0, 0))
         out.append(pt(((u + du) * height / HEIGHT, (v + dv) * height / HEIGHT)))
     return out
@@ -205,6 +216,22 @@ def c04() -> tuple:
                    court.DOUBLES_CORNERS, UNTAPPED, 1080, "good"),
         check_case("no line pixels measured: not measurable, never a pass", scaled_taps(court.DOUBLES_CORNERS, 1080),
                    court.DOUBLES_CORNERS, [], 1080, "notMeasurable"),
+        # Story 66, the grossly wrong fits: a bracket dragged across the court twists the quad until measured lines
+        # fall on or beyond the fit's own horizon. They were measured, so the fit is poor (and so invalid, C05); no
+        # RMSE is invented for a line the fit puts nowhere.
+        check_case("the far right bracket dragged to the middle of the court: measured lines beyond the horizon, poor",
+                   scaled_taps(court.DOUBLES_CORNERS, 1080, moved={"farRightDoubles": (960.0, 600.0)}),
+                   court.DOUBLES_CORNERS, UNTAPPED, 1080, "poor", twisted=True),
+        check_case("the far brackets swapped (a self-intersecting quad): poor",
+                   scaled_taps(FAR_SWAPPED, 1080), court.DOUBLES_CORNERS, UNTAPPED, 1080, "poor", twisted=True),
+        check_case("the far right bracket dragged below the near baseline: poor",
+                   scaled_taps(court.DOUBLES_CORNERS, 1080,
+                               moved={"farRightDoubles": (camera(court.POINTS["farRightDoubles"])[0], 1000.0)}),
+                   court.DOUBLES_CORNERS, UNTAPPED, 1080, "poor", twisted=True),
+        check_case("the same twisted taps at 720p: poor at every frame size",
+                   scaled_taps(FAR_SWAPPED, 720), court.DOUBLES_CORNERS, UNTAPPED, 720, "poor", twisted=True),
+        check_case("a twisted fit with no line pixels measured: only an absent measurement is not measurable",
+                   scaled_taps(FAR_SWAPPED, 1080), court.DOUBLES_CORNERS, [], 1080, "notMeasurable", twisted=True),
     ])
 
 

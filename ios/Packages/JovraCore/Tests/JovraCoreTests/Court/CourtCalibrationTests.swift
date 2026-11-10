@@ -63,6 +63,26 @@ struct CourtCalibrationTests {
         #expect(c.check?.rmsePx == nil)
     }
 
+    /// Story 66: a bracket dragged across the court twists the quad until the fit puts measured lines beyond its
+    /// own horizon. Those lines were measured, so this is the worst fit there is, never "not measurable".
+    /// The far right tap (hand-worked true pixel (1179.4, 64.6)) moves to (800, 900), inside the triangle of the
+    /// other three taps: a non-convex quad, which no camera looking at a flat court can produce.
+    @Test func measuredLinesTheFitPutsBeyondItsHorizonAreAPoorFitAndInvalid() throws {
+        var taps = CourtGeometry.doublesCorners.map { Self.pixel($0.point) }
+        taps[2] = VideoPixel(x: 800, y: 900)
+        let twisted = try CourtCalibration(doublesCorners: taps, camera: Self.binding)
+        #expect(twisted.project(CourtIntersection.nearLeftDoubles.point) == nil, "premise: the fit cannot place the opposite tapped corner")
+        #expect(twisted.project(CourtIntersection.nearServiceT.point) == nil, "premise: a measured line is unprojectable")
+
+        let checked = twisted.checked(against: untapped())
+        let check = try #require(checked.check)
+        #expect(check.verdict == .poor)
+        #expect(check.rmsePx == nil, "no residual is invented for a line that has no pixel")
+        #expect(checked.validity(atMs: 0, current: Self.binding) == .invalid(.poorFit))
+        // Nothing measured stays the only way to read notMeasurable, however twisted the fit.
+        #expect(twisted.checked(against: []).check?.verdict == .notMeasurable)
+    }
+
     @Test func aRecordWithoutACameraFormatIsRefused() throws {
         let record = SessionCalibration(id: "c", method: .value, frameMs: 0, imagePoints: [], courtPoints: [], status: .valid,
                                         provenance: RecordProvenance(status: .manual, source: "user"))

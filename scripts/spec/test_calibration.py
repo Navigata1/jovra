@@ -74,6 +74,29 @@ class CheckTests(unittest.TestCase):
         self.assertEqual(court.poor_fit_threshold_px(720), 2.0)
         self.assertEqual(court.fit_check(h, [], 1080)["verdict"], "notMeasurable")
 
+    def test_measured_lines_the_fit_puts_beyond_its_horizon_are_a_poor_fit_never_unmeasured(self):
+        # Story 66: one bracket dragged across the court twists the quad so far that court points the lines were
+        # measured at cannot be projected at all. That is the worst fit there is, not an absent measurement.
+        corners = [court.POINTS[n] for n in court.DOUBLES_CORNERS]
+        true_taps = [camera(c) for c in corners]
+        observed = [(p, camera(p)) for n, p in court.INTERSECTIONS if n not in court.DOUBLES_CORNERS]
+        bind = {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"}
+        twisted = {
+            "far right bracket dragged to the middle of the court": true_taps[:2] + [(960.0, 600.0)] + true_taps[3:],
+            "far brackets swapped": true_taps[:2] + [true_taps[3], true_taps[2]],
+            "far right bracket dragged below the near baseline": true_taps[:2] + [(true_taps[2][0], 1000.0)] + true_taps[3:],
+        }
+        for name, taps in twisted.items():
+            with self.subTest(name):
+                h = court.fit(taps, corners)
+                self.assertTrue(any(court.project(h, p) is None for p, _ in observed), "premise: a line is unprojectable")
+                got = court.fit_check(h, observed, 1080)
+                self.assertEqual((got["verdict"], got["rmsePx"]), ("poor", None))
+                self.assertEqual(court.validity(bind, bind, None, 0, got), {"status": "invalid", "reason": "poorFit"})
+        # Nothing measured is still the only way to read notMeasurable, however twisted the fit.
+        h = court.fit(twisted["far brackets swapped"], corners)
+        self.assertEqual(court.fit_check(h, [], 1080)["verdict"], "notMeasurable")
+
 
 class ValidityTests(unittest.TestCase):
     BIND = {"lens": "wide", "width": 1920, "height": 1080, "zoomFactor": "1.0"}

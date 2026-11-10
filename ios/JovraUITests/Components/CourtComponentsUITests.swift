@@ -107,12 +107,40 @@ final class CourtComponentsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["All four corners visible"].waitForExistence(timeout: 3), "double tap puts the bracket back")
     }
 
+    /// Story 66: a bracket dragged right across the court twists the quad until the fit puts measured lines beyond
+    /// its own horizon. The guide must say so; it once read "All four corners visible" and "0.0 px RMSE" here.
+    @MainActor
+    func testDraggingABracketAcrossTheCourtIsNeverTheGoodState() throws {
+        let app = launch("guide")
+        let check = app.staticTexts["court.check"].firstMatch
+        XCTAssertTrue(check.waitForExistence(timeout: 5))
+        let farRight = app.descendants(matching: .any)["court.corner.farRightDoubles"].firstMatch
+        let nearLeft = app.descendants(matching: .any)["court.corner.nearLeftDoubles"].firstMatch
+        let start = farRight.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        // Most of the way to the opposite corner: inside the triangle of the other three brackets.
+        let end = nearLeft.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let across = CGVector(dx: (end.screenPoint.x - start.screenPoint.x) * 0.7, dy: (end.screenPoint.y - start.screenPoint.y) * 0.7)
+        start.press(forDuration: 0.2, thenDragTo: start.withOffset(across))
+        XCTAssertTrue(app.staticTexts["Check the corners"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.staticTexts["All four corners visible"].exists)
+        XCTAssertEqual(check.label, "Untapped lines: beyond the horizon, limit 3 px")
+        attachScreenshot(app, name: "t13-light-guide-dragged-across")
+        farRight.doubleTap()
+        XCTAssertTrue(app.staticTexts["All four corners visible"].waitForExistence(timeout: 3), "double tap puts the bracket back")
+    }
+
     @MainActor
     func testPoorFitAndLoupeStates() throws {
-        for (scenario, appearance) in [("guide-poor", LaunchConfiguration.Appearance.dark), ("guide-loupe", .light)] {
+        for (scenario, appearance) in [("guide-poor", LaunchConfiguration.Appearance.dark), ("guide-loupe", .light),
+                                       ("guide-twisted", .dark)] {
             let app = launch(scenario, appearance: appearance)
             if scenario == "guide-poor" {
                 XCTAssertTrue(app.staticTexts["Check the corners"].waitForExistence(timeout: 5))
+            }
+            if scenario == "guide-twisted" {
+                XCTAssertTrue(app.staticTexts["Check the corners"].waitForExistence(timeout: 5))
+                XCTAssertFalse(app.staticTexts["All four corners visible"].exists)
+                XCTAssertEqual(app.staticTexts["court.check"].firstMatch.label, "Untapped lines: beyond the horizon, limit 3 px")
             }
             try auditScreen(app)
             attachScreenshot(app, name: "t13-\(appearance == .dark ? "dark" : "light")-\(scenario)")

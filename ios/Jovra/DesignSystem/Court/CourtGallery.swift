@@ -21,6 +21,8 @@ struct CourtGallery: View {
         case diagrams, markers, guide
         case guidePoor = "guide-poor"
         case guideLoupe = "guide-loupe"
+        /// The far right bracket dragged to the middle of the court: a quad no camera can produce.
+        case guideTwisted = "guide-twisted"
     }
 
     /// Tall enough to read a to-scale court (2.17 times longer than wide) and short enough to keep it on one screen.
@@ -40,7 +42,7 @@ struct CourtGallery: View {
                         switch scenario {
                         case .diagrams: diagrams
                         case .markers: markers
-                        case .guide, .guidePoor, .guideLoupe: guide
+                        case .guide, .guidePoor, .guideLoupe, .guideTwisted: guide
                         }
                     }
                     .padding(Space.screenMargin)
@@ -55,6 +57,7 @@ struct CourtGallery: View {
         .background(Color.jovra(.background).ignoresSafeArea())
         .onAppear {
             if scenario == .guidePoor { corners[2] = VideoPixel(x: corners[2].x + 9, y: corners[2].y - 7) }
+            if scenario == .guideTwisted { corners[2] = CourtGuideReadout.twistedFarRight }
         }
     }
 
@@ -168,9 +171,7 @@ struct CourtGallery: View {
     // MARK: - Guide
 
     private var guide: some View {
-        let check = CalibrationCheck(homography: (try? Homography.fit(image: corners, court: CourtGeometry.doublesCorners.map(\.point)))
-                                        ?? Homography(matrix: [1, 0, 0, 0, 1, 0, 0, 0, 1]),
-                                     observations: SyntheticCourtCamera.untappedObservations, frameHeight: 1080)
+        let readout = CourtGuideReadout(corners: corners)
         return VStack(alignment: .leading, spacing: Space.x2) {
             PerspectiveCourtGuide(videoSize: SyntheticCourtCamera.size, corners: $corners, defaults: SyntheticCourtCamera.trueCorners,
                                   pinnedLoupe: scenario == .guideLoupe ? 2 : nil) {
@@ -185,17 +186,17 @@ struct CourtGallery: View {
             }
             .accessibilityIdentifier("court.guide")
             VStack(alignment: .leading, spacing: Space.half) {
-                Text(check.verdict == .poor ? "Check the corners" : "All four corners visible")
+                Text(readout.passes ? "All four corners visible" : "Check the corners")
                     .font(.jovraHeadline)
                     .foregroundStyle(.jovra(.textPrimary))
-                Text(check.verdict == .poor ? "The court lines don't match. Drag the brackets onto the outer corners."
-                     : "Keep the phone steady and the net centered.")
+                Text(readout.passes ? "Keep the phone steady and the net centered."
+                     : "The court lines don't match. Drag the brackets onto the outer corners.")
                     .font(.jovraBody)
                     .foregroundStyle(.jovra(.textSecondary))
                     .fixedSize(horizontal: false, vertical: true)
-                Text(String(format: "Untapped lines: %.1f px RMSE, limit %.0f px", check.rmsePx ?? 0, check.thresholdPx))
+                Text(readout.residual)
                     .font(.jovraTimecode)
-                    .foregroundStyle(.jovra(check.verdict == .poor ? .attentionInk : .positiveInk))
+                    .foregroundStyle(.jovra(readout.passes ? .positiveInk : .attentionInk))
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("court.check")
             }
@@ -208,6 +209,34 @@ struct CourtGallery: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(RoundedRectangle(cornerRadius: Radius.card, style: .continuous).fill(Color.jovra(.courtSurface)))
             .environment(\.colorScheme, .dark)
+    }
+}
+
+/// What the gallery says under the framing guide for the current brackets (story 66). Only a good check reads as
+/// the good state. A fit that is refused, or one so twisted that it puts measured lines beyond its own horizon, has
+/// no residual: it says so in words and never prints 0.0 px.
+struct CourtGuideReadout: Equatable {
+    /// Where the `guide-twisted` scenario puts the far right bracket: the middle of the court in the 1080p frame.
+    static let twistedFarRight = VideoPixel(x: 960, y: 600)
+
+    let passes: Bool
+    let residual: String
+
+    init(corners: [VideoPixel], observations: [CalibrationObservation] = SyntheticCourtCamera.untappedObservations,
+         frameHeight: Int = 1080) {
+        guard let homography = try? Homography.fit(image: corners, court: CourtGeometry.doublesCorners.map(\.point)) else {
+            passes = false
+            residual = "Untapped lines: no fit through these corners"
+            return
+        }
+        let check = CalibrationCheck(homography: homography, observations: observations, frameHeight: frameHeight)
+        passes = check.verdict == .good
+        let limit = String(format: "limit %.0f px", check.thresholdPx)
+        switch (check.verdict, check.rmsePx) {
+        case (.notMeasurable, _): residual = "Untapped lines: not measured"
+        case (_, let rmsePx?): residual = String(format: "Untapped lines: %.1f px RMSE, ", rmsePx) + limit
+        case (_, nil): residual = "Untapped lines: beyond the horizon, " + limit
+        }
     }
 }
 

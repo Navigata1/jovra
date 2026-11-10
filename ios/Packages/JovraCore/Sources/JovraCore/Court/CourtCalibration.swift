@@ -13,7 +13,9 @@ public struct CalibrationObservation: Hashable, Sendable {
 
 /// The check that can fail (ios-v1-spec CourtCalibration, story 66): project the court points the player did not
 /// tap and measure how far they land from where those lines are seen. Poor above 3 px RMSE at 1080p, scaled by
-/// the frame height (2 px at 720p). With nothing measured it is `notMeasurable`, never a pass.
+/// the frame height (2 px at 720p). A fit so twisted that a measured court point falls on or beyond its horizon (a
+/// bracket dragged across the court) has no residual to state and is poor too. Only with nothing measured is it
+/// `notMeasurable`, and that is never a pass.
 public struct CalibrationCheck: Hashable, Sendable {
     public static let poorFitPxAt1080p = 3.0
 
@@ -22,17 +24,21 @@ public struct CalibrationCheck: Hashable, Sendable {
     }
 
     public let verdict: Verdict
-    /// Root mean square pixel distance; nil when nothing was measured or a point projects beyond the horizon.
+    /// Root mean square pixel distance. Nil when nothing was measured (`notMeasurable`), and nil with a `poor`
+    /// verdict when the fit puts a measured court point beyond its horizon: no residual is invented for it.
     public let rmsePx: Double?
     public let thresholdPx: Double
 
     public init(homography: Homography, observations: [CalibrationObservation], frameHeight: Int) {
         thresholdPx = Self.thresholdPx(frameHeight: frameHeight)
         rmsePx = Self.reprojectionRMSE(homography: homography, observations: observations)
-        if let rmsePx {
-            verdict = rmsePx <= thresholdPx ? .good : .poor
-        } else {
+        if observations.isEmpty {
             verdict = .notMeasurable
+        } else if let rmsePx, rmsePx <= thresholdPx {
+            verdict = .good
+        } else {
+            // Above the limit, or a line that was seen in the frame and that the fit cannot place at all.
+            verdict = .poor
         }
     }
 

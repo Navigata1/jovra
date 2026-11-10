@@ -22,7 +22,9 @@ all be collinear. Fewer than four pairs is `tooFewPoints`; unequal lists
 
 The check that can fail: `reprojection_rmse` projects court points the player did not tap (line intersections) and
 compares them with where those lines are seen; a fit is poor above 3 px at 1080p, scaled by the frame height
-(2 px at 720p). With nothing measured the check is `notMeasurable`, never a pass.
+(2 px at 720p). A fit so twisted that a measured court point falls on or beyond its horizon (a bracket dragged
+across the court) has no residual to state and is poor too. Only with nothing measured is the check
+`notMeasurable`, and that is never a pass.
 
 Validity binds a calibration to one lens, format (width x height) and zoom, and to the time the camera moved
 ("stale from mm:ss"). Reasons are reported in this order: lensChanged, formatChanged, zoomChanged, poorFit, stale,
@@ -296,10 +298,15 @@ def poor_fit_threshold_px(frame_height: int) -> float:
 
 
 def fit_check(h, observations, frame_height: int) -> dict:
+    """The verdict on a fit. `notMeasurable` only when nothing was measured. With measurements, a court point the
+    fit cannot project (on or beyond its horizon) makes the fit poor with no RMSE: the line was seen in the frame
+    and the fit puts it nowhere, which is worse than any pixel distance. No residual is invented for it."""
     rmse = reprojection_rmse(h, observations)
     threshold = poor_fit_threshold_px(frame_height)
-    if rmse is None:
+    if not observations:
         return {"verdict": "notMeasurable", "rmsePx": None, "thresholdPx": threshold}
+    if rmse is None:
+        return {"verdict": "poor", "rmsePx": None, "thresholdPx": threshold}
     return {"verdict": "good" if rmse <= threshold else "poor", "rmsePx": rmse, "thresholdPx": threshold}
 
 

@@ -1,15 +1,19 @@
 $ SIMULATOR_ID=EC62AF47-253F-497F-B735-233029F969BA JOVRA_SKIP_SAMPLE_MEDIA=YES scripts/ios/ui-test.sh -only-testing JovraUITests/CourtComponentsUITests 13-court-calibration-diagrams
 Test class                           passed  failed  skipped  expected
-JovraUITests/CourtComponentsUITests       5       0        0         0
-Total: 5 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 5 passed, 0 failed, 0 skipped; result Passed)
+JovraUITests/CourtComponentsUITests       6       0        0         0
+Total: 6 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 6 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-T13 EC62AF47-253F-497F-B735-233029F969BA (iPhone 17 Pro, iOS Simulator 27.2)
   Passed testCourtComponentsInLightDarkAndAX5()     (performAccessibilityAudit, every type, each scenario scrolled)
+  Passed testDraggingABracketAcrossTheCourtIsNeverTheGoodState()     (new: reads "Untapped lines: beyond the horizon, limit 3 px")
   Passed testDraggingACornerOffTheCourtFailsTheReprojectionCheck()
   Passed testFiveMarkerShapesEachNamedByShapeAndMeaning()
-  Passed testPoorFitAndLoupeStates()
+  Passed testPoorFitAndLoupeStates()     (now also audits the guide-twisted scenario)
   Passed testVoiceOverDescribesAPlacementInWords()
 
-Run on the tree with origin/main merged through bc2229e (#512) and 9cdbf59 (#524).
+Run on 2026-11-09 with the round 1 review fixes on top of 5819b8c (origin/main merged through c9021f5, #540).
+The run re-exported every screenshot. Only the two new ones were committed (t13-dark-guide-twisted.jpg,
+t13-light-guide-dragged-across.jpg); the other 19 show screens this update did not change and are kept from the
+run one merge earlier (main through bc2229e).
 
 The audit failed three times on the way here and each failure changed the app code, not what is audited:
   1. "Potentially inaccessible text": the serve-zone words were drawn in the canvas. They are now real text
@@ -21,16 +25,20 @@ The audit failed three times on the way here and each failure changed the app co
      for the page to settle after launch, which made the failure happen on every launch (8 of 8); the gallery
      cells then became plain text elements, and the same probe passed 6 of 6.
 
-$ xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -only-testing:JovraTests -destination id=EC62AF47-253F-497F-B735-233029F969BA -derivedDataPath .derivedData
+$ JOVRA_SKIP_SAMPLE_MEDIA=YES xcodebuild test -project ios/Jovra.xcodeproj -scheme Jovra -only-testing:JovraTests -destination id=EC62AF47-253F-497F-B735-233029F969BA -derivedDataPath .derivedData
 ✔ Suite "Loupe placement" passed after 0.001 seconds.
-✔ Test "with room above, the loupe sits 96 pt above the finger" passed
-✔ Test "near a side edge it slides in so the whole circle shows" passed
-✔ Test "with no room above it moves beside the finger, towards the middle of the frame, never below it" passed
-✔ Test "everywhere in a phone-width 16:9 frame the loupe is whole and clear of the finger" passed
-✔ Test "a frame smaller than the loupe centres it instead of trapping" passed
-✔ Test run with 114 tests in 19 suites passed after 2.591 seconds.
-	 Executed 24 tests, with 1 test skipped and 0 failures (0 unexpected) in 6.787 (6.797) seconds
+✔ Test "brackets on the true corners pass with a 0.0 px residual" passed after 0.001 seconds.
+✔ Test "a far corner 11 px off is a poor fit with its residual" passed after 0.001 seconds.
+✔ Test "a bracket dragged across the court never reads as the good state or as 0.0 px" with 2 test cases passed after 0.001 seconds.
+✔ Test "the far brackets swapped read the same" passed after 0.001 seconds.
+✔ Test "four brackets on one spot are no fit, not a pass" passed after 0.001 seconds.
+✔ Test "with no line pixels measured nothing passes" passed after 0.001 seconds.
+✔ Suite "Court guide readout" passed after 0.002 seconds.
+✔ Test run with 122 tests in 20 suites passed after 3.184 seconds.
+	 Executed 24 tests, with 1 test skipped and 0 failures (0 unexpected) in 6.882 (6.895) seconds
 ** TEST SUCCEEDED **
-(LoupePlacementTests was written before LoupePlacement existed; its red state was the missing symbol.)
+(LoupePlacementTests was written before LoupePlacement existed; its red state was the missing symbol.
+CourtGuideReadoutTests was written before CourtGuideReadout; that red state, also a missing symbol, was not run.
+The Core rule behind the readout has a recorded red run: 07-core-twisted-fit-caught.txt.)
 
 The app was built with JOVRA_SKIP_SAMPLE_MEDIA=YES: the court gallery needs no sample video.
