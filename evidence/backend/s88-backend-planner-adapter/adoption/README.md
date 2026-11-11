@@ -1,0 +1,10 @@
+# S88 adoption and fixture-safety evidence
+
+- Original Claude head `14d5b71aa38c52e7751381b957474f259077cba3` is unchanged. Its deliberate failing CI run `42467957634` and vector restore remain in its original branch and in `ci-runs.md`.
+- Refreeze `24a79d9ba8807a5f9c6a2b3164a55e51d77c7558` has sole parent `42f3a56314eb444c95966d905a47d3ac5bda8bc4` and whole tree `54976b13b2d731b308cba4e0c226d16b13bf56b9`, identical to the original head. No hosted result was reassigned to it. Local Node 24.15.0 baseline passed all 176 original tests.
+- `01-fixture-red.txt` records the actual focused tests on the refrozen source before the fix: eight failures and one positive Unicode control pass. The untrimmed raw output is retained at `/tmp/jovra-s88-01-fixture-red.raw.txt`.
+- Source `15b56f575b62ed2f03ef14da202f3507660f8007` moves fixture patching into tests, requires own-property traversal, refuses unsafe keys and escaping or symlinked record paths, and refuses lone surrogates in canonical keys and values. The fixture loader is for an owned test checkout; this is not a concurrent-filesystem sandbox or a production file reader.
+- On that exact source, Node 24.15.0 typecheck passed; all 185 tests passed with no failures or skips, including both keeper-window hash-binding controls. The three vector files contain 150 cases: 143 reruns (all byte-identical), and seven base contexts. The earlier PR body count of 151/eight contexts was not used.
+- The original Studio Python encoder independently refused lone surrogates and matched the adapter's SHA-256 for valid non-BMP/BMP keys. The adapter retains the existing Studio scalar-order byte contract, not general RFC 8785 UTF-16 key ordering. No shared fixture, workflow, package dependency, or provider code changed in the remediation.
+
+This is bounded local source verification. It does not establish current-head hosted CI, provider/auth integration, rendering, production activation, or merge permission. The evidence-only commit after the tested source does not relabel its test runs.
