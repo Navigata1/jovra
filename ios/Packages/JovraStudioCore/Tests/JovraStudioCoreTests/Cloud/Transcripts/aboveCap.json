@@ -1,0 +1,202 @@
+{
+  "accept" : {
+    "ok" : {
+      "_0" : {
+        "demoDisabled" : {
+          "sampleJob" : "job-queue-38"
+        }
+      }
+    }
+  },
+  "artifacts" : {
+    "ok" : {
+      "_0" : [
+
+      ]
+    }
+  },
+  "deleteAccount" : {
+    "error" : {
+      "_0" : {
+        "demoDisabled" : {
+
+        }
+      }
+    }
+  },
+  "deleteCloudCopies" : {
+    "ok" : {
+      "_0" : {
+        "requestId" : "deletion-sample-01",
+        "sample" : true,
+        "scope" : "project:sample-court-day",
+        "status" : {
+          "nothingToDelete" : {
+
+          }
+        }
+      }
+    }
+  },
+  "exportMyData" : {
+    "ok" : {
+      "_0" : {
+        "requestId" : "export-sample-01",
+        "sample" : true,
+        "status" : {
+          "nothingInCloud" : {
+
+          }
+        }
+      }
+    }
+  },
+  "history" : [
+    {
+      "at" : "2026-10-07T22:44:00Z",
+      "reason" : "created",
+      "seq" : 0,
+      "to" : "draft"
+    },
+    {
+      "at" : "2026-10-07T22:45:00Z",
+      "from" : "draft",
+      "reason" : "preflight",
+      "seq" : 1,
+      "to" : "quoted"
+    }
+  ],
+  "identity" : {
+    "ok" : {
+      "_0" : {
+        "demoProfile" : {
+
+        }
+      }
+    }
+  },
+  "jobId" : "job-queue-38",
+  "launchArguments" : [
+    "-studioCloudScenario",
+    "aboveCap"
+  ],
+  "mode" : {
+    "demo" : {
+
+    }
+  },
+  "quote" : {
+    "ok" : {
+      "_0" : {
+        "chargingEnabled" : false,
+        "condition" : {
+          "aboveCap" : {
+            "spendingLimitCredits" : 3
+          }
+        },
+        "environment" : "demo",
+        "illustrative" : true,
+        "limit" : "$12",
+        "quoteId" : "quote-sample-37",
+        "range" : "$4 – $8",
+        "sample" : true,
+        "title" : "Sample quote"
+      }
+    }
+  },
+  "scenario" : "aboveCap",
+  "snapshots" : [
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "seq" : 0,
+      "stages" : [
+        {
+          "bytesDone" : 0,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 0,
+          "stage" : "upload",
+          "status" : "queued"
+        },
+        {
+          "stage" : "alignAngles",
+          "status" : "queued"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "queued"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "draft"
+    },
+    {
+      "attempt" : 1,
+      "deliveredArtifactIds" : [
+
+      ],
+      "maxAttempts" : 3,
+      "seq" : 1,
+      "stages" : [
+        {
+          "bytesDone" : 0,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 0,
+          "stage" : "upload",
+          "status" : "queued"
+        },
+        {
+          "stage" : "alignAngles",
+          "status" : "queued"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "queued"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "queued"
+        }
+      ],
+      "state" : "quoted"
+    }
+  ],
+  "transcript" : "jovra.demo-cloud-transcript/1 (test golden file, not a shared contract)",
+  "uploads" : [
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    },
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    },
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    }
+  ]
+}
