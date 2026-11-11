@@ -1,0 +1,51 @@
+// :app — the phone, tablet and foldable application: NavigationSuiteScaffold shell, Navigation 3 back stack of
+// @Serializable keys, the one composition root (plain constructor injection), manifest, FileProvider, backup rules.
+plugins {
+    alias(libs.plugins.jovra.android.application)
+    alias(libs.plugins.jovra.android.compose)
+    alias(libs.plugins.kotlin.serialization)
+}
+
+dependencies {
+    implementation(project(":core"))
+    implementation(project(":studio-core"))
+    implementation(project(":room-protocol"))
+    implementation(project(":designsystem"))
+    implementation(project(":data"))
+    implementation(project(":media"))
+    implementation(project(":room-transport"))
+    implementation(project(":wear-bridge"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:sessions"))
+    implementation(project(":feature:record"))
+    implementation(project(":feature:insights"))
+    implementation(project(":feature:profile"))
+    implementation(project(":studio:build-match"))
+    implementation(project(":studio:films"))
+    implementation(project(":studio:editor"))
+    implementation(project(":studio:cloud"))
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.navigation.suite)
+    implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.compose.material3.adaptive.layout)
+    implementation(libs.androidx.compose.material3.adaptive.navigation)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.window)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines.android)
+
+    testImplementation(libs.androidx.window.testing)
+    androidTestImplementation(libs.androidx.window.testing)
+    androidTestImplementation(libs.androidx.test.espresso.device)
+    androidTestImplementation(libs.androidx.test.uiautomator)
+}

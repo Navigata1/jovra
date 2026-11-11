@@ -1,0 +1,19 @@
+2026-10-11T22:46:22Z
+$ du -sh android (before clean)
+359M	android
+$ android/gradlew -p android clean && android/gradlew -p android/build-logic clean
+BUILD SUCCESSFUL in 1s
+25 actionable tasks: 21 executed, 4 up-to-date
+BUILD SUCCESSFUL in 511ms
+1 actionable task: 1 executed
+$ du -sh android (after clean)
+ 22M	android
+$ du -sh ~/.gradle/caches/9.3.1 ~/.gradle/caches/modules-2   (shared by every Gradle project on the machine; persists after clean)
+3.3G	/Users/IDC2.5/.gradle/caches/9.3.1
+2.4G	/Users/IDC2.5/.gradle/caches/modules-2
+$ df -h /
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   926Gi    12Gi    42Gi    22%    459k  443M    0%   /
+$ df -h /System/Volumes/Data
+Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s5   926Gi   811Gi    42Gi    96%    9.3M  443M    2%   /System/Volumes/Data

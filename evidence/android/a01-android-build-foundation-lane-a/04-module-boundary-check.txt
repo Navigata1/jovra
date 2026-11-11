@@ -1,0 +1,119 @@
+# Module-boundary check: four rules, five deliberate violations (2026-10-11)
+# Each violation is a temporary, uncommitted edit in the A01 worktree, reverted before the next run; none was committed or pushed.
+
+================================================================
+## Baseline: the A01 tree as committed (expect pass)
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as no cached configuration is available for tasks: checkModuleBoundaries
+> Task :checkModuleBoundaries
+Checked 20 modules: 0 violation(s).
+BUILD SUCCESSFUL in 1s
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 0
+
+## Violation 1 edit: android/core/build.gradle.kts gains implementation(project(":designsystem"))
+
+================================================================
+## Violation 1: JVM module depends on an Android module (expect FAIL)
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'core/build.gradle.kts' has changed.
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :core JVM_DEPENDS_ON_ANDROID: depends on Android module :designsystem (JVM modules never depend on Android modules)
+BUILD FAILED in 2s
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 1
+
+## Violation 2 edit: android/feature/record/build.gradle.kts gains implementation(project(":feature:sessions"))
+
+================================================================
+## Violation 2: feature module depends on another feature module (expect FAIL)
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'core/build.gradle.kts' has changed.
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :feature:record FEATURE_DEPENDS_ON_FEATURE: depends on feature module :feature:sessions (feature modules never depend on each other)
+BUILD FAILED in 1s
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 1
+
+## Violation 3 edit: new file android/feature/sessions/src/main/kotlin/com/islanddevcrew/jovra/feature/sessions/Peer.kt:
+package com.islanddevcrew.jovra.feature.sessions
+
+import java.net.Socket
+
+fun openPeer(host: String): Socket = Socket(host, 7443)
+
+================================================================
+## Violation 3: java.net.Socket outside :room-transport (expect FAIL)
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'feature/record/build.gradle.kts' has changed.
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :feature:sessions NETWORK_OUTSIDE_ROOM_TRANSPORT: src/main/kotlin/com/islanddevcrew/jovra/feature/sessions/Peer.kt references Socket (only :room-transport may use sockets, NSD or Wi-Fi)
+BUILD FAILED in 1s
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 1
+
+## Violation 4 edit: new file android/feature/record/src/main/kotlin/com/islanddevcrew/jovra/feature/record/Framing.kt:
+package com.islanddevcrew.jovra.feature.record
+
+import androidx.camera.core.Preview
+
+fun framingPreview(): Preview = Preview.Builder().build()
+
+================================================================
+## Violation 4: CameraX outside :media (expect FAIL)
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Reusing configuration cache.
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :feature:record MEDIA_OUTSIDE_MEDIA: src/main/kotlin/com/islanddevcrew/jovra/feature/record/Framing.kt references androidx.camera (only :media may use CameraX, Media3 or MediaCodec)
+BUILD FAILED in 427ms
+1 actionable task: 1 executed
+Configuration cache entry reused.
+exit status: 1
+
+## Violation 5 edit: android/studio/editor/build.gradle.kts gains implementation(libs.androidx.media3.exoplayer)
+
+================================================================
+## Violation 5: Media3 outside :media (expect FAIL)
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'studio/editor/build.gradle.kts' has changed.
+> Task :checkModuleBoundaries FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':checkModuleBoundaries'.
+> Module boundary violations:
+    :studio:editor MEDIA_OUTSIDE_MEDIA: declares dependency androidx.media3:media3-exoplayer (only :media may use CameraX, Media3 or MediaCodec)
+BUILD FAILED in 1s
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 1
+
+================================================================
+## After reverting all five edits (expect pass)
+$ android/gradlew -p android checkModuleBoundaries   (ANDROID_HOME unset)
+Calculating task graph as configuration cache cannot be reused because file 'studio/editor/build.gradle.kts' has changed.
+> Task :checkModuleBoundaries
+Checked 20 modules: 0 violation(s).
+BUILD SUCCESSFUL in 1s
+5 actionable tasks: 1 executed, 4 up-to-date
+Configuration cache entry stored.
+exit status: 0

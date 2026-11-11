@@ -1,0 +1,91 @@
+A01 (#179) round 2 re-verification, 2026-11-08
+Branch ticket/a01-android-build-foundation-lane-a at 990e299, after merging origin/main a7361c9 (docs-only; no android/ file changed).
+Machine: macOS 27.2 build Mac, JDK 17.0.19, Gradle 9.3.1 wrapper, Android SDK platforms android-35/36, build-tools 35.0.0/36.0.0 (unchanged; nothing installed).
+No AVD created (~/.android/avd still holds only OlamyPixel, untouched). No iOS simulator booted. No physical device used.
+
+## 0. Disk at round start (stop line 8 GB; concurrency cap applies under 14 GiB)
+2026-11-08T08:35:46Z
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   926Gi    13Gi    94Gi    13%    487k  981M    0%   /
+/dev/disk3s5     926Gi   799Gi    94Gi    90%    9.7M  981M    1%   /System/Volumes/Data
+2.5G	~/.gradle/caches/9.3.1
+1.5G	~/.gradle/caches/modules-2
+(Gradle daemons running before the round: 0)
+Projected budget (toolchain research section 8): 3.5-6 GB of Gradle caches, so projected free >= 88 GiB. Far above both lines.
+
+## 1. build-logic rule tests
+$ android/gradlew -p android/build-logic :convention:test
+BUILD SUCCESSFUL in 16s
+exit 0
+-> 11 tests, 0 failures, 0 skipped (ModuleBoundariesTest, from build-logic test-results XML)
+
+## 2. What android-core runs, with no Android SDK in the environment
+$ env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test checkModuleBoundaries
+> Task :checkModuleBoundaries
+> Task :testing:testClasses UP-TO-DATE
+> Task :room-protocol:testClasses UP-TO-DATE
+> Task :studio-core:testClasses UP-TO-DATE
+> Task :core:testClasses UP-TO-DATE
+> Task :studio-core:test
+> Task :testing:test
+> Task :room-protocol:test
+> Task :core:test
+BUILD SUCCESSFUL in 1m 9s
+exit 0
+-> 8 tests (core 2, studio-core 2, room-protocol 2, testing 2), 0 failures; boundary check passed on 20 modules
+
+## 3. G-RESOLVE
+$ ANDROID_HOME=$HOME/Library/Android/sdk android/gradlew -p android help :app:dependencies :app:checkDebugAarMetadata :wear:checkDebugAarMetadata
+BUILD SUCCESSFUL in 9s
+exit 0
+FAILED lines in output: 0
+Resolved versions in the :app dependency report (every requested version resolves to these):
+  androidx.navigation3:navigation3-runtime: resolved 1.1.7
+  androidx.navigation3:navigation3-ui: resolved 1.1.7
+  androidx.compose.material3:material3: resolved 1.4.0
+  androidx.lifecycle:lifecycle-runtime: resolved 2.10.0
+  androidx.core:core: resolved 1.18.0
+  androidx.compose.ui:ui: resolved 1.11.4
+  androidx.window:window: resolved 1.5.1
+  androidx.compose.material3.adaptive:adaptive: resolved 1.2.0
+  com.squareup.okhttp3:okhttp: resolved 5.4.0
+  org.jetbrains.kotlin:kotlin-stdlib: 2.4.20 on debugRuntimeClasspath (every request there resolves to 2.4.20); the older versions in the report are on the lint-checks and build-tool classpaths, not the app
+Navigation 3 1.1.7 still resolves; the Navigation Compose 2.9.8 fallback is not used.
+
+## 4. assembleDebug and the Android unit (smoke) tests
+$ ANDROID_HOME=$HOME/Library/Android/sdk android/gradlew -p android assembleDebug :wear:assembleDebug testDebugUnitTest
+BUILD SUCCESSFUL in 42s
+exit 0
+-> 16 Android smoke tests in 16 suites, 0 failures, 0 errors (testDebugUnitTest XML)
+$ aapt2 dump badging (build-tools 36.0.0)
+app-debug.apk:  package com.islanddevcrew.jovra, versionName 0.1.0, compileSdk 36, minSdkVersion 29, targetSdkVersion 36
+wear-debug.apk: package com.islanddevcrew.jovra, versionName 0.1.0, compileSdk 36, minSdkVersion 30, targetSdkVersion 36, uses-feature android.hardware.type.watch
+
+## 5. Module-boundary negatives
+See 12-module-boundary-check-scratch-branch.txt: five violations, each its own commit on a local scratch branch, each FAILS
+with exactly one violation of the expected rule; the base and the tree after the five reverts both pass.
+
+## 6. Forbidden names
+## Forbidden names, round 2 (2026-11-08, branch at 990e299)
+$ grep -nE "\":room\"" android/settings.gradle.kts
+exit: 1 (1 = no match)
+$ grep -no "\":room[^\"]*\"" android/settings.gradle.kts   (every :room* include)
+23:":room-protocol"
+27:":room-transport"
+# 33 files searched (every *.gradle.kts, the catalog, gradle.properties, the wrapper properties, build-logic sources)
+$ xargs grep -niE "androidx\.room|kapt|ksp|hilt" < files
+exit: 1 (123/1 = no match in any file)
+
+## 7. Clean at ticket end (story 343)
+$ android/gradlew -p android clean ; android/gradlew -p android/build-logic clean ; android/gradlew --stop
+2026-11-08T08:40:19Z
+android/ before clean: 356M	android
+android/ after clean:   21M	android
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   926Gi    13Gi    79Gi    14%    487k  829M    0%   /
+/dev/disk3s5     926Gi   806Gi    79Gi    92%    9.8M  829M    1%   /System/Volumes/Data
+3.3G	~/.gradle/caches/9.3.1
+1.5G	~/.gradle/caches/modules-2
+Other Gradle and Xcode agents were running on the machine at the same time (shared transforms were being deleted mid-measure), so the
+15 GiB drop in free space during this round is not all A01's. The shared cache A01 can be held to grew from 2.5 GB to 3.3 GB (caches/9.3.1);
+modules-2 stayed 1.5 GB.

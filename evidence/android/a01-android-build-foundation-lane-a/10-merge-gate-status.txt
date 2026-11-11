@@ -1,0 +1,49 @@
+A01 (#179) merge gate status, round 1 review
+Captured: 2026-10-12T04:16:05Z by the A01 agent on branch ticket/a01-android-build-foundation-lane-a
+
+Gate (from #179 and docs/spec/android-v1-spec.md AND-0, story 351): A01 does not merge until the ADR owner has merged
+  #376 (ADR-0001 header note, F-ADR-0001) and #375 (Android start + Lane A pins ADR, incl. the OkHttp 5.5.0 -> 5.4.0 deviation).
+These are ADR-owner changes (ready-for-human). No Android ticket edits docs/adr/, so A01 cannot clear the gate itself.
+
+$ gh issue view 375|376|377 --json number,state,title,labels
+#375 OPEN [documentation,ready-for-human,platform:android,track:android] ADR: record the Android start and the verified Lane A toolchain pins (story 351, A01 merge gate)
+#376 OPEN [documentation,ready-for-human,platform:android,track:android] ADR-0001 header note: amended by ADR-0024, Android start condition only (F-ADR-0001, A01 merge gate)
+#377 OPEN [documentation,ready-for-human,platform:android,track:android] ADR-0008 Android amendment: Drive authorization through Play services AuthorizationClient (F-ADR-0008, A49 merge gate)
+
+$ grep -n 'OkHttp 5.4.0' in #375 body (the deviation the ADR must record)
+18:   `minCompileSdk=37` in its AAR metadata, so `:app:checkDebugAarMetadata` fails on compileSdk 36. Lane A pins
+19:   **OkHttp 5.4.0** (minCompileSdk 36); 5.5.0 moves to Lane B with the other compileSdk 37 artifacts. Evidence:
+
+$ gh pr list --state merged --search 'ADR-0001 header note in:title' ; then --search 'Lane A pins in:title'
+(empty above = no merged PR closes #376)
+(empty above = no merged PR closes #375)
+
+$ origin/main docs/adr/0001-native-per-platform-shared-contracts.md header (first 8 lines)
+# Native app per platform, shared contracts instead of shared code
+
+JOVRA is a camera-and-video product: durable long recordings, frame-accurate scrubbing, slow motion, Vision
+trajectory and body-pose analysis, audio-onset detection and composited clip export all sit directly on
+AVFoundation/Vision (iOS) and CameraX/Media3/ML Kit (Android). We therefore build two native apps — SwiftUI on
+iOS first, Kotlin + Jetpack Compose on Android after the iOS capture gates pass — and share **contracts**, not code:
+versioned JSON schemas for every persisted record and a cross-platform **conformance suite** of golden fixtures
+(scoring sequences, stat computations, unit conversions, archive manifests) in `spec/` that both platforms'
+
+$ grep 'amended by ADR-0024' on origin/main ADR-0001
+0
+
+$ ls origin/main docs/adr/ | tail -4
+docs/adr/0027-room-v1-transport-and-trust.md
+docs/adr/0028-line-review-roadmap.md
+docs/adr/0029-core-contract-vocabulary.md
+docs/adr/0030-reviewed-order-overrides.md
+
+$ grep -n -i 'okhttp|g-resolve|unverified' origin/main docs/adr/0024-android-stack-and-module-layout.md
+4:verified**: nothing has been synced or built, and transitive resolution is UNVERIFIED until gate G-RESOLVE passes
+96:  fallback if Navigation 3 1.1.7 fails G-RESOLVE.
+(ADR-0024 on main still calls the pins UNVERIFIED and has no OkHttp 5.4.0 record: #375 is unmet)
+
+$ gh pr view 378 --json isDraft,state
+isDraft=true state=OPEN
+
+Verdict: merge gate NOT met. PR #378 stays an unmerged draft. To clear: the ADR owner merges #376 and #375 to main;
+then the PR body links both merged ADRs and is marked ready for review.

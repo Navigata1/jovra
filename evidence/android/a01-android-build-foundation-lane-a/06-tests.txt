@@ -1,0 +1,60 @@
+# Tests (2026-10-11, JDK 17.0.19, macOS build Mac)
+
+## 1. build-logic: module-boundary rules (JUnit Jupiter)
+$ android/gradlew -p android/build-logic :convention:test --rerun-tasks
+BUILD SUCCESSFUL in 4s
+7 actionable tasks: 7 executed
+testsuite name="com.islanddevcrew.jovra.buildlogic.boundaries.ModuleBoundariesTest" tests="11" skipped="0" failures="0" errors="0"
+
+## 2. Pure-JVM modules with NO Android SDK (ANDROID_HOME/ANDROID_SDK_ROOT unset, no local.properties)
+$ env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test --rerun-tasks
+> Task :testing:test
+> Task :studio-core:test
+> Task :room-protocol:test
+> Task :core:test
+BUILD SUCCESSFUL in 5s
+16 actionable tasks: 16 executed
+ls: android/local.properties: No such file or directory
+testsuite name="com.islanddevcrew.jovra.core.smoke.CoreSmokeTest" tests="2" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.studiocore.smoke.StudioCoreSmokeTest" tests="2" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.roomprotocol.smoke.RoomProtocolSmokeTest" tests="2" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.testing.smoke.TestingSmokeTest" tests="2" skipped="0" failures="0" errors="0"
+
+## 3. Android module smoke tests (JUnit 4, local JVM; planned Lane A dependencies on each module's classpath)
+$ ANDROID_HOME=~/Library/Android/sdk android/gradlew -p android testDebugUnitTest
+testsuite name="com.islanddevcrew.jovra.app.smoke.AppSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.data.smoke.DataSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.designsystem.smoke.DesignsystemSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.feature.home.smoke.HomeSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.feature.insights.smoke.InsightsSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.feature.profile.smoke.ProfileSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.feature.record.smoke.RecordSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.feature.sessions.smoke.SessionsSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.media.smoke.MediaSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.roomtransport.smoke.RoomTransportSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.studio.buildmatch.smoke.BuildMatchSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.studio.cloud.smoke.CloudSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.studio.editor.smoke.EditorSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.studio.films.smoke.FilmsSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.wearbridge.smoke.WearBridgeSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+testsuite name="com.islanddevcrew.jovra.wear.smoke.WearSmokeTest" tests="1" skipped="0" failures="0" errors="0"
+BUILD SUCCESSFUL in 3s
+437 actionable tasks: 5 executed, 432 up-to-date
+
+## 4. Mutation check: the smoke test can fail
+# Removed implementation(libs.androidx.media3.transformer) from android/media/build.gradle.kts (temporarily, uncommitted), then:
+$ android/gradlew -p android :media:testDebugUnitTest
+> Task :media:testDebugUnitTest FAILED
+MediaSmokeTest > plannedLaneADependenciesAreOnTheTestClasspath FAILED
+    java.lang.AssertionError at MediaSmokeTest.kt:29
+1 test completed, 1 failed
+BUILD FAILED in 3s
+# The line was restored; the full suite above is green.
+
+## Round 1 re-run (2026-10-12, after merging origin/main 6e46a57 into the branch; JDK 17, Gradle 9.3.1)
+
+- android/gradlew -p android/build-logic :convention:test -> BUILD SUCCESSFUL, 11 tests, 0 failures (ModuleBoundariesTest)
+- env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test checkModuleBoundaries
+  -> BUILD SUCCESSFUL, 8 tests (core 2, studio-core 2, room-protocol 2, testing 2), 0 failures, 0 boundary violations, no SDK
+- ANDROID_HOME=$HOME/Library/Android/sdk android/gradlew -p android testDebugUnitTest -> BUILD SUCCESSFUL, 16 tests, 0 failures
+Counts are unchanged from the first run. The merged main commits touch no android/ file.

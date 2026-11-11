@@ -1,0 +1,29 @@
+# android-core CI, deliberate red run on PR #378
+# Commit ff7bf4e changed the :core smoke test to expect 1501 instead of 1500 (CoreSmokeTest.kt); reverted by the next commit.
+# Run: https://github.com/Navigata1/jovra/actions/runs/38181568767/job/114595056663 (conclusion: failure)
+# Failed-step log excerpt (ANSI stripped):
+
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:36.5378782Z > Task :testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:36.5380479Z > Task :testing:processResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:36.5381543Z > Task :testing:compileKotlin NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:36.5384505Z > Task :testing:compileJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:36.5384998Z > Task :testing:classes UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:36.5388153Z > Task :testing:processTestResources NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:36.5389864Z > Task :testing:jar
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:46.2384218Z > Task :testing:compileTestKotlin
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:46.2567844Z > Task :testing:compileTestJava NO-SOURCE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:46.2596620Z > Task :testing:testClasses UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:46.2677707Z > Task :studio-core:testClasses UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:46.2717670Z > Task :room-protocol:testClasses UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:46.2749825Z > Task :core:testClasses UP-TO-DATE
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.5378344Z > Task :studio-core:test
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.5379118Z > Task :room-protocol:test
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.5379504Z > Task :testing:test
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.5379860Z > Task :core:test FAILED
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.5380486Z CoreSmokeTest > kotlinx serialization round-trips an integer-only record() FAILED
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.5386516Z 2 tests completed, 1 failed
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.6372283Z * What went wrong:
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.6372693Z Execution failed for task ':core:test'.
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.6373810Z > There were failing tests. See the report at: file:///home/runner/work/jovra/jovra/android/core/build/reports/tests/test/index.html
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:49.6375504Z BUILD FAILED in 1m 50s
+JVM module tests (:core, :studio-core, :room-protocol, :testing)	2026-10-11T22:45:50.0739479Z ##[error]Process completed with exit code 1.
