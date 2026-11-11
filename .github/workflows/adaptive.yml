@@ -1,0 +1,42 @@
+name: adaptive
+
+# Shared pane-policy contract (A14 / issue #192; ADR-0025 §8, gate G-PANE). Pure files: the validator checks the
+# golden vectors, the Python reference and the ADR-0025 §2 breakpoint table, then proves its own checks fail on
+# known-bad mutations. Python standard library only. ci.yml and the Android workflow are deliberately not involved.
+
+on:
+  pull_request:
+    paths:
+      - spec/adaptive/**
+      - scripts/spec/validate_adaptive.py
+      - docs/adr/0025-adaptive-layout-policy.md
+      - .github/workflows/adaptive.yml
+  push:
+    branches: [main]
+    paths:
+      - spec/adaptive/**
+      - scripts/spec/validate_adaptive.py
+      - docs/adr/0025-adaptive-layout-policy.md
+      - .github/workflows/adaptive.yml
+  workflow_dispatch:
+
+concurrency:
+  group: adaptive-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pane-policy:
+    name: pane-policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate pane-policy vectors against the reference and ADR-0025
+        run: python3 scripts/spec/validate_adaptive.py -v
+      - name: Mutations (each removed rule or broken vector must fail)
+        run: python3 scripts/spec/validate_adaptive.py --mutations
