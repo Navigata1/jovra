@@ -87,7 +87,8 @@ T06 landed every v1 Info.plist key and capability in `ios/project.yml`, so featu
 the project. **After T06, only the Live Activity follow-up ticket (if the T60 spike says ship) may touch
 `ios/project.yml`.** If a feature needs something the project lacks, raise it with the lead instead.
 JOVRA Studio's one project edit (its two packages and its Info.plist keys) was ticket S04; see
-[docs/studio/DEVELOPING.md](studio/DEVELOPING.md).
+[docs/studio/DEVELOPING.md](studio/DEVELOPING.md). The watch track's one project edit (the `JovraWatch` and
+`JovraWatchUITests` targets and the `JovraRoom` package) was ticket W03; see [Apple Watch](#apple-watch-w03).
 
 | What | Value | For |
 |---|---|---|
@@ -373,6 +374,45 @@ physical-device behavior require separate acceptance.
 The build Mac is short on disk. Always build with `-derivedDataPath .derivedData` (the scripts do),
 never into `~/Library/Developer/Xcode/DerivedData`, keep a single derived-data directory, and delete
 it when you finish a ticket: `rm -rf .derivedData`.
+
+## Apple Watch (W03)
+
+`JovraWatch` is the Apple Watch companion (ADR-0026, `docs/spec/watch-v1-spec.md`): a single-target SwiftUI watchOS
+app, bundle id `com.islanddevcrew.jovra.watchkitapp`, `WKCompanionAppBundleIdentifier` `com.islanddevcrew.jovra`,
+deployment target **watchOS 11** to pair with iOS 18 (INFERRED from ADR-0007; to be recorded in the watch target ADR).
+It depends only on `JovraRoom`. It is **not yet embedded in `Jovra.app`**, so the watch app is not yet installable
+through the companion flow (watch user story 1). Adding `- target: JovraWatch` to the `Jovra` target's dependencies
+changes every iOS build and device signing, so it needs a core-owner-reviewed `project.yml` diff. It is tracked in
+[#419](https://github.com/Navigata1/jovra/issues/419) and proposed for W07 (#284), whose simulator-pair gate is the
+first that needs the embed. The core owner has not yet confirmed that move.
+
+| Folder | Holds |
+|---|---|
+| `ios/JovraWatch/App` | the app, `WatchAppModel`, the vertical-page shell (Health → Score → Latest serve → Mark, one `NavigationStack`, the alert as a full-screen sheet) and its shell pages, which W04–W06 replace from `Features/` |
+| `ios/JovraWatch/App/Model` | `WatchSnapshotReceiver`: accepts bridge deliveries and derives freshness with JovraRoom (queued ⇒ Unknown, restart ⇒ Unknown) |
+| `ios/JovraWatch/Bridge` | `WatchBridgeClient` and `FakeWatchBridge` (deliver now, queue, drop, reorder, duplicate, restart); the WatchConnectivity adapter is W07 |
+| `ios/JovraWatch/Harness` | `-watchState <surface>.<state>` (`WatchStateRegistry`), fed from `spec/room/fixtures/records` bundled in place |
+| `ios/JovraWatch/DesignSystem` | forest, ivory, chartreuse, clay; `FreshnessMark` (dot, half ring, clay ring), `SampleTag`, buttons, `WatchCopy` (18 characters a line) |
+
+```sh
+scripts/ios/watch-sim.sh create --evidence evidence/watch/<ticket>   # the three JOVRA watch simulators, before/after check
+xcodebuild -project ios/Jovra.xcodeproj -scheme JovraWatch \
+  -destination 'platform=watchOS Simulator,name=JOVRA Watch Ultra 3 49mm' -derivedDataPath .derivedData build
+scripts/ios/watch-ui-test.sh [-only-testing JovraWatchUITests/<Class>] [-device ultra49|series42|se40]
+scripts/ios/watch-sim.sh delete --evidence evidence/watch/<ticket>   # when done
+```
+
+`watch-sim.sh` creates `JOVRA Watch Ultra 3 49mm`, `JOVRA Watch Series 11 42mm` and `JOVRA Watch SE 3 40mm` on the
+newest installed watchOS runtime (a destination without `OS=` resolves to the latest one) and touches no other
+simulator; `watch_sim_diff.py` fails the run if any other device was removed or changed. Harness states run on a
+frozen receiver clock so screenshots are stable; growing ages are covered by `FakeWatchBridgeTests`.
+
+Watch copy goes through `String(localized:table: "Watch")` and `Text(_:tableName: "Watch")`; there is no watch String
+Catalog yet, because `catalog_ownership.py` accepts catalogs only in `ios/Jovra/Resources/Localization` from
+`tNN` branches. `python3 scripts/l10n/literal_lint.py ios/JovraWatch` checks the watch sources.
+
+Evidence levels (ADR-0026 §9): simulator UI only. WatchConnectivity transport, background delivery, suspension and
+haptics are unverified until the pair and real-watch gates.
 
 ## CI (`.github/workflows/ci.yml`)
 

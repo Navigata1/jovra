@@ -1,0 +1,17 @@
+$ git diff --stat origin/main -- ios/project.yml
+ ios/project.yml | 69 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+
+Removed lines: 0
+Top-level keys touched (added lines grouped by section):
+@@ -29,0 +30,3 @@ packages:
+@@ -164,0 +168,66 @@ targets:
+
+Added under packages: JovraRoom. Added under targets: JovraWatch, JovraWatchUITests. Nothing else in the file changed (Jovra, JovraTests, JovraUITests and schemes are byte-identical).
+Core-owner review: NOT RECORDED. As of 2026-11-08, PR #407 has no reviews, no review requests and no comments
+(`gh pr view 407 --json reviews,reviewRequests,comments` returns empty lists). This criterion stays open until the
+core owner records an approving review or comment on PR #407 for exactly this diff.
+
+Not in this diff, by design: the `Jovra` target has no `- target: JovraWatch` (embed) dependency, so the watch app is
+not installable through the companion flow (watch user story 1). That edit is outside this ticket's allowance. It is
+proposed for W07 (#284) and tracked in #419, pending the core owner's confirmation.
