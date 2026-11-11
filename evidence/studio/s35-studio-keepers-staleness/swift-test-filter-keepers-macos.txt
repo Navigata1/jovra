@@ -1,0 +1,78 @@
+# swift test --filter Keepers (macOS 27.2, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)), 2026-11-09T03:05:52Z, commit base 9d88c4c
+Building for debugging...
+Build complete! (0.55 sec)
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Keepers: staleness through the project store" started.
+◇ Suite "Keepers: select, exclude, annotate and markBroll" started.
+◇ Suite "Keepers: parity with keepers.py and staleness.py" started.
+◇ Test "a plan bound ahead of its project is refused and nothing is written" started.
+◇ Test "markBroll refuses an empty window, a repeated id, stock footage and another day's clip claimed as this match" started.
+◇ Test "excluding a person or the location removes every B-roll clip that shows them from later plans" started.
+◇ Test "an excluded keeper never appears in any profile's order, in the plan input or in the stored catalog" started.
+◇ Test "candidates(project, eventVersion) is a jovra.keeper-catalog/1 record the strict encoder accepts" started.
+◇ Test "a sync or keeper change that spares the plan carries it forward; a later change it uses stales it" started.
+◇ Test "a correction found at lock time stales what was built before it" started.
+◇ Test "every keepers vector matches the reference and its hand assertions (zero mismatches)" started.
+◇ Test "every staleness vector matches the reference and its hand assertions (zero mismatches)" started.
+◇ Test "select and annotate keep a keeper with the player's note; each edit names the keepers it changed" started.
+◇ Test "the Sample film binds the canonical hash Swift computes for the final plan (the key staleness uses)" started.
+◇ Test "B-roll marked as not from this match is never offered as match footage by a later plan (planner input)" started.
+◇ Test "correcting an early point stales the dependent plan and its film in the same transaction; another session's films stay current" started.
+✔ Test "markBroll refuses an empty window, a repeated id, stock footage and another day's clip claimed as this match" passed after 0.002 seconds.
+✔ Test "excluding a person or the location removes every B-roll clip that shows them from later plans" passed after 0.004 seconds.
+✔ Test "select and annotate keep a keeper with the player's note; each edit names the keepers it changed" passed after 0.005 seconds.
+✔ Test "an excluded keeper never appears in any profile's order, in the plan input or in the stored catalog" passed after 0.007 seconds.
+staleness parity:
+keepers parity:
+✔ Test "B-roll marked as not from this match is never offered as match footage by a later plan (planner input)" passed after 0.100 seconds.
+✔ Test "the Sample film binds the canonical hash Swift computes for the final plan (the key staleness uses)" passed after 0.105 seconds.
+  match     event-revision-stales-the-project
+✔ Test "candidates(project, eventVersion) is a jovra.keeper-catalog/1 record the strict encoder accepts" passed after 0.109 seconds.
+✔ Suite "Keepers: select, exclude, annotate and markBroll" passed after 0.109 seconds.
+  match     sync-camera-2-spares-a-camera-1-plan
+  match     jon-vs-alex-one-per-point
+  match     voided-point-is-not-a-keeper
+  match     default-pre-and-post-roll
+  match     clamped-to-the-session
+  match     same-point-two-angles-one-keeper
+  match     angle-without-coverage-has-no-view
+  match     primary-angle-missing
+  match     reviewed-contacts-widen-the-window
+  match     estimated-hit-inside-reviewed-window
+  match     estimated-hit-outside-is-labelled
+  match     mark-on-a-point-and-mark-alone
+  match     lesson-clips
+  match     shot-for-unknown-event
+  match     rally-pulse-order
+  match     rally-pulse-limit
+  match     coach-cut-order
+  match     match-broadcast-all-in-order
+  match     excluded-keeper-never-offered
+  match     progress-all
+  match     progress-user-chosen
+  match     progress-seeded-random
+  match     sync-camera-1-stales-every-plan-using-it
+  match     progress-no-comparable-evidence
+  match     court-memories-chapters
+  match     court-memories-says-what-is-missing
+  match     keeper-k04-change
+  match     jon-vs-alex-broadcast
+  match     keeper-k01-change-stales-the-film
+  match     keeper-then-event
+  match     jon-vs-alex-rally-pulse
+keepers vectors: 26 cases, 26 match, 0 mismatch(es)
+✔ Test "every keepers vector matches the reference and its hand assertions (zero mismatches)" passed after 0.454 seconds.
+  match     old-version-kept
+  match     revision-must-increase
+  match     film-without-its-plan
+staleness vectors: 9 cases, 9 match, 0 mismatch(es)
+✔ Test "every staleness vector matches the reference and its hand assertions (zero mismatches)" passed after 0.593 seconds.
+✔ Suite "Keepers: parity with keepers.py and staleness.py" passed after 0.594 seconds.
+✔ Test "a plan bound ahead of its project is refused and nothing is written" passed after 0.648 seconds.
+✔ Test "a sync or keeper change that spares the plan carries it forward; a later change it uses stales it" passed after 0.762 seconds.
+✔ Test "a correction found at lock time stales what was built before it" passed after 0.843 seconds.
+✔ Test "correcting an early point stales the dependent plan and its film in the same transaction; another session's films stay current" passed after 1.003 seconds.
+✔ Suite "Keepers: staleness through the project store" passed after 1.003 seconds.
+✔ Test run with 13 tests in 3 suites passed after 1.003 seconds.
