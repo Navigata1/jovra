@@ -1,0 +1,57 @@
+T14 playback core: JovraMedia package tests
+Run: 2026-11-19 on the build Mac (macOS host, Xcode 27.2). No simulator or device.
+Head: e37139c (ticket/t14-playback-core after merging main 083c866). ios/Packages/JovraMedia is identical to main at that commit; this branch does not change it.
+
+$ python3 scripts/media/render.py --check
+==> 50 clips, total rendered size 114,316,555 bytes (109.02 MiB)
+decoded-frame hash check: PASS (50 clips match the committed ground truth)
+
+$ swift test --package-path ios/Packages/JovraMedia --no-parallel
+
+-- Frame accuracy (AC 1): 100 seeded targets per fixture; each is an exact seek, +1 step and -1 step, read back from the decoded displayed frame
+✔ Test seekAndStepLandOnTheExactDisplayedFrame(id:) with 2 test cases passed after 4.722 seconds.
+✔ Test stepsClampAtTheEndsAndTenSecondSkipStaysInsideTheClip() passed after 0.039 seconds.
+✔ Test draggingChasesCoarselyAndReleaseLandsExactly() passed after 0.037 seconds.
+
+-- Rate and A-B loop (AC 3)
+✔ Test rateChangesReachThePlayerAndTheReadout() passed after 0.160 seconds.
+✔ Test anABLoopRepeatsWithinOneFrameOfAAndB() passed after 0.588 seconds.
+
+-- Proxy (AC 2): XCTClockMetric, 5 iterations of 50 backward steps on the 240 fps fixture's proxy
+ios/Packages/JovraMedia/Tests/JovraMediaTests/Playback/ShortGOPProxyTests.swift:299: Test Case '-[JovraMediaTests.ProxyBackwardStepTimingTests testBackwardStepsWithTheProxyAverageUnder100ms]' measured [Clock Monotonic Time, s] average: 0.477, relative standard deviation: 3.804%, values: [0.498729, 0.449534, 0.462782, 0.483058, 0.490418], performanceMetricID:com.apple.dt.XCTMetric_Clock.time.monotonic
+Test Case '-[JovraMediaTests.ProxyBackwardStepTimingTests testBackwardStepsWithTheProxyAverageUnder100ms]' passed (3.867 seconds).
+proxy backward step average per iteration (ms): ["11.02", "10.11", "9.11", "9.38", "9.79", "9.94"]
+✔ Test everyProxyFrameDecodesAsItself(id:) with 2 test cases passed after 3.866 seconds.
+controller proxy backward step average: 0.00570091916 seconds
+
+-- Missing file (AC 6)
+✔ Test aMissingFileIsAnErrorNotACrash() passed after 0.001 seconds.
+
+-- Playback suites
+✔ Suite "Chase-time seeking" passed after 0.006 seconds.
+✔ Suite "Playback values" passed after 0.001 seconds.
+✔ Suite "Frame-counter fixtures decode to their own frame index" passed after 1.265 seconds.
+✔ Suite "Exact replay frame lookup" passed after 3.409 seconds.
+✔ Suite "Frame-accurate CMTime" passed after 0.001 seconds.
+✔ Suite "Frame rate from presentation timestamps" passed after 0.003 seconds.
+✔ Suite "Terminal playback close" passed after 0.061 seconds.
+✔ Suite "PlaybackController on the frame-counter fixtures" passed after 5.927 seconds.
+✔ Suite "Playback outcomes after an interrupted seek" passed after 0.527 seconds.
+✔ Suite "Rally-only composition from a RallyOnlyPlan" passed after 0.299 seconds.
+✔ Suite "Short-GOP proxy name collisions" passed after 0.677 seconds.
+✔ Suite "Short-GOP proxy destination custody" passed after 0.745 seconds.
+✔ Suite "Short-GOP proxy" passed after 6.982 seconds.
+
+-- Totals
+	 Executed 1 test, with 0 failures (0 unexpected) in 3.867 (3.867) seconds
+✔ Test run with 128 tests in 20 suites passed after 294.725 seconds.   (JovraMediaTests)
+✔ Test run with 67 tests in 12 suites passed after 3.780 seconds.      (JovraBenchmarkTests, including V01's label tests from main)
+swift test exit 0
+
+Re-run 2026-11-19 (review round 1), head dc0b25d plus the TransportBar fix (JovraMedia unchanged by this PR):
+$ swift test --package-path ios/Packages/JovraMedia --scratch-path .derivedData/spm-JovraMedia --no-parallel
+XCTest: ProxyBackwardStepTimingTests.testBackwardStepsWithTheProxyAverageUnder100ms passed; 50 backward steps averaged 0.838 s
+  (about 16.8 ms per step, RSD 24.9%) on a build Mac shared with other test runs, still under the 100 ms gate.
+✔ Test run with 128 tests in 20 suites passed after 824.243 seconds.   (JovraMediaTests)
+✔ Test run with 67 tests in 12 suites passed after 8.518 seconds.      (JovraBenchmarkTests)
+exit=0

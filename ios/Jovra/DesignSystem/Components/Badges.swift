@@ -30,6 +30,21 @@ struct ProvenanceBadge: View {
     private var ink: ColorRole { onForest ? .textOnEditorial : .textPrimary }
 
     var body: some View {
+        // The label's natural width when the space offered has room for it, so a compact section
+        // header never splits “Sam-ple”. Otherwise (a long caption or translation at the largest text
+        // sizes) it wraps. A badge fixed wider than the space offered does not clip: it widens every
+        // container above it, up to the whole screen and its tab bar.
+        ViewThatFits(in: .horizontal) {
+            capsule.fixedSize(horizontal: true, vertical: true)
+            capsule.fixedSize(horizontal: false, vertical: true)
+        }
+        .layoutPriority(1)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityText)
+        .accessibilityAddTraits(.isStaticText)
+    }
+
+    private var capsule: some View {
         HStack(spacing: Space.half) {
             Image(systemName: symbol)
                 .imageScale(.small)
@@ -46,13 +61,6 @@ struct ProvenanceBadge: View {
                 Capsule().strokeBorder(Color.jovra(ink), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
             }
         }
-        // Reserve the label's natural width, so a compact section header never splits “Sam-ple”; a longer
-        // custom caption may wrap at the largest text sizes rather than clip.
-        .fixedSize(horizontal: customTitle == nil, vertical: true)
-        .layoutPriority(1)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(accessibilityText)
-        .accessibilityAddTraits(.isStaticText)
     }
 
     var title: String {

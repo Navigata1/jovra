@@ -19,13 +19,11 @@ struct TransportBar<Trailing: View>: View {
 
     var body: some View {
         ViewThatFits(in: .horizontal) {
-            HStack(spacing: Space.x2) {
-                rateMenu
-                frameButton(-1)
-                playButton
-                frameButton(1)
-                trailing()
-            }
+            // One row of five discs (reference 10). 4 × 56 + 72 + 4 × 16 = 360 pt fits a 402 pt iPhone; the tighter
+            // gaps keep the single row on 390–393 pt (12 pt gaps, 344 pt) and 375 pt (8 pt gaps, 328 pt) widths.
+            singleRow(spacing: Space.x2)
+            singleRow(spacing: Space.x1 + Space.half)
+            singleRow(spacing: Space.x1)
             VStack(spacing: Space.x2) {
                 HStack(spacing: Space.x2) {
                     frameButton(-1)
@@ -53,18 +51,30 @@ struct TransportBar<Trailing: View>: View {
         .frame(maxWidth: .infinity)
     }
 
+    private func singleRow(spacing: CGFloat) -> some View {
+        HStack(spacing: spacing) {
+            rateMenu
+            frameButton(-1)
+            playButton
+            frameButton(1)
+            trailing()
+        }
+    }
+
     /// The rate control: a disc showing the current rate that opens a small anchored list of the four rates.
     /// (A system `Menu` label does not follow Dynamic Type, so this is a button and a popover.)
     private var rateMenu: some View {
         Button { showsRates = true } label: {
             Text(verbatim: ReadoutFormat.rate(rate))
                 .font(.headline.monospacedDigit())
-                .fixedSize()
-                .transportDisc(.secondary)
+                .transportDisc(.secondary, keepsRound: true)
         }
         .buttonStyle(TransportPressStyle())
         .accessibilityLabel(Text("Playback speed", tableName: "DesignSystem.Video"))
         .accessibilityValue(Text(verbatim: ReadoutFormat.rate(rate)))
+        .accessibilityShowsLargeContentViewer {
+            Label(ReadoutFormat.rate(rate), systemImage: "speedometer")
+        }
         .accessibilityIdentifier("transport.rate")
         .popover(isPresented: $showsRates) {
             VStack(alignment: .leading, spacing: 0) {
@@ -145,33 +155,52 @@ extension TransportBar where Trailing == EmptyView {
 }
 
 /// A round transport button face: 56 pt secondary discs, a 72 pt forest primary disc. Both grow with Dynamic
-/// Type, and a label wider than the disc stretches it into a capsule rather than shrinking the text.
+/// Type. A label wider than the disc stretches it into a capsule rather than shrinking the text, except for a
+/// `keepsRound` face (the rate and the loop letters): below the accessibility text sizes that face stays a disc and
+/// its short label scales down slightly instead, so "0.25×" never pushes the five-disc transport onto two rows.
+/// At the accessibility sizes the transport wraps anyway, so the label keeps its full size and the face stretches.
 struct TransportDisc: ViewModifier {
     enum Kind { case primary, secondary }
     var kind: Kind
     var isSelected = false
+    var keepsRound = false
     @ScaledMetric(relativeTo: .title3) private var secondarySize: CGFloat = 56
     @ScaledMetric(relativeTo: .title3) private var primarySize: CGFloat = 72
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     static let secondaryCap: CGFloat = 84
     static let primaryCap: CGFloat = 104
+    /// The smallest a `keepsRound` label shrinks to fit inside its disc.
+    static let minimumLabelScale: CGFloat = 0.7
 
     func body(content: Content) -> some View {
         // Grow with Dynamic Type, but stop where three discs no longer fit a phone's width.
         let size = kind == .primary ? min(primarySize, Self.primaryCap) : min(secondarySize, Self.secondaryCap)
         let filled = kind == .primary || isSelected
-        content
-            .foregroundStyle(.jovra(filled ? .onPrimaryFill : .textPrimary))
-            .padding(.horizontal, Space.x2 - Space.half)
-            .frame(minWidth: size, minHeight: size)
-            .background(Capsule().fill(Color.jovra(filled ? .primaryFill : .surfaceSunken)))
-            .overlay { if !filled { Capsule().strokeBorder(Color.jovra(.separator), lineWidth: 1) } }
-            .contentShape(Capsule())
+        let round = keepsRound && !dynamicTypeSize.isAccessibilitySize
+        Group {
+            if round {
+                content
+                    .lineLimit(1)
+                    .minimumScaleFactor(Self.minimumLabelScale)
+                    .padding(.horizontal, Space.half)
+                    .frame(width: size, height: size)
+            } else {
+                content
+                    .fixedSize()
+                    .padding(.horizontal, Space.x2 - Space.half)
+                    .frame(minWidth: size, minHeight: size)
+            }
+        }
+        .foregroundStyle(.jovra(filled ? .onPrimaryFill : .textPrimary))
+        .background(Capsule().fill(Color.jovra(filled ? .primaryFill : .surfaceSunken)))
+        .overlay { if !filled { Capsule().strokeBorder(Color.jovra(.separator), lineWidth: 1) } }
+        .contentShape(Capsule())
     }
 }
 
 extension View {
-    func transportDisc(_ kind: TransportDisc.Kind, isSelected: Bool = false) -> some View {
-        modifier(TransportDisc(kind: kind, isSelected: isSelected))
+    func transportDisc(_ kind: TransportDisc.Kind, isSelected: Bool = false, keepsRound: Bool = false) -> some View {
+        modifier(TransportDisc(kind: kind, isSelected: isSelected, keepsRound: keepsRound))
     }
 }
 
