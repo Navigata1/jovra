@@ -61,7 +61,9 @@ struct ModeRow: View {
         let shape = RoundedRectangle(cornerRadius: Radius.card, style: .continuous)
         if isSelected {
             shape.fill(Color(uiColor: ColorRole.editorial.color(in: colorScheme == .dark ? .dark : .light).uiColor))
-                .overlay(shape.strokeBorder(Color.jovra(.accent).opacity(0.55), lineWidth: 1.5))
+                // On a forest page the fill alone barely separates it, so the chartreuse edge is stronger in dark.
+                .overlay(shape.strokeBorder(Color.jovra(.accent).opacity(colorScheme == .dark ? 0.9 : 0.55),
+                                            lineWidth: colorScheme == .dark ? 2 : 1.5))
         } else {
             shape.fill(Color.jovra(.surface))
                 .shadow(color: .black.opacity(colorScheme == .dark ? 0 : 0.04), radius: 10, x: 0, y: 4)
@@ -80,10 +82,11 @@ struct RadioMark: View {
         ZStack {
             Circle().strokeBorder(ring, lineWidth: 2)
             if isSelected {
-                Circle().fill(Color.jovra(.accent)).padding(size * 0.22)
+                Circle().fill(Color.jovra(.accent)).padding(min(size, 34) * 0.22)
             }
         }
-        .frame(width: size, height: size)
+        // Grows with text, but never so far that it takes the words' width at accessibility sizes.
+        .frame(width: min(size, 34), height: min(size, 34))
         .accessibilityHidden(true)
     }
 

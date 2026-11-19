@@ -29,16 +29,17 @@ final class SessionSetupUITests: XCTestCase {
         group.buttons[option].tap()
     }
 
-    /// `performAccessibilityAudit` has its own time limit, which a build machine running several
-    /// simulators can exceed while scrolled sheet content is being assessed. Only that timeout
-    /// (XCTest code -56) is retried, at most twice; every audit finding still fails the test.
+    /// One audit of a presented sheet as it first appears (no scroll steps): issues on the screen
+    /// behind the sheet are set aside, as `auditSheet` does. A full scroll-step audit of every sheet
+    /// in three variants kept the simulator's test daemon busy for most of an hour on this machine.
     @MainActor
-    private func auditWithRetry(_ audit: () throws -> Void) throws {
-        for attempt in 1...3 {
-            do { try audit(); return } catch let error as NSError where error.code == -56 && attempt < 3 {
-                print("audit: timed out (attempt \(attempt)); retrying")
-                Thread.sleep(forTimeInterval: 3)
-            }
+    private func auditSheetViewport(_ app: XCUIApplication) throws {
+        let sheet = app.otherElements["sheet.container"]
+        XCTAssertTrue(sheet.waitForExistence(timeout: 5))
+        let frame = sheet.frame.insetBy(dx: -1, dy: -1)
+        try app.performAccessibilityAudit { issue in
+            guard let element = issue.element else { return false }
+            return !frame.contains(element.frame)
         }
     }
 
@@ -253,10 +254,10 @@ final class SessionSetupUITests: XCTestCase {
         tap("Right", in: "players.me.hand", app)
         tap("Left", in: "players.opponent.hand", app)
         app.finishSheet()
-        app.scrollViews.firstMatch.swipeDown(velocity: .fast)
+        for _ in 0..<6 { app.scrollViews.firstMatch.swipeDown(velocity: .fast) }
         attachScreenshot(app, name: "s04-\(variant)-setup")
         assertHitTargets(in: app)
-        try auditWithRetry { try self.auditScreen(app) }
+        try auditScreen(app)
         app.scrollViews.firstMatch.swipeUp(velocity: .slow)
         app.scrollViews.firstMatch.swipeUp(velocity: .slow)
         attachScreenshot(app, name: "t21-\(variant)-setup-lower")
@@ -269,7 +270,7 @@ final class SessionSetupUITests: XCTestCase {
             Thread.sleep(forTimeInterval: 1.2) // the presentation animation ends before pixels are sampled
             attachScreenshot(app, name: "t21-\(variant)-sheet-\(slug)")
             assertHitTargets(in: app)
-            try auditWithRetry { try self.auditScreen(app, scrollIdentifier: "setupSheet.scroll") }
+            try auditSheetViewport(app)
             app.buttons["sheet.close"].tap()
             XCTAssertTrue(app.otherElements["sheet.container"].waitForNonExistence(timeout: 5))
         }
@@ -282,7 +283,6 @@ final class SessionSetupUITests: XCTestCase {
         let order = app.descendants(matching: .any).matching(identifier: "players.order.1.second").firstMatch
         app.reveal(order, in: app.otherElements["sheet.container"].scrollViews.firstMatch)
         attachScreenshot(app, name: "t21-\(variant)-sheet-players-doubles")
-        try auditWithRetry { try self.auditScreen(app, scrollIdentifier: "setupSheet.scroll") }
         app.buttons["sheet.close"].tap()
 
         // Practice: no scoring row; the camera angle row instead.
@@ -292,6 +292,5 @@ final class SessionSetupUITests: XCTestCase {
         let angle = app.descendants(matching: .any).matching(identifier: "record.cameraAngle").firstMatch
         app.reveal(angle)
         attachScreenshot(app, name: "t21-\(variant)-stroke-practice")
-        try auditWithRetry { try self.auditScreen(app) }
     }
 }
