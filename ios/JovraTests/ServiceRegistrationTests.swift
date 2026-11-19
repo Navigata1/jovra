@@ -24,6 +24,22 @@ struct ServiceRegistrationTests {
         #expect(values.demoGreetingService.isFake, "a preview or test can still override it")
     }
 
+    @Test("-library fresh opens a new, empty library on each launch; no flag uses the device library")
+    func freshLibrary() async throws {
+        let fresh = LaunchConfiguration(arguments: ["Jovra", "-library", "fresh"])
+        #expect(LocalCaptureLibraryKey.usesFake(fresh))
+        #expect(!LocalCaptureLibraryKey.usesFake(LaunchConfiguration()))
+        #expect(!LocalCaptureLibraryKey.usesFake(LaunchConfiguration(arguments: ["Jovra", "-demo", "sample"])),
+                "demo choices never switch the store")
+        guard case .ready(let first) = LocalCaptureLibraryKey.resolve(fresh),
+              case .ready(let second) = LocalCaptureLibraryKey.resolve(fresh) else {
+            Issue.record("a fresh library opens")
+            return
+        }
+        #expect(try await first.sessions().isEmpty)
+        #expect(try await second.sessions().isEmpty)
+    }
+
     @Test("the app's own services use the same seam")
     func appServices() async {
         #expect(EnvironmentValues().permissionsCenter is LivePermissionsCenter)

@@ -139,7 +139,7 @@ extension XCTestCase {
     /// A swipe returns while the page may still be decelerating; an audit taken then samples pixels
     /// that no longer sit under the elements' reported frames. Waits until `marker` holds still.
     @MainActor
-    private func waitForScrollingToSettle(_ marker: XCUIElement) {
+    func waitForScrollingToSettle(_ marker: XCUIElement) {
         var previous = marker.frame.minY
         for _ in 0..<AccessibilityAudit.settleChecks {
             Thread.sleep(forTimeInterval: AccessibilityAudit.settleInterval)

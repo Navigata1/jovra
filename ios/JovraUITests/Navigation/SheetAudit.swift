@@ -23,17 +23,33 @@ extension XCTestCase {
         }
     }
 
+    /// A rendered issue (contrast, element detection) found while the audit itself scrolled the sheet
+    /// was sampled from pixels that no longer sit under the reported frame, as in `auditScreen`: it is
+    /// set aside and the audit repeated once at the settled position, where every issue counts.
     @MainActor
-    private func auditSheetOnce(_ app: XCUIApplication, sheet: XCUIElement) throws {
+    private func auditSheetOnce(_ app: XCUIApplication, sheet: XCUIElement, isRepeat: Bool = false) throws {
         let frame = sheet.frame.insetBy(dx: -1, dy: -1)
+        let marker = sheet.staticTexts.firstMatch
+        let markerY = marker.frame.minY
+        var setAside: [String] = []
         try app.performAccessibilityAudit { issue in
             guard let element = issue.element else { return false }
-            if frame.contains(element.frame) { return false }
+            if frame.contains(element.frame) {
+                let isRendered = issue.auditType == .contrast || issue.auditType == .elementDetection
+                guard isRendered, !isRepeat, abs(marker.frame.minY - markerY) > 1 else { return false }
+                print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue on “\(element.label)” at \(element.frame) set aside: the audit moved the sheet by \(marker.frame.minY - markerY) pt")
+                setAside.append(element.label)
+                return true
+            }
             let visible = element.frame.intersection(frame)
             // Sheet content scrolled partly out of view is clipped by the sheet itself: judged at the
             // step where it is fully inside. Anything that does not start inside the sheet is behind it.
             print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue on “\(element.label)” at \(element.frame) set aside: outside the sheet \(frame) (visible part \(visible))")
             return true
         }
+        guard !setAside.isEmpty else { return }
+        waitForScrollingToSettle(marker)
+        print("audit: repeating the sheet audit at the settled position for \(setAside)")
+        try auditSheetOnce(app, sheet: sheet, isRepeat: true)
     }
 }
