@@ -5,6 +5,8 @@ import UIKit
 struct TimelinePanGesture: UIGestureRecognizerRepresentable {
     let width: CGFloat
     let frameCount: Int
+    /// The thumb's radius (see `TimelineScrubInteraction.frame(at:width:frameCount:inset:)`).
+    var inset: CGFloat = 0
     let onScrub: (Int) -> Void
     let onScrubEnded: (Int) -> Void
 
@@ -37,12 +39,12 @@ struct TimelinePanGesture: UIGestureRecognizerRepresentable {
             fallthrough
         case .changed:
             if let target = coordinator.interaction.change(x: context.converter.localLocation.x,
-                                                            width: width, frameCount: frameCount) {
+                                                            width: width, frameCount: frameCount, inset: inset) {
                 onScrub(target)
             }
         case .ended:
             if let target = coordinator.interaction.end(x: context.converter.localLocation.x,
-                                                         width: width, frameCount: frameCount) {
+                                                         width: width, frameCount: frameCount, inset: inset) {
                 onScrubEnded(target)
             }
         case .cancelled, .failed:

@@ -90,6 +90,51 @@ struct FrameReadoutFormatTests {
     }
 }
 
+/// The timeline's thumb is drawn inside the track, so at the first and last frame it lines up with the content
+/// margin instead of hanging over it (or being cut by a scroll view's edge), and a touch maps to the frame
+/// whose thumb is under the finger.
+@Suite("Timeline thumb travel")
+struct TimelineThumbTravelTests {
+    /// A 402 pt iPhone with 20 pt margins and the 18 pt thumb.
+    let width: CGFloat = 362
+    let inset: CGFloat = 9
+
+    @Test
+    func theThumbStaysInsideTheTrackAtBothEnds() {
+        #expect(TimelineScrubInteraction.thumbCentre(frame: 0, frameCount: 120, width: width, inset: inset) == 9)
+        #expect(TimelineScrubInteraction.thumbCentre(frame: 119, frameCount: 120, width: width, inset: inset) == 353)
+        #expect(TimelineScrubInteraction.thumbCentre(frame: 0, frameCount: 1, width: width, inset: inset) == 9,
+                "a single-frame clip rests at the start")
+        #expect(TimelineScrubInteraction.thumbCentre(frame: 500, frameCount: 120, width: width, inset: inset) == 353,
+                "a frame past the end never leaves the track")
+    }
+
+    @Test(arguments: [2, 120, 480, 194_400])
+    func aTouchOnTheThumbSelectsTheFrameTheThumbShows(frameCount: Int) {
+        for frame in Set([0, 1, frameCount / 3, frameCount / 2, frameCount - 2, frameCount - 1]) where frame >= 0 {
+            let centre = TimelineScrubInteraction.thumbCentre(frame: frame, frameCount: frameCount, width: width, inset: inset)
+            #expect(TimelineScrubInteraction.frame(at: centre, width: width, frameCount: frameCount, inset: inset) == frame)
+        }
+    }
+
+    @Test
+    func theMarginsBesideTheTravelSelectTheEnds() {
+        #expect(TimelineScrubInteraction.frame(at: 0, width: width, frameCount: 120, inset: inset) == 0)
+        #expect(TimelineScrubInteraction.frame(at: 4, width: width, frameCount: 120, inset: inset) == 0)
+        #expect(TimelineScrubInteraction.frame(at: 362, width: width, frameCount: 120, inset: inset) == 119)
+        // Half-way along the travel is the middle frame: (181 - 9) / 344 × 119 = 59.5, rounded away from zero.
+        #expect(TimelineScrubInteraction.frame(at: 181, width: width, frameCount: 120, inset: inset) == 60)
+        // Without an inset the mapping is unchanged.
+        #expect(TimelineScrubInteraction.frame(at: 90.5, width: width, frameCount: 120) == 30)
+    }
+
+    @Test
+    func aTrackNarrowerThanItsThumbFallsBackToTheWholeWidth() {
+        #expect(TimelineScrubInteraction.frame(at: 6, width: 12, frameCount: 3, inset: inset) == 1)
+        #expect(TimelineScrubInteraction.thumbCentre(frame: 2, frameCount: 3, width: 12, inset: inset) == 12)
+    }
+}
+
 /// The jog strip is the element VoiceOver focuses; an accessibility increment on it (what a VoiceOver swipe up
 /// sends) must move the real player exactly one frame and the readout must say so. XCUITest cannot send an
 /// adjustable increment on iOS, so this drives the app's own accessibility tree in the hosted test.

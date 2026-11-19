@@ -128,6 +128,33 @@ final class PlaybackCoreUITests: XCTestCase {
         XCTAssertTrue((86...92).contains(dragged), "three quarters of the fixture: \(dragged)")
     }
 
+    /// iPhone landscape (screens.md S10): the video leads and the trailing 300 pt panel shows the timeline, the jog
+    /// strip and the frame-step and play buttons without scrolling at the default text size. Five discs do not fit
+    /// 300 pt, so the rate and the fifth slot wrap to a second row that the panel scrolls to.
+    @MainActor
+    func testLandscapeShowsTimelineJogAndTransportWithoutScrolling() throws {
+        let app = launchLab()
+        XCTAssertTrue(element(app, "playback.jog").waitForExistence(timeout: 10))
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let window = app.windows.firstMatch
+        let video = element(app, "video.surface"), timeline = element(app, "playback.timeline")
+        let jog = element(app, "playback.jog"), play = element(app, "transport.playPause")
+        let laidOut = NSPredicate { _, _ in window.frame.width > window.frame.height && jog.frame.minX > video.frame.maxX }
+        _ = XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: laidOut, object: nil)], timeout: 8)
+        XCTAssertGreaterThan(window.frame.width, window.frame.height, "the app rotated")
+        XCTAssertGreaterThanOrEqual(element(app, "screen.title").frame.minY, window.frame.minY + 12, "the title clears the top edge")
+        XCTAssertGreaterThan(timeline.frame.minX, video.frame.maxX, "the timeline is in the trailing panel")
+        XCTAssertGreaterThanOrEqual(jog.frame.minY - timeline.frame.maxY, 16)
+        for id in ["playback.readout", "transport.previousFrame", "transport.playPause", "transport.nextFrame"] {
+            let frame = element(app, id).frame
+            XCTAssertLessThanOrEqual(frame.maxY, window.frame.maxY, "\(id) at \(frame) is on screen without scrolling")
+        }
+        XCTAssertTrue(play.isHittable)
+        play.tap()
+        XCTAssertTrue(play.wait(for: \.label, toEqual: "Pause", timeout: 3), "the transport works where it stands")
+        play.tap()
+    }
+
     // MARK: Keyboard
 
     @MainActor
@@ -156,13 +183,47 @@ final class PlaybackCoreUITests: XCTestCase {
         let rate = element(app, "transport.rate")
         XCTAssertTrue(rate.waitForExistence(timeout: 10))
         XCTAssertFalse(readout(app).contains("×"), "1× is not repeated in the readout")
+        assertTransportIsOneRowOfDiscs(app, rate: "1×")
         rate.tap()
         element(app, "transport.rate.0.5").tap()
         XCTAssertTrue(readout(app).contains("0.5×"), readout(app))
+        assertTransportIsOneRowOfDiscs(app, rate: "0.5×")
         attachScreenshot(app, name: "s10-light-lab-half-rate")
+        rate.tap()
+        element(app, "transport.rate.0.25").tap()
+        XCTAssertTrue(readout(app).contains("0.25×"), readout(app))
+        assertTransportIsOneRowOfDiscs(app, rate: "0.25×")
         rate.tap()
         element(app, "transport.rate.2.0").tap()
         XCTAssertTrue(readout(app).contains("2×"), readout(app))
+        assertTransportIsOneRowOfDiscs(app, rate: "2×")
+    }
+
+    /// screens.md S10 §5 and reference 10: at the default text size in portrait the transport is one row of five
+    /// round buttons (rate, previous frame, play/pause, next frame, the fifth slot) whatever rate is chosen. The
+    /// rate face stays a 56 pt disc rather than stretching into a capsule that pushes the row onto two lines.
+    @MainActor private func assertTransportIsOneRowOfDiscs(_ app: XCUIApplication, rate: String,
+                                                           file: StaticString = #filePath, line: UInt = #line) {
+        let rateButton = element(app, "transport.rate")
+        XCTAssertTrue(waitForValue(rateButton, rate), "rate shows \(rate): \(String(describing: rateButton.value))",
+                      file: file, line: line)
+        let play = element(app, "transport.playPause").frame
+        let ids = ["transport.rate", "transport.previousFrame", "transport.nextFrame", "transport.loop"]
+        var previousMaxX = -CGFloat.infinity
+        for id in ["transport.rate", "transport.previousFrame", "transport.playPause", "transport.nextFrame", "transport.loop"] {
+            let frame = element(app, id).frame
+            XCTAssertEqual(frame.midY, play.midY, accuracy: 1, "\(id) at \(frame) shares the play row \(play) at \(rate)",
+                           file: file, line: line)
+            XCTAssertGreaterThan(frame.minX, previousMaxX, "\(id) follows the previous button left to right at \(rate)",
+                                 file: file, line: line)
+            previousMaxX = frame.maxX
+        }
+        for id in ids {
+            let frame = element(app, id).frame
+            XCTAssertEqual(frame.width, 56, accuracy: 0.5, "\(id) is a 56 pt disc at \(rate): \(frame)", file: file, line: line)
+            XCTAssertEqual(frame.height, 56, accuracy: 0.5, "\(id) is a 56 pt disc at \(rate): \(frame)", file: file, line: line)
+        }
+        XCTAssertEqual(play.width, 72, accuracy: 0.5, "play is the 72 pt primary disc", file: file, line: line)
     }
 
     @MainActor

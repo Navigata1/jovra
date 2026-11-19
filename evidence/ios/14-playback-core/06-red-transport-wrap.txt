@@ -1,0 +1,10 @@
+# Red run, 2026-11-19, before the TransportBar fix (branch at dc0b25d plus the new assertion only)
+# SIMULATOR_ID=B7D403BE-869C-4F1D-B84F-0CBF0006402F scripts/ios/ui-test.sh -only-testing JovraUITests/PlaybackCoreUITests/testRateChangesShowInTheReadout
+# JOVRA-T14, iPhone 17 Pro (402 pt), iOS Simulator 27.2, default text size, portrait
+==> Summary
+Test class                        passed  failed  skipped  expected
+JovraUITests/PlaybackCoreUITests       0       1        0         0
+Total: 0 passed, 1 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED PlaybackCoreUITests/testRateChangesShowInTheReadout(): XCTAssertEqualWithAccuracy failed: ("780.0") is not equal to ("700.0") +/- ("1.0") - transport.rate at (134.33333333333331, 752.0, 61.333333333333314, 56.0) shares the play row (165.0, 664.0, 72.0, 72.0) at 0.5×
+# The 1× row passed the same assertion. At 0.5× the rate face stretched to a 61.3 pt capsule, the five-disc row
+# (4 x 56 + 72 + 4 x 16 = 360 pt in 362 pt) no longer fit, and ViewThatFits fell back to two rows.
