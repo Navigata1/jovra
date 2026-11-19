@@ -1,49 +1,545 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Capture, replay and compare take over the whole screen and hide the tabs." : {
-      "comment" : "Explanation",
+    "%@ & %@" : {
+      "comment" : "A doubles team",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Capture, replay and compare take over the whole screen and hide the tabs."
+            "state" : "new",
+            "value" : "%1$@ & %2$@"
           }
         }
       }
     },
-    "Choose a singles or doubles match, serve practice or stroke practice, then frame your court and record." : {
-      "comment" : "Placeholder message",
+    "%@ & %@ vs %@ & %@" : {
+      "comment" : "Default session name",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a singles or doubles match, serve practice or stroke practice, then frame your court and record."
+            "state" : "new",
+            "value" : "%1$@ & %2$@ vs %3$@ & %4$@"
           }
         }
       }
     },
-    "Full-screen flows" : {
-      "comment" : "Section header",
+    "%@ serves first." : {
+      "comment" : "Set 1 first server follows the toss"
+    },
+    "%@ vs %@" : {
+      "comment" : "Default session name",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Full-screen flows"
+            "state" : "new",
+            "value" : "%1$@ vs %2$@"
           }
         }
       }
     },
-    "Preview the capture screen" : {
-      "comment" : "Button",
+    "%@ · %@" : {
+      "comment" : "Camera preset: size · rate\nPlayers row: me · opponent\nPlayers row: my team · their team",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Preview the capture screen"
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
           }
         }
       }
+    },
+    "%@ · %@ · Ultra-wide" : {
+      "comment" : "Camera preset: size · rate · lens",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@ · Ultra-wide"
+          }
+        }
+      }
+    },
+    "%@ · %@ · Wide" : {
+      "comment" : "Camera preset: size · rate · lens",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@ · Wide"
+          }
+        }
+      }
+    },
+    "%@ · about %@ fits" : {
+      "comment" : "Camera format detail",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · about %2$@ fits"
+          }
+        }
+      }
+    },
+    "%@'s name is longer than 60 characters." : {
+      "comment" : "Setup problem"
+    },
+    "%@p" : {
+      "comment" : "Resolution, e.g. 1080p (no digit grouping)"
+    },
+    "%lld MB per minute" : {
+      "comment" : "Camera sheet: planning size"
+    },
+    "%lld fps" : {
+      "comment" : "Frame rate, e.g. 60 fps"
+    },
+    "%lld of %lld" : {
+      "comment" : "Position in the mode radio group",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "%lld-point match tie-break for the fifth set" : {
+      "comment" : "Deciding set"
+    },
+    "%lld-point match tie-break for the third set" : {
+      "comment" : "Deciding set"
+    },
+    "%lld-point tie-break at %lld–%lld in the fifth" : {
+      "comment" : "Deciding set",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld-point tie-break at %2$lld–%3$lld in the fifth"
+          }
+        }
+      }
+    },
+    "%lld-point tie-break at %lld–%lld in the third" : {
+      "comment" : "Deciding set",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld-point tie-break at %2$lld–%3$lld in the third"
+          }
+        }
+      }
+    },
+    "4K" : {
+      "comment" : "Resolution"
+    },
+    "A tie-break has no games, so Ad and set endings do not apply." : {
+      "comment" : "Format rules footnote, tie-break only"
+    },
+    "Ad" : {
+      "comment" : "Game scoring: advantage games"
+    },
+    "Ad court" : {
+      "comment" : "No-Ad deciding point side"
+    },
+    "Add names to keep score" : {
+      "comment" : "Players row detail when a name is missing"
+    },
+    "Add set %lld" : {
+      "comment" : "Adds the next set's serving order"
+    },
+    "Add your name." : {
+      "comment" : "Setup problem"
+    },
+    "Add your opponent's name." : {
+      "comment" : "Setup problem"
+    },
+    "Add your opponent's partner's name." : {
+      "comment" : "Setup problem"
+    },
+    "Add your partner's name." : {
+      "comment" : "Setup problem"
+    },
+    "Add your racket" : {
+      "comment" : "Gear row when no racket is saved"
+    },
+    "Advantage set" : {
+      "comment" : "How a set ends: win by two games"
+    },
+    "Advantage set in the fifth" : {
+      "comment" : "Deciding set"
+    },
+    "Advantage set in the third" : {
+      "comment" : "Deciding set"
+    },
+    "Backhand" : {
+      "comment" : "Backhand field label"
+    },
+    "Battery" : {
+      "comment" : "Pre-flight check name"
+    },
+    "Battery %@" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Battery %@. Low Power Mode can lower the frame rate." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Battery not reported" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Before you record" : {
+      "comment" : "Heading over what still needs fixing\nPre-flight strip heading"
+    },
+    "Behind the baseline" : {
+      "comment" : "Camera angle"
+    },
+    "Best of %lld" : {
+      "comment" : "Format length, e.g. Best of 3"
+    },
+    "Best of 5" : {
+      "comment" : "Format preset"
+    },
+    "Camera" : {
+      "comment" : "Setup row label"
+    },
+    "Camera angle" : {
+      "comment" : "Setup row label (practice modes)"
+    },
+    "Change camera preset" : {
+      "comment" : "Low space banner action"
+    },
+    "Changing a rule makes this a custom format." : {
+      "comment" : "Format rules footnote"
+    },
+    "Changing a saved match's format recomputes every score and stat, so it is done from the match overview." : {
+      "comment" : "Format sheet for a saved session"
+    },
+    "Check camera position" : {
+      "comment" : "Primary button"
+    },
+    "Checking heat" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Checking storage" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Checking this camera…" : {
+      "comment" : "Camera row while formats load"
+    },
+    "Choose a mode and configure your recording settings." : {
+      "comment" : "Screen subtitle"
+    },
+    "Choosing who agreed to be filmed arrives with recording rules." : {
+      "comment" : "Consent row empty state"
+    },
+    "Club match" : {
+      "comment" : "Format preset"
+    },
+    "Deciding point at deuce" : {
+      "comment" : "No-Ad deciding side field"
+    },
+    "Deuce court" : {
+      "comment" : "No-Ad deciding point side"
+    },
+    "Deuce court, opponents" : {
+      "comment" : "Doubles order field"
+    },
+    "Deuce court, your team" : {
+      "comment" : "Doubles order field"
+    },
+    "Done" : {
+      "comment" : "Closes a setup sheet"
+    },
+    "Doubles match" : {
+      "comment" : "Session mode"
+    },
+    "Edit from the match overview" : {
+      "comment" : "Format sheet for a saved session"
+    },
+    "Enough charge to start." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Estimated space" : {
+      "comment" : "Camera sheet storage card"
+    },
+    "Estimated space: %@–%@ for %@ · %@ free" : {
+      "comment" : "Camera row detail",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Estimated space: %1$@–%2$@ for %3$@ · %4$@ free"
+          }
+        }
+      }
+    },
+    "Far end" : {
+      "comment" : "Starting end"
+    },
+    "Fast4" : {
+      "comment" : "Format preset"
+    },
+    "Fills the opponent" : {
+      "comment" : "Previous opponent chip hint"
+    },
+    "First server" : {
+      "comment" : "Doubles order field"
+    },
+    "Focus on your serve. Log placement and consistency, and estimate speed from marked frames." : {
+      "comment" : "Mode description"
+    },
+    "Format" : {
+      "comment" : "Camera sheet section"
+    },
+    "Framing guidance shows the whole court from behind the baseline." : {
+      "comment" : "Camera angle detail"
+    },
+    "Framing guidance shows your swing from the side, for Stroke Lab." : {
+      "comment" : "Camera angle detail"
+    },
+    "Free space is being checked." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Free up space before you record." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Games" : {
+      "comment" : "Game scoring field"
+    },
+    "Gear" : {
+      "comment" : "Setup row label"
+    },
+    "Heat" : {
+      "comment" : "Pre-flight check name"
+    },
+    "Import a recording instead" : {
+      "comment" : "Link under the primary button"
+    },
+    "Keep the phone in the shade. Recording continues." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Left" : {
+      "comment" : "Plays left-handed (segment)"
+    },
+    "Left-handed" : {
+      "comment" : "Handedness"
+    },
+    "Less room than the planned length. Recording still starts." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Less than 5 min of space" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Lets" : {
+      "comment" : "Lets field"
+    },
+    "Low Power Mode on" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Low battery. Plug in for a long session." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Match tie-break in lieu of a third set" : {
+      "comment" : "Format preset"
+    },
+    "Microphone" : {
+      "comment" : "Setup row label"
+    },
+    "Mode" : {
+      "comment" : "Section header over the four session modes"
+    },
+    "Names and hands label strokes and stats for both sides." : {
+      "comment" : "Players sheet subtitle"
+    },
+    "Near the camera" : {
+      "comment" : "Starting end"
+    },
+    "No heat limits." : {
+      "comment" : "Pre-flight detail"
+    },
+    "No lets" : {
+      "comment" : "Format: lets are not played\nLets off"
+    },
+    "No match end" : {
+      "comment" : "Practice set: the set has no end"
+    },
+    "No supported camera format" : {
+      "comment" : "Camera row when the camera lists nothing JOVRA records"
+    },
+    "No-Ad" : {
+      "comment" : "Game scoring: deciding point at deuce"
+    },
+    "No-Ad with a match tie-break" : {
+      "comment" : "Format preset"
+    },
+    "Not available yet: its rules are still being confirmed." : {
+      "comment" : "Format preset unavailable"
+    },
+    "Not available yet: scoring for a set without a match end is still being built." : {
+      "comment" : "Format preset unavailable"
+    },
+    "Not enough space for %@. About %@ fits." : {
+      "comment" : "Camera row detail when space is short",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Not enough space for %1$@. About %2$@ fits."
+          }
+        }
+      }
+    },
+    "Not enough space for the planned length" : {
+      "comment" : "Low space banner"
+    },
+    "Not set" : {
+      "comment" : "Consent row: no consent choice yet\nHandedness or backhand not recorded"
+    },
+    "Off: rally detection unavailable; video still records" : {
+      "comment" : "Microphone row, off"
+    },
+    "On: used to find rallies" : {
+      "comment" : "Microphone row, on"
+    },
+    "One set" : {
+      "comment" : "Format length\nFormat preset"
+    },
+    "One vs one. Record the full match and keep score." : {
+      "comment" : "Mode description"
+    },
+    "One-handed" : {
+      "comment" : "Backhand"
+    },
+    "Only formats this camera records are listed." : {
+      "comment" : "Camera sheet subtitle"
+    },
+    "Opponent" : {
+      "comment" : "Players sheet section\nSeat"
+    },
+    "Opponent's name" : {
+      "comment" : "Name field"
+    },
+    "Opponent's partner" : {
+      "comment" : "Seat"
+    },
+    "Opponent's partner's name" : {
+      "comment" : "Name field"
+    },
+    "Opponents" : {
+      "comment" : "Players sheet section"
+    },
+    "Optional" : {
+      "comment" : "Gear row: a racket is not required"
+    },
+    "Optional. Leave it blank to call it “%@”." : {
+      "comment" : "Session name footnote"
+    },
+    "Partner's name" : {
+      "comment" : "Name field"
+    },
+    "People you record with appear here." : {
+      "comment" : "No previous opponents yet"
+    },
+    "Phone cool" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Phone warm · preview may turn off" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Planned length" : {
+      "comment" : "Camera sheet section\nStepper name"
+    },
+    "Play lets" : {
+      "comment" : "Lets on"
+    },
+    "Played before" : {
+      "comment" : "Previous opponents heading"
+    },
+    "Players" : {
+      "comment" : "Setup row label"
+    },
+    "Plays" : {
+      "comment" : "Handedness field label"
+    },
+    "Practice set" : {
+      "comment" : "Format length\nFormat preset"
+    },
+    "Presets" : {
+      "comment" : "Format sheet section"
+    },
+    "Pro set" : {
+      "comment" : "Format preset"
+    },
+    "Pro set to %lld" : {
+      "comment" : "Format length"
+    },
+    "Receiver chooses" : {
+      "comment" : "No-Ad deciding point side"
+    },
+    "Record groundstrokes, volleys and overheads." : {
+      "comment" : "Mode description"
+    },
+    "Recording consent" : {
+      "comment" : "Setup row label"
+    },
+    "Recording still starts and warns you before space runs out. A smaller preset or a shorter plan fits more." : {
+      "comment" : "Low space banner"
+    },
+    "Remove set %lld" : {
+      "comment" : "Removes the last set's serving order"
+    },
+    "Right" : {
+      "comment" : "Plays right-handed (segment)"
+    },
+    "Right-handed" : {
+      "comment" : "Handedness"
+    },
+    "Room for about %@" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Room for about %@." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Rules" : {
+      "comment" : "Format sheet section"
+    },
+    "Scoring" : {
+      "comment" : "Format summary label\nSetup row label"
+    },
+    "Second server" : {
+      "comment" : "Doubles order field"
+    },
+    "Serve practice" : {
+      "comment" : "Default session name\nSession mode"
+    },
+    "Serves first" : {
+      "comment" : "First server field"
+    },
+    "Serving order" : {
+      "comment" : "Doubles section"
+    },
+    "Session mode" : {
+      "comment" : "VoiceOver name of the mode radio group"
+    },
+    "Session name" : {
+      "comment" : "Players sheet section\nSession name field"
+    },
+    "Set %lld" : {
+      "comment" : "Doubles order block heading"
+    },
+    "Set %lld: each team's deuce-court receiver must be one of its own players." : {
+      "comment" : "Doubles order problem"
+    },
+    "Set %lld: the second server must come from the other team. Service alternates between the teams." : {
+      "comment" : "Doubles order problem"
+    },
+    "Set 1 is needed now. Later sets can be added here or when they start." : {
+      "comment" : "Doubles order footnote"
+    },
+    "Set 1 starts with the player who serves first in the match." : {
+      "comment" : "Doubles order problem"
     },
     "Set up your session" : {
       "comment" : "Screen title",
@@ -55,6 +551,122 @@
           }
         }
       }
+    },
+    "Sets" : {
+      "comment" : "Set ending field"
+    },
+    "Settings" : {
+      "comment" : "Section header over the setup rows"
+    },
+    "Short sets" : {
+      "comment" : "Format preset"
+    },
+    "Short sets to %lld" : {
+      "comment" : "Format length"
+    },
+    "Side-on (technique)" : {
+      "comment" : "Camera angle"
+    },
+    "Simulator fixture camera" : {
+      "comment" : "Camera row on the simulator, spoken with the badge"
+    },
+    "Singles match" : {
+      "comment" : "Session mode"
+    },
+    "Storage" : {
+      "comment" : "Pre-flight check name"
+    },
+    "Storage ready" : {
+      "comment" : "Pre-flight chip"
+    },
+    "Stroke practice" : {
+      "comment" : "Default session name\nSession mode"
+    },
+    "The phone's temperature is being checked." : {
+      "comment" : "Pre-flight detail"
+    },
+    "The scoreboard derives every later server and change of ends from these two answers." : {
+      "comment" : "Toss footnote"
+    },
+    "The scoreboard follows the format you are actually playing." : {
+      "comment" : "Format sheet subtitle"
+    },
+    "The session name is longer than 120 characters." : {
+      "comment" : "Setup problem"
+    },
+    "The simulator records a labelled sample clip, so its one format is listed." : {
+      "comment" : "Camera sheet on the simulator"
+    },
+    "This camera reports no format JOVRA records. You can still import a recording." : {
+      "comment" : "Camera sheet empty state"
+    },
+    "This device does not report a battery level." : {
+      "comment" : "Pre-flight detail"
+    },
+    "Tie-break at %lld–%lld" : {
+      "comment" : "How a set ends",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Tie-break at %1$lld–%2$lld"
+          }
+        }
+      }
+    },
+    "Tie-break only to %lld" : {
+      "comment" : "Format length"
+    },
+    "Tie-break to 10" : {
+      "comment" : "Format preset"
+    },
+    "Tie-break to 7" : {
+      "comment" : "Format preset"
+    },
+    "Toss" : {
+      "comment" : "Players sheet section"
+    },
+    "Two vs two. Keep score with serving and receiving order." : {
+      "comment" : "Mode description"
+    },
+    "Two-handed" : {
+      "comment" : "Backhand"
+    },
+    "Used only for the storage estimate. Recording never stops at this length." : {
+      "comment" : "Planned length footnote"
+    },
+    "You" : {
+      "comment" : "Players sheet section\nSeat: the recording player"
+    },
+    "You can still import a recording." : {
+      "comment" : "Camera row when nothing can be recorded"
+    },
+    "Your name" : {
+      "comment" : "Name field"
+    },
+    "Your name and hand label your strokes." : {
+      "comment" : "Players sheet subtitle, practice"
+    },
+    "Your partner" : {
+      "comment" : "Seat"
+    },
+    "Your side starts" : {
+      "comment" : "Starting end field"
+    },
+    "Your team" : {
+      "comment" : "Players sheet section"
+    },
+    "failed" : {
+      "comment" : "Pre-flight result, spoken"
+    },
+    "not checked" : {
+      "comment" : "Pre-flight result, spoken"
+    },
+    "passed" : {
+      "comment" : "Pre-flight result, spoken"
+    },
+    "warning" : {
+      "comment" : "Pre-flight result, spoken"
     }
   },
   "version" : "1.0"
