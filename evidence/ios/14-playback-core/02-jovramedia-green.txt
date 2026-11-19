@@ -47,3 +47,11 @@ controller proxy backward step average: 0.00570091916 seconds
 ✔ Test run with 128 tests in 20 suites passed after 294.725 seconds.   (JovraMediaTests)
 ✔ Test run with 67 tests in 12 suites passed after 3.780 seconds.      (JovraBenchmarkTests, including V01's label tests from main)
 swift test exit 0
+
+Re-run 2026-11-19 (review round 1), head dc0b25d plus the TransportBar fix (JovraMedia unchanged by this PR):
+$ swift test --package-path ios/Packages/JovraMedia --scratch-path .derivedData/spm-JovraMedia --no-parallel
+XCTest: ProxyBackwardStepTimingTests.testBackwardStepsWithTheProxyAverageUnder100ms passed; 50 backward steps averaged 0.838 s
+  (about 16.8 ms per step, RSD 24.9%) on a build Mac shared with other test runs, still under the 100 ms gate.
+✔ Test run with 128 tests in 20 suites passed after 824.243 seconds.   (JovraMediaTests)
+✔ Test run with 67 tests in 12 suites passed after 8.518 seconds.      (JovraBenchmarkTests)
+exit=0

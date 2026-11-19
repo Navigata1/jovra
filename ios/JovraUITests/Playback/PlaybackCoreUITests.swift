@@ -183,13 +183,47 @@ final class PlaybackCoreUITests: XCTestCase {
         let rate = element(app, "transport.rate")
         XCTAssertTrue(rate.waitForExistence(timeout: 10))
         XCTAssertFalse(readout(app).contains("×"), "1× is not repeated in the readout")
+        assertTransportIsOneRowOfDiscs(app, rate: "1×")
         rate.tap()
         element(app, "transport.rate.0.5").tap()
         XCTAssertTrue(readout(app).contains("0.5×"), readout(app))
+        assertTransportIsOneRowOfDiscs(app, rate: "0.5×")
         attachScreenshot(app, name: "s10-light-lab-half-rate")
+        rate.tap()
+        element(app, "transport.rate.0.25").tap()
+        XCTAssertTrue(readout(app).contains("0.25×"), readout(app))
+        assertTransportIsOneRowOfDiscs(app, rate: "0.25×")
         rate.tap()
         element(app, "transport.rate.2.0").tap()
         XCTAssertTrue(readout(app).contains("2×"), readout(app))
+        assertTransportIsOneRowOfDiscs(app, rate: "2×")
+    }
+
+    /// screens.md S10 §5 and reference 10: at the default text size in portrait the transport is one row of five
+    /// round buttons (rate, previous frame, play/pause, next frame, the fifth slot) whatever rate is chosen. The
+    /// rate face stays a 56 pt disc rather than stretching into a capsule that pushes the row onto two lines.
+    @MainActor private func assertTransportIsOneRowOfDiscs(_ app: XCUIApplication, rate: String,
+                                                           file: StaticString = #filePath, line: UInt = #line) {
+        let rateButton = element(app, "transport.rate")
+        XCTAssertTrue(waitForValue(rateButton, rate), "rate shows \(rate): \(String(describing: rateButton.value))",
+                      file: file, line: line)
+        let play = element(app, "transport.playPause").frame
+        let ids = ["transport.rate", "transport.previousFrame", "transport.nextFrame", "transport.loop"]
+        var previousMaxX = -CGFloat.infinity
+        for id in ["transport.rate", "transport.previousFrame", "transport.playPause", "transport.nextFrame", "transport.loop"] {
+            let frame = element(app, id).frame
+            XCTAssertEqual(frame.midY, play.midY, accuracy: 1, "\(id) at \(frame) shares the play row \(play) at \(rate)",
+                           file: file, line: line)
+            XCTAssertGreaterThan(frame.minX, previousMaxX, "\(id) follows the previous button left to right at \(rate)",
+                                 file: file, line: line)
+            previousMaxX = frame.maxX
+        }
+        for id in ids {
+            let frame = element(app, id).frame
+            XCTAssertEqual(frame.width, 56, accuracy: 0.5, "\(id) is a 56 pt disc at \(rate): \(frame)", file: file, line: line)
+            XCTAssertEqual(frame.height, 56, accuracy: 0.5, "\(id) is a 56 pt disc at \(rate): \(frame)", file: file, line: line)
+        }
+        XCTAssertEqual(play.width, 72, accuracy: 0.5, "play is the 72 pt primary disc", file: file, line: line)
     }
 
     @MainActor

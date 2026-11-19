@@ -241,8 +241,7 @@ struct VideoLab: View {
         } label: {
             Text(verbatim: face)
                 .font(.headline)
-                .fixedSize()
-                .transportDisc(.secondary, isSelected: active)
+                .transportDisc(.secondary, isSelected: active, keepsRound: true)
         }
         .buttonStyle(TransportPressStyle())
         .accessibilityLabel(Text(label))
