@@ -1,0 +1,217 @@
+import Foundation
+
+/// A court point and where its painted line was seen in the video: an input of the reprojection check.
+public struct CalibrationObservation: Hashable, Sendable {
+    public var court: CourtPoint
+    public var pixel: VideoPixel
+
+    public init(court: CourtPoint, pixel: VideoPixel) {
+        self.court = court
+        self.pixel = pixel
+    }
+}
+
+/// The check that can fail (ios-v1-spec CourtCalibration, story 66): project the court points the player did not
+/// tap and measure how far they land from where those lines are seen. Poor above 3 px RMSE at 1080p, scaled by
+/// the frame height (2 px at 720p). A measured court point the fit puts on or beyond its horizon has no residual to
+/// state and makes the fit poor too. A twisted fit (`Homography.isTwisted`: a bracket dragged across the court) is
+/// poor whether or not anything was measured. Only an untwisted fit with nothing measured is `notMeasurable`, and
+/// that is never a pass.
+public struct CalibrationCheck: Hashable, Sendable {
+    public static let poorFitPxAt1080p = 3.0
+
+    public enum Verdict: String, Sendable, Hashable {
+        case good, poor, notMeasurable
+    }
+
+    public let verdict: Verdict
+    /// Root mean square pixel distance. Nil when nothing was measured (`notMeasurable`), and nil with a `poor`
+    /// verdict when the fit puts a measured court point beyond its horizon: no residual is invented for it.
+    public let rmsePx: Double?
+    public let thresholdPx: Double
+
+    /// `tapped` are the court points the homography was fitted through.
+    public init(homography: Homography, tapped: [CourtPoint], observations: [CalibrationObservation], frameHeight: Int) {
+        thresholdPx = Self.thresholdPx(frameHeight: frameHeight)
+        rmsePx = Self.reprojectionRMSE(homography: homography, observations: observations)
+        if homography.isTwisted(tapped: tapped) {
+            // The fit cannot place its own tapped corners: nothing needs measuring to know it is wrong.
+            verdict = .poor
+        } else if observations.isEmpty {
+            verdict = .notMeasurable
+        } else if let rmsePx, rmsePx <= thresholdPx {
+            verdict = .good
+        } else {
+            // Above the limit, or a line that was seen in the frame and that the fit cannot place at all.
+            verdict = .poor
+        }
+    }
+
+    init(recordedRMSEPx: Decimal, frameHeight: Int) {
+        thresholdPx = Self.thresholdPx(frameHeight: frameHeight)
+        // Compare the stored decimal before conversion. Decimal overflow can produce NaN, which compares below finite values.
+        let scaledResidual = recordedRMSEPx * 1080
+        let scaledLimit = Decimal(frameHeight) * Decimal(Self.poorFitPxAt1080p)
+        let fits = !scaledResidual.isNaN && recordedRMSEPx >= 0 && scaledResidual <= scaledLimit
+        verdict = fits ? .good : .poor
+        rmsePx = NSDecimalNumber(decimal: recordedRMSEPx).doubleValue
+    }
+
+    public static func thresholdPx(frameHeight: Int) -> Double {
+        poorFitPxAt1080p * Double(frameHeight) / 1080
+    }
+
+    public static func reprojectionRMSE(homography: Homography, observations: [CalibrationObservation]) -> Double? {
+        guard !observations.isEmpty else { return nil }
+        var total = 0.0
+        for observation in observations {
+            guard let p = homography.project(observation.court) else { return nil }
+            total += (p.x - observation.pixel.x) * (p.x - observation.pixel.x) + (p.y - observation.pixel.y) * (p.y - observation.pixel.y)
+        }
+        return (total / Double(observations.count)).squareRoot()
+    }
+}
+
+/// What a calibration is bound to (technical-feasibility §8): a different lens, format or zoom invalidates it.
+public struct CameraBinding: Hashable, Sendable {
+    public var lens: SessionCalibrationCameraLens
+    public var width: Int
+    public var height: Int
+    public var zoomFactor: Decimal
+
+    public init(lens: SessionCalibrationCameraLens, width: Int, height: Int, zoomFactor: Decimal) {
+        self.lens = lens
+        self.width = width
+        self.height = height
+        self.zoomFactor = zoomFactor
+    }
+}
+
+/// Whether calibration-dependent features (frame taps, serve speed) may use a calibration now.
+public enum CalibrationValidity: Hashable, Sendable {
+    public enum Reason: Hashable, Sendable {
+        case lensChanged, formatChanged, zoomChanged, poorFit
+        /// The camera moved: stale from this session time ("stale from mm:ss").
+        case stale(fromMs: Int)
+        /// The status a reopened record was stored with: invalid, awaiting review, or camera moved with no time.
+        case recordedInvalid, needsReview, cameraMoved
+
+        public var code: String {
+            switch self {
+            case .lensChanged: "lensChanged"
+            case .formatChanged: "formatChanged"
+            case .zoomChanged: "zoomChanged"
+            case .poorFit: "poorFit"
+            case .recordedInvalid: "recordedInvalid"
+            case .needsReview: "needsReview"
+            case .cameraMoved: "cameraMoved"
+            case .stale: "stale"
+            }
+        }
+    }
+
+    case valid
+    case invalid(Reason)
+
+    public var status: String {
+        if case .valid = self { return "valid" }
+        return "invalid"
+    }
+
+    public var reasonCode: String? {
+        if case .invalid(let reason) = self { return reason.code }
+        return nil
+    }
+
+    /// First failing reason wins, in this order: lens, format, zoom, poor fit, stale, then the status a reopened
+    /// record was stored with. A twisted fit (`Homography.isTwisted`) is a poor fit even when it was never checked,
+    /// and no stored status or residual outranks it. Refitting stored taps always succeeds, so the stored status is
+    /// carried, never re-derived: `invalid` and `needsReview` stay unusable, and `cameraMoved` with no stale-from
+    /// time is unusable throughout.
+    public static func evaluate(binding: CameraBinding, current: CameraBinding, twisted: Bool,
+                                checkVerdict: CalibrationCheck.Verdict?, staleFromMs: Int?, atMs: Int,
+                                recordedStatus: SessionCalibrationStatus? = nil) -> CalibrationValidity {
+        if binding.lens != current.lens { return .invalid(.lensChanged) }
+        if binding.width != current.width || binding.height != current.height { return .invalid(.formatChanged) }
+        if binding.zoomFactor != current.zoomFactor { return .invalid(.zoomChanged) }
+        if twisted || checkVerdict == .poor { return .invalid(.poorFit) }
+        if let staleFromMs, atMs >= staleFromMs { return .invalid(.stale(fromMs: staleFromMs)) }
+        switch recordedStatus {
+        case .invalid: return .invalid(.recordedInvalid)
+        case .needsReview: return .invalid(.needsReview)
+        case .cameraMoved where staleFromMs == nil: return .invalid(.cameraMoved)
+        case .cameraMoved, .valid, nil: return .valid
+        }
+    }
+}
+
+/// A 4-tap court calibration: taps in video pixels, the court points they mark, the fitted homography, the camera it
+/// is bound to and, once the camera moved, the time it is stale from.
+public struct CourtCalibration: Hashable, Sendable {
+    public let imagePoints: [VideoPixel]
+    public let courtPoints: [CourtPoint]
+    public let homography: Homography
+    /// The taps are a quad no camera can produce (`Homography.isTwisted`): never valid, measured or not.
+    public let isTwisted: Bool
+    public let camera: CameraBinding?
+    public var staleFromMs: Int?
+    /// The latest reprojection check, when line pixels were measured.
+    public var check: CalibrationCheck?
+    /// The status a reopened session record was stored with; nil for a calibration fitted just now.
+    public private(set) var recordedStatus: SessionCalibrationStatus?
+
+    public init(imagePoints: [VideoPixel], courtPoints: [CourtPoint], camera: CameraBinding?, staleFromMs: Int? = nil) throws(CalibrationError) {
+        self.imagePoints = imagePoints
+        self.courtPoints = courtPoints
+        let homography = try Homography.fit(image: imagePoints, court: courtPoints)
+        self.homography = homography
+        self.isTwisted = homography.isTwisted(tapped: courtPoints)
+        self.camera = camera
+        self.staleFromMs = staleFromMs
+    }
+
+    /// The four doubles corners, tapped in video pixels in `CourtGeometry.doublesCorners` order.
+    public init(doublesCorners taps: [VideoPixel], camera: CameraBinding?) throws(CalibrationError) {
+        try self.init(imagePoints: taps, courtPoints: CourtGeometry.doublesCorners.map(\.point), camera: camera)
+    }
+
+    /// A session calibration record: normalized image points (0..1, top-left) scaled by its camera format. A
+    /// record without a camera format cannot be placed in pixels and is refused as degenerate. The stored status
+    /// and residual are kept, so reopening a poor or unusable calibration never reads valid; nor does a record
+    /// stored valid whose taps are twisted.
+    public init(record: SessionCalibration) throws(CalibrationError) {
+        guard let camera = record.camera else { throw .degenerate }
+        let w = Double(camera.width), h = Double(camera.height)
+        let image = record.imagePoints.map { VideoPixel(x: Self.double($0.x) * w, y: Self.double($0.y) * h) }
+        let court = record.courtPoints.map { CourtPoint(x: Self.double($0.x), y: Self.double($0.y)) }
+        let zoom = Decimal(string: camera.zoomFactor) ?? 1
+        try self.init(imagePoints: image, courtPoints: court,
+                      camera: CameraBinding(lens: camera.lens, width: camera.width, height: camera.height, zoomFactor: zoom),
+                      staleFromMs: record.staleFromMs)
+        recordedStatus = record.status
+        if let residual = record.residualPx {
+            check = CalibrationCheck(recordedRMSEPx: residual, frameHeight: camera.height)
+        }
+    }
+
+    public func project(_ point: CourtPoint) -> VideoPixel? { homography.project(point) }
+    public func unproject(_ pixel: VideoPixel) -> CourtPoint? { homography.unproject(pixel) }
+
+    /// Runs the reprojection check against measured line pixels and keeps the result.
+    public func checked(against observations: [CalibrationObservation]) -> CourtCalibration {
+        var copy = self
+        copy.check = CalibrationCheck(homography: homography, tapped: courtPoints, observations: observations,
+                                      frameHeight: camera?.height ?? 1080)
+        return copy
+    }
+
+    /// Usable at `atMs` with the camera configured as `current`? A calibration with no recorded binding can only be
+    /// judged on fit and staleness. A twisted calibration is a poor fit without any check.
+    public func validity(atMs: Int, current: CameraBinding) -> CalibrationValidity {
+        CalibrationValidity.evaluate(binding: camera ?? current, current: current, twisted: isTwisted,
+                                     checkVerdict: check?.verdict, staleFromMs: staleFromMs, atMs: atMs,
+                                     recordedStatus: recordedStatus)
+    }
+
+    private static func double(_ value: Decimal) -> Double { NSDecimalNumber(decimal: value).doubleValue }
+}

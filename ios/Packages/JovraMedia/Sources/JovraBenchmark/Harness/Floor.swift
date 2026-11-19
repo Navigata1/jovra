@@ -59,7 +59,27 @@ public struct Floor: Codable, Hashable, Sendable {
         ]
     )
 
-    public static let builtIn: [String: Floor] = ["harnessSelfTest": harnessSelfTest]
+    /// T13's acceptance claim for the 4-tap calibration: with corners tapped up to 2 px off at 1080p, every
+    /// untapped line intersection lands within 0.10 m of its ITF position. court.calibration is a manual,
+    /// ungated capability, so this floor names no capability and promotes nothing (ADR-0004).
+    public static let t13CourtCalibration = Floor(
+        source: "T13 acceptance claim (untapped intersections within 0.10 m with taps up to 2 px off at 1080p; court.calibration is manual and ungated, promotes nothing)",
+        metrics: [Metric(name: "intersections within 0.10 m", comparator: .atLeast, threshold: "1")]
+    )
+
+    /// The shape of the research gate for calibration (technical-feasibility §8: ground error at most 0.10 m on
+    /// the near half, the far half reported separately), applied to the synthetic frame: every untapped
+    /// intersection on the near half within 0.10 m with corners tapped up to 2 px off at 1080p. It is not the
+    /// 20-court gate, names no capability and promotes nothing (ADR-0004).
+    public static let courtCalibrationNearHalf = Floor(
+        source: "technical-feasibility §8 gate shape, synthetic frame only (near-half untapped intersections within 0.10 m, taps up to 2 px off at 1080p; far half reported, not gated; promotes nothing)",
+        metrics: [Metric(name: "near-half intersections within 0.10 m", comparator: .atLeast, threshold: "1")]
+    )
+
+    public static let builtIn: [String: Floor] = [
+        "harnessSelfTest": harnessSelfTest, "t13CourtCalibration": t13CourtCalibration,
+        "courtCalibrationNearHalf": courtCalibrationNearHalf,
+    ]
 
     /// Applies the floor to exact metric values. An undefined or missing metric fails (so does an unparsable
     /// threshold, which decoding already refuses).

@@ -1,0 +1,50 @@
+$ swift test --package-path ios/Packages/JovraCore  (macOS, 2026-11-09, the twist rule on top of 3844615, origin/main c9021f5 merged)
+	 Executed 12 tests, with 0 failures (0 unexpected) in 154.715 (154.716) seconds
+◇ Suite "CourtDiagramLayout" started.
+◇ Suite "CourtCalibration" started.
+calibration vectors C01-exact-four-point: 4 (fits 4)
+calibration vectors C02-least-squares: 2 (fits 2)
+calibration vectors C03-jittered-corners: 6 (fits 6)
+calibration vectors C04-fit-check: 16 (fits 0)
+calibration vectors C05-validity: 23 (fits 0)
+calibration vectors C06-tap-mapping: 6 (fits 0)
+calibration vectors C07-refused: 4 (fits 4)
+calibration vectors C08-geometry: 13 (fits 0)
+calibration vectors C09-placement-words: 8 (fits 0)
+Consumed jovra.fixture.calibration: 9 fixtures
+✔ Test doublesAlleysAreDrawnOutsideTheSinglesSidelines() passed after 2.474 seconds.
+✔ Test outliersClampToTheEdgeAndSayItAndTapsRoundTrip() passed after 2.474 seconds.
+✔ Test serviceBoxVariantDrawsOnlyThatBoxWithThirds() passed after 2.471 seconds.
+✔ Test everySegmentIsTheGeometryLineMapped() passed after 2.458 seconds.
+✔ Test centreServiceLineRunsOnlyBetweenTheServiceLines() passed after 2.357 seconds.
+✔ Test scaleAndHeightFollowTheCourt() passed after 2.357 seconds.
+✔ Test depthBandsSplitTheFarHalfAtTheServiceLine() passed after 2.357 seconds.
+✔ Test aRecordedPoorFitRemainsInvalidAfterReopening(_:) with 3 test cases passed after 0.077 seconds.
+✔ Test aTwistedCalibrationWithNothingMeasuredIsNotValid(_:) with 3 test cases passed after 0.077 seconds.
+✔ Test theTrapezoidItselfIsNotTwisted() passed after 0.077 seconds.
+✔ Test pastItsStaleFromTimeACalibrationIsInvalidWithThatReason() passed after 0.077 seconds.
+✔ Test aRecordWithoutACameraFormatIsRefused() passed after 0.077 seconds.
+✔ Test recordedCameraMovementWithATimestampInvalidatesFromThatTime() passed after 0.077 seconds.
+✔ Test aDifferentLensFormatOrZoomInvalidates() passed after 0.077 seconds.
+✔ Test measuredLinesTheFitPutsBeyondItsHorizonAreAPoorFitAndInvalid() passed after 0.077 seconds.
+✔ Test exactTapsProjectEveryIntersection() passed after 0.077 seconds.
+✔ Test aBowTieCentredOnTheCourtIsRefused() passed after 0.077 seconds.
+✔ Test aRecordedUnusableStateRemainsInvalidWithoutMeasurements(_:) with 3 test cases passed after 0.079 seconds.
+✔ Test rotatedAndMirroredCornerOrdersAreOutOfReachOfTheTwistRule() passed after 0.079 seconds.
+✔ Test tapsBecomeVideoPixelsBeforeFitting() passed after 0.079 seconds.
+✔ Test nothingMeasuredIsNeverAPass() passed after 0.079 seconds.
+✔ Test aCalibrationPerturbedBeyondThreePixelsIsAPoorFitAndInvalid() passed after 0.079 seconds.
+✔ Test aFitThatPutsACourtLineBeyondItsHorizonIsTwisted() passed after 0.079 seconds.
+✔ Suite "CourtDiagramLayout" passed after 3.011 seconds.
+✔ Test aStoredValidRecordWithTwistedTapsReopensInvalid(_:) with 3 test cases passed after 0.088 seconds.
+✔ Suite "CourtCalibration" passed after 3.020 seconds.
+✔ Test allDiscoveredRunnerFixturesPass() passed after 7.118 seconds.
+✔ Test run with 146 tests in 9 suites passed after 7.484 seconds.
+
+82 calibration vectors in 9 fixtures (16 fits): 4 + 2 + 6 + 16 + 23 + 6 + 4 + 13 + 8.
+C04 went from 10 to 16 vectors in this update. The old "twisted fit, nothing measured: notMeasurable" vector is
+replaced by four in which a twisted fit reads poor with nothing measured, and three state the limit: wrong corners in
+a convex order are not twisted. Every C04 vector now states expected.twisted. C05 went from 17 to 23: a twisted fit is
+a poor fit unchecked, checked, before a stale time and when reopened from a record stored valid.
+0 failures: 12 XCTest and 146 Swift Testing tests (140 before; 6 new in CourtCalibrationTests). Only the Court
+suites' lines are kept here; the run is the whole package.
