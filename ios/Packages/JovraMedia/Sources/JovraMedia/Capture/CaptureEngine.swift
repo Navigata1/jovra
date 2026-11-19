@@ -4,6 +4,12 @@ import JovraCore
 
 public enum CapturePhase: String, Sendable { case idle, ready, recording, pausing, paused, stopping, stopped }
 public enum CapturePreviewMode: String, Sendable { case normal, dimmed, courtMode }
+/// A segment that closed for a reason other than the player's own pause, still waiting for Resume or Stop.
+public struct CaptureInterruption: Equatable, Sendable {
+    public let startMs: Int
+    public let reason: SessionGapReason
+    public init(startMs: Int, reason: SessionGapReason) { self.startMs = startMs; self.reason = reason }
+}
 public struct CaptureStatus: Sendable {
     public let phase: CapturePhase
     public let recordingTime: MediaTime?
@@ -12,6 +18,10 @@ public struct CaptureStatus: Sendable {
     public let budget: DeviceBudgetSnapshot?
     public let helpersMayRun: Bool
     public let previewMode: CapturePreviewMode
+    /// Gaps the journal has recorded, in session time. A pending interruption is not yet one of them.
+    public let gaps: [SessionGap]
+    /// Set while paused by anything but the player (a call, the camera, heat); nil for a player's pause.
+    public let interruption: CaptureInterruption?
 }
 
 /// Serial capture state; sample-buffer appends and transitions share one queue. Analysis, networking,
@@ -274,7 +284,9 @@ public final class CaptureEngine: @unchecked Sendable {
         CaptureStatus(phase: phase, recordingTime: try? MediaTime(value: latestVideoTime.value, timescale: latestVideoTime.timescale),
                       savedThrough: journal?.snapshot().lastConfirmedMediaTime, sourceLabel: source.label, budget: lastBudget,
                       helpersMayRun: lastBudget?.thermalState == .nominal,
-                      previewMode: (lastBudget?.thermalState == .serious || lastBudget?.thermalState == .critical || lastBudget?.thermalState == .shutdown) ? .courtMode : lastBudget?.thermalState == .fair ? .dimmed : .normal)
+                      previewMode: (lastBudget?.thermalState == .serious || lastBudget?.thermalState == .critical || lastBudget?.thermalState == .shutdown) ? .courtMode : lastBudget?.thermalState == .fair ? .dimmed : .normal,
+                      gaps: journal?.snapshot().gaps ?? [],
+                      interruption: phase == .paused ? pendingGap.flatMap { $0.reason == .userPaused ? nil : CaptureInterruption(startMs: $0.startMs, reason: $0.reason) } : nil)
     }
     private func emitStatus() { let status = makeStatus(); for continuation in continuations.values { continuation.yield(status) } }
 }

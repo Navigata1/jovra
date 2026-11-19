@@ -31,7 +31,7 @@ final class PartialRecoveryRelaunchUITests: XCTestCase {
         XCTAssertTrue(pause.waitForExistence(timeout: 10))
         waitForSavedSeconds(saved, atLeast: firstEnd + 2)
         app.buttons["capture.markPoint"].tap()
-        XCTAssertTrue(app.staticTexts["capture.marked"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Point marked · '")).firstMatch.waitForExistence(timeout: 5))
         pause.tap()
         XCTAssertTrue(resume.waitForExistence(timeout: 10))
         XCTAssertFalse(app.staticTexts["capture.saved"].exists)
@@ -53,6 +53,15 @@ final class PartialRecoveryRelaunchUITests: XCTestCase {
         defer { terminate(app) }
         let id = try XCTUnwrap(ProcessInfo.processInfo.environment["JOVRA_PARTIAL_RECOVERY_SESSION_ID"])
         XCTAssertEqual(UUID(uuidString: id)?.uuidString, id)
+        // T17: the launch that adopts the recovery says so in the recovered-recording sheet, once.
+        let sheet = app.staticTexts["recovery.title"]
+        XCTAssertEqual(sheet.waitForExistence(timeout: announced ? 20 : 3), announced)
+        if announced {
+            XCTAssertEqual(sheet.label, "Recording partially recovered")
+            XCTAssertTrue(app.staticTexts["recovery.unrecoverable.0"].label.hasPrefix("Part 1: "))
+            app.buttons["recovery.done"].tap()
+            XCTAssertTrue(sheet.waitForNonExistence(timeout: 5))
+        }
         let row = app.buttons["library.session.\(id)"]
         XCTAssertTrue(row.waitForExistence(timeout: 20))
         XCTAssertTrue(row.label.contains("Partial recovery fixture"))

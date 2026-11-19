@@ -1,0 +1,17 @@
+# RED: the two new UI tests before the recording phase had a stopped state (the screen as at 884f3a7).
+# scripts/ios/ui-test.sh -only-testing JovraUITests/CaptureRecordingUITests/testAStopWhoseSaveFailsSaysStoppedOffersCloseAndIsRecoveredAtTheNextLaunch -only-testing JovraUITests/CaptureRecordingUITests/testAFailedDeleteSaysTheRecordingIsStillHereAndCanBeRetried
+Failing tests:
+	CaptureRecordingUITests.testAFailedDeleteSaysTheRecordingIsStillHereAndCanBeRetried()
+	CaptureRecordingUITests.testAStopWhoseSaveFailsSaysStoppedOffersCloseAndIsRecoveredAtTheNextLaunch()
+
+** TEST FAILED **
+
+Testing started
+==> Summary
+Test class                            passed  failed  skipped  expected
+JovraUITests/CaptureRecordingUITests       0       2        0         0
+Total: 0 passed, 2 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 0 passed, 2 failed, 0 skipped; result Failed)
+FAILED CaptureRecordingUITests/testAFailedDeleteSaysTheRecordingIsStillHereAndCanBeRetried(): XCTAssertTrue failed - a failed deletion is not a dead end
+FAILED CaptureRecordingUITests/testAStopWhoseSaveFailsSaysStoppedOffersCloseAndIsRecoveredAtTheNextLaunch(): XCTAssertTrue failed - a stop whose save failed is not left reading REC
+Device: JOVRA-T17 A6EAAFA5-C71D-48F2-BF1B-9185FE995CDF (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: ~/jv/.claude/worktrees/t17-capture-route-recording/.derivedData/ui-tests-20261109-204235.xcresult
