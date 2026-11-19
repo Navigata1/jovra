@@ -24,6 +24,8 @@ final class ProcessingConditionsMonitor {
     private var observers: [NSObjectProtocol] = []
     private var captureObserver: UUID?
     private let path = NWPathMonitor()
+    /// The path monitor's queue name (an identifier, never shown).
+    private static let pathQueueName = "com.islanddevcrew.jovra.processing.path"
 
     init(launch: LaunchConfiguration) {
         archiveState = launch.archiveState
@@ -57,7 +59,7 @@ final class ProcessingConditionsMonitor {
                 self?.refresh()
             }
         }
-        path.start(queue: DispatchQueue(label: "com.islanddevcrew.jovra.processing.path"))
+        path.start(queue: DispatchQueue(label: Self.pathQueueName))
         refresh()
     }
 

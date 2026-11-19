@@ -48,7 +48,7 @@ struct CaptureSavedPhase: View {
             }
             .jovraCard()
             if let seeProcessing {
-                Button(String(localized: "See processing", table: "Capture"), action: seeProcessing)
+                Button(String(localized: "See processing", table: "Processing"), action: seeProcessing)
                     .buttonStyle(JovraButtonStyle(kind: .accent, fullWidth: true))
                     .accessibilityIdentifier("capture.processing")
             }

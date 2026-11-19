@@ -36,9 +36,9 @@ struct DemoProcessingState: View {
             .overlay(RoundedRectangle(cornerRadius: Radius.control, style: .continuous)
                 .strokeBorder(Color.jovra(.textPrimary), style: StrokeStyle(lineWidth: 1, dash: [4, 3])))
             .accessibilityIdentifier("processing.demo")
-        SessionVideoCard(title: "Jon vs Alex", meta: String(localized: "54 min · 1080p", table: "Processing"),
+        SessionVideoCard(title: String(localized: "Jon vs Alex", table: "Processing"), meta: String(localized: "54 min · 1080p", table: "Processing"),
                          date: String(localized: "Oct 6, 2026", table: "Processing"), isSample: true,
-                         length: "54:00", thumbnail: nil, viewable: false) {}
+                         length: String(localized: "54:00", table: "Processing"), thumbnail: nil, viewable: false) {}
         VStack(alignment: .leading, spacing: Space.x2) {
             SectionHeader(title: String(localized: "Analysis progress", table: "Processing"))
             VStack(alignment: .leading, spacing: Space.x3) {
