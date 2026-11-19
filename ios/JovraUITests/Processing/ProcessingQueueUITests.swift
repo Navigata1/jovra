@@ -9,6 +9,7 @@ final class ProcessingQueueUITests: XCTestCase {
     func testStageTimelineProgressesViewSessionIsReadyBeforeAnalysisEndsAndPauseHoldsUntilResume() throws {
         let app = XCUIApplication.launchJovra {
             $0.appearance = .light
+            $0.library = .fresh
             $0.processingAnalyzer = .steady
         }
         recordAndOpenProcessing(app, title: "Processing " + UUID().uuidString.prefix(6))
@@ -57,6 +58,7 @@ final class ProcessingQueueUITests: XCTestCase {
     func testAnInjectedAnalysisFailureShowsRetryWhileTheVideoStillPlays() throws {
         let app = XCUIApplication.launchJovra {
             $0.appearance = .light
+            $0.library = .fresh
             $0.processingAnalyzer = .failsOnce
         }
         recordAndOpenProcessing(app, title: "Failure " + UUID().uuidString.prefix(6))
@@ -90,7 +92,10 @@ final class ProcessingQueueUITests: XCTestCase {
             (.light, nil, "light"), (.dark, nil, "dark"), (.light, .accessibility5, "ax5"),
         ]
         for (appearance, size, variant) in variants {
-            let app = XCUIApplication.launchJovra(contentSize: size) { $0.appearance = appearance }
+            let app = XCUIApplication.launchJovra(contentSize: size) {
+                $0.appearance = appearance
+                $0.library = .fresh
+            }
             recordAndOpenProcessing(app, title: "Unavailable \(variant) " + UUID().uuidString.prefix(4))
             let analyze = stage("analyze", in: app)
             XCTAssertTrue(waitFor(analyze, toStartWith: "Unavailable", timeout: 20), "\(variant): \(value(of: analyze))")

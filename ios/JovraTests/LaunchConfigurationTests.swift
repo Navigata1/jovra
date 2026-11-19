@@ -17,6 +17,7 @@ struct LaunchConfigurationTests {
         #expect(configuration.pseudoLocale == nil)
         #expect(configuration.startRoute == nil)
         #expect(configuration.processingAnalyzer == nil)
+        #expect(configuration.library == nil)
         #expect(configuration.problems.isEmpty)
     }
 
@@ -36,6 +37,7 @@ struct LaunchConfigurationTests {
             "-NSAccentuateLocalizedStrings", "YES",
             "-startRoute", "insights",
             "-processingAnalyzer", "failsOnce",
+            "-library", "fresh",
         ])
         #expect(configuration.appearance == .dark)
         #expect(configuration.demo == .sample)
@@ -46,6 +48,7 @@ struct LaunchConfigurationTests {
         #expect(configuration.pseudoLocale == .accented)
         #expect(configuration.startRoute == "insights")
         #expect(configuration.processingAnalyzer == .failsOnce)
+        #expect(configuration.library == .fresh)
         #expect(configuration.problems.isEmpty)
     }
 
@@ -57,6 +60,7 @@ struct LaunchConfigurationTests {
         (["-reduceMotion", "sometimes"], "-reduceMotion: unknown value “sometimes” (expected YES or NO)"),
         (["-archiveState"], "-archiveState: missing value"),
         (["-processingAnalyzer", "real"], "-processingAnalyzer: unknown value “real” (expected steady, failsOnce)"),
+        (["-library", "shared"], "-library: unknown value “shared” (expected fresh)"),
     ])
     func reportsProblems(arguments: [String], problem: String) {
         let configuration = LaunchConfiguration(arguments: ["Jovra"] + arguments)
@@ -75,6 +79,7 @@ struct LaunchConfigurationTests {
         configuration.pseudoLocale = .doubleLength
         configuration.startRoute = "capture"
         configuration.processingAnalyzer = .steady
+        configuration.library = .fresh
 
         let parsed = LaunchConfiguration(arguments: ["Jovra"] + configuration.arguments)
         #expect(parsed == configuration)

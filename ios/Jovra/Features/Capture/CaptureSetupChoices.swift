@@ -13,6 +13,16 @@ struct CaptureSetupChoices: Hashable, Codable, Sendable {
     var firstServer = Player.a
     var nearPlayer = Player.a
 
+    /// What the capture route records when it opens without a setup: a singles match between two neutral
+    /// names, best of three sets, which the player can edit before starting.
+    static var defaultSinglesDraft: CaptureSetupChoices {
+        var draft = CaptureSetupChoices()
+        draft.title = String(localized: "Singles match", table: "Capture")
+        draft.playerA = String(localized: "Player A", table: "Capture")
+        draft.playerB = String(localized: "Player B", table: "Capture")
+        return draft
+    }
+
     var isValid: Bool {
         let title = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let players = [playerA, playerB].map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
