@@ -40,6 +40,11 @@ public enum EstimatorRegistry {
     public static let all: [String: Runner] = [
         "oracle.eventTimes": eventTimes(OracleEventEstimator()),
         "null.eventTimes": eventTimes(NullEventEstimator()),
+        "courtCalibration.fourTap": { harness, request in
+            try await harness.run(CourtCalibrationEstimator(catalog: harness.catalog), task: CourtCalibrationTask(catalog: harness.catalog),
+                                  clipIDs: request.clipIDs, mode: request.mode, floor: request.floor,
+                                  capabilityId: request.capabilityId, runId: request.runId, at: request.at)
+        },
     ]
 
     public static func eventTimes<E: BenchmarkEstimator>(_ estimator: E) -> Runner where E.Output == [RationalTime] {

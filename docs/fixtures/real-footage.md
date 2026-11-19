@@ -59,6 +59,9 @@ model) and must stay "Needs review" until a labelled benchmark on these excerpts
 
 ## Labelling plan for the benchmark
 
+Since V01 the labels are made with the labelling tool and sealed into the label set: see [labelling.md](labelling.md).
+The paragraph below is the 2026-10-07 plan, kept for the record.
+
 Ground truth for the 6-minute excerpt: point start/end times, server, winner and racket-contact times. Labels are
 produced by a human in JOVRA's own Fast Point Review and Mark tools (Jon, in the hardware phase) or by an agent that
 verifies candidate contacts against frame strips and spectrograms, recorded as `labelled-by` with method. The

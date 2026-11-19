@@ -1,0 +1,36 @@
+{
+  "description" : "Labels on the founder's three recordings (docs/fixtures/real-footage.md), the ground truth for the V02-V07 gates. The founder labels them locally with the labelling tool (docs/fixtures/labelling.md); an agent never views their frames. Only label files (times and points, no imagery) and their hashes are committed. founderPending until every target below is met.",
+  "kind" : "jovra.benchmarkLabelSet",
+  "labelFiles" : [
+
+  ],
+  "recordings" : [
+    {
+      "description" : "Feb 2024 match, elevated camera behind the near baseline.",
+      "role" : "match",
+      "sha256" : "07fbd86e2dc963fa047643a661c2cad91c2671d8ea2070a130051e2ff907f8ac",
+      "targets" : {
+        "bounces" : 150,
+        "hits" : 300
+      }
+    },
+    {
+      "description" : "Sep 29 2026, low camera at a corner of the court.",
+      "role" : "cornerAngle",
+      "sha256" : "156cf7568cf1e92d9fdba161c933c101dac20d14f8f6baf2218abd9c4cc267ac",
+      "targets" : {
+        "cameraPositions" : 1
+      }
+    },
+    {
+      "description" : "Oct 4 2026, ground-level camera at the net post looking down the sideline.",
+      "role" : "sideView",
+      "sha256" : "1682e5934c40dde2a5760261e6342356866483538cc5437546a078751d1dd03e",
+      "targets" : {
+        "strokes" : 100
+      }
+    }
+  ],
+  "schemaVersion" : "1.0.0",
+  "status" : "founderPending"
+}

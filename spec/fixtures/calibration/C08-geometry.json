@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.calibration",
+  "id": "C08-geometry",
+  "title": "CourtGeometry: lines, intersections, depth bins and service zones",
+  "cases": [
+    {
+      "op": "geometry",
+      "name": "the ITF court model in metres",
+      "expected": {
+        "lines": [
+          {"id": "nearBaseline", "kind": "baseline", "from": {"x": -5.485, "y": -11.885}, "to": {"x": 5.485, "y": -11.885}},
+          {"id": "farBaseline", "kind": "baseline", "from": {"x": -5.485, "y": 11.885}, "to": {"x": 5.485, "y": 11.885}},
+          {"id": "leftDoublesSideline", "kind": "doublesSideline", "from": {"x": -5.485, "y": -11.885}, "to": {"x": -5.485, "y": 11.885}},
+          {"id": "rightDoublesSideline", "kind": "doublesSideline", "from": {"x": 5.485, "y": -11.885}, "to": {"x": 5.485, "y": 11.885}},
+          {"id": "leftSinglesSideline", "kind": "singlesSideline", "from": {"x": -4.115, "y": -11.885}, "to": {"x": -4.115, "y": 11.885}},
+          {"id": "rightSinglesSideline", "kind": "singlesSideline", "from": {"x": 4.115, "y": -11.885}, "to": {"x": 4.115, "y": 11.885}},
+          {"id": "nearServiceLine", "kind": "serviceLine", "from": {"x": -4.115, "y": -6.4}, "to": {"x": 4.115, "y": -6.4}},
+          {"id": "farServiceLine", "kind": "serviceLine", "from": {"x": -4.115, "y": 6.4}, "to": {"x": 4.115, "y": 6.4}},
+          {"id": "centreServiceLine", "kind": "centreServiceLine", "from": {"x": 0.0, "y": -6.4}, "to": {"x": 0.0, "y": 6.4}},
+          {"id": "nearCentreMark", "kind": "centreMark", "from": {"x": 0.0, "y": -11.885}, "to": {"x": 0.0, "y": -11.785}},
+          {"id": "farCentreMark", "kind": "centreMark", "from": {"x": 0.0, "y": 11.785}, "to": {"x": 0.0, "y": 11.885}},
+          {"id": "net", "kind": "net", "from": {"x": -6.4, "y": 0.0}, "to": {"x": 6.4, "y": 0.0}}
+        ],
+        "intersections": [
+          {"id": "nearLeftDoubles", "point": {"x": -5.485, "y": -11.885}},
+          {"id": "nearRightDoubles", "point": {"x": 5.485, "y": -11.885}},
+          {"id": "farRightDoubles", "point": {"x": 5.485, "y": 11.885}},
+          {"id": "farLeftDoubles", "point": {"x": -5.485, "y": 11.885}},
+          {"id": "nearLeftSingles", "point": {"x": -4.115, "y": -11.885}},
+          {"id": "nearRightSingles", "point": {"x": 4.115, "y": -11.885}},
+          {"id": "farRightSingles", "point": {"x": 4.115, "y": 11.885}},
+          {"id": "farLeftSingles", "point": {"x": -4.115, "y": 11.885}},
+          {"id": "nearLeftService", "point": {"x": -4.115, "y": -6.4}},
+          {"id": "nearRightService", "point": {"x": 4.115, "y": -6.4}},
+          {"id": "farRightService", "point": {"x": 4.115, "y": 6.4}},
+          {"id": "farLeftService", "point": {"x": -4.115, "y": 6.4}},
+          {"id": "nearServiceT", "point": {"x": 0.0, "y": -6.4}},
+          {"id": "farServiceT", "point": {"x": 0.0, "y": 6.4}},
+          {"id": "nearCentreMark", "point": {"x": 0.0, "y": -11.885}},
+          {"id": "farCentreMark", "point": {"x": 0.0, "y": 11.885}}
+        ],
+        "tappedCorners": {
+          "doubles": ["nearLeftDoubles", "nearRightDoubles", "farRightDoubles", "farLeftDoubles"],
+          "singles": ["nearLeftSingles", "nearRightSingles", "farRightSingles", "farLeftSingles"]
+        },
+        "depthBins": [{"id": "short", "fromM": 0.0, "toM": 6.4}, {"id": "deep", "fromM": 6.4, "toM": 11.885}]
+      }
+    },
+    {
+      "op": "classify",
+      "name": "landing at (0.5, 3.0)",
+      "point": {"x": 0.5, "y": 3.0},
+      "expected": {"depth": "short", "serviceZone": "t", "serviceBox": "ad", "inSingles": true, "inDoubles": true}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (-2.0, 6.4)",
+      "point": {"x": -2.0, "y": 6.4},
+      "expected": {
+        "depth": "short",
+        "serviceZone": "body",
+        "serviceBox": "deuce",
+        "inSingles": true,
+        "inDoubles": true
+      }
+    },
+    {
+      "op": "classify",
+      "name": "landing at (3.9, 6.41)",
+      "point": {"x": 3.9, "y": 6.41},
+      "expected": {"depth": "deep", "serviceZone": "wide", "serviceBox": "ad", "inSingles": true, "inDoubles": true}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (-1.2, 11.885)",
+      "point": {"x": -1.2, "y": 11.885},
+      "expected": {"depth": "deep", "serviceZone": "t", "serviceBox": "deuce", "inSingles": true, "inDoubles": true}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (0.0, 12.5)",
+      "point": {"x": 0.0, "y": 12.5},
+      "expected": {"depth": "long", "serviceZone": "t", "serviceBox": "ad", "inSingles": false, "inDoubles": false}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (-5.0, -8.0)",
+      "point": {"x": -5.0, "y": -8.0},
+      "expected": {"depth": "deep", "serviceZone": "wide", "serviceBox": "ad", "inSingles": false, "inDoubles": true}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (4.2, 2.0)",
+      "point": {"x": 4.2, "y": 2.0},
+      "expected": {"depth": "short", "serviceZone": "wide", "serviceBox": "ad", "inSingles": false, "inDoubles": true}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (1.0, -5.0)",
+      "point": {"x": 1.0, "y": -5.0},
+      "expected": {"depth": "short", "serviceZone": "t", "serviceBox": "deuce", "inSingles": true, "inDoubles": true}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (-1.0, 5.0)",
+      "point": {"x": -1.0, "y": 5.0},
+      "expected": {"depth": "short", "serviceZone": "t", "serviceBox": "deuce", "inSingles": true, "inDoubles": true}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (2.0, 5.0)",
+      "point": {"x": 2.0, "y": 5.0},
+      "expected": {"depth": "short", "serviceZone": "body", "serviceBox": "ad", "inSingles": true, "inDoubles": true}
+    },
+    {
+      "op": "classify",
+      "name": "landing at (-3.5, 4.0)",
+      "point": {"x": -3.5, "y": 4.0},
+      "expected": {
+        "depth": "short",
+        "serviceZone": "wide",
+        "serviceBox": "deuce",
+        "inSingles": true,
+        "inDoubles": true
+      }
+    },
+    {
+      "op": "classify",
+      "name": "landing at (5.485, 11.885)",
+      "point": {"x": 5.485, "y": 11.885},
+      "expected": {"depth": "deep", "serviceZone": "wide", "serviceBox": "ad", "inSingles": false, "inDoubles": true}
+    }
+  ]
+}
