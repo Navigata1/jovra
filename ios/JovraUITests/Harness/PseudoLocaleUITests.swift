@@ -13,11 +13,14 @@ final class PseudoLocaleUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    /// A fresh, empty library: sessions earlier tests saved in the app container would show their
+    /// titles, player names and dates, which are the player's own text, not catalog strings.
     @MainActor
     func testEveryTabPassesTheTextClippedAuditInThePseudoLocale() throws {
         let app = XCUIApplication.launchJovra {
             $0.appearance = .light
             $0.pseudoLocale = .accented
+            $0.library = .fresh
         }
         var bypassed: [String] = []
         for (index, tab) in ShellTab.allCases.enumerated() {

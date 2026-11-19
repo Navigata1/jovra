@@ -145,6 +145,7 @@ destination; the app then opens on Home). With no arguments, everything is live.
 | `-reduceMotion` | `YES`, `NO` | forces Reduce Motion on (read it from `\.launchConfiguration` together with the system setting) |
 | `-pseudoLocale` | `accented`, `doubleLength`, `rightToLeft` | also adds the matching Foundation pseudolanguage arguments |
 | `-startRoute` | any destination's launch name (`AppDestination.catalog`): a tab (`home` … `profile`), `welcome`, `onboarding`, a push (`sessions.matchOverview`, `profile.settings`, …), a full-screen route (`capture`, `replay`, …) or a sheet (`sheet.pointEditor`, `sheet.permission.camera`, …) | where the app opens (example payloads) |
+| `-library` | `fresh` | a new, empty local library in a temporary folder for this launch; the library saved on the device is not read or changed |
 
 In UI tests: `XCUIApplication.launchJovra(contentSize: .accessibility5) { $0.appearance = .dark; $0.permissions = [.camera: .denied] }`.
 Services read `@Environment(\.launchConfiguration)`; the fake/live switch is the `ServiceKey` seam below.
