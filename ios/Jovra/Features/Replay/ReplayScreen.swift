@@ -1,4 +1,3 @@
-import AVKit
 import JovraCore
 import SwiftUI
 
@@ -59,7 +58,7 @@ struct ReplayScreen: View {
     @ViewBuilder private var video: some View {
         if let player = playback.player {
             ZStack {
-                VideoPlayer(player: player)
+                ReplayVideoPlayer(player: player)
                 if playback.showStill, let frame = playback.frame {
                     Image(decorative: frame.image, scale: 1).resizable().scaledToFit().accessibilityHidden(true)
                 }
