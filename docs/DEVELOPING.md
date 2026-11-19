@@ -30,6 +30,8 @@ ios/
       Components/             buttons, cards, stat tile, fraction popover, provenance/Sample/Fixture badges,
                               status pill, rows, state cards, banners, toasts, readable column, capability
                               detail; DEBUG gallery (`JOVRA_CORE_COMPONENT_GALLERY=<scenario>`) for UI tests
+      Court/                  CourtDiagram, CourtMarker (+ legend), PerspectiveCourtGuide, CornerHandle and Loupe,
+                              drawn from JovraCore CourtGeometry; DEBUG gallery (`JOVRA_COURT_GALLERY=<scenario>`)
       Art/                    vector hero and editorial art (no photographs, hidden from VoiceOver)
       Brand/                  BrandGeometry (Court Arc mark + JOVRA wordmark vectors), SwiftUI shapes, lockup
     Features/<Tab>/           one folder per feature (Home, Sessions, Record, Insights, Profile, Capture)
