@@ -72,17 +72,45 @@ private struct PlannedLengthSection: View {
         let range = SessionSetup.plannedMinutesRange
         SetupSection(title: String(localized: "Planned length", table: "Record", comment: "Camera sheet section"),
                      footnote: String(localized: "Used only for the storage estimate. Recording never stops at this length.", table: "Record", comment: "Planned length footnote")) {
-            Stepper(value: Binding(get: { minutes }, set: { store.setup.plannedMinutes = $0 }),
-                    in: range, step: SessionSetup.plannedMinutesStep) {
+            // Own 44 pt controls: the system stepper's segments are 32 pt tall. VoiceOver gets one
+            // adjustable element (swipe up or down) with the length as its value.
+            HStack(spacing: Space.x2) {
+                stepButton(symbol: "minus", enabled: minutes > range.lowerBound) { change(by: -SessionSetup.plannedMinutesStep) }
                 Text(SetupCopy.plannedLength(minutes: minutes))
                     .font(.body.weight(.semibold))
                     .foregroundStyle(.jovra(.textPrimary))
                     .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity)
+                stepButton(symbol: "plus", enabled: minutes < range.upperBound) { change(by: SessionSetup.plannedMinutesStep) }
             }
-            .frame(minHeight: HitTarget.minimum)
+            .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text("Planned length", tableName: "Record", comment: "Stepper name"))
             .accessibilityValue(Text(verbatim: SetupCopy.plannedLength(minutes: minutes)))
+            .accessibilityAdjustableAction { direction in
+                switch direction {
+                case .increment: change(by: SessionSetup.plannedMinutesStep)
+                case .decrement: change(by: -SessionSetup.plannedMinutesStep)
+                @unknown default: break
+                }
+            }
             .accessibilityIdentifier("camera.plannedLength")
         }
+    }
+
+    private func change(by step: Int) {
+        let range = SessionSetup.plannedMinutesRange
+        store.setup.plannedMinutes = min(max(store.setup.plannedMinutes + step, range.lowerBound), range.upperBound)
+    }
+
+    private func stepButton(symbol: String, enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.body.weight(.semibold))
+                .frame(width: HitTarget.minimum, height: HitTarget.minimum)
+                .background(Color.jovra(.surfaceSunken), in: Circle())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(.jovra(enabled ? .textPrimary : .textSecondary))
+        .disabled(!enabled)
     }
 }
