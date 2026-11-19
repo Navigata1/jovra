@@ -15,10 +15,10 @@ struct VideoLab: View {
 
         var title: String {
             switch self {
-            case .fc060: "Counter 60 fps"
-            case .fc240: "Counter 240 fps"
-            case .sample: "Sample match"
-            case .missing: "Missing file"
+            case .fc060: "60 fps"
+            case .fc240: "240 fps"
+            case .sample: "Sample"
+            case .missing: "Missing"
             }
         }
 
@@ -95,25 +95,44 @@ struct VideoLab: View {
                     header
                     controls
                 }
+                .padding(.top, Space.x2)
                 .padding(.bottom, Space.x4)
+                .padding(.trailing, Space.screenMargin)
             }
-            .frame(width: 300)
+            // The scroll view runs to the trailing edge and keeps the margin inside its content, so its indicator sits
+            // in the margin instead of over the timeline and jog strip.
+            .frame(width: Self.landscapePanelWidth + Space.screenMargin)
             .accessibilityIdentifier("videoLab.scroll")
         }
-        .padding(.horizontal, Space.screenMargin)
+        .padding(.leading, Space.screenMargin)
     }
 
+    /// screens.md S10: in iPhone landscape a trailing 300 pt panel holds the timeline, jog strip and transport.
+    private static let landscapePanelWidth: CGFloat = 300
+
+    /// The large title and its subtitle belong to regular height. When height is short they are dropped first
+    /// (screens.md S10 §1), so the timeline, jog strip and transport row are on screen without scrolling.
     private var header: some View {
-        VStack(alignment: .leading, spacing: Space.x1) {
-            Text("Video lab")
-                .jovraDisplayTitle()
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("screen.title")
-            Text("Frame-accurate playback on synthetic clips.")
-                .font(.jovraSubtitle)
-                .foregroundStyle(.jovra(.textSecondary))
-                .fixedSize(horizontal: false, vertical: true)
+        let isCompact = verticalSizeClass == .compact
+        return VStack(alignment: .leading, spacing: Space.x1) {
+            Group {
+                if isCompact {
+                    Text("Video lab")
+                        .font(.jovraHeadline)
+                        .foregroundStyle(.jovra(.textPrimary))
+                } else {
+                    Text("Video lab").jovraDisplayTitle()
+                }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityAddTraits(.isHeader)
+            .accessibilityIdentifier("screen.title")
+            if !isCompact {
+                Text("Frame-accurate playback on synthetic clips.")
+                    .font(.jovraSubtitle)
+                    .foregroundStyle(.jovra(.textSecondary))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             if source != .missing {
                 FilterPills(options: [Source.fc060, .fc240, .sample], selection: $source) { $0.title }
                     .accessibilityIdentifier("videoLab.sources")

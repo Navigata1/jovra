@@ -128,6 +128,33 @@ final class PlaybackCoreUITests: XCTestCase {
         XCTAssertTrue((86...92).contains(dragged), "three quarters of the fixture: \(dragged)")
     }
 
+    /// iPhone landscape (screens.md S10): the video leads and the trailing 300 pt panel shows the timeline, the jog
+    /// strip and the frame-step and play buttons without scrolling at the default text size. Five discs do not fit
+    /// 300 pt, so the rate and the fifth slot wrap to a second row that the panel scrolls to.
+    @MainActor
+    func testLandscapeShowsTimelineJogAndTransportWithoutScrolling() throws {
+        let app = launchLab()
+        XCTAssertTrue(element(app, "playback.jog").waitForExistence(timeout: 10))
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let window = app.windows.firstMatch
+        let video = element(app, "video.surface"), timeline = element(app, "playback.timeline")
+        let jog = element(app, "playback.jog"), play = element(app, "transport.playPause")
+        let laidOut = NSPredicate { _, _ in window.frame.width > window.frame.height && jog.frame.minX > video.frame.maxX }
+        _ = XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: laidOut, object: nil)], timeout: 8)
+        XCTAssertGreaterThan(window.frame.width, window.frame.height, "the app rotated")
+        XCTAssertGreaterThanOrEqual(element(app, "screen.title").frame.minY, window.frame.minY + 12, "the title clears the top edge")
+        XCTAssertGreaterThan(timeline.frame.minX, video.frame.maxX, "the timeline is in the trailing panel")
+        XCTAssertGreaterThanOrEqual(jog.frame.minY - timeline.frame.maxY, 16)
+        for id in ["playback.readout", "transport.previousFrame", "transport.playPause", "transport.nextFrame"] {
+            let frame = element(app, id).frame
+            XCTAssertLessThanOrEqual(frame.maxY, window.frame.maxY, "\(id) at \(frame) is on screen without scrolling")
+        }
+        XCTAssertTrue(play.isHittable)
+        play.tap()
+        XCTAssertTrue(play.wait(for: \.label, toEqual: "Pause", timeout: 3), "the transport works where it stands")
+        play.tap()
+    }
+
     // MARK: Keyboard
 
     @MainActor

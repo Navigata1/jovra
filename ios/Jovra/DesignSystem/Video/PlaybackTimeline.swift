@@ -11,29 +11,32 @@ struct PlaybackTimeline: View {
     var onScrub: (Int) -> Void
     var onScrubEnded: (Int) -> Void
 
-    private var progress: CGFloat {
-        frameCount > 1 ? CGFloat(frame) / CGFloat(frameCount - 1) : 0
-    }
+    /// The thumb is 18 pt across and stays inside the track, so at either end it lines up with the content margin.
+    static let thumbDiameter: CGFloat = 18
+    static let trackHeight: CGFloat = 4
 
     var body: some View {
         VStack(spacing: Space.half) {
             GeometryReader { proxy in
                 let width = proxy.size.width
+                let radius = Self.thumbDiameter / 2
+                let centre = TimelineScrubInteraction.thumbCentre(frame: frame, frameCount: frameCount, width: width, inset: radius)
                 ZStack(alignment: .leading) {
-                    Capsule().fill(Color.jovra(.separator)).frame(height: 4)
-                    Capsule().fill(Color.jovra(.textPrimary)).frame(width: max(4, width * progress), height: 4)
+                    Capsule().fill(Color.jovra(.separator)).frame(height: Self.trackHeight)
+                    Capsule().fill(Color.jovra(.textPrimary)).frame(width: max(Self.trackHeight, centre), height: Self.trackHeight)
                     Circle()
                         .fill(Color.jovra(.accent))
                         .overlay(Circle().strokeBorder(Color.jovra(.textPrimary), lineWidth: 2))
-                        .frame(width: 18, height: 18)
-                        .offset(x: width * progress - 9)
+                        .frame(width: Self.thumbDiameter, height: Self.thumbDiameter)
+                        .offset(x: centre - radius)
                 }
                 .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
-                .gesture(TimelinePanGesture(width: width, frameCount: frameCount,
+                .gesture(TimelinePanGesture(width: width, frameCount: frameCount, inset: radius,
                                             onScrub: onScrub, onScrubEnded: onScrubEnded))
                 .simultaneousGesture(SpatialTapGesture().onEnded { value in
-                    if let target = TimelineScrubInteraction.frame(at: value.location.x, width: width, frameCount: frameCount) {
+                    if let target = TimelineScrubInteraction.frame(at: value.location.x, width: width,
+                                                                   frameCount: frameCount, inset: radius) {
                         onScrubEnded(target)
                     }
                 })
