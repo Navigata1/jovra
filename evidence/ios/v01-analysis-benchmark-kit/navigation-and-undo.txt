@@ -1,0 +1,87 @@
+Round 1 review: three defects in the label tool, before and after.
+
+All recordings here are synthetic: two clips the tests write themselves (grey frames with a moving bar, 4 kHz bursts)
+and the rendered sample video. No founder recording was opened.
+
+== The clips the tests write (Tests/JovraLabelKitTests/SyntheticClip.swift), probed once with ffprobe
+
+odd-time-base.mov      the match recording's time base, 1/29589 s; frame times are not whole 1/90000 s ticks
+stream|codec_name=h264|codec_type=video|r_frame_rate=29589/1000|time_base=1/29589|duration=1.520835|nb_frames=45
+first video pts: 0 1000 2000 3000 4000 5000
+
+thirty-fps-clicks.mov  30 fps; bursts at 1.026, 2.027 and 3.028 s start 26 to 28 ms into their frame, one at 3.5 s on a frame boundary
+stream|codec_name=h264|codec_type=video|r_frame_rate=30/1|time_base=1/600|duration=4.500000|nb_frames=135
+stream|codec_name=pcm_s16le|codec_type=audio|sample_rate=48000|r_frame_rate=0/0|time_base=1/48000|duration=4.500000|nb_frames=216000
+first video pts: 0 20 40 60 80 100
+
+== BEFORE the fixes: the new tests as first written (five; the sixth was added with the fix) on the unfixed session:
+== commit e05f8d1 plus the tests and the then-unused `LabelSession.mediaTime` helper
+$ swift test --package-path tools/label-tool --no-parallel --filter LabelNavigationTests
+
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testALabelTimeGoesToThePlayerExactly]' passed (0.062 seconds).
+tools/label-tool/Tests/JovraLabelKitTests/LabelWindowTestCase.swift:53: error: -[JovraLabelKitTests.LabelNavigationTests testNextAndPreviousLabelReachEveryLabelWhenFrameTimesAreNotWholeNinetyKilohertzTicks] : failed - timed out waiting for hit 1 on screen; frame time is 1000/29589
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testNextAndPreviousLabelReachEveryLabelWhenFrameTimesAreNotWholeNinetyKilohertzTicks]' failed (11.114 seconds).
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:143: error: -[JovraLabelKitTests.LabelNavigationTests testNextCandidateMovesOnWhenTheSoundStartsLateInItsFrame] : XCTAssertEqual failed: ("Optional("Candidate at 0:01.026. H or J confirms it as a hit; R rejects it.")") is not equal to ("Optional("Candidate at 0:02.026. H or J confirms it as a hit; R rejects it.")")
+tools/label-tool/Tests/JovraLabelKitTests/LabelWindowTestCase.swift:53: error: -[JovraLabelKitTests.LabelNavigationTests testNextCandidateMovesOnWhenTheSoundStartsLateInItsFrame] : failed - timed out waiting for candidate 2 on screen; frame time is 600/600
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testNextCandidateMovesOnWhenTheSoundStartsLateInItsFrame]' failed (10.883 seconds).
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:22: error: -[JovraLabelKitTests.LabelNavigationTests testTwoLabelsOnOneFrameAreBothReached] : XCTAssertEqual failed: ("Optional(JovraLabelKit.LabelSelection.hit(time: 15360/15360, player: JovraBenchmark.BenchmarkLabels.Player.near))") is not equal to ("Optional(JovraLabelKit.LabelSelection.rally(start: 60/60))") - the rally on the same frame is selected as soon as the key is pressed
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:25: error: -[JovraLabelKitTests.LabelNavigationTests testTwoLabelsOnOneFrameAreBothReached] : XCTAssertEqual failed: ("Optional(JovraLabelKit.LabelSelection.hit(time: 15360/15360, player: JovraBenchmark.BenchmarkLabels.Player.near))") is not equal to ("Optional(JovraLabelKit.LabelSelection.rally(start: 60/60))") - the rally on the same frame is still selected once its frame is up
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:119: error: -[JovraLabelKitTests.LabelNavigationTests testTwoLabelsOnOneFrameAreBothReached] : XCTAssertEqual failed: ("Optional(JovraLabelKit.LabelSelection.hit(time: 15360/15360, player: JovraBenchmark.BenchmarkLabels.Player.near))") is not equal to ("Optional(JovraLabelKit.LabelSelection.rally(start: 60/60))") - a frame arriving late does not take the selection back
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:121: error: -[JovraLabelKitTests.LabelNavigationTests testTwoLabelsOnOneFrameAreBothReached] : XCTAssertEqual failed: ("Optional([JovraBenchmark.BenchmarkLabels.Rally(start: 15360/15360, end: Optional(17920/15360))])") is not equal to ("Optional([])") - Delete removes the rally that was reached
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:122: error: -[JovraLabelKitTests.LabelNavigationTests testTwoLabelsOnOneFrameAreBothReached] : XCTAssertEqual failed: ("Optional(0)") is not equal to ("Optional(1)") - and leaves the hit on the same frame
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testTwoLabelsOnOneFrameAreBothReached]' failed (0.475 seconds).
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:199: error: -[JovraLabelKitTests.LabelNavigationTests testUndoingAnEditMadeWhileTheToolWasListeningKeepsTheCandidates] : XCTAssertEqual failed: ("nil") is not equal to ("Optional(7)") - undo takes back the hit, not the candidates
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:200: error: -[JovraLabelKitTests.LabelNavigationTests testUndoingAnEditMadeWhileTheToolWasListeningKeepsTheCandidates] : XCTAssertEqual failed: ("Optional(0)") is not equal to ("Optional(7)")
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:201: error: -[JovraLabelKitTests.LabelNavigationTests testUndoingAnEditMadeWhileTheToolWasListeningKeepsTheCandidates] : XCTAssertEqual failed: ("nil") is not equal to ("Optional(7)") - and the label file keeps them
+tools/label-tool/Tests/JovraLabelKitTests/LabelNavigationTests.swift:204: error: -[JovraLabelKitTests.LabelNavigationTests testUndoingAnEditMadeWhileTheToolWasListeningKeepsTheCandidates] : XCTAssertEqual failed: ("Optional("No pending candidates are left.")") is not equal to ("Optional("Candidate at 0:01.500. H or J confirms it as a hit; R rejects it.")")
+tools/label-tool/Tests/JovraLabelKitTests/LabelWindowTestCase.swift:53: error: -[JovraLabelKitTests.LabelNavigationTests testUndoingAnEditMadeWhileTheToolWasListeningKeepsTheCandidates] : failed - timed out waiting for the first candidate's frame; frame time is 0/48000
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testUndoingAnEditMadeWhileTheToolWasListeningKeepsTheCandidates]' failed (30.126 seconds).
+	 Executed 5 tests, with 16 failures (3 unexpected) in 52.660 (52.661) seconds
+
+Read as: "." showed frame 1 (1000/29589) for the label on frame 2 and never left it; N stayed on the candidate at
+1.026 s; undo left the document and the label file without candidates and N answered "No pending candidates are left."
+(testTwoLabelsOnOneFrameAreBothReached covers a related fault found while fixing: a rally that starts on a hit's frame
+could not be reached with "." or ",", and the status line named one label while Delete removed the other.)
+
+== AFTER the fixes: the same tests (full run in tests.txt)
+
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testALabelTimeGoesToThePlayerExactly]' passed (0.063 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testNextAndPreviousLabelReachEveryLabelWhenFrameTimesAreNotWholeNinetyKilohertzTicks]' passed (1.231 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testNextCandidateMovesOnWhenTheSoundStartsLateInItsFrame]' passed (1.219 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testTwoLabelsOnOneFrameAreBothReached]' passed (0.470 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testUndoingAnEditMadeWhileTheToolWasListeningKeepsTheCandidates]' passed (0.144 seconds).
+Test Case '-[JovraLabelKitTests.LabelNavigationTests testWhileTheRecordingPlaysNextLabelStartsFromTheFrameOnScreen]' passed (1.404 seconds).
+
+== AFTER the fixes: the reviewer's own reproduction, unchanged, on the reviewer's ffmpeg-rendered clips
+(a scratch harness outside the repository that drives the public LabelSession; time base 1/29589 for A, 30 fps with
+bursts at 1.026, 3.027, 5.028 and 6.5 s for C, the sample video with autosave on for B)
+
+VERIFY-C candidates: ["1.0260", "3.0260", "5.0280", "6.5000"]
+VERIFY-C
+press 1: frame on screen 1.0000 s, notice=Candidate at 0:01.026. H or J confirms it as a hit; R rejects it.
+press 2: frame on screen 3.0000 s, notice=Candidate at 0:03.026. H or J confirms it as a hit; R rejects it.
+press 3: frame on screen 5.0000 s, notice=Candidate at 0:05.028. H or J confirms it as a hit; R rejects it.
+press 4: frame on screen 6.5000 s, notice=Candidate at 0:06.500. H or J confirms it as a hit; R rejects it.
+press 5: frame on screen 6.5000 s, notice=No more pending candidates after this frame.
+press 6: frame on screen 6.5000 s, notice=No more pending candidates after this frame.
+VERIFY-C-prev
+P press 1: frame on screen 6.5000 s, notice=Candidate at 0:06.500. H or J confirms it as a hit; R rejects it.
+P press 2: frame on screen 5.0000 s, notice=Candidate at 0:05.028. H or J confirms it as a hit; R rejects it.
+P press 3: frame on screen 3.0000 s, notice=Candidate at 0:03.026. H or J confirms it as a hit; R rejects it.
+P press 4: frame on screen 1.0000 s, notice=Candidate at 0:01.026. H or J confirms it as a hit; R rejects it.
+P press 5: frame on screen 1.0000 s, notice=No more pending candidates before this frame.
+P press 6: frame on screen 1.0000 s, notice=No more pending candidates before this frame.
+VERIFY-A
+press 1: selected hit frame 2, frame on screen 2.0 [2000/29589], notice=Hit by the near player at 0:00.067.
+press 2: selected hit frame 5, frame on screen 5.0 [5000/29589], notice=Hit by the near player at 0:00.168.
+press 3: selected hit frame 8, frame on screen 8.0 [8000/29589], notice=Hit by the near player at 0:00.270.
+press 4: selected hit frame 11, frame on screen 11.0 [11000/29589], notice=Hit by the near player at 0:00.371.
+press 5: selected hit frame 14, frame on screen 14.0 [14000/29589], notice=Hit by the near player at 0:00.473.
+press 6: selected hit frame 14, frame on screen 14.0 [14000/29589], notice=No label after this frame.
+press 7: selected hit frame 14, frame on screen 14.0 [14000/29589], notice=No label after this frame.
+VERIFY-B search state right after open: searching; candidates in document: nil
+VERIFY-B after H: hits=1 candidates=nil
+VERIFY-B after search settled: search=found(7) candidates=Optional(7)
+VERIFY-B after undo: hits=0 search=found(7) candidates=Optional(7) notice=Undone.
+VERIFY-B after N: notice=Candidate at 0:01.500. H or J confirms it as a hit; R rejects it. shown=23040/15360
+VERIFY-B on disk: candidates=Optional(7)

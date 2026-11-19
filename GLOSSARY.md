@@ -285,6 +285,17 @@ A recorded run of a capability against footage with ground-truth labels, scored 
 benchmark on real footage promotes a capability; synthetic sample media can fail a capability but never validate it.
 _Avoid_: Test (generic), evaluation, accuracy claim
 
+**Benchmark labels**:
+What a person marked on one real recording as ground truth for a benchmark: hits, bounces, rally boundaries and court
+corners, as times and image points keyed by the recording's hash. Never imagery. A hit candidate the labelling tool
+offered is not a label until the labeller confirms it.
+_Avoid_: Annotations (those are drawings on a comparison), tags, ground-truth video
+
+**Held-out window**:
+A stretch of a labelled recording that gating runs score and tuning never reads, fixed by the recording's hash before
+any label exists. Every other stretch is a tuning window.
+_Avoid_: Test set (alone), validation split
+
 **Benchmark binding**:
 For one capability, the benchmark task, version and tolerance that measure its gate, and which task metric each gate
 metric is (`spec/fixtures/media/benchmark-bindings.json`). A benchmark that names a capability must use its binding.

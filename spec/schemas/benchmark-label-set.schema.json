@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOVRA benchmark label set (spec/benchmarks/labels/manifest.json)",
+  "description": "The label set that gates V02-V07 (docs/spec/vision-tickets.md): the founder's recordings by hash with the label counts each one needs, and every sealed label file with the SHA-256 of its bytes, its hash-fixed tuning / held-out split and its counts. `jovra-benchmark labels seal` writes the entries; scripts/spec/validate.py re-hashes each file, re-derives its split and counts, and requires status to be complete exactly when every target is met. Until then the set is founderPending and no V-track capability may leave disabled on it.",
+  "$comment": "Schema 1.0.0, added by V01.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "description", "status", "recordings", "labelFiles"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"$ref": "common.schema.json#/$defs/schemaVersion"},
+    "kind": {"const": "jovra.benchmarkLabelSet"},
+    "description": {"type": "string", "minLength": 1, "maxLength": 600},
+    "status": {"enum": ["founderPending", "complete"]},
+    "recordings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "sha256", "description", "targets"],
+        "additionalProperties": false,
+        "properties": {
+          "role": {"enum": ["match", "cornerAngle", "sideView"]},
+          "sha256": {"$ref": "common.schema.json#/$defs/sha256", "description": "The original file (docs/fixtures/real-footage.md). Labels made on an excerpt do not count towards the targets."},
+          "description": {"type": "string", "minLength": 1, "maxLength": 300},
+          "targets": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "description": "Minimum label counts on this recording before the set is complete.",
+            "properties": {
+              "hits": {"type": "integer", "minimum": 1},
+              "strokes": {"type": "integer", "minimum": 1, "description": "Hits that carry a stroke type."},
+              "bounces": {"type": "integer", "minimum": 1},
+              "rallies": {"type": "integer", "minimum": 1},
+              "cameraPositions": {"type": "integer", "minimum": 1}
+            }
+          }
+        }
+      }
+    },
+    "labelFiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "recordingSha256", "labelsSha256", "split", "counts"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {"type": "string", "pattern": "^spec/benchmarks/labels/rec-[0-9a-f]{12}\\.labels\\.json$"},
+          "recordingSha256": {"$ref": "common.schema.json#/$defs/sha256"},
+          "labelsSha256": {"$ref": "common.schema.json#/$defs/sha256", "description": "SHA-256 of the label file's bytes as committed."},
+          "split": {"$ref": "benchmark-labels.schema.json#/$defs/split", "description": "The label file's own split, recorded beside its hash."},
+          "counts": {
+            "type": "object",
+            "required": ["hits", "strokes", "bounces", "rallies", "cameraPositions"],
+            "additionalProperties": false,
+            "properties": {
+              "hits": {"type": "integer", "minimum": 0},
+              "strokes": {"type": "integer", "minimum": 0},
+              "bounces": {"type": "integer", "minimum": 0},
+              "rallies": {"type": "integer", "minimum": 0},
+              "cameraPositions": {"type": "integer", "minimum": 0}
+            }
+          }
+        }
+      }
+    }
+  }
+}

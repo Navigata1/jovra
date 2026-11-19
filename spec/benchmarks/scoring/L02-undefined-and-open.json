@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.labelScoring",
+  "id": "L02-undefined-and-open",
+  "title": "One window: nothing held out, undefined ratios, an open rally and an early stage",
+  "covers": ["V01", "ADR-0031", "docs/spec/vision-tickets.md"],
+  "worked": [
+    "20 s is a single 30 s window, so there is no held-out window: every label is a tuning label and the held-out side has no labels, no observations and only undefined ratios.",
+    "Hits: 2.000 <- 1.960 (-40), 3.000 <- 2.910 (-90). Precision 2/2, recall 2/2, near 1/1, far 1/1. MAE 130/2 = 65.000 ms; bias -130/2 = -65.000 ms (the stage is early). No observation names a stroke: 0 compared, accuracy undefined.",
+    "Bounces: the stage reports an empty list, so the kind is scored: 1 label, 0 observations, precision undefined (0/0), recall 0/1, MAE undefined, nothing placed.",
+    "Rally boundaries: label starts 2.0 and 15.0, label end 6.0 (the second rally is open and has no end). Observed start 15.4 matches 15.0; observed end 19.0 is unmatched. 3 labels, 2 observations, 1 matched: precision 1/2, recall 1/3, F1 2/(2+1+2) = 2/5.",
+    "Court corners: the only observation is at 1 s, before the first labelled camera position (5 s): nothing compared.",
+    "No analysed ranges were given, so there is no coverage row."
+  ],
+  "tolerances": {
+    "hit": {"value": 100, "timescale": 1000},
+    "bounce": {"value": 100, "timescale": 1000},
+    "rallyBoundary": {"value": 1000, "timescale": 1000}
+  },
+  "labels": {
+    "schemaVersion": "1.0.0",
+    "kind": "jovra.benchmarkLabels",
+    "recording": {
+      "sha256": "7c1ed98153475f6bfb58cbfbab66c33e5839bedc8db7aa4642743a4f2ba8323d",
+      "byteSize": 1048576,
+      "duration": {"value": 20, "timescale": 1},
+      "width": 1280,
+      "height": 720,
+      "frameRate": {"num": 30, "den": 1},
+      "variableFrameRate": false
+    },
+    "labelledBy": {"method": "synthetic", "tool": "fixture-author@1.0.0"},
+    "split": {
+      "method": "jovra.hashWindows.v1",
+      "windowMs": 30000,
+      "heldOutPermille": 300,
+      "durationMs": 20000,
+      "heldOutWindows": []
+    },
+    "hits": [
+      {"time": {"value": 2000, "timescale": 1000}, "player": "near", "stroke": "serve"},
+      {"time": {"value": 3000, "timescale": 1000}, "player": "far", "stroke": "forehand"}
+    ],
+    "bounces": [{"time": {"value": 2500, "timescale": 1000}, "imagePoint": {"x": 0.5, "y": 0.5}, "inPlay": true}],
+    "rallies": [
+      {"start": {"value": 2000, "timescale": 1000}, "end": {"value": 6000, "timescale": 1000}},
+      {"start": {"value": 15000, "timescale": 1000}, "end": null}
+    ],
+    "cameraPositions": [
+      {"from": {"value": 5000, "timescale": 1000}, "corners": {"court": "doubles", "order": "farLeft,farRight,nearRight,nearLeft", "points": [{"x": 0.3, "y": 0.2}, {"x": 0.7, "y": 0.2}, {"x": 0.95, "y": 0.9}, {"x": 0.05, "y": 0.9}]}}
+    ]
+  },
+  "observations": {
+    "schemaVersion": "1.0.0",
+    "kind": "jovra.benchmarkObservations",
+    "recordingSha256": "7c1ed98153475f6bfb58cbfbab66c33e5839bedc8db7aa4642743a4f2ba8323d",
+    "producer": "rule:fixture@1.0.0",
+    "hits": [{"time": {"value": 1960, "timescale": 1000}}, {"time": {"value": 2910, "timescale": 1000}}],
+    "bounces": [],
+    "rallies": [{"start": {"value": 15400, "timescale": 1000}, "end": {"value": 19000, "timescale": 1000}}],
+    "courtCorners": [
+      {"time": {"value": 1000, "timescale": 1000}, "points": [{"x": 0.3, "y": 0.2}, {"x": 0.7, "y": 0.2}, {"x": 0.95, "y": 0.9}, {"x": 0.05, "y": 0.9}]}
+    ]
+  },
+  "expected": {
+    "tuning": {
+      "windows": 1,
+      "durationMs": 20000,
+      "rows": [
+        {"group": "hits", "name": "labels", "value": "2"},
+        {"group": "hits", "name": "observations", "value": "2"},
+        {"group": "hits", "name": "matched", "value": "2"},
+        {"group": "hits", "name": "precision", "exact": {"n": 1, "d": 1}, "value": "1.0000"},
+        {"group": "hits", "name": "recall", "exact": {"n": 1, "d": 1}, "value": "1.0000"},
+        {"group": "hits", "name": "recall near", "exact": {"n": 1, "d": 1}, "value": "1.0000"},
+        {"group": "hits", "name": "recall far", "exact": {"n": 1, "d": 1}, "value": "1.0000"},
+        {"group": "hits", "name": "timing MAE", "unit": "ms", "exact": {"n": 65, "d": 1}, "value": "65.000"},
+        {"group": "hits", "name": "timing bias", "unit": "ms", "exact": {"n": -65, "d": 1}, "value": "-65.000"},
+        {"group": "hits", "name": "strokes compared", "value": "0"},
+        {"group": "hits", "name": "stroke accuracy", "exact": null, "value": null},
+        {"group": "bounces", "name": "labels in play", "value": "1"},
+        {"group": "bounces", "name": "labels not in play", "value": "0"},
+        {"group": "bounces", "name": "observations", "value": "0"},
+        {"group": "bounces", "name": "matched", "value": "0"},
+        {"group": "bounces", "name": "dropped on a label not in play", "value": "0"},
+        {"group": "bounces", "name": "precision", "exact": null, "value": null},
+        {"group": "bounces", "name": "recall", "exact": {"n": 0, "d": 1}, "value": "0.0000"},
+        {"group": "bounces", "name": "timing MAE", "unit": "ms", "exact": null, "value": null},
+        {"group": "bounces", "name": "placed", "value": "0"},
+        {"group": "bounces", "name": "placement error median", "unit": "px", "value": null},
+        {"group": "bounces", "name": "placement error mean", "unit": "px", "value": null},
+        {"group": "rally boundaries", "name": "labels", "value": "3"},
+        {"group": "rally boundaries", "name": "observations", "value": "2"},
+        {"group": "rally boundaries", "name": "matched", "value": "1"},
+        {"group": "rally boundaries", "name": "precision", "exact": {"n": 1, "d": 2}, "value": "0.5000"},
+        {"group": "rally boundaries", "name": "recall", "exact": {"n": 1, "d": 3}, "value": "0.3333"},
+        {"group": "rally boundaries", "name": "F1", "exact": {"n": 2, "d": 5}, "value": "0.4000"},
+        {"group": "court corners", "name": "corners compared", "value": "0"},
+        {"group": "court corners", "name": "observations before any labelled camera position", "value": "1"},
+        {"group": "court corners", "name": "corner error mean", "unit": "px", "value": null},
+        {"group": "court corners", "name": "corner error max", "unit": "px", "value": null}
+      ]
+    },
+    "heldOut": {
+      "windows": 0,
+      "durationMs": 0,
+      "rows": [
+        {"group": "hits", "name": "labels", "value": "0"},
+        {"group": "hits", "name": "observations", "value": "0"},
+        {"group": "hits", "name": "matched", "value": "0"},
+        {"group": "hits", "name": "precision", "exact": null, "value": null},
+        {"group": "hits", "name": "recall", "exact": null, "value": null},
+        {"group": "hits", "name": "recall near", "exact": null, "value": null},
+        {"group": "hits", "name": "recall far", "exact": null, "value": null},
+        {"group": "hits", "name": "timing MAE", "unit": "ms", "exact": null, "value": null},
+        {"group": "hits", "name": "timing bias", "unit": "ms", "exact": null, "value": null},
+        {"group": "hits", "name": "strokes compared", "value": "0"},
+        {"group": "hits", "name": "stroke accuracy", "exact": null, "value": null},
+        {"group": "bounces", "name": "labels in play", "value": "0"},
+        {"group": "bounces", "name": "labels not in play", "value": "0"},
+        {"group": "bounces", "name": "observations", "value": "0"},
+        {"group": "bounces", "name": "matched", "value": "0"},
+        {"group": "bounces", "name": "dropped on a label not in play", "value": "0"},
+        {"group": "bounces", "name": "precision", "exact": null, "value": null},
+        {"group": "bounces", "name": "recall", "exact": null, "value": null},
+        {"group": "bounces", "name": "timing MAE", "unit": "ms", "exact": null, "value": null},
+        {"group": "bounces", "name": "placed", "value": "0"},
+        {"group": "bounces", "name": "placement error median", "unit": "px", "value": null},
+        {"group": "bounces", "name": "placement error mean", "unit": "px", "value": null},
+        {"group": "rally boundaries", "name": "labels", "value": "0"},
+        {"group": "rally boundaries", "name": "observations", "value": "0"},
+        {"group": "rally boundaries", "name": "matched", "value": "0"},
+        {"group": "rally boundaries", "name": "precision", "exact": null, "value": null},
+        {"group": "rally boundaries", "name": "recall", "exact": null, "value": null},
+        {"group": "rally boundaries", "name": "F1", "exact": null, "value": null},
+        {"group": "court corners", "name": "corners compared", "value": "0"},
+        {"group": "court corners", "name": "observations before any labelled camera position", "value": "0"},
+        {"group": "court corners", "name": "corner error mean", "unit": "px", "value": null},
+        {"group": "court corners", "name": "corner error max", "unit": "px", "value": null}
+      ]
+    }
+  }
+}
