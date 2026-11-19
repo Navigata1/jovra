@@ -91,8 +91,12 @@ struct CaptureScreen: View {
         if coordinator.savedRecording != nil {
             Label(String(localized: "Saved on this iPhone", table: "Capture"), systemImage: "checkmark.circle")
                 .font(.jovraHeadline).accessibilityIdentifier("capture.saved")
+            if let session = coordinator.sessionID {
+                Button(String(localized: "See processing", table: "Capture")) { router.present(.processing(session)) }
+                    .buttonStyle(.jovraPrimary).accessibilityIdentifier("capture.processing")
+            }
             Button(String(localized: "Open library", table: "Sessions.Library")) { router.show(.tab(.sessions)) }
-                .buttonStyle(.jovraPrimary).accessibilityIdentifier("capture.openLibrary")
+                .buttonStyle(.jovraSecondary).accessibilityIdentifier("capture.openLibrary")
         } else {
             CapturePreview(session: coordinator.previewSession, fixture: coordinator.isFixture ? fixtureURL : nil)
                 .aspectRatio(16 / 9, contentMode: .fit).frame(minHeight: 180).accessibilityHidden(true)

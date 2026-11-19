@@ -37,7 +37,7 @@ final class NativeCaptureCoordinator {
         guard !isWorking, engine == nil else { throw CaptureError.invalidState }
         isWorking = true
         defer { isWorking = false }
-        let candidate = CaptureEngine(source: source, clock: clock, sink: library)
+        let candidate = CaptureEngine(source: source, clock: clock, sink: library, activity: .app)
         do {
             let report = try await candidate.prepare(preset, microphone: microphone)
             let id = try await library.createCapture(seed, mode: source.mode)
@@ -66,6 +66,8 @@ final class NativeCaptureCoordinator {
 
     func stop() async throws {
         try await transition { self.savedRecording = try await $0.stop() }
+        // The original is saved: queue its processing (T27). Recording never waits on this.
+        if let sessionID, savedRecording != nil { Task { await ProcessingScheduler.shared.enqueue(sessionID) } }
     }
 
     func markPoint() throws {
