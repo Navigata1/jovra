@@ -7,6 +7,9 @@ final class FilesImportUITests: XCTestCase {
         let app = XCUIApplication.launchJovra { $0.demo = .off }
         app.buttons["tab.sessions"].tap()
         app.buttons["library.import"].tap()
+        let files = app.buttons["import.source.files"]
+        XCTAssertTrue(files.waitForExistence(timeout: 5))
+        files.tap()
         let name = app.textFields["import.player"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         let choose = app.buttons["import.choose"]

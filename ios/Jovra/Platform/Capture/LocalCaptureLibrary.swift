@@ -30,9 +30,9 @@ actor LocalCaptureLibrary: RecordingSink {
     private let store: SessionStore
     private let media: MediaLibrary
 
-    init(root: URL) throws {
+    init(root: URL, writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = nil) throws {
         self.root = root
-        let store = try SessionStore(root: root)
+        let store = try SessionStore(root: root, writeFault: writeFault)
         self.store = store
         media = MediaLibrary(store: store)
     }
@@ -123,13 +123,41 @@ actor LocalCaptureLibrary: RecordingSink {
         return try await store.needsCaptureRecovery(id)
     }
 
-    func importFile(_ source: URL, playerName: String) async throws -> SessionID {
-        let id = try await FilesImportService(store: store).importVideo(source, playerName: playerName)
+    func importFile(_ source: URL, playerName: String, importingAgain permission: FilesImportFingerprint? = nil) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).importVideo(source, playerName: playerName, importingAgain: permission)
         return SessionID(rawValue: id)
     }
 
-    func importMatch(_ source: URL, setup: FilesImportMatchSetup) async throws -> SessionID {
-        let id = try await FilesImportService(store: store).importMatch(source, setup: setup)
+    func importMatch(_ source: URL, setup: FilesImportMatchSetup, importingAgain permission: FilesImportFingerprint? = nil) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).importMatch(source, setup: setup, importingAgain: permission)
+        return SessionID(rawValue: id)
+    }
+
+    /// Import picked videos one by one (T26). Progress arrives per item; one bad file never fails the batch.
+    func runImport(_ items: [ImportItem], intent: ImportIntent,
+                   availability: any ImportSourceAvailability = SystemImportSourceAvailability(),
+                   progress: @escaping @Sendable (ImportItem.ID, ImportItemPhase) async -> Void) async -> ImportReport {
+        await ImportPipeline(store: store, availability: availability).run(items, intent: intent, progress: progress)
+    }
+
+    func importAnyway(_ duplicate: FilesImportDuplicate) async throws -> SessionID {
+        SessionID(rawValue: try await ImportPipeline(store: store).importAnyway(duplicate))
+    }
+
+    func openExisting(_ duplicate: FilesImportDuplicate) async throws -> SessionID {
+        SessionID(rawValue: try await ImportPipeline(store: store).openExisting(duplicate))
+    }
+
+    func discardHeldImport(_ duplicate: FilesImportDuplicate) async {
+        await ImportPipeline(store: store).discard(duplicate)
+    }
+
+    func rotateImport(_ id: SessionID) async throws -> SessionSegmentRotationDegrees {
+        try await store.rotateImportedVideo(id.rawValue)
+    }
+
+    func verifyExistingDuplicate(_ duplicate: FilesImportDuplicate) async throws -> SessionID {
+        let id = try await FilesImportService(store: store).verifyExistingDuplicate(duplicate)
         return SessionID(rawValue: id)
     }
 

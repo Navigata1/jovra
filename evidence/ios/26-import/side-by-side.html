@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Side by side: 26-import</title>
+<style>
+  body { font: 15px/1.45 -apple-system, system-ui, sans-serif; margin: 24px; color: #182F29; background: #F4F1E8; }
+  .pair { display: flex; gap: 24px; flex-wrap: wrap; }
+  figure { margin: 0; } img { max-height: 720px; max-width: 100%; border: 1px solid #DCD7CA; border-radius: 12px; }
+  section { margin-bottom: 40px; } .review { background: #FBFAF6; padding: 8px 12px; border-radius: 8px; }
+</style></head><body>
+<h1>Side by side: 26-import</h1>
+<p>References are AI-generated rasters: they guide layout, rhythm, palette and hierarchy; the written spec wins.</p>
+
+  <section>
+    <h2>Screen 07 · s07-ax5-import-results</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-ax5-import-results.jpg" alt="Simulator s07-ax5-import-results"><figcaption>Simulator: s07-ax5-import-results.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — AX5: the row glyph moves above the words, actions stack vertically; the audit passes every type except contrast here (contrast is audited for the same rows in light and dark; see the PR&#x27;s known gaps).</p>
+  </section>
+  <section>
+    <h2>Screen 07 · s07-ax5-import-sources</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-ax5-import-sources.jpg" alt="Simulator s07-ax5-import-sources"><figcaption>Simulator: s07-ax5-import-sources.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — AX5: tiles become full-width rows with fixed-size decorative glyphs so words keep the width; nothing truncates; textClipped and Dynamic Type audits pass.</p>
+  </section>
+  <section>
+    <h2>Screen 07 · s07-dark-import-results</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-dark-import-results.jpg" alt="Simulator s07-dark-import-results"><figcaption>Simulator: s07-dark-import-results.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — dark per-file rows: attention ink for the unsupported row, palette check for saved, outline actions legible on forest.</p>
+  </section>
+  <section>
+    <h2>Screen 07 · s07-dark-import-sources</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-dark-import-sources.jpg" alt="Simulator s07-dark-import-sources"><figcaption>Simulator: s07-dark-import-sources.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — dark tokens throughout (forest surfaces, ivory text, chartreuse selection border and check); same structure as light; no colour-only state.</p>
+  </section>
+  <section>
+    <h2>Screen 07 · s07-light-import-drive</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-light-import-drive.jpg" alt="Simulator s07-light-import-drive"><figcaption>Simulator: s07-light-import-drive.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — Drive tile selected: explains that other Drive videos import through Files with a direct &quot;Choose from Files&quot; action, and shows the named archive-restore slot (T54) stating plainly that restore is not available yet. No reference panel exists for this state; tokens and card rhythm match the sources view.</p>
+  </section>
+  <section>
+    <h2>Screen 07 · s07-light-import-results</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-light-import-results.jpg" alt="Simulator s07-light-import-results"><figcaption>Simulator: s07-light-import-results.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — per-file results replace the reference&#x27;s single &quot;Selected video&quot; card for batches: saved (duration · resolution · source · real date), unsupported naming the codec (FFV1) and a duplicate with Open existing / Import anyway; the positive safe card mirrors &quot;Recording is safe. You can leave this screen.&quot; Deviation by design: the analysis timeline is T27&#x27;s route.</p>
+  </section>
+  <section>
+    <h2>Screen 07 · s07-light-import-saved</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-light-import-saved.jpg" alt="Simulator s07-light-import-saved"><figcaption>Simulator: s07-light-import-saved.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — a single Files import after closing the processing route it presented: Saved locally with the file&#x27;s own date (Oct 6, 2026, Sample metadata) and the manual quarter-turn note; matches the reference&#x27;s metadata line style.</p>
+  </section>
+  <section>
+    <h2>Screen 07 · s07-light-import-sources</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-light-import-sources.jpg" alt="Simulator s07-light-import-sources"><figcaption>Simulator: s07-light-import-sources.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — matches the top of the reference: lockup, display heading &quot;Bring your game in&quot; (brief copy; the PNG&#x27;s trailing period is a generated-image artefact), the reference subtitle, three source tiles with the selected tile marked by a chartreuse check and border. Deviation: the Drive tile uses an SF Symbol, not the Google logo (CLAUDE.md rule 6), and says &quot;Your JOVRA archive&quot; (story 105). Added &quot;About this footage&quot; (player or explicit singles match, merged in #457) and the Choose action the reference omits.</p>
+  </section>
+</body></html>

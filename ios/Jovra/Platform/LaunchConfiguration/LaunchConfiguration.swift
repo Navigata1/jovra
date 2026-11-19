@@ -23,6 +23,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let reduceMotion = "-reduceMotion"
         static let pseudoLocale = "-pseudoLocale"
         static let startRoute = "-startRoute"
+        static let importSelection = "-importSelection"
+        static let importStall = "-importStall"
     }
 
     enum Appearance: String, CaseIterable, Sendable {
@@ -86,6 +88,11 @@ struct LaunchConfiguration: Equatable, Sendable {
     var pseudoLocale: PseudoLocale?
     /// A tab or full-screen route name to open at launch (resolved by the app shell).
     var startRoute: String?
+    /// UI-test seam (T26): absolute paths delivered as the picker's selection instead of presenting the
+    /// system Photos or Files picker. A path prefixed `cloud:` is reported as not yet downloaded for a moment.
+    var importSelection: [String] = []
+    /// UI-test seam (T26): an import stops just before publication, so a test can end the process mid-import.
+    var importStall = false
 
     /// Arguments that could not be understood. Not part of equality.
     private(set) var problems: [String] = []
@@ -129,6 +136,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         if reduceMotion { result += [Key.reduceMotion, "YES"] }
         if let pseudoLocale { result += [Key.pseudoLocale, pseudoLocale.rawValue] + pseudoLocale.systemArguments }
         if let startRoute { result += [Key.startRoute, startRoute] }
+        if !importSelection.isEmpty { result += [Key.importSelection, importSelection.joined(separator: "|")] }
+        if importStall { result += [Key.importStall, "YES"] }
         return result
     }
 
@@ -141,6 +150,7 @@ struct LaunchConfiguration: Equatable, Sendable {
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
         Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute,
+        Key.importSelection, Key.importStall,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -153,6 +163,13 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.reduceMotion: parseReduceMotion(value)
         case Key.pseudoLocale: pseudoLocale = parse(PseudoLocale.self, value, for: key)
         case Key.startRoute: startRoute = value
+        case Key.importSelection: importSelection = value.split(separator: "|").map(String.init)
+        case Key.importStall:
+            guard value == "YES" || value == "NO" else {
+                problems.append("\(key): unknown value “\(value)” (expected YES or NO)")
+                return
+            }
+            importStall = value == "YES"
         default: break
         }
     }

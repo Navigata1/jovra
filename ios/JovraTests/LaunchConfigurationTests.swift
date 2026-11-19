@@ -16,6 +16,8 @@ struct LaunchConfigurationTests {
         #expect(configuration.reduceMotion == false)
         #expect(configuration.pseudoLocale == nil)
         #expect(configuration.startRoute == nil)
+        #expect(configuration.importSelection.isEmpty)
+        #expect(configuration.importStall == false)
         #expect(configuration.problems.isEmpty)
     }
 
@@ -70,6 +72,8 @@ struct LaunchConfigurationTests {
         configuration.reduceMotion = true
         configuration.pseudoLocale = .doubleLength
         configuration.startRoute = "capture"
+        configuration.importSelection = ["/tmp/a.mov", "cloud:/tmp/b clip.mp4"]
+        configuration.importStall = true
 
         let parsed = LaunchConfiguration(arguments: ["Jovra"] + configuration.arguments)
         #expect(parsed == configuration)
