@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.fixture.calibration",
+  "id": "C07-refused",
+  "title": "Inputs that do not fix a homography are refused with a shared code",
+  "cases": [
+    {
+      "op": "fit",
+      "name": "three taps",
+      "imagePoints": [
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 1627.970575824, "y": 866.918918919},
+        {"x": 1241.781999318, "y": 313.674257396}
+      ],
+      "courtPoints": [{"x": -5.485, "y": -11.885}, {"x": 5.485, "y": -11.885}, {"x": 5.485, "y": 11.885}],
+      "expectedError": "tooFewPoints"
+    },
+    {
+      "op": "fit",
+      "name": "four taps, three court points",
+      "imagePoints": [
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 1627.970575824, "y": 866.918918919},
+        {"x": 1241.781999318, "y": 313.674257396},
+        {"x": 678.218000682, "y": 313.674257396}
+      ],
+      "courtPoints": [{"x": -5.485, "y": -11.885}, {"x": 5.485, "y": -11.885}, {"x": 5.485, "y": 11.885}],
+      "expectedError": "countMismatch"
+    },
+    {
+      "op": "fit",
+      "name": "three taps on one line",
+      "imagePoints": [
+        {"x": 100.0, "y": 100.0},
+        {"x": 200.0, "y": 200.0},
+        {"x": 300.0, "y": 300.0},
+        {"x": 900.0, "y": 100.0}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "expectedError": "degenerate"
+    },
+    {
+      "op": "fit",
+      "name": "the same tap four times",
+      "imagePoints": [
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 292.029424176, "y": 866.918918919},
+        {"x": 292.029424176, "y": 866.918918919}
+      ],
+      "courtPoints": [
+        {"x": -5.485, "y": -11.885},
+        {"x": 5.485, "y": -11.885},
+        {"x": 5.485, "y": 11.885},
+        {"x": -5.485, "y": 11.885}
+      ],
+      "expectedError": "degenerate"
+    }
+  ]
+}
