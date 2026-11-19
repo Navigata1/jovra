@@ -209,6 +209,22 @@ English ships; Spanish is the first translation and ships after native review (s
   recognition, which fails on "…" or a missing word. A long tab title wraps onto up to three lines and
   only then shrinks (to 75 % at most); it is never truncated.
 
+## Session setup (T21)
+
+The Record tab is S04. `SessionSetupStore` (`Features/Record`, a `ServiceKey`) holds the `SessionSetup` draft the tab
+and its sheets edit, writes it to `Application Support/JOVRA/setup/last-session-setup.json` on every change (the next
+session's default) and registers the `sessionSetup` eraser. "Check camera position" presents
+`.capture(SessionSetupDraft(setup))`: `sessionSetup` carries everything decided; `captureChoices` is filled only when
+today's capture screen can record the chosen format exactly (singles, one or three tie-break sets), never a substitute.
+The camera preset row lists `CaptureFormatCatalog` options (JovraMedia): the back camera's own formats on a device, the
+fixture clip's format on the simulator. DEBUG launch environment for UI tests:
+
+| Variable | Effect |
+|---|---|
+| `JOVRA_SETUP_RESET=1` | forget the remembered setup at launch (`launchJovra` sets it; set `0` to test the memory) |
+| `JOVRA_DEVICE_BUDGET=roomy\|lowStorage\|almostFull\|lowBattery\|warm` | a synthetic `DeviceBudget` for the pre-flight strip |
+| `JOVRA_ROUTE_PROBE=1` | exposes the presented full-screen route's JSON as the value of `route.payload` |
+
 ## UI-test support (`ios/JovraUITests/Support`)
 
 | Helper | Use |
@@ -218,6 +234,7 @@ English ships; Spanish is the first translation and ships after native review (s
 | `assertHitTargets(in:exempt:)` | every hittable control at least 44 × 44 pt |
 | `attachScreenshot(app, name:)` | a named screenshot, exported by `ui-test.sh`; name reference pairs `sNN-<appearance>-<what>`; a bad name is a recorded test failure, not a crash |
 | `assertBriefCopy(screen:in:corrections:excluding:)`, `BriefCopy.expected(screen:)` | copy from `design-reference/brief/screens.json` with the spec's honesty corrections (Photos "Not needed for import" / "Add-only", "Best of 3 · Ad · Tie-break at 6–6", "+4 percentage points", "Fastest marked serve", provider "Demo", no "Reference concept", no "3.2 GB", no "Estimated from calibrated video"); add a screen's own deliberate differences through `corrections` |
+| `startSinglesCapture(sessionName:me:opponent:)`, `fillPlayers(_:sessionName:)`, `finishSheet()`, `reveal(_:in:)` | session setup (T21) as a player does it: Record tab → players sheet → "Check camera position"; `reveal` scrolls until an element is tappable above the tab bar |
 
 ### Side-by-side evidence
 
