@@ -16,7 +16,7 @@
       <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
       <figure><img src="s07-ax5-import-results.jpg" alt="Simulator s07-ax5-import-results"><figcaption>Simulator: s07-ax5-import-results.jpg</figcaption></figure>
     </div>
-    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — AX5: the row glyph moves above the words, actions stack vertically; the audit passes every type except contrast here (contrast is audited for the same rows in light and dark; see the PR&#x27;s known gaps).</p>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — AX5: &quot;Your imports&quot; with the first row: glyph above the words, name, &quot;Saved locally&quot; and metadata wrapping on three lines, View session and Rotate 90° stacked full-width; nothing truncates. The full audit runs here including contrast, with the helper&#x27;s one logged exception for an unplaceable SwiftUI node while tile text is under the tab bar.</p>
   </section>
   <section>
     <h2>Screen 07 · s07-ax5-import-sources</h2>
@@ -24,7 +24,7 @@
       <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
       <figure><img src="s07-ax5-import-sources.jpg" alt="Simulator s07-ax5-import-sources"><figcaption>Simulator: s07-ax5-import-sources.jpg</figcaption></figure>
     </div>
-    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — AX5: tiles become full-width rows with fixed-size decorative glyphs so words keep the width; nothing truncates; textClipped and Dynamic Type audits pass.</p>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — AX5: the source tiles become full-width rows (Photos selected with border and check, Files, and the top of Google Drive above the tab bar), each glyph fixed-size so the words keep the width; nothing truncates; textClipped and Dynamic Type audits pass.</p>
   </section>
   <section>
     <h2>Screen 07 · s07-dark-import-results</h2>
@@ -32,7 +32,7 @@
       <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
       <figure><img src="s07-dark-import-results.jpg" alt="Simulator s07-dark-import-results"><figcaption>Simulator: s07-dark-import-results.jpg</figcaption></figure>
     </div>
-    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — dark per-file rows: attention ink for the unsupported row, palette check for saved, outline actions legible on forest.</p>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — the same three rows in dark tokens (forest card, ivory text): palette check for saved, attention ink for the FFV1 row, duplicate with Open existing (ivory fill) / Import anyway (outline) legible on forest, and the safe card; no state is carried by colour alone (each row has a status title and glyph).</p>
   </section>
   <section>
     <h2>Screen 07 · s07-dark-import-sources</h2>
@@ -56,7 +56,7 @@
       <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
       <figure><img src="s07-light-import-results.jpg" alt="Simulator s07-light-import-results"><figcaption>Simulator: s07-light-import-results.jpg</figcaption></figure>
     </div>
-    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — per-file results replace the reference&#x27;s single &quot;Selected video&quot; card for batches: saved (duration · resolution · source · real date), unsupported naming the codec (FFV1) and a duplicate with Open existing / Import anyway; the positive safe card mirrors &quot;Recording is safe. You can leave this screen.&quot; Deviation by design: the analysis timeline is T27&#x27;s route.</p>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — shows &quot;Your imports&quot; with all three rows in view: saved (2 sec · 720p · Photos · Oct 6, 2026) with View session / Rotate 90°; the FFV1 file in attention ink (&quot;Can&#x27;t import this video&quot;, naming the codec and what to do); and the duplicate (&quot;Already in your library&quot;, naming the saved session) with Open existing / Import anyway; the positive safe card below mirrors the reference&#x27;s &quot;Recording is safe. You can leave this screen.&quot; Deviation by design: the reference&#x27;s single &quot;Selected video&quot; card and analysis timeline belong to T27&#x27;s processing route, which a single clean import presents.</p>
   </section>
   <section>
     <h2>Screen 07 · s07-light-import-saved</h2>
@@ -64,7 +64,7 @@
       <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
       <figure><img src="s07-light-import-saved.jpg" alt="Simulator s07-light-import-saved"><figcaption>Simulator: s07-light-import-saved.jpg</figcaption></figure>
     </div>
-    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — a single Files import after closing the processing route it presented: Saved locally with the file&#x27;s own date (Oct 6, 2026, Sample metadata) and the manual quarter-turn note; matches the reference&#x27;s metadata line style.</p>
+    <p class="review"><strong>Reviewer:</strong> Claude (T26 agent) — a single Files import after closing the processing route it presented: Saved locally · 2 sec · 720p · Files · Oct 6, 2026 (the file&#x27;s own Sample date), and after Rotate 90° the row says only what happened: &quot;Turn saved: 90° clockwise. The video still plays as recorded, and the original file is unchanged.&quot; (Replay does not apply the turn yet); metadata line style matches the reference.</p>
   </section>
   <section>
     <h2>Screen 07 · s07-light-import-sources</h2>

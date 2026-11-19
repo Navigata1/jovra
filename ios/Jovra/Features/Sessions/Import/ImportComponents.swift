@@ -213,7 +213,7 @@ struct ImportResultRow: View {
     private var rotateButton: some View {
         Button(String(localized: "Rotate 90°", table: "Sessions.Import"), action: rotate)
         .buttonStyle(.jovraCompact)
-        .accessibilityHint(String(localized: "Turns how this video is shown. The original file is unchanged.", table: "Sessions.Import"))
+        .accessibilityHint(String(localized: "Saves a 90° clockwise turn with this session. The video still plays as recorded.", table: "Sessions.Import"))
         .accessibilityIdentifier("import.row.rotate")
     }
 

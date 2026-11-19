@@ -47,6 +47,8 @@ final class ImportModel {
     private(set) var rows: [Row] = []
     private(set) var isRunning = false
     private(set) var isCancelling = false
+    /// Photos items are still being handed over; `task` is the hand-over, not the pipeline.
+    private var isReceiving = false
     private var task: Task<Void, Never>?
 
     var hasRows: Bool { !rows.isEmpty }
@@ -56,12 +58,15 @@ final class ImportModel {
         rows.contains { if case .duplicate = $0.status { true } else { false } }
     }
 
-    /// Show rows for Photos items while the picker hands their files over.
-    func beginReceiving(_ count: Int) {
+    /// Show rows for Photos items while the picker hands their files over. `handOver` loads them and then calls
+    /// `start` or `finishReceiving`; "Cancel import" cancels it (an iCloud Photos download can take minutes).
+    func beginReceiving(_ count: Int, handOver: @escaping @MainActor () async -> Void) {
         guard !isRunning else { return }
         rows = (0..<count).map { Row(id: UUID(), name: String(localized: "Video \($0 + 1)", table: "Sessions.Import"), status: .receiving) }
         isRunning = true
         isCancelling = false
+        isReceiving = true
+        task = Task { await handOver() }
     }
 
     /// Run the pipeline. `onFinished` receives the one saved session when a single video imported cleanly,
@@ -69,7 +74,15 @@ final class ImportModel {
     func start(_ items: [ImportItem], intent: ImportIntent, library: LocalCaptureLibrary,
                availability: any ImportSourceAvailability, failedBeforeCopy: Int = 0,
                cleanup: @escaping @Sendable () -> Void = {}, onFinished: @escaping (SessionID?) -> Void) {
-        task?.cancel()
+        if isReceiving, isCancelling {
+            // Cancelled during the hand-over: nothing is imported and the received copies are removed.
+            cleanup()
+            finishCancelledHandOver()
+            onFinished(nil)
+            return
+        }
+        if !isReceiving { task?.cancel() }
+        isReceiving = false
         rows = items.map { Row(id: $0.id, name: $0.displayName, status: .queued) }
             + Self.failedRows(failedBeforeCopy, startingAt: items.count)
         isRunning = true
@@ -90,9 +103,20 @@ final class ImportModel {
 
     /// Picker failures before any copy (Photos could not hand a file over).
     func finishReceiving(failures: Int) {
+        guard !(isReceiving && isCancelling) else { return finishCancelledHandOver() }
         rows = Self.failedRows(failures, startingAt: 0)
         isRunning = false
         isCancelling = false
+        isReceiving = false
+        task = nil
+    }
+
+    private func finishCancelledHandOver() {
+        rows = rows.map { Row(id: $0.id, name: $0.name, status: .cancelled) }
+        isRunning = false
+        isCancelling = false
+        isReceiving = false
+        task = nil
     }
 
     private static func failedRows(_ count: Int, startingAt offset: Int) -> [Row] {

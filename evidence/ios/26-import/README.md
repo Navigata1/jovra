@@ -7,15 +7,28 @@ All media is synthetic: the committed import fixture set (T10) and passthrough c
 | File | What it shows |
 |---|---|
 | `swift-test-import.log` | `swift test --package-path ios/Packages/JovraMedia --no-parallel --filter "ImportPipelineTests\|FilesImport\|ImportFixtureProbeTests"`: 22 tests in 4 suites passed (durations normalised) |
-| `ui-test.log` | `scripts/ios/ui-test.sh -only-testing JovraUITests/ImportSourcesUITests -only-testing JovraUITests/FilesImportUITests`: 7 passed, 0 failed (local paths removed) |
+| `ui-test.log` | `scripts/ios/ui-test.sh -only-testing JovraUITests/ImportSourcesUITests -only-testing JovraUITests/FilesImportUITests -only-testing JovraUITests/AuditExceptionTests`: 10 passed, 0 failed (local paths removed) |
+| `red-photos-cancel.txt` | RED before the Photos-cancel fix: both new `ImportModelTests` cancel cases fail against the previous model (Cancel during the hand-over still saved the video) |
 | `s07-*.jpg`, `reviews.txt`, `side-by-side.html` | light, dark and AX5 screenshots beside `design-reference/screens/07-import-processing.png`, one reviewer line each |
 
 What the UI tests use instead of the system pickers: the `-importSelection` launch argument hands the
 app the files a player would have picked, through the same pipeline and store. The real Files picker
-presentation and cancellation is `FilesImportUITests`. The Photos picker was not driven in a test.
+presentation and cancellation is `FilesImportUITests`; after cancelling it asserts that no `import.row`, `import.row.summary`,
+`import.safe` or "Your imports" exists (the saved-import UI test asserts the same identifiers are live). The Photos
+picker was not driven in a test; Cancel during its hand-over is covered at model level by `ImportModelTests`.
 
 The interrupted-import UI test stalls one import just before publication (`-importStall`), confirms
 its partial folder exists in the app container, terminates the app, relaunches it and confirms the
 folder is gone and the session never appears.
 
 The earlier Files-only evidence for #393 remains in `evidence/ios/26-files-import/`.
+
+Screenshots scroll the state they name into the viewport before capture (`scrollIntoViewport`); at standard
+sizes the results test asserts that the unsupported row and the duplicate's Import anyway are in view.
+
+AX5 audit: the results state runs every audit type, contrast included. One logged, opt-in exception in
+`AccessibilityAuditing.swift` applies there: a contrast finding with no element whose description is exactly
+"Contrast failed for SwiftUI.AccessibilityNode", while scroll-content text sits under the tab bar. In the run
+behind `ui-test.log` it fired 24 times, always with the page at its top and the Files tile's "From your device"
+and the Google Drive tile's "Google Drive" text under the bar (logged with frames). The same tiles at AX5 pass the
+full audit, contrast included and with no exception, on the sources state.

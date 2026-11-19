@@ -36,8 +36,12 @@ final class ImportSourcesUITests: XCTestCase {
         XCTAssertTrue(summary.label.contains("Files"), summary.label)
         XCTAssertTrue(summary.label.contains("Oct 6, 2026"), "the date comes from the file's own metadata: \(summary.label)")
         XCTAssertTrue(summary.label.contains("720p"), summary.label)
+        // Negative control for FilesImportUITests' cancelled-picker check: these identifiers are live on a result.
+        XCTAssertGreaterThan(app.descendants(matching: .any).matching(identifier: "import.row").count, 0)
+        XCTAssertTrue(app.descendants(matching: .any)["import.safe"].exists)
         app.buttons["import.row.rotate"].firstMatch.tap()
-        XCTAssertTrue(rowSummary(app, containing: "Shown turned 90°").waitForExistence(timeout: 5))
+        XCTAssertTrue(rowSummary(app, containing: "Turn saved: 90°").waitForExistence(timeout: 5))
+        scrollIntoViewport(app.staticTexts["Your imports"], in: app, at: 0.1)
         attachScreenshot(app, name: "s07-light-import-saved")
 
         app.buttons["import.back"].tap()
@@ -126,6 +130,8 @@ final class ImportSourcesUITests: XCTestCase {
             try FileManager.default.copyItem(at: good, to: again)
             let app = launch(selection: [good.path, ffv1.path, again.path], appearance: appearance, contentSize: size)
             openImport(app, source: "photos")
+            // The tiles at the top of the page (full-width rows at AX5), not the Choose button openImport scrolled to.
+            scrollIntoViewport(app.buttons["import.source.photos"], in: app, at: 0.25)
             attachScreenshot(app, name: "s07-\(slug)-import-sources")
             try auditScreen(app)
             if slug == "light" {
@@ -146,17 +152,21 @@ final class ImportSourcesUITests: XCTestCase {
             let cancel = app.buttons["import.cancel"]
             XCTAssertTrue(XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: cancel)],
                                            timeout: 20) == .completed)
-            let results = app.staticTexts["Your imports"]
-            reveal(results, in: app)
-            attachScreenshot(app, name: "s07-\(slug)-import-results")
-            if size == .accessibility5 {
-                // Every type including textClipped and Dynamic Type. Contrast does not depend on text size and
-                // is audited for these same rows in light and dark; on this ~3,000 pt AX5 page the audit's own
-                // scrolling reports an element-less contrast finding it cannot place (see the PR's known gaps).
-                try auditScreen(app, for: XCUIAccessibilityAuditType.all.subtracting(.contrast))
+            // The results, not the sources: "Your imports" near the top of the viewport, then (at standard sizes,
+            // where the three rows fit) the held duplicate's actions must be in view too.
+            scrollIntoViewport(app.staticTexts["Your imports"], in: app, at: 0.05)
+            if size == nil {
+                XCTAssertTrue(isInViewport(app.buttons["import.row.importAnyway"], in: app), "the duplicate row is in the screenshot")
+                XCTAssertTrue(isInViewport(rowSummary(app, containing: "Old camera \(slug) \(run).mov"), in: app),
+                              "the unsupported row is in the screenshot")
             } else {
-                try auditScreen(app)
+                XCTAssertTrue(isInViewport(rowSummary(app, containing: "HDR rally \(slug) \(run).mov"), in: app),
+                              "the first result row is in the screenshot")
             }
+            attachScreenshot(app, name: "s07-\(slug)-import-results")
+            // Every audit type, contrast included. At AX5 only, the helper's one logged exception applies: a contrast
+            // finding on a SwiftUI node it cannot place, while tile text runs under the tab bar (see the helper).
+            try auditScreen(app, allowUnplacedContrastUnderTabBar: size == .accessibility5)
             app.terminate()
         }
     }
@@ -217,6 +227,47 @@ final class ImportSourcesUITests: XCTestCase {
         let scroll = app.scrollViews.firstMatch
         for _ in 0..<8 where !(element.exists && element.isHittable) { scroll.swipeUp() }
         for _ in 0..<8 where !(element.exists && element.isHittable) { scroll.swipeDown() }
+    }
+
+    /// The page area not covered by the status bar, the screen's back control or the tab bar.
+    @MainActor
+    private func viewport(_ app: XCUIApplication) -> (top: CGFloat, bottom: CGFloat) {
+        let window = app.windows.firstMatch.frame
+        let back = app.buttons["import.back"]
+        let top = back.exists && back.frame.maxY > window.minY ? max(back.frame.maxY, window.minY + 60) : window.minY + 60
+        let tabBar = app.otherElements["tabBar"]
+        return (top, tabBar.exists ? tabBar.frame.minY - 8 : window.maxY - 34)
+    }
+
+    @MainActor
+    private func isInViewport(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard element.exists else { return false }
+        let (top, bottom) = viewport(app)
+        let frame = element.frame
+        return !frame.isEmpty && frame.minY >= top && frame.maxY <= bottom
+    }
+
+    /// Drags the page (slowly, so it does not fling) until `element`'s top sits at `fraction` of the visible area,
+    /// or the page cannot move further. `reveal` only needs hittability, which an element behind the tab bar can have.
+    @MainActor
+    private func scrollIntoViewport(_ element: XCUIElement, in app: XCUIApplication, at fraction: CGFloat) {
+        XCTAssertTrue(element.waitForExistence(timeout: 5), "\(element)")
+        let origin = app.windows.firstMatch.coordinate(withNormalizedOffset: .zero)
+        for _ in 0..<12 {
+            let (top, bottom) = viewport(app)
+            let height = bottom - top
+            let target = top + height * fraction
+            let delta = target - element.frame.minY
+            if abs(delta) < 12 { return }
+            let move = max(-height * 0.7, min(height * 0.7, delta))
+            let startY = move > 0 ? top + 16 : bottom - 16
+            let before = element.frame.minY
+            let start = origin.withOffset(CGVector(dx: 8, dy: startY))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: move)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
+            waitForScrollingToSettle(element)
+            if abs(element.frame.minY - before) < 1 { return }
+        }
     }
 
     /// The app's data container on this simulator (UI-test runner and app share the simulated device).

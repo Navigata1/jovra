@@ -223,10 +223,11 @@ struct ImportScreen: View {
     private func receivePhotos(_ picked: [PhotosPickerItem]) {
         guard !picked.isEmpty else { return }
         photoSelection = []
-        model.beginReceiving(picked.count)
-        Task {
+        model.beginReceiving(picked.count) {
             var items: [ImportItem] = [], failures = 0
             for item in picked {
+                // "Cancel import" cancels this hand-over; `start` then removes what already arrived.
+                if Task.isCancelled { break }
                 do {
                     guard let video = try await item.loadTransferable(type: PickedVideo.self) else { failures += 1; continue }
                     items.append(ImportItem(url: video.url, origin: .photos))

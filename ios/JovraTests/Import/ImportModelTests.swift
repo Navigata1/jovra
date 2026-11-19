@@ -133,6 +133,64 @@ final class ImportModelTests: XCTestCase {
         XCTAssertEqual(after.map(\.id), [completed.rawValue], "the frozen import can never publish into the relaunched library")
     }
 
+    /// Story 110: "Cancel import" while Photos is still handing items over (an iCloud Photos download) imports nothing,
+    /// stops the hand-over and removes the copies already received.
+    @MainActor
+    func testCancelWhilePhotosHandsOverImportsNothingAndRemovesTheInboxCopies() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let library = try LocalCaptureLibrary(root: root)
+        let fixture = try XCTUnwrap(Bundle.main.url(forResource: "fixture-camera-720p30", withExtension: "mp4"))
+        let folder = try ImportInbox.newFolder()
+        let received = folder.appendingPathComponent("rally.mov")
+        try FileManager.default.copyItem(at: fixture, to: received)
+
+        let model = ImportModel()
+        let finished = expectation(description: "hand-over finished")
+        var gate: CheckedContinuation<Void, Never>?
+        let waiting = expectation(description: "hand-over waiting")
+        var handOverSawCancellation = false
+        var single: SessionID?? = .none
+        model.beginReceiving(2) {
+            await withCheckedContinuation { gate = $0; waiting.fulfill() }
+            handOverSawCancellation = Task.isCancelled
+            // The picker finished one item and failed the other anyway; the screen hands over what it has.
+            model.start([ImportItem(url: received, origin: .photos)], intent: .practice(playerName: "P"), library: library,
+                        availability: SystemImportSourceAvailability(), failedBeforeCopy: 1,
+                        cleanup: { ImportInbox.remove([received]) }) { single = .some($0); finished.fulfill() }
+        }
+        await fulfillment(of: [waiting], timeout: 5)
+        XCTAssertEqual(model.rows.map(\.status), [.receiving, .receiving])
+        model.cancel()
+        XCTAssertTrue(model.isCancelling)
+        gate?.resume()
+        await fulfillment(of: [finished], timeout: 30)
+
+        XCTAssertTrue(handOverSawCancellation, "Cancel stops the Photos hand-over itself")
+        XCTAssertEqual(single, .some(nil))
+        XCTAssertEqual(model.rows.map(\.status), [.cancelled, .cancelled])
+        XCTAssertFalse(model.isRunning)
+        XCTAssertFalse(model.isCancelling)
+        let sessions = try await library.sessions()
+        XCTAssertTrue(sessions.isEmpty, "nothing is saved after Cancel")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: folder.path), "the received copy is removed")
+    }
+
+    /// A hand-over cancelled before any item arrived ends as cancelled rows, not as failures.
+    @MainActor
+    func testCancelBeforeAnyPhotosItemArrivesShowsCancelledRows() async {
+        let model = ImportModel()
+        let done = expectation(description: "done")
+        model.beginReceiving(1) {
+            model.finishReceiving(failures: 1)
+            done.fulfill()
+        }
+        model.cancel()
+        await fulfillment(of: [done], timeout: 5)
+        XCTAssertEqual(model.rows.map(\.status), [.cancelled])
+        XCTAssertFalse(model.isRunning)
+    }
+
     func testUnsupportedAndFailedRowsNameTheProblem() {
         XCTAssertEqual(ImportRowCopy.unsupported(.codec("FFV1")),
                        "It uses the FFV1 codec. Convert it to HEVC or H.264, then import it again.")
@@ -146,5 +204,8 @@ final class ImportModelTests: XCTestCase {
                                            recordedAt: nil, source: .photos, rotationDegrees: 0)
         XCTAssertEqual(ImportRowCopy.metadata(video), "12 sec · 1080p · Photos · Date not in file")
         XCTAssertNil(ImportRowCopy.rotationText(quarterTurns: 4))
+        XCTAssertEqual(ImportRowCopy.rotationText(quarterTurns: 1),
+                       "Turn saved: 90° clockwise. The video still plays as recorded, and the original file is unchanged.",
+                       "the row claims only that the turn is saved (Replay does not apply it)")
     }
 }

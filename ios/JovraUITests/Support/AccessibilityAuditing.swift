@@ -1,6 +1,6 @@
 import XCTest
 
-/// Xcode's automated accessibility audit, run over the whole of a scrolling screen, with the two
+/// Xcode's automated accessibility audit, run over the whole of a scrolling screen, with the
 /// documented exceptions (docs/DEVELOPING.md, "What the UI smoke test checks").
 ///
 /// The audit runs on the screen as first shown, then again one, two, … slow swipes further down
@@ -25,7 +25,29 @@ import XCTest
 ///   swipe moves the page by more than `edgeBand` and less than the visible height, and every screen
 ///   ends with 32 pt of padding, so every element is audited clear of both bars at some step. Every
 ///   other audit type fails wherever the element is.
+/// - *Unplaced contrast under the tab bar* (opt-in per call, `allowUnplacedContrastUnderTabBar`): a contrast
+///   finding with no element whose description is exactly "Contrast failed for SwiftUI.AccessibilityNode", on a
+///   tab screen at the settled position, while scroll-content text sits under the tab bar or within `edgeBand`
+///   of it. Found on S07 at AX5 (T26): the audit names a SwiftUI child node it cannot hand back as an element, so
+///   the clipped-content exception above cannot place it; at the failing position the Files and Google Drive
+///   tiles' text ran under the bar's backdrop. Every such text is audited clear of the bar at a later step,
+///   where any contrast finding on it fails. Logged with the text under the bar each time it is used.
 enum AccessibilityAudit {
+    static let unplacedSwiftUINodeContrast = "Contrast failed for SwiftUI.AccessibilityNode"
+
+    /// Text whose frame reaches into the band above the tab bar or lies beneath it, on screen.
+    static func isUnderTabBar(frame: CGRect, tabBarTop: CGFloat, screenBottom: CGFloat) -> Bool {
+        guard !frame.isNull, !frame.isEmpty, tabBarTop.isFinite else { return false }
+        return frame.maxY > tabBarTop - edgeBand && frame.minY < screenBottom
+    }
+
+    /// The opt-in exception above: only an element-less contrast finding on an unplaceable SwiftUI node, and only
+    /// while some scroll-content text is under the tab bar.
+    static func isUnplacedContrastUnderTabBar(type: XCUIAccessibilityAuditType, hasElement: Bool, detail: String,
+                                              textUnderTabBar: [String]) -> Bool {
+        type == .contrast && !hasElement && detail == unplacedSwiftUINodeContrast && !textUnderTabBar.isEmpty
+    }
+
     /// A renderer cannot assess a scrolling node whose pixels are cropped by its own viewport.
     /// Membership must be established from the scroll subtree; geometry alone must not exempt a
     /// fixed header control. Text clipping and all semantic/interaction findings always fail.
@@ -86,7 +108,7 @@ extension XCTestCase {
     /// `pageTop` is where a full-screen page without a tab bar stops scrolling under its status-bar
     /// backdrop (the component gallery passes it); content above it is clipped, not shown.
     func auditScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType = .all, scrollIdentifier: String? = nil,
-                     pageTop: CGFloat? = nil) throws {
+                     pageTop: CGFloat? = nil, allowUnplacedContrastUnderTabBar: Bool = false) throws {
         // On a tab screen the lockup is the first row, Space.x1 (8 pt) below the status-bar backdrop.
         let lockup = app.descendants(matching: .any).matching(identifier: "brand.lockup").firstMatch
         let onTabScreen = scrollIdentifier == nil && app.otherElements["tabBar"].exists && lockup.exists
@@ -100,7 +122,8 @@ extension XCTestCase {
         if scrollIdentifier != nil, !title.exists {
             XCTFail("Requested foreground scroll title is missing"); return
         }
-        try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title, scrollView: scrollView, foregroundModal: scrollIdentifier != nil)
+        try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title, scrollView: scrollView, foregroundModal: scrollIdentifier != nil,
+                                   allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar)
         guard scrollView.exists, title.exists else { return }
         // The audit itself may move the scroll position, so each step starts again from the top and
         // scrolls `step` slow swipes down; it stops once another swipe no longer moves the page.
@@ -112,7 +135,8 @@ extension XCTestCase {
             let titleY = title.frame.minY
             guard abs(titleY - previousTitleY) > 1 else { break }
             previousTitleY = titleY
-            try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title, scrollView: scrollView, foregroundModal: scrollIdentifier != nil)
+            try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title, scrollView: scrollView, foregroundModal: scrollIdentifier != nil,
+                                   allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar)
         }
         scrollToTop(scrollView, foregroundTitle: scrollIdentifier == nil ? nil : title)
     }
@@ -157,7 +181,8 @@ extension XCTestCase {
     /// repeat's result is the one that counts.
     @MainActor
     private func auditVisibleScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType, visibleTop: CGFloat,
-                                    marker: XCUIElement, scrollView: XCUIElement, foregroundModal: Bool, isRepeat: Bool = false) throws {
+                                    marker: XCUIElement, scrollView: XCUIElement, foregroundModal: Bool,
+                                    allowUnplacedContrastUnderTabBar: Bool = false, isRepeat: Bool = false) throws {
         let tabBar = app.otherElements["tabBar"]
         let hasForegroundTabBar = !foregroundModal && tabBar.exists
         let visibleBottom = hasForegroundTabBar ? tabBar.frame.minY : app.frame.maxY
@@ -173,6 +198,17 @@ extension XCTestCase {
                     print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element set aside: the audit moved the page by \(marker.frame.minY - markerY) pt (\(issue.compactDescription))")
                     setAside.append(issue.compactDescription)
                     return true
+                }
+                if allowUnplacedContrastUnderTabBar, hasForegroundTabBar, issue.auditType == .contrast,
+                   issue.detailedDescription == AccessibilityAudit.unplacedSwiftUINodeContrast {
+                    let underBar = scrollView.staticTexts.allElementsBoundByIndex.filter {
+                        AccessibilityAudit.isUnderTabBar(frame: $0.frame, tabBarTop: tabBarFrame.minY, screenBottom: app.frame.maxY)
+                    }.map { "“\($0.label)” \($0.frame)" }
+                    if AccessibilityAudit.isUnplacedContrastUnderTabBar(type: issue.auditType, hasElement: false,
+                                                                        detail: issue.detailedDescription, textUnderTabBar: underBar) {
+                        print("audit: contrast issue with no element ignored (\(issue.compactDescription); \(issue.detailedDescription)): unplaceable SwiftUI node while text is under the tab bar at \(tabBarFrame.minY): \(underBar)")
+                        return true
+                    }
                 }
                 print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element: FAILS (\(issue.compactDescription); \(issue.detailedDescription))")
                 return false
@@ -230,6 +266,7 @@ extension XCTestCase {
         guard !setAside.isEmpty else { return }
         waitForScrollingToSettle(marker)
         print("audit: repeating the audit at the settled position for \(setAside)")
-        try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: marker, scrollView: scrollView, foregroundModal: foregroundModal, isRepeat: true)
+        try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: marker, scrollView: scrollView, foregroundModal: foregroundModal,
+                               allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar, isRepeat: true)
     }
 }

@@ -117,7 +117,7 @@ enum ImportRowCopy {
     static func rotationText(quarterTurns: Int) -> String? {
         guard quarterTurns % 4 != 0 else { return nil }
         let degrees = (quarterTurns % 4) * 90
-        return String(localized: "Shown turned \(degrees)° clockwise. The original file is unchanged.", table: "Sessions.Import")
+        return String(localized: "Turn saved: \(degrees)° clockwise. The video still plays as recorded, and the original file is unchanged.", table: "Sessions.Import")
     }
 
     private static func frameRateText(_ rate: FrameRate) -> String {
