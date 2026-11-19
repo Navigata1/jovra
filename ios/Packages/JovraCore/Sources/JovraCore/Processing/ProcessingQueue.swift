@@ -238,6 +238,21 @@ public struct ProcessingQueue: Codable, Equatable, Sendable {
         jobs[sessionID] = job
     }
 
+    /// Marks every queued `stage` unavailable for `reason`, whatever holds are in force: when nothing in
+    /// this build can run the stage, it must not look as if it were only waiting. Returns the sessions
+    /// it changed (none on a second call).
+    @discardableResult
+    public mutating func markQueuedUnavailable(_ stage: ProcessingStage, reason: ProcessingReason) -> [String] {
+        var changed: [String] = []
+        for (id, var job) in jobs where job[stage].status == .queued {
+            job[stage].status = .unavailable
+            job[stage].reason = reason
+            jobs[id] = job
+            changed.append(id)
+        }
+        return changed.sorted()
+    }
+
     /// The player holds analysis; its progress is kept.
     public mutating func pauseAnalysis(for sessionID: String) throws {
         var job = try existing(sessionID)

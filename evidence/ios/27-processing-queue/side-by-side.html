@@ -99,6 +99,22 @@
     <p class="review"><strong>Reviewer:</strong> Claude (T27 agent) — matches the reference&#x27;s lower half: forest View session button, then the Wi-Fi status item; no pause control is offered because nothing can run.</p>
   </section>
   <section>
+    <h2>Screen 07 · s07-processing-light-unavailable-low-power</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-processing-light-unavailable-low-power.jpg" alt="Simulator s07-processing-light-unavailable-low-power"><figcaption>Simulator: s07-processing-light-unavailable-low-power.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T27 agent) — matches the layout under an injected Low Power Mode on battery (-processingDevice lowPowerOnBattery): prepare replay still finishes (the hold applies to analysis only), and with no analyzer the analyze row reads Unavailable with its reason instead of &quot;Waiting for a charger while Low Power Mode is on&quot;; no Pause analysis and no &quot;Runs on this iPhone&quot; line.</p>
+  </section>
+  <section>
+    <h2>Screen 07 · s07-processing-light-unavailable-too-warm</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>
+      <figure><img src="s07-processing-light-unavailable-too-warm.jpg" alt="Simulator s07-processing-light-unavailable-too-warm"><figcaption>Simulator: s07-processing-light-unavailable-too-warm.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T27 agent) — matches the layout under an injected serious thermal state (-processingDevice tooWarm): the hold copy &quot;Waiting for your iPhone to cool down&quot; shows on Preparing replay, where it applies; the analyze row stays Unavailable with its reason.</p>
+  </section>
+  <section>
     <h2>Screen 07 · s07-processing-light-unavailable</h2>
     <div class="pair">
       <figure><img src="../../../design-reference/screens/07-import-processing.png" alt="Reference 07"><figcaption>Reference: 07-import-processing.png</figcaption></figure>

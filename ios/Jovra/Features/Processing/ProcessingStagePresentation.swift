@@ -32,6 +32,28 @@ enum ProcessingStagePresentation {
          backup(job?.backup)]
     }
 
+    /// The one analysis control screen 7 offers.
+    enum AnalysisAction: Equatable { case pause, resume, retry }
+
+    /// The control for the analyze stage's status; none when there is nothing the player can change
+    /// (finished, or unavailable in this build).
+    static func analysisAction(for status: ProcessingStageState.Status?) -> AnalysisAction? {
+        switch status {
+        case .running?, .queued?: .pause
+        case .paused?: .resume
+        case .failed?: .retry
+        default: nil
+        }
+    }
+
+    /// What happens to analysis outside JOVRA, said only while there is analysis that can still run.
+    static func backgroundNote(analysis: ProcessingStageState.Status?, continuesInBackground: Bool) -> String? {
+        guard let analysis, [.queued, .running, .paused].contains(analysis) else { return nil }
+        return continuesInBackground
+            ? String(localized: "Analysis continues if you switch apps", table: "Processing")
+            : String(localized: "Analysis pauses if you leave JOVRA", table: "Processing")
+    }
+
     /// The video can be watched as soon as the original is saved, whatever analysis is doing.
     static func isViewable(_ original: SessionOriginalState?) -> Bool {
         guard let state = original?.state else { return false }

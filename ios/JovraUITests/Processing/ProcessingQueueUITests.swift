@@ -117,6 +117,42 @@ final class ProcessingQueueUITests: XCTestCase {
         }
     }
 
+    /// The simulator can set neither Low Power Mode nor the thermal state, so the device state is
+    /// injected (`-processingDevice`). With no analyzer registered the hold must not turn an analysis
+    /// this build cannot run into one that only seems to wait.
+    @MainActor
+    func testWithNoAnalyzerAnalysisIsUnavailableEvenWhileLowPowerModeOrHeatHoldsTheQueue() throws {
+        let variants: [(LaunchConfiguration.ProcessingDevice, String, String)] = [
+            (.lowPowerOnBattery, "low-power", "Waiting for a charger while Low Power Mode is on"),
+            (.tooWarm, "too-warm", "Waiting for your iPhone to cool down"),
+        ]
+        for (device, variant, holdCopy) in variants {
+            let app = XCUIApplication.launchJovra {
+                $0.appearance = .light
+                $0.library = .fresh
+                $0.processingDevice = device
+            }
+            recordAndOpenProcessing(app, title: "Held \(variant) " + UUID().uuidString.prefix(4))
+            let analyze = stage("analyze", in: app)
+            XCTAssertTrue(waitFor(analyze, toStartWith: "Unavailable", timeout: 20), "\(variant): \(value(of: analyze))")
+            XCTAssertTrue(value(of: analyze).contains("no automatic analysis is installed"), "\(variant): the reason is stated")
+            XCTAssertFalse(value(of: analyze).contains(holdCopy), "\(variant): no waiting copy for analysis that cannot run")
+            if device == .tooWarm {
+                XCTAssertTrue(value(of: stage("prepareReplay", in: app)).contains(holdCopy),
+                              "the hold still shows where it applies: \(value(of: stage("prepareReplay", in: app)))")
+            } else {
+                XCTAssertTrue(waitFor(stage("prepareReplay", in: app), toStartWith: "Done", timeout: 20),
+                              "Low Power Mode holds analysis only")
+            }
+            XCTAssertFalse(app.buttons["processing.pause"].exists, "\(variant): no Pause analysis")
+            XCTAssertFalse(app.descendants(matching: .any)["processing.status.path"].exists,
+                           "\(variant): no 'Runs on this iPhone' line")
+            XCTAssertTrue(app.buttons["processing.viewSession"].isEnabled, "\(variant): the video stays viewable")
+            attachScreenshot(app, name: "s07-processing-light-unavailable-\(variant)")
+            app.terminate()
+        }
+    }
+
     @MainActor
     func testTheDemoShowsDemoProcessingStateInLightDarkAndAX5() throws {
         let variants: [(LaunchConfiguration.Appearance, ContentSize?, String)] = [

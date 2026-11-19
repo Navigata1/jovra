@@ -53,6 +53,45 @@ struct ProcessingStagePresentationTests {
         #expect(rows[2].detail.hasPrefix("Unavailable: no automatic analysis is installed in this version yet."))
     }
 
+    @Test("no analyzer under a Low Power Mode or heat hold: Unavailable with its reason, no Pause, no background line",
+          arguments: [ProcessingHold.lowPower, .tooWarm])
+    func unavailableUnderAHold(_ hold: ProcessingHold) {
+        // A freshly saved session, queued while the hold is in force, as the scheduler sees it on enqueue
+        // with nothing registered: the queue marks the analysis unavailable whatever the hold.
+        var queue = ProcessingQueue()
+        queue.enqueue("s1", originalSaved: true)
+        queue.markQueuedUnavailable(.analyze, reason: .noAnalyzerRegistered)
+        let job = queue.job("s1")
+        let analyze = ProcessingStagePresentation.rows(original: .init(state: .saved), recordingMode: .camera,
+                                                       job: job, hold: hold, locale: english)[2]
+        #expect(analyze.status == "Unavailable")
+        #expect(analyze.indicator == .unavailable)
+        #expect(analyze.detail.hasPrefix("Unavailable: no automatic analysis is installed in this version yet."))
+        #expect(ProcessingStagePresentation.holdDetail(hold).map { analyze.detail.contains($0) } == false,
+                "the hold's waiting copy is not shown for an analysis this build cannot run")
+        #expect(ProcessingStagePresentation.analysisAction(for: job?.analyze.status) == nil, "no Pause analysis")
+        for continues in [true, false] {
+            #expect(ProcessingStagePresentation.backgroundNote(analysis: job?.analyze.status, continuesInBackground: continues) == nil,
+                    "no 'Runs on this iPhone' line")
+        }
+    }
+
+    @Test("the analysis control and background line follow the analyze stage")
+    func controlsFollowTheStage() {
+        #expect(ProcessingStagePresentation.analysisAction(for: .running) == .pause)
+        #expect(ProcessingStagePresentation.analysisAction(for: .queued) == .pause)
+        #expect(ProcessingStagePresentation.analysisAction(for: .paused) == .resume)
+        #expect(ProcessingStagePresentation.analysisAction(for: .failed) == .retry)
+        #expect(ProcessingStagePresentation.analysisAction(for: .done) == nil)
+        #expect(ProcessingStagePresentation.analysisAction(for: nil) == nil)
+        #expect(ProcessingStagePresentation.backgroundNote(analysis: .running, continuesInBackground: true)
+                == "Analysis continues if you switch apps")
+        #expect(ProcessingStagePresentation.backgroundNote(analysis: .paused, continuesInBackground: false)
+                == "Analysis pauses if you leave JOVRA")
+        #expect(ProcessingStagePresentation.backgroundNote(analysis: .failed, continuesInBackground: false) == nil)
+        #expect(ProcessingStagePresentation.backgroundNote(analysis: .done, continuesInBackground: true) == nil)
+    }
+
     @Test("a failed analysis keeps the video's promise; a paused one keeps its percentage")
     func failedAndPaused() {
         let failed = ProcessingStagePresentation.rows(original: .init(state: .saved), recordingMode: .camera,

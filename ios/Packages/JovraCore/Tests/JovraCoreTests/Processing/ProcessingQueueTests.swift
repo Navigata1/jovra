@@ -151,6 +151,60 @@ final class ProcessingQueueTests: XCTestCase {
         XCTAssertThrowsError(try queue.pauseAnalysis(for: "s1"))
     }
 
+    func testWithNoAnalyzerEveryQueuedAnalysisIsUnavailableWhateverHoldIsInForce() throws {
+        var queue = ProcessingQueue()
+        queue.enqueue("s1", originalSaved: true)
+        queue.enqueue("s2", originalSaved: false)
+        try queue.start(.analyze, for: "s1", under: idle)
+        try queue.report(.analyze, for: "s1", progress: 0.3)
+        try queue.pauseAnalysis(for: "s1")
+        try queue.resumeAnalysis(for: "s1")
+        queue.enqueue("s3", originalSaved: true)
+        try queue.start(.analyze, for: "s3", under: idle)
+        try queue.fail(.analyze, for: "s3", reason: .analyzerFailed)
+
+        // Low Power Mode without a charger and a hot iPhone both hold analysis; neither may leave an
+        // analysis that this build cannot run looking like it is only waiting.
+        var lowPower = idle
+        lowPower.externalPower = false
+        lowPower.lowPowerMode = true
+        XCTAssertEqual(queue.next(under: lowPower, stages: [.analyze]), .hold(.lowPower), "precondition: analysis is held")
+
+        let changed = queue.markQueuedUnavailable(.analyze, reason: .noAnalyzerRegistered)
+        XCTAssertEqual(Set(changed), ["s1", "s2"], "queued analyses change, whether or not the original is saved yet")
+        for id in ["s1", "s2"] {
+            XCTAssertEqual(queue.job(id)?.analyze.status, .unavailable, id)
+            XCTAssertEqual(queue.job(id)?.analyze.reason, .noAnalyzerRegistered, id)
+        }
+        XCTAssertEqual(queue.job("s3")?.analyze.status, .failed, "a stage that is not queued is left alone")
+        XCTAssertEqual(queue.job("s1")?.prepareReplay.status, .queued, "other stages are untouched")
+        XCTAssertEqual(queue.next(under: lowPower, stages: [.analyze]), .idle, "nothing is left waiting on the hold")
+        var warm = idle
+        warm.thermal = .serious
+        XCTAssertEqual(queue.next(under: warm), .hold(.tooWarm), "prepare replay still waits for the iPhone to cool down")
+        XCTAssertTrue(queue.markQueuedUnavailable(.analyze, reason: .noAnalyzerRegistered).isEmpty, "idempotent")
+    }
+
+    func testTheStoreMarksQueuedAnalysesUnavailableAndMirrorsTheFacet() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let sessions = try SessionStore(root: root)
+        let document = try Self.sampleDocument()
+        try await sessions.create(document)
+        let store = try ProcessingQueueStore(root: root, sessions: sessions)
+        try await store.enqueue(document.id, originalSaved: true)
+
+        try await store.markQueuedUnavailable(.analyze, reason: .noAnalyzerRegistered)
+
+        let job = try await XCTUnwrapAsync(await store.job(document.id))
+        XCTAssertEqual(job.analyze.status, .unavailable)
+        let reopened = try ProcessingQueueStore(root: root, sessions: sessions)
+        let persisted = await reopened.job(document.id)?.analyze.status
+        XCTAssertEqual(persisted, .unavailable, "written to disk before it is acknowledged")
+        let stored = try await sessions.load(document.id)
+        XCTAssertEqual(stored.analysis?.state, .unavailable, "the analysis facet says unavailable too")
+    }
+
     func testBackupWaitsForTheArchiveWithAReasonAndNeverRunsWithoutOne() throws {
         var queue = ProcessingQueue()
         queue.enqueue("s1", originalSaved: true)

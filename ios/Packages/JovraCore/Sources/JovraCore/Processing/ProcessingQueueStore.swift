@@ -77,6 +77,16 @@ public actor ProcessingQueueStore {
         try await apply(sessionID) { try $0.markUnavailable(stage, for: sessionID, reason: reason) }
     }
 
+    /// Marks every queued `stage` unavailable (nothing in this build can run it), whatever holds are in
+    /// force, and mirrors each changed session's analysis facet.
+    public func markQueuedUnavailable(_ stage: ProcessingStage, reason: ProcessingReason) async throws {
+        var next = queue
+        let changed = next.markQueuedUnavailable(stage, reason: reason)
+        guard !changed.isEmpty else { return }
+        try commit(next)
+        for sessionID in changed { try await mirror(sessionID) }
+    }
+
     public func pauseAnalysis(for sessionID: String) async throws {
         try await apply(sessionID) { try $0.pauseAnalysis(for: sessionID) }
     }

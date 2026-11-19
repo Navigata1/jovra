@@ -20,6 +20,7 @@ final class ProcessingConditionsMonitor {
     var onBackground: (@MainActor (Bool) -> Void)?
 
     private let archiveState: LaunchConfiguration.ArchiveState?
+    private let injectedDevice: LaunchConfiguration.ProcessingDevice?
     private var onWiFi = false
     private var observers: [NSObjectProtocol] = []
     private var captureObserver: UUID?
@@ -29,6 +30,7 @@ final class ProcessingConditionsMonitor {
 
     init(launch: LaunchConfiguration) {
         archiveState = launch.archiveState
+        injectedDevice = launch.processingDevice
         conditions = ProcessingConditions(captureActive: CaptureActivity.app.isActive, thermal: .nominal,
                                           externalPower: false, lowPowerMode: false, backup: .awaitingSetup)
     }
@@ -63,15 +65,18 @@ final class ProcessingConditionsMonitor {
         refresh()
     }
 
+    /// Whether JOVRA is in the background now (true when the system launched it for the overnight task).
+    var isInBackground: Bool { UIApplication.shared.applicationState == .background }
+
     func refresh() {
         let battery = UIDevice.current.batteryState
-        let next = ProcessingConditions(
+        let next = Self.applying(injectedDevice, to: ProcessingConditions(
             captureActive: CaptureActivity.app.isActive,
             thermal: Self.thermal(ProcessInfo.processInfo.thermalState),
             externalPower: battery == .charging || battery == .full,
             lowPowerMode: ProcessInfo.processInfo.isLowPowerModeEnabled,
             backup: backupReadiness
-        )
+        ))
         guard next != conditions else { return }
         conditions = next
         onChange?(next)
@@ -82,6 +87,22 @@ final class ProcessingConditionsMonitor {
     private var backupReadiness: ProcessingConditions.BackupReadiness {
         guard archiveState == .connected else { return .awaitingSetup }
         return onWiFi ? .ready : .waitingForWiFi
+    }
+
+    /// A UI test's injected device state (`-processingDevice`) over what the device reports.
+    private static func applying(_ device: LaunchConfiguration.ProcessingDevice?,
+                                 to conditions: ProcessingConditions) -> ProcessingConditions {
+        var result = conditions
+        switch device {
+        case .lowPowerOnBattery?:
+            result.lowPowerMode = true
+            result.externalPower = false
+        case .tooWarm?:
+            result.thermal = .serious
+        case nil:
+            break
+        }
+        return result
     }
 
     private static func thermal(_ state: ProcessInfo.ThermalState) -> ProcessingConditions.Thermal {

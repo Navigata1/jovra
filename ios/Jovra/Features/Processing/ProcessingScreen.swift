@@ -126,20 +126,20 @@ struct ProcessingScreen: View {
     }
 
     @ViewBuilder private func analysisAction(_ stage: ProcessingStageState?) -> some View {
-        switch stage?.status {
-        case .running?, .queued?:
+        switch ProcessingStagePresentation.analysisAction(for: stage?.status) {
+        case .pause?:
             actionButton(String(localized: "Pause analysis", table: "Processing"), symbol: "pause.fill", id: "processing.pause") {
                 await ProcessingScheduler.shared.pauseAnalysis(session)
             }
-        case .paused?:
+        case .resume?:
             actionButton(String(localized: "Resume analysis", table: "Processing"), symbol: "play.fill", id: "processing.resume") {
                 await ProcessingScheduler.shared.resumeAnalysis(session)
             }
-        case .failed?:
+        case .retry?:
             actionButton(String(localized: "Retry analysis", table: "Processing"), symbol: "arrow.clockwise", id: "processing.retry") {
                 await ProcessingScheduler.shared.retryAnalysis(session)
             }
-        default:
+        case nil:
             EmptyView()
         }
     }
@@ -157,15 +157,10 @@ struct ProcessingScreen: View {
         var items = [StatusStrip.Item(id: "wifi", symbol: "wifi",
                                       title: String(localized: "Wi-Fi only", table: "Processing"),
                                       detail: String(localized: "Backup waits for Wi-Fi", table: "Processing"))]
-        guard let analysis, [.queued, .running, .paused].contains(analysis) else { return items }
-        if scheduler.continuesInBackground {
+        if let note = ProcessingStagePresentation.backgroundNote(analysis: analysis,
+                                                                 continuesInBackground: scheduler.continuesInBackground) {
             items.append(.init(id: "path", symbol: "iphone",
-                               title: String(localized: "Runs on this iPhone", table: "Processing"),
-                               detail: String(localized: "Analysis continues if you switch apps", table: "Processing")))
-        } else {
-            items.append(.init(id: "path", symbol: "iphone",
-                               title: String(localized: "Runs on this iPhone", table: "Processing"),
-                               detail: String(localized: "Analysis pauses if you leave JOVRA", table: "Processing")))
+                               title: String(localized: "Runs on this iPhone", table: "Processing"), detail: note))
         }
         return items
     }

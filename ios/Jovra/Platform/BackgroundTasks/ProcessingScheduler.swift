@@ -5,8 +5,9 @@ import os
 
 /// The app adapter around `ProcessingQueueStore` (spec: ProcessingQueue). It runs one stage at a time,
 /// only while capture is idle, at thermal state fair or better and (for analysis) not on Low Power Mode
-/// without a charger. Every decision and transition is the pure queue's; this type only does the work,
-/// reports progress and reacts to the device. Backups are left to the archive service.
+/// without a charger. Every decision and transition is the pure queue's, and what may happen outside the
+/// foreground is `ProcessingBackgroundPolicy`'s; this type only does the work, reports progress and
+/// reacts to the device. Backups are left to the archive service.
 @MainActor @Observable
 final class ProcessingScheduler {
     static let shared = ProcessingScheduler(launch: .current, library: LocalCaptureLibraryKey.defaultValue)
@@ -38,6 +39,12 @@ final class ProcessingScheduler {
     @ObservationIgnored private var pumping = false
     @ObservationIgnored private var activation: Task<Void, Never>?
     @ObservationIgnored private var idleWaiters: [CheckedContinuation<Void, Never>] = []
+    @ObservationIgnored private var inBackground = false
+    @ObservationIgnored private var overnightActive = false
+    /// The overnight task has been asked for during this stay in the background.
+    @ObservationIgnored private var overnightRequested = false
+    /// Submits the overnight `BGProcessingTask` request (replaced in unit tests, which cannot submit one).
+    @ObservationIgnored var submitOvernightRequest: @MainActor () -> Void = { ProcessingBackgroundTasks.scheduleOvernight() }
     @ObservationIgnored private let log = Logger(subsystem: "com.islanddevcrew.jovra", category: "processing")
     private static let scheduledStages: Set<ProcessingStage> = [.prepareReplay, .analyze]
 
@@ -67,7 +74,9 @@ final class ProcessingScheduler {
         monitor.onChange = { [weak self] conditions in self?.conditionsChanged(conditions) }
         monitor.onBackground = { [weak self] background in self?.backgroundChanged(background) }
         monitor.start()
+        inBackground = monitor.isInBackground
         try? await store?.updateBackup(monitor.conditions.backup)
+        await markUnanalyzable()
         await refreshAll()
         availability = .ready
         pump()
@@ -85,6 +94,7 @@ final class ProcessingScheduler {
             try await store.enqueue(session.rawValue, originalSaved: originalSaved)
             try await store.updateBackup(monitor.conditions.backup)
         } catch { log.error("enqueue failed: \(String(describing: error), privacy: .public)") }
+        await markUnanalyzable()
         await refresh(session.rawValue)
         pump()
     }
@@ -104,6 +114,7 @@ final class ProcessingScheduler {
     func resumeAnalysis(_ session: SessionID) async {
         guard let store else { return }
         try? await store.resumeAnalysis(for: session.rawValue)
+        await markUnanalyzable()
         await refresh(session.rawValue)
         pump()
     }
@@ -111,22 +122,45 @@ final class ProcessingScheduler {
     func retryAnalysis(_ session: SessionID) async {
         guard let store else { return }
         try? await store.retry(.analyze, for: session.rawValue)
+        await markUnanalyzable()
         await refresh(session.rawValue)
         pump()
     }
 
-    /// Waits until nothing is running and nothing can start (the overnight task's completion point).
-    func drain() async {
+    /// The overnight task: runs the queue in the background until nothing is running and nothing can
+    /// start, then asks for another run if work is still left (a hold, for example).
+    func runOvernight() async {
+        // Set before opening the queue: a system launch for this task starts in the background.
+        overnightActive = true
+        overnightRequested = false
         await activate()
+        await drain()
+        overnightActive = false
+        requestOvernightIfNeeded()
+    }
+
+    /// The overnight task's time ran out: the running stage stops at its saved progress and nothing
+    /// new starts until JOVRA returns to the foreground or the next overnight run.
+    func overnightExpired() {
+        overnightActive = false
+        stop(.interrupt)
+    }
+
+    /// Waits until nothing is running and nothing can start.
+    private func drain() async {
         pump()
         guard running != nil || pumping else { return }
         await withCheckedContinuation { idleWaiters.append($0) }
     }
 
-    /// Stops the running stage at its saved progress (background time ran out, or the app left the
-    /// foreground on the iOS 18 path).
+    /// Stops the running stage at its saved progress (the continued-processing task ran out of time).
     func interruptRunning() {
         stop(.interrupt)
+    }
+
+    private var policy: ProcessingBackgroundPolicy {
+        ProcessingBackgroundPolicy(inBackground: inBackground, continuesInBackground: continuesInBackground,
+                                   overnightActive: overnightActive)
     }
 
     // MARK: Scheduling
@@ -135,7 +169,8 @@ final class ProcessingScheduler {
         guard availability != .unavailable, running == nil, !pumping, let store else { return }
         pumping = true
         Task {
-            while running == nil {
+            // Re-checked on every turn: JOVRA may leave the foreground while a decision is being made.
+            while running == nil, policy.mayStart {
                 let decision = await store.next(under: monitor.conditions, stages: Self.scheduledStages)
                 guard case .run(let stage, let session) = decision else {
                     if case .hold(let reason) = decision { hold = reason } else { hold = nil }
@@ -145,8 +180,28 @@ final class ProcessingScheduler {
                 guard await begin(stage, session, store: store) else { break }
             }
             pumping = false
+            requestOvernightIfNeeded()
             notifyIdleIfSettled()
         }
+    }
+
+    /// With no analyzer registered nothing in this build can analyse: every queued analysis says so with
+    /// its reason at once, whatever hold is in force, instead of looking as if it were only waiting.
+    private func markUnanalyzable() async {
+        guard analyzers.isEmpty, let store else { return }
+        do {
+            try await store.markQueuedUnavailable(.analyze, reason: .noAnalyzerRegistered)
+        } catch {
+            log.error("marking analysis unavailable failed: \(String(describing: error), privacy: .public)")
+        }
+    }
+
+    /// Asks for the overnight task once per stay in the background, after any interrupted stage has
+    /// settled back into the queue (the cached jobs are refreshed before `running` is cleared).
+    private func requestOvernightIfNeeded() {
+        guard !overnightRequested, policy.needsOvernight(running: running != nil || pumping, jobs: jobs.values) else { return }
+        overnightRequested = true
+        submitOvernightRequest()
     }
 
     /// Starts `stage`; returns false when nothing more should be tried now.
@@ -261,13 +316,18 @@ final class ProcessingScheduler {
         }
     }
 
-    private func backgroundChanged(_ background: Bool) {
+    /// Leaving JOVRA: the policy decides whether the running stage stops; an interrupted stage settles
+    /// asynchronously and `finish` then asks for the overnight task. Nothing new starts in the background.
+    func backgroundChanged(_ background: Bool) {
+        inBackground = background
         if background {
-            if !continuesInBackground { stop(.interrupt) }
-            if jobs.values.contains(where: { $0.analyze.status == .queued || $0.prepareReplay.status == .queued }) {
-                ProcessingBackgroundTasks.scheduleOvernight()
+            if policy.interruptsOnLeaving(running: running?.stage) {
+                stop(.interrupt)
+            } else {
+                requestOvernightIfNeeded()
             }
         } else {
+            overnightRequested = false
             pump()
         }
     }

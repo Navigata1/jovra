@@ -1,8 +1,8 @@
 import Foundation
 
 /// What a launch asked for: appearance, demo state, fixture camera, injected permission and archive
-/// states, Reduce Motion, a pseudo-locale, the start route, a fresh local library and the processing
-/// fixture analyzer.
+/// states, Reduce Motion, a pseudo-locale, the start route, a fresh local library, the processing
+/// fixture analyzer and an injected device state for the processing queue.
 ///
 /// This file is the launch-argument contract between the app and its UI tests and is compiled into
 /// both targets (see `ios/project.yml`): UI tests build `arguments` from a value, and the app parses
@@ -26,6 +26,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let pseudoLocale = "-pseudoLocale"
         static let startRoute = "-startRoute"
         static let processingAnalyzer = "-processingAnalyzer"
+        static let processingDevice = "-processingDevice"
         static let library = "-library"
     }
 
@@ -84,6 +85,15 @@ struct LaunchConfiguration: Equatable, Sendable {
         case steady, failsOnce
     }
 
+    /// A device state the processing queue holds for, injected because the simulator can set neither
+    /// Low Power Mode nor the thermal state (T27). Only the processing queue's conditions change.
+    enum ProcessingDevice: String, CaseIterable, Sendable {
+        /// Low Power Mode on, not charging: analysis waits for a charger.
+        case lowPowerOnBattery
+        /// Thermal state serious: every stage waits for the iPhone to cool down.
+        case tooWarm
+    }
+
     /// Which local library a launch uses.
     enum Library: String, CaseIterable, Sendable {
         /// A new, empty library in a temporary folder for this launch only. The library saved on the
@@ -105,6 +115,8 @@ struct LaunchConfiguration: Equatable, Sendable {
     var startRoute: String?
     /// Registers the fixture analyzer; nil registers none (production has none until a V ticket ships one).
     var processingAnalyzer: ProcessingAnalyzer?
+    /// nil reads the device's own power and thermal state.
+    var processingDevice: ProcessingDevice?
     /// nil uses the library saved on the device.
     var library: Library?
 
@@ -151,6 +163,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         if let pseudoLocale { result += [Key.pseudoLocale, pseudoLocale.rawValue] + pseudoLocale.systemArguments }
         if let startRoute { result += [Key.startRoute, startRoute] }
         if let processingAnalyzer { result += [Key.processingAnalyzer, processingAnalyzer.rawValue] }
+        if let processingDevice { result += [Key.processingDevice, processingDevice.rawValue] }
         if let library { result += [Key.library, library.rawValue] }
         return result
     }
@@ -164,6 +177,7 @@ struct LaunchConfiguration: Equatable, Sendable {
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
         Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library, Key.processingAnalyzer,
+        Key.processingDevice,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -177,6 +191,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.pseudoLocale: pseudoLocale = parse(PseudoLocale.self, value, for: key)
         case Key.startRoute: startRoute = value
         case Key.processingAnalyzer: processingAnalyzer = parse(ProcessingAnalyzer.self, value, for: key)
+        case Key.processingDevice: processingDevice = parse(ProcessingDevice.self, value, for: key)
         case Key.library: library = parse(Library.self, value, for: key)
         default: break
         }
