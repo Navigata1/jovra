@@ -1,0 +1,19 @@
+Run: 2026-11-19 (review round 1), head dc0b25d plus this PR's TransportBar fix (the five-disc row at slow rates).
+COMMAND: SIMULATOR_ID=<JOVRA-T14> DERIVED_DATA=<worktree>/.derivedData scripts/ios/ui-test.sh -only-testing JovraUITests/PlaybackCoreUITests -only-testing JovraUITests/CoreComponentsUITests -only-testing JovraUITests/ReplayFlowUITests 14-playback-core
+Simulator: JOVRA-T14 B7D403BE-869C-4F1D-B84F-0CBF0006402F (iPhone 17 Pro, iOS Simulator 27.2); frame counters read from .cache/media via JOVRA_FRAME_COUNTER_DIR (none skipped)
+==> Summary
+Test class                          passed  failed  skipped  expected
+JovraUITests/CoreComponentsUITests       4       0        0         0
+JovraUITests/PlaybackCoreUITests        12       0        0         0
+JovraUITests/ReplayFlowUITests           1       0        0         0
+Total: 17 passed, 0 failed, 0 skipped, 0 expected failure(s) in 3 classes (xcresult summary: 17 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T14 B7D403BE-869C-4F1D-B84F-0CBF0006402F (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261119-111855.xcresult
+
+PlaybackCoreUITests (12): testJogStripIsTallClearOfTheTimelineAboveTransportAndScrubsByFrame, testTimelineVerticalDragScrollsWithoutSeekingOrStartingPlayback,
+testTimelineTapAndHorizontalDragStillSeek, testLandscapeShowsTimelineJogAndTransportWithoutScrolling (new in this PR),
+testSpaceTogglesPlaybackAndRightArrowStepsOneFrame, testRateChangesShowInTheReadout (now also asserts one row of five discs at 1×, 0.5×, 0.25× and 2×), testABLoopKeepsPlaybackBetweenAAndB, testHoldingNextFrameRepeats,
+testPinchZoomPersistsWhileSteppingResetsAndMatchesTheAccessibleControl, testAMissingFileShowsAStateCardInsteadOfCrashing,
+testSampleMediaCarriesTheSyntheticSampleBadge, testAccessibilityAuditInLightDarkAndAX5PortraitAndLandscape.
+Before the fix, the new row assertion failed at 0.5× (06-red-transport-wrap.txt). After the fix, the single test passed on its own
+(.derivedData/ui-tests-20261119-103742.xcresult) and then in this full run.

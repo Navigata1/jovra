@@ -1,7 +1,7 @@
 import Foundation
 
 /// What a launch asked for: appearance, demo state, fixture camera, injected permission and archive
-/// states, Reduce Motion, a pseudo-locale and the start route.
+/// states, Reduce Motion, a pseudo-locale, the start route and a fresh local library.
 ///
 /// This file is the launch-argument contract between the app and its UI tests and is compiled into
 /// both targets (see `ios/project.yml`): UI tests build `arguments` from a value, and the app parses
@@ -10,7 +10,8 @@ import Foundation
 /// `-UIPreferredContentSizeCategoryName`) are skipped.
 ///
 /// With no arguments every field means "live behaviour": the player's own appearance preference, no
-/// demo, the real camera, real permission and archive states, and the system Reduce Motion setting.
+/// demo, the real camera, real permission and archive states, the system Reduce Motion setting and
+/// the library saved on the device.
 struct LaunchConfiguration: Equatable, Sendable {
     /// Argument names. `-appearance` doubles as the `appearance` UserDefaults key read by
     /// `@AppStorage`, so the preference itself follows the launch argument.
@@ -23,6 +24,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let reduceMotion = "-reduceMotion"
         static let pseudoLocale = "-pseudoLocale"
         static let startRoute = "-startRoute"
+        static let library = "-library"
     }
 
     enum Appearance: String, CaseIterable, Sendable {
@@ -74,6 +76,13 @@ struct LaunchConfiguration: Equatable, Sendable {
         }
     }
 
+    /// Which local library a launch uses.
+    enum Library: String, CaseIterable, Sendable {
+        /// A new, empty library in a temporary folder for this launch only. The library saved on the
+        /// device is neither read nor changed, so a UI test sees no sessions left by an earlier test.
+        case fresh
+    }
+
     var appearance: Appearance?
     var demo: DemoState = .off
     /// The fixture clip the simulator fixture camera streams (ADR-0012); nil uses the default source.
@@ -86,6 +95,8 @@ struct LaunchConfiguration: Equatable, Sendable {
     var pseudoLocale: PseudoLocale?
     /// A tab or full-screen route name to open at launch (resolved by the app shell).
     var startRoute: String?
+    /// nil uses the library saved on the device.
+    var library: Library?
 
     /// Arguments that could not be understood. Not part of equality.
     private(set) var problems: [String] = []
@@ -129,6 +140,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         if reduceMotion { result += [Key.reduceMotion, "YES"] }
         if let pseudoLocale { result += [Key.pseudoLocale, pseudoLocale.rawValue] + pseudoLocale.systemArguments }
         if let startRoute { result += [Key.startRoute, startRoute] }
+        if let library { result += [Key.library, library.rawValue] }
         return result
     }
 
@@ -140,7 +152,7 @@ struct LaunchConfiguration: Equatable, Sendable {
 
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
-        Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute,
+        Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -153,6 +165,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.reduceMotion: parseReduceMotion(value)
         case Key.pseudoLocale: pseudoLocale = parse(PseudoLocale.self, value, for: key)
         case Key.startRoute: startRoute = value
+        case Key.library: library = parse(Library.self, value, for: key)
         default: break
         }
     }

@@ -46,6 +46,8 @@ struct ClipExportSheet: View {
                 .ignoresSafeArea(.container, edges: .bottom)
         }
         .background(Color.jovra(.background).ignoresSafeArea())
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("sheet.container")
         .interactiveDismissDisabled(model.isWorking)
         .task(id: session) { if case .ready(let library) = library { await model.open(library: library, session: session) } }
         .onChange(of: scenePhase) { _, phase in
