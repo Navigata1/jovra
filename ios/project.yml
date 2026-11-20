@@ -22,6 +22,9 @@ packages:
     path: Packages/JovraCore
   JovraMedia:
     path: Packages/JovraMedia
+  # V00: the on-device analysis pipeline (ADR-0031).
+  JovraVision:
+    path: Packages/JovraVision
   # Studio (S04, docs/studio/DEVELOPING.md): the only Studio ticket that edits this file.
   JovraStudioCore:
     path: Packages/JovraStudioCore
@@ -36,6 +39,7 @@ targets:
     dependencies:
       - package: JovraCore
       - package: JovraMedia
+      - package: JovraVision
       - package: JovraStudioCore
       - package: JovraStudioMedia
     # T11: copy the rendered synthetic sample media into the bundle (SampleMedia/); fails with the command to
@@ -139,6 +143,7 @@ targets:
     dependencies:
       - target: Jovra
       - package: JovraCore
+      - package: JovraVision
       - package: JovraStudioCore
     settings:
       base:
@@ -157,6 +162,8 @@ targets:
       - target: Jovra
       - package: JovraStudioCore
       - package: JovraStudioMedia
+      # V00: the kill-and-resume test re-runs the fixture stages uninterrupted to compare bytes.
+      - package: JovraVision
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.islanddevcrew.jovra.uitests

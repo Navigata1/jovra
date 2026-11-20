@@ -84,10 +84,12 @@ struct LaunchConfiguration: Equatable, Sendable {
         }
     }
 
-    /// The fixture analyzer the processing queue registers for UI tests (T27). It writes no results:
-    /// it only moves the analyze stage's progress, steadily or failing once at 40 %.
+    /// The fixture analyzer the processing queue registers for UI tests. `steady` and `failsOnce` (T27)
+    /// write no results: they only move the analyze stage's progress, steadily or failing once at 40 %.
+    /// `visionFixture` (V00) runs the JovraVision pipeline with its fixture stages over the session's own
+    /// recording, paced so a test can act mid-run, and writes their observations and checkpoints.
     enum ProcessingAnalyzer: String, CaseIterable, Sendable {
-        case steady, failsOnce
+        case steady, failsOnce, visionFixture
     }
 
     /// A device state the processing queue holds for, injected because the simulator can set neither
@@ -104,6 +106,11 @@ struct LaunchConfiguration: Equatable, Sendable {
         /// A new, empty library in a temporary folder for this launch only. The library saved on the
         /// device is neither read nor changed, so a UI test sees no sessions left by an earlier test.
         case fresh
+        /// Like `fresh`, but in one fixed temporary folder that a later `relaunch` launch opens again (V00:
+        /// a test kills JOVRA mid-analysis and relaunches it). Emptied at the start of this launch.
+        case relaunchable
+        /// The `relaunchable` library exactly as the previous launch left it.
+        case relaunch
     }
 
     /// Which player profile store a launch uses (T18). The welcome gate reads it: with no profile, the launch opens

@@ -1,5 +1,6 @@
 import Foundation
 import JovraCore
+import JovraVision
 
 /// One on-device analysis the analyze stage runs over a saved session (ADR-0031: every result is
 /// `estimated` and is gated by its benchmark before it is registered here).
@@ -16,10 +17,22 @@ protocol SessionAnalyzer: Sendable {
 /// production list is empty until a V-track ticket passes its benchmark gate, so the analyze stage
 /// reports unavailable with its reason instead of pretending to analyse.
 enum AnalyzerRegistry {
-    static func registered(for launch: LaunchConfiguration) -> [any SessionAnalyzer] {
+    /// Extra time per window of the vision fixture: a few seconds of recording take several seconds to analyse.
+    static let visionFixturePace: Duration = .milliseconds(750)
+
+    static func registered(for launch: LaunchConfiguration, library: LocalCaptureAvailability) -> [any SessionAnalyzer] {
         var analyzers: [any SessionAnalyzer] = []
-        if let fixture = launch.processingAnalyzer {
-            analyzers.append(FixtureAnalyzer(mode: fixture))
+        switch launch.processingAnalyzer {
+        case .visionFixture?:
+            // V00: the JovraVision fixture stages, paced so a UI test can kill JOVRA or record mid-run.
+            if case .ready(let library) = library {
+                analyzers.append(VisionAnalyzer(capabilityID: "fixture.vision", library: library,
+                                                stages: { FixtureStages.pipeline(pace: visionFixturePace) }))
+            }
+        case let mode?:
+            analyzers.append(FixtureAnalyzer(mode: mode))
+        case nil:
+            break
         }
         return analyzers
     }

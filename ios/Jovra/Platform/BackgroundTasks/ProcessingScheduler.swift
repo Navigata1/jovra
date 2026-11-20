@@ -50,7 +50,7 @@ final class ProcessingScheduler {
 
     init(launch: LaunchConfiguration, library: LocalCaptureAvailability) {
         if case .ready(let library) = library { self.library = library } else { self.library = nil }
-        analyzers = AnalyzerRegistry.registered(for: launch)
+        analyzers = AnalyzerRegistry.registered(for: launch, library: library)
         monitor = ProcessingConditionsMonitor(launch: launch)
     }
 

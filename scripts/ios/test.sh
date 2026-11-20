@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs every non-UI test: renders the media fixtures if needed, JovraCore and JovraMedia with `swift test`,
+# Runs every non-UI test: renders the media fixtures if needed, JovraCore, JovraMedia and JovraVision with `swift test`,
 # then the hosted JovraTests bundle on the simulator, and prints per-class counts and the .xcresult path.
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
@@ -11,7 +11,7 @@ source "$(dirname "$0")/common.sh"
 echo "==> render media fixtures (check against committed ground truth)"
 python3 "$ROOT/scripts/media/render.py" --check
 
-for package in JovraCore JovraMedia; do
+for package in JovraCore JovraMedia JovraVision; do
   echo "==> swift test ($package)"
   swift_test_flags=(--package-path "$IOS_DIR/Packages/$package" --scratch-path "$DERIVED_DATA/spm-$package")
   if [ "$package" = JovraMedia ]; then swift_test_flags+=(--no-parallel); fi

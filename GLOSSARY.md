@@ -306,6 +306,17 @@ A capability's own certainty for one value, stored and shown as a band. It is ne
 confidence sends the value to needs review.
 _Avoid_: Accuracy, probability, trust score
 
+**Analysis stage**:
+One step of on-device analysis (JovraVision): it reads a saved recording window by window, and the finished results
+of earlier stages, and writes observations under its own name and method version. Its work is checkpointed after every
+window, so analysis resumes where it stopped after an app kill.
+_Avoid_: Model, detector, job, pass
+
+**Coverage**:
+What share of a recording an analysis stage looked at, and for the rest the reason it could not. Analysis reports
+coverage instead of filling gaps with guesses.
+_Avoid_: Completeness, recall, accuracy
+
 ### Court geometry
 
 **Court model**:

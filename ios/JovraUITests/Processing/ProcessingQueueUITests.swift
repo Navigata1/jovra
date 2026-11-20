@@ -180,18 +180,8 @@ final class ProcessingQueueUITests: XCTestCase {
 
     /// Records a short fixture-camera singles session, stops it and opens its processing route.
     @MainActor private func recordAndOpenProcessing(_ app: XCUIApplication, title: String) {
-        app.buttons["tab.record"].tap()
-        for (id, text) in [("capture.setup.title", title), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
-            let field = app.textFields[id]
-            XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(text + "\n")
-        }
-        let preview = app.buttons["record.previewCapture"]
-        // At large text sizes the button can sit under the floating tab bar while still "hittable".
-        let tabBar = app.otherElements["tabBar"]
-        for _ in 0..<8 where !preview.isHittable || (tabBar.exists && preview.frame.maxY > tabBar.frame.minY - 8) {
-            app.swipeUp()
-        }
-        preview.tap()
+        // T21 replaced the inline setup fields with the Record tab's players sheet.
+        app.startSinglesCapture(sessionName: title, me: "Jon", opponent: "Alex")
         let start = app.buttons["capture.start"]
         XCTAssertTrue(start.waitForExistence(timeout: 10))
         for _ in 0..<6 where !start.isHittable { app.swipeUp() }
