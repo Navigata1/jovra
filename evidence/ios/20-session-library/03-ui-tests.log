@@ -1,3 +1,16 @@
+# Post-merge (origin/main 95e9a34) UI receipts on JOVRA-T20, scripts/ios/ui-test.sh -only-testing ...
+## SessionLibraryUITests
+==> Summary
+Test class                          passed  failed  skipped  expected
+JovraUITests/SessionLibraryUITests       8       0        0         0
+Total: 8 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 8 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T20 39331E6A-2160-4C51-A8E1-63902099F844 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261119-223317.xcresult
+## NativeLibraryUITests + NavigationRoutesUITests/testEverySheetHasACloseControlAndNamesItsTicket (same merged build; the SessionLibrary demo audit in this run hit XCTest's audit time limit, which the retried run above covers)
+Test class                            passed  failed  skipped  expected
+JovraUITests/NativeLibraryUITests          2       0        0         0
+JovraUITests/NavigationRoutesUITests       1       0        0         0
+## Pre-merge full receipt
 ==> Summary
 Test class                            passed  failed  skipped  expected
 JovraUITests/NativeLibraryUITests          2       0        0         0
@@ -6,4 +19,3 @@ JovraUITests/SessionLibraryUITests         8       0        0         0
 Total: 11 passed, 0 failed, 0 skipped, 0 expected failure(s) in 3 classes (xcresult summary: 11 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-T20 39331E6A-2160-4C51-A8E1-63902099F844 (iPhone 17 Pro, iOS Simulator 27.2)
 Result bundle: .derivedData/ui-tests-20261119-214841.xcresult
-exit 0

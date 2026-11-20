@@ -193,6 +193,21 @@ final class SessionLibraryUITests: XCTestCase {
         }
     }
 
+    /// The demo library is the longest audited page (eight cards of four status pills each). XCTest's own
+    /// time limit for one audit is sometimes exceeded there even after `auditScreen` splits the audit by type;
+    /// the whole audit then runs once more from the top. Every finding still fails; only XCTest's
+    /// "Audit failed to complete in time" is retried, once.
+    @MainActor
+    private func auditLongScreen(_ app: XCUIApplication) throws {
+        do {
+            try auditScreen(app)
+        } catch let error as NSError where AccessibilityAudit.isTimeout(error) {
+            app.scrollViews.firstMatch.swipeDown(velocity: .fast)
+            app.scrollViews.firstMatch.swipeDown(velocity: .fast)
+            try auditScreen(app)
+        }
+    }
+
     @MainActor
     func testDemoLibraryPassesTheAuditInLightDarkAndAX5() throws {
         for variant in Variant.allCases {
@@ -200,7 +215,7 @@ final class SessionLibraryUITests: XCTestCase {
             XCTAssertTrue(card(app, containing: "Jon vs Alex").waitForExistence(timeout: 15))
             attachScreenshot(app, name: "s08-\(variant.slug)-demo")
             assertHitTargets(in: app)
-            try auditScreen(app)
+            try auditLongScreen(app)
             app.terminate()
         }
     }
