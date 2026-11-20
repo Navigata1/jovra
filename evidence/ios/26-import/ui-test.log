@@ -2,13 +2,20 @@
 ⚙️  Generating project...
 ⚙️  Writing project...
 Created project at ios/Jovra.xcodeproj
-==> JovraUITests on 9A5AB74F-4028-47A0-941E-9C7D510F45ED, only: JovraUITests/ImportSourcesUITests JovraUITests/FilesImportUITests JovraUITests/AuditExceptionTests JovraUITests/JovraSmokeUITests JovraUITests/ReplayFlowUITests
+==> JovraUITests on 9A5AB74F-4028-47A0-941E-9C7D510F45ED, only: JovraUITests/ImportSourcesUITests JovraUITests/FilesImportUITests JovraUITests/AuditExceptionTests JovraUITests/JovraSmokeUITests JovraUITests/ProcessingQueueUITests JovraUITests/ReplayFlowUITests
 Writing result bundle at path:
-	.derivedData/ui-tests-20261119-182331.xcresult
+	.derivedData/ui-tests-20261119-214435.xcresult
 
-2026-11-19 19:07:10.093 xcodebuild[83417:8612393] [MT] IDETestOperationsObserverDebug: 2607.035 elapsed -- Testing started completed.
-2026-11-19 19:07:10.093 xcodebuild[83417:8612393] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
-2026-11-19 19:07:10.093 xcodebuild[83417:8612393] [MT] IDETestOperationsObserverDebug: 2607.035 sec, +2607.035 sec -- end
+2026-11-19 22:21:21.859 xcodebuild[39421:9497080] [MT] IDETestOperationsObserverDebug: 2203.224 elapsed -- Testing started completed.
+2026-11-19 22:21:21.859 xcodebuild[39421:9497080] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-19 22:21:21.859 xcodebuild[39421:9497080] [MT] IDETestOperationsObserverDebug: 2203.224 sec, +2203.224 sec -- end
+Failing tests:
+	JovraSmokeUITests.testEveryTabAtLargestAccessibilityTextSize()
+	JovraSmokeUITests.testEveryTabInDarkAppearance()
+	ProcessingQueueUITests.testWithNoAnalyzerRegisteredAnalysisIsUnavailableInLightDarkAndAX5()
+
+** TEST FAILED **
+
 Testing started
 ==> Screenshots exported to evidence/ios/26-import
    evidence/ios/26-import/s07-light-import-saved.png
@@ -20,12 +27,17 @@ Testing started
    evidence/ios/26-import/s07-light-import-drive.png
    evidence/ios/26-import/s07-light-import-sources.png
 ==> Summary
-Test class                         passed  failed  skipped  expected
-JovraUITests/AuditExceptionTests        3       0        0         0
-JovraUITests/FilesImportUITests         2       0        0         0
-JovraUITests/ImportSourcesUITests       5       0        0         0
-JovraUITests/JovraSmokeUITests          6       0        0         0
-JovraUITests/ReplayFlowUITests          1       0        0         0
-Total: 17 passed, 0 failed, 0 skipped, 0 expected failure(s) in 5 classes (xcresult summary: 17 passed, 0 failed, 0 skipped; result Passed)
+Test class                           passed  failed  skipped  expected
+JovraUITests/AuditExceptionTests          3       0        0         0
+JovraUITests/FilesImportUITests           2       0        0         0
+JovraUITests/ImportSourcesUITests         5       0        0         0
+JovraUITests/JovraSmokeUITests            4       2        0         0
+JovraUITests/ProcessingQueueUITests       4       1        0         0
+JovraUITests/ReplayFlowUITests            1       0        0         0
+Total: 19 passed, 3 failed, 0 skipped, 0 expected failure(s) in 6 classes (xcresult summary: 19 passed, 3 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): failed: caught error: "Error Domain=com.apple.xcode.xctest.accessibilityAudit Code=-56 "Audit failed to complete in time" UserInfo={NSLocalizedDescription=Audit failed to complete in time}"
+FAILED JovraSmokeUITests/testEveryTabInDarkAppearance(): failed: caught error: "Error Domain=com.apple.xcode.xctest.accessibilityAudit Code=-56 "Audit failed to complete in time" UserInfo={NSLocalizedDescription=Audit failed to complete in time}"
+FAILED ProcessingQueueUITests/testWithNoAnalyzerRegisteredAnalysisIsUnavailableInLightDarkAndAX5(): failed: caught error: "Error Domain=com.apple.xcode.xctest.accessibilityAudit Code=-56 "Audit failed to complete in time" UserInfo={NSLocalizedDescription=Audit failed to complete in time}"
 Device: JOVRA-T26 9A5AB74F-4028-47A0-941E-9C7D510F45ED (iPhone 17 Pro, iOS Simulator 27.2)
-Result bundle: .derivedData/ui-tests-20261119-182331.xcresult
+Result bundle: .derivedData/ui-tests-20261119-214435.xcresult
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.

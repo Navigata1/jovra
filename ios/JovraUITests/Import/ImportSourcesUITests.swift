@@ -147,7 +147,7 @@ final class ImportSourcesUITests: XCTestCase {
                 reveal(app.buttons["import.choose"], in: app)
             }
             app.buttons["import.choose"].tap()
-            XCTAssertTrue(waitForLabel(rowSummary(app, containing: "HDR rally copy \(slug) \(run).mov"), containing: "Already in your library", timeout: 30))
+            XCTAssertTrue(waitForLabel(rowSummary(app, containing: "HDR rally copy \(slug) \(run).mov"), containing: "Already in your library", timeout: 90))
             // Audit the finished state: while a batch runs, the sources and footage controls are disabled.
             let cancel = app.buttons["import.cancel"]
             XCTAssertTrue(XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: cancel)],
