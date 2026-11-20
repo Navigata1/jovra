@@ -15,6 +15,7 @@ Design: `docs/backend/architecture.md` (layout §1.2, local test strategy §12, 
 | `gateway/` | Cloudflare signing gateway Worker | — | — | Not started (B-07) |
 | `render/` | Render-host image | — | — | Not started (B-13) |
 | `contracts/` | Gateway and queue JSON Schemas | See `contracts/README.md` | `.github/workflows/backend-contracts.yml` | Implemented contract/checker foundation (S81 / B-01); gateway/render runtime remains separate |
+| `planner/` | Planner adapter (TypeScript): the heuristic StoryDirector, RulesPlanner, trust check and EDL compiler | `npm test` (see `planner/README.md`) | `.github/workflows/backend-planner.yml` | Heuristic planner with byte parity to the S06 and S07 vectors (S88 / B-15 part 1); model adapters are S89 |
 
 ## `supabase/` (S75)
 

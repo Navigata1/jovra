@@ -1,0 +1,41 @@
+Source 393325605d139fde826a27fda2932929608bd1a8 (only one trailing blank line removed from previously tested source 15b56f5).
+
+$ node --version
+Exit 0
+v24.15.0
+
+$ npm run typecheck
+Exit 0
+
+> @jovra/planner@0.1.0 typecheck
+> tsc -p tsconfig.json
+
+$ npm test
+Exit 0
+✔ compile compile stale-event-revision (0.009125ms)
+✔ compile compile window-across-gap (0.009833ms)
+✔ compile compile unknown-request-field (0.00975ms)
+✔ every vector file has cases, and every re-run case is byte-identical (2.614083ms)
+ℹ tests 185
+ℹ suites 0
+ℹ pass 185
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 206.107333
+
+$ npm run --silent parity
+Exit 0
+| compile | court-memories-final-film | compile | edl | b634bc703079c65c | b634bc703079c65c | identical |
+| compile | court-memories-final-film-stage-s1 | compile | edl | e47f03fcc814044b | e47f03fcc814044b | identical |
+| compile | trim-outside-window | compile | reject | 165631bdb65fdf7d | 165631bdb65fdf7d | identical |
+| compile | unknown-keeper | compile | reject | b6541c5ed8b82138 | b6541c5ed8b82138 | identical |
+| compile | stale-event-revision | compile | reject | 9f8955d3073f27ba | 9f8955d3073f27ba | identical |
+| compile | window-across-gap | compile | reject | c8c7f5c8ef422226 | c8c7f5c8ef422226 | identical |
+| compile | unknown-request-field | compile | reject | 8d9fb8a5fec5832b | 8d9fb8a5fec5832b | identical |
+
+director (spec/studio/fixtures/vectors/director.json): 58/58 byte-identical, plus 1 base context case(s); results {"brief":16,"refusal":9,"reject":10,"templates":1,"findings":22}
+planner (spec/studio/fixtures/vectors/planner.json): 46/46 byte-identical, plus 1 base context case(s); results {"plan":23,"refusal":3,"check":4,"reject":16}
+compile (spec/studio/fixtures/vectors/compile.json): 39/39 byte-identical, plus 5 base context case(s); results {"edl":28,"refusal":6,"reject":5}
+TOTAL: 143/143 reference vectors reproduced byte for byte (canonical JSON).

@@ -1,0 +1,67 @@
+name: backend-planner
+
+# The heuristic planner adapter (S88 / issue #157; docs/backend/architecture.md §7.6). The TypeScript server copy of
+# StoryDirector, the RulesPlanner, the trust check and the EDL compiler must reproduce every S06 (director, planner)
+# and S07 (compile) reference vector byte for byte. Pure code: no service, account, URL, key or network call.
+
+on:
+  pull_request:
+    paths:
+      - backend/planner/**
+      - .github/workflows/backend-planner.yml
+      - spec/reference/studio/**
+      - spec/studio/fixtures/vectors/**
+      - spec/studio/fixtures/records/story-brief.*.json
+      - spec/studio/contracts/story-profiles.v1.json
+  push:
+    branches: [main]
+    paths:
+      - backend/planner/**
+      - .github/workflows/backend-planner.yml
+      - spec/reference/studio/**
+      - spec/studio/fixtures/vectors/**
+      - spec/studio/fixtures/records/story-brief.*.json
+      - spec/studio/contracts/story-profiles.v1.json
+  workflow_dispatch:
+
+concurrency:
+  group: backend-planner-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend-planner:
+    name: backend-planner
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/planner
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: backend/planner/package-lock.json
+
+      - name: Install (lockfile only; dev tools, no runtime dependencies)
+        run: npm ci --no-audit --no-fund
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Parity, binding and adversarial tests
+        run: npm test
+
+      - name: Parity table against the S06 and S07 vectors
+        run: |
+          npm run --silent parity | tee parity-table.md
+          {
+            echo "## Heuristic planner parity (S06 director/planner, S07 compile)"
+            echo
+            tail -n 4 parity-table.md
+          } >> "$GITHUB_STEP_SUMMARY"

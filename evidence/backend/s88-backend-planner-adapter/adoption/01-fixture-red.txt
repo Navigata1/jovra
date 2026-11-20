@@ -1,0 +1,171 @@
+Node v24.15.0; source refreeze 24a79d9, with new tests only.
+Command: /usr/local/bin/node --test --test-reporter=spec backend/planner/test/heuristic/fixture-safety.test.ts
+Exit 1. Only trailing spaces stripped from the raw test output.
+
+✖ fixture patches cannot write to inherited prototypes (1.38125ms)
+✖ fixture patches reject direct prototype replacement (0.11425ms)
+✖ fixture patches do not traverse inherited properties (0.133208ms)
+✖ vector records cannot escape the fixture directory (1.047917ms)
+✖ vector records refuse a file symlink even when it names JSON (1.018833ms)
+✖ vector records refuse a directory symlink even when it names JSON (0.898ms)
+✖ Studio canonical bytes refuse a lone UTF-16 surrogate in a value (0.37425ms)
+✖ Studio canonical bytes refuse a lone UTF-16 surrogate in a key (0.069708ms)
+✔ Studio canonical bytes retain Python scalar key ordering and valid Unicode (0.095375ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 1
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 109.335125
+
+✖ failing tests:
+
+test at backend/planner/test/heuristic/fixture-safety.test.ts:10:1
+✖ fixture patches cannot write to inherited prototypes (1.38125ms)
+  AssertionError [ERR_ASSERTION]: a fixture patch changed Object.prototype
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///Users/IDC2.5/.codex/worktrees/s88-planner-safe-adoption/jv/backend/planner/test/heuristic/fixture-safety.test.ts:17:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at backend/planner/test/heuristic/fixture-safety.test.ts:21:1
+✖ fixture patches reject direct prototype replacement (0.11425ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/IDC2.5/.codex/worktrees/s88-planner-safe-adoption/jv/backend/planner/test/heuristic/fixture-safety.test.ts:22:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /Unsafe patch path/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at backend/planner/test/heuristic/fixture-safety.test.ts:25:1
+✖ fixture patches do not traverse inherited properties (0.133208ms)
+  AssertionError [ERR_ASSERTION]: a fixture patch wrote to an inherited function
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///Users/IDC2.5/.codex/worktrees/s88-planner-safe-adoption/jv/backend/planner/test/heuristic/fixture-safety.test.ts:32:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at backend/planner/test/heuristic/fixture-safety.test.ts:40:1
+✖ vector records cannot escape the fixture directory (1.047917ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/IDC2.5/.codex/worktrees/s88-planner-safe-adoption/jv/backend/planner/test/heuristic/fixture-safety.test.ts:45:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /Unsafe fixture path/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at backend/planner/test/heuristic/fixture-safety.test.ts:49:3
+✖ vector records refuse a file symlink even when it names JSON (1.018833ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/IDC2.5/.codex/worktrees/s88-planner-safe-adoption/jv/backend/planner/test/heuristic/fixture-safety.test.ts:59:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /Unsafe fixture path/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at backend/planner/test/heuristic/fixture-safety.test.ts:49:3
+✖ vector records refuse a directory symlink even when it names JSON (0.898ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/IDC2.5/.codex/worktrees/s88-planner-safe-adoption/jv/backend/planner/test/heuristic/fixture-safety.test.ts:59:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /Unsafe fixture path/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at backend/planner/test/heuristic/fixture-safety.test.ts:64:3
+✖ Studio canonical bytes refuse a lone UTF-16 surrogate in a value (0.37425ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/IDC2.5/.codex/worktrees/s88-planner-safe-adoption/jv/backend/planner/test/heuristic/fixture-safety.test.ts:65:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unpaired Unicode surrogate/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at backend/planner/test/heuristic/fixture-safety.test.ts:64:3
+✖ Studio canonical bytes refuse a lone UTF-16 surrogate in a key (0.069708ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///Users/IDC2.5/.codex/worktrees/s88-planner-safe-adoption/jv/backend/planner/test/heuristic/fixture-safety.test.ts:65:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unpaired Unicode surrogate/,
+    operator: 'throws',
+    diff: 'simple'
+  }
