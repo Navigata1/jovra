@@ -53,13 +53,16 @@ final class NativeLibraryUITests: XCTestCase {
         attachScreenshot(app, name: "library-stored-ax5")
         assertHitTargets(in: app)
         try auditScreen(app)
+        // At AX5 a SessionCard is taller than the screen, so its centre can sit under the floating tab bar:
+        // bring its top into view and tap there.
         let scroll = app.scrollViews.firstMatch
-        for _ in 0..<4 {
-            if row.isHittable { break }
-            scroll.swipeUp()
+        let bar = app.otherElements["tabBar"]
+        for _ in 0..<6 {
+            if row.isHittable, row.frame.minY > 100, row.frame.minY + 80 < bar.frame.minY { break }
+            row.frame.minY > 100 ? scroll.swipeUp(velocity: .slow) : scroll.swipeDown(velocity: .slow)
         }
         XCTAssertTrue(row.isHittable)
-        row.tap()
+        row.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0)).withOffset(CGVector(dx: 0, dy: 40)).tap()
         XCTAssertTrue(app.heading("Smart replay").waitForExistence(timeout: 5))
     }
 }

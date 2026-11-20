@@ -4,7 +4,7 @@ import SwiftUI
 
 /// One session in the library (S08 SessionCard, full variant): court thumbnail, title with its Sample badge,
 /// the score for matches, "Oct 6 · 54 min · Singles", the four independent facet pills, "Only on this iPhone"
-/// and the bytes it uses here. Tapping opens replay; the trailing control (and the context menu) deletes. At accessibility text
+/// and the bytes it uses here. Tapping opens replay; the trailing control (and the VoiceOver action) deletes. At accessibility text
 /// sizes the thumbnail moves above the text.
 struct SessionCard: View {
     var entry: LibraryEntry
@@ -26,12 +26,6 @@ struct SessionCard: View {
                 .accessibilityAddTraits(.isButton)
                 .accessibilityAction(named: Text("Delete", tableName: "Sessions.Library"), delete)
                 .accessibilityIdentifier("library.session.\(entry.id)")
-                .contextMenu {
-                    Button(action: open) { Label(String(localized: "Watch", table: "Sessions.Library"), systemImage: "play") }
-                    Button(role: .destructive, action: delete) {
-                        Label(String(localized: "Delete…", table: "Sessions.Library"), systemImage: "trash")
-                    }
-                }
                 .overlay(alignment: .bottomTrailing) { deleteButton }
             ArchiveActionSlot(entry: entry)
         }
