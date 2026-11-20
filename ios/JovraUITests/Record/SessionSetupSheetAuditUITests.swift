@@ -12,7 +12,15 @@ import XCTest
 /// (it is judged where it is whole). The test fails unless it reaches the end with Done wholly on screen,
 /// and it attaches the list of audited positions (`audit-positions-<variant>-<sheet>`).
 final class SessionSetupSheetAuditUITests: XCTestCase {
-    override func setUp() { continueAfterFailure = false }
+    /// An audit issue fails the test with its element, frame and position (`XCTFail` from the audit's
+    /// handler), and the audit carries on so every issue at that position is reported.
+    override func setUp() { continueAfterFailure = true }
+
+    /// A swipe that reaches the end bounces; the frames settle before the pixels do.
+    static let bounceSettle: TimeInterval = 3
+
+    /// Element-detection issues with no element set aside at positions where the edge cut an element.
+    private var setAsideWithoutElement = 0
 
     /// More than any setup sheet needs at AX5 (the format sheet's ten presets take about twenty).
     static let maximumSteps = 40
@@ -70,31 +78,55 @@ final class SessionSetupSheetAuditUITests: XCTestCase {
         assertHitTargets(in: app)
 
         // Position k puts the title k half-heights above its resting place. The audit may scroll the
-        // content itself, so every position is reached from wherever the last audit left it. The end is
-        // the first position the content cannot reach (or where Done, the last control, is whole).
+        // content itself, so every position is reached from wherever the last audit left it. Once the
+        // next position would take Done, the last control, above the bottom edge, the last position is
+        // instead the end itself: Done scrolled into view the way a player scrolls (a drag past the end
+        // would leave the content overscrolled while it is audited).
         let done = scroll.buttons["sheet.done"]
         let top = title.frame.minY
         let stride = (scroll.frame.height / 2).rounded()
         var positions: [String] = []
         for step in 1...Self.maximumSteps {
             let target = top - CGFloat(step - 1) * stride
-            let reached = scrollTitle(to: target, in: scroll, marker: title)
-            let before = title.frame.minY
-            let atEnd = isWhole(done, in: scroll) || !reached
-            try auditPosition(app, sheet: container, scroll: scroll, marker: title)
-            positions.append("position \(step): title y \(Int(target)) wanted, \(Int(before)) audited\(atEnd ? " (end)" : "")")
-            guard atEnd else { continue }
-            // The last position: Done scrolled wholly into view the way a player scrolls, and audited there.
-            app.reveal(done, in: scroll)
-            waitForScrollingToSettle(title)
-            if Int(title.frame.minY) != Int(before) {
-                let last = title.frame.minY
-                try auditPosition(app, sheet: container, scroll: scroll, marker: title)
-                positions.append("position \(step + 1): title y \(Int(last)) audited, Done wholly in view (end)")
+            let move = title.frame.minY - target
+            let isLast = isWhole(done, in: scroll) || move >= done.frame.maxY - scroll.frame.maxY
+            if isLast {
+                // Done scrolled into view the way a player scrolls (a held drag past the end can leave the
+                // content mid-bounce, and the audit then never sees it idle), then the bounce settles.
+                app.reveal(done, in: scroll)
+                waitForScrollingToSettle(title)
+                Thread.sleep(forTimeInterval: Self.bounceSettle)
+            } else {
+                XCTAssertTrue(scrollTitle(to: target, in: scroll, marker: title), "the \(sheet.rawValue) sheet scrolls to position \(step)")
             }
-            attachScreenshot(app, name: "t21-\(variant.rawValue)-sheet-\(sheet.rawValue)-end")
+            let audited = title.frame.minY
+            let doneIsWhole = isWhole(done, in: scroll)
+            let doneFrame = done.frame
+            if isLast { attachScreenshot(app, name: "t21-\(variant.rawValue)-sheet-\(sheet.rawValue)-end") }
+            positions.append(isLast ? "position \(step): title y \(Int(audited)), the end, Done \(doneFrame.integral)"
+                                    : "position \(step): title y \(Int(target)) wanted, \(Int(audited)) audited")
+            do {
+                try auditPosition(app, sheet: container, scroll: scroll, marker: title)
+            } catch let error as NSError where Self.isTimeout(error) && !isLast {
+                // The audit did not finish here, so this position is audited a little further on instead;
+                // it still overlaps both neighbours by more than a third of the visible height.
+                let further = target - Self.timeoutNudge
+                XCTAssertTrue(scrollTitle(to: further, in: scroll, marker: title), "the \(sheet.rawValue) sheet scrolls past position \(step)")
+                positions[positions.count - 1] = "position \(step): title y \(Int(target)) wanted, the audit did not finish there in time; audited instead at \(Int(title.frame.minY))"
+                do {
+                    try auditPosition(app, sheet: container, scroll: scroll, marker: title)
+                } catch {
+                    attachPositions(positions, sheet, variant, reachedEnd: false)
+                    throw error
+                }
+            } catch {
+                attachPositions(positions, sheet, variant, reachedEnd: false)
+                throw error
+            }
+            guard isLast else { continue }
+            positions.append("element-detection issues with no element set aside where the edge cut an element: \(setAsideWithoutElement)")
             attachPositions(positions, sheet, variant, reachedEnd: true)
-            XCTAssertTrue(isWhole(done, in: scroll), "at the end of the \(sheet.rawValue) sheet Done is wholly on screen: \(done.frame) in \(scroll.frame)")
+            XCTAssertTrue(doneIsWhole, "at the end of the \(sheet.rawValue) sheet Done is wholly on screen: \(doneFrame) in \(scroll.frame)")
             return
         }
         attachPositions(positions, sheet, variant, reachedEnd: false)
@@ -108,7 +140,7 @@ final class SessionSetupSheetAuditUITests: XCTestCase {
     }
 
     private func attachPositions(_ positions: [String], _ sheet: Sheet, _ variant: Variant, reachedEnd: Bool) {
-        let heading = "\(sheet.rawValue) sheet, \(variant.rawValue): audited at \(positions.count) scroll positions"
+        let heading = "\(sheet.rawValue) sheet, \(variant.rawValue): audited at \(positions.filter { $0.hasPrefix("position") }.count) scroll positions"
             + (reachedEnd ? ", top to end" : ", end not reached")
         let attachment = XCTAttachment(string: ([heading] + positions).joined(separator: "\n"))
         attachment.name = "audit-positions-\(variant.rawValue)-\(sheet.rawValue)"
@@ -149,7 +181,8 @@ final class SessionSetupSheetAuditUITests: XCTestCase {
     /// Drags the content until the title's top is within `tolerance` of `target` (a drag shorter than the
     /// touch slop does not scroll, so positions land within about 10 pt), never more than half the
     /// visible height at a time and holding before lifting, so nothing flings. A drag starts in the right
-    /// margin (no control sits there), then the left margin, then the middle. False when the content
+    /// margin (no control sits there), then just inside it, then the middle (never at the left edge,
+    /// where a drag is a system edge gesture). False when the content
     /// stops short of the target: the sheet's end.
     @discardableResult @MainActor
     private func scrollTitle(to target: CGFloat, in scroll: XCUIElement, marker: XCUIElement) -> Bool {
@@ -159,7 +192,7 @@ final class SessionSetupSheetAuditUITests: XCTestCase {
             if abs(delta) <= Self.tolerance { return true }
             let distance = min(abs(delta), height / 2) / height
             var moved = false
-            for x in [0.97, 0.03, 0.5] {
+            for x in [0.97, 0.9, 0.5] {
                 let before = marker.frame.minY
                 let from = delta > 0 ? 0.75 : 0.25
                 let to = delta > 0 ? from - distance : from + distance
@@ -179,32 +212,58 @@ final class SessionSetupSheetAuditUITests: XCTestCase {
     /// screen has its own audit), elements the scroll view clips at this position (judged where they are
     /// whole), and a rendered issue (contrast, element detection) found after the audit itself scrolled
     /// the content, which is sampled again once scrolling has settled.
+    ///
+    /// Element detection can also report text with no element at all, so with no frame to judge. Glyphs
+    /// the scroll view's edge cuts in half look like that. Such an issue is set aside only while some
+    /// text, field or button is cut by the scroll view's edge at this position; that element is audited
+    /// whole at a neighbouring position. Anywhere else it fails.
     @MainActor
     private func auditPosition(_ app: XCUIApplication, sheet: XCUIElement, scroll: XCUIElement, marker: XCUIElement,
                                isRepeat: Bool = false) throws {
         let sheetFrame = sheet.frame.insetBy(dx: -1, dy: -1)
         let visible = scroll.frame.insetBy(dx: -1, dy: -1)
         let markerY = marker.frame.minY
+        let cut = elementsCut(by: visible, in: scroll)
         var moved: [String] = []
-        try performAuditAllowingTimeouts(app) { issue in
-            guard let element = issue.element else { return false }
-            let frame = element.frame
-            let kind = AccessibilityAudit.name(of: issue.auditType)
-            guard sheetFrame.contains(frame) else {
-                print("audit: \(kind) on “\(element.label)” at \(frame) set aside: behind the sheet")
+        // One call per audit type (`auditPasses`); together they are `.all`.
+        for types in Self.auditPasses {
+            try performAuditAllowingTimeouts(app, types: types) { issue in
+                let kind = AccessibilityAudit.name(of: issue.auditType)
+                guard let element = issue.element else {
+                    if issue.auditType == .elementDetection, !cut.isEmpty {
+                        print("audit: element detection with no element at title y \(markerY) set aside: the edge cuts \(cut)")
+                        self.setAsideWithoutElement += 1
+                    } else {
+                        XCTFail("\(kind) with no element, title y \(markerY), nothing cut by the edge: \(issue.compactDescription)")
+                        let tree = XCTAttachment(string: sheet.debugDescription)
+                        tree.name = "audit-tree-at-issue"
+                        tree.lifetime = .keepAlways
+                        self.add(tree)
+                    }
+                    return true
+                }
+                let frame = element.frame
+                guard sheetFrame.contains(frame) else {
+                    print("audit: \(kind) on “\(element.label)” at \(frame) set aside: behind the sheet")
+                    return true
+                }
+                if visible.intersects(frame), !visible.contains(frame) {
+                    print("audit: \(kind) on “\(element.label)” at \(frame) set aside: clipped by the scroll view at this position")
+                    return true
+                }
+                if !visible.intersects(frame), element.identifier != "sheet.close" {
+                    print("audit: \(kind) on “\(element.label)” at \(frame) set aside: scrolled out of view at this position")
+                    return true
+                }
+                let isRendered = issue.auditType == .contrast || issue.auditType == .elementDetection
+                if isRendered, !isRepeat, abs(marker.frame.minY - markerY) > 1 {
+                    print("audit: \(kind) on “\(element.label)” at \(frame) set aside: the audit moved the sheet by \(marker.frame.minY - markerY) pt")
+                    moved.append(element.label)
+                    return true
+                }
+                XCTFail("\(kind) on “\(element.label)” (\(element.identifier)) at \(frame); title y \(markerY) when the audit began, \(marker.frame.minY) now; scroll view \(visible): \(issue.compactDescription)")
                 return true
             }
-            if visible.intersects(frame), !visible.contains(frame) {
-                print("audit: \(kind) on “\(element.label)” at \(frame) set aside: clipped by the scroll view at this position")
-                return true
-            }
-            let isRendered = issue.auditType == .contrast || issue.auditType == .elementDetection
-            if isRendered, !isRepeat, abs(marker.frame.minY - markerY) > 1 {
-                print("audit: \(kind) on “\(element.label)” at \(frame) set aside: the audit moved the sheet by \(marker.frame.minY - markerY) pt")
-                moved.append(element.label)
-                return true
-            }
-            return false
         }
         guard !moved.isEmpty else { return }
         waitForScrollingToSettle(marker)
@@ -212,19 +271,45 @@ final class SessionSetupSheetAuditUITests: XCTestCase {
         try auditPosition(app, sheet: sheet, scroll: scroll, marker: marker, isRepeat: true)
     }
 
-    /// XCTest code -56 means the audit did not finish in its time limit on a loaded machine; it reported
-    /// nothing either way. Only that error is retried, up to twice, after a pause; any issue still fails.
-    static let auditAttempts = 3
+    /// Labels of the texts, fields and buttons the scroll view's edge cuts at this position.
+    @MainActor
+    private func elementsCut(by visible: CGRect, in scroll: XCUIElement) -> [String] {
+        [scroll.staticTexts, scroll.textFields, scroll.buttons].flatMap { query in
+            query.allElementsBoundByIndex.compactMap { element -> String? in
+                let frame = element.frame
+                return visible.intersects(frame) && !visible.contains(frame) ? element.label : nil
+            }
+        }
+    }
+
+    /// XCTest code -56 means the audit did not finish in its time limit; it reported nothing either way.
+    /// Only that error is retried, once, after a pause; any issue still fails.
+    static let auditAttempts = 2
+    /// How much further on a position is audited when the audit cannot finish at it.
+    static let timeoutNudge: CGFloat = 120
+
+    static func isTimeout(_ error: NSError) -> Bool {
+        error.domain == "com.apple.xcode.xctest.accessibilityAudit" && error.code == -56
+    }
+
+    /// The seven audit types iOS defines (XCUIAccessibilityAuditTypes.h: `.all` adds only reserved bits
+    /// on iOS), one call each, with dynamic type last because it re-lays the sheet out at other text
+    /// sizes while it runs. A single `.all` call, reserved bits included, does not finish within
+    /// XCTest's time limit at the format sheet's last position.
+    static let auditPasses: [XCUIAccessibilityAuditType] = [
+        .contrast, .elementDetection, .hitRegion, .sufficientElementDescription, .textClipped, .trait, .dynamicType,
+    ]
 
     @MainActor
-    private func performAuditAllowingTimeouts(_ app: XCUIApplication,
+    private func performAuditAllowingTimeouts(_ app: XCUIApplication, types: XCUIAccessibilityAuditType,
                                               _ handler: @escaping (XCUIAccessibilityAuditIssue) throws -> Bool) throws {
         for attempt in 1...Self.auditAttempts {
             do {
-                try app.performAccessibilityAudit(for: .all, handler)
+                try XCTContext.runActivity(named: "Audit \(AccessibilityAudit.name(of: types)), attempt \(attempt)") { _ in
+                    try app.performAccessibilityAudit(for: types, handler)
+                }
                 return
-            } catch let error as NSError where error.domain == "com.apple.xcode.xctest.accessibilityAudit" && error.code == -56
-                && attempt < Self.auditAttempts {
+            } catch let error as NSError where Self.isTimeout(error) && attempt < Self.auditAttempts {
                 print("audit: did not complete in time (-56), attempt \(attempt); auditing this position again")
                 Thread.sleep(forTimeInterval: 10)
             }

@@ -175,7 +175,7 @@ private struct SessionNameSection: View {
         SetupSection(title: String(localized: "Session name", table: "Record", comment: "Players sheet section"),
                      footnote: String(localized: "Optional. Leave it blank to call it “\(SetupCopy.defaultSessionName(store.setup))”.", table: "Record", comment: "Session name footnote")) {
             SetupTextField(label: String(localized: "Session name", table: "Record", comment: "Session name field"),
-                           text: $store.setup.sessionName, identifier: "players.sessionName")
+                           text: $store.setup.sessionName, identifier: "players.sessionName", showsLabel: false)
         }
     }
 }

@@ -89,6 +89,8 @@ struct SegmentField<Option: Hashable & Identifiable>: View {
     var identifier: String
     var title: (Option) -> String
 
+    /// The visible label is not a separate VoiceOver stop: the group, label included, is one container
+    /// named by it, so the label's text lies inside an element that carries the same words.
     var body: some View {
         VStack(alignment: .leading, spacing: Space.half + 2) {
             Text(label)
@@ -97,10 +99,10 @@ struct SegmentField<Option: Hashable & Identifiable>: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityHidden(true)
             FilterPills(options: options, selection: $selection, title: title)
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel(Text(verbatim: label))
-                .accessibilityIdentifier(identifier)
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text(verbatim: label))
+        .accessibilityIdentifier(identifier)
     }
 }
 
@@ -120,23 +122,31 @@ extension SegmentField {
     }
 }
 
-/// A labelled text field at least 56 pt tall.
+/// A labelled text field at least 56 pt tall. `showsLabel` false when the section title above already
+/// says the same words (VoiceOver still reads the label on the field). As with `SegmentField`, the
+/// label and field form one container named by the label, so the visible label is never text without
+/// an accessibility element, even when scrolling cuts it at the sheet's edge.
 struct SetupTextField: View {
     var label: String
     @Binding var text: String
     var identifier: String
+    var showsLabel = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.half + 2) {
-            Text(label)
-                .font(.footnote.weight(.medium))
-                .foregroundStyle(.jovra(.textSecondary))
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityHidden(true)
+            if showsLabel {
+                Text(label)
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(.jovra(.textSecondary))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityHidden(true)
+            }
             JovraTextInput(text: $text, title: label, identifier: identifier)
                 .padding(.horizontal, Space.x2)
                 .frame(minHeight: 56)
                 .background(Color.jovra(.surfaceSunken), in: RoundedRectangle(cornerRadius: Radius.control, style: .continuous))
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text(verbatim: label))
     }
 }

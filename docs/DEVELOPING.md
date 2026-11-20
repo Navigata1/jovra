@@ -268,8 +268,12 @@ The camera preset row lists `CaptureFormatCatalog` options (JovraMedia): the bac
 fixture clip's format on the simulator. "Played before" chips come from `RecentPlayers`: a person's id is derived from
 their name (`recent-` + FNV-1a), because saved sessions use session-local ids (`player-a`/`player-b`); anyone already
 named in a seat is not offered, and `SetupProblem.samePlayerTwice` blocks one id in two seats. Sheet audits:
-`SessionSetupSheetAuditUITests` audits each sheet at every scroll position (half-height drags, settled) in light, dark
-and AX5, one test per sheet and variant. DEBUG launch environment for UI tests:
+`SessionSetupSheetAuditUITests` audits each sheet at every scroll position in light, dark and AX5, one test per sheet
+and variant: positions half a screen apart reached by held drags (no fling), the last one the sheet's end with Done
+whole, one `performAccessibilityAudit` call per iOS audit type (a single `.all` call, reserved bits included, runs out
+of time on the format sheet), and an `audit-positions-<variant>-<sheet>` attachment listing every audited position.
+Issues on elements the scroll view cuts or hides at a position are set aside there and judged where the element is
+whole. DEBUG launch environment for UI tests:
 
 | Variable | Effect |
 |---|---|

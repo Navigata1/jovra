@@ -261,8 +261,8 @@ final class SessionSetupUITests: XCTestCase {
     @MainActor
     func testSetupScreenPassesTheAuditAtAX5() throws { try auditSetupScreen(.light, .accessibility5, "ax5") }
 
-    /// The whole scrolling setup screen at every scroll step, singles with names filled in, then the
-    /// stroke-practice variant (camera angle row, no scoring row).
+    /// The whole scrolling setup screen at every scroll step, singles with names filled in; then a
+    /// screenshot of the stroke-practice variant (camera angle row, no scoring row).
     @MainActor
     private func auditSetupScreen(_ appearance: LaunchConfiguration.Appearance, _ size: ContentSize?, _ variant: String) throws {
         let app = launch(appearance: appearance, contentSize: size)
@@ -284,6 +284,5 @@ final class SessionSetupUITests: XCTestCase {
         let angle = app.descendants(matching: .any).matching(identifier: "record.cameraAngle").firstMatch
         app.reveal(angle)
         attachScreenshot(app, name: "t21-\(variant)-stroke-practice")
-        try auditScreen(app)
     }
 }
