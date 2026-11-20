@@ -25,6 +25,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let pseudoLocale = "-pseudoLocale"
         static let startRoute = "-startRoute"
         static let library = "-library"
+        static let recordFixtureSession = "-recordFixtureSession"
     }
 
     enum Appearance: String, CaseIterable, Sendable {
@@ -81,7 +82,13 @@ struct LaunchConfiguration: Equatable, Sendable {
         /// A new, empty library in a temporary folder for this launch only. The library saved on the
         /// device is neither read nor changed, so a UI test sees no sessions left by an earlier test.
         case fresh
+        /// A fresh library seeded with visibly labelled Sample sessions covering every original, analysis,
+        /// review and archive state, one session in Trash and one unreadable document set aside in quarantine.
+        case facets
     }
+
+    /// The longest headless fixture recording a launch may ask for, in seconds.
+    static let maximumFixtureSessionSeconds = 120
 
     var appearance: Appearance?
     var demo: DemoState = .off
@@ -97,6 +104,9 @@ struct LaunchConfiguration: Equatable, Sendable {
     var startRoute: String?
     /// nil uses the library saved on the device.
     var library: Library?
+    /// Records a session of this many seconds through the capture engine and the fixture camera at launch,
+    /// with no screen in between (the walking skeleton), then opens the library. nil records nothing.
+    var recordFixtureSessionSeconds: Int?
 
     /// Arguments that could not be understood. Not part of equality.
     private(set) var problems: [String] = []
@@ -141,6 +151,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         if let pseudoLocale { result += [Key.pseudoLocale, pseudoLocale.rawValue] + pseudoLocale.systemArguments }
         if let startRoute { result += [Key.startRoute, startRoute] }
         if let library { result += [Key.library, library.rawValue] }
+        if let recordFixtureSessionSeconds { result += [Key.recordFixtureSession, String(recordFixtureSessionSeconds)] }
         return result
     }
 
@@ -153,6 +164,7 @@ struct LaunchConfiguration: Equatable, Sendable {
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
         Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library,
+        Key.recordFixtureSession,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -166,6 +178,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.pseudoLocale: pseudoLocale = parse(PseudoLocale.self, value, for: key)
         case Key.startRoute: startRoute = value
         case Key.library: library = parse(Library.self, value, for: key)
+        case Key.recordFixtureSession: parseFixtureSeconds(value)
         default: break
         }
     }
@@ -195,6 +208,14 @@ struct LaunchConfiguration: Equatable, Sendable {
             }
             permissions[permission] = state
         }
+    }
+
+    private mutating func parseFixtureSeconds(_ value: String) {
+        guard let seconds = Int(value), (1...Self.maximumFixtureSessionSeconds).contains(seconds) else {
+            problems.append("\(Key.recordFixtureSession): unknown value “\(value)” (expected whole seconds from 1 to \(Self.maximumFixtureSessionSeconds))")
+            return
+        }
+        recordFixtureSessionSeconds = seconds
     }
 
     private mutating func parseReduceMotion(_ value: String) {

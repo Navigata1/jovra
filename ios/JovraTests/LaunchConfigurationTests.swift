@@ -56,7 +56,7 @@ struct LaunchConfigurationTests {
         (["-permissions", "camera"], "-permissions: “camera” is not permission=state"),
         (["-reduceMotion", "sometimes"], "-reduceMotion: unknown value “sometimes” (expected YES or NO)"),
         (["-archiveState"], "-archiveState: missing value"),
-        (["-library", "shared"], "-library: unknown value “shared” (expected fresh)"),
+        (["-library", "shared"], "-library: unknown value “shared” (expected fresh, facets)"),
     ])
     func reportsProblems(arguments: [String], problem: String) {
         let configuration = LaunchConfiguration(arguments: ["Jovra"] + arguments)

@@ -138,14 +138,15 @@ destination; the app then opens on Home). With no arguments, everything is live.
 | Argument | Values | Meaning |
 |---|---|---|
 | `-appearance` | `system`, `light`, `dark` | also the `appearance` UserDefaults key behind Profile → Appearance |
-| `-demo` | `off`, `sample` | sample library installed (always badged "Sample") |
+| `-demo` | `off`, `sample` | the shipped Sample library (`spec/fixtures/sample`, bundled as `sample/`) installed into a temporary library for this launch (always badged "Sample"; the library saved on the device is not touched) |
 | `-fixtureCamera` | a fixture clip id | the simulator fixture camera's source (ADR-0012) |
 | `-permissions` | `camera=denied,microphone=notDetermined,...` | injected states for `camera`, `microphone`, `photosAdd`, `notifications`, `health`: `notDetermined`, `denied`, `restricted`, `authorized` |
 | `-archiveState` | `awaitingSetup`, `notConnected`, `connecting`, `connected`, `needsReconnect` | injected archive account state |
 | `-reduceMotion` | `YES`, `NO` | forces Reduce Motion on (read it from `\.launchConfiguration` together with the system setting) |
 | `-pseudoLocale` | `accented`, `doubleLength`, `rightToLeft` | also adds the matching Foundation pseudolanguage arguments |
 | `-startRoute` | any destination's launch name (`AppDestination.catalog`): a tab (`home` … `profile`), `welcome`, `onboarding`, a push (`sessions.matchOverview`, `profile.settings`, …), a full-screen route (`capture`, `replay`, …) or a sheet (`sheet.pointEditor`, `sheet.permission.camera`, …) | where the app opens (example payloads) |
-| `-library` | `fresh` | a new, empty local library in a temporary folder for this launch; the library saved on the device is not read or changed |
+| `-library` | `fresh`, `facets` | a new local library in a temporary folder for this launch; the library saved on the device is not read or changed. `facets` seeds Sample sessions covering every original, analysis, review and archive state, one session in Trash and one unreadable document set aside in quarantine (T20) |
+| `-recordFixtureSession` | whole seconds, 1–120 | the walking skeleton (T20): records a session of that length through `CaptureEngine` and the fixture camera with no recording screen, then lists it in the library |
 
 In UI tests: `XCUIApplication.launchJovra(contentSize: .accessibility5) { $0.appearance = .dark; $0.permissions = [.camera: .denied] }`.
 Services read `@Environment(\.launchConfiguration)`; the fake/live switch is the `ServiceKey` seam below.

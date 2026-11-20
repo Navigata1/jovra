@@ -54,12 +54,15 @@ actor LocalCaptureLibrary: RecordingSink {
     private var capturesStartedHere: Set<String> = []
     private let store: SessionStore
     private let media: MediaLibrary
+    /// Sample or fixture content a harness launch asked for, put in before anything reads the library.
+    private let launchSeed: LibraryLaunchSeed?
 
-    init(root: URL) throws {
+    init(root: URL, launchSeed: LibraryLaunchSeed? = nil) throws {
         self.root = root
         let store = try SessionStore(root: root)
         self.store = store
         media = MediaLibrary(store: store)
+        self.launchSeed = launchSeed
     }
 
     func createCapture(_ seed: CaptureSessionSeed, mode: SessionRecordingMode) async throws -> SessionID {
@@ -114,6 +117,9 @@ actor LocalCaptureLibrary: RecordingSink {
     private func runStartupRecovery() async -> StartupRecoverySummary {
         let scanner = RecoveryScanner(root: root)
         var summary = StartupRecoverySummary()
+        if let launchSeed {
+            do { try await seed(launchSeed) } catch { summary.scanFailed = true }
+        }
         do { try await store.discardAbandonedFilesImports() } catch { summary.scanFailed = true }
         do {
             let candidates = try await scanner.scan { id in try await self.isStartupRecoveryCandidate(id) }
@@ -157,6 +163,72 @@ actor LocalCaptureLibrary: RecordingSink {
         try await store.trash(id.rawValue)
         let confirmation = try await store.purgeConfirmation(for: id.rawValue)
         try await store.purge(id.rawValue, confirmation: confirmation)
+    }
+
+    // MARK: Library (T20)
+
+    /// Every session the library shows, those in Trash and the documents set aside in quarantine. Read from the
+    /// session folders on every call (the index is a disposable cache), so a lost index hides nothing.
+    func libraryEntries() async throws -> LibrarySnapshot {
+        _ = await reconcileAtStartup()
+        var entries: [LibraryEntry] = [], trashed: [LibraryEntry] = []
+        for summary in try await store.list(.init(includeTrashed: true)) {
+            // A document that changed under us since the listing is skipped; the next read sees it.
+            guard let document = try? await store.load(summary.id) else { continue }
+            let entry = LibraryEntry(document: document, bytes: try? await bytes(of: summary.id))
+            if document.original?.state == .trashed { trashed.append(entry) } else { entries.append(entry) }
+        }
+        let quarantined = (try? await store.quarantinedSessions()) ?? []
+        return LibrarySnapshot(entries: entries, trashed: trashed, quarantined: quarantined)
+    }
+
+    /// Moves a session to Trash; its video and every other facet stay until a confirmed purge (story 129).
+    func trash(_ id: SessionID) async throws { try await store.trash(id.rawValue) }
+
+    /// Undo and Restore: the session comes back with the exact original state it had.
+    func restore(_ id: SessionID) async throws { try await store.restoreFromTrash(id.rawValue) }
+
+    /// Permanently deletes a trashed session after the player confirmed the dialog that states its scope.
+    func purge(_ id: SessionID) async throws {
+        let confirmation = try await store.purgeConfirmation(for: id.rawValue)
+        try await store.purge(id.rawValue, confirmation: confirmation)
+    }
+
+    /// Measures without creating anything: listing the library never writes to a session folder.
+    private func bytes(of id: String) async throws -> SessionBytes {
+        let folder = try await store.sessionDirectory(id)
+        func count(_ url: URL) throws -> Int64 {
+            guard let attributes = try? FileManager.default.attributesOfItem(atPath: url.path) else { return 0 }
+            switch attributes[.type] as? FileAttributeType {
+            case .typeRegular?: return (attributes[.size] as? NSNumber)?.int64Value ?? 0
+            case .typeDirectory?:
+                return try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil).reduce(0) { $0 + (try count($1)) }
+            default: return 0 // A link is never followed out of the folder.
+            }
+        }
+        return SessionBytes(originals: try count(folder.appendingPathComponent("originals")),
+                            cache: try count(folder.appendingPathComponent("cache")),
+                            exports: try count(folder.appendingPathComponent("exports")))
+    }
+
+    private func seed(_ seed: LibraryLaunchSeed) async throws {
+        switch seed {
+        case .sample(let library):
+            try await SampleContent(library: library).install(into: store)
+        case .facets:
+            for document in LibraryFixtures.facetSessions() where (try? await store.load(document.id)) == nil {
+                try await store.create(document)
+            }
+            try await store.trash(LibraryFixtures.trashedID)
+            let quarantined = try await store.quarantinedSessions().contains { $0.sessionID == LibraryFixtures.quarantinedID }
+            if !quarantined {
+                let folder = root.appendingPathComponent("sessions/\(LibraryFixtures.quarantinedID)", isDirectory: true)
+                try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+                try LibraryFixtures.unreadableDocument.write(to: folder.appendingPathComponent("session.json"), options: .atomic)
+            }
+            // Sets the unreadable document aside now, before the recovery scan reads the folders.
+            _ = try await store.rebuildIndex()
+        }
     }
 
     func importFile(_ source: URL, playerName: String) async throws -> SessionID {

@@ -29,8 +29,6 @@ struct ServiceRegistrationTests {
         let fresh = LaunchConfiguration(arguments: ["Jovra", "-library", "fresh"])
         #expect(LocalCaptureLibraryKey.usesFake(fresh))
         #expect(!LocalCaptureLibraryKey.usesFake(LaunchConfiguration()))
-        #expect(!LocalCaptureLibraryKey.usesFake(LaunchConfiguration(arguments: ["Jovra", "-demo", "sample"])),
-                "demo choices never switch the store")
         guard case .ready(let first) = LocalCaptureLibraryKey.resolve(fresh),
               case .ready(let second) = LocalCaptureLibraryKey.resolve(fresh) else {
             Issue.record("a fresh library opens")
@@ -40,10 +38,24 @@ struct ServiceRegistrationTests {
         #expect(try await second.sessions().isEmpty)
     }
 
+    @Test("-demo sample opens a temporary library with the shipped Sample sessions, never the device library")
+    func demoLibrary() async throws {
+        let demo = LaunchConfiguration(arguments: ["Jovra", "-demo", "sample"])
+        #expect(LocalCaptureLibraryKey.usesFake(demo), "a harness demo never writes sample sessions into the device library")
+        guard case .ready(let library) = LocalCaptureLibraryKey.resolve(demo) else {
+            Issue.record("the demo library opens")
+            return
+        }
+        let titles = try await library.libraryEntries().entries.map(\.title)
+        #expect(titles.count == 8, "the eight sessions of spec/fixtures/sample/library")
+        #expect(titles.contains("Jon vs Alex") && titles.contains("Serve practice") && titles.contains("Forehand session"))
+        #expect(try await library.libraryEntries().entries.allSatisfy(\.isSample))
+    }
+
     @Test("the app's own services use the same seam")
     func appServices() async {
         #expect(EnvironmentValues().permissionsCenter is LivePermissionsCenter)
         #expect(EnvironmentValues().dataEraserRegistry === DataEraserRegistry.shared)
-        #expect(await EnvironmentValues().sessionLookup.summaries().isEmpty, "no session store yet (T20 replaces the lookup)")
+        #expect(EnvironmentValues().sessionLookup is LibrarySessionLookup, "deep links resolve against the stored library (T20)")
     }
 }

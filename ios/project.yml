@@ -33,6 +33,11 @@ targets:
     platform: iOS
     sources:
       - path: Jovra
+      # T20: the shipped demo library (sessions, equipment, plan, analysis overlays and media manifest) as the
+      # folder `sample`; `-demo sample` installs it through SampleContent. No video here: that is SampleMedia/.
+      - path: ../spec/fixtures/sample
+        type: folder
+        buildPhase: resources
     dependencies:
       - package: JovraCore
       - package: JovraMedia

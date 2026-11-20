@@ -223,6 +223,12 @@ final class NavigationRoutesUITests: XCTestCase {
             XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
             return
         }
+        if expected.launchName == "sheet.trash" {
+            XCTAssertTrue(app.descendants(matching: .any)["trash.explainer"].waitForExistence(timeout: 5),
+                          "Trash renders the stored library's trashed sessions", file: file, line: line)
+            XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
+            return
+        }
         if expected.launchName == "sheet.capabilityDetail" {
             XCTAssertTrue(app.descendants(matching: .any)["capability.status"].waitForExistence(timeout: 5),
                           "The capability sheet renders the registry entry", file: file, line: line)
