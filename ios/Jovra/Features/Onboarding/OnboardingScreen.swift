@@ -28,42 +28,21 @@ struct OnboardingScreen: View {
             }
         }
         .id(shownStep)
-        .transition(OnboardingMotion.stepChange(forward: true, reduceMotion: reduceMotion).transition)
+        .transition(PreShellMotion.stepChange(forward: true, reduceMotion: reduceMotion).transition)
     }
 
     private var reduceMotion: Bool { systemReduceMotion || launch.reduceMotion }
 
     private func go(to step: Int) {
-        withAnimation(Motion.standard.animation(reduceMotion: reduceMotion)) {
+        withAnimation(PreShellMotion.stepChange(forward: step > shownStep, reduceMotion: reduceMotion).animation) {
             router.show(.preShell(.onboarding(step: step)))
         }
     }
 
     /// Back from the first step: Welcome for a new player; the shell for one who came from the demo's "Make it yours".
     private func leaveOnboarding() {
-        withAnimation(Motion.standard.animation(reduceMotion: reduceMotion)) {
+        withAnimation(PreShellMotion.stepChange(forward: false, reduceMotion: reduceMotion).animation) {
             if model.needsWelcome { router.show(.preShell(.welcome)) } else { router.enterShell() }
-        }
-    }
-}
-
-/// How onboarding moves (screens.md §0.4): steps slide in from the trailing edge; with Reduce Motion every change,
-/// including the swap of the app's root, is a cross-fade only.
-enum OnboardingMotion: Equatable {
-    case slide(Edge)
-    case crossFade
-
-    static func stepChange(forward: Bool, reduceMotion: Bool) -> OnboardingMotion {
-        reduceMotion ? .crossFade : .slide(forward ? .trailing : .leading)
-    }
-
-    /// The pre-shell ⇄ shell swap is a cross-fade with or without Reduce Motion.
-    static let rootSwap = OnboardingMotion.crossFade
-
-    var transition: AnyTransition {
-        switch self {
-        case .slide(let edge): .asymmetric(insertion: .move(edge: edge).combined(with: .opacity), removal: .opacity)
-        case .crossFade: .opacity
         }
     }
 }

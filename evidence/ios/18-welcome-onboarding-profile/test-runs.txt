@@ -77,3 +77,31 @@ Result bundle: .derivedData/ui-tests-20261120-070925.xcresult (load average ~180
 New: WelcomeOnboardingUITests/testUnitsChosenOnPlaySurviveGoingBackToProfile.
 JovraTests (xcodebuild test -only-testing:JovraTests): 216 passed, 1 failed, 2 skipped. New suite "Onboarding state restoration" 4/4,
 "Player profile model" 8/8. The failure is again 'Jog strip VoiceOver adjust', which needs frame-counter media not rendered here.
+
+## Review round 1: Reduce Motion root swap goes through one helper (PreShellMotion)
+The dead `OnboardingMotion.rootSwap` constant is gone. AppRoot's transition and animation and OnboardingScreen's step
+transition and animation all come from `PreShellMotion`. Under Reduce Motion the root swap and each step change are
+instant (no animation, `.identity` transition), as screens.md §1 says ("cross-fade; no animation with Reduce Motion").
+The T18 criterion's wording ("swaps the root with a cross-fade only") disagrees with that spec line; the spec wins.
+RED first: the rewritten PreShellMotionTests did not compile against the old code ("cannot find 'PreShellMotion' in scope").
+
+scripts/ios/test.sh (SIMULATOR_ID=JOVRA-T18), log in the build Mac's .t18/unit-r1.log:
+render.py --check: 50 clips reproduce the committed ground truth
+swift test JovraCore: Swift Testing 158 passed (10 suites); XCTest 30 passed, 0 failures
+swift test JovraMedia: Swift Testing 148 passed (22 suites) and 72 passed (13 suites)
+JovraTests: Total: 220 passed, 0 failed, 0 skipped, 0 expected failure(s) in 46 classes (xcresult summary: 220 passed, 0 failed, 0 skipped; result Passed)
+  JovraTests/PreShellMotionTests (Pre-shell motion and Apple sign-in switch)  3 passed, 0 failed
+  (the frame-counter media were rendered in this run, so 'Jog strip VoiceOver adjust' passed here too)
+Result bundle: .derivedData/unit-tests-20261120-093624.xcresult
+
+scripts/ios/ui-test.sh -only-testing JovraUITests/WelcomeOnboardingUITests -only-testing JovraUITests/DemoEntryUITests -only-testing JovraUITests/WelcomeOnboardingAuditUITests -only-testing JovraUITests/AuditExceptionTests -only-testing JovraUITests/NavigationRoutesUITests
+==> Summary
+Test class                                  passed  failed  skipped  expected
+JovraUITests/AuditExceptionTests                 4       0        0         0
+JovraUITests/DemoEntryUITests                    2       0        0         0
+JovraUITests/NavigationRoutesUITests             6       0        0         0
+JovraUITests/WelcomeOnboardingAuditUITests       4       0        0         0
+JovraUITests/WelcomeOnboardingUITests            6       0        0         0
+Total: 22 passed, 0 failed, 0 skipped, 0 expected failure(s) in 5 classes (xcresult summary: 22 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261120-093747.xcresult

@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 /// The app's two roots: the pre-shell (welcome and onboarding) and the shell, swapped with a
-/// cross-fade (none with Reduce Motion). Owns the router, opens deep links, and saves and restores
+/// cross-fade, or instantly with Reduce Motion (`PreShellMotion.rootSwap`). Owns the router, opens deep links, and saves and restores
 /// the navigation state.
 ///
 /// Where a launch starts, in order: the `-startRoute` the launch harness names; otherwise the state
@@ -37,17 +37,17 @@ struct AppRoot: View {
         ZStack {
             if let route = router.preShell {
                 PreShellDestination(route: route)
-                    .transition(.opacity)
+                    .transition(rootSwap.transition)
             } else {
                 AppShell()
-                    .transition(.opacity)
+                    .transition(rootSwap.transition)
             }
         }
         #if DEBUG
         .modifier(CoreComponentsGalleryHarness())
         .modifier(CourtGalleryHarness())
         #endif
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.3), value: router.preShell == nil)
+        .animation(rootSwap.animation, value: router.preShell == nil)
         .environment(router)
         .environment(profile)
         .task { await profile.checkAppleCredential(using: appleSignIn) }
@@ -81,6 +81,8 @@ struct AppRoot: View {
     }
 
     private var reduceMotion: Bool { systemReduceMotion || launch.reduceMotion }
+
+    private var rootSwap: PreShellMotion { .rootSwap(reduceMotion: reduceMotion) }
 
     /// The recovered-recording sheet waits for the shell to be clear: a restored or harness-opened
     /// full-screen route (or another sheet) already owns the presentation, and two presentations at once

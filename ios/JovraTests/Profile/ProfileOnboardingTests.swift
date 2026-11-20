@@ -265,14 +265,31 @@ struct BundledSampleLibraryTests {
     }
 }
 
-@Suite("Onboarding motion and Apple sign-in switch")
-struct OnboardingMotionTests {
-    @Test("with Reduce Motion every onboarding change is a cross-fade; without it steps slide")
-    func motion() {
-        #expect(OnboardingMotion.stepChange(forward: true, reduceMotion: true) == .crossFade)
-        #expect(OnboardingMotion.stepChange(forward: false, reduceMotion: true) == .crossFade)
-        #expect(OnboardingMotion.stepChange(forward: true, reduceMotion: false) == .slide(.trailing))
-        #expect(OnboardingMotion.rootSwap == .crossFade)
+@Suite("Pre-shell motion and Apple sign-in switch")
+struct PreShellMotionTests {
+    @Test("without Reduce Motion steps slide in and the root swap cross-fades, each with an animation")
+    func motionAnimates() {
+        let forward = PreShellMotion.stepChange(forward: true, reduceMotion: false)
+        #expect(forward == .slide(.trailing))
+        #expect(forward.animation == Motion.standard.animation(reduceMotion: false))
+        #expect(forward.animation != nil)
+        #expect(PreShellMotion.stepChange(forward: false, reduceMotion: false) == .slide(.leading))
+
+        let swap = PreShellMotion.rootSwap(reduceMotion: false)
+        #expect(swap == .crossFade)
+        #expect(swap.animation == .easeInOut(duration: 0.3))
+    }
+
+    /// screens.md §1, pre-shell row: "cross-fade; no animation with Reduce Motion". AppRoot and OnboardingScreen take
+    /// both their transition and their animation from `PreShellMotion`, so a slide or any animation here would fail.
+    @Test("with Reduce Motion the root swap and every step change are instant: no animation, no transition")
+    func reduceMotionIsInstant() {
+        for motion in [PreShellMotion.rootSwap(reduceMotion: true),
+                       PreShellMotion.stepChange(forward: true, reduceMotion: true),
+                       PreShellMotion.stepChange(forward: false, reduceMotion: true)] {
+            #expect(motion == .instant)
+            #expect(motion.animation == nil)
+        }
     }
 
     @Test("Continue with Apple is offered only when the build setting says YES")
