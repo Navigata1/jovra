@@ -27,6 +27,7 @@ let package = Package(
         .testTarget(
             name: "JovraStudioCoreTests",
             dependencies: ["JovraStudioCore", .product(name: "JovraCore", package: "JovraCore")],
+            exclude: ["Cloud/Transcripts"],   // S14 golden demo transcripts, read from #filePath
             plugins: ["StudioConsumerDiscoveryPlugin"]
         ),
         .executableTarget(name: "StudioConsumerGenerator", path: "Tools/StudioConsumerGenerator"),

@@ -1,0 +1,9 @@
+S14 scratch mutation (2026-11-08, macOS, not committed): the golden transcript tests can fail.
+
+Change: DemoCloudScripts.pausedBytes 2_100_000_000 -> 2_000_000_000
+$ swift test --filter CloudDemoTranscriptTests
+✘ "paused: the upload stage is paused at 2.1 of 10.8 GB, ..." Expectation failed: upload.bytesDone == 2_100_000_000 && upload.bytesTotal == 10_800_000_000
+✘ "the scenario's snapshots and call results equal its committed transcript" scenario → .paused: recorded.snapshots == committed.snapshots
+✘ "the scenario's snapshots and call results equal its committed transcript" scenario → .paused: recorded == committed
+
+Reverted; swift test --filter Cloud: 42 tests in 7 suites passed.

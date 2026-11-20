@@ -86,6 +86,19 @@ jobs:
             echo "JovraStudioCore must stay Foundation-only" >&2
             exit 1
           fi
+      # S14: the demo cloud client has no code path that builds a request (SD11). The same scan runs in
+      # CloudNoNetworkTests, beside a URLProtocol trap.
+      - name: No networking code in DemoCloudClient
+        run: |
+          if grep -rnE "URLRequest|URLSession|URLProtocol|FoundationNetworking|import Network" \
+              ios/Packages/JovraStudioCore/Sources/JovraStudioCore/Cloud/Demo; then
+            echo "DemoCloudClient must not name any networking type" >&2
+            exit 1
+          fi
+          echo "Cloud/Demo names no networking type"
+      - name: swift test --filter Cloud (S14 CloudClient)
+        working-directory: ios/Packages/JovraStudioCore
+        run: swift test --filter Cloud
       - name: swift test (JovraStudioCore)
         working-directory: ios/Packages/JovraStudioCore
         run: swift test

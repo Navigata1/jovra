@@ -1,0 +1,319 @@
+{
+  "accept" : {
+    "ok" : {
+      "_0" : {
+        "demoDisabled" : {
+          "sampleJob" : "job-film-01"
+        }
+      }
+    }
+  },
+  "artifacts" : {
+    "ok" : {
+      "_0" : [
+        {
+          "accessible" : false,
+          "artifactId" : "film-court-memories",
+          "shareLink" : {
+            "revoked" : {
+              "grantId" : "grant-01"
+            }
+          },
+          "verified" : true
+        }
+      ]
+    }
+  },
+  "deleteAccount" : {
+    "error" : {
+      "_0" : {
+        "demoDisabled" : {
+
+        }
+      }
+    }
+  },
+  "deleteCloudCopies" : {
+    "ok" : {
+      "_0" : {
+        "requestId" : "deletion-sample-01",
+        "sample" : true,
+        "scope" : "project:sample-court-day",
+        "status" : {
+          "nothingToDelete" : {
+
+          }
+        }
+      }
+    }
+  },
+  "download" : {
+    "error" : {
+      "_0" : {
+        "accessRevoked" : {
+
+        }
+      }
+    }
+  },
+  "exportMyData" : {
+    "ok" : {
+      "_0" : {
+        "requestId" : "export-sample-01",
+        "sample" : true,
+        "status" : {
+          "nothingInCloud" : {
+
+          }
+        }
+      }
+    }
+  },
+  "history" : [
+    {
+      "at" : "2026-10-07T22:44:00Z",
+      "reason" : "created",
+      "seq" : 0,
+      "to" : "draft"
+    },
+    {
+      "at" : "2026-10-07T22:45:00Z",
+      "from" : "draft",
+      "reason" : "preflight",
+      "seq" : 1,
+      "to" : "quoted"
+    },
+    {
+      "at" : "2026-10-07T22:50:00Z",
+      "from" : "quoted",
+      "reason" : "owner-accepted",
+      "seq" : 2,
+      "to" : "consented"
+    },
+    {
+      "at" : "2026-10-07T22:50:05Z",
+      "from" : "consented",
+      "reason" : "reserved",
+      "seq" : 3,
+      "to" : "upload_pending"
+    },
+    {
+      "at" : "2026-10-07T22:51:00Z",
+      "from" : "upload_pending",
+      "reason" : "upload-started",
+      "seq" : 4,
+      "to" : "uploading"
+    },
+    {
+      "at" : "2026-10-07T22:55:00Z",
+      "from" : "uploading",
+      "reason" : "owner-paused",
+      "seq" : 5,
+      "to" : "paused"
+    },
+    {
+      "at" : "2026-10-07T22:58:00Z",
+      "from" : "paused",
+      "reason" : "owner-resumed",
+      "seq" : 6,
+      "to" : "uploading"
+    },
+    {
+      "at" : "2026-10-07T23:03:00Z",
+      "from" : "uploading",
+      "reason" : "sources-verified",
+      "seq" : 7,
+      "to" : "queued"
+    },
+    {
+      "at" : "2026-10-07T23:04:00Z",
+      "from" : "queued",
+      "reason" : "stage-start",
+      "seq" : 8,
+      "to" : "normalizing"
+    },
+    {
+      "at" : "2026-10-07T23:08:00Z",
+      "from" : "normalizing",
+      "reason" : "stage-start",
+      "seq" : 9,
+      "to" : "syncing"
+    },
+    {
+      "at" : "2026-10-07T23:10:00Z",
+      "from" : "syncing",
+      "reason" : "stage-start",
+      "seq" : 10,
+      "to" : "analyzing"
+    },
+    {
+      "at" : "2026-10-07T23:14:00Z",
+      "from" : "analyzing",
+      "reason" : "stage-start",
+      "seq" : 11,
+      "to" : "planning"
+    },
+    {
+      "at" : "2026-10-07T23:15:00Z",
+      "from" : "planning",
+      "reason" : "plan-valid",
+      "seq" : 12,
+      "to" : "preview_rendering"
+    },
+    {
+      "at" : "2026-10-07T23:22:00Z",
+      "from" : "preview_rendering",
+      "reason" : "preview-ready",
+      "seq" : 13,
+      "to" : "awaiting_review"
+    },
+    {
+      "at" : "2026-10-07T23:30:00Z",
+      "from" : "awaiting_review",
+      "reason" : "owner-approved",
+      "seq" : 14,
+      "to" : "final_rendering"
+    },
+    {
+      "at" : "2026-10-07T23:33:00Z",
+      "from" : "final_rendering",
+      "reason" : "lease-lost",
+      "seq" : 15,
+      "to" : "failed_retryable"
+    },
+    {
+      "at" : "2026-10-07T23:34:00Z",
+      "from" : "failed_retryable",
+      "reason" : "retry",
+      "seq" : 16,
+      "to" : "final_rendering"
+    },
+    {
+      "at" : "2026-10-07T23:44:00Z",
+      "from" : "final_rendering",
+      "reason" : "render-done",
+      "seq" : 17,
+      "to" : "verifying"
+    },
+    {
+      "at" : "2026-10-07T23:49:00Z",
+      "from" : "verifying",
+      "reason" : "verification-passed",
+      "seq" : 18,
+      "to" : "ready"
+    }
+  ],
+  "identity" : {
+    "ok" : {
+      "_0" : {
+        "demoProfile" : {
+
+        }
+      }
+    }
+  },
+  "jobId" : "job-film-01",
+  "launchArguments" : [
+    "-studioCloudScenario",
+    "revokedAccess"
+  ],
+  "mode" : {
+    "demo" : {
+
+    }
+  },
+  "quote" : {
+    "ok" : {
+      "_0" : {
+        "chargingEnabled" : false,
+        "condition" : {
+          "open" : {
+
+          }
+        },
+        "environment" : "demo",
+        "illustrative" : true,
+        "limit" : "$12",
+        "quoteId" : "quote-sample-37",
+        "range" : "$4 – $8",
+        "sample" : true,
+        "title" : "Sample quote"
+      }
+    }
+  },
+  "scenario" : "revokedAccess",
+  "shareLink" : {
+    "error" : {
+      "_0" : {
+        "accessRevoked" : {
+
+        }
+      }
+    }
+  },
+  "snapshots" : [
+    {
+      "attempt" : 2,
+      "deliveredArtifactIds" : [
+        "film-court-memories"
+      ],
+      "maxAttempts" : 3,
+      "reservationId" : "res-0002",
+      "seq" : 18,
+      "stages" : [
+        {
+          "bytesDone" : 10800000000,
+          "bytesTotal" : 10800000000,
+          "sourceCount" : 3,
+          "sourcesDone" : 3,
+          "stage" : "upload",
+          "status" : "complete"
+        },
+        {
+          "reviewed" : true,
+          "stage" : "alignAngles",
+          "status" : "complete"
+        },
+        {
+          "stage" : "buildFilm",
+          "status" : "complete"
+        },
+        {
+          "stage" : "verifyExport",
+          "status" : "complete"
+        }
+      ],
+      "state" : "ready"
+    }
+  ],
+  "transcript" : "jovra.demo-cloud-transcript/1 (test golden file, not a shared contract)",
+  "uploads" : [
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    },
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    },
+    {
+      "error" : {
+        "_0" : {
+          "demoDisabled" : {
+
+          }
+        }
+      }
+    }
+  ]
+}
