@@ -366,6 +366,14 @@ SIMULATOR_ID=$UDID scripts/ios/ui-test.sh
 xcrun simctl delete "$UDID"   # when done
 ```
 
+**Leftover test daemon.** After an audit times out ("Audit failed to complete in time", XCTest error -56) the
+`testmanagerd` inside that simulator keeps computing after the run has ended. It has been seen using 3 to 11
+cores for hours, which slows the other simulators until their audits time out as well. `scripts/ios/test.sh` and
+`scripts/ios/ui-test.sh` stop this simulator's daemon before and after each run (`stop_leftover_test_daemon` in
+`scripts/ios/common.sh`; skipped while another `xcodebuild` is using the simulator). If you run `xcodebuild test`
+directly, check `ps -Ao pcpu,etime,args -r | head` afterwards and stop a busy `testmanagerd` yourself, or shut
+the simulator down.
+
 Resolved in T06: on a freshly created iPhone 17 Pro / iOS 26.5 simulator (`JOVRA-T06`),
 `performAccessibilityAudit` reported contrast failures on high-contrast text such as Home's "This week"
 after a scroll step, on `main` as well. The audit had scrolled the page itself while sampling; the
