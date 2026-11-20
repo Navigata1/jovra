@@ -16,6 +16,8 @@ struct LaunchConfigurationTests {
         #expect(configuration.reduceMotion == false)
         #expect(configuration.pseudoLocale == nil)
         #expect(configuration.startRoute == nil)
+        #expect(configuration.processingAnalyzer == nil)
+        #expect(configuration.processingDevice == nil)
         #expect(configuration.library == nil)
         #expect(configuration.problems.isEmpty)
     }
@@ -35,6 +37,8 @@ struct LaunchConfigurationTests {
             "-pseudoLocale", "accented",
             "-NSAccentuateLocalizedStrings", "YES",
             "-startRoute", "insights",
+            "-processingAnalyzer", "failsOnce",
+            "-processingDevice", "lowPowerOnBattery",
             "-library", "fresh",
         ])
         #expect(configuration.appearance == .dark)
@@ -45,6 +49,8 @@ struct LaunchConfigurationTests {
         #expect(configuration.reduceMotion)
         #expect(configuration.pseudoLocale == .accented)
         #expect(configuration.startRoute == "insights")
+        #expect(configuration.processingAnalyzer == .failsOnce)
+        #expect(configuration.processingDevice == .lowPowerOnBattery)
         #expect(configuration.library == .fresh)
         #expect(configuration.problems.isEmpty)
     }
@@ -56,7 +62,9 @@ struct LaunchConfigurationTests {
         (["-permissions", "camera"], "-permissions: “camera” is not permission=state"),
         (["-reduceMotion", "sometimes"], "-reduceMotion: unknown value “sometimes” (expected YES or NO)"),
         (["-archiveState"], "-archiveState: missing value"),
+        (["-processingAnalyzer", "real"], "-processingAnalyzer: unknown value “real” (expected steady, failsOnce)"),
         (["-library", "shared"], "-library: unknown value “shared” (expected fresh, facets)"),
+        (["-processingDevice", "hot"], "-processingDevice: unknown value “hot” (expected lowPowerOnBattery, tooWarm)"),
     ])
     func reportsProblems(arguments: [String], problem: String) {
         let configuration = LaunchConfiguration(arguments: ["Jovra"] + arguments)
@@ -74,6 +82,8 @@ struct LaunchConfigurationTests {
         configuration.reduceMotion = true
         configuration.pseudoLocale = .doubleLength
         configuration.startRoute = "capture"
+        configuration.processingAnalyzer = .steady
+        configuration.processingDevice = .tooWarm
         configuration.library = .fresh
 
         let parsed = LaunchConfiguration(arguments: ["Jovra"] + configuration.arguments)

@@ -61,6 +61,9 @@ struct ImportScreen: View {
             if let issue { Text(issue).fixedSize(horizontal: false, vertical: true).accessibilityIdentifier("import.issue") }
             if let imported {
                 Text("Video saved in your library", tableName: "Sessions.Import").accessibilityIdentifier("import.saved")
+                Button(String(localized: "See processing", table: "Processing")) {
+                    router.present(.processing(imported))
+                }.buttonStyle(.jovraPrimary).accessibilityIdentifier("import.processing")
                 Button(String(localized: "Open video", table: "Sessions.Import")) {
                     router.present(.replay(.init(session: imported, point: nil, filter: .all)))
                 }.buttonStyle(.jovraSecondary)
@@ -149,6 +152,7 @@ struct ImportScreen: View {
                 } else {
                     imported = try await library.importFile(url, playerName: name)
                 }
+                if let imported { await ProcessingScheduler.shared.enqueue(imported) }
             } catch is CancellationError {
                 return
             } catch {

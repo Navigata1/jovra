@@ -56,6 +56,7 @@ actor LocalCaptureLibrary: RecordingSink {
     private let media: MediaLibrary
     /// Sample or fixture content a harness launch asked for, put in before anything reads the library.
     private let launchSeed: LibraryLaunchSeed?
+    private var processingQueue: Task<ProcessingQueueStore, any Error>?
 
     init(root: URL, launchSeed: LibraryLaunchSeed? = nil) throws {
         self.root = root
@@ -93,6 +94,16 @@ actor LocalCaptureLibrary: RecordingSink {
     }
 
     func load(_ id: SessionID) async throws -> SessionDocument { try await store.load(id.rawValue) }
+
+    /// The processing queue (T27) shares this library's root and its single SessionStore, so analysis
+    /// facets are written by the same actor as every other session write.
+    func processing() async throws -> ProcessingQueueStore {
+        // One opening task, so two callers arriving together never open the queue twice.
+        if let processingQueue { return try await processingQueue.value }
+        let task = Task { [root, store] in try await ProcessingQueueStore.open(root: root, sessions: store) }
+        processingQueue = task
+        return try await task.value
+    }
 
     func recordingFolder(_ id: SessionID) async throws -> URL {
         try await media.recordingFolder(sessionID: id.rawValue)

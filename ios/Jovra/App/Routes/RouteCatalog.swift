@@ -221,7 +221,7 @@ private extension FullScreenRoute {
         case .processing:
             cover("processing", "T27", String(localized: "Processing", table: "App", comment: "Screen name"),
                   String(localized: "Close processing", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Processing/ProcessingScreen.swift")
+                  "Features/Processing/ProcessingScreen.swift", placeholder: ProcessingScreen.isPlaceholder)
         }
     }
 }

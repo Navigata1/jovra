@@ -41,7 +41,14 @@ final class NativeCaptureCoordinator {
     private(set) var sessionID: SessionID?
     private(set) var status: CaptureStatus?
     private(set) var preflight: PreflightReport?
-    private(set) var savedRecording: SessionRecording?
+    private(set) var savedRecording: SessionRecording? {
+        // The original is saved (by Stop or by the engine's own stop): queue its processing (T27).
+        // Recording never waits on this.
+        didSet {
+            guard oldValue == nil, savedRecording != nil, let sessionID else { return }
+            Task { await ProcessingScheduler.shared.enqueue(sessionID) }
+        }
+    }
     private(set) var isWorking = false
     /// The player confirmed Delete this recording and the session folder is gone.
     private(set) var isDeleted = false
@@ -72,7 +79,7 @@ final class NativeCaptureCoordinator {
         guard !isWorking, engine == nil else { throw CaptureError.invalidState }
         isWorking = true
         defer { isWorking = false }
-        let candidate = CaptureEngine(source: source, clock: clock, sink: sink, budget: budget)
+        let candidate = CaptureEngine(source: source, clock: clock, sink: sink, budget: budget, activity: .app)
         do {
             let report = try await candidate.prepare(preset, microphone: microphone)
             self.seed = seed; engine = candidate; preflight = report
