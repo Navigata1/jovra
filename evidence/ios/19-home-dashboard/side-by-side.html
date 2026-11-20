@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Side by side: 19-home-dashboard</title>
+<style>
+  body { font: 15px/1.45 -apple-system, system-ui, sans-serif; margin: 24px; color: #182F29; background: #F4F1E8; }
+  .pair { display: flex; gap: 24px; flex-wrap: wrap; }
+  figure { margin: 0; } img { max-height: 720px; max-width: 100%; border: 1px solid #DCD7CA; border-radius: 12px; }
+  section { margin-bottom: 40px; } .review { background: #FBFAF6; padding: 8px 12px; border-radius: 8px; }
+</style></head><body>
+<h1>Side by side: 19-home-dashboard</h1>
+<p>References are AI-generated rasters: they guide layout, rhythm, palette and hierarchy; the written spec wins.</p>
+
+  <section>
+    <h2>Screen 03 · s03-ax5-demo-latest</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-ax5-demo-latest.jpg" alt="Simulator s03-ax5-demo-latest"><figcaption>Simulator: s03-ax5-demo-latest.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — AX5: the Latest session header stacks &quot;View all ›&quot; under its title (no mid-word break), then the card with its poster full width; nothing clipped.</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-ax5-demo-steps</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-ax5-demo-steps.jpg" alt="Simulator s03-ax5-demo-steps"><figcaption>Simulator: s03-ax5-demo-steps.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — AX5: the latest-session card stacks its poster above the text; status line and next-step row wrap without clipping.</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-ax5-demo-tiles</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-ax5-demo-tiles.jpg" alt="Simulator s03-ax5-demo-tiles"><figcaption>Simulator: s03-ax5-demo-tiles.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — AX5: the Sample data badge and the tiles stack full width (spec S03 Accessibility: tiles stack at accessibility sizes); values unclipped.</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-ax5-demo-trend</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-ax5-demo-trend.jpg" alt="Simulator s03-ax5-demo-trend"><figcaption>Simulator: s03-ax5-demo-trend.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — AX5: the section title and its Sample badge stack; the trend card stacks the headline above the chart; the chart keeps its 160 pt minimum and thins x labels to the first and last week (spec S03 Accessibility).</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-ax5-demo</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-ax5-demo.jpg" alt="Simulator s03-ax5-demo"><figcaption>Simulator: s03-ax5-demo.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — AX5: greeting and hero wrap without clipping (foundation hero behaviour); no reference at this size; audit passed including textClipped.</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-ax5-empty</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-ax5-empty.jpg" alt="Simulator s03-ax5-empty"><figcaption>Simulator: s03-ax5-empty.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — the empty state at AX5; text wraps, both actions remain full-width buttons, audit passed.</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-dark-demo-lower</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-dark-demo-lower.jpg" alt="Simulator s03-dark-demo-lower"><figcaption>Simulator: s03-dark-demo-lower.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — matches the light lower half in dark; the chart line, area and the chartreuse last-week marker read on the forest card. Same documented deviations as s03-light-demo-lower.</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-dark-demo</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-dark-demo.jpg" alt="Simulator s03-dark-demo"><figcaption>Simulator: s03-dark-demo.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — matches the light composition on forest; every text role keeps its contrast (audit passed). Same documented deviations as s03-light-demo.</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-dark-empty</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-dark-empty.jpg" alt="Simulator s03-dark-empty"><figcaption>Simulator: s03-dark-empty.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — the empty state in dark; same content as s03-light-empty, audit passed.</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-light-demo-lower</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-light-demo-lower.jpg" alt="Simulator s03-light-demo-lower"><figcaption>Simulator: s03-light-demo-lower.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — matches: &quot;Latest session&quot; with &quot;View all ›&quot;, card with a frame of the sample video, &quot;Jon vs Alex&quot;, &quot;6–4 6–3&quot;, &quot;54 min · Singles&quot;, chevron. Documented deviations: the card&#x27;s status line &quot;Needs review · 8 points&quot; and the &quot;Finish reviewing&quot; next-step row (spec S03 States &quot;Needs review&quot;; the sample match has eight flagged points), a Sample badge on the card; &quot;This week&quot; daily chart becomes the &quot;Last 4 weeks&quot; weekly chart 48/55/63/67 and &quot;+4 pts&quot; becomes &quot;+4 percentage points vs last week&quot; (spec S03 deliberate differences).</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-light-demo</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-light-demo.jpg" alt="Simulator s03-light-demo"><figcaption>Simulator: s03-light-demo.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — matches: lockup and round avatar (the player&#x27;s initial &quot;J&quot;, spec S03 deviation), &quot;Good morning, Jon.&quot;, &quot;Your game, in focus.&quot;, forest editorial card with &quot;Ready for your next session?&quot; and the chartreuse &quot;Record a session →&quot;, three tiles 8 / 6h 42m / 67%. Documented deviations: vector court art instead of the photo (spec S03); tiles carry scope captions &quot;Last 4 weeks&quot; / &quot;Latest match&quot; and the label &quot;First serves in&quot; (spec S03 layout 6); one &quot;Sample data&quot; badge over the tile row instead of one per tile (a badge inside each ~110 pt tile failed the Dynamic Type audit; every tile still speaks &quot;sample data&quot;).</p>
+  </section>
+  <section>
+    <h2>Screen 03 · s03-light-empty</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/03-home.png" alt="Reference 03"><figcaption>Reference: 03-home.png</figcaption></figure>
+      <figure><img src="s03-light-empty.jpg" alt="Simulator s03-light-empty"><figcaption>Simulator: s03-light-empty.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T19 agent) — no reference for this state; spec S03 States &quot;Empty&quot;: greeting without a name (&quot;Good morning.&quot;), hero, then one card &quot;Your first session shows up here.&quot; with Record a session and Import a video, and no zero-filled tiles (issue #21 acceptance: Record and Import actions).</p>
+  </section>
+</body></html>

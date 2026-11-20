@@ -145,9 +145,9 @@ struct HomeTrendChart: View {
             }
         }
         .chartXAxis {
-            AxisMarks(values: xAxisLabels) { value in
-                AxisValueLabel(centered: true) {
-                    if let label = value.as(String.self) {
+            AxisMarks { value in
+                if let label = value.as(String.self), xAxisLabels.contains(label) {
+                    AxisValueLabel(centered: true) {
                         Text(verbatim: label).font(.caption2).foregroundStyle(Color.jovra(.textSecondary))
                     }
                 }

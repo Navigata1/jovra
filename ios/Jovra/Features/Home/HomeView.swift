@@ -65,7 +65,7 @@ struct HomeView: View {
         let caption = HomeCopy.windowCaption(overview.window, now: model.now)
         HomeStatTiles(overview: overview, windowCaption: caption)
         VStack(alignment: .leading, spacing: Space.x1 + Space.half) {
-            SectionHeader(title: String(localized: "Latest session", table: "Home", comment: "Section header")) {
+            HomeSectionHeader(title: String(localized: "Latest session", table: "Home", comment: "Section header")) {
                 Button { router.select(.sessions) } label: {
                     Label {
                         Text("View all", tableName: "Home", comment: "Opens the session library")
@@ -91,7 +91,7 @@ struct HomeView: View {
             }
         }
         VStack(alignment: .leading, spacing: Space.x1 + Space.half) {
-            SectionHeader(title: caption) {
+            HomeSectionHeader(title: caption) {
                 if overview.isSample { ProvenanceBadge(kind: .sample).accessibilityIdentifier("home.trend.sample") }
             }
             HomeTrendCard(trend: overview.trend, isSample: overview.isSample)
@@ -101,6 +101,29 @@ struct HomeView: View {
     private func profileLabel(_ name: String?) -> Text {
         if let name { return Text("Profile, \(name)", tableName: "Home", comment: "VoiceOver: the avatar button, e.g. “Profile, Jon”") }
         return Text("Profile", tableName: "Home")
+    }
+}
+
+/// A section header whose trailing badge moves under the title at accessibility sizes, so the title never breaks
+/// mid-word beside it.
+private struct HomeSectionHeader<Trailing: View>: View {
+    var title: String
+    @ViewBuilder var trailing: Trailing
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var body: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: Space.x1) {
+                Text(title)
+                    .font(.jovraHeadline)
+                    .foregroundStyle(.jovra(.textPrimary))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                trailing
+            }
+        } else {
+            SectionHeader(title: title) { trailing }
+        }
     }
 }
 
