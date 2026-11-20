@@ -1,5 +1,8 @@
-# JovraTests after merging origin/main (JovraTests, JOVRA-T20, JOVRA_SKIP_SAMPLE_MEDIA=YES).
-# JogStripAccessibilityTests needs locally rendered frameCounter media (scripts/media/render.py --set frameCounter); CI renders it.
+# scripts/ios/test.sh on the merged head (origin/main 55899e9 merged), SIMULATOR_ID=JOVRA-T20, sample media rendered (render.py --check passed).
+# swift test JovraCore: XCTest 30 executed, 0 failures; Swift Testing 146 tests in 9 suites passed.
+# swift test JovraMedia step: Swift Testing 148 tests in 22 suites, then 72 tests in 13 suites (benchmark harness), all passed.
+# SessionLibraryPresentationTests grew from 10 to 12: moveToTrashMessage (zero, nil and 500 MB bytes) and moveToTrashBackedUpWithoutBytes.
+==> JovraTests summary
 Test class                                                                     passed  failed  skipped  expected
 JovraTests/CaptureDeleteAndRelaunchTests                                            2       0        0         0
 JovraTests/CaptureKeepAwakeTests                                                    1       0        0         0
@@ -14,38 +17,35 @@ JovraTests/CaptureTextBoundaryTests                                             
 JovraTests/ColorRoleContrastTests (Semantic colour contrast)                       10       0        0         0
 JovraTests/FilesImportTests                                                         6       0        0         0
 JovraTests/CourtGuideReadoutTests (Court guide readout)                             7       0        0         0
-JovraTests/LocalCaptureLibraryTests                                                 4       0        0         0
+JovraTests/ImportModelTests                                                         7       0        0         0
 JovraTests/DriveClientConfigurationTests (Drive client configuration)               7       0        0         0
-JovraTests/NativeCaptureCoordinatorTests                                            1       0        0         0
+JovraTests/LocalCaptureLibraryTests                                                 4       0        0         0
 JovraTests/FractionPresentationTests (Fraction presentation)                        4       0        0         0
-JovraTests/NativeExportModelTests                                                   1       0        0         0
+JovraTests/NativeCaptureCoordinatorTests                                            1       0        0         0
 JovraTests/JovraFormatTests (Locale formatting)                                     8       0        0         0
-JovraTests/ProcessingSchedulerTests                                                 4       0        0         0
+JovraTests/NativeExportModelTests                                                   1       0        0         0
 JovraTests/LaunchConfigurationTests (Launch configuration)                          7       0        0         0
-JovraTests/ReplayPlaybackModelTests                                                 2       0        0         0
+JovraTests/ProcessingSchedulerTests                                                 4       0        0         0
 JovraTests/LoupePlacementTests (Loupe placement)                                    5       0        0         0
-JovraTests/ReplayVideoPlayerTests                                                   1       0        0         0
+JovraTests/ReplayPlaybackModelTests                                                 2       0        0         0
 JovraTests/MotionTests (Motion and haptics)                                         4       0        0         0
-JovraTests/ReviewedPointModelTests                                                  1       0        0         0
+JovraTests/ReplayVideoPlayerTests                                                   1       0        0         0
 JovraTests/PermissionsCenterTests (Permissions center)                              7       0        0         0
-JovraTests/SampleMediaBundleTests                                                   0       0        1         0
+JovraTests/ReviewedPointModelTests                                                  1       0        0         0
 JovraTests/ProcessingBackgroundPolicyTests (Processing background policy)           5       0        0         0
-JovraTests/StartupRecoveryTests                                                     2       0        0         0
+JovraTests/SampleMediaBundleTests                                                   1       0        0         0
 JovraTests/ProcessingStagePresentationTests (Processing stage presentation)         8       0        0         0
+JovraTests/StartupRecoveryTests                                                     2       0        0         0
 JovraTests/ServiceRegistrationTests (Service registration seam)                     5       0        0         0
 JovraTests/SessionLibraryOperationsTests (Session library operations)               6       0        0         0
-JovraTests/SessionLibraryPresentationTests (Session library presentation)          10       0        0         0
+JovraTests/SessionLibraryPresentationTests (Session library presentation)          12       0        0         0
 JovraTests/StudioWiringTests (Studio wiring)                                        4       0        0         0
 JovraTests/ToastCenterTests (Toast and UndoBar)                                     3       0        0         0
 JovraTests/VideoLabPlaybackTests (VideoLab source switching)                        5       0        0         0
 JovraTests/VideoZoomTests (Video zoom)                                              3       0        0         0
 JovraTests/FrameReadoutFormatTests (Frame readout text)                             3       0        0         0
 JovraTests/TimelineThumbTravelTests (Timeline thumb travel)                         4       0        0         0
-JovraTests/JogStripAccessibilityTests (Jog strip VoiceOver adjust)                  1       1        1         0
-Total: 206 passed, 1 failed, 2 skipped, 0 expected failure(s) in 41 classes (xcresult summary: 206 passed, 1 failed, 2 skipped; result Failed)
-FAILED JogStripAccessibilityTests/timelineAdjustmentMovesTheDecodedPictureOneFrameAndClampsAtEachEnd(id:): Expectation failed: Self.frameCounter(id)
-Self → JogStripAccessibilityTests
-id → "fc-060": render it: python3 scripts/media/render.py --set frameCounter
+JovraTests/JogStripAccessibilityTests (Jog strip VoiceOver adjust)                  3       0        0         0
+Total: 218 passed, 0 failed, 0 skipped, 0 expected failure(s) in 42 classes (xcresult summary: 218 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-T20 39331E6A-2160-4C51-A8E1-63902099F844 (iPhone 17 Pro, iOS Simulator 27.2)
-Result bundle: .derivedData/unit-merged.xcresult
-INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.
+Result bundle: .derivedData/unit-tests-20261120-012943.xcresult
