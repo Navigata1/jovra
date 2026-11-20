@@ -29,6 +29,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let processingDevice = "-processingDevice"
         static let library = "-library"
         static let recordFixtureSession = "-recordFixtureSession"
+        static let importSelection = "-importSelection"
+        static let importStall = "-importStall"
     }
 
     enum Appearance: String, CaseIterable, Sendable {
@@ -129,6 +131,11 @@ struct LaunchConfiguration: Equatable, Sendable {
     /// Records a session of this many seconds through the capture engine and the fixture camera at launch,
     /// with no screen in between (the walking skeleton), then opens the library. nil records nothing.
     var recordFixtureSessionSeconds: Int?
+    /// UI-test seam (T26): absolute paths delivered as the picker's selection instead of presenting the
+    /// system Photos or Files picker. A path prefixed `cloud:` is reported as not yet downloaded for a moment.
+    var importSelection: [String] = []
+    /// UI-test seam (T26): an import stops just before publication, so a test can end the process mid-import.
+    var importStall = false
 
     /// Arguments that could not be understood. Not part of equality.
     private(set) var problems: [String] = []
@@ -176,6 +183,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         if let processingDevice { result += [Key.processingDevice, processingDevice.rawValue] }
         if let library { result += [Key.library, library.rawValue] }
         if let recordFixtureSessionSeconds { result += [Key.recordFixtureSession, String(recordFixtureSessionSeconds)] }
+        if !importSelection.isEmpty { result += [Key.importSelection, importSelection.joined(separator: "|")] }
+        if importStall { result += [Key.importStall, "YES"] }
         return result
     }
 
@@ -188,7 +197,7 @@ struct LaunchConfiguration: Equatable, Sendable {
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
         Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library, Key.processingAnalyzer,
-        Key.processingDevice, Key.recordFixtureSession,
+        Key.processingDevice, Key.recordFixtureSession, Key.importSelection, Key.importStall,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -205,6 +214,13 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.processingDevice: processingDevice = parse(ProcessingDevice.self, value, for: key)
         case Key.library: library = parse(Library.self, value, for: key)
         case Key.recordFixtureSession: parseFixtureSeconds(value)
+        case Key.importSelection: importSelection = value.split(separator: "|").map(String.init)
+        case Key.importStall:
+            guard value == "YES" || value == "NO" else {
+                problems.append("\(key): unknown value “\(value)” (expected YES or NO)")
+                return
+            }
+            importStall = value == "YES"
         default: break
         }
     }

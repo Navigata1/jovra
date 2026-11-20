@@ -23,4 +23,22 @@ final class AuditExceptionTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(AccessibilityAudit.singleTypes(in: .all).count, 7)
         XCTAssertEqual(AccessibilityAudit.singleTypes(in: [.contrast, .textClipped]), [.contrast, .textClipped])
     }
+
+    func testUnplacedContrastIsExemptOnlyWithNoElementOnASwiftUINodeAndTextUnderTheTabBar() {
+        let node = AccessibilityAudit.unplacedSwiftUINodeContrast
+        XCTAssertTrue(AccessibilityAudit.isUnplacedContrastUnderTabBar(type: .contrast, hasElement: false, detail: node,
+                                                                       textUnderTabBar: ["“From your device”"]))
+        // No text under the bar, a placed element, another description or another audit type: it still fails.
+        XCTAssertFalse(AccessibilityAudit.isUnplacedContrastUnderTabBar(type: .contrast, hasElement: false, detail: node, textUnderTabBar: []))
+        XCTAssertFalse(AccessibilityAudit.isUnplacedContrastUnderTabBar(type: .contrast, hasElement: true, detail: node, textUnderTabBar: ["x"]))
+        XCTAssertFalse(AccessibilityAudit.isUnplacedContrastUnderTabBar(type: .contrast, hasElement: false, detail: "Contrast failed",
+                                                                        textUnderTabBar: ["x"]))
+        XCTAssertFalse(AccessibilityAudit.isUnplacedContrastUnderTabBar(type: .elementDetection, hasElement: false, detail: node,
+                                                                        textUnderTabBar: ["x"]))
+        // "Under the tab bar": reaching into the 16 pt band above it or below its top, and on screen.
+        XCTAssertTrue(AccessibilityAudit.isUnderTabBar(frame: CGRect(x: 0, y: 700, width: 100, height: 50), tabBarTop: 759, screenBottom: 874))
+        XCTAssertTrue(AccessibilityAudit.isUnderTabBar(frame: CGRect(x: 0, y: 810, width: 100, height: 100), tabBarTop: 759, screenBottom: 874))
+        XCTAssertFalse(AccessibilityAudit.isUnderTabBar(frame: CGRect(x: 0, y: 600, width: 100, height: 100), tabBarTop: 759, screenBottom: 874))
+        XCTAssertFalse(AccessibilityAudit.isUnderTabBar(frame: CGRect(x: 0, y: 900, width: 100, height: 40), tabBarTop: 759, screenBottom: 874))
+    }
 }
