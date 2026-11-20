@@ -65,9 +65,13 @@ extension XCUIApplication {
         staticTexts.matching(identifier: "screen.title").firstMatch
     }
 
-    /// The display title when it reads exactly `text`.
+    /// The display title when it reads exactly `text`. Home's title is its greeting (S03, T19: "Good morning, Jon."),
+    /// which follows the time of day and the player's name, so `heading("Home")` matches any greeting.
     @MainActor
     func heading(_ text: String) -> XCUIElement {
-        staticTexts.matching(identifier: "screen.title").matching(NSPredicate(format: "label == %@", text)).firstMatch
+        let predicate = text == ShellTab.home.heading
+            ? NSPredicate(format: "label MATCHES %@", "^Good (morning|afternoon|evening)[.,].*")
+            : NSPredicate(format: "label == %@", text)
+        return staticTexts.matching(identifier: "screen.title").matching(predicate).firstMatch
     }
 }

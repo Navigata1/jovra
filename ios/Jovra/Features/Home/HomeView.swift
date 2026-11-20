@@ -1,22 +1,128 @@
+import JovraCore
 import SwiftUI
 
+/// Home (S03, reference 03): the greeting, the next action (record), three honest headline numbers, the latest
+/// session, the next useful step and one trend, all computed from stored sessions (`HomeDashboard`).
 struct HomeView: View {
     @Environment(AppRouter.self) private var router
+    @Environment(\.localCaptureLibrary) private var library
+    @Environment(\.launchConfiguration) private var launch
+    @State private var model = HomeModel()
 
     var body: some View {
-        JovraScreen(title: String(localized: "Home", table: "Home"), subtitle: String(localized: "Your game, in focus.", table: "Home")) {
+        let dashboard: HomeDashboard? = if case .loaded(let value) = model.phase { value } else { nil }
+        JovraScreen(title: HomeGreeting.text(name: dashboard?.playerName, at: model.now),
+                    subtitle: String(localized: "Your game, in focus.", table: "Home")) {
             Button { router.select(.profile) } label: {
-                AvatarInitial(initial: nil, size: 52)
+                AvatarInitial(initial: dashboard?.playerName, size: 52)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(Text("Profile", tableName: "Home"))
+            .accessibilityLabel(profileLabel(dashboard?.playerName))
+            .accessibilityIdentifier("home.profile")
         } content: {
             HomeHero { router.select(.record) }
-            SampleStatTiles()
-            ComingLaterCard(
-                symbol: "house",
-                message: String(localized: "Your latest session, on-court time and weekly trends, computed from sessions saved on this device, replace the sample tiles above.", table: "Home")
-            )
+            content(dashboard)
+        }
+        .task { await model.load(library: library, launch: launch) }
+        .onChange(of: router.state.selectedTab) { _, tab in
+            // Back on Home after recording, importing or reviewing elsewhere: recompute from the store.
+            guard tab == .home else { return }
+            Task { await model.load(library: library, launch: launch) }
+        }
+        .refreshable { await model.load(library: library, launch: launch) }
+    }
+
+    @ViewBuilder private func content(_ dashboard: HomeDashboard?) -> some View {
+        switch model.phase {
+        case .loading:
+            ProgressView(String(localized: "Loading your sessions…", table: "Home", comment: "Home while sessions load"))
+                .frame(maxWidth: .infinity, minHeight: 120)
+                .accessibilityIdentifier("home.loading")
+        case .unavailable:
+            StateCard(symbol: "externaldrive.badge.exclamationmark",
+                      title: String(localized: "Your sessions can't be opened right now", table: "Home", comment: "Home error title"),
+                      message: String(localized: "Recording still works and nothing was deleted. Close JOVRA and open it again to see your numbers.",
+                                      table: "Home", comment: "Home error message: local library unavailable"))
+        case .failed:
+            StateCard(symbol: "exclamationmark.triangle",
+                      title: String(localized: "Your numbers could not be loaded", table: "Home", comment: "Home error title"),
+                      message: String(localized: "Your videos are safe. Try loading them again.", table: "Home", comment: "Home error message"),
+                      primaryAction: .init(title: String(localized: "Try again", table: "Home")) {
+                          Task { await model.load(library: library, launch: launch) }
+                      })
+        case .loaded(let dashboard):
+            switch dashboard.content {
+            case .empty:
+                HomeEmptyState(record: { router.select(.record) },
+                               importVideo: { router.show(.push(.sessions(.importVideos))) })
+            case .populated(let overview):
+                populated(overview, nextSteps: dashboard.nextSteps)
+            }
+        }
+    }
+
+    @ViewBuilder private func populated(_ overview: HomeDashboard.Overview, nextSteps: [HomeNextStep]) -> some View {
+        let caption = HomeCopy.windowCaption(overview.window, now: model.now)
+        HomeStatTiles(overview: overview, windowCaption: caption)
+        VStack(alignment: .leading, spacing: Space.x1 + Space.half) {
+            HomeSectionHeader(title: String(localized: "Latest session", table: "Home", comment: "Section header")) {
+                Button { router.select(.sessions) } label: {
+                    Label {
+                        Text("View all", tableName: "Home", comment: "Opens the session library")
+                    } icon: {
+                        Image(systemName: "chevron.right").imageScale(.small)
+                    }
+                    .labelStyle(TrailingIconLabelStyle())
+                    .font(.jovraLabel)
+                    .foregroundStyle(.jovra(.textPrimary))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(minHeight: HitTarget.minimum)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("home.viewAll")
+            }
+            HomeLatestSessionCard(latest: overview.latest, thumbnail: model.thumbnail) {
+                let id = SessionID(rawValue: overview.latest.id)
+                router.show(.push(.sessions(overview.latest.format == nil ? .practiceOverview(id) : .matchOverview(id))))
+            }
+            ForEach(nextSteps) { step in
+                HomeNextStepRow(step: step) { router.show(step.destination) }
+            }
+        }
+        VStack(alignment: .leading, spacing: Space.x1 + Space.half) {
+            HomeSectionHeader(title: caption) {
+                if overview.isSample { ProvenanceBadge(kind: .sample).accessibilityIdentifier("home.trend.sample") }
+            }
+            HomeTrendCard(trend: overview.trend, isSample: overview.isSample)
+        }
+    }
+
+    private func profileLabel(_ name: String?) -> Text {
+        if let name { return Text("Profile, \(name)", tableName: "Home", comment: "VoiceOver: the avatar button, e.g. “Profile, Jon”") }
+        return Text("Profile", tableName: "Home")
+    }
+}
+
+/// A section header whose trailing badge moves under the title at accessibility sizes, so the title never breaks
+/// mid-word beside it.
+private struct HomeSectionHeader<Trailing: View>: View {
+    var title: String
+    @ViewBuilder var trailing: Trailing
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var body: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: Space.x1) {
+                Text(title)
+                    .font(.jovraHeadline)
+                    .foregroundStyle(.jovra(.textPrimary))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                trailing
+            }
+        } else {
+            SectionHeader(title: title) { trailing }
         }
     }
 }
@@ -55,39 +161,6 @@ private struct HomeHero: View {
             .buttonStyle(.jovraAccent)
             .accessibilityIdentifier("home.recordSession")
         }
-    }
-}
-
-/// Three illustrative stat tiles under a visible "Sample" badge (CLAUDE.md rule 1) until the
-/// session store lands; VoiceOver reads "sample data" on every tile too. The tiles share one
-/// height in a row and stack vertically at accessibility text sizes.
-private struct SampleStatTiles: View {
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-
-    private let tiles: [(value: String, label: String, symbol: String)] = [
-        (JovraFormat.count(8), String(localized: "Sessions", table: "Home"), "tennisball"),
-        (JovraFormat.duration(seconds: 24_120), String(localized: "On court", table: "Home"), "clock"),
-        (JovraFormat.percent(67), String(localized: "First serves", table: "Home"), "scope"),
-    ]
-
-    var body: some View {
-        let layout = dynamicTypeSize.isAccessibilitySize
-            ? AnyLayout(VStackLayout(spacing: Space.x1))
-            : AnyLayout(HStackLayout(alignment: .top, spacing: Space.x1))
-        VStack(alignment: .leading, spacing: Space.x1 + Space.half) {
-            SectionHeader(title: String(localized: "This week", table: "Home")) {
-                ProvenanceBadge(kind: .sample)
-            }
-            layout {
-                ForEach(tiles, id: \.label) { tile in
-                    StatTile(value: tile.value, label: tile.label, symbol: tile.symbol)
-                        .accessibilityLabel(Text("\(tile.label): \(tile.value), sample data", tableName: "Home"))
-                }
-            }
-            .fixedSize(horizontal: false, vertical: true)
-        }
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("home.sampleStats")
     }
 }
 

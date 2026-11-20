@@ -105,11 +105,27 @@ final class HarnessUITests: XCTestCase {
 
     @MainActor
     func testCopyAssertionFindsTheShellsBriefCopyOnHome() throws {
-        // The foundation Home shows a subset of screen 3; the rest arrives with the Home ticket (T19).
-        let app = XCUIApplication.launchJovra { $0.appearance = .light }
-        XCTAssertTrue(app.heading("Home").waitForExistence(timeout: 5))
-        let shownByShell: Set<String> = ["Your game, in focus.", "Ready for your next session?", "Record a session", "This week", "Sample data"]
-        let notYetBuilt = Set(try BriefCopy.expected(screen: 3)).subtracting(shownByShell)
-        try assertBriefCopy(screen: 3, in: app, excluding: notYetBuilt)
+        // Home (T19) in the demo shows screen 3's copy computed from the sample library. The reference's "This week"
+        // daily chart and "+4 pts" are deliberate differences of the written spec (S03): a "Last 4 weeks" weekly
+        // chart and "+4 percentage points vs last week".
+        let app = XCUIApplication.jovra {
+            $0.appearance = .light
+            $0.demo = .sample
+            $0.library = .fresh
+        }
+        let morning = Calendar.current.date(from: DateComponents(year: 2026, month: 10, day: 6, hour: 8, minute: 30))!
+        app.launchEnvironment["JOVRA_HOME_NOW"] = ISO8601DateFormatter().string(from: morning)
+        app.launch()
+        XCTAssertTrue(app.heading("Good morning, Jon.").waitForExistence(timeout: 10))
+        // Tiles and the latest-session card are single VoiceOver elements, so their numbers are values, not labels:
+        // HomeDashboardUITests asserts each one ("8, sample data", "6 hours, 42 minutes, sample data", "67 percent,
+        // 40 of 60, sample data", "Jon vs Alex, Jon won 6–4, 6–3, 54 minutes, Singles").
+        let spokenInItsCard = BriefCopy.Correction.drop(reason: "read as part of its tile or card (HomeDashboardUITests)")
+        try assertBriefCopy(screen: 3, in: app, corrections: [
+            "8": spokenInItsCard, "6h 42m": spokenInItsCard, "67%": spokenInItsCard,
+            "Jon vs Alex": spokenInItsCard, "6–4 6–3": spokenInItsCard, "54 min · Singles": spokenInItsCard,
+            "This week": .replace(with: ["Last 4 weeks"]),
+            "+4 pts": .drop(reason: "spoken with the trend value: “+4 percentage points vs last week”"),
+        ])
     }
 }

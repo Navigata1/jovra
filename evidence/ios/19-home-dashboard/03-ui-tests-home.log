@@ -1,0 +1,19 @@
+# scripts/ios/ui-test.sh -only-testing JovraUITests/HomeDashboardUITests -only-testing JovraUITests/HarnessUITests/testCopyAssertionFindsTheShellsBriefCopyOnHome
+** TEST FAILED **
+Test class                         passed  failed  skipped  expected
+JovraUITests/HarnessUITests             1       0        0         0
+JovraUITests/HomeDashboardUITests      14       1        0         0
+Total: 15 passed, 1 failed, 0 skipped, 0 expected failure(s) in 2 classes (xcresult summary: 15 passed, 1 failed, 0 skipped; result Failed)
+FAILED HomeDashboardUITests/testDemoAtAX5PassesTheAudit(): failed: caught error: "Error Domain=com.apple.xcode.xctest.accessibilityAudit Code=-56 "Audit failed to complete in time" UserInfo={NSLocalizedDescription=Audit failed to complete in time}"
+Device: JOVRA-T19 93C38034-99FC-4B17-A927-DE926D499162 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261120-110256.xcresult
+
+# The one failure is XCTest's audit time limit (-56) on a loaded build Mac (load average 7-11, other agents' simulators); the same test alone:
+# scripts/ios/ui-test.sh -only-testing JovraUITests/HomeDashboardUITests/testDemoAtAX5PassesTheAudit
+JovraUITests/HomeDashboardUITests       1       0        0         0
+Total: 1 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+Result bundle: .derivedData/ui-tests-20261120-111009.xcresult
+
+# Earlier class run on the same code before the AX5 header fix: testDemoInLight… hit the same -56 limit and passed alone:
+Total: 1 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+Result bundle: .derivedData/ui-tests-20261120-105910.xcresult

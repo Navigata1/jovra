@@ -1,0 +1,4 @@
+# Red: xcodebuild build-for-testing before the Home model existed (the new tests do not compile)
+   |                            `- error: cannot find 'HomeSampleLibrary' in scope
+error: the following command failed with exit code 0 but produced no further output
+ios/JovraTests/Home/HomeSampleBundleTests.swift:32:28: error: cannot find 'HomeSampleLibrary' in scope
