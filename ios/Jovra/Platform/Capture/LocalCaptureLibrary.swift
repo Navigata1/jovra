@@ -1,5 +1,6 @@
 import Foundation
 import JovraCore
+import JovraVision
 import JovraMedia
 
 /// The first core flow records a singles match. Players remain caller-supplied, with unknown
@@ -102,6 +103,23 @@ actor LocalCaptureLibrary: RecordingSink {
         return try await task.value
     }
 
+    /// The folder JovraVision keeps one session's analysis in (observations, checkpoints, run log). It sits
+    /// beside the session folders, never inside them, and goes when the session is deleted.
+    func analysisFolder(_ id: SessionID) -> URL {
+        root.appendingPathComponent("analysis", isDirectory: true).appendingPathComponent(id.rawValue, isDirectory: true)
+    }
+
+    /// The session's saved recording as JovraVision reads it: every finalized segment on the session timeline.
+    func analysisSources(_ id: SessionID) async throws -> [RecordingWindowReader.Source] {
+        let document = try await store.load(id.rawValue)
+        var sources: [RecordingWindowReader.Source] = []
+        for segment in document.recording.segments.filter(\.finalized).sorted(by: { $0.index < $1.index }) {
+            let url = try await media.fileURL(sessionID: id.rawValue, relativePath: segment.file.path)
+            sources.append(.init(url: url, startMs: segment.startMs, durationMs: segment.durationMs))
+        }
+        return sources
+    }
+
     func recordingFolder(_ id: SessionID) async throws -> URL {
         try await media.recordingFolder(sessionID: id.rawValue)
     }
@@ -168,6 +186,8 @@ actor LocalCaptureLibrary: RecordingSink {
         try await store.trash(id.rawValue)
         let confirmation = try await store.purgeConfirmation(for: id.rawValue)
         try await store.purge(id.rawValue, confirmation: confirmation)
+        let analysis = analysisFolder(id)
+        if FileManager.default.fileExists(atPath: analysis.path) { try FileManager.default.removeItem(at: analysis) }
     }
 
     func importFile(_ source: URL, playerName: String, importingAgain permission: FilesImportFingerprint? = nil) async throws -> SessionID {

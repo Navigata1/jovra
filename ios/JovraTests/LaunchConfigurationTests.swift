@@ -64,8 +64,8 @@ struct LaunchConfigurationTests {
         (["-permissions", "camera"], "-permissions: “camera” is not permission=state"),
         (["-reduceMotion", "sometimes"], "-reduceMotion: unknown value “sometimes” (expected YES or NO)"),
         (["-archiveState"], "-archiveState: missing value"),
-        (["-processingAnalyzer", "real"], "-processingAnalyzer: unknown value “real” (expected steady, failsOnce)"),
-        (["-library", "shared"], "-library: unknown value “shared” (expected fresh)"),
+        (["-processingAnalyzer", "real"], "-processingAnalyzer: unknown value “real” (expected steady, failsOnce, visionFixture)"),
+        (["-library", "shared"], "-library: unknown value “shared” (expected fresh, relaunchable, relaunch)"),
         (["-processingDevice", "hot"], "-processingDevice: unknown value “hot” (expected lowPowerOnBattery, tooWarm)"),
     ])
     func reportsProblems(arguments: [String], problem: String) {

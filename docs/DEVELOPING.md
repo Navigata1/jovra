@@ -47,6 +47,7 @@ ios/
   Packages/
     JovraCore/                Foundation-only domain layer; builds and tests on Linux (CI required check)
     JovraMedia/               AVFoundation/CoreMedia adapters over JovraCore; tested on macOS
+    JovraVision/              on-device analysis pipeline: stages, checkpointing runner, suggestions (V track); macOS
 ```
 
 ADR-0005 names the domain package "JovraKit" with two libraries. It is implemented as two sibling
@@ -63,7 +64,7 @@ All scripts live in `scripts/ios/` and keep derived data in `.derivedData/` at t
 | Command | What it does |
 |---|---|
 | `scripts/ios/generate.sh` | Generates `ios/Jovra.xcodeproj` from `ios/project.yml`. |
-| `scripts/ios/test.sh` | `swift test` for JovraCore and JovraMedia, then `xcodebuild test` for `JovraTests` on the simulator (renders the media fixtures with `render.py --check` first); prints per-class counts and the `.xcresult` path. |
+| `scripts/ios/test.sh` | `swift test` for JovraCore, JovraMedia and JovraVision, then `xcodebuild test` for `JovraTests` on the simulator (renders the media fixtures with `render.py --check` first); prints per-class counts and the `.xcresult` path. |
 | `scripts/ios/ui-test.sh [-only-testing JovraUITests/<Class>[/<test>]]... [ticket]` | With `-only-testing` (repeatable), runs only those classes or tests, so a ticket shows exactly its own. Without it, runs all of `JovraUITests`, then a system-appearance pass with the simulator in light and in dark (restored afterwards). Prints per-class counts and the `.xcresult` path, and exports every named screenshot to `evidence/ios/<ticket>/` (default: branch name minus `ticket/` and the `t` before the number, so `ticket/t06-x` gives `06-x`). |
 | `scripts/ios/check-build-config.sh` | Builds the app unsigned (no team) without and with a test Drive xcconfig; checks the entitlements in the binary, every v1 Info.plist key, that every URL type registers one valid (non-empty) scheme, the unconfigured (placeholder) and the configured Drive client, and that the unsigned build installs and runs. |
 | `scripts/ios/side_by_side.py evidence/ios/<ticket>` | Pairs `sNN-*` screenshots with reference PNG NN and writes `side-by-side.html`; exits non-zero until every pair has a reviewer line in `reviews.txt`. |
@@ -76,6 +77,7 @@ All scripts live in `scripts/ios/` and keep derived data in `.derivedData/` at t
 
 Single package directly: `swift test --package-path ios/Packages/JovraCore`.
 For the macOS media suite, use `swift test --package-path ios/Packages/JovraMedia --no-parallel`.
+The analysis pipeline: `swift test --package-path ios/Packages/JovraVision` (reads the rendered fixture-camera clip).
 Its real capture/decoder tests otherwise start many AVFoundation sessions together; the T16 integrated
 parallel run stalled, while the unchanged suite passed with explicit sequential scheduling
 (see [T16 integrated evidence](../evidence/ios/t16-recovery/SCANNER.md)). This schedules tests and does not establish concurrent decoder safety.
