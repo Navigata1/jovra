@@ -23,6 +23,7 @@ struct AppShell: View {
         .sheet(item: sheetBinding(overFullScreen: false)) { SheetDestination(route: $0).presentedSheet(router) }
         .fullScreenCover(item: Binding(get: { router.fullScreenRoute }, set: { if $0 == nil { router.dismissFullScreen() } })) { route in
             FullScreenDestination(route: route)
+                .routeProbe(route)
                 .environment(router)
                 // A sheet over a full-screen route is presented by the cover itself.
                 .sheet(item: sheetBinding(overFullScreen: true)) { SheetDestination(route: $0).presentedSheet(router) }

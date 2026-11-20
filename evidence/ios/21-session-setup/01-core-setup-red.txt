@@ -1,0 +1,25 @@
+    |                                                                                       `- error: cannot find type 'SessionSetup' in scope
+    |                                                               `- error: cannot find type 'FormatPreset' in scope
+    |                                                           `- error: cannot find type 'SessionSetup' in scope
+    |                            `- error: cannot find type 'FormatPreset' in scope
+    |                     `- error: cannot find type 'FormatPreset' in scope
+    |           `- error: cannot infer contextual base in reference to member 'bestOf5'
+    |           `- error: cannot infer contextual base in reference to member 'clubBestOf3'
+    |           `- error: cannot infer contextual base in reference to member 'fast4'
+    |           `- error: cannot infer contextual base in reference to member 'matchTiebreakThird'
+    |           `- error: cannot infer contextual base in reference to member 'noAdMatchTiebreak'
+    |           `- error: cannot infer contextual base in reference to member 'oneSet'
+    |           `- error: cannot infer contextual base in reference to member 'proSet8'
+    |           `- error: cannot infer contextual base in reference to member 'shortSets'
+    |           `- error: cannot infer contextual base in reference to member 'tiebreak10'
+    |           `- error: cannot infer contextual base in reference to member 'tiebreak7'
+error: Build failed
+error: SwiftCompile normal arm64 failed with a nonzero exit code. Command line:     cd ios/Packages
+error: fatalError
+ios/Packages/JovraCore/Tests/JovraCoreTests/Setup/DoublesSetupTests.swift:9:59: error: cannot find type 'SessionSetup' in scope
+ios/Packages/JovraCore/Tests/JovraCoreTests/Setup/FormatPresetTests.swift:10:11: error: cannot infer contextual base in reference to member 'clubBestOf3'
+ios/Packages/JovraCore/Tests/JovraCoreTests/Setup/FormatPresetTests.swift:11:11: error: cannot infer contextual base in reference to member 'matchTiebreakThird'
+ios/Packages/JovraCore/Tests/JovraCoreTests/Setup/FormatPresetTests.swift:12:11: error: cannot infer contextual base in reference to member 'noAdMatchTiebreak'
+ios/Packages/JovraCore/Tests/JovraCoreTests/Setup/FormatPresetTests.swift:13:11: error: cannot infer contextual base in reference to member 'bestOf5'
+ios/Packages/JovraCore/Tests/JovraCoreTests/Setup/FormatPresetTests.swift:143:21: error: cannot find type 'FormatPreset' in scope
+ios/Packages/JovraCore/Tests/JovraCoreTests/Setup/FormatPresetTests.swift:14:11: error: cannot infer contextual base in reference to member 'proSet8'

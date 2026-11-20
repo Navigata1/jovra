@@ -18,6 +18,9 @@ struct CaptureScreen: View {
     @State private var choices: CaptureSetupChoices
     @State private var coordinator: NativeCaptureCoordinator?
     @State private var cameraExplanation = false
+    @State private var microphoneExplanation = false
+    /// The player's answer to the microphone explanation, once given (or the sheet closed).
+    @State private var microphoneAnswer: PermissionState?
     @State private var sheet: CaptureSheet?
     @State private var closeAfterSave = false
     @State private var failed = false
@@ -33,7 +36,9 @@ struct CaptureScreen: View {
         CaptureRoutePhase(enginePhase: coordinator?.status?.phase, isSaved: coordinator?.savedRecording != nil)
     }
 
-    private var isSupported: Bool { setup?.kind == nil || setup?.kind == .singlesMatch }
+    /// A setup from S04 is recorded exactly or not at all: no other mode or format is substituted.
+    private var support: SessionSetupDraft.CaptureSupport { setup?.captureSupport ?? .supported }
+    private var isSupported: Bool { support == .supported }
 
     /// Set once the engine has stopped with nothing saved: the recording phase then shows what failed.
     private var stopFailure: CaptureStopFailure? {
@@ -58,6 +63,12 @@ struct CaptureScreen: View {
             PermissionExplanationSheet(permission: .camera) { decision in
                 if decision == .authorized { Task { await prepare() } }
             }
+        }
+        .sheet(isPresented: $microphoneExplanation, onDismiss: {
+            if microphoneAnswer == nil { microphoneAnswer = .notDetermined }
+            Task { await prepare() }
+        }) {
+            PermissionExplanationSheet(permission: .microphone) { microphoneAnswer = $0 }
         }
         .sheet(item: $sheet, onDismiss: sheetDismissed) { presented in sheetContent(presented) }
         .onChange(of: coordinator?.status?.phase) { _, phase in keepAwake.update(for: scenePhase == .active ? phase : nil) }
@@ -112,9 +123,13 @@ struct CaptureScreen: View {
     }
 
     @ViewBuilder private var columnContent: some View {
-        if !isSupported {
+        if support == .modeUnavailable {
             StateCard(symbol: "video.slash", title: String(localized: "This recording mode is not available yet", table: "Capture"),
                       message: String(localized: "Close this screen to keep your selected mode. It will not be replaced with a singles match.", table: "Capture"))
+        } else if support == .formatUnavailable {
+            StateCard(symbol: "video.slash", title: SetupCopy.formatNotRecordableTitle,
+                      message: SetupCopy.formatNotRecordableMessage)
+                .accessibilityIdentifier("capture.formatUnavailable")
         } else if case .unavailable = library {
             StateCard(symbol: "externaldrive.badge.exclamationmark", title: String(localized: "Local library unavailable", table: "Capture"),
                       message: String(localized: "Close JOVRA and try again. Your existing videos are not removed.", table: "Capture"))
@@ -252,10 +267,33 @@ struct CaptureScreen: View {
         let clock = RealtimeCaptureClock()
         let source: any CaptureSource = CameraSource()
         #endif
+        guard let microphone = await microphoneChoice() else { return }
+        // The preset and microphone chosen on S04, so its camera row and storage estimate are what is recorded.
+        let preset = CaptureRecordingPlan.preset(for: setup?.sessionSetup, offered: setup?.sessionSetup == nil ? [] : await CameraFormatSource.load())
+        guard coordinator == nil else { return }
         let candidate = NativeCaptureCoordinator(library: library, source: source, clock: clock)
         coordinator = candidate
-        do { try await candidate.prepare(seed: choices.seed, preset: .init(width: 1280, height: 720, bitRate: 4_000_000), microphone: .notRequested) }
+        do { try await candidate.prepare(seed: choices.seed, preset: preset, microphone: microphone) }
         catch { failed = true }
+    }
+
+    /// The microphone state to record with, or nil while the explanation is shown. Once the player has
+    /// answered (or closed it) recording goes ahead either way. The simulator's fixture never asks.
+    private func microphoneChoice() async -> SessionRecordingMicrophone? {
+        let on = setup?.sessionSetup?.microphoneOn ?? false
+        let state: PermissionState
+        if let microphoneAnswer { state = microphoneAnswer } else { state = await permissions.status(of: .microphone) }
+        switch CaptureRecordingPlan.microphone(on: on, permission: state) {
+        case .record(let microphone): return microphone
+        case .askFirst:
+            #if targetEnvironment(simulator)
+            return .notRequested
+            #else
+            if microphoneAnswer != nil { return .notRequested }
+            microphoneExplanation = true
+            return nil
+            #endif
+        }
     }
 
     private func markPoint(_ coordinator: NativeCaptureCoordinator) {

@@ -1,0 +1,17 @@
+# T21 round 1, test first: recent-player identity and duplicate-seat tests before the fix (2026-11-19).
+# swift test --package-path ios/Packages/JovraCore --filter RecentPlayersTests
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:109:31: error: type 'RecentPlayers' has no member 'id'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:109:69: error: type 'RecentPlayers' has no member 'id'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:110:31: error: type 'RecentPlayers' has no member 'id'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:110:68: error: type 'RecentPlayers' has no member 'id'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:138:37: error: type 'Array<SetupProblem>.ArrayLiteralElement' (aka 'SetupProblem') has no member 'samePlayerTwice'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:147:37: error: type 'RecentPlayers' has no member 'offered'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:148:29: error: cannot infer key path type from context; consider explicitly specifying a root type
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:162:31: error: type 'RecentPlayers' has no member 'offered'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:162:64: error: cannot infer key path type from context; consider explicitly specifying a root type
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:163:73: error: type 'RecentPlayers' has no member 'id'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:164:31: error: type 'RecentPlayers' has no member 'offered'
+Tests/JovraCoreTests/Setup/RecentPlayersTests.swift:31:52: error: type 'RecentPlayers' has no member 'id'
+error: Build failed
+error: SwiftCompile normal arm64 Tests/JovraCoreTests/Setup/RecentPlayersTests.swift failed with a nonzero exit code. Command line:     cd /Users/IDC2.5/jv/.claude/worktrees/t21-session-setup/ios/Packages
+error: fatalError
