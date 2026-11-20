@@ -51,6 +51,14 @@ final class ImportModel {
     private var isReceiving = false
     private var task: Task<Void, Never>?
 
+    /// Called once for every session this screen saves (an import or Import anyway), before its row shows it.
+    /// The screen passes T27's processing queue; tests pass a recorder.
+    private let onSaved: @MainActor (SessionID) async -> Void
+
+    init(onSaved: @escaping @MainActor (SessionID) async -> Void = { _ in }) {
+        self.onSaved = onSaved
+    }
+
     var hasRows: Bool { !rows.isEmpty }
 
     /// Rows still waiting for the player (a held duplicate) or for the pipeline.
@@ -134,6 +142,7 @@ final class ImportModel {
         rows[index].status = .working
         do {
             let id = try await library.importAnyway(duplicate)
+            await onSaved(id)
             await setStatus(rowID, to: (try? await saved(id, library: library)).map(Status.saved) ?? .actionFailed)
         } catch {
             setStatus(rowID, to: .actionFailed)
@@ -180,6 +189,7 @@ final class ImportModel {
         case .finished(let outcome):
             switch outcome {
             case .imported(let session):
+                await onSaved(SessionID(rawValue: session))
                 setStatus(id, to: (try? await saved(SessionID(rawValue: session), library: library)).map(Status.saved) ?? .actionFailed)
             case .duplicate(let duplicate):
                 let title = try? await library.load(SessionID(rawValue: duplicate.sessionID)).title

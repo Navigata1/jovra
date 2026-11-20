@@ -20,7 +20,8 @@ final class ImportModelTests: XCTestCase {
         let items = [ImportItem(url: fixture, origin: .files), ImportItem(url: notVideo, origin: .files),
                      ImportItem(url: again, origin: .photos)]
 
-        let model = ImportModel()
+        var queued: [SessionID] = []
+        let model = ImportModel(onSaved: { queued.append($0) })
         let finished = expectation(description: "batch finished")
         var single: SessionID?? = .none
         model.start(items, intent: .practice(playerName: "Practice Player"), library: library,
@@ -37,12 +38,14 @@ final class ImportModelTests: XCTestCase {
         guard case .duplicate(_, let existing) = model.rows[2].status else { return XCTFail("\(model.rows[2].status)") }
         XCTAssertEqual(existing, "fixture-camera-720p30")
         XCTAssertTrue(model.needsAttention)
+        XCTAssertEqual(queued, [saved.session], "T27: each saved import joins the processing queue; a held duplicate does not")
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: root.appendingPathComponent(".files-imports").path).count, 1)
 
         await model.importAnyway(model.rows[2].id, library: library)
         guard case .saved(let copy) = model.rows[2].status else { return XCTFail("\(model.rows[2].status)") }
         XCTAssertEqual(copy.source, .photos)
         XCTAssertNotEqual(copy.session, saved.session)
+        XCTAssertEqual(queued, [saved.session, copy.session], "Import anyway queues the new session")
         let sessions = try await library.sessions()
         XCTAssertEqual(Set(sessions.map(\.id)), [saved.session.rawValue, copy.session.rawValue])
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: root.appendingPathComponent(".files-imports").path), [])
@@ -60,7 +63,8 @@ final class ImportModelTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         let library = try LocalCaptureLibrary(root: root)
         let fixture = try XCTUnwrap(Bundle.main.url(forResource: "fixture-camera-720p30", withExtension: "mp4"))
-        let model = ImportModel()
+        var queued: [SessionID] = []
+        let model = ImportModel(onSaved: { queued.append($0) })
         let finished = expectation(description: "finished")
         var single: SessionID?
         model.start([ImportItem(url: fixture, origin: .files)], intent: .practice(playerName: "P"), library: library,
@@ -69,6 +73,7 @@ final class ImportModelTests: XCTestCase {
         let id = try XCTUnwrap(single)
         let sessions = try await library.sessions()
         XCTAssertEqual(sessions.map(\.id), [id.rawValue])
+        XCTAssertEqual(queued, [id], "the session is queued for processing before its route is presented")
     }
 
     @MainActor

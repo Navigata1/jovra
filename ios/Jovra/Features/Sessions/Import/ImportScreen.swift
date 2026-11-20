@@ -28,7 +28,8 @@ struct ImportScreen: View {
     @State private var showPhotos = false
     @State private var photoSelection: [PhotosPickerItem] = []
     @State private var pickerIssue: String?
-    @State private var model = ImportModel()
+    /// Every saved import joins the processing queue (T27), like a finished recording.
+    @State private var model = ImportModel(onSaved: { await ProcessingScheduler.shared.enqueue($0) })
 
     var body: some View {
         JovraScreen(title: String(localized: "Bring your game in", table: "Sessions.Import"),
