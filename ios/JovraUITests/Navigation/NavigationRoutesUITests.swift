@@ -53,9 +53,6 @@ final class NavigationRoutesUITests: XCTestCase {
         .init(launchName: "sheet.clipExport", title: "Clip export", ticket: "T36", closeLabel: "Close clip export"),
         .init(launchName: "sheet.sharePack", title: "Share Pack", ticket: "T38", closeLabel: "Close Share Pack"),
         .init(launchName: "sheet.capabilityDetail", title: "How this was measured", ticket: "T12", closeLabel: "Close how this was measured"),
-        .init(launchName: "sheet.matchFormat", title: "Match format", ticket: "T21", closeLabel: "Close match format"),
-        .init(launchName: "sheet.players", title: "Players", ticket: "T21", closeLabel: "Close players"),
-        .init(launchName: "sheet.cameraPreset", title: "Camera preset", ticket: "T21", closeLabel: "Close camera preset"),
         .init(launchName: "sheet.trash", title: "Trash", ticket: "T20", closeLabel: "Close trash"),
         .init(launchName: "sheet.goal", title: "Goal", ticket: "T48", closeLabel: "Close goal"),
         .init(launchName: "sheet.consentAttach", title: "Consent", ticket: "T58", closeLabel: "Close consent"),
@@ -164,13 +161,7 @@ final class NavigationRoutesUITests: XCTestCase {
     @MainActor
     func testRecordPresentsCaptureAndClosingReturnsToRecord() {
         let app = XCUIApplication.launchJovra { $0.appearance = .light }
-        app.buttons["tab.record"].tap()
-        for (id, value) in [("capture.setup.title", "Navigation test"), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
-            let field = app.textFields[id]
-            field.tap(); field.typeText(value + "\n")
-        }
-        app.swipeUp()
-        app.buttons["record.previewCapture"].tap()
+        app.startSinglesCapture(sessionName: "Navigation test")
         XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 5))
         XCTAssertFalse(app.otherElements["tabBar"].exists)
         app.buttons["capture.close"].tap()

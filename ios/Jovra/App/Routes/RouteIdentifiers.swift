@@ -1,4 +1,5 @@
 import Foundation
+import JovraCore
 
 /// A typed identifier carried by a route payload. Routes hold identifiers, never documents, so a
 /// payload stays small, `Codable` for state restoration, and valid after the document changes.
@@ -66,6 +67,8 @@ enum SessionKind: String, Codable, CaseIterable, Sendable {
 struct SessionSetupDraft: Hashable, Codable, Sendable {
     var kind: SessionKind
     var captureChoices: CaptureSetupChoices? = nil
+    /// Everything S04 decided (T21): players, format, toss, doubles orders, camera preset, microphone.
+    var sessionSetup: SessionSetup? = nil
 }
 
 /// Which points a review or replay route shows (screen spec N1: Needs review · Unscored · All points).

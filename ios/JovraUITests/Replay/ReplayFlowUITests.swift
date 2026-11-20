@@ -8,12 +8,7 @@ final class ReplayFlowUITests: XCTestCase {
     func testActualSavedRecordingOpensDecodedReplayAndDurableReviewedCorrection() throws {
         let title = "Replay " + UUID().uuidString.prefix(8)
         let app = XCUIApplication.launchJovra { $0.demo = .off }
-        app.buttons["tab.record"].tap()
-        for (id, text) in [("capture.setup.title", title), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
-            let field = app.textFields[id]
-            XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(text + "\n")
-        }
-        app.swipeUp(); app.buttons["record.previewCapture"].tap()
+        app.startSinglesCapture(sessionName: title)
         XCTAssertTrue(app.buttons["capture.start"].waitForExistence(timeout: 10))
         app.buttons["capture.start"].tap()
         let saved = app.staticTexts["capture.confirmedTime"]

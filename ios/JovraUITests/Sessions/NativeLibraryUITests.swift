@@ -8,13 +8,7 @@ final class NativeLibraryUITests: XCTestCase {
     func testSavedFixtureRemainsInLibraryAfterRelaunchAndOpensReplay() throws {
         let title = "Library " + String(UUID().uuidString.prefix(8))
         let app = XCUIApplication.launchJovra { $0.demo = .off }
-        app.buttons["tab.record"].tap()
-        for (id, value) in [("capture.setup.title", String(title)), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
-            let field = app.textFields[id]
-            XCTAssertTrue(field.waitForExistence(timeout: 5))
-            field.tap(); field.typeText(value + "\n")
-        }
-        app.swipeUp(); app.buttons["record.previewCapture"].tap()
+        app.startSinglesCapture(sessionName: String(title))
         XCTAssertTrue(app.staticTexts["capture.sample"].waitForExistence(timeout: 10))
         app.buttons["capture.start"].tap()
         XCTAssertTrue(app.staticTexts["capture.confirmedTime"].waitForExistence(timeout: 12))
