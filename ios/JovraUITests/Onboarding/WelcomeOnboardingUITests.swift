@@ -240,11 +240,6 @@ final class WelcomeOnboardingAuditUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    override func tearDown() {
-        XCUIDevice.shared.orientation = .portrait
-        super.tearDown()
-    }
-
     private static let variants: [(LaunchConfiguration.Appearance, ContentSize?, String)] = [
         (.light, nil, "light"), (.dark, nil, "dark"), (.light, .accessibility5, "ax5"),
     ]
@@ -311,6 +306,7 @@ final class WelcomeOnboardingAuditUITests: XCTestCase {
 
     @MainActor
     func testLandscapeIPhoneHasNoClippedText() throws {
+        defer { XCUIDevice.shared.orientation = .portrait }
         let app = XCUIApplication.launchJovra { $0.appearance = .light; $0.profile = .fresh; $0.library = .fresh }
         XCTAssertTrue(app.heading("See your game.").waitForExistence(timeout: 10))
         XCUIDevice.shared.orientation = .landscapeLeft
