@@ -189,6 +189,20 @@ extension XCTestCase {
         let tabBarFrame = hasForegroundTabBar ? tabBar.frame : .null
         let markerY = marker.exists ? marker.frame.minY : nil
         var setAside: [String] = []
+        var textUnderTabBar: [String]?
+        func textUnderTabBarNow() -> [String] {
+            guard let snapshot = try? scrollView.snapshot() else { return [] }
+            var found: [String] = []
+            var stack = [snapshot]
+            while let node = stack.popLast() {
+                stack.append(contentsOf: node.children)
+                if node.elementType == .staticText,
+                   AccessibilityAudit.isUnderTabBar(frame: node.frame, tabBarTop: tabBarFrame.minY, screenBottom: app.frame.maxY) {
+                    found.append("“\(node.label)” \(node.frame)")
+                }
+            }
+            return found
+        }
         let handler: (XCUIAccessibilityAuditIssue) -> Bool = { issue in
             guard let element = issue.element else {
                 // A rendered finding with no element (text recognition) cannot be placed; if the page
@@ -201,9 +215,9 @@ extension XCTestCase {
                 }
                 if allowUnplacedContrastUnderTabBar, hasForegroundTabBar, issue.auditType == .contrast,
                    issue.detailedDescription == AccessibilityAudit.unplacedSwiftUINodeContrast {
-                    let underBar = scrollView.staticTexts.allElementsBoundByIndex.filter {
-                        AccessibilityAudit.isUnderTabBar(frame: $0.frame, tabBarTop: tabBarFrame.minY, screenBottom: app.frame.maxY)
-                    }.map { "“\($0.label)” \($0.frame)" }
+                    // One snapshot per audit pass, not one query per text: the audit has its own time limit.
+                    let underBar = textUnderTabBar ?? textUnderTabBarNow()
+                    textUnderTabBar = underBar
                     if AccessibilityAudit.isUnplacedContrastUnderTabBar(type: issue.auditType, hasElement: false,
                                                                         detail: issue.detailedDescription, textUnderTabBar: underBar) {
                         print("audit: contrast issue with no element ignored (\(issue.compactDescription); \(issue.detailedDescription)): unplaceable SwiftUI node while text is under the tab bar at \(tabBarFrame.minY): \(underBar)")

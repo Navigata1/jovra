@@ -79,14 +79,14 @@ struct PickedVideo: Transferable {
     }
 }
 
-/// UI-test seam behind `-importSelection`: paths prefixed `cloud:` report "not downloaded" for two seconds
+/// UI-test seam behind `-importSelection`: paths prefixed `cloud:` report "not downloaded" for six seconds
 /// after first being asked, then become available, like an iCloud Drive file arriving.
 actor SimulatedImportAvailability: ImportSourceAvailability {
     private let cloudPaths: Set<String>
     private var firstAsked: [String: ContinuousClock.Instant] = [:]
     private let delay: Duration
 
-    init(cloudPaths: Set<String>, delay: Duration = .seconds(2)) {
+    init(cloudPaths: Set<String>, delay: Duration = .seconds(6)) {
         self.cloudPaths = cloudPaths
         self.delay = delay
     }

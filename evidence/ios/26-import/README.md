@@ -7,7 +7,7 @@ All media is synthetic: the committed import fixture set (T10) and passthrough c
 | File | What it shows |
 |---|---|
 | `swift-test-import.log` | `swift test --package-path ios/Packages/JovraMedia --no-parallel --filter "ImportPipelineTests\|FilesImport\|ImportFixtureProbeTests"`: 22 tests in 4 suites passed (durations normalised) |
-| `ui-test.log` | `scripts/ios/ui-test.sh -only-testing JovraUITests/ImportSourcesUITests -only-testing JovraUITests/FilesImportUITests -only-testing JovraUITests/AuditExceptionTests`: 10 passed, 0 failed (local paths removed) |
+| `ui-test.log` | `scripts/ios/ui-test.sh -only-testing JovraUITests/ImportSourcesUITests -only-testing JovraUITests/FilesImportUITests -only-testing JovraUITests/AuditExceptionTests -only-testing JovraUITests/JovraSmokeUITests -only-testing JovraUITests/ReplayFlowUITests`: 17 passed, 0 failed (local paths and the smoke and replay classes' own screenshots removed) |
 | `red-photos-cancel.txt` | RED before the Photos-cancel fix: both new `ImportModelTests` cancel cases fail against the previous model (Cancel during the hand-over still saved the video) |
 | `s07-*.jpg`, `reviews.txt`, `side-by-side.html` | light, dark and AX5 screenshots beside `design-reference/screens/07-import-processing.png`, one reviewer line each |
 
@@ -29,6 +29,6 @@ sizes the results test asserts that the unsupported row and the duplicate's Impo
 AX5 audit: the results state runs every audit type, contrast included. One logged, opt-in exception in
 `AccessibilityAuditing.swift` applies there: a contrast finding with no element whose description is exactly
 "Contrast failed for SwiftUI.AccessibilityNode", while scroll-content text sits under the tab bar. In the run
-behind `ui-test.log` it fired 24 times, always with the page at its top and the Files tile's "From your device"
+behind `ui-test.log` it fired 30 times, always with the page at its top and the Files tile's "From your device"
 and the Google Drive tile's "Google Drive" text under the bar (logged with frames). The same tiles at AX5 pass the
 full audit, contrast included and with no exception, on the sources state.

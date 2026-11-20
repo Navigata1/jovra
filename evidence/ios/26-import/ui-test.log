@@ -2,41 +2,13 @@
 ⚙️  Generating project...
 ⚙️  Writing project...
 Created project at ios/Jovra.xcodeproj
-==> JovraUITests on 9A5AB74F-4028-47A0-941E-9C7D510F45ED, only: JovraUITests/ImportSourcesUITests JovraUITests/FilesImportUITests JovraUITests/AuditExceptionTests
+==> JovraUITests on 9A5AB74F-4028-47A0-941E-9C7D510F45ED, only: JovraUITests/ImportSourcesUITests JovraUITests/FilesImportUITests JovraUITests/AuditExceptionTests JovraUITests/JovraSmokeUITests JovraUITests/ReplayFlowUITests
 Writing result bundle at path:
-	.derivedData/ui-tests-20261119-151015.xcresult
+	.derivedData/ui-tests-20261119-182331.xcresult
 
-error: the following command failed with exit code 0 but produced no further output
-SwiftCompile normal arm64 ios/JovraUITests/Import/ImportSourcesUITests.swift (in target 'JovraUITests' from project 'Jovra')
-ios/JovraUITests/Import/ImportSourcesUITests.swift:318:23: warning: 'export()' was deprecated in iOS 18.0 [#DeprecatedDeclaration]
-316 |         session.outputURL = destination
-317 |         session.outputFileType = .mov
-318 |         await session.export()
-    |                       `- warning: 'export()' was deprecated in iOS 18.0 [#DeprecatedDeclaration]
-319 |         XCTAssertEqual(session.status, .completed, String(describing: session.error))
-320 |     }
-
-ios/JovraUITests/Import/ImportSourcesUITests.swift:319:32: warning: 'status' was deprecated in iOS 18.0: Use states(updateInterval:) instead [#DeprecatedDeclaration]
-317 |         session.outputFileType = .mov
-318 |         await session.export()
-319 |         XCTAssertEqual(session.status, .completed, String(describing: session.error))
-    |                                `- warning: 'status' was deprecated in iOS 18.0: Use states(updateInterval:) instead [#DeprecatedDeclaration]
-320 |     }
-321 | }
-
-ios/JovraUITests/Import/ImportSourcesUITests.swift:319:79: warning: 'error' was deprecated in iOS 18.0: Use export(to:as:) async throws instead [#DeprecatedDeclaration]
-317 |         session.outputFileType = .mov
-318 |         await session.export()
-319 |         XCTAssertEqual(session.status, .completed, String(describing: session.error))
-    |                                                                               `- warning: 'error' was deprecated in iOS 18.0: Use export(to:as:) async throws instead [#DeprecatedDeclaration]
-320 |     }
-321 | }
-
-[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
-note: Run script build phase 'Bundle sample media' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Jovra' from project 'Jovra')
-2026-11-19 15:22:18.282 xcodebuild[84399:7556547] [MT] IDETestOperationsObserverDebug: 711.597 elapsed -- Testing started completed.
-2026-11-19 15:22:18.283 xcodebuild[84399:7556547] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
-2026-11-19 15:22:18.283 xcodebuild[84399:7556547] [MT] IDETestOperationsObserverDebug: 711.597 sec, +711.597 sec -- end
+2026-11-19 19:07:10.093 xcodebuild[83417:8612393] [MT] IDETestOperationsObserverDebug: 2607.035 elapsed -- Testing started completed.
+2026-11-19 19:07:10.093 xcodebuild[83417:8612393] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-19 19:07:10.093 xcodebuild[83417:8612393] [MT] IDETestOperationsObserverDebug: 2607.035 sec, +2607.035 sec -- end
 Testing started
 ==> Screenshots exported to evidence/ios/26-import
    evidence/ios/26-import/s07-light-import-saved.png
@@ -52,6 +24,8 @@ Test class                         passed  failed  skipped  expected
 JovraUITests/AuditExceptionTests        3       0        0         0
 JovraUITests/FilesImportUITests         2       0        0         0
 JovraUITests/ImportSourcesUITests       5       0        0         0
-Total: 10 passed, 0 failed, 0 skipped, 0 expected failure(s) in 3 classes (xcresult summary: 10 passed, 0 failed, 0 skipped; result Passed)
+JovraUITests/JovraSmokeUITests          6       0        0         0
+JovraUITests/ReplayFlowUITests          1       0        0         0
+Total: 17 passed, 0 failed, 0 skipped, 0 expected failure(s) in 5 classes (xcresult summary: 17 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-T26 9A5AB74F-4028-47A0-941E-9C7D510F45ED (iPhone 17 Pro, iOS Simulator 27.2)
-Result bundle: .derivedData/ui-tests-20261119-151015.xcresult
+Result bundle: .derivedData/ui-tests-20261119-182331.xcresult
