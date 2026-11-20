@@ -352,6 +352,17 @@ There are three documented audit exceptions, and the test logs every issue it ig
   a dash, is exempt; the tile also speaks "no data", and its colour role is proved by
   `ColorRoleContrastTests`. `AuditExceptionTests` holds the negative controls.
 
+One further exception is opt-in per call (`auditScreen(app, allowUnplacedContrastUnderTabBar: true)`) and is
+used only by S07's AX5 results audit (T26):
+
+- **Unplaced contrast under the tab bar.** A contrast finding with no element whose description is exactly
+  "Contrast failed for SwiftUI.AccessibilityNode", at the settled position on a tab screen, while some
+  scroll-content text reaches into the tab bar's 16 pt band or lies beneath it. The audit names a SwiftUI child
+  node it cannot hand back as an element, so the clipped-content rule cannot place it. Each use is logged with
+  the text under the bar and its frames; on S07 that was the Files and Google Drive tiles' text, which passes
+  the full audit, contrast included, on the AX5 sources state with no exception. `AuditExceptionTests` holds
+  the negative controls (a placed element, another description, another audit type, no text under the bar).
+
 Two robustness rules sit beside them, and neither drops a finding. A rendered finding that has no
 element (text recognition) is set aside like the others when the audit moved the page, and counts on the
 repeat at the settled position. When XCTest reports "Audit failed to complete in time", the same audit is
@@ -383,6 +394,14 @@ UDID=$(xcrun simctl create "Jovra iPhone 17 Pro" com.apple.CoreSimulator.SimDevi
 SIMULATOR_ID=$UDID scripts/ios/ui-test.sh
 xcrun simctl delete "$UDID"   # when done
 ```
+
+**Leftover test daemon.** After an audit times out ("Audit failed to complete in time", XCTest error -56) the
+`testmanagerd` inside that simulator keeps computing after the run has ended. It has been seen using 3 to 11
+cores for hours, which slows the other simulators until their audits time out as well. `scripts/ios/test.sh` and
+`scripts/ios/ui-test.sh` stop this simulator's daemon before and after each run (`stop_leftover_test_daemon` in
+`scripts/ios/common.sh`; skipped while another `xcodebuild` is using the simulator). If you run `xcodebuild test`
+directly, check `ps -Ao pcpu,etime,args -r | head` afterwards and stop a busy `testmanagerd` yourself, or shut
+the simulator down.
 
 Resolved in T06: on a freshly created iPhone 17 Pro / iOS 26.5 simulator (`JOVRA-T06`),
 `performAccessibilityAudit` reported contrast failures on high-contrast text such as Home's "This week"

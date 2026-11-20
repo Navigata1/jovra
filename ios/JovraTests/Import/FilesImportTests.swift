@@ -54,8 +54,13 @@ final class FilesImportTests: XCTestCase {
         let selected = try XCTUnwrap(Bundle.main.url(forResource: "fixture-camera-720p30", withExtension: "mp4"))
         let before = try Data(contentsOf: selected)
         let practiceID = try await library.importFile(selected, playerName: "Practice Player")
-        let matchID = try await library.importMatch(selected, setup: .init(playerA: " Player A ", playerB: "Player B",
-            format: .bestOfOne, gameScoring: .noAd, firstServer: .b, nearPlayer: .b, containsFullMatch: true))
+        let setup = FilesImportMatchSetup(playerA: " Player A ", playerB: "Player B",
+            format: .bestOfOne, gameScoring: .noAd, firstServer: .b, nearPlayer: .b, containsFullMatch: true)
+        // The same bytes are a duplicate (T26); the explicit, byte-bound "Import anyway" saves the match copy.
+        var permission: FilesImportFingerprint?
+        do { _ = try await library.importMatch(selected, setup: setup); XCTFail("Identical bytes must be offered as a duplicate") }
+        catch FilesImportError.duplicate(let duplicate) { permission = duplicate.fingerprint }
+        let matchID = try await library.importMatch(selected, setup: setup, importingAgain: permission)
 
         let reopened = try LocalCaptureLibrary(root: root)
         let practice = try await reopened.load(practiceID)

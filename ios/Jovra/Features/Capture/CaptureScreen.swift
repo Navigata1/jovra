@@ -135,6 +135,7 @@ struct CaptureScreen: View {
                       message: String(localized: "Close JOVRA and try again. Your existing videos are not removed.", table: "Capture"))
         } else if let coordinator, let saved = coordinator.savedRecording {
             CaptureSavedPhase(recording: saved, isFixture: coordinator.isFixture,
+                              seeProcessing: coordinator.sessionID.map { session in { router.present(.processing(session)) } },
                               openLibrary: { router.show(.tab(.sessions)) }, done: { router.dismissFullScreen() })
         } else if let coordinator {
             CaptureFramingPhase(coordinator: coordinator, choices: choices, fixture: fixtureURL,

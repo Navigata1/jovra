@@ -187,7 +187,9 @@ struct VideoLab: View {
                                  onScrubEnded: controller.finishScrub(atFrame:))
                 Spacer().frame(height: VideoMetrics.timelineToJogGap)
                 jog(controller)
-                Spacer().frame(height: Space.x3)
+                // Compact height (iPhone landscape): a tighter gap keeps the whole transport row on screen on
+                // 390 pt tall phones, where the 24 pt gap pushed Play 2 pt past the bottom edge.
+                Spacer().frame(height: verticalSizeClass == .compact ? Space.x2 : Space.x3)
                 TransportBar(isPlaying: controller.isPlaying, rate: controller.rate, canPlaySlow: controller.canPlaySlowForward,
                              timeText: time(controller.currentFrame, controller),
                              onRate: { controller.setRate($0) },

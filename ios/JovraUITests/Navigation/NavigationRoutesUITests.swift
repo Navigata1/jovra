@@ -209,6 +209,12 @@ final class NavigationRoutesUITests: XCTestCase {
             XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
             return
         }
+        if expected.launchName == "processing" {
+            XCTAssertTrue(app.descendants(matching: .any)["processing.missing"].waitForExistence(timeout: 5),
+                          "The launch session is not stored, so processing says so", file: file, line: line)
+            XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
+            return
+        }
         if expected.launchName == "sheet.clipExport" {
             XCTAssertTrue(app.textFields["export.from"].waitForExistence(timeout: 5), "Export renders actual range controls", file: file, line: line)
             XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)

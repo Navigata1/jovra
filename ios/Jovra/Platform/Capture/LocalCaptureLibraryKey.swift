@@ -1,3 +1,4 @@
+import JovraCore
 import SwiftUI
 
 enum LocalCaptureAvailability: Sendable {
@@ -8,25 +9,38 @@ enum LocalCaptureAvailability: Sendable {
 /// The app's single local actor is shared by capture, library and review. Demo choices never
 /// switch this registration to another store; FixtureCamera writes visibly marked sample sessions.
 /// Only `-library fresh` does: a new, empty library in a temporary folder, so a UI test does not
-/// depend on the sessions earlier tests left in the app container.
+/// depend on the sessions earlier tests left in the app container. `-importStall` (a T26 UI-test seam)
+/// keeps the real store and only pauses an import just before it publishes.
 struct LocalCaptureLibraryKey: ServiceKey {
     static let defaultValue: LocalCaptureAvailability = resolve(.current)
-    static func usesFake(_ configuration: LaunchConfiguration) -> Bool { configuration.library == .fresh }
-    static func fake(for configuration: LaunchConfiguration) -> LocalCaptureAvailability {
-        open(root: FileManager.default.temporaryDirectory
-            .appendingPathComponent("JOVRA-fresh-\(UUID().uuidString)", isDirectory: true))
+    static func usesFake(_ configuration: LaunchConfiguration) -> Bool {
+        configuration.library == .fresh || configuration.importStall
     }
-    static func live() -> LocalCaptureAvailability {
+    static func fake(for configuration: LaunchConfiguration) -> LocalCaptureAvailability {
+        let stall: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = configuration.importStall ? stallBeforePublishing : nil
+        guard configuration.library == .fresh else { return live(writeFault: stall) }
+        return open(root: FileManager.default.temporaryDirectory
+            .appendingPathComponent("JOVRA-fresh-\(UUID().uuidString)", isDirectory: true), writeFault: stall)
+    }
+    static func live() -> LocalCaptureAvailability { live(writeFault: nil) }
+
+    /// The staged copy and its document are on disk but unpublished: the state a crash must clean up.
+    @Sendable private static func stallBeforePublishing(_ checkpoint: SessionWriteCheckpoint) throws {
+        guard case .documentRenamed(let url) = checkpoint, url.pathComponents.contains(".files-imports") else { return }
+        Thread.sleep(forTimeInterval: 600)
+    }
+
+    private static func live(writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)?) -> LocalCaptureAvailability {
         do {
             let root = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
                                                     appropriateFor: nil, create: true)
                 .appendingPathComponent("JOVRA", isDirectory: true)
-            return open(root: root)
+            return open(root: root, writeFault: writeFault)
         } catch { return .unavailable }
     }
 
-    private static func open(root: URL) -> LocalCaptureAvailability {
-        do { return .ready(try LocalCaptureLibrary(root: root)) } catch { return .unavailable }
+    private static func open(root: URL, writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = nil) -> LocalCaptureAvailability {
+        do { return .ready(try LocalCaptureLibrary(root: root, writeFault: writeFault)) } catch { return .unavailable }
     }
 }
 

@@ -35,4 +35,5 @@ if [ -d "$RESULT" ]; then
   echo "==> JovraTests summary"
   "$(dirname "$0")/xcresult-summary.py" "$RESULT" || status=1
 fi
+stop_leftover_test_daemon
 exit $status

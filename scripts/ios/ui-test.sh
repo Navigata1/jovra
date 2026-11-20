@@ -107,4 +107,5 @@ if [ ${#FILTERS[@]} -eq 0 ]; then
   done
 fi
 
+stop_leftover_test_daemon
 exit $status

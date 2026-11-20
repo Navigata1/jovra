@@ -1,7 +1,8 @@
 import Foundation
 
 /// What a launch asked for: appearance, demo state, fixture camera, injected permission and archive
-/// states, Reduce Motion, a pseudo-locale, the start route and a fresh local library.
+/// states, Reduce Motion, a pseudo-locale, the start route, a fresh local library, the processing
+/// fixture analyzer and an injected device state for the processing queue.
 ///
 /// This file is the launch-argument contract between the app and its UI tests and is compiled into
 /// both targets (see `ios/project.yml`): UI tests build `arguments` from a value, and the app parses
@@ -24,7 +25,11 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let reduceMotion = "-reduceMotion"
         static let pseudoLocale = "-pseudoLocale"
         static let startRoute = "-startRoute"
+        static let processingAnalyzer = "-processingAnalyzer"
+        static let processingDevice = "-processingDevice"
         static let library = "-library"
+        static let importSelection = "-importSelection"
+        static let importStall = "-importStall"
     }
 
     enum Appearance: String, CaseIterable, Sendable {
@@ -76,6 +81,21 @@ struct LaunchConfiguration: Equatable, Sendable {
         }
     }
 
+    /// The fixture analyzer the processing queue registers for UI tests (T27). It writes no results:
+    /// it only moves the analyze stage's progress, steadily or failing once at 40 %.
+    enum ProcessingAnalyzer: String, CaseIterable, Sendable {
+        case steady, failsOnce
+    }
+
+    /// A device state the processing queue holds for, injected because the simulator can set neither
+    /// Low Power Mode nor the thermal state (T27). Only the processing queue's conditions change.
+    enum ProcessingDevice: String, CaseIterable, Sendable {
+        /// Low Power Mode on, not charging: analysis waits for a charger.
+        case lowPowerOnBattery
+        /// Thermal state serious: every stage waits for the iPhone to cool down.
+        case tooWarm
+    }
+
     /// Which local library a launch uses.
     enum Library: String, CaseIterable, Sendable {
         /// A new, empty library in a temporary folder for this launch only. The library saved on the
@@ -95,8 +115,17 @@ struct LaunchConfiguration: Equatable, Sendable {
     var pseudoLocale: PseudoLocale?
     /// A tab or full-screen route name to open at launch (resolved by the app shell).
     var startRoute: String?
+    /// Registers the fixture analyzer; nil registers none (production has none until a V ticket ships one).
+    var processingAnalyzer: ProcessingAnalyzer?
+    /// nil reads the device's own power and thermal state.
+    var processingDevice: ProcessingDevice?
     /// nil uses the library saved on the device.
     var library: Library?
+    /// UI-test seam (T26): absolute paths delivered as the picker's selection instead of presenting the
+    /// system Photos or Files picker. A path prefixed `cloud:` is reported as not yet downloaded for a moment.
+    var importSelection: [String] = []
+    /// UI-test seam (T26): an import stops just before publication, so a test can end the process mid-import.
+    var importStall = false
 
     /// Arguments that could not be understood. Not part of equality.
     private(set) var problems: [String] = []
@@ -140,7 +169,11 @@ struct LaunchConfiguration: Equatable, Sendable {
         if reduceMotion { result += [Key.reduceMotion, "YES"] }
         if let pseudoLocale { result += [Key.pseudoLocale, pseudoLocale.rawValue] + pseudoLocale.systemArguments }
         if let startRoute { result += [Key.startRoute, startRoute] }
+        if let processingAnalyzer { result += [Key.processingAnalyzer, processingAnalyzer.rawValue] }
+        if let processingDevice { result += [Key.processingDevice, processingDevice.rawValue] }
         if let library { result += [Key.library, library.rawValue] }
+        if !importSelection.isEmpty { result += [Key.importSelection, importSelection.joined(separator: "|")] }
+        if importStall { result += [Key.importStall, "YES"] }
         return result
     }
 
@@ -152,7 +185,8 @@ struct LaunchConfiguration: Equatable, Sendable {
 
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
-        Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library,
+        Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library, Key.processingAnalyzer,
+        Key.processingDevice, Key.importSelection, Key.importStall,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -165,7 +199,16 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.reduceMotion: parseReduceMotion(value)
         case Key.pseudoLocale: pseudoLocale = parse(PseudoLocale.self, value, for: key)
         case Key.startRoute: startRoute = value
+        case Key.processingAnalyzer: processingAnalyzer = parse(ProcessingAnalyzer.self, value, for: key)
+        case Key.processingDevice: processingDevice = parse(ProcessingDevice.self, value, for: key)
         case Key.library: library = parse(Library.self, value, for: key)
+        case Key.importSelection: importSelection = value.split(separator: "|").map(String.init)
+        case Key.importStall:
+            guard value == "YES" || value == "NO" else {
+                problems.append("\(key): unknown value “\(value)” (expected YES or NO)")
+                return
+            }
+            importStall = value == "YES"
         default: break
         }
     }
