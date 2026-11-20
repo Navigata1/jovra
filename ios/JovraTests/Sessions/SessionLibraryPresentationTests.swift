@@ -152,6 +152,29 @@ struct SessionLibraryPresentationTests {
             This can't be undone.
             """)
     }
+
+    // MARK: Move to Trash
+
+    @Test("moving to Trash states the video's size only when this iPhone holds some bytes", arguments: [
+        (SessionBytes?.none, "The session and its points move to Trash. Nothing is deleted until you delete it there."),
+        (SessionBytes(originals: 0, cache: 0, exports: 0),
+         "The session and its points move to Trash. Nothing is deleted until you delete it there."),
+        (SessionBytes(originals: 500_000_000, cache: 0, exports: 0),
+         "The video (500 MB) and its points move to Trash. Nothing is deleted until you delete it there."),
+    ])
+    func moveToTrashMessage(bytes: SessionBytes?, expected: String) {
+        #expect(SessionsView.deleteMessage(entry(bytes: bytes), locale: Locale(identifier: "en_US")) == expected)
+    }
+
+    @Test("a Sample session with nothing on this iPhone never says “Zero kB”; a Drive copy is named as untouched")
+    func moveToTrashBackedUpWithoutBytes() {
+        let message = SessionsView.deleteMessage(entry(archive: .backedUp, copy: .original,
+                                                       bytes: .init(originals: 0, cache: 0, exports: 0)),
+                                                 locale: Locale(identifier: "en_US"))
+        #expect(message == "The session and its points move to Trash. Nothing is deleted until you delete it there. "
+                + "Your Google Drive copy is not affected.")
+        #expect(!message.localizedCaseInsensitiveContains("zero"))
+    }
 }
 
 extension Calendar {

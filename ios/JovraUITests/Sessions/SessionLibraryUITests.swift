@@ -67,17 +67,24 @@ final class SessionLibraryUITests: XCTestCase {
         XCTAssertTrue(quarantine.label.contains("Reason:"), quarantine.label)
         attachScreenshot(app, name: "s08-light-facets-1")
 
+        // Every scroll position is attached, down to the one showing the Trash row, so each card whose label is
+        // read here (it must be hittable) also appears in a named screenshot: the facet grid covers all eleven.
         var labels: [String: String] = [:]
         var page = 2
+        var reachedTrash = false
         for _ in 0..<16 {
             for element in cards(app).allElementsBoundByIndex where element.exists && element.isHittable {
                 labels[element.identifier] = element.label
             }
-            if app.buttons["library.trash"].isHittable { break }
+            if app.buttons["library.trash"].isHittable { reachedTrash = true; break }
             app.scrollViews.firstMatch.swipeUp(velocity: .slow)
-            if page <= 6 { attachScreenshot(app, name: "s08-light-facets-\(page)"); page += 1 }
+            attachScreenshot(app, name: "s08-light-facets-\(page)")
+            page += 1
         }
+        XCTAssertTrue(reachedTrash, "the last screenshot shows the Trash row below the last card")
         XCTAssertEqual(labels.count, 11, "every facet fixture lists while one document is quarantined: \(labels.keys.sorted())")
+        XCTAssertTrue(labels.values.contains { $0.hasPrefix("Lesson with coach") && $0.contains("Backup: Google Drive is full") },
+                      "the eleventh card, the only quota-blocked one, was on screen in an attached page")
         for label in labels.values {
             for axis in ["Video:", "Analysis:", "Review:", "Backup:"] {
                 XCTAssertTrue(label.contains(axis), "each card states its \(axis) facet: \(label)")

@@ -151,8 +151,10 @@ struct SessionsView: View {
     }
 
     /// What moving to Trash does, said before it happens: nothing is deleted yet, and Drive is not touched.
-    static func deleteMessage(_ entry: LibraryEntry) -> String {
-        let size = entry.bytes.map { SessionCardPresentation.bytes($0.total) }
+    /// A session with nothing stored here (sample, archived-only, missing video) states no size rather than
+    /// "Zero kB", the same rule the card's storage line and the purge dialog follow.
+    nonisolated static func deleteMessage(_ entry: LibraryEntry, locale: Locale = .autoupdatingCurrent) -> String {
+        let size = entry.bytes.flatMap { $0.total > 0 ? SessionCardPresentation.bytes($0.total, locale: locale) : nil }
         let first = size.map { String(localized: "The video (\($0)) and its points move to Trash.", table: "Sessions.Library") }
             ?? String(localized: "The session and its points move to Trash.", table: "Sessions.Library")
         let rest = entry.archive == .backedUp
