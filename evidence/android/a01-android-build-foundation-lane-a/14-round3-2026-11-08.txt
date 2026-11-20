@@ -1,0 +1,74 @@
+A01 (#179) round 3, 2026-11-08. Blocker: the merge gate (#375 Lane A pins ADR, #376 ADR-0001 header note).
+Branch ticket/a01-android-build-foundation-lane-a at 7c109ee, 0 commits behind origin/main (a7361c9). No android/ change this round.
+No AVD created, no simulator booted, no physical device used. Nothing installed.
+
+## 1. Merge gate, captured 2026-11-08T08:53:12Z
+#375 OPEN ADR: record the Android start and the verified Lane A toolchain pins (story 351, A01 merge gate)
+#376 OPEN ADR-0001 header note: amended by ADR-0024, Android start condition only (F-ADR-0001, A01 merge gate)
+#377 OPEN ADR-0008 Android amendment: Drive authorization through Play services AuthorizationClient (F-ADR-0008, A49 merge gate)
+$ gh pr list --state all --search "ADR-0001 in:title"   -> []
+$ gh pr list --state all --search "Lane A pins in:title" -> []
+$ git show origin/main:docs/adr/0001-native-per-platform-shared-contracts.md | grep -ci ADR-0024 -> 0
+Result: still OPEN. Neither ADR has a PR. Clearing it needs the ADR owner (ready-for-human) to merge both to main.
+A01 does not edit docs/adr/ (#376: 'not edited by any Android ticket'), and this agent may not push to main or to any
+branch but its own. So the blocker is outside A01's authority. PR #378 stays a draft and unmerged.
+
+## 2. Full Lane A suites, forced (--rerun-tasks), JDK 17, Gradle 9.3.1 wrapper
+$ android/gradlew -p android/build-logic :convention:test --rerun-tasks
+BUILD SUCCESSFUL in 1s
+7 actionable tasks: 7 executed
+exit 0
+-> 11 tests in 1 suite, 0 failures (ModuleBoundariesTest XML)
+$ env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test :studio-core:test :room-protocol:test :testing:test checkModuleBoundaries --rerun-tasks
+Checked 20 modules: 0 violation(s).
+BUILD SUCCESSFUL in 1s
+13 actionable tasks: 13 executed
+exit 0
+-> 8 tests (core 2, studio-core 2, room-protocol 2, testing 2), 0 failures
+$ ANDROID_HOME=$HOME/Library/Android/sdk android/gradlew -p android help :app:dependencies :app:checkDebugAarMetadata :wear:checkDebugAarMetadata
+BUILD SUCCESSFUL in 692ms
+18 actionable tasks: 18 executed
+exit 0
+FAILED lines: 0
+|         +--- androidx.navigation3:navigation3-runtime:1.0.0 -> 1.1.7 (*)
+$ ANDROID_HOME=$HOME/Library/Android/sdk android/gradlew -p android assembleDebug :wear:assembleDebug testDebugUnitTest --rerun-tasks
+BUILD SUCCESSFUL in 5s
+663 actionable tasks: 663 executed
+exit 0
+-> 16 Android smoke tests in 16 suites, 0 failures, 0 errors (testDebugUnitTest XML)
+Totals unchanged from round 2: 11 + 8 + 16 = 35 tests, 0 failures; boundary check 20 modules, 0 violations.
+
+## 3. CI on 7c109ee (PR #378 statusCheckRollup)
+android-core SUCCESS
+jovra-core SUCCESS
+spec SUCCESS
+l10n SUCCESS
+media-fixtures SUCCESS
+ios-app (manual) SKIPPED
+native-data-export SUCCESS
+
+## 4. Disk
+/dev/disk3s5   926Gi   804Gi    87Gi    91%    9.8M  912M    1%   /System/Volumes/Data
+
+## 5. CI on d749e45 (this round's first push): android-core failed 4 times before any task ran (infrastructure, not code)
+Run https://github.com/Navigata1/jovra/actions/runs/42464849939 (attempts 1-4). The wrapper could not download the distribution:
+  attempt 1: java.io.IOException: Server returned HTTP response code: 504 for URL: https://services.gradle.org/distributions/gradle-9.3.1-bin.zip
+  attempts 2-4: Downloading from https://services.gradle.org/distributions/gradle-9.3.1-bin.zip failed: timeout (10000ms)
+                (java.net.SocketTimeoutException: Read timed out)
+The other six checks on d749e45 passed. From this Mac the same URL returned 200 (137037885 bytes in 4.4 s) at the same time.
+Fix: android/gradle/wrapper/gradle-wrapper.properties networkTimeout 10000 -> 60000 (the wrapper's read timeout only;
+distributionUrl and distributionSha256Sum are unchanged, so the pinned Gradle 9.3.1 and its checksum check are unchanged).
+Local check after the change: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android :core:test checkModuleBoundaries -> BUILD SUCCESSFUL.
+
+## 6. The timeout alone was not enough: 53fdc15 hit 504 again (run 42465480561, attempts 1-4, all HTTP 504 before any task ran)
+The same intermittent 504 shows from this Mac (sampled 2026-11-08 ~09:15Z, 4 tries each):
+  https://github.com/gradle/gradle-distributions/releases/download/v9.3.1/gradle-9.3.1-bin.zip -> 504, 504, 504, 200 (137037885 B)
+  https://services.gradle.org/distributions/gradle-9.3.1-bin.zip                              -> 504, 504, 504, 504
+status.gradle.com and githubstatus.com both reported "All Systems Operational" at the time.
+Why every run downloads: setup-gradle writes its cache only on the default branch, and main has no Android job yet, so a
+PR run never restores ~/.gradle/wrapper/dists.
+Fix: android.yml gets a "Fetch the pinned Gradle distribution" step before the first Gradle task. It runs
+`android/gradlew -p android --version` up to 8 times, 60 s apart (at most 7 minutes of waiting, inside the 20-minute job limit).
+Only the download is retried. Tests, the boundary check and the build-logic tests still run once and fail on the first failure.
+The wrapper still verifies distributionSha256Sum, so the bytes are the same pinned Gradle 9.3.1.
+Local check: env -u ANDROID_HOME -u ANDROID_SDK_ROOT android/gradlew -p android --version -> Gradle 9.3.1, exit 0. YAML parses.

@@ -1,0 +1,43 @@
+# No bare :room module; no androidx.room, kapt, ksp or hilt in any build file (2026-10-11)
+# (A first run matched the substring 'ksp' inside the word 'workspace' in a comment of android/studio/editor/build.gradle.kts; the comment now says 'layout'.)
+
+$ grep -nE "\":room\"|':room'|include\(\":room\)" android/settings.gradle.kts
+exit: 1 (1 = no match)
+
+$ grep -no "\":room[^\"]*\"" android/settings.gradle.kts   (every :room* include, for context)
+23:":room-protocol"
+27:":room-transport"
+
+# Build files searched (android/, excluding build/ and .gradle/):
+#   android/app/build.gradle.kts
+#   android/build-logic/convention/build.gradle.kts
+#   android/build-logic/settings.gradle.kts
+#   android/build.gradle.kts
+#   android/core/build.gradle.kts
+#   android/data/build.gradle.kts
+#   android/designsystem/build.gradle.kts
+#   android/feature/home/build.gradle.kts
+#   android/feature/insights/build.gradle.kts
+#   android/feature/profile/build.gradle.kts
+#   android/feature/record/build.gradle.kts
+#   android/feature/sessions/build.gradle.kts
+#   android/gradle.properties
+#   android/gradle/libs.versions.toml
+#   android/gradle/wrapper/gradle-wrapper.properties
+#   android/media/build.gradle.kts
+#   android/room-protocol/build.gradle.kts
+#   android/room-transport/build.gradle.kts
+#   android/settings.gradle.kts
+#   android/studio-core/build.gradle.kts
+#   android/studio/build-match/build.gradle.kts
+#   android/studio/cloud/build.gradle.kts
+#   android/studio/editor/build.gradle.kts
+#   android/studio/films/build.gradle.kts
+#   android/testing/build.gradle.kts
+#   android/wear-bridge/build.gradle.kts
+#   android/wear/build.gradle.kts
+$ <those files> | xargs grep -n -i -E "androidx\.room|kapt|ksp|hilt"
+exit: 1 (1 = no match)
+
+$ grep -rn -i -E "androidx\.room|kapt|ksp|hilt" android/build-logic/convention/src/main
+exit: 1 (1 = no match)
