@@ -2,22 +2,32 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(AppRouter.self) private var router
+    @Environment(PlayerProfileModel.self) private var profile
+    @Environment(\.localCaptureLibrary) private var library
 
     var body: some View {
         JovraScreen(title: String(localized: "Home", table: "Home"), subtitle: String(localized: "Your game, in focus.", table: "Home")) {
             Button { router.select(.profile) } label: {
-                AvatarInitial(initial: nil, size: 52)
+                AvatarInitial(initial: profile.profile?.initial, size: 52)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text("Profile", tableName: "Home"))
         } content: {
+            // T18: the DemoBanner in the demo, and the first-session empty state for a new player.
+            HomeStartSection(part: .demoBanner)
             HomeHero { router.select(.record) }
-            SampleStatTiles()
-            ComingLaterCard(
-                symbol: "house",
-                message: String(localized: "Your latest session, on-court time and weekly trends, computed from sessions saved on this device, replace the sample tiles above.", table: "Home")
-            )
+            HomeStartSection(part: .firstSession)
+            // Sample tiles only while sample sessions are installed (CLAUDE.md rule 1); T19 computes the real ones.
+            // The empty state replaces them (S03 States "Empty").
+            if profile.hasSampleContent && !profile.isFirstRunEmpty { SampleStatTiles() }
+            if !profile.isFirstRunEmpty {
+                ComingLaterCard(
+                    symbol: "house",
+                    message: String(localized: "Your latest session, on-court time and weekly trends, computed from sessions saved on this device, replace the sample tiles above.", table: "Home")
+                )
+            }
         }
+        .task { await profile.refreshLibrary(library) }
     }
 }
 

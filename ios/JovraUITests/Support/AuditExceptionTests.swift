@@ -15,6 +15,17 @@ final class AuditExceptionTests: XCTestCase {
         }
     }
 
+    func testAnUnattributedFindingIsDeferredOnlyWhileScrollContentIsCut() {
+        XCTAssertTrue(AccessibilityAudit.isUnattributedCropIssue(type: .contrast, hasElement: false, scrollContentIsCropped: true))
+        XCTAssertTrue(AccessibilityAudit.isUnattributedCropIssue(type: .elementDetection, hasElement: false, scrollContentIsCropped: true))
+        // Nothing cut, or a finding with its element: the usual rules decide, so this exception never applies.
+        XCTAssertFalse(AccessibilityAudit.isUnattributedCropIssue(type: .contrast, hasElement: false, scrollContentIsCropped: false))
+        XCTAssertFalse(AccessibilityAudit.isUnattributedCropIssue(type: .contrast, hasElement: true, scrollContentIsCropped: true))
+        for type in [XCUIAccessibilityAuditType.dynamicType, .textClipped, .hitRegion, .sufficientElementDescription, .trait] {
+            XCTAssertFalse(AccessibilityAudit.isUnattributedCropIssue(type: type, hasElement: false, scrollContentIsCropped: true))
+        }
+    }
+
     func testATimedOutAuditIsRepeatedOneTypeAtATime() {
         XCTAssertTrue(AccessibilityAudit.isTimeout(NSError(domain: "com.apple.xcode.xctest.accessibilityAudit", code: -56)))
         XCTAssertFalse(AccessibilityAudit.isTimeout(NSError(domain: "com.apple.xcode.xctest.accessibilityAudit", code: -1)))

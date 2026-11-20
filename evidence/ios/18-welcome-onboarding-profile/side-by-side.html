@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Side by side: 18-welcome-onboarding-profile</title>
+<style>
+  body { font: 15px/1.45 -apple-system, system-ui, sans-serif; margin: 24px; color: #182F29; background: #F4F1E8; }
+  .pair { display: flex; gap: 24px; flex-wrap: wrap; }
+  figure { margin: 0; } img { max-height: 720px; max-width: 100%; border: 1px solid #DCD7CA; border-radius: 12px; }
+  section { margin-bottom: 40px; } .review { background: #FBFAF6; padding: 8px 12px; border-radius: 8px; }
+</style></head><body>
+<h1>Side by side: 18-welcome-onboarding-profile</h1>
+<p>References are AI-generated rasters: they guide layout, rhythm, palette and hierarchy; the written spec wins.</p>
+
+  <section>
+    <h2>Screen 01 · s01-ax5-welcome</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/01-welcome.png" alt="Reference 01"><figcaption>Reference: 01-welcome.png</figcaption></figure>
+      <figure><img src="s01-ax5-welcome.jpg" alt="Simulator s01-ax5-welcome"><figcaption>Simulator: s01-ax5-welcome.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — documented S01 behaviour at AX5: the hero shrinks first to a short band, the lockup drops to 40 pt, the panel scrolls and the headline wraps without truncation; no reference at this size.</p>
+  </section>
+  <section>
+    <h2>Screen 01 · s01-dark-welcome</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/01-welcome.png" alt="Reference 01"><figcaption>Reference: 01-welcome.png</figcaption></figure>
+      <figure><img src="s01-dark-welcome.jpg" alt="Simulator s01-dark-welcome"><figcaption>Simulator: s01-dark-welcome.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — identical to light by design (S01 is forest in both appearances); matches.</p>
+  </section>
+  <section>
+    <h2>Screen 01 · s01-light-landscape-welcome</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/01-welcome.png" alt="Reference 01"><figcaption>Reference: 01-welcome.png</figcaption></figure>
+      <figure><img src="s01-light-landscape-welcome.jpg" alt="Simulator s01-light-landscape-welcome"><figcaption>Simulator: s01-light-landscape-welcome.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — documented S01 landscape layout, no reference: hero on the leading 45 %, the panel scrolls on the trailing 55 %; the textClipped audit passes.</p>
+  </section>
+  <section>
+    <h2>Screen 01 · s01-light-welcome-apple-cancelled</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/01-welcome.png" alt="Reference 01"><figcaption>Reference: 01-welcome.png</figcaption></figure>
+      <figure><img src="s01-light-welcome-apple-cancelled.jpg" alt="Simulator s01-light-welcome-apple-cancelled"><figcaption>Simulator: s01-light-welcome-apple-cancelled.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — documented state, no reference: a cancelled Apple sign-in shows the plain info banner above the buttons and Get started stays enabled (ticket wording &quot;Cancel or failure returns to Welcome with a plain message&quot; wins over S01&#x27;s &quot;no message&quot; row).</p>
+  </section>
+  <section>
+    <h2>Screen 01 · s01-light-welcome-apple-failed</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/01-welcome.png" alt="Reference 01"><figcaption>Reference: 01-welcome.png</figcaption></figure>
+      <figure><img src="s01-light-welcome-apple-failed.jpg" alt="Simulator s01-light-welcome-apple-failed"><figcaption>Simulator: s01-light-welcome-apple-failed.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — documented S01 state, no reference: the attention banner &quot;Sign in with Apple didn&#x27;t finish. You can continue without an account.&quot; never blocks Get started.</p>
+  </section>
+  <section>
+    <h2>Screen 01 · s01-light-welcome</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/01-welcome.png" alt="Reference 01"><figcaption>Reference: 01-welcome.png</figcaption></figure>
+      <figure><img src="s01-light-welcome.jpg" alt="Simulator s01-light-welcome"><figcaption>Simulator: s01-light-welcome.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — matches the reference&#x27;s hierarchy: lockup over a full-bleed hero, &quot;See your game.&quot; display headline, subline, chartreuse Get started, Continue with Apple, understated Explore a demo with arrow; forest in both appearances with a light status bar. Documented deviations: vector CourtHeroArt replaces the uncleared photograph (no marks on ball or racket), Apple&#x27;s own white system button replaces the drawn outline, and the P0-18 promise line is added.</p>
+  </section>
+  <section>
+    <h2>Screen 02 · s02-ax5-onboarding-play</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/02-player-onboarding.png" alt="Reference 02"><figcaption>Reference: 02-player-onboarding.png</figcaption></figure>
+      <figure><img src="s02-ax5-onboarding-play.jpg" alt="Simulator s02-ax5-onboarding-play"><figcaption>Simulator: s02-ax5-onboarding-play.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — step 3 at AX5: the actions follow the content instead of a pinned bar that would cover most of the screen; nothing truncates.</p>
+  </section>
+  <section>
+    <h2>Screen 02 · s02-ax5-onboarding-profile</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/02-player-onboarding.png" alt="Reference 02"><figcaption>Reference: 02-player-onboarding.png</figcaption></figure>
+      <figure><img src="s02-ax5-onboarding-profile.jpg" alt="Simulator s02-ax5-onboarding-profile"><figcaption>Simulator: s02-ax5-onboarding-profile.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — documented S02 accessibility layout, no reference: segments and goal chips stack in one column, the avatar shrinks to 64 pt, the rail shows one &quot;2. Profile&quot; line, and the actions end the page instead of pinning over it.</p>
+  </section>
+  <section>
+    <h2>Screen 02 · s02-dark-onboarding-play</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/02-player-onboarding.png" alt="Reference 02"><figcaption>Reference: 02-player-onboarding.png</figcaption></figure>
+      <figure><img src="s02-dark-onboarding-play.jpg" alt="Simulator s02-dark-onboarding-play"><figcaption>Simulator: s02-dark-onboarding-play.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — step 3 in dark; colour roles switch, cards keep their tints; matches the light pairing.</p>
+  </section>
+  <section>
+    <h2>Screen 02 · s02-dark-onboarding-profile</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/02-player-onboarding.png" alt="Reference 02"><figcaption>Reference: 02-player-onboarding.png</figcaption></figure>
+      <figure><img src="s02-dark-onboarding-profile.jpg" alt="Simulator s02-dark-onboarding-profile"><figcaption>Simulator: s02-dark-onboarding-profile.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — the same layout on the forest background with colour roles switched (selected segments ivory on forest); matches the light pairing.</p>
+  </section>
+  <section>
+    <h2>Screen 02 · s02-light-landscape-onboarding-profile</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/02-player-onboarding.png" alt="Reference 02"><figcaption>Reference: 02-player-onboarding.png</figcaption></figure>
+      <figure><img src="s02-light-landscape-onboarding-profile.jpg" alt="Simulator s02-light-landscape-onboarding-profile"><figcaption>Simulator: s02-light-landscape-onboarding-profile.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — documented S02 landscape: one readable column (560 pt max) centred; the textClipped audit passes.</p>
+  </section>
+  <section>
+    <h2>Screen 02 · s02-light-onboarding-play</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/02-player-onboarding.png" alt="Reference 02"><figcaption>Reference: 02-player-onboarding.png</figcaption></figure>
+      <figure><img src="s02-light-onboarding-play.jpg" alt="Simulator s02-light-onboarding-play"><figcaption>Simulator: s02-light-onboarding-play.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — step 3 &quot;Play&quot; is specified in S02 (the reference only names it): &quot;How you play&quot;, Usually play and Units, the own-your-footage promise with where originals live, the iCloud device-backup default and how recording asks for permissions; Record your first session / Look around first / Explore the sample.</p>
+  </section>
+  <section>
+    <h2>Screen 02 · s02-light-onboarding-profile</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/02-player-onboarding.png" alt="Reference 02"><figcaption>Reference: 02-player-onboarding.png</figcaption></figure>
+      <figure><img src="s02-light-onboarding-profile.jpg" alt="Simulator s02-light-onboarding-profile"><figcaption>Simulator: s02-light-onboarding-profile.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T18 agent) — matches the reference: small lockup, StepRail with 1 done / 2 current (chartreuse) / 3 upcoming and labels, &quot;Make it your game&quot; and subtitle, J avatar with Name field, icon ChoiceSegments for hand and backhand, Skill level segments, goal chips, forest Continue with arrow in a pinned bar. Documented deviations: the avatar shows the initial on forest (no court photo, so no Photos access), nothing is preselected (the test made the reference&#x27;s choices), and a Back control sits top leading.</p>
+  </section>
+</body></html>

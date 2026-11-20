@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 /// The app's two roots: the pre-shell (welcome and onboarding) and the shell, swapped with a
-/// cross-fade (none with Reduce Motion). Owns the router, opens deep links, and saves and restores
+/// cross-fade, or instantly with Reduce Motion (`PreShellMotion.rootSwap`). Owns the router, opens deep links, and saves and restores
 /// the navigation state.
 ///
 /// Where a launch starts, in order: the `-startRoute` the launch harness names; otherwise the state
@@ -10,34 +10,47 @@ import SwiftUI
 /// its arguments say); otherwise the welcome gate (`WelcomeGate`, T18) decides between pre-shell and
 /// Home.
 struct AppRoot: View {
-    @State private var router: AppRouter = AppRoot.initialRouter(launch: .current)
+    @State private var router: AppRouter
+    /// The player profile (T18): read once here so the welcome gate can decide before the first frame.
+    @State private var profile: PlayerProfileModel
     @State private var hasRestored = false
     /// Recordings adopted at this launch after JOVRA stopped while recording (T17's recovered-recording sheet).
     @State private var recoveredRecordings: [RecoveredCaptureReport] = []
     @State private var isShellSettled = false
     @State private var shellSettled: Task<Void, Never>?
     @SceneStorage("jovra.router.state") private var savedState: Data?
+    /// Onboarding's answers in progress, saved beside the route so a restored onboarding step is never blank.
+    @SceneStorage("jovra.onboarding.draft") private var savedDraft: Data?
     @Environment(\.localCaptureLibrary) private var captureLibrary
     @Environment(\.sessionLookup) private var sessions
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @Environment(\.launchConfiguration) private var launch
+    @Environment(\.appleSignInClient) private var appleSignIn
+
+    init() {
+        let profile = PlayerProfileModel(availability: ProfileStoreKey.defaultValue)
+        _profile = State(initialValue: profile)
+        _router = State(initialValue: AppRoot.initialRouter(launch: .current, profile: profile.state))
+    }
 
     var body: some View {
         ZStack {
             if let route = router.preShell {
                 PreShellDestination(route: route)
-                    .transition(.opacity)
+                    .transition(rootSwap.transition)
             } else {
                 AppShell()
-                    .transition(.opacity)
+                    .transition(rootSwap.transition)
             }
         }
         #if DEBUG
         .modifier(CoreComponentsGalleryHarness())
         .modifier(CourtGalleryHarness())
         #endif
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.3), value: router.preShell == nil)
+        .animation(rootSwap.animation, value: router.preShell == nil)
         .environment(router)
+        .environment(profile)
+        .task { await profile.checkAppleCredential(using: appleSignIn) }
         .onOpenURL { url in
             Task { await router.open(url, sessions: sessions) }
         }
@@ -62,9 +75,14 @@ struct AppRoot: View {
         .onChange(of: router.state) { _, state in
             savedState = try? state.restorationData()
         }
+        .onChange(of: profile.onboardingDraft) { _, draft in
+            savedDraft = try? JSONEncoder().encode(draft)
+        }
     }
 
     private var reduceMotion: Bool { systemReduceMotion || launch.reduceMotion }
+
+    private var rootSwap: PreShellMotion { .rootSwap(reduceMotion: reduceMotion) }
 
     /// The recovered-recording sheet waits for the shell to be clear: a restored or harness-opened
     /// full-screen route (or another sheet) already owns the presentation, and two presentations at once
@@ -82,11 +100,35 @@ struct AppRoot: View {
         hasRestored = true
         guard Self.restoresSavedState(launch: .current), let savedState else { return }
         do {
-            router.state = try RouterState(restorationData: savedState)
+            let restored = try RouterState(restorationData: savedState)
+            if let state = Self.restoration(of: restored, savedDraft: savedDraft, model: profile) { router.state = state }
         } catch {
             Logger(subsystem: "com.islanddevcrew.jovra", category: "Restoration")
                 .notice("Saved navigation state did not decode; starting fresh. \(String(describing: error), privacy: .public)")
         }
+    }
+
+    /// What a restored navigation state becomes, or nil to keep where the launch already is.
+    ///
+    /// With no profile saved (a first run, or after "Delete all JOVRA data") a shell state never wins over the welcome
+    /// gate. An onboarding step comes back only with the answers saved beside it (`OnboardingDraft`): without them a
+    /// new player starts again on Welcome (where "Continue with Apple" is offered again), and a demo player's "Make it
+    /// yours" starts again at its first step, so nobody resumes past fields that are now blank.
+    static func restoration(of restored: RouterState, savedDraft: Data?, model: PlayerProfileModel) -> RouterState? {
+        guard restored.preShell != nil || WelcomeGate.initialRoute(for: model.state) == nil else { return nil }
+        guard case .onboarding = restored.preShell else { return restored }
+        if let savedDraft, let draft = try? JSONDecoder().decode(OnboardingDraft.self, from: savedDraft) {
+            model.resumeOnboarding(draft)
+            return restored
+        }
+        var state = restored
+        if model.needsWelcome {
+            state.preShell = .welcome
+        } else {
+            model.beginOnboarding()
+            state.preShell = .onboarding(step: 2)
+        }
+        return state
     }
 
     /// A launch with harness arguments starts where they say, never where a previous run left off.
@@ -94,11 +136,11 @@ struct AppRoot: View {
         launch == LaunchConfiguration()
     }
 
-    static func initialRouter(launch: LaunchConfiguration) -> AppRouter {
+    static func initialRouter(launch: LaunchConfiguration, profile: PlayerProfileModel.State) -> AppRouter {
         let router = AppRouter()
         if let destination = launch.startDestination {
             router.show(destination)
-        } else if let route = WelcomeGate.initialRoute() {
+        } else if let route = WelcomeGate.initialRoute(for: profile) {
             router.show(.preShell(route))
         }
         return router

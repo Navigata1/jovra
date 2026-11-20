@@ -1,0 +1,107 @@
+# T18 test runs on simulator JOVRA-T18 (iPhone 17 Pro, iOS Simulator 27.2), 2026-11-20
+
+## scripts/ios/ui-test.sh -only-testing JovraUITests/WelcomeOnboardingUITests -only-testing JovraUITests/DemoEntryUITests -only-testing JovraUITests/WelcomeOnboardingAuditUITests -only-testing JovraUITests/AuditExceptionTests
+==> Summary
+Test class                                  passed  failed  skipped  expected
+JovraUITests/AuditExceptionTests                 3       0        0         0
+JovraUITests/DemoEntryUITests                    2       0        0         0
+JovraUITests/WelcomeOnboardingAuditUITests       4       0        0         0
+JovraUITests/WelcomeOnboardingUITests            5       0        0         0
+Total: 14 passed, 0 failed, 0 skipped, 0 expected failure(s) in 4 classes (xcresult summary: 14 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261120-025913.xcresult
+
+## Landscape re-run after switching its capture to XCUIScreen: WelcomeOnboardingAuditUITests/testLandscapeIPhoneHasNoClippedText
+==> Summary
+Test class                                  passed  failed  skipped  expected
+JovraUITests/WelcomeOnboardingAuditUITests       1       0        0         0
+Total: 1 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+
+## Existing tests touched by the welcome gate (regression)
+==> Summary
+Test class                             passed  failed  skipped  expected
+JovraUITests/CaptureFlowUITests             5       0        0         0
+JovraUITests/HarnessUITests                 9       0        0         1
+JovraUITests/JovraSmokeUITests              5       1        0         0
+JovraUITests/NativeLibraryUITests           2       0        0         0
+JovraUITests/NavigationRoutesUITests        2       0        0         0
+JovraUITests/PermissionsCenterUITests       1       0        0         0
+Total: 24 passed, 1 failed, 0 skipped, 1 expected failure(s) in 6 classes (xcresult summary: 24 passed, 1 failed, 0 skipped; result Failed)
+FAILED JovraSmokeUITests/testEveryTabAtLargestAccessibilityTextSize(): failed: caught error: "Error Domain=com.apple.xcode.xctest.accessibilityAudit Code=-56 "Audit failed to complete in time" UserInfo={NSLocalizedDescription=Audit failed to complete in time}"
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261120-024209.xcresult
+Re-run alone (audit timeout under machine load, load average ~9):
+==> Summary
+Test class                      passed  failed  skipped  expected
+JovraUITests/JovraSmokeUITests       1       0        0         0
+Total: 1 passed, 0 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 1 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+
+## Hosted unit tests (xcodebuild test -only-testing:JovraTests)
+✔ Suite "App router" passed after 0.104 seconds.
+✔ Suite "Launch configuration" passed after 0.003 seconds.
+✔ Suite "Profile eraser" passed after 0.001 seconds.
+✔ Suite "Welcome gate" passed after 0.001 seconds.
+✔ Suite "Player profile model" passed after 0.004 seconds.
+✔ Suite "Bundled sample library" passed after 0.685 seconds.
+✔ Suite "Onboarding motion and Apple sign-in switch" passed after 0.001 seconds.
+✘ Test run with 156 tests in 28 suites failed after 1.514 seconds with 2 issues.
+The two failing cases are 'Jog strip VoiceOver adjust' (fc-060, fc-240): they need the rendered frame-counter media, which this worktree has not rendered; CI renders it (python3 scripts/media/render.py --check) before running JovraTests.
+
+## After merging origin/main (T26) into the branch
+==> Summary
+Test class                                  passed  failed  skipped  expected
+JovraUITests/AuditExceptionTests                 4       0        0         0
+JovraUITests/DemoEntryUITests                    2       0        0         0
+JovraUITests/HarnessUITests                      9       0        0         1
+JovraUITests/NavigationRoutesUITests             1       0        0         0
+JovraUITests/WelcomeOnboardingAuditUITests       4       0        0         0
+JovraUITests/WelcomeOnboardingUITests            5       0        0         0
+Total: 25 passed, 0 failed, 0 skipped, 1 expected failure(s) in 6 classes (xcresult summary: 25 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+JovraTests: ✘ Test run with 156 tests in 28 suites failed after 1.503 seconds with 2 issues.
+(the 2 issues are the same jog-strip frame-counter cases as above)
+
+## After addressing the Codex review on #559 (units survive Back; onboarding draft saved with the scene)
+scripts/ios/ui-test.sh -only-testing JovraUITests/WelcomeOnboardingUITests -only-testing JovraUITests/DemoEntryUITests -only-testing JovraUITests/WelcomeOnboardingAuditUITests -only-testing JovraUITests/AuditExceptionTests
+==> Summary
+Test class                                  passed  failed  skipped  expected
+JovraUITests/AuditExceptionTests                 4       0        0         0
+JovraUITests/DemoEntryUITests                    2       0        0         0
+JovraUITests/WelcomeOnboardingAuditUITests       4       0        0         0
+JovraUITests/WelcomeOnboardingUITests            6       0        0         0
+Total: 16 passed, 0 failed, 0 skipped, 0 expected failure(s) in 4 classes (xcresult summary: 16 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261120-070925.xcresult (load average ~180 during the run)
+New: WelcomeOnboardingUITests/testUnitsChosenOnPlaySurviveGoingBackToProfile.
+JovraTests (xcodebuild test -only-testing:JovraTests): 216 passed, 1 failed, 2 skipped. New suite "Onboarding state restoration" 4/4,
+"Player profile model" 8/8. The failure is again 'Jog strip VoiceOver adjust', which needs frame-counter media not rendered here.
+
+## Review round 1: Reduce Motion root swap goes through one helper (PreShellMotion)
+The dead `OnboardingMotion.rootSwap` constant is gone. AppRoot's transition and animation and OnboardingScreen's step
+transition and animation all come from `PreShellMotion`. Under Reduce Motion the root swap and each step change are
+instant (no animation, `.identity` transition), as screens.md §1 says ("cross-fade; no animation with Reduce Motion").
+The T18 criterion's wording ("swaps the root with a cross-fade only") disagrees with that spec line; the spec wins.
+RED first: the rewritten PreShellMotionTests did not compile against the old code ("cannot find 'PreShellMotion' in scope").
+
+scripts/ios/test.sh (SIMULATOR_ID=JOVRA-T18), log in the build Mac's .t18/unit-r1.log:
+render.py --check: 50 clips reproduce the committed ground truth
+swift test JovraCore: Swift Testing 158 passed (10 suites); XCTest 30 passed, 0 failures
+swift test JovraMedia: Swift Testing 148 passed (22 suites) and 72 passed (13 suites)
+JovraTests: Total: 220 passed, 0 failed, 0 skipped, 0 expected failure(s) in 46 classes (xcresult summary: 220 passed, 0 failed, 0 skipped; result Passed)
+  JovraTests/PreShellMotionTests (Pre-shell motion and Apple sign-in switch)  3 passed, 0 failed
+  (the frame-counter media were rendered in this run, so 'Jog strip VoiceOver adjust' passed here too)
+Result bundle: .derivedData/unit-tests-20261120-093624.xcresult
+
+scripts/ios/ui-test.sh -only-testing JovraUITests/WelcomeOnboardingUITests -only-testing JovraUITests/DemoEntryUITests -only-testing JovraUITests/WelcomeOnboardingAuditUITests -only-testing JovraUITests/AuditExceptionTests -only-testing JovraUITests/NavigationRoutesUITests
+==> Summary
+Test class                                  passed  failed  skipped  expected
+JovraUITests/AuditExceptionTests                 4       0        0         0
+JovraUITests/DemoEntryUITests                    2       0        0         0
+JovraUITests/NavigationRoutesUITests             6       0        0         0
+JovraUITests/WelcomeOnboardingAuditUITests       4       0        0         0
+JovraUITests/WelcomeOnboardingUITests            6       0        0         0
+Total: 22 passed, 0 failed, 0 skipped, 0 expected failure(s) in 5 classes (xcresult summary: 22 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261120-093747.xcresult
