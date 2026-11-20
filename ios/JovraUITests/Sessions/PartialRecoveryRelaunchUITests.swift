@@ -9,15 +9,7 @@ final class PartialRecoveryRelaunchUITests: XCTestCase {
     func testRecordTwoSegmentsAndTerminateBeforeSave() throws {
         let app = try launchIsolated(startRoute: "record")
         defer { terminate(app) }
-        for (id, text) in [("capture.setup.title", "Partial recovery fixture"),
-                           ("capture.setup.playerA", "Fixture A"), ("capture.setup.playerB", "Fixture B")] {
-            let field = app.textFields[id]
-            XCTAssertTrue(field.waitForExistence(timeout: 5))
-            field.tap()
-            field.typeText(text + "\n")
-        }
-        app.swipeUp()
-        app.buttons["record.previewCapture"].tap()
+        app.startSinglesCapture(sessionName: "Partial recovery fixture", me: "Fixture A", opponent: "Fixture B")
         XCTAssertTrue(app.staticTexts["capture.sample"].waitForExistence(timeout: 10))
         app.buttons["capture.start"].tap()
         let saved = app.staticTexts["capture.confirmedTime"]

@@ -70,6 +70,7 @@ All scripts live in `scripts/ios/` and keep derived data in `.derivedData/` at t
 | `scripts/ios/xcresult-summary.py <bundle.xcresult>` | Per-class passed/failed/skipped/expected-failure (XCTExpectFailure) counts, so every test case is counted; the device and the bundle path. |
 | `scripts/l10n/check.sh` | The localization tools' tests, the literal-string lint, the copy lint and (with `BRANCH` and `BASE`) the String Catalog ownership check. CI job `l10n`. |
 | `python3 scripts/media/render.py [--check] [--set NAME]` | Renders the media fixtures (frame counters, fixture camera, import set, harness clips, and T11's sample media and benchmark corpus) into `.cache/media/` and writes their ground truth; `--check` fails unless the committed ground truth and decoded-frame hashes are reproduced. Needs ffmpeg; a cold render of everything takes about 6 minutes. See `scripts/media/README.md`. `test.sh` runs `--check` first (it never rewrites committed truth). |
+| `scripts/ios/sync-sample-library.sh [--check]` | Refreshes `ios/Jovra/Resources/SampleLibrary.bundle`, the app's byte-identical copy of the demo library (`spec/fixtures/sample/library`, the analysis overlays and the media manifest) that "Explore a demo" installs (T18). A `.bundle` folder is one resource, so its layout survives. `--check` changes nothing and names each difference; the hosted test `BundledSampleLibraryTests` fails on any. Run it after regenerating the sample fixtures. |
 | `scripts/ios/bundle-sample-media.sh` | The Jovra target's build phase: copies the rendered sample media into the app (`SampleMedia/`), failing with the render command when it is missing. Set `JOVRA_SKIP_SAMPLE_MEDIA=YES` for a Debug build that does not need the demo video. |
 | `swift run --package-path ios/Packages/JovraMedia jovra-benchmark run ...` | Runs a registered estimator through the benchmark harness and writes a benchmark record (`scripts/media/README.md`). |
 | `scripts/ios/render-app-icon.sh [proof.png]` | Re-renders `AppIcon-1024.png` from `BrandGeometry.swift` (and optionally a brand proof sheet). Run after changing the mark. |
@@ -147,6 +148,8 @@ destination; the app then opens on Home). With no arguments, everything is live.
 | `-startRoute` | any destination's launch name (`AppDestination.catalog`): a tab (`home` … `profile`), `welcome`, `onboarding`, a push (`sessions.matchOverview`, `profile.settings`, …), a full-screen route (`capture`, `replay`, …) or a sheet (`sheet.pointEditor`, `sheet.permission.camera`, …) | where the app opens (example payloads) |
 | `-library` | `fresh`, `facets` | a new local library in a temporary folder for this launch; the library saved on the device is not read or changed. `facets` seeds Sample sessions covering every original, analysis, review and archive state, one session in Trash and one unreadable document set aside in quarantine (T20) |
 | `-recordFixtureSession` | whole seconds, 1–120 | the walking skeleton (T20): records a session of that length through `CaptureEngine` and the fixture camera with no recording screen, then lists it in the library |
+| `-profile` | `fresh`, `onboarded`, `persistentNew`, `persistent` | the player profile store (T18): `fresh` is empty, so the launch opens on Welcome; `onboarded` holds a plain profile, so it opens in the shell; `persistentNew` empties the UI-test folder and keeps it for the next launch, which passes `persistent`. Each uses an in-memory Apple identity, never the Keychain. `XCUIApplication.jovra` sets `onboarded` unless a test names another |
+| `-appleSignIn` | `succeeded`, `cancelled`, `failed` | what "Continue with Apple" answers instead of Apple's sheet (T18); `succeeded` gives a fixture identifier and the given name "Jon" |
 
 In UI tests: `XCUIApplication.launchJovra(contentSize: .accessibility5) { $0.appearance = .dark; $0.permissions = [.camera: .denied] }`.
 Services read `@Environment(\.launchConfiguration)`; the fake/live switch is the `ServiceKey` seam below.
@@ -254,6 +257,34 @@ English ships; Spanish is the first translation and ships after native review (s
   recognition, which fails on "…" or a missing word. A long tab title wraps onto up to three lines and
   only then shrinks (to 75 % at most); it is never truncated.
 
+## Session setup (T21)
+
+The Record tab is S04. `SessionSetupStore` (`Features/Record`, a `ServiceKey`) holds the `SessionSetup` draft the tab
+and its sheets edit, writes it to `Application Support/JOVRA/setup/last-session-setup.json` on every change (the next
+session's default) and registers the `sessionSetup` eraser. "Check camera position" presents
+`.capture(SessionSetupDraft(setup))`: `sessionSetup` carries everything decided; `captureChoices` is filled only when
+today's capture screen can record the chosen format exactly (singles, one or three tie-break sets with lets), never a
+substitute. Otherwise `SessionSetupDraft.captureSupport` is `.formatUnavailable` (or `.modeUnavailable` for doubles and
+practice) and capture shows why instead of its own form. Capture records with `CaptureRecordingPlan`: the preset chosen
+on S04 (the first offered one when the remembered preset is not offered, as the camera row shows) and the microphone
+choice (off: no sound, never asks; on: sound when allowed, the in-app explanation first when iOS has not asked yet).
+The camera preset row lists `CaptureFormatCatalog` options (JovraMedia): the back camera's own formats on a device, the
+fixture clip's format on the simulator. "Played before" chips come from `RecentPlayers`: a person's id is derived from
+their name (`recent-` + FNV-1a), because saved sessions use session-local ids (`player-a`/`player-b`); anyone already
+named in a seat is not offered, and `SetupProblem.samePlayerTwice` blocks one id in two seats. Sheet audits:
+`SessionSetupSheetAuditUITests` audits each sheet at every scroll position in light, dark and AX5, one test per sheet
+and variant: positions half a screen apart reached by held drags (no fling), the last one the sheet's end with Done
+whole, one `performAccessibilityAudit` call per iOS audit type (a single `.all` call, reserved bits included, runs out
+of time on the format sheet), and an `audit-positions-<variant>-<sheet>` attachment listing every audited position.
+Issues on elements the scroll view cuts or hides at a position are set aside there and judged where the element is
+whole. DEBUG launch environment for UI tests:
+
+| Variable | Effect |
+|---|---|
+| `JOVRA_SETUP_RESET=1` | forget the remembered setup at launch (`launchJovra` sets it; set `0` to test the memory) |
+| `JOVRA_DEVICE_BUDGET=roomy\|lowStorage\|almostFull\|lowBattery\|warm` | a synthetic `DeviceBudget` for the pre-flight strip |
+| `JOVRA_ROUTE_PROBE=1` | exposes the presented full-screen route's JSON as the value of `route.payload` |
+
 ## UI-test support (`ios/JovraUITests/Support`)
 
 | Helper | Use |
@@ -263,6 +294,7 @@ English ships; Spanish is the first translation and ships after native review (s
 | `assertHitTargets(in:exempt:)` | every hittable control at least 44 × 44 pt |
 | `attachScreenshot(app, name:)` | a named screenshot, exported by `ui-test.sh`; name reference pairs `sNN-<appearance>-<what>`; a bad name is a recorded test failure, not a crash |
 | `assertBriefCopy(screen:in:corrections:excluding:)`, `BriefCopy.expected(screen:)` | copy from `design-reference/brief/screens.json` with the spec's honesty corrections (Photos "Not needed for import" / "Add-only", "Best of 3 · Ad · Tie-break at 6–6", "+4 percentage points", "Fastest marked serve", provider "Demo", no "Reference concept", no "3.2 GB", no "Estimated from calibrated video"); add a screen's own deliberate differences through `corrections` |
+| `startSinglesCapture(sessionName:me:opponent:)`, `fillPlayers(_:sessionName:)`, `finishSheet()`, `reveal(_:in:)` | session setup (T21) as a player does it: Record tab → players sheet → "Check camera position"; `reveal` scrolls until an element is tappable above the tab bar |
 
 ### Side-by-side evidence
 

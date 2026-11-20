@@ -119,6 +119,12 @@ actor LocalCaptureLibrary: RecordingSink {
         return try await store.list(query)
     }
 
+    /// Installs the demo library through the same store actor as every other session write (T18, "Explore a demo").
+    /// Sample sessions already there are kept as they are.
+    func installSampleContent(_ content: SampleContent) async throws {
+        try await content.install(into: store)
+    }
+
     func reconcileAtStartup() async -> StartupRecoverySummary {
         if let startupRecovery { return await startupRecovery.value }
         let task = Task { await runStartupRecovery() }

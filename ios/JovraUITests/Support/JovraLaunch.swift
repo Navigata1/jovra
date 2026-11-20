@@ -10,15 +10,23 @@ enum ContentSize: String {
 extension XCUIApplication {
     /// The app, configured through `LaunchConfiguration` (the same type the app parses, compiled into
     /// this target) and optionally at a Dynamic Type size.
+    ///
+    /// Launches start with a temporary onboarded profile (`-profile onboarded`), so a test opens in the
+    /// shell as it did before the welcome gate (T18) and never reads or leaves a profile on the
+    /// simulator. A test of the first run sets `$0.profile = .fresh`.
     @MainActor
     static func jovra(
         contentSize: ContentSize? = nil,
         _ configure: (inout LaunchConfiguration) -> Void = { _ in }
     ) -> XCUIApplication {
         var configuration = LaunchConfiguration()
+        configuration.profile = .onboarded
         configure(&configuration)
         let app = XCUIApplication()
         app.launchArguments += configuration.arguments
+        // Every launch starts from the default session setup (T21 remembers the last one); a test of
+        // that memory sets this to "0" before relaunching.
+        app.launchEnvironment["JOVRA_SETUP_RESET"] = "1"
         if let contentSize {
             app.launchArguments += ["-UIPreferredContentSizeCategoryName", contentSize.rawValue]
         }

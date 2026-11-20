@@ -86,11 +86,11 @@ extension AppDestination {
         case .preShell(.welcome):
             RouteInfo(kind: .preShell, launchName: "welcome", ticket: "T18",
                       title: String(localized: "Welcome", table: "App", comment: "Screen name"),
-                      file: "Features/Welcome/WelcomeScreen.swift")
+                      file: "Features/Welcome/WelcomeScreen.swift", isPlaceholder: false)
         case .preShell(.onboarding):
             RouteInfo(kind: .preShell, launchName: "onboarding", ticket: "T18",
                       title: String(localized: "Player onboarding", table: "App", comment: "Screen name"),
-                      file: "Features/Onboarding/OnboardingScreen.swift")
+                      file: "Features/Onboarding/OnboardingScreen.swift", isPlaceholder: false)
         case .tab(let tab):
             tab.rootInfo
         case .push(.sessions(let route)):
@@ -249,15 +249,15 @@ private extension SheetRoute {
         case .matchFormat:
             sheet("matchFormat", "T21", String(localized: "Match format", table: "App", comment: "Sheet name"),
                   String(localized: "Close match format", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Record/FormatSheet/FormatSheet.swift")
+                  "Features/Record/FormatSheet/FormatSheet.swift", placeholder: FormatSheet.isPlaceholder)
         case .players:
             sheet("players", "T21", String(localized: "Players", table: "App", comment: "Sheet name"),
                   String(localized: "Close players", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Record/PlayersSheet.swift")
+                  "Features/Record/PlayersSheet.swift", placeholder: PlayersSheet.isPlaceholder)
         case .cameraPreset:
             sheet("cameraPreset", "T21", String(localized: "Camera preset", table: "App", comment: "Sheet name"),
                   String(localized: "Close camera preset", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Record/CameraPresetSheet.swift")
+                  "Features/Record/CameraPresetSheet.swift", placeholder: CameraPresetSheet.isPlaceholder)
         case .trash:
             sheet("trash", "T20", String(localized: "Trash", table: "App", comment: "Sheet name"),
                   String(localized: "Close trash", table: "App", comment: "VoiceOver label of the Close control"),

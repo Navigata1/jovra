@@ -16,8 +16,9 @@ final class NavigationRoutesUITests: XCTestCase {
     }
 
     static let preShell: [Expected] = [
-        .init(launchName: "welcome", title: "Welcome", ticket: "T18"),
-        .init(launchName: "onboarding", title: "Player onboarding", ticket: "T18"),
+        // T18 built both: their headings are the screens' own titles.
+        .init(launchName: "welcome", title: "See your game.", ticket: "T18"),
+        .init(launchName: "onboarding", title: "Make it your game", ticket: "T18"),
     ]
 
     static let pushes: [Expected] = [
@@ -52,9 +53,6 @@ final class NavigationRoutesUITests: XCTestCase {
         .init(launchName: "sheet.clipExport", title: "Clip export", ticket: "T36", closeLabel: "Close clip export"),
         .init(launchName: "sheet.sharePack", title: "Share Pack", ticket: "T38", closeLabel: "Close Share Pack"),
         .init(launchName: "sheet.capabilityDetail", title: "How this was measured", ticket: "T12", closeLabel: "Close how this was measured"),
-        .init(launchName: "sheet.matchFormat", title: "Match format", ticket: "T21", closeLabel: "Close match format"),
-        .init(launchName: "sheet.players", title: "Players", ticket: "T21", closeLabel: "Close players"),
-        .init(launchName: "sheet.cameraPreset", title: "Camera preset", ticket: "T21", closeLabel: "Close camera preset"),
         .init(launchName: "sheet.trash", title: "Trash", ticket: "T20", closeLabel: "Close trash"),
         .init(launchName: "sheet.goal", title: "Goal", ticket: "T48", closeLabel: "Close goal"),
         .init(launchName: "sheet.consentAttach", title: "Consent", ticket: "T58", closeLabel: "Close consent"),
@@ -144,7 +142,16 @@ final class NavigationRoutesUITests: XCTestCase {
             XCTAssertFalse(app.otherElements["tabBar"].exists, "\(expected.launchName) is before the shell")
             try auditScreen(app)
 
-            app.buttons["preShell.continue"].tap()
+            // Welcome → onboarding → Home; onboarding launched directly goes Back to the shell (a profile exists).
+            if expected.launchName == "welcome" {
+                app.buttons["welcome.getStarted"].tap()
+                XCTAssertTrue(app.heading("Make it your game").waitForExistence(timeout: 5))
+                app.buttons["onboarding.continue"].tap()
+                XCTAssertTrue(app.heading("How you play").waitForExistence(timeout: 5))
+                app.buttons["onboarding.lookAround"].tap()
+            } else {
+                app.buttons["onboarding.back"].tap()
+            }
             XCTAssertTrue(app.heading("Home").waitForExistence(timeout: 5), "the pre-shell opens on Home")
             XCTAssertTrue(app.otherElements["tabBar"].exists)
             app.terminate()
@@ -154,13 +161,7 @@ final class NavigationRoutesUITests: XCTestCase {
     @MainActor
     func testRecordPresentsCaptureAndClosingReturnsToRecord() {
         let app = XCUIApplication.launchJovra { $0.appearance = .light }
-        app.buttons["tab.record"].tap()
-        for (id, value) in [("capture.setup.title", "Navigation test"), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
-            let field = app.textFields[id]
-            field.tap(); field.typeText(value + "\n")
-        }
-        app.swipeUp()
-        app.buttons["record.previewCapture"].tap()
+        app.startSinglesCapture(sessionName: "Navigation test")
         XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 5))
         XCTAssertFalse(app.otherElements["tabBar"].exists)
         app.buttons["capture.close"].tap()
@@ -211,6 +212,11 @@ final class NavigationRoutesUITests: XCTestCase {
         if expected.launchName == "capture" {
             XCTAssertTrue(app.staticTexts["capture.kind"].exists, "Capture now renders its actual setup", file: file, line: line)
             XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists)
+            return
+        }
+        if expected.launchName == "welcome" || expected.launchName == "onboarding" {
+            XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "placeholder.ticket").firstMatch.exists,
+                           "\(expected.launchName) is the real screen (T18)", file: file, line: line)
             return
         }
         if expected.launchName == "replay" {

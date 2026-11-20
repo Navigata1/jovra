@@ -32,6 +32,12 @@ import XCTest
 ///   the clipped-content exception above cannot place it; at the failing position the Files and Google Drive
 ///   tiles' text ran under the bar's backdrop. Every such text is audited clear of the bar at a later step,
 ///   where any contrast finding on it fails. Logged with the text under the bar each time it is used.
+/// - *Unattributed finding on cut scroll content* (opt-in per call, `allowUnattributedCropContrast`): a contrast or
+///   element-detection finding with no element, at a first (not repeated) pass, while some scroll content is cut by
+///   the viewport's edge on a screen with no tab bar. Found on the Profile hub's edit screen (T18): a goal-chip row
+///   cut by the bottom of the screen at the first step. That content is audited fully visible at a later step.
+/// - *Pinned bottom bar*: an element marked `screen.bottomBar` (onboarding's Continue) bounds the visible page like
+///   the tab bar, for the clipped-content exception above.
 enum AccessibilityAudit {
     static let unplacedSwiftUINodeContrast = "Contrast failed for SwiftUI.AccessibilityNode"
 
@@ -58,6 +64,14 @@ enum AccessibilityAudit {
               !frame.isNull, !frame.isEmpty,
               [frame.minY, frame.maxY, viewport.minY, viewport.maxY].allSatisfy({ $0.isFinite }) else { return false }
         return frame.minY < viewport.minY || frame.maxY > viewport.maxY
+    }
+
+    /// A contrast or element-detection finding the audit could not attach to any element (its text recognition read
+    /// text it cannot match), made while some scroll content is cut by the viewport's edge. The cut text is the likely
+    /// source, as for `isOccludedScrollIssue`; that content is audited fully visible at a later scroll step, where an
+    /// unattributed finding fails as usual. With nothing cropped, an unattributed finding always fails.
+    static func isUnattributedCropIssue(type: XCUIAccessibilityAuditType, hasElement: Bool, scrollContentIsCropped: Bool) -> Bool {
+        (type == .contrast || type == .elementDetection) && !hasElement && scrollContentIsCropped
     }
 
     /// XCTest's "Audit failed to complete in time".
@@ -108,7 +122,8 @@ extension XCTestCase {
     /// `pageTop` is where a full-screen page without a tab bar stops scrolling under its status-bar
     /// backdrop (the component gallery passes it); content above it is clipped, not shown.
     func auditScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType = .all, scrollIdentifier: String? = nil,
-                     pageTop: CGFloat? = nil, allowUnplacedContrastUnderTabBar: Bool = false) throws {
+                     pageTop: CGFloat? = nil, allowUnplacedContrastUnderTabBar: Bool = false,
+                     allowUnattributedCropContrast: Bool = false) throws {
         // On a tab screen the lockup is the first row, Space.x1 (8 pt) below the status-bar backdrop.
         let lockup = app.descendants(matching: .any).matching(identifier: "brand.lockup").firstMatch
         let onTabScreen = scrollIdentifier == nil && app.otherElements["tabBar"].exists && lockup.exists
@@ -123,7 +138,8 @@ extension XCTestCase {
             XCTFail("Requested foreground scroll title is missing"); return
         }
         try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title, scrollView: scrollView, foregroundModal: scrollIdentifier != nil,
-                                   allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar)
+                                   allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar,
+                                   allowUnattributedCropContrast: allowUnattributedCropContrast)
         guard scrollView.exists, title.exists else { return }
         // The audit itself may move the scroll position, so each step starts again from the top and
         // scrolls `step` slow swipes down; it stops once another swipe no longer moves the page.
@@ -136,7 +152,8 @@ extension XCTestCase {
             guard abs(titleY - previousTitleY) > 1 else { break }
             previousTitleY = titleY
             try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: title, scrollView: scrollView, foregroundModal: scrollIdentifier != nil,
-                                   allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar)
+                                   allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar,
+                                   allowUnattributedCropContrast: allowUnattributedCropContrast)
         }
         scrollToTop(scrollView, foregroundTitle: scrollIdentifier == nil ? nil : title)
     }
@@ -158,6 +175,19 @@ extension XCTestCase {
             waitForScrollingToSettle(foregroundTitle)
         }
         XCTFail("Foreground scroll did not reach its top boundary")
+    }
+
+    /// Whether any element inside the scroll view is cut by the viewport's top or bottom edge right now.
+    @MainActor
+    private func isScrollContentCropped(_ scrollView: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard scrollView.exists else { return false }
+        let viewport = scrollView.frame.intersection(app.frame)
+        guard !viewport.isNull, !viewport.isEmpty else { return false }
+        return scrollView.descendants(matching: .any).allElementsBoundByIndex.contains { element in
+            let frame = element.frame
+            return !frame.isEmpty && frame.intersects(viewport)
+                && AccessibilityAudit.isOccludedScrollIssue(type: .contrast, frame: frame, viewport: viewport, isScrollDescendant: true)
+        }
     }
 
     /// A swipe returns while the page may still be decelerating; an audit taken then samples pixels
@@ -182,10 +212,14 @@ extension XCTestCase {
     @MainActor
     private func auditVisibleScreen(_ app: XCUIApplication, for types: XCUIAccessibilityAuditType, visibleTop: CGFloat,
                                     marker: XCUIElement, scrollView: XCUIElement, foregroundModal: Bool,
-                                    allowUnplacedContrastUnderTabBar: Bool = false, isRepeat: Bool = false) throws {
+                                    allowUnplacedContrastUnderTabBar: Bool = false, allowUnattributedCropContrast: Bool = false,
+                                    isRepeat: Bool = false) throws {
         let tabBar = app.otherElements["tabBar"]
         let hasForegroundTabBar = !foregroundModal && tabBar.exists
-        let visibleBottom = hasForegroundTabBar ? tabBar.frame.minY : app.frame.maxY
+        // A pinned bottom action bar (`screen.bottomBar`, e.g. onboarding's Continue) covers the page like the tab bar.
+        let bottomBar = app.otherElements["screen.bottomBar"]
+        let barTop = bottomBar.exists ? bottomBar.frame.minY : app.frame.maxY
+        let visibleBottom = min(hasForegroundTabBar ? tabBar.frame.minY : app.frame.maxY, barTop)
         let tabBarFrame = hasForegroundTabBar ? tabBar.frame : .null
         let markerY = marker.exists ? marker.frame.minY : nil
         var setAside: [String] = []
@@ -224,6 +258,12 @@ extension XCTestCase {
                         return true
                     }
                 }
+                if allowUnattributedCropContrast, !isRepeat, AccessibilityAudit.isUnattributedCropIssue(
+                    type: issue.auditType, hasElement: false,
+                    scrollContentIsCropped: self.isScrollContentCropped(scrollView, in: app)) {
+                    print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element while scroll content is cut by the viewport: assessed when visible (\(issue.compactDescription))")
+                    return true
+                }
                 print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element: FAILS (\(issue.compactDescription); \(issue.detailedDescription))")
                 return false
             }
@@ -258,7 +298,9 @@ extension XCTestCase {
                 }
             }
             let isTabBarItem = element.identifier.hasPrefix("tab.")
-            let isClipped = !isTabBarItem && (frame.maxY > visibleBottom - AccessibilityAudit.edgeBand || frame.minY < visibleTop)
+            let isInBottomBar = bottomBar.exists && bottomBar.frame.contains(frame)
+            let isClipped = !isTabBarItem && !isInBottomBar
+                && (frame.maxY > visibleBottom - AccessibilityAudit.edgeBand || frame.minY < visibleTop)
             guard isRendered, isClipped else {
                 print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue on “\(element.label)” at \(frame), visible \(visibleTop)–\(visibleBottom): FAILS (\(issue.compactDescription))")
                 return false
@@ -281,6 +323,7 @@ extension XCTestCase {
         waitForScrollingToSettle(marker)
         print("audit: repeating the audit at the settled position for \(setAside)")
         try auditVisibleScreen(app, for: types, visibleTop: visibleTop, marker: marker, scrollView: scrollView, foregroundModal: foregroundModal,
-                               allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar, isRepeat: true)
+                               allowUnplacedContrastUnderTabBar: allowUnplacedContrastUnderTabBar,
+                               allowUnattributedCropContrast: allowUnattributedCropContrast, isRepeat: true)
     }
 }

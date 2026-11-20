@@ -2,7 +2,8 @@ import Foundation
 
 /// What a launch asked for: appearance, demo state, fixture camera, injected permission and archive
 /// states, Reduce Motion, a pseudo-locale, the start route, a fresh local library, the processing
-/// fixture analyzer and an injected device state for the processing queue.
+/// fixture analyzer, an injected device state for the processing queue, the profile store and an
+/// injected Sign in with Apple answer.
 ///
 /// This file is the launch-argument contract between the app and its UI tests and is compiled into
 /// both targets (see `ios/project.yml`): UI tests build `arguments` from a value, and the app parses
@@ -29,6 +30,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let processingDevice = "-processingDevice"
         static let library = "-library"
         static let recordFixtureSession = "-recordFixtureSession"
+        static let profile = "-profile"
+        static let appleSignIn = "-appleSignIn"
         static let importSelection = "-importSelection"
         static let importStall = "-importStall"
     }
@@ -110,6 +113,24 @@ struct LaunchConfiguration: Equatable, Sendable {
     /// The longest headless fixture recording a launch may ask for, in seconds.
     static let maximumFixtureSessionSeconds = 120
 
+    /// Which player profile store a launch uses (T18). The welcome gate reads it: with no profile, the launch opens
+    /// on Welcome.
+    enum ProfileStoreChoice: String, CaseIterable, Sendable {
+        /// A new, empty store in a temporary folder for this launch only: Welcome shows.
+        case fresh
+        /// A temporary store holding a plain, unnamed profile for this launch only: the shell shows, as before T18.
+        case onboarded
+        /// The UI-test folder, emptied at launch and kept for the next launch.
+        case persistentNew
+        /// The UI-test folder as the previous launch left it (a relaunch check).
+        case persistent
+    }
+
+    /// What "Continue with Apple" answers instead of Apple's sheet (T18). The fixture identity never leaves the device.
+    enum AppleSignInFixture: String, CaseIterable, Sendable {
+        case succeeded, cancelled, failed
+    }
+
     var appearance: Appearance?
     var demo: DemoState = .off
     /// The fixture clip the simulator fixture camera streams (ADR-0012); nil uses the default source.
@@ -131,6 +152,10 @@ struct LaunchConfiguration: Equatable, Sendable {
     /// Records a session of this many seconds through the capture engine and the fixture camera at launch,
     /// with no screen in between (the walking skeleton), then opens the library. nil records nothing.
     var recordFixtureSessionSeconds: Int?
+    /// nil uses the profile saved on the device.
+    var profile: ProfileStoreChoice?
+    /// nil uses Sign in with Apple itself.
+    var appleSignIn: AppleSignInFixture?
     /// UI-test seam (T26): absolute paths delivered as the picker's selection instead of presenting the
     /// system Photos or Files picker. A path prefixed `cloud:` is reported as not yet downloaded for a moment.
     var importSelection: [String] = []
@@ -183,6 +208,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         if let processingDevice { result += [Key.processingDevice, processingDevice.rawValue] }
         if let library { result += [Key.library, library.rawValue] }
         if let recordFixtureSessionSeconds { result += [Key.recordFixtureSession, String(recordFixtureSessionSeconds)] }
+        if let profile { result += [Key.profile, profile.rawValue] }
+        if let appleSignIn { result += [Key.appleSignIn, appleSignIn.rawValue] }
         if !importSelection.isEmpty { result += [Key.importSelection, importSelection.joined(separator: "|")] }
         if importStall { result += [Key.importStall, "YES"] }
         return result
@@ -197,7 +224,7 @@ struct LaunchConfiguration: Equatable, Sendable {
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
         Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library, Key.processingAnalyzer,
-        Key.processingDevice, Key.recordFixtureSession, Key.importSelection, Key.importStall,
+        Key.processingDevice, Key.recordFixtureSession, Key.profile, Key.appleSignIn, Key.importSelection, Key.importStall,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -214,6 +241,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.processingDevice: processingDevice = parse(ProcessingDevice.self, value, for: key)
         case Key.library: library = parse(Library.self, value, for: key)
         case Key.recordFixtureSession: parseFixtureSeconds(value)
+        case Key.profile: profile = parse(ProfileStoreChoice.self, value, for: key)
+        case Key.appleSignIn: appleSignIn = parse(AppleSignInFixture.self, value, for: key)
         case Key.importSelection: importSelection = value.split(separator: "|").map(String.init)
         case Key.importStall:
             guard value == "YES" || value == "NO" else {

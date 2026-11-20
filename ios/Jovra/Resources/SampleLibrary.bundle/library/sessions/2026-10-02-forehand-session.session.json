@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.2.0",
+  "kind": "jovra.session",
+  "id": "c47f4d6a-6fb8-5a0f-b9da-65d10f8b7886",
+  "sport": "tennis",
+  "createdAt": "2026-10-02T22:00:00Z",
+  "updatedAt": "2026-10-02T23:08:00Z",
+  "title": "Forehand session",
+  "sample": {
+    "label": "Sample",
+    "synthetic": true,
+    "generator": "sample:library@1.0.0",
+    "mediaIds": ["sample-media.2026-10-02-forehand-session", "sample-media.2026-10-02-side-on-forehands"]
+  },
+  "sessionKind": "strokePractice",
+  "players": [
+    {
+      "id": "e75faf7e-1ce8-5d45-b003-af3f331b1082",
+      "displayName": "Jon",
+      "handedness": "right",
+      "backhand": "twoHanded",
+      "isSelf": true
+    }
+  ],
+  "recording": {
+    "mode": "none",
+    "startedAt": "2026-10-02T22:00:00Z",
+    "timeZone": "America/Chicago",
+    "durationMs": 2280000,
+    "segments": [],
+    "gaps": [],
+    "microphone": "notRequested",
+    "mediaAvailable": false
+  },
+  "marks": [],
+  "shots": [],
+  "calibrations": [],
+  "annotations": [],
+  "voiceNotes": [],
+  "comparisons": [],
+  "derivedValues": [],
+  "analysis": {"state": "notRequested", "runs": []},
+  "review": {"state": "inProgress", "updatedAt": "2026-10-02T23:08:00Z"},
+  "archive": {
+    "state": "failed",
+    "provider": "googleDrive",
+    "lastError": "Sample: the upload stopped. Retry backup."
+  },
+  "storage": {"originals": "none", "includeInDeviceBackup": false},
+  "equipmentUse": [
+    {
+      "id": "5787dd81-bb4b-5a14-928a-1f96c52a9e84",
+      "playerId": "e75faf7e-1ce8-5d45-b003-af3f331b1082",
+      "racketId": "69d4aa05-fb98-5e6c-a83d-9d3cc723b7cc",
+      "stringJobId": "3bb29cb7-74fe-5c5c-9c43-99de8c2f076f",
+      "setupLabelSnapshot": "Head Prestige · Hyper-G 52 / Ghost Wire 50 lb",
+      "activeMinutes": 38,
+      "source": "manualLog"
+    }
+  ],
+  "consent": {"status": "informed", "competitionMode": false},
+  "capturePurpose": "sideOnTechnique"
+}
