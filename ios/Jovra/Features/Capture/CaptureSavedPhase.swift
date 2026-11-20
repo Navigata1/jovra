@@ -5,6 +5,8 @@ import SwiftUI
 struct CaptureSavedPhase: View {
     var recording: SessionRecording
     var isFixture: Bool
+    /// Opens the processing route for this recording (T27); nil hides the action.
+    var seeProcessing: (() -> Void)? = nil
     var openLibrary: () -> Void
     var done: () -> Void
 
@@ -45,8 +47,13 @@ struct CaptureSavedPhase: View {
                 CaptureGapList(gaps: recording.gaps, ink: .textSecondary)
             }
             .jovraCard()
+            if let seeProcessing {
+                Button(String(localized: "See processing", table: "Processing"), action: seeProcessing)
+                    .buttonStyle(JovraButtonStyle(kind: .accent, fullWidth: true))
+                    .accessibilityIdentifier("capture.processing")
+            }
             Button(String(localized: "Open library", table: "Sessions.Library"), action: openLibrary)
-                .buttonStyle(JovraButtonStyle(kind: .accent, fullWidth: true))
+                .buttonStyle(JovraButtonStyle(kind: seeProcessing == nil ? .accent : .secondary, fullWidth: true))
                 .accessibilityIdentifier("capture.openLibrary")
             Button(String(localized: "Done", table: "Capture"), action: done)
                 .buttonStyle(.jovraSecondary)
