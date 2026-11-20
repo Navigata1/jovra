@@ -4,7 +4,7 @@ reference: [spec/reference/studio/keepers.py, spec/reference/studio/staleness.py
 cases: [spec/reference/studio/cases/keepers_cases.py]
 kinds: [keepers, staleness]
 coverage: covered
-swift: pending
+swift: consumed
 kotlin: pending
 ---
 

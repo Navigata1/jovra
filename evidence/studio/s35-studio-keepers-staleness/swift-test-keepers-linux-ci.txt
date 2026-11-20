@@ -1,0 +1,66 @@
+# CI job jovra-studio-core (Linux, container swift:6.1), run 42554574261 job 128957317074, commit b903fc1 — swift test (whole package; Keepers suites and parity lines extracted)
+2026-11-09T03:07:26.7118690Z SWIFT_BRANCH=swift-6.1.3-release
+2026-11-09T03:07:26.7119238Z SWIFT_VERSION=swift-6.1.3-RELEASE
+2026-11-09T03:08:28.0860025Z [122/168] Compiling JovraStudioCoreTests KeepersConsumer.swift
+2026-11-09T03:08:28.0867511Z [123/168] Compiling JovraStudioCoreTests KeepersEditsTests.swift
+2026-11-09T03:08:28.0875133Z [124/168] Compiling JovraStudioCoreTests KeepersParityTests.swift
+2026-11-09T03:08:28.0883598Z [125/168] Compiling JovraStudioCoreTests KeepersStoreStalenessTests.swift
+2026-11-09T03:08:28.0891060Z [126/168] Compiling JovraStudioCoreTests KeepersVectors.swift
+2026-11-09T03:08:34.5428087Z ◇ Suite "Keepers: staleness through the project store" started.
+2026-11-09T03:08:34.5430718Z ◇ Suite "Keepers: parity with keepers.py and staleness.py" started.
+2026-11-09T03:08:34.5443108Z ◇ Suite "Keepers: select, exclude, annotate and markBroll" started.
+2026-11-09T03:08:34.5555720Z ◇ Test "the Sample film binds the canonical hash Swift computes for the final plan (the key staleness uses)" started.
+2026-11-09T03:08:34.5557143Z ◇ Test "every staleness vector matches the reference and its hand assertions (zero mismatches)" started.
+2026-11-09T03:08:34.5572754Z ◇ Test "every keepers vector matches the reference and its hand assertions (zero mismatches)" started.
+2026-11-09T03:08:42.4833019Z Studio fixture manifest: 42 kinds; consumers: ["ContractsConsumer", "EDLConsumer", "KeepersConsumer", "LedgerConsumer"]
+2026-11-09T03:08:42.4895521Z   keepers page=keepers swift=consumed consumed=true files=1
+2026-11-09T03:08:42.4902038Z   staleness page=keepers swift=consumed consumed=true files=1
+2026-11-09T03:08:45.2717658Z Studio vector cases run by Swift checkers: [(key: "edl-context", value: 4), (key: "job-transitions", value: 32), (key: "keepers", value: 26), (key: "ledger", value: 21), (key: "quote-credits", value: 8), (key: "staleness", value: 9)]
+2026-11-09T03:08:45.2767987Z staleness parity:
+2026-11-09T03:08:45.2768411Z   match     event-revision-stales-the-project
+2026-11-09T03:08:45.2769022Z   match     sync-camera-2-spares-a-camera-1-plan
+2026-11-09T03:08:45.2769622Z   match     sync-camera-1-stales-every-plan-using-it
+2026-11-09T03:08:45.2770163Z   match     keeper-k04-change
+2026-11-09T03:08:45.2770621Z   match     keeper-k01-change-stales-the-film
+2026-11-09T03:08:45.2771126Z   match     keeper-then-event
+2026-11-09T03:08:45.2771539Z   match     old-version-kept
+2026-11-09T03:08:45.2771963Z   match     revision-must-increase
+2026-11-09T03:08:45.2774228Z   match     film-without-its-plan
+2026-11-09T03:08:45.2774730Z staleness vectors: 9 cases, 9 match, 0 mismatch(es)
+2026-11-09T03:08:45.2775247Z keepers parity:
+2026-11-09T03:08:45.2775623Z   match     jon-vs-alex-one-per-point
+2026-11-09T03:08:45.2776113Z   match     voided-point-is-not-a-keeper
+2026-11-09T03:08:45.2776624Z   match     default-pre-and-post-roll
+2026-11-09T03:08:45.2777096Z   match     clamped-to-the-session
+2026-11-09T03:08:45.2777586Z   match     same-point-two-angles-one-keeper
+2026-11-09T03:08:45.2778143Z   match     angle-without-coverage-has-no-view
+2026-11-09T03:08:45.2778667Z   match     primary-angle-missing
+2026-11-09T03:08:45.2779152Z   match     reviewed-contacts-widen-the-window
+2026-11-09T03:08:45.2779722Z   match     estimated-hit-inside-reviewed-window
+2026-11-09T03:08:45.2780287Z   match     estimated-hit-outside-is-labelled
+2026-11-09T03:08:45.2780822Z   match     mark-on-a-point-and-mark-alone
+2026-11-09T03:08:45.2781313Z   match     lesson-clips
+2026-11-09T03:08:45.2781713Z   match     shot-for-unknown-event
+2026-11-09T03:08:45.2782150Z   match     rally-pulse-order
+2026-11-09T03:08:45.2782558Z   match     rally-pulse-limit
+2026-11-09T03:08:45.2782958Z   match     coach-cut-order
+2026-11-09T03:08:45.2783609Z   match     match-broadcast-all-in-order
+2026-11-09T03:08:45.2784413Z   match     excluded-keeper-never-offered
+2026-11-09T03:08:45.2784896Z   match     progress-all
+2026-11-09T03:08:45.2785304Z   match     progress-user-chosen
+2026-11-09T03:08:45.2785743Z   match     progress-seeded-random
+2026-11-09T03:08:45.2786216Z   match     progress-no-comparable-evidence
+2026-11-09T03:08:45.2786717Z   match     court-memories-chapters
+2026-11-09T03:08:45.2787216Z   match     court-memories-says-what-is-missing
+2026-11-09T03:08:46.4773254Z   match     jon-vs-alex-broadcast
+2026-11-09T03:08:46.4803997Z   match     jon-vs-alex-rally-pulse
+2026-11-09T03:08:46.4813943Z keepers vectors: 26 cases, 26 match, 0 mismatch(es)
+2026-11-09T03:08:48.5837704Z ◇ Test "select and annotate keep a keeper with the player's note; each edit names the keepers it changed" started.
+2026-11-09T03:08:48.9113245Z ✔ Test "the Sample film binds the canonical hash Swift computes for the final plan (the key staleness uses)" passed after 14.360 seconds.
+2026-11-09T03:08:48.9131106Z ✔ Test "every staleness vector matches the reference and its hand assertions (zero mismatches)" passed after 14.361 seconds.
+2026-11-09T03:08:48.9153670Z ✔ Test "every keepers vector matches the reference and its hand assertions (zero mismatches)" passed after 14.362 seconds.
+2026-11-09T03:08:49.9672808Z ✔ Test "select and annotate keep a keeper with the player's note; each edit names the keepers it changed" passed after 1.509 seconds.
+2026-11-09T03:08:50.6526846Z ✔ Suite "Keepers: staleness through the project store" passed after 15.422 seconds.
+2026-11-09T03:08:50.6528890Z ✔ Suite "Keepers: parity with keepers.py and staleness.py" passed after 15.423 seconds.
+2026-11-09T03:08:50.6537478Z ✔ Suite "Keepers: select, exclude, annotate and markBroll" passed after 15.424 seconds.
+2026-11-09T03:08:50.6541947Z ✔ Test run with 141 tests passed after 16.109 seconds.
