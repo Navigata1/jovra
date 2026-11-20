@@ -1,0 +1,92 @@
+# swift test --filter Lessons — macOS 27.2, swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1) — 2026-11-09T03:11:53Z
+[1 / 5]
+◇ Test run started.
+↳ Testing Library Version: 2403
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite "Lessons: insights follow corrections" started.
+◇ Suite "Lessons: Progress Story comparisons" started.
+◇ Suite "Lessons: journal" started.
+◇ Suite "Lessons: missing clips and Find the video" started.
+◇ Test "correcting a point in a lesson's session changes that lesson's comparison the next time it is read" started.
+◇ Suite "Lessons: record rules" started.
+◇ Test "the installed Sample lessons read back exactly as shipped, oldest first, with their journey focus lines" started.
+◇ Test "leaving with unsaved edits asks first; a save never overwrites a lesson changed since the edit began" started.
+◇ Test "an observation becomes a cue with its own provenance; a rejected observation never becomes one" started.
+◇ Test "a source moved to Trash is missing, and Undo (restore from Trash) brings the clip back" started.
+◇ Test "a coach note entered without a coach is refused; with one it is attributed to that coach as entered" started.
+◇ Test "the lesson journal has no network path: no source file in Lessons or Progress names a network API" started.
+◇ Test "a lesson is created by hand with no recording and no core session store, and survives a reopen" started.
+◇ Test "a Sample lesson never reads the core session store: its clips are shown as shipped" started.
+◇ Test "every progress-comparison vector reproduces the reference output and its hand-derived assertions" started.
+◇ Test "a film attaches to a lesson of its own kind; Sample and real content never mix" started.
+◇ Test "a scope with an unknown field, a bad date or no session is refused as badScope" started.
+◇ Test "a method change and a differing selection each drop the comparison to a chronology" started.
+◇ Test "the progress page says swift: consumed, and the manifest passes only while this checker is registered" started.
+◇ Test "no output words a percentage improvement, whatever the change" started.
+◇ Test "an exact clip range of any session links to a lesson; a range outside the recording is refused" started.
+◇ Test "deleting the source session marks the clip missing; restoring the same file by hash re-links it" started.
+◇ Test "the three Sample lesson records pass the rules and round-trip byte for byte" started.
+◇ Test "the reference's other lesson rules hold: duplicate ids, sourceless clips, empty windows, private grants" started.
+◇ Test "a practice checklist with counts reads 2 of 3 drills complete after ticking two drills to their targets" started.
+◇ Test "every lesson invalid case is refused: schema cases by the decoder, reference cases with their code" started.
+◇ Test "JOVRA can never author a note: the author enum is exactly user and coach, and 'jovra' is refused on read" started.
+◇ Test "story 134: the Sample serve practice reads 12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points" started.
+◇ Test "an original replaced in place by other bytes under the same name leaves the clip missing" started.
+◇ Test case passing 2 arguments id → "later-method-version-changed", reason → .methodChange to "a method change and a differing selection each drop the comparison to a chronology" started.
+◇ Test case passing 2 arguments id → "later-capability-version-changed", reason → .methodChange to "a method change and a differing selection each drop the comparison to a chronology" started.
+◇ Test case passing 2 arguments id → "user-chosen-one-side", reason → .differingSelection to "a method change and a differing selection each drop the comparison to a chronology" started.
+◇ Test case passing 1 argument name → "lesson.2026-09-09.json" to "the three Sample lesson records pass the rules and round-trip byte for byte" started.
+◇ Test case passing 2 arguments id → "seeded-random-vs-all", reason → .differingSelection to "a method change and a differing selection each drop the comparison to a chronology" started.
+  progress-comparison sample-serve-practice: 12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points
+  progress-comparison later-method-version-changed: "chronology"
+  progress-comparison later-capability-version-changed: "chronology"
+  progress-comparison user-chosen-one-side: "chronology"
+  progress-comparison user-chosen-both-sides: 12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points
+  progress-comparison seeded-random-vs-all: "chronology"
+  progress-comparison earlier-estimated: "chronology"
+  progress-comparison later-manual: "chronology"
+  progress-comparison both-validated: 12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points
+  progress-comparison match-vs-practice: "chronology"
+  progress-comparison different-stat-definition: "chronology"
+  progress-comparison several-reasons-in-order: "chronology"
+  progress-comparison no-change: 18 / 30 · 60% → 18 / 30 · 60%, 0 percentage points
+  progress-comparison decline: 18 / 30 · 60% → 15 / 30 · 50%, -10 percentage points
+  progress-comparison one-point-singular: 1 / 4 · 25% → 13 / 50 · 26%, +1 percentage point
+  progress-comparison delta-from-displayed-integers: 1 / 8 · 13% → 5 / 16 · 31%, +18 percentage points
+  progress-comparison half-up-at-ties: 3 / 8 · 38% → 5 / 8 · 63%, +25 percentage points
+  progress-comparison no-earlier-evidence: "chronology"
+  progress-comparison not-chronological: {"rejectCode":"notChronological"}
+  progress-comparison numerator-above-denominator: {"rejectCode":"badFraction"}
+◇ Test case passing 1 argument name → "lesson.2026-09-23.json" to "the three Sample lesson records pass the rules and round-trip byte for byte" started.
+◇ Test case passing 1 argument name → "lesson.2026-10-07.json" to "the three Sample lesson records pass the rules and round-trip byte for byte" started.
+✔ Test "no output words a percentage improvement, whatever the change" passed after 0.095 seconds.
+✔ Test "the lesson journal has no network path: no source file in Lessons or Progress names a network API" passed after 0.095 seconds.
+✔ Test "a method change and a differing selection each drop the comparison to a chronology" with 4 test cases passed after 0.095 seconds.
+✔ Test "a scope with an unknown field, a bad date or no session is refused as badScope" passed after 0.095 seconds.
+✔ Test "every progress-comparison vector reproduces the reference output and its hand-derived assertions" passed after 0.095 seconds.
+✔ Test "JOVRA can never author a note: the author enum is exactly user and coach, and 'jovra' is refused on read" passed after 0.095 seconds.
+✔ Test "story 134: the Sample serve practice reads 12 / 30 · 40% → 18 / 30 · 60%, +20 percentage points" passed after 0.096 seconds.
+✔ Test "the reference's other lesson rules hold: duplicate ids, sourceless clips, empty windows, private grants" passed after 0.096 seconds.
+✔ Test "a lesson is created by hand with no recording and no core session store, and survives a reopen" passed after 0.103 seconds.
+✔ Test "the three Sample lesson records pass the rules and round-trip byte for byte" with 3 test cases passed after 0.111 seconds.
+Lesson invalid cases refused: [(key: "cue-on-unknown-clip", value: "unknownClip"), (key: "estimate-marked-reviewed", value: "provenanceMismatch"), (key: "id-trailing-newline", value: "schema"), (key: "over-done", value: "badPractice"), (key: "pending-marked-done", value: "badPractice"), (key: "unattributed-coach-note", value: "unattributedCoach")]
+✔ Test "every lesson invalid case is refused: schema cases by the decoder, reference cases with their code" passed after 0.130 seconds.
+✔ Suite "Lessons: record rules" passed after 0.130 seconds.
+✔ Test "leaving with unsaved edits asks first; a save never overwrites a lesson changed since the edit began" passed after 0.153 seconds.
+✔ Test "a coach note entered without a coach is refused; with one it is attributed to that coach as entered" passed after 0.180 seconds.
+✔ Test "the installed Sample lessons read back exactly as shipped, oldest first, with their journey focus lines" passed after 0.395 seconds.
+✔ Test "a Sample lesson never reads the core session store: its clips are shown as shipped" passed after 0.400 seconds.
+✔ Test "an observation becomes a cue with its own provenance; a rejected observation never becomes one" passed after 0.562 seconds.
+✔ Test "a practice checklist with counts reads 2 of 3 drills complete after ticking two drills to their targets" passed after 0.567 seconds.
+✔ Test "an exact clip range of any session links to a lesson; a range outside the recording is refused" passed after 0.626 seconds.
+✔ Test "a source moved to Trash is missing, and Undo (restore from Trash) brings the clip back" passed after 0.775 seconds.
+✔ Test "an original replaced in place by other bytes under the same name leaves the clip missing" passed after 0.816 seconds.
+✔ Test "a film attaches to a lesson of its own kind; Sample and real content never mix" passed after 0.869 seconds.
+✔ Suite "Lessons: journal" passed after 0.869 seconds.
+✔ Test "correcting a point in a lesson's session changes that lesson's comparison the next time it is read" passed after 1.179 seconds.
+✔ Suite "Lessons: insights follow corrections" passed after 1.179 seconds.
+✔ Test "deleting the source session marks the clip missing; restoring the same file by hash re-links it" passed after 1.540 seconds.
+✔ Suite "Lessons: missing clips and Find the video" passed after 1.540 seconds.
+✔ Test "the progress page says swift: consumed, and the manifest passes only while this checker is registered" passed after 1.752 seconds.
+✔ Suite "Lessons: Progress Story comparisons" passed after 1.753 seconds.
+✔ Test run with 24 tests in 5 suites passed after 1.753 seconds.
