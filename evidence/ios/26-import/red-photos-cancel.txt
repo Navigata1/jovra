@@ -1,0 +1,11 @@
+# RED: Cancel during the Photos hand-over (story 110), before the fix
+# The new ImportModelTests cases run against the PR's previous ImportModel; beginReceiving(_:handOver:) was a test-only shim
+# reproducing the old screen (an unheld Task the model could not cancel). Simulator JOVRA-T26, iOS 27.2.
+
+Test class                   passed  failed  skipped  expected
+JovraTests/ImportModelTests       0       2        0         0
+Total: 0 passed, 2 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 0 passed, 2 failed, 0 skipped; result Failed)
+FAILED ImportModelTests/testCancelBeforeAnyPhotosItemArrivesShowsCancelledRows(): XCTAssertEqual failed: ("[Jovra.ImportModel.Status.failed(JovraMedia.ImportFailure.unreadable)]") is not equal to ("[Jovra.ImportModel.Status.cancelled]")
+FAILED ImportModelTests/testCancelWhilePhotosHandsOverImportsNothingAndRemovesTheInboxCopies(): XCTAssertTrue failed - Cancel stops the Photos hand-over itself
+Device: JOVRA-T26 9A5AB74F-4028-47A0-941E-9C7D510F45ED (iPhone 17 Pro, iOS Simulator 27.2)
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.

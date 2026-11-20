@@ -21,6 +21,8 @@ struct LaunchConfigurationTests {
         #expect(configuration.library == nil)
         #expect(configuration.profile == nil)
         #expect(configuration.appleSignIn == nil)
+        #expect(configuration.importSelection.isEmpty)
+        #expect(configuration.importStall == false)
         #expect(configuration.problems.isEmpty)
     }
 
@@ -95,6 +97,8 @@ struct LaunchConfigurationTests {
         configuration.library = .fresh
         configuration.profile = .onboarded
         configuration.appleSignIn = .failed
+        configuration.importSelection = ["/tmp/a.mov", "cloud:/tmp/b clip.mp4"]
+        configuration.importStall = true
 
         let parsed = LaunchConfiguration(arguments: ["Jovra"] + configuration.arguments)
         #expect(parsed == configuration)

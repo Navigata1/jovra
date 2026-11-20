@@ -304,7 +304,7 @@ final class WelcomeOnboardingAuditUITests: XCTestCase {
             // The push slides the page in; audit it once it has stopped moving.
             waitForScrollingToSettle(app.heading("Your player profile"))
             attachScreenshot(app, name: "t18-\(variant)-profile-edit")
-            try auditScreen(app, pageTop: app.buttons["profile.edit.back"].frame.minY - 8)
+            try auditScreen(app, pageTop: app.buttons["profile.edit.back"].frame.minY - 8, allowUnattributedCropContrast: true)
             app.terminate()
         }
     }

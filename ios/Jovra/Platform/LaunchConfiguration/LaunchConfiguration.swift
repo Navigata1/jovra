@@ -31,6 +31,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let library = "-library"
         static let profile = "-profile"
         static let appleSignIn = "-appleSignIn"
+        static let importSelection = "-importSelection"
+        static let importStall = "-importStall"
     }
 
     enum Appearance: String, CaseIterable, Sendable {
@@ -144,6 +146,11 @@ struct LaunchConfiguration: Equatable, Sendable {
     var profile: ProfileStoreChoice?
     /// nil uses Sign in with Apple itself.
     var appleSignIn: AppleSignInFixture?
+    /// UI-test seam (T26): absolute paths delivered as the picker's selection instead of presenting the
+    /// system Photos or Files picker. A path prefixed `cloud:` is reported as not yet downloaded for a moment.
+    var importSelection: [String] = []
+    /// UI-test seam (T26): an import stops just before publication, so a test can end the process mid-import.
+    var importStall = false
 
     /// Arguments that could not be understood. Not part of equality.
     private(set) var problems: [String] = []
@@ -192,6 +199,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         if let library { result += [Key.library, library.rawValue] }
         if let profile { result += [Key.profile, profile.rawValue] }
         if let appleSignIn { result += [Key.appleSignIn, appleSignIn.rawValue] }
+        if !importSelection.isEmpty { result += [Key.importSelection, importSelection.joined(separator: "|")] }
+        if importStall { result += [Key.importStall, "YES"] }
         return result
     }
 
@@ -204,7 +213,7 @@ struct LaunchConfiguration: Equatable, Sendable {
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
         Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library, Key.processingAnalyzer,
-        Key.processingDevice, Key.profile, Key.appleSignIn,
+        Key.processingDevice, Key.profile, Key.appleSignIn, Key.importSelection, Key.importStall,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -222,6 +231,13 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.library: library = parse(Library.self, value, for: key)
         case Key.profile: profile = parse(ProfileStoreChoice.self, value, for: key)
         case Key.appleSignIn: appleSignIn = parse(AppleSignInFixture.self, value, for: key)
+        case Key.importSelection: importSelection = value.split(separator: "|").map(String.init)
+        case Key.importStall:
+            guard value == "YES" || value == "NO" else {
+                problems.append("\(key): unknown value “\(value)” (expected YES or NO)")
+                return
+            }
+            importStall = value == "YES"
         default: break
         }
     }
