@@ -105,9 +105,12 @@ final class HarnessUITests: XCTestCase {
 
     @MainActor
     func testCopyAssertionFindsTheShellsBriefCopyOnHome() throws {
-        // The foundation Home shows a subset of screen 3; the rest arrives with the Home ticket (T19).
-        let app = XCUIApplication.launchJovra { $0.appearance = .light }
-        XCTAssertTrue(app.heading("Home").waitForExistence(timeout: 5))
+        // The foundation Home shows a subset of screen 3; the rest arrives with the Home ticket (T19). Its sample
+        // tiles show only while the sample is installed (T18), so this enters through "Explore a demo".
+        let app = XCUIApplication.launchJovra { $0.appearance = .light; $0.profile = .fresh; $0.library = .fresh }
+        XCTAssertTrue(app.buttons["welcome.exploreDemo"].waitForExistence(timeout: 8))
+        app.buttons["welcome.exploreDemo"].tap()
+        XCTAssertTrue(app.heading("Home").waitForExistence(timeout: 15))
         let shownByShell: Set<String> = ["Your game, in focus.", "Ready for your next session?", "Record a session", "This week", "Sample data"]
         let notYetBuilt = Set(try BriefCopy.expected(screen: 3)).subtracting(shownByShell)
         try assertBriefCopy(screen: 3, in: app, excluding: notYetBuilt)

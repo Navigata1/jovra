@@ -86,11 +86,11 @@ extension AppDestination {
         case .preShell(.welcome):
             RouteInfo(kind: .preShell, launchName: "welcome", ticket: "T18",
                       title: String(localized: "Welcome", table: "App", comment: "Screen name"),
-                      file: "Features/Welcome/WelcomeScreen.swift")
+                      file: "Features/Welcome/WelcomeScreen.swift", isPlaceholder: false)
         case .preShell(.onboarding):
             RouteInfo(kind: .preShell, launchName: "onboarding", ticket: "T18",
                       title: String(localized: "Player onboarding", table: "App", comment: "Screen name"),
-                      file: "Features/Onboarding/OnboardingScreen.swift")
+                      file: "Features/Onboarding/OnboardingScreen.swift", isPlaceholder: false)
         case .tab(let tab):
             tab.rootInfo
         case .push(.sessions(let route)):

@@ -10,7 +10,9 @@ import SwiftUI
 /// its arguments say); otherwise the welcome gate (`WelcomeGate`, T18) decides between pre-shell and
 /// Home.
 struct AppRoot: View {
-    @State private var router: AppRouter = AppRoot.initialRouter(launch: .current)
+    @State private var router: AppRouter
+    /// The player profile (T18): read once here so the welcome gate can decide before the first frame.
+    @State private var profile: PlayerProfileModel
     @State private var hasRestored = false
     /// Recordings adopted at this launch after JOVRA stopped while recording (T17's recovered-recording sheet).
     @State private var recoveredRecordings: [RecoveredCaptureReport] = []
@@ -21,6 +23,13 @@ struct AppRoot: View {
     @Environment(\.sessionLookup) private var sessions
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @Environment(\.launchConfiguration) private var launch
+    @Environment(\.appleSignInClient) private var appleSignIn
+
+    init() {
+        let profile = PlayerProfileModel(availability: ProfileStoreKey.defaultValue)
+        _profile = State(initialValue: profile)
+        _router = State(initialValue: AppRoot.initialRouter(launch: .current, profile: profile.state))
+    }
 
     var body: some View {
         ZStack {
@@ -38,6 +47,8 @@ struct AppRoot: View {
         #endif
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.3), value: router.preShell == nil)
         .environment(router)
+        .environment(profile)
+        .task { await profile.checkAppleCredential(using: appleSignIn) }
         .onOpenURL { url in
             Task { await router.open(url, sessions: sessions) }
         }
@@ -82,7 +93,10 @@ struct AppRoot: View {
         hasRestored = true
         guard Self.restoresSavedState(launch: .current), let savedState else { return }
         do {
-            router.state = try RouterState(restorationData: savedState)
+            let restored = try RouterState(restorationData: savedState)
+            // With no profile saved (a first run, or after "Delete all JOVRA data") the welcome gate wins.
+            guard restored.preShell != nil || WelcomeGate.initialRoute(for: profile.state) == nil else { return }
+            router.state = restored
         } catch {
             Logger(subsystem: "com.islanddevcrew.jovra", category: "Restoration")
                 .notice("Saved navigation state did not decode; starting fresh. \(String(describing: error), privacy: .public)")
@@ -94,11 +108,11 @@ struct AppRoot: View {
         launch == LaunchConfiguration()
     }
 
-    static func initialRouter(launch: LaunchConfiguration) -> AppRouter {
+    static func initialRouter(launch: LaunchConfiguration, profile: PlayerProfileModel.State) -> AppRouter {
         let router = AppRouter()
         if let destination = launch.startDestination {
             router.show(destination)
-        } else if let route = WelcomeGate.initialRoute() {
+        } else if let route = WelcomeGate.initialRoute(for: profile) {
             router.show(.preShell(route))
         }
         return router

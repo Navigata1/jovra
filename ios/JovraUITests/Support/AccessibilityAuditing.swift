@@ -38,6 +38,14 @@ enum AccessibilityAudit {
         return frame.minY < viewport.minY || frame.maxY > viewport.maxY
     }
 
+    /// A contrast or element-detection finding the audit could not attach to any element (its text recognition read
+    /// text it cannot match), made while some scroll content is cut by the viewport's edge. The cut text is the likely
+    /// source, as for `isOccludedScrollIssue`; that content is audited fully visible at a later scroll step, where an
+    /// unattributed finding fails as usual. With nothing cropped, an unattributed finding always fails.
+    static func isUnattributedCropIssue(type: XCUIAccessibilityAuditType, hasElement: Bool, scrollContentIsCropped: Bool) -> Bool {
+        (type == .contrast || type == .elementDetection) && !hasElement && scrollContentIsCropped
+    }
+
     /// XCTest's "Audit failed to complete in time".
     static func isTimeout(_ error: NSError) -> Bool {
         error.domain == "com.apple.xcode.xctest.accessibilityAudit" && error.code == -56
@@ -136,6 +144,19 @@ extension XCTestCase {
         XCTFail("Foreground scroll did not reach its top boundary")
     }
 
+    /// Whether any element inside the scroll view is cut by the viewport's top or bottom edge right now.
+    @MainActor
+    private func isScrollContentCropped(_ scrollView: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard scrollView.exists else { return false }
+        let viewport = scrollView.frame.intersection(app.frame)
+        guard !viewport.isNull, !viewport.isEmpty else { return false }
+        return scrollView.descendants(matching: .any).allElementsBoundByIndex.contains { element in
+            let frame = element.frame
+            return !frame.isEmpty && frame.intersects(viewport)
+                && AccessibilityAudit.isOccludedScrollIssue(type: .contrast, frame: frame, viewport: viewport, isScrollDescendant: true)
+        }
+    }
+
     /// A swipe returns while the page may still be decelerating; an audit taken then samples pixels
     /// that no longer sit under the elements' reported frames. Waits until `marker` holds still.
     @MainActor
@@ -160,7 +181,10 @@ extension XCTestCase {
                                     marker: XCUIElement, scrollView: XCUIElement, foregroundModal: Bool, isRepeat: Bool = false) throws {
         let tabBar = app.otherElements["tabBar"]
         let hasForegroundTabBar = !foregroundModal && tabBar.exists
-        let visibleBottom = hasForegroundTabBar ? tabBar.frame.minY : app.frame.maxY
+        // A pinned bottom action bar (`screen.bottomBar`, e.g. onboarding's Continue) covers the page like the tab bar.
+        let bottomBar = app.otherElements["screen.bottomBar"]
+        let barTop = bottomBar.exists ? bottomBar.frame.minY : app.frame.maxY
+        let visibleBottom = min(hasForegroundTabBar ? tabBar.frame.minY : app.frame.maxY, barTop)
         let tabBarFrame = hasForegroundTabBar ? tabBar.frame : .null
         let markerY = marker.exists ? marker.frame.minY : nil
         var setAside: [String] = []
@@ -172,6 +196,12 @@ extension XCTestCase {
                 if isRendered, !isRepeat, let markerY, abs(marker.frame.minY - markerY) > 1 {
                     print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element set aside: the audit moved the page by \(marker.frame.minY - markerY) pt (\(issue.compactDescription))")
                     setAside.append(issue.compactDescription)
+                    return true
+                }
+                if !isRepeat, AccessibilityAudit.isUnattributedCropIssue(
+                    type: issue.auditType, hasElement: false,
+                    scrollContentIsCropped: self.isScrollContentCropped(scrollView, in: app)) {
+                    print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element while scroll content is cut by the viewport: assessed when visible (\(issue.compactDescription))")
                     return true
                 }
                 print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue with no element: FAILS (\(issue.compactDescription); \(issue.detailedDescription))")
@@ -208,7 +238,9 @@ extension XCTestCase {
                 }
             }
             let isTabBarItem = element.identifier.hasPrefix("tab.")
-            let isClipped = !isTabBarItem && (frame.maxY > visibleBottom - AccessibilityAudit.edgeBand || frame.minY < visibleTop)
+            let isInBottomBar = bottomBar.exists && bottomBar.frame.contains(frame)
+            let isClipped = !isTabBarItem && !isInBottomBar
+                && (frame.maxY > visibleBottom - AccessibilityAudit.edgeBand || frame.minY < visibleTop)
             guard isRendered, isClipped else {
                 print("audit: \(AccessibilityAudit.name(of: issue.auditType)) issue on “\(element.label)” at \(frame), visible \(visibleTop)–\(visibleBottom): FAILS (\(issue.compactDescription))")
                 return false

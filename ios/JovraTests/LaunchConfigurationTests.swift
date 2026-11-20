@@ -19,6 +19,8 @@ struct LaunchConfigurationTests {
         #expect(configuration.processingAnalyzer == nil)
         #expect(configuration.processingDevice == nil)
         #expect(configuration.library == nil)
+        #expect(configuration.profile == nil)
+        #expect(configuration.appleSignIn == nil)
         #expect(configuration.problems.isEmpty)
     }
 
@@ -40,6 +42,8 @@ struct LaunchConfigurationTests {
             "-processingAnalyzer", "failsOnce",
             "-processingDevice", "lowPowerOnBattery",
             "-library", "fresh",
+            "-profile", "persistentNew",
+            "-appleSignIn", "cancelled",
         ])
         #expect(configuration.appearance == .dark)
         #expect(configuration.demo == .sample)
@@ -52,6 +56,8 @@ struct LaunchConfigurationTests {
         #expect(configuration.processingAnalyzer == .failsOnce)
         #expect(configuration.processingDevice == .lowPowerOnBattery)
         #expect(configuration.library == .fresh)
+        #expect(configuration.profile == .persistentNew)
+        #expect(configuration.appleSignIn == .cancelled)
         #expect(configuration.problems.isEmpty)
     }
 
@@ -65,6 +71,8 @@ struct LaunchConfigurationTests {
         (["-processingAnalyzer", "real"], "-processingAnalyzer: unknown value “real” (expected steady, failsOnce)"),
         (["-library", "shared"], "-library: unknown value “shared” (expected fresh)"),
         (["-processingDevice", "hot"], "-processingDevice: unknown value “hot” (expected lowPowerOnBattery, tooWarm)"),
+        (["-profile", "shared"], "-profile: unknown value “shared” (expected fresh, onboarded, persistentNew, persistent)"),
+        (["-appleSignIn", "maybe"], "-appleSignIn: unknown value “maybe” (expected succeeded, cancelled, failed)"),
     ])
     func reportsProblems(arguments: [String], problem: String) {
         let configuration = LaunchConfiguration(arguments: ["Jovra"] + arguments)
@@ -85,6 +93,8 @@ struct LaunchConfigurationTests {
         configuration.processingAnalyzer = .steady
         configuration.processingDevice = .tooWarm
         configuration.library = .fresh
+        configuration.profile = .onboarded
+        configuration.appleSignIn = .failed
 
         let parsed = LaunchConfiguration(arguments: ["Jovra"] + configuration.arguments)
         #expect(parsed == configuration)

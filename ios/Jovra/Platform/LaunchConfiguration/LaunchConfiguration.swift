@@ -2,7 +2,8 @@ import Foundation
 
 /// What a launch asked for: appearance, demo state, fixture camera, injected permission and archive
 /// states, Reduce Motion, a pseudo-locale, the start route, a fresh local library, the processing
-/// fixture analyzer and an injected device state for the processing queue.
+/// fixture analyzer, an injected device state for the processing queue, the profile store and an
+/// injected Sign in with Apple answer.
 ///
 /// This file is the launch-argument contract between the app and its UI tests and is compiled into
 /// both targets (see `ios/project.yml`): UI tests build `arguments` from a value, and the app parses
@@ -28,6 +29,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let processingAnalyzer = "-processingAnalyzer"
         static let processingDevice = "-processingDevice"
         static let library = "-library"
+        static let profile = "-profile"
+        static let appleSignIn = "-appleSignIn"
     }
 
     enum Appearance: String, CaseIterable, Sendable {
@@ -101,6 +104,24 @@ struct LaunchConfiguration: Equatable, Sendable {
         case fresh
     }
 
+    /// Which player profile store a launch uses (T18). The welcome gate reads it: with no profile, the launch opens
+    /// on Welcome.
+    enum ProfileStoreChoice: String, CaseIterable, Sendable {
+        /// A new, empty store in a temporary folder for this launch only: Welcome shows.
+        case fresh
+        /// A temporary store holding a plain, unnamed profile for this launch only: the shell shows, as before T18.
+        case onboarded
+        /// The UI-test folder, emptied at launch and kept for the next launch.
+        case persistentNew
+        /// The UI-test folder as the previous launch left it (a relaunch check).
+        case persistent
+    }
+
+    /// What "Continue with Apple" answers instead of Apple's sheet (T18). The fixture identity never leaves the device.
+    enum AppleSignInFixture: String, CaseIterable, Sendable {
+        case succeeded, cancelled, failed
+    }
+
     var appearance: Appearance?
     var demo: DemoState = .off
     /// The fixture clip the simulator fixture camera streams (ADR-0012); nil uses the default source.
@@ -119,6 +140,10 @@ struct LaunchConfiguration: Equatable, Sendable {
     var processingDevice: ProcessingDevice?
     /// nil uses the library saved on the device.
     var library: Library?
+    /// nil uses the profile saved on the device.
+    var profile: ProfileStoreChoice?
+    /// nil uses Sign in with Apple itself.
+    var appleSignIn: AppleSignInFixture?
 
     /// Arguments that could not be understood. Not part of equality.
     private(set) var problems: [String] = []
@@ -165,6 +190,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         if let processingAnalyzer { result += [Key.processingAnalyzer, processingAnalyzer.rawValue] }
         if let processingDevice { result += [Key.processingDevice, processingDevice.rawValue] }
         if let library { result += [Key.library, library.rawValue] }
+        if let profile { result += [Key.profile, profile.rawValue] }
+        if let appleSignIn { result += [Key.appleSignIn, appleSignIn.rawValue] }
         return result
     }
 
@@ -177,7 +204,7 @@ struct LaunchConfiguration: Equatable, Sendable {
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
         Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library, Key.processingAnalyzer,
-        Key.processingDevice,
+        Key.processingDevice, Key.profile, Key.appleSignIn,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -193,6 +220,8 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.processingAnalyzer: processingAnalyzer = parse(ProcessingAnalyzer.self, value, for: key)
         case Key.processingDevice: processingDevice = parse(ProcessingDevice.self, value, for: key)
         case Key.library: library = parse(Library.self, value, for: key)
+        case Key.profile: profile = parse(ProfileStoreChoice.self, value, for: key)
+        case Key.appleSignIn: appleSignIn = parse(AppleSignInFixture.self, value, for: key)
         default: break
         }
     }

@@ -1,0 +1,316 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "jovra.sampleAnalysis",
+  "sessionId": "c80aad59-ede9-5b4b-9672-57f157bd3a92",
+  "sample": {"label": "Sample", "synthetic": true, "generator": "sample:analysis@1.0.0"},
+  "shots": [],
+  "calibrations": [
+    {
+      "id": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "method": "fourTap",
+      "frameMs": 300000,
+      "imagePoints": [
+        {"x": 0.238995, "y": 0.802703},
+        {"x": 0.761005, "y": 0.802703},
+        {"x": 0.610105, "y": 0.290439},
+        {"x": 0.389895, "y": 0.290439}
+      ],
+      "courtPoints": [
+        {"x": -4.115, "y": -11.885},
+        {"x": 4.115, "y": -11.885},
+        {"x": 4.115, "y": 11.885},
+        {"x": -4.115, "y": 11.885}
+      ],
+      "status": "valid",
+      "camera": {
+        "lens": "wide",
+        "width": 1280,
+        "height": 720,
+        "frameRate": {"num": 60, "den": 1},
+        "zoomFactor": "1.0"
+      },
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    }
+  ],
+  "serveMarks": [
+    {
+      "id": "4c104beb-483a-5327-8bbd-5fbd94934141",
+      "contactFrame": {"value": 18239, "timescale": 60},
+      "bounceFrame": {"value": 18264, "timescale": 60},
+      "bounceCourt": {"x": -2.386, "y": 5.339},
+      "bounceImage": {"x": 0.424219, "y": 0.361111},
+      "serverPosition": {"x": 0.709, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "deuce",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "4cee3321-876b-5764-bb21-958e78244588",
+      "contactFrame": {"value": 18809, "timescale": 60},
+      "bounceFrame": {"value": 18836, "timescale": 60},
+      "bounceCourt": {"x": 2.927, "y": 5.306},
+      "bounceImage": {"x": 0.592969, "y": 0.361111},
+      "serverPosition": {"x": -0.9, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "ad",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "54eaf6df-8642-5dfa-9ef8-d7dc9be6641b",
+      "contactFrame": {"value": 19379, "timescale": 60},
+      "bounceFrame": {"value": 19401, "timescale": 60},
+      "bounceCourt": {"x": -0.396, "y": 5.433},
+      "bounceImage": {"x": 0.4875, "y": 0.359722},
+      "serverPosition": {"x": 0.853, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "deuce",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "08ee5c0a-a412-5d3c-9ad8-0ca4efd98b73",
+      "contactFrame": {"value": 19949, "timescale": 60},
+      "bounceFrame": {"value": 19972, "timescale": 60},
+      "bounceCourt": {"x": 2.596, "y": 5.522},
+      "bounceImage": {"x": 0.582031, "y": 0.358333},
+      "serverPosition": {"x": -0.577, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "ad",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "8e05ea79-e417-5bbb-b5f4-b2c29cf52c12",
+      "contactFrame": {"value": 20519, "timescale": 60},
+      "bounceFrame": {"value": 20542, "timescale": 60},
+      "bounceCourt": {"x": -1.217, "y": 5.697},
+      "bounceImage": {"x": 0.461719, "y": 0.356944},
+      "serverPosition": {"x": 0.352, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "deuce",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "5c8e96bb-510b-52aa-92e6-9aa9f1e37fe3",
+      "contactFrame": {"value": 21090, "timescale": 60},
+      "bounceFrame": {"value": 21113, "timescale": 60},
+      "bounceCourt": {"x": 0.426, "y": 5.325},
+      "bounceImage": {"x": 0.513281, "y": 0.361111},
+      "serverPosition": {"x": -0.908, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "ad",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "286d5a18-8744-5965-a9be-892a0fcd47c7",
+      "contactFrame": {"value": 21660, "timescale": 60},
+      "bounceFrame": {"value": 21685, "timescale": 60},
+      "bounceCourt": {"x": -3.225, "y": 5.847},
+      "bounceImage": {"x": 0.399219, "y": 0.354167},
+      "serverPosition": {"x": 0.634, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "deuce",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "82ac4003-f646-5f78-9707-5f2ff0357681",
+      "contactFrame": {"value": 22230, "timescale": 60},
+      "bounceFrame": {"value": 22252, "timescale": 60},
+      "bounceCourt": {"x": 3.024, "y": 5.33},
+      "bounceImage": {"x": 0.596094, "y": 0.361111},
+      "serverPosition": {"x": -0.904, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "ad",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "8d22b7af-1aa1-57f6-9c4d-7f90dc21b94e",
+      "contactFrame": {"value": 22799, "timescale": 60},
+      "bounceFrame": {"value": 22826, "timescale": 60},
+      "bounceCourt": {"x": -0.683, "y": 5.037},
+      "bounceImage": {"x": 0.478125, "y": 0.365278},
+      "serverPosition": {"x": 1.011, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "deuce",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "0b304d0a-2b33-50a7-bcf3-82dc03a6465f",
+      "contactFrame": {"value": 23370, "timescale": 60},
+      "bounceFrame": {"value": 23391, "timescale": 60},
+      "bounceCourt": {"x": 3.022, "y": 5.764},
+      "bounceImage": {"x": 0.595313, "y": 0.355556},
+      "serverPosition": {"x": -0.694, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "ad",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "d461b1ce-bff5-54e5-92b0-8c0d0681f5d5",
+      "contactFrame": {"value": 23939, "timescale": 60},
+      "bounceFrame": {"value": 23964, "timescale": 60},
+      "bounceCourt": {"x": -0.928, "y": 5.752},
+      "bounceImage": {"x": 0.471094, "y": 0.355556},
+      "serverPosition": {"x": 0.661, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "deuce",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    },
+    {
+      "id": "7f046037-8727-5fd0-829c-1dcc976d5d5c",
+      "contactFrame": {"value": 24509, "timescale": 60},
+      "bounceFrame": {"value": 24532, "timescale": 60},
+      "bounceCourt": {"x": 2.049, "y": 5.209},
+      "bounceImage": {"x": 0.565625, "y": 0.3625},
+      "serverPosition": {"x": -0.869, "y": -12.135},
+      "contactDefaulted": false,
+      "servedTo": "ad",
+      "calibrationId": "c16a681b-df92-5f02-a371-041d729ccebc",
+      "provenance": {"status": "manual", "source": "user", "sample": true}
+    }
+  ],
+  "swings": [
+    {
+      "id": "8e44ac1e-1302-5206-a085-46c7e8245cd3",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "4c104beb-483a-5327-8bbd-5fbd94934141",
+      "clip": {"fromMs": 302983, "toMs": 304984},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 18224, "timescale": 60}, "imagePoint": {"x": 0.548516, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 18239, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "07936a62-b1cc-58d3-b24a-515a43081608",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "4cee3321-876b-5764-bb21-958e78244588",
+      "clip": {"fromMs": 312483, "toMs": 314484},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 18794, "timescale": 60}, "imagePoint": {"x": 0.438415, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 18809, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "4203973d-7c26-5483-b7ef-a9378b42c20c",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "54eaf6df-8642-5dfa-9ef8-d7dc9be6641b",
+      "clip": {"fromMs": 321983, "toMs": 323984},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 19364, "timescale": 60}, "imagePoint": {"x": 0.558369, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 19379, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "3555d3f0-ad54-5da1-99da-ff50a4d111ce",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "08ee5c0a-a412-5d3c-9ad8-0ca4efd98b73",
+      "clip": {"fromMs": 331483, "toMs": 333484},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 19934, "timescale": 60}, "imagePoint": {"x": 0.460517, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 19949, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "f24b2585-a465-5602-90ee-39c8591149a5",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "8e05ea79-e417-5bbb-b5f4-b2c29cf52c12",
+      "clip": {"fromMs": 340983, "toMs": 342984},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 20504, "timescale": 60}, "imagePoint": {"x": 0.524087, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 20519, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "ee1976b1-7cae-5122-932d-b6f0c030bc6b",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "5c8e96bb-510b-52aa-92e6-9aa9f1e37fe3",
+      "clip": {"fromMs": 350500, "toMs": 352500},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 21074, "timescale": 60}, "imagePoint": {"x": 0.437867, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 21090, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "c46ca459-b410-5ee4-b730-74d57a493347",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "286d5a18-8744-5965-a9be-892a0fcd47c7",
+      "clip": {"fromMs": 360000, "toMs": 362000},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 21644, "timescale": 60}, "imagePoint": {"x": 0.543384, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 21660, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "2ccf3fa6-1c71-5a17-856e-bfa2edb4320f",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "82ac4003-f646-5f78-9707-5f2ff0357681",
+      "clip": {"fromMs": 369500, "toMs": 371500},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 22214, "timescale": 60}, "imagePoint": {"x": 0.438141, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 22230, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "53117d4d-df7b-5472-be3a-433e74cc2f30",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "8d22b7af-1aa1-57f6-9c4d-7f90dc21b94e",
+      "clip": {"fromMs": 378983, "toMs": 380984},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 22784, "timescale": 60}, "imagePoint": {"x": 0.569181, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 22799, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "545a4235-13f5-5f59-9f52-1530f1a8af86",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "0b304d0a-2b33-50a7-bcf3-82dc03a6465f",
+      "clip": {"fromMs": 388500, "toMs": 390500},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 23354, "timescale": 60}, "imagePoint": {"x": 0.452511, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 23370, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "a74694d6-565b-5e72-97d7-39d890eac604",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "d461b1ce-bff5-54e5-92b0-8c0d0681f5d5",
+      "clip": {"fromMs": 397983, "toMs": 399984},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 23924, "timescale": 60}, "imagePoint": {"x": 0.545231, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 23939, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    },
+    {
+      "id": "17f6c17f-c6c2-5d5e-8bfa-26b88d9d0526",
+      "kind": "serve",
+      "stroke": "serve",
+      "serveMarkId": "7f046037-8727-5fd0-829c-1dcc976d5d5c",
+      "clip": {"fromMs": 407483, "toMs": 409484},
+      "keyMoments": [
+        {"name": "tossPeak", "time": {"value": 24494, "timescale": 60}, "imagePoint": {"x": 0.440536, "y": 0.476798}, "provenance": {"status": "manual", "source": "user", "sample": true}},
+        {"name": "contact", "time": {"value": 24509, "timescale": 60}, "provenance": {"status": "manual", "source": "user", "sample": true}}
+      ]
+    }
+  ],
+  "comparisons": []
+}
