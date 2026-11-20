@@ -1,0 +1,24 @@
+{
+  "name": "@jovra/planner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Studio planner adapter for the jovra-internal Workflow's plan step. Part 1 (S88): the heuristic RulesPlanner, StoryDirector, trust check and EDL compiler ported from spec/reference/studio with byte parity to the S06 and S07 vectors.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "exports": {
+    ".": "./src/heuristic/index.ts",
+    "./heuristic": "./src/heuristic/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test --test-reporter=spec \"test/heuristic/*.test.ts\"",
+    "parity": "node test/heuristic/parity-table.ts"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.1",
+    "typescript": "5.9.3"
+  }
+}
