@@ -1,24 +1,101 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@: %@, sample data" : {
-      "comment" : "VoiceOver: stat tile label, value",
+    "%@ percentage point vs %@" : {
+      "comment" : "Trend delta, one point, against a named week",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@: %@, sample data"
+            "value" : "%1$@ percentage point vs %2$@"
           }
         }
       }
     },
-    "A BETTER GAME TOMORROW" : {
-      "comment" : "Letter-spaced kicker above the hero headline",
+    "%@ percentage point vs last week" : {
+      "comment" : "Trend delta, one point, e.g. “+1 percentage point vs last week”",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A BETTER GAME TOMORROW"
+            "value" : "%@ percentage point vs last week"
+          }
+        }
+      }
+    },
+    "%@ percentage points vs %@" : {
+      "comment" : "Trend delta against a named week, e.g. “+4 percentage points vs Week 2”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ percentage points vs %2$@"
+          }
+        }
+      }
+    },
+    "%@ percentage points vs last week" : {
+      "comment" : "Trend delta, e.g. “+4 percentage points vs last week”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ percentage points vs last week"
+          }
+        }
+      }
+    },
+    "%@ stopped early. %@ is saved." : {
+      "comment" : "Next step detail, e.g. “Jon vs Alex stopped early. 41:12 is saved.”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ stopped early. %2$@ is saved."
+          }
+        }
+      }
+    },
+    "%@ won %@" : {
+      "comment" : "VoiceOver: who won and the set scores, e.g. “Jon won 6–4, 6–3”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ won %2$@"
+          }
+        }
+      }
+    },
+    "%@, sample data" : {
+      "comment" : "VoiceOver: a tile value that is demo data",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, sample data"
+          }
+        }
+      }
+    },
+    "%lld of %lld" : {
+      "comment" : "Audio Graph: a week's fraction, e.g. “40 of 60”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "4 weeks to %@" : {
+      "comment" : "Scope caption: the four weeks ending on a past day, e.g. “4 weeks to Oct 6”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4 weeks to %@"
           }
         }
       }
@@ -34,24 +111,311 @@
         }
       }
     },
-    "First serves" : {
-      "comment" : "Stat tile label",
+    "A BETTER GAME TOMORROW" : {
+      "comment" : "Letter-spaced kicker above the hero headline",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "First serves"
+            "value" : "A BETTER GAME TOMORROW"
           }
         }
       }
     },
-    "Home" : {
-      "comment" : "Screen title",
+    "Back up %@" : {
+      "comment" : "Next step title, one session, e.g. “Back up Jon vs Alex”",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Home"
+            "value" : "Back up %@"
+          }
+        }
+      }
+    },
+    "Back up %lld sessions" : {
+      "comment" : "Next step title, several sessions",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back up %lld sessions"
+          }
+        }
+      }
+    },
+    "Doubles" : {
+      "comment" : "Session type on the latest session card",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doubles"
+          }
+        }
+      }
+    },
+    "Drill" : {
+      "comment" : "Session type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drill"
+          }
+        }
+      }
+    },
+    "Finish reviewing" : {
+      "comment" : "Next step title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finish reviewing"
+          }
+        }
+      }
+    },
+    "First serves in" : {
+      "comment" : "Stat tile label\nTrend card label\nTrend chart series name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First serves in"
+          }
+        }
+      }
+    },
+    "First serves in · Latest match" : {
+      "comment" : "Fraction popover title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First serves in · Latest match"
+          }
+        }
+      }
+    },
+    "First serves in by week" : {
+      "comment" : "Audio Graph title\nVoiceOver: the trend chart",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First serves in by week"
+          }
+        }
+      }
+    },
+    "Good afternoon, %@." : {
+      "comment" : "Home greeting with the player's name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good afternoon, %@."
+          }
+        }
+      }
+    },
+    "Good afternoon." : {
+      "comment" : "Home greeting, no name known",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good afternoon."
+          }
+        }
+      }
+    },
+    "Good evening, %@." : {
+      "comment" : "Home greeting with the player's name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good evening, %@."
+          }
+        }
+      }
+    },
+    "Good evening." : {
+      "comment" : "Home greeting, no name known",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good evening."
+          }
+        }
+      }
+    },
+    "Good morning, %@." : {
+      "comment" : "Home greeting with the player's name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good morning, %@."
+          }
+        }
+      }
+    },
+    "Good morning." : {
+      "comment" : "Home greeting, no name known",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good morning."
+          }
+        }
+      }
+    },
+    "Import a video" : {
+      "comment" : "Empty state action",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import a video"
+          }
+        }
+      }
+    },
+    "Includes estimated points" : {
+      "comment" : "Trend card caption",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Includes estimated points"
+          }
+        }
+      }
+    },
+    "Last 4 weeks" : {
+      "comment" : "Scope caption: the four weeks ending today",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last 4 weeks"
+          }
+        }
+      }
+    },
+    "Latest match" : {
+      "comment" : "First-serves tile scope",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latest match"
+          }
+        }
+      }
+    },
+    "Latest session" : {
+      "comment" : "Section header",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latest session"
+          }
+        }
+      }
+    },
+    "Lesson" : {
+      "comment" : "Session type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesson"
+          }
+        }
+      }
+    },
+    "Loading your sessions…" : {
+      "comment" : "Home while sessions load",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading your sessions…"
+          }
+        }
+      }
+    },
+    "Match" : {
+      "comment" : "Session type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Match"
+          }
+        }
+      }
+    },
+    "Needs review · %lld points" : {
+      "comment" : "Session card status line",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Needs review · %lld point"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Needs review · %lld points"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "No change vs %@" : {
+      "comment" : "Trend delta of zero against a named week, e.g. “No change vs Week 2”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No change vs %@"
+          }
+        }
+      }
+    },
+    "No change vs last week" : {
+      "comment" : "Trend delta of zero percentage points",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No change vs last week"
+          }
+        }
+      }
+    },
+    "No match yet" : {
+      "comment" : "First-serves tile scope when no match is stored",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No match yet"
           }
         }
       }
@@ -67,6 +431,72 @@
         }
       }
     },
+    "Opens the session" : {
+      "comment" : "VoiceOver hint on the latest session card",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the session"
+          }
+        }
+      }
+    },
+    "Percent" : {
+      "comment" : "Audio Graph y axis",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Percent"
+          }
+        }
+      }
+    },
+    "Pick up your interrupted session" : {
+      "comment" : "Next step title: open a recording that stopped early",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick up your interrupted session"
+          }
+        }
+      }
+    },
+    "Play matches in two different weeks to see a trend." : {
+      "comment" : "Trend card: not enough weeks with first serves to compare",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play matches in two different weeks to see a trend."
+          }
+        }
+      }
+    },
+    "Points you served in your latest match where the first serve went in, out of every point you served." : {
+      "comment" : "Fraction popover definition of first serves in",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Points you served in your latest match where the first serve went in, out of every point you served."
+          }
+        }
+      }
+    },
+    "Practice set" : {
+      "comment" : "Session type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Practice set"
+          }
+        }
+      }
+    },
     "Profile" : {
       "comment" : "VoiceOver: the avatar button opens Profile",
       "localizations" : {
@@ -74,6 +504,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Profile"
+          }
+        }
+      }
+    },
+    "Profile, %@" : {
+      "comment" : "VoiceOver: the avatar button, e.g. “Profile, Jon”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile, %@"
+          }
+        }
+      }
+    },
+    "Rally" : {
+      "comment" : "Session type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rally"
           }
         }
       }
@@ -100,6 +552,28 @@
         }
       }
     },
+    "Record a match or practice, or import a video you already have. Your sessions, time on court and first serves appear here once there is something to count." : {
+      "comment" : "Home empty state message",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record a match or practice, or import a video you already have. Your sessions, time on court and first serves appear here once there is something to count."
+          }
+        }
+      }
+    },
+    "Record a match to start your first-serve trend." : {
+      "comment" : "Trend card: no match in the window",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record a match to start your first-serve trend."
+          }
+        }
+      }
+    },
     "Record a session" : {
       "comment" : "Hero button",
       "localizations" : {
@@ -107,6 +581,84 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Record a session"
+          }
+        }
+      }
+    },
+    "Recording still works and nothing was deleted. Close JOVRA and open it again to see your numbers." : {
+      "comment" : "Home error message: local library unavailable",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recording still works and nothing was deleted. Close JOVRA and open it again to see your numbers."
+          }
+        }
+      }
+    },
+    "Review %lld flagged points in %@" : {
+      "comment" : "Next step detail",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Review %1$lld flagged point in %2$@"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Review %1$lld flagged points in %2$@"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sample data" : {
+      "comment" : "VoiceOver suffix: demo data",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sample data"
+          }
+        }
+      }
+    },
+    "Sample data" : {
+      "comment" : "Badge over the demo's stat tiles",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sample data"
+          }
+        }
+      }
+    },
+    "Saved only on this iPhone. Keep a copy in your archive." : {
+      "comment" : "Next step detail",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved only on this iPhone. Keep a copy in your archive."
+          }
+        }
+      }
+    },
+    "Serve practice" : {
+      "comment" : "Session type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serve practice"
           }
         }
       }
@@ -122,13 +674,100 @@
         }
       }
     },
-    "This week" : {
-      "comment" : "Section header",
+    "Singles" : {
+      "comment" : "Session type on the latest session card",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This week"
+            "value" : "Singles"
+          }
+        }
+      }
+    },
+    "Stroke practice" : {
+      "comment" : "Session type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stroke practice"
+          }
+        }
+      }
+    },
+    "Tie-break" : {
+      "comment" : "Session type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tie-break"
+          }
+        }
+      }
+    },
+    "Try again" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
+          }
+        }
+      }
+    },
+    "View all" : {
+      "comment" : "Opens the session library",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View all"
+          }
+        }
+      }
+    },
+    "Week" : {
+      "comment" : "Audio Graph x axis",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week"
+          }
+        }
+      }
+    },
+    "Week %lld" : {
+      "comment" : "Trend chart x-axis label, e.g. “Week 4”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week %lld"
+          }
+        }
+      }
+    },
+    "Wk %lld" : {
+      "comment" : "Trend chart x-axis label, abbreviated, e.g. “Wk 4”",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wk %lld"
+          }
+        }
+      }
+    },
+    "Your first session shows up here." : {
+      "comment" : "Home empty state title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your first session shows up here."
           }
         }
       }
@@ -144,13 +783,35 @@
         }
       }
     },
-    "Your latest session, on-court time and weekly trends, computed from sessions saved on this device, replace the sample tiles above." : {
-      "comment" : "Placeholder message",
+    "Your numbers could not be loaded" : {
+      "comment" : "Home error title",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your latest session, on-court time and weekly trends, computed from sessions saved on this device, replace the sample tiles above."
+            "value" : "Your numbers could not be loaded"
+          }
+        }
+      }
+    },
+    "Your sessions can't be opened right now" : {
+      "comment" : "Home error title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your sessions can't be opened right now"
+          }
+        }
+      }
+    },
+    "Your videos are safe. Try loading them again." : {
+      "comment" : "Home error message",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your videos are safe. Try loading them again."
           }
         }
       }
