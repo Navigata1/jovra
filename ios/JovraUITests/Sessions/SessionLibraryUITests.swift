@@ -5,10 +5,12 @@ import XCTest
 final class SessionLibraryUITests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
+    @MainActor
     private func cards(_ app: XCUIApplication) -> XCUIElementQuery {
         app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'library.session.'"))
     }
 
+    @MainActor
     private func card(_ app: XCUIApplication, containing text: String) -> XCUIElement {
         app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'library.session.' AND label CONTAINS %@", text)).firstMatch
     }
