@@ -35,7 +35,7 @@ final class NativeLibraryUITests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10))
         app.buttons["All"].tap()
         XCTAssertTrue(row.waitForExistence(timeout: 10))
-        attachScreenshot(app, name: "library-persisted-fixture")
+        attachScreenshot(app, name: "s08-light-persisted-fixture")
         assertHitTargets(in: app)
         try auditScreen(app)
         row.tap()
@@ -50,7 +50,8 @@ final class NativeLibraryUITests: XCTestCase {
         XCTAssertTrue(app.heading("Your sessions").waitForExistence(timeout: 5))
         let row = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'library.session.'")).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 10), "Use a real fixture session retained by the recording flow")
-        attachScreenshot(app, name: "library-stored-ax5")
+        assertFitsTheScreenWidth(app, identifierPrefixes: ["library.session.", "library.delete.", "library.import"])
+        attachScreenshot(app, name: "s08-ax5-stored-library")
         assertHitTargets(in: app)
         try auditScreen(app)
         // At AX5 a SessionCard is taller than the screen, so its centre can sit under the floating tab bar:
@@ -62,6 +63,8 @@ final class NativeLibraryUITests: XCTestCase {
             row.frame.minY > 100 ? scroll.swipeUp(velocity: .slow) : scroll.swipeDown(velocity: .slow)
         }
         XCTAssertTrue(row.isHittable)
+        assertFitsTheScreenWidth(app, identifierPrefixes: ["library.session.", "library.delete."])
+        attachScreenshot(app, name: "s08-ax5-stored-card")
         row.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0)).withOffset(CGVector(dx: 0, dy: 40)).tap()
         XCTAssertTrue(app.heading("Smart replay").waitForExistence(timeout: 5))
     }

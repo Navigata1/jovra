@@ -27,9 +27,10 @@ struct PurgeScope: Equatable, Sendable {
         } else {
             drive = .none
         }
+        let originalsHere = entry.bytes?.originals ?? 0
         var lines = [String(localized: "This removes from this iPhone:", table: "Sessions.Library")]
-        if let originals = entry.bytes?.originals, originals > 0 {
-            lines.append("• " + String(localized: "The original video (\(format(originals)))", table: "Sessions.Library"))
+        if originalsHere > 0 {
+            lines.append("• " + String(localized: "The original video (\(format(originalsHere)))", table: "Sessions.Library"))
         } else {
             lines.append("• " + String(localized: "No original video is on this iPhone", table: "Sessions.Library"))
         }
@@ -49,8 +50,12 @@ struct PurgeScope: Equatable, Sendable {
             lines.append(String(localized: "Google Drive: a verified copy of the original is kept.", table: "Sessions.Library"))
         case .rallyOnly:
             lines.append(String(localized: "Google Drive: only a rallies-only copy is kept. The full original video is not.", table: "Sessions.Library"))
-        case .none:
+        case .none where originalsHere > 0:
             lines.append(String(localized: "Google Drive: no verified copy. This is the only copy of the original video.", table: "Sessions.Library"))
+        case .none:
+            // Nothing to call "the only copy": no original is stored here and none is backed up (a missing video,
+            // or a Sample session without media).
+            lines.append(String(localized: "Google Drive: no verified copy. No copy of the original video exists on this iPhone or in Google Drive.", table: "Sessions.Library"))
         }
         lines.append(String(localized: "This can't be undone.", table: "Sessions.Library"))
         message = lines.joined(separator: "\n")

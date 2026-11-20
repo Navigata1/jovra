@@ -1,0 +1,13 @@
+# Round 2 red, UI: the new SessionLibraryUITests/testRecordedSessionWithAPosterFitsTheScreenAtAX5 against the OLD
+# SessionThumbnail body (ZStack with the poster's scaledToFill image sizing the 16:10 frame), restored temporarily.
+# SIMULATOR_ID=<JOVRA-T20> scripts/ios/ui-test.sh -only-testing JovraUITests/SessionLibraryUITests/testRecordedSessionWithAPosterFitsTheScreenAtAX5
+# The 16:9 fixture-camera poster widens the page to the same frame the reviewer saw on the stored library (x -39.7, width 481.3).
+Total: 0 passed, 1 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 0 passed, 1 failed, 0 skipped; result Failed)
+FAILED SessionLibraryUITests/testRecordedSessionWithAPosterFitsTheScreenAtAX5(): XCTAssertEqual failed: ("XCTWaiterResult(rawValue: 1)") is not equal to ("XCTWaiterResult(rawValue: 2)") - the library is laid out wider than the screen: (-39.666666666666664, 0.0, 481.3333333333333, 874.0) vs width 402.0
+Device: JOVRA-T20 39331E6A-2160-4C51-A8E1-63902099F844 (iPhone 17 Pro, iOS Simulator 27.2)
+
+# Round 2 red, unit: JovraTests/SessionThumbnailLayoutTests against the same old body (xcodebuild -only-testing).
+✘ poster (480, 270) at width 132 and 338: Expectation failed: fitted.width <= width + 0.5   (landscape poster widens the frame)
+✘ poster (300, 480), (480, 480), (2, 900): Expectation failed: abs(fitted.height - width * 10 / 16) <= 0.5   (portrait/square posters stretch it)
+✔ without a poster the drawn court keeps the same 16:10 frame
+✘ Test run with 2 tests in 1 suite failed with 8 issues. ** TEST FAILED **

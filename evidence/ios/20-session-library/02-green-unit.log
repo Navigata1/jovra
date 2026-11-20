@@ -1,7 +1,10 @@
-# scripts/ios/test.sh on the merged head (origin/main 55899e9 merged), SIMULATOR_ID=JOVRA-T20, sample media rendered (render.py --check passed).
+# scripts/ios/test.sh on the round-2 head (AX5 poster fix + purge copy fix), SIMULATOR_ID=JOVRA-T20, sample media rendered (render.py --check passed).
 # swift test JovraCore: XCTest 30 executed, 0 failures; Swift Testing 146 tests in 9 suites passed.
 # swift test JovraMedia step: Swift Testing 148 tests in 22 suites, then 72 tests in 13 suites (benchmark harness), all passed.
-# SessionLibraryPresentationTests grew from 10 to 12: moveToTrashMessage (zero, nil and 500 MB bytes) and moveToTrashBackedUpWithoutBytes.
+# Round 2 adds SessionThumbnailLayoutTests (2 tests, 5 cases): a poster of any shape keeps the 16:10 frame and never widens it.
+# Round 2 adds SessionLibraryPresentationTests.purgeWithoutAnyOriginal (nil and zero bytes) and purgeWithoutLocalOriginalButBackedUp (original and rally-only copy): 12 -> 14.
+# The first attempt of this run failed one JovraMedia test outside this ticket (PlaybackSeekOutcomeTests.failedActiveLoopPositioningStopsOutsideTheLoop,
+# frame 80 vs 5) under machine load; JovraMedia is unchanged on this branch, the suite then passed 3/3 alone and in the full rerun below.
 ==> JovraTests summary
 Test class                                                                     passed  failed  skipped  expected
 JovraTests/CaptureDeleteAndRelaunchTests                                            2       0        0         0
@@ -38,7 +41,8 @@ JovraTests/ProcessingStagePresentationTests (Processing stage presentation)     
 JovraTests/StartupRecoveryTests                                                     2       0        0         0
 JovraTests/ServiceRegistrationTests (Service registration seam)                     5       0        0         0
 JovraTests/SessionLibraryOperationsTests (Session library operations)               6       0        0         0
-JovraTests/SessionLibraryPresentationTests (Session library presentation)          12       0        0         0
+JovraTests/SessionLibraryPresentationTests (Session library presentation)          14       0        0         0
+JovraTests/SessionThumbnailLayoutTests (Session thumbnail layout)                   2       0        0         0
 JovraTests/StudioWiringTests (Studio wiring)                                        4       0        0         0
 JovraTests/ToastCenterTests (Toast and UndoBar)                                     3       0        0         0
 JovraTests/VideoLabPlaybackTests (VideoLab source switching)                        5       0        0         0
@@ -46,6 +50,6 @@ JovraTests/VideoZoomTests (Video zoom)                                          
 JovraTests/FrameReadoutFormatTests (Frame readout text)                             3       0        0         0
 JovraTests/TimelineThumbTravelTests (Timeline thumb travel)                         4       0        0         0
 JovraTests/JogStripAccessibilityTests (Jog strip VoiceOver adjust)                  3       0        0         0
-Total: 218 passed, 0 failed, 0 skipped, 0 expected failure(s) in 42 classes (xcresult summary: 218 passed, 0 failed, 0 skipped; result Passed)
+Total: 222 passed, 0 failed, 0 skipped, 0 expected failure(s) in 43 classes (xcresult summary: 222 passed, 0 failed, 0 skipped; result Passed)
 Device: JOVRA-T20 39331E6A-2160-4C51-A8E1-63902099F844 (iPhone 17 Pro, iOS Simulator 27.2)
-Result bundle: .derivedData/unit-tests-20261120-012943.xcresult
+Result bundle: .derivedData/unit-tests-20261120-082949.xcresult

@@ -137,25 +137,8 @@ struct SessionThumbnail: View {
     @State private var poster: CGImage?
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: Radius.control, style: .continuous)
-        ZStack {
-            Color.jovra(.courtSurface)
-            CourtLinesBackdrop()
-                .stroke(Color.jovra(.courtLine).opacity(0.85), lineWidth: 1.5)
-            if let poster {
-                Image(decorative: poster, scale: 1).resizable().scaledToFill()
-            } else {
-                Image(systemName: LibraryFilter.matches.includes(entry.kind) ? "figure.tennis" : "tennisball.fill")
-                    .font(.title2)
-                    .foregroundStyle(.jovra(.courtLine))
-            }
-        }
-        .aspectRatio(16 / 10, contentMode: .fit)
-        .clipShape(shape)
-        // A hairline keeps the drawn court distinct from the forest card surface in dark mode.
-        .overlay(shape.strokeBorder(Color.jovra(.separator), lineWidth: 1))
-        .accessibilityHidden(true)
-        .task(id: entry.posterPath) { await loadPoster() }
+        SessionThumbnailArtwork(poster: poster, isMatch: LibraryFilter.matches.includes(entry.kind))
+            .task(id: entry.posterPath) { await loadPoster() }
     }
 
     private func loadPoster() async {
@@ -165,6 +148,37 @@ struct SessionThumbnail: View {
         generator.appliesPreferredTrackTransform = true
         generator.maximumSize = CGSize(width: 480, height: 300)
         poster = try? await generator.image(at: CMTime(seconds: 1, preferredTimescale: 600)).image
+    }
+}
+
+/// What the thumbnail draws: the poster frame filling a 16:10 rounded frame, or the drawn court with a symbol.
+/// The 16:10 court surface alone sizes the frame; the court lines and the poster are overlays, so a filled poster
+/// (landscape, portrait or square) is cropped to the frame and never reports a larger size to the card.
+struct SessionThumbnailArtwork: View {
+    var poster: CGImage?
+    var isMatch: Bool
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: Radius.control, style: .continuous)
+        Color.jovra(.courtSurface)
+            .aspectRatio(16 / 10, contentMode: .fit)
+            .overlay {
+                CourtLinesBackdrop()
+                    .stroke(Color.jovra(.courtLine).opacity(0.85), lineWidth: 1.5)
+            }
+            .overlay {
+                if let poster {
+                    Image(decorative: poster, scale: 1).resizable().scaledToFill()
+                } else {
+                    Image(systemName: isMatch ? "figure.tennis" : "tennisball.fill")
+                        .font(.title2)
+                        .foregroundStyle(.jovra(.courtLine))
+                }
+            }
+            .clipShape(shape)
+        // A hairline keeps the drawn court distinct from the forest card surface in dark mode.
+        .overlay(shape.strokeBorder(Color.jovra(.separator), lineWidth: 1))
+        .accessibilityHidden(true)
     }
 }
 

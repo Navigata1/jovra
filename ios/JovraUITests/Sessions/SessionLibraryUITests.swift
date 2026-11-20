@@ -56,6 +56,32 @@ final class SessionLibraryUITests: XCTestCase {
         attachScreenshot(app, name: "walking-skeleton-replay")
     }
 
+    /// A session with video on this iPhone shows its poster frame (the fixture camera records 16:9). At AX5 the
+    /// thumbnail spans the card, and the poster must be cropped to 16:10 rather than widen the whole page.
+    @MainActor
+    func testRecordedSessionWithAPosterFitsTheScreenAtAX5() throws {
+        let app = XCUIApplication.launchJovra(contentSize: .accessibility5) {
+            $0.appearance = .light; $0.library = .fresh; $0.recordFixtureSessionSeconds = 3; $0.startRoute = "sessions"
+        }
+        let recorded = card(app, containing: "Fixture recording")
+        XCTAssertTrue(recorded.waitForExistence(timeout: 60), "the 3 s engine recording is listed")
+        XCTAssertTrue(recorded.label.contains("Video: On device"), "the card has a poster to load: \(recorded.label)")
+        // The poster loads after the card appears. Wait for the page to widen; it must not.
+        let screenWidth = app.windows.firstMatch.frame.width
+        let page = app.scrollViews.firstMatch
+        let widened = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in page.exists && page.frame.width > screenWidth + 0.5 }, object: nil)
+        XCTAssertEqual(XCTWaiter().wait(for: [widened], timeout: 5), .timedOut,
+                       "the library is laid out wider than the screen: \(page.frame) vs width \(screenWidth)")
+        assertFitsTheScreenWidth(app, identifierPrefixes: ["library.session.", "library.delete.", "library.import"])
+        attachScreenshot(app, name: "s08-ax5-recorded-poster")
+        assertHitTargets(in: app)
+        try auditScreen(app)
+        reveal(recorded, in: app)
+        assertFitsTheScreenWidth(app, identifierPrefixes: ["library.session.", "library.delete."])
+        attachScreenshot(app, name: "s08-ax5-recorded-poster-card")
+    }
+
     // MARK: Facets and quarantine
 
     @MainActor
@@ -174,6 +200,22 @@ final class SessionLibraryUITests: XCTestCase {
         XCTAssertTrue(purge.waitForNonExistence(timeout: 10), "the confirmed purge removes it")
         XCTAssertTrue(app.descendants(matching: .any)["trash.session.\(LibraryFixtureIDs.trashed)"].exists,
                       "other trashed sessions stay: Trash is never emptied for you")
+
+        // The Sample "Old warm-up" has no original stored here and no backup: the dialog must not call anything
+        // "the only copy of the original video".
+        let purgeSample = app.buttons["trash.purge.\(LibraryFixtureIDs.trashed)"]
+        XCTAssertTrue(purgeSample.waitForExistence(timeout: 5))
+        purgeSample.tap()
+        let sampleAlert = app.alerts.firstMatch
+        XCTAssertTrue(sampleAlert.waitForExistence(timeout: 5))
+        let sampleText = sampleAlert.staticTexts.allElementsBoundByIndex.map(\.label).joined(separator: "\n")
+        XCTAssertTrue(sampleText.contains("No original video is on this iPhone"), sampleText)
+        XCTAssertTrue(sampleText.contains("No copy of the original video exists on this iPhone or in Google Drive."), sampleText)
+        XCTAssertFalse(sampleText.contains("This is the only copy"), sampleText)
+        attachScreenshot(app, name: "s08-light-purge-dialog-no-original")
+        sampleAlert.buttons["Cancel"].firstMatch.tap()
+        XCTAssertTrue(sampleAlert.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(purgeSample.exists, "Cancel keeps the session in Trash")
     }
 
     @MainActor

@@ -16,7 +16,7 @@
       <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
       <figure><img src="s08-ax5-demo.jpg" alt="Simulator s08-ax5-demo"><figcaption>Simulator: s08-ax5-demo.jpg</figcaption></figure>
     </div>
-    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — documented deviation: at AX5 &quot;+ Import&quot; wraps beside the lockup and the cards stack the thumbnail above the text (spec S08 accessibility); nothing is clipped (audit passes)</p>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — documented deviation: at AX5 &quot;+ Import&quot; wraps beside the lockup and the cards stack the thumbnail above the text (spec S08 accessibility); checked by eye: the header, search and filters sit inside both screen edges. These Sample cards draw the court (no poster); the poster case is s08-ax5-recorded-poster and s08-ax5-stored-library, where the UI tests also assert every card, Delete and Import frame lies inside the screen width</p>
   </section>
   <section>
     <h2>Screen 08 · s08-ax5-empty</h2>
@@ -35,12 +35,44 @@
     <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — no-results at AX5; filters stack vertically (FilterPills) as designed</p>
   </section>
   <section>
+    <h2>Screen 08 · s08-ax5-recorded-poster-card</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-ax5-recorded-poster-card.jpg" alt="Simulator s08-ax5-recorded-poster-card"><figcaption>Simulator: s08-ax5-recorded-poster-card.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — the same recorded card scrolled into view: poster cropped to the 16:10 frame, &quot;Fixture recording&quot;, Sample, &quot;On device&quot; and the other pills wrap inside the card</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-ax5-recorded-poster</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-ax5-recorded-poster.jpg" alt="Simulator s08-ax5-recorded-poster"><figcaption>Simulator: s08-ax5-recorded-poster.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — round 2 fix: fresh library with one engine recording (16:9 fixture camera poster) at AX5; the page stays the screen width (the test waits 5 s for the poster to load and fails if the page widens)</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-ax5-stored-card</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-ax5-stored-card.jpg" alt="Simulator s08-ax5-stored-card"><figcaption>Simulator: s08-ax5-stored-card.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — round 2 fix: scrolled to the first stored card (a synthetic HDR import clip) at AX5: its poster is cropped to the 16:10 frame inside the card edges, filters stack full width; the title continues below the tab bar as the page scrolls</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-ax5-stored-library</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-ax5-stored-library.jpg" alt="Simulator s08-ax5-stored-library"><figcaption>Simulator: s08-ax5-stored-library.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — round 2 fix: the device library at AX5 with stored posters; header, &quot;+ Import&quot;, search and filters inside both edges (was 481 pt wide on 9eca5bf); assertFitsTheScreenWidth passes for every card, Delete and Import element</p>
+  </section>
+  <section>
     <h2>Screen 08 · s08-ax5-trash</h2>
     <div class="pair">
       <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
       <figure><img src="s08-ax5-trash.jpg" alt="Simulator s08-ax5-trash"><figcaption>Simulator: s08-ax5-trash.jpg</figcaption></figure>
     </div>
-    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — Trash at AX5; buttons stack, text unclipped</p>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — Trash at AX5; buttons stack; checked by eye, no text is cut at the edges</p>
   </section>
   <section>
     <h2>Screen 08 · s08-dark-demo</h2>
@@ -153,6 +185,22 @@
       <figure><img src="s08-light-no-results.jpg" alt="Simulator s08-light-no-results"><figcaption>Simulator: s08-light-no-results.jpg</figcaption></figure>
     </div>
     <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — spec S08 search no-results (&quot;No sessions match “zzz”&quot; with Clear search); filters stay visible</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-persisted-fixture</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-persisted-fixture.jpg" alt="Simulator s08-light-persisted-fixture"><figcaption>Simulator: s08-light-persisted-fixture.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — a session recorded through the capture flow, still listed after relaunch: its 16:9 poster frame is cropped into the 16:10 thumbnail, card rhythm matches the reference row; Sample badge and four facet pills are the documented deviations</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-purge-dialog-no-original</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-purge-dialog-no-original.jpg" alt="Simulator s08-light-purge-dialog-no-original"><figcaption>Simulator: s08-light-purge-dialog-no-original.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — round 2 fix: purge dialog for the Sample &quot;Old warm-up&quot; (no original stored, no backup) says no original is on this iPhone and that no copy exists here or in Google Drive; it no longer claims &quot;the only copy&quot;; not drawn in the reference</p>
   </section>
   <section>
     <h2>Screen 08 · s08-light-purge-dialog</h2>

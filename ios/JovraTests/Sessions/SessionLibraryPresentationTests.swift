@@ -153,6 +153,36 @@ struct SessionLibraryPresentationTests {
             """)
     }
 
+    @Test("with no original here and no Drive copy, the dialog says no copy of the original exists", arguments: [
+        SessionBytes?.none,
+        SessionBytes(originals: 0, cache: 0, exports: 0),
+    ])
+    func purgeWithoutAnyOriginal(bytes: SessionBytes?) {
+        let scope = PurgeScope(entry(archive: .localOnly, bytes: bytes), locale: Locale(identifier: "en_US"))
+        #expect(scope.message == """
+            This removes from this iPhone:
+            • No original video is on this iPhone
+            • Its analysis, points and review
+            • No local copies
+
+            Google Drive: no verified copy. No copy of the original video exists on this iPhone or in Google Drive.
+            This can't be undone.
+            """)
+        #expect(!scope.message.contains("This is the only copy"), "never claims an original that is not stored")
+    }
+
+    @Test("with no original here, a Drive copy is still named exactly", arguments: [
+        (SessionArchiveStateCopy.original, "Google Drive: a verified copy of the original is kept."),
+        (.rallyOnlyCopy, "Google Drive: only a rallies-only copy is kept. The full original video is not."),
+    ])
+    func purgeWithoutLocalOriginalButBackedUp(copy: SessionArchiveStateCopy, line: String) {
+        let scope = PurgeScope(entry(original: .archiveOnly, archive: .backedUp, copy: copy,
+                                     bytes: .init(originals: 0, cache: 0, exports: 0)),
+                               locale: Locale(identifier: "en_US"))
+        #expect(scope.message.contains("• No original video is on this iPhone"))
+        #expect(scope.message.contains(line))
+    }
+
     // MARK: Move to Trash
 
     @Test("moving to Trash states the video's size only when this iPhone holds some bytes", arguments: [
