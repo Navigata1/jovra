@@ -19,6 +19,8 @@ struct LaunchConfigurationTests {
         #expect(configuration.processingAnalyzer == nil)
         #expect(configuration.processingDevice == nil)
         #expect(configuration.library == nil)
+        #expect(configuration.importSelection.isEmpty)
+        #expect(configuration.importStall == false)
         #expect(configuration.problems.isEmpty)
     }
 
@@ -85,6 +87,8 @@ struct LaunchConfigurationTests {
         configuration.processingAnalyzer = .steady
         configuration.processingDevice = .tooWarm
         configuration.library = .fresh
+        configuration.importSelection = ["/tmp/a.mov", "cloud:/tmp/b clip.mp4"]
+        configuration.importStall = true
 
         let parsed = LaunchConfiguration(arguments: ["Jovra"] + configuration.arguments)
         #expect(parsed == configuration)

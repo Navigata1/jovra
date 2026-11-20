@@ -7,6 +7,9 @@ final class FilesImportUITests: XCTestCase {
         let app = XCUIApplication.launchJovra { $0.demo = .off }
         app.buttons["tab.sessions"].tap()
         app.buttons["library.import"].tap()
+        let files = app.buttons["import.source.files"]
+        XCTAssertTrue(files.waitForExistence(timeout: 5))
+        files.tap()
         let name = app.textFields["import.player"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         let choose = app.buttons["import.choose"]
@@ -20,8 +23,12 @@ final class FilesImportUITests: XCTestCase {
         XCTAssertTrue(cancel.waitForExistence(timeout: 10), app.debugDescription)
         cancel.tap()
         XCTAssertTrue(choose.waitForExistence(timeout: 5))
-        XCTAssertFalse(app.staticTexts["import.saved"].exists)
-        XCTAssertFalse(app.staticTexts["import.issue"].exists)
+        // A cancelled picker reports nothing: no per-file result row, no "safe on this iPhone" card, no issue.
+        XCTAssertEqual(app.descendants(matching: .any).matching(identifier: "import.row").count, 0, app.debugDescription)
+        XCTAssertEqual(app.descendants(matching: .any).matching(identifier: "import.row.summary").count, 0)
+        XCTAssertFalse(app.descendants(matching: .any)["import.safe"].exists)
+        XCTAssertFalse(app.staticTexts["Your imports"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["import.issue"].exists)
         let back = app.buttons["import.back"]
         XCTAssertTrue(back.exists)
         back.tap()
