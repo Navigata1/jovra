@@ -7,14 +7,7 @@ final class CaptureFlowUITests: XCTestCase {
     @MainActor
     func testChosenFixtureCapturePausesMarksAndSavesWithoutAccountOrMicrophone() throws {
         let app = XCUIApplication.launchJovra { $0.demo = .off }
-        app.buttons["tab.record"].tap()
-        for (identifier, value) in [("capture.setup.title", "Court session"), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
-            let field = app.textFields[identifier]
-            XCTAssertTrue(field.waitForExistence(timeout: 5))
-            field.tap(); field.typeText(value + "\n")
-        }
-        app.swipeUp()
-        app.buttons["record.previewCapture"].tap()
+        app.startSinglesCapture(sessionName: "Court session")
         XCTAssertTrue(app.staticTexts["Simulator fixture camera"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["capture.sample"].exists)
         app.buttons["capture.start"].tap()

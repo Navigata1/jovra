@@ -31,16 +31,15 @@ final class JovraSmokeUITests: XCTestCase {
     func testFullScreenRouteHidesTabsAndReturns() throws {
         let app = launch(appearance: .light)
         app.buttons["tab.record"].tap()
-        // Since T17 "Frame your court" stays disabled until the session has a title and both players.
-        for (identifier, value) in [("capture.setup.title", "Smoke test"), ("capture.setup.playerA", "Jon"), ("capture.setup.playerB", "Alex")] {
-            let field = app.textFields[identifier]
-            XCTAssertTrue(field.waitForExistence(timeout: 5))
-            field.tap(); field.typeText(value + "\n")
-        }
-        app.swipeUp()
-        let frameCourt = app.buttons["record.previewCapture"]
-        XCTAssertTrue(frameCourt.isEnabled, "a complete setup enables Frame your court")
-        frameCourt.tap()
+        // Since T21 "Check camera position" stays disabled until both players have names.
+        let checkCamera = app.buttons["record.checkCameraPosition"]
+        app.reveal(checkCamera)
+        XCTAssertFalse(checkCamera.isEnabled, "a match without names cannot start")
+        app.fillPlayers(["me": "Jon", "opponent": "Alex"], sessionName: "Smoke test")
+        app.finishSheet()
+        app.reveal(checkCamera)
+        XCTAssertTrue(checkCamera.isEnabled, "a complete setup enables Check camera position")
+        checkCamera.tap()
 
         XCTAssertTrue(app.heading("Capture").waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["tab.home"].waitForNonExistence(timeout: 5), "tab bar should be hidden by a full-screen route")

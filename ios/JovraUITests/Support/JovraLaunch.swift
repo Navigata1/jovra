@@ -19,6 +19,9 @@ extension XCUIApplication {
         configure(&configuration)
         let app = XCUIApplication()
         app.launchArguments += configuration.arguments
+        // Every launch starts from the default session setup (T21 remembers the last one); a test of
+        // that memory sets this to "0" before relaunching.
+        app.launchEnvironment["JOVRA_SETUP_RESET"] = "1"
         if let contentSize {
             app.launchArguments += ["-UIPreferredContentSizeCategoryName", contentSize.rawValue]
         }

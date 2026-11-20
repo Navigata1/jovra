@@ -249,15 +249,15 @@ private extension SheetRoute {
         case .matchFormat:
             sheet("matchFormat", "T21", String(localized: "Match format", table: "App", comment: "Sheet name"),
                   String(localized: "Close match format", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Record/FormatSheet/FormatSheet.swift")
+                  "Features/Record/FormatSheet/FormatSheet.swift", placeholder: FormatSheet.isPlaceholder)
         case .players:
             sheet("players", "T21", String(localized: "Players", table: "App", comment: "Sheet name"),
                   String(localized: "Close players", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Record/PlayersSheet.swift")
+                  "Features/Record/PlayersSheet.swift", placeholder: PlayersSheet.isPlaceholder)
         case .cameraPreset:
             sheet("cameraPreset", "T21", String(localized: "Camera preset", table: "App", comment: "Sheet name"),
                   String(localized: "Close camera preset", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Record/CameraPresetSheet.swift")
+                  "Features/Record/CameraPresetSheet.swift", placeholder: CameraPresetSheet.isPlaceholder)
         case .trash:
             sheet("trash", "T20", String(localized: "Trash", table: "App", comment: "Sheet name"),
                   String(localized: "Close trash", table: "App", comment: "VoiceOver label of the Close control"),
