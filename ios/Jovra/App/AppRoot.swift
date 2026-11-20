@@ -19,6 +19,8 @@ struct AppRoot: View {
     @State private var isShellSettled = false
     @State private var shellSettled: Task<Void, Never>?
     @SceneStorage("jovra.router.state") private var savedState: Data?
+    /// Onboarding's answers in progress, saved beside the route so a restored onboarding step is never blank.
+    @SceneStorage("jovra.onboarding.draft") private var savedDraft: Data?
     @Environment(\.localCaptureLibrary) private var captureLibrary
     @Environment(\.sessionLookup) private var sessions
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
@@ -73,6 +75,9 @@ struct AppRoot: View {
         .onChange(of: router.state) { _, state in
             savedState = try? state.restorationData()
         }
+        .onChange(of: profile.onboardingDraft) { _, draft in
+            savedDraft = try? JSONEncoder().encode(draft)
+        }
     }
 
     private var reduceMotion: Bool { systemReduceMotion || launch.reduceMotion }
@@ -94,13 +99,34 @@ struct AppRoot: View {
         guard Self.restoresSavedState(launch: .current), let savedState else { return }
         do {
             let restored = try RouterState(restorationData: savedState)
-            // With no profile saved (a first run, or after "Delete all JOVRA data") the welcome gate wins.
-            guard restored.preShell != nil || WelcomeGate.initialRoute(for: profile.state) == nil else { return }
-            router.state = restored
+            if let state = Self.restoration(of: restored, savedDraft: savedDraft, model: profile) { router.state = state }
         } catch {
             Logger(subsystem: "com.islanddevcrew.jovra", category: "Restoration")
                 .notice("Saved navigation state did not decode; starting fresh. \(String(describing: error), privacy: .public)")
         }
+    }
+
+    /// What a restored navigation state becomes, or nil to keep where the launch already is.
+    ///
+    /// With no profile saved (a first run, or after "Delete all JOVRA data") a shell state never wins over the welcome
+    /// gate. An onboarding step comes back only with the answers saved beside it (`OnboardingDraft`): without them a
+    /// new player starts again on Welcome (where "Continue with Apple" is offered again), and a demo player's "Make it
+    /// yours" starts again at its first step, so nobody resumes past fields that are now blank.
+    static func restoration(of restored: RouterState, savedDraft: Data?, model: PlayerProfileModel) -> RouterState? {
+        guard restored.preShell != nil || WelcomeGate.initialRoute(for: model.state) == nil else { return nil }
+        guard case .onboarding = restored.preShell else { return restored }
+        if let savedDraft, let draft = try? JSONDecoder().decode(OnboardingDraft.self, from: savedDraft) {
+            model.resumeOnboarding(draft)
+            return restored
+        }
+        var state = restored
+        if model.needsWelcome {
+            state.preShell = .welcome
+        } else {
+            model.beginOnboarding()
+            state.preShell = .onboarding(step: 2)
+        }
+        return state
     }
 
     /// A launch with harness arguments starts where they say, never where a previous run left off.

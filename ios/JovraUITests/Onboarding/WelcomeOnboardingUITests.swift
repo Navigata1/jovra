@@ -81,6 +81,27 @@ final class WelcomeOnboardingUITests: XCTestCase {
         XCTAssertEqual(app.textFields["onboarding.name"].value as? String, "Jon", "Apple's given name is filled in")
     }
 
+    @MainActor
+    func testUnitsChosenOnPlaySurviveGoingBackToProfile() {
+        let app = XCUIApplication.launchJovra { $0.appearance = .light; $0.profile = .fresh; $0.library = .fresh }
+        XCTAssertTrue(app.buttons["welcome.getStarted"].waitForExistence(timeout: 10))
+        app.buttons["welcome.getStarted"].tap()
+        XCTAssertTrue(app.buttons["onboarding.continue"].waitForExistence(timeout: 5))
+        app.buttons["onboarding.continue"].tap()
+
+        // Choose whichever units the saved preference did not preselect, so the test holds in any locale.
+        XCTAssertTrue(app.buttons["onboarding.units.0"].waitForExistence(timeout: 5))
+        let chosen = app.buttons["onboarding.units.0"].isSelected ? "onboarding.units.1" : "onboarding.units.0"
+        app.buttons[chosen].tap()
+        XCTAssertTrue(app.buttons[chosen].isSelected)
+
+        app.buttons["onboarding.back"].tap()
+        XCTAssertTrue(app.heading("Make it your game").waitForExistence(timeout: 5))
+        app.buttons["onboarding.continue"].tap()
+        XCTAssertTrue(app.buttons[chosen].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons[chosen].isSelected, "going Back and on again keeps the units chosen on Play")
+    }
+
     // MARK: Profile persists and is editable
 
     @MainActor

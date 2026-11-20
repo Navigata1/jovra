@@ -62,3 +62,18 @@ Total: 25 passed, 0 failed, 0 skipped, 1 expected failure(s) in 6 classes (xcres
 Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
 JovraTests: ✘ Test run with 156 tests in 28 suites failed after 1.503 seconds with 2 issues.
 (the 2 issues are the same jog-strip frame-counter cases as above)
+
+## After addressing the Codex review on #559 (units survive Back; onboarding draft saved with the scene)
+scripts/ios/ui-test.sh -only-testing JovraUITests/WelcomeOnboardingUITests -only-testing JovraUITests/DemoEntryUITests -only-testing JovraUITests/WelcomeOnboardingAuditUITests -only-testing JovraUITests/AuditExceptionTests
+==> Summary
+Test class                                  passed  failed  skipped  expected
+JovraUITests/AuditExceptionTests                 4       0        0         0
+JovraUITests/DemoEntryUITests                    2       0        0         0
+JovraUITests/WelcomeOnboardingAuditUITests       4       0        0         0
+JovraUITests/WelcomeOnboardingUITests            6       0        0         0
+Total: 16 passed, 0 failed, 0 skipped, 0 expected failure(s) in 4 classes (xcresult summary: 16 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T18 2C551BFA-ADB1-4A1D-AFDA-F22C0B35EE60 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261120-070925.xcresult (load average ~180 during the run)
+New: WelcomeOnboardingUITests/testUnitsChosenOnPlaySurviveGoingBackToProfile.
+JovraTests (xcodebuild test -only-testing:JovraTests): 216 passed, 1 failed, 2 skipped. New suite "Onboarding state restoration" 4/4,
+"Player profile model" 8/8. The failure is again 'Jog strip VoiceOver adjust', which needs frame-counter media not rendered here.

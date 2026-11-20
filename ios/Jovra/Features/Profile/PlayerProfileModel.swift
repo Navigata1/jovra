@@ -22,6 +22,9 @@ final class PlayerProfileModel {
     var draft = PlayerProfile()
     /// The account the next completed onboarding records ("Continue with Apple" sets it).
     private(set) var pendingAccount: ProfileAccount = .none
+    /// The units chosen on the Play step, kept with the draft so Back and on again keeps the choice. Nil until the step
+    /// first appears and fills in the saved preference.
+    var draftUnits: UnitSystem?
     /// The demo library is installed on this iPhone (its sessions are badged Sample).
     private(set) var hasSampleContent = false
     /// At least one of the player's own sessions is saved; nil until counted.
@@ -67,6 +70,19 @@ final class PlayerProfileModel {
     func beginOnboarding(prefilledName: String? = nil, account: ProfileAccount = .none) {
         draft = PlayerProfile(name: prefilledName ?? "")
         pendingAccount = account
+        draftUnits = nil
+    }
+
+    /// Everything onboarding has collected so far, saved with the scene beside its route (`AppRoot`).
+    var onboardingDraft: OnboardingDraft {
+        OnboardingDraft(profile: draft, account: pendingAccount, units: draftUnits)
+    }
+
+    /// Picks up a draft state restoration saved, so a restored onboarding step shows the answers already given.
+    func resumeOnboarding(_ saved: OnboardingDraft) {
+        draft = saved.profile
+        pendingAccount = saved.account
+        draftUnits = saved.units
     }
 
     /// Saves the draft as the player's own profile. A demo profile is replaced; sample sessions stay installed and
@@ -154,6 +170,14 @@ final class PlayerProfileModel {
             logger.error("The library could not be counted: \(String(describing: error), privacy: .public)")
         }
     }
+}
+
+/// Onboarding's answers in progress: the profile fields, the account "Continue with Apple" recorded, and the units.
+/// Saved with the scene so that when iOS ends JOVRA in the background mid-onboarding, the restored step is not blank.
+struct OnboardingDraft: Codable, Equatable, Sendable {
+    var profile = PlayerProfile()
+    var account: ProfileAccount = .none
+    var units: UnitSystem?
 }
 
 enum ProfileModelError: Error {

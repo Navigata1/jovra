@@ -144,7 +144,7 @@ enum AppearancePreference: String, CaseIterable, Identifiable, Sendable {
 }
 
 /// S20 "Units".
-enum UnitSystem: String, CaseIterable, Identifiable, Sendable {
+enum UnitSystem: String, Codable, CaseIterable, Identifiable, Sendable {
     case imperial, metric
 
     var id: String { rawValue }

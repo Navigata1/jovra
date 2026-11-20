@@ -6,8 +6,8 @@ import SwiftUI
 /// needed, or Apple filled it in), so onboarding opens on step 2 "Profile" and ends with step 3 "Play". It never asks
 /// for the camera, the microphone or Photos (story 17): each is asked for only when it is first needed.
 ///
-/// The router owns the step (`onboarding(step:)`); the answers live in `PlayerProfileModel.draft` so they survive
-/// moving between steps.
+/// The router owns the step (`onboarding(step:)`); the answers, units included, live in `PlayerProfileModel` so they
+/// survive moving between steps, and `AppRoot` saves them with the scene so a restored step keeps them too.
 struct OnboardingScreen: View {
     var step: Int
 
@@ -205,7 +205,6 @@ private struct PlayStep: View {
     @Environment(PlayerProfileModel.self) private var model
     @Environment(\.appPreferences) private var preferences
     @Environment(\.localCaptureLibrary) private var library
-    @State private var units: UnitSystem? = nil
     @State private var problem: String?
     @State private var isWorking = false
 
@@ -220,7 +219,8 @@ private struct PlayStep: View {
                               title: \.title, identifier: "onboarding.format")
             }
             ProfileFieldGroup(title: String(localized: "Units", table: "Onboarding")) {
-                ChoiceSegment(options: UnitSystem.allCases, selection: $units, title: \.shortTitle, identifier: "onboarding.units")
+                ChoiceSegment(options: UnitSystem.allCases, selection: $model.draftUnits, title: \.shortTitle,
+                              identifier: "onboarding.units")
             }
             FootageCards()
             if let problem {
@@ -251,7 +251,7 @@ private struct PlayStep: View {
             }
         }
         .disabled(isWorking)
-        .onAppear { units = units ?? preferences.units }
+        .onAppear { if model.draftUnits == nil { model.draftUnits = preferences.units } }
     }
 
     private enum Destination { case record, home, sample }
@@ -261,7 +261,7 @@ private struct PlayStep: View {
         Task {
             defer { isWorking = false }
             do {
-                if let units { preferences.units = units }
+                if let units = model.draftUnits { preferences.units = units }
                 try model.completeOnboarding()
                 if destination == .sample {
                     try await model.installSample(library: library, content: BundledSampleLibrary.load())

@@ -133,6 +133,17 @@ struct PlayerProfileModelTests {
         #expect(model.profile?.handedness == .left)
     }
 
+    @Test("Back from Play and on again keeps the units chosen there; starting onboarding afresh forgets them")
+    func unitsSurviveGoingBack() throws {
+        let model = PlayerProfileModel(availability: .ready(try readyStore()))
+        model.beginOnboarding()
+        #expect(model.draftUnits == nil, "the Play step fills in the saved preference when it first appears")
+        model.draftUnits = .metric
+        #expect(model.onboardingDraft.units == .metric)
+        model.beginOnboarding()
+        #expect(model.draftUnits == nil)
+    }
+
     @Test("an unreadable profile is reported, never mistaken for a first run")
     func unreadable() throws {
         let folder = temporaryFolder()
@@ -141,6 +152,71 @@ struct PlayerProfileModelTests {
         let model = PlayerProfileModel(availability: .ready(store))
         #expect(model.state == .unreadable)
         #expect(!model.needsWelcome)
+    }
+}
+
+@Suite("Onboarding state restoration")
+@MainActor
+struct OnboardingRestorationTests {
+    private func onboardingState(step: Int) -> RouterState {
+        var state = RouterState()
+        state.preShell = .onboarding(step: step)
+        return state
+    }
+
+    @Test("a restored onboarding step comes back with the answers and the Apple account saved beside it")
+    func resumesWithTheSavedDraft() async throws {
+        let before = PlayerProfileModel(availability: .ready(try readyStore()))
+        #expect(await before.signInWithApple(using: ScriptedSignIn(result: .signedIn(userID: "apple.0001", givenName: "Sam"))) == .onboarding)
+        before.draft.handedness = .left
+        before.draft.backhand = .oneHanded
+        before.draftUnits = .metric
+        let saved = try JSONEncoder().encode(before.onboardingDraft)
+
+        // A relaunch after iOS ended the app in the background: a fresh model, no profile saved yet.
+        let after = PlayerProfileModel(availability: .ready(try readyStore()))
+        let restored = AppRoot.restoration(of: onboardingState(step: 3), savedDraft: saved, model: after)
+
+        #expect(restored?.preShell == .onboarding(step: 3))
+        #expect(after.draft.name == "Sam")
+        #expect(after.draft.handedness == .left)
+        #expect(after.draft.backhand == .oneHanded)
+        #expect(after.draftUnits == .metric)
+        try after.completeOnboarding()
+        #expect(after.profile?.account == .apple, "the Apple association survives the restore")
+        #expect(after.profile?.handedness == .left)
+    }
+
+    @Test("with no answers to restore, a new player starts again on Welcome, never past blank fields")
+    func noDraftRestartsAtWelcome() throws {
+        let model = PlayerProfileModel(availability: .ready(try readyStore()))
+        #expect(AppRoot.restoration(of: onboardingState(step: 3), savedDraft: nil, model: model)?.preShell == .welcome)
+        #expect(AppRoot.restoration(of: onboardingState(step: 3), savedDraft: Data("{".utf8), model: model)?.preShell == .welcome,
+                "answers that no longer decode count as none")
+    }
+
+    @Test("with no answers to restore, Make it yours starts again at its first step with a fresh draft")
+    func noDraftRestartsMakeItYours() throws {
+        let model = PlayerProfileModel(availability: .ready(try readyStore()))
+        try model.save(.sample)
+        model.draft.name = "stale"
+        #expect(AppRoot.restoration(of: onboardingState(step: 3), savedDraft: nil, model: model)?.preShell == .onboarding(step: 2))
+        #expect(model.draft == PlayerProfile())
+    }
+
+    @Test("other restored states are unchanged, and a shell state never overrides a missing profile")
+    func otherStates() throws {
+        let fresh = PlayerProfileModel(availability: .ready(try readyStore()))
+        var shell = RouterState()
+        shell.selectedTab = .sessions
+        #expect(AppRoot.restoration(of: shell, savedDraft: nil, model: fresh) == nil, "no profile: the welcome gate wins")
+        var welcome = RouterState()
+        welcome.preShell = .welcome
+        #expect(AppRoot.restoration(of: welcome, savedDraft: nil, model: fresh) == welcome)
+
+        let onboarded = PlayerProfileModel(availability: .ready(try readyStore()))
+        try onboarded.save(PlayerProfile(name: "Sam"))
+        #expect(AppRoot.restoration(of: shell, savedDraft: nil, model: onboarded) == shell)
     }
 }
 
