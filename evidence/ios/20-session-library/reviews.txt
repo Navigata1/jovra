@@ -1,0 +1,24 @@
+# T20 session library against design-reference/screens/08-session-library.png. The written spec (S08) wins
+# over the generated reference where they differ; each deviation is named.
+s08-light-demo: Claude (T20 agent) — matches the header, title, subtitle, search pill, All/Matches/Practice and card rhythm; deviations per spec: Sample badges, drawn court thumbnails instead of photographs, four independent facet pills instead of one status line, "Only on this iPhone" because the sample Jon vs Alex has no verified backup
+s08-dark-demo: Claude (T20 agent) — same layout on forest; pills and court thumbnail keep their contrast; documented deviations as in light
+s08-ax5-demo: Claude (T20 agent) — documented deviation: at AX5 "+ Import" wraps beside the lockup and the cards stack the thumbnail above the text (spec S08 accessibility); nothing is clipped (audit passes)
+s08-light-empty: Claude (T20 agent) — spec S08 empty state ("No sessions yet", Record a session, Import a video); not drawn in the reference
+s08-dark-empty: Claude (T20 agent) — empty state in dark; matches light
+s08-ax5-empty: Claude (T20 agent) — empty state at AX5; actions stay full width and unclipped
+s08-light-no-results: Claude (T20 agent) — spec S08 search no-results ("No sessions match “zzz”" with Clear search); filters stay visible
+s08-dark-no-results: Claude (T20 agent) — no-results in dark; matches light
+s08-ax5-no-results: Claude (T20 agent) — no-results at AX5; filters stack vertically (FilterPills) as designed
+s08-light-search-alex: Claude (T20 agent) — search "Alex" leaves Jon vs Alex; the reference shows the empty search pill, same styling
+s08-light-trash: Claude (T20 agent) — Trash sheet (spec "Recently deleted", titled Trash by the route catalog); not drawn in the reference
+s08-dark-trash: Claude (T20 agent) — Trash in dark; Restore / Delete now and the Drive status pill keep contrast
+s08-ax5-trash: Claude (T20 agent) — Trash at AX5; buttons stack, text unclipped
+s08-light-purge-dialog: Claude (T20 agent) — purge dialog names the original video and its size, the analysis, local copies and the Drive status (story 130); not drawn in the reference
+s08-light-undo-bar: Claude (T20 agent) — UndoBar "Moved to Trash · Undo" over the list (spec S08 Delete); not drawn in the reference
+s08-light-walking-skeleton: Claude (T20 agent) — the 10 s engine recording listed with a real poster frame from the fixture camera, "On device", "Only on this iPhone" and its bytes
+s08-light-facets-1: Claude (T20 agent) — quarantine card with the reason, then the facet fixtures; the reference has no quarantine state (story 386)
+s08-light-facets-2: Claude (T20 agent) — facet fixtures: each card shows its own video, analysis, review and backup labels
+s08-light-facets-3: Claude (T20 agent) — facet fixtures continued
+s08-light-facets-4: Claude (T20 agent) — facet fixtures continued
+s08-light-facets-5: Claude (T20 agent) — facet fixtures continued
+s08-light-facets-6: Claude (T20 agent) — facet fixtures continued; every facet value appears on at least one card (see facet-grid.jpg)

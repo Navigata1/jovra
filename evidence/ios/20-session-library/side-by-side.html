@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Side by side: 20-session-library</title>
+<style>
+  body { font: 15px/1.45 -apple-system, system-ui, sans-serif; margin: 24px; color: #182F29; background: #F4F1E8; }
+  .pair { display: flex; gap: 24px; flex-wrap: wrap; }
+  figure { margin: 0; } img { max-height: 720px; max-width: 100%; border: 1px solid #DCD7CA; border-radius: 12px; }
+  section { margin-bottom: 40px; } .review { background: #FBFAF6; padding: 8px 12px; border-radius: 8px; }
+</style></head><body>
+<h1>Side by side: 20-session-library</h1>
+<p>References are AI-generated rasters: they guide layout, rhythm, palette and hierarchy; the written spec wins.</p>
+
+  <section>
+    <h2>Screen 08 · s08-ax5-demo</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-ax5-demo.jpg" alt="Simulator s08-ax5-demo"><figcaption>Simulator: s08-ax5-demo.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — documented deviation: at AX5 &quot;+ Import&quot; wraps beside the lockup and the cards stack the thumbnail above the text (spec S08 accessibility); nothing is clipped (audit passes)</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-ax5-empty</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-ax5-empty.jpg" alt="Simulator s08-ax5-empty"><figcaption>Simulator: s08-ax5-empty.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — empty state at AX5; actions stay full width and unclipped</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-ax5-no-results</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-ax5-no-results.jpg" alt="Simulator s08-ax5-no-results"><figcaption>Simulator: s08-ax5-no-results.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — no-results at AX5; filters stack vertically (FilterPills) as designed</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-ax5-trash</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-ax5-trash.jpg" alt="Simulator s08-ax5-trash"><figcaption>Simulator: s08-ax5-trash.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — Trash at AX5; buttons stack, text unclipped</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-dark-demo</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-dark-demo.jpg" alt="Simulator s08-dark-demo"><figcaption>Simulator: s08-dark-demo.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — same layout on forest; pills and court thumbnail keep their contrast; documented deviations as in light</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-dark-empty</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-dark-empty.jpg" alt="Simulator s08-dark-empty"><figcaption>Simulator: s08-dark-empty.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — empty state in dark; matches light</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-dark-no-results</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-dark-no-results.jpg" alt="Simulator s08-dark-no-results"><figcaption>Simulator: s08-dark-no-results.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — no-results in dark; matches light</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-dark-trash</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-dark-trash.jpg" alt="Simulator s08-dark-trash"><figcaption>Simulator: s08-dark-trash.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — Trash in dark; Restore / Delete now and the Drive status pill keep contrast</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-demo</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-demo.jpg" alt="Simulator s08-light-demo"><figcaption>Simulator: s08-light-demo.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — matches the header, title, subtitle, search pill, All/Matches/Practice and card rhythm; deviations per spec: Sample badges, drawn court thumbnails instead of photographs, four independent facet pills instead of one status line, &quot;Only on this iPhone&quot; because the sample Jon vs Alex has no verified backup</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-empty</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-empty.jpg" alt="Simulator s08-light-empty"><figcaption>Simulator: s08-light-empty.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — spec S08 empty state (&quot;No sessions yet&quot;, Record a session, Import a video); not drawn in the reference</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-facets-1</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-facets-1.jpg" alt="Simulator s08-light-facets-1"><figcaption>Simulator: s08-light-facets-1.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — quarantine card with the reason, then the facet fixtures; the reference has no quarantine state (story 386)</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-facets-2</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-facets-2.jpg" alt="Simulator s08-light-facets-2"><figcaption>Simulator: s08-light-facets-2.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — facet fixtures: each card shows its own video, analysis, review and backup labels</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-facets-3</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-facets-3.jpg" alt="Simulator s08-light-facets-3"><figcaption>Simulator: s08-light-facets-3.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — facet fixtures continued</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-facets-4</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-facets-4.jpg" alt="Simulator s08-light-facets-4"><figcaption>Simulator: s08-light-facets-4.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — facet fixtures continued</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-facets-5</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-facets-5.jpg" alt="Simulator s08-light-facets-5"><figcaption>Simulator: s08-light-facets-5.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — facet fixtures continued</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-facets-6</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-facets-6.jpg" alt="Simulator s08-light-facets-6"><figcaption>Simulator: s08-light-facets-6.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — facet fixtures continued; every facet value appears on at least one card (see facet-grid.jpg)</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-no-results</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-no-results.jpg" alt="Simulator s08-light-no-results"><figcaption>Simulator: s08-light-no-results.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — spec S08 search no-results (&quot;No sessions match “zzz”&quot; with Clear search); filters stay visible</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-purge-dialog</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-purge-dialog.jpg" alt="Simulator s08-light-purge-dialog"><figcaption>Simulator: s08-light-purge-dialog.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — purge dialog names the original video and its size, the analysis, local copies and the Drive status (story 130); not drawn in the reference</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-search-alex</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-search-alex.jpg" alt="Simulator s08-light-search-alex"><figcaption>Simulator: s08-light-search-alex.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — search &quot;Alex&quot; leaves Jon vs Alex; the reference shows the empty search pill, same styling</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-trash</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-trash.jpg" alt="Simulator s08-light-trash"><figcaption>Simulator: s08-light-trash.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — Trash sheet (spec &quot;Recently deleted&quot;, titled Trash by the route catalog); not drawn in the reference</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-undo-bar</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-undo-bar.jpg" alt="Simulator s08-light-undo-bar"><figcaption>Simulator: s08-light-undo-bar.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — UndoBar &quot;Moved to Trash · Undo&quot; over the list (spec S08 Delete); not drawn in the reference</p>
+  </section>
+  <section>
+    <h2>Screen 08 · s08-light-walking-skeleton</h2>
+    <div class="pair">
+      <figure><img src="../../../design-reference/screens/08-session-library.png" alt="Reference 08"><figcaption>Reference: 08-session-library.png</figcaption></figure>
+      <figure><img src="s08-light-walking-skeleton.jpg" alt="Simulator s08-light-walking-skeleton"><figcaption>Simulator: s08-light-walking-skeleton.jpg</figcaption></figure>
+    </div>
+    <p class="review"><strong>Reviewer:</strong> Claude (T20 agent) — the 10 s engine recording listed with a real poster frame from the fixture camera, &quot;On device&quot;, &quot;Only on this iPhone&quot; and its bytes</p>
+  </section>
+</body></html>
