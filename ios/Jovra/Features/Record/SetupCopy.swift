@@ -163,6 +163,14 @@ enum SetupCopy {
             }
         case .nameTooLong(let seat):
             return String(localized: "\(seatTitle(seat))'s name is longer than 60 characters.", table: "Record", comment: "Setup problem")
+        case .samePlayerTwice(let seat):
+            let name = displayName(setup[seat], seat: seat)
+            switch seat {
+            case .me: return String(localized: "\(name) is already in this session.", table: "Record", comment: "Setup problem: one person in two seats")
+            case .partner: return String(localized: "\(name) is already in this session. Choose someone else as your partner.", table: "Record", comment: "Setup problem: one person in two seats")
+            case .opponent: return String(localized: "\(name) is already in this session. Choose someone else as your opponent.", table: "Record", comment: "Setup problem: one person in two seats")
+            case .opponentPartner: return String(localized: "\(name) is already in this session. Choose someone else as your opponent's partner.", table: "Record", comment: "Setup problem: one person in two seats")
+            }
         case .sessionNameTooLong:
             return String(localized: "The session name is longer than 120 characters.", table: "Record", comment: "Setup problem")
         case .doublesOrder(let set, let issue):
@@ -179,6 +187,17 @@ enum SetupCopy {
         case .firstServerDiffersFromMatch:
             String(localized: "Set 1 starts with the player who serves first in the match.", table: "Record", comment: "Doubles order problem")
         }
+    }
+
+    // MARK: Capture
+
+    /// Capture's card when S04 chose a singles format it cannot score yet (it never substitutes one).
+    static var formatNotRecordableTitle: String {
+        String(localized: "This match format cannot be recorded yet", table: "Record", comment: "Capture card when the chosen format cannot be scored yet")
+    }
+
+    static var formatNotRecordableMessage: String {
+        String(localized: "Recording keeps score for one set or best of three tie-break sets, with lets. Close this screen to keep your format. It will not be replaced with another one.", table: "Record", comment: "Capture card when the chosen format cannot be scored yet")
     }
 
     // MARK: Camera and storage

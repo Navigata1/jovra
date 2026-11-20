@@ -259,9 +259,17 @@ The Record tab is S04. `SessionSetupStore` (`Features/Record`, a `ServiceKey`) h
 and its sheets edit, writes it to `Application Support/JOVRA/setup/last-session-setup.json` on every change (the next
 session's default) and registers the `sessionSetup` eraser. "Check camera position" presents
 `.capture(SessionSetupDraft(setup))`: `sessionSetup` carries everything decided; `captureChoices` is filled only when
-today's capture screen can record the chosen format exactly (singles, one or three tie-break sets), never a substitute.
+today's capture screen can record the chosen format exactly (singles, one or three tie-break sets with lets), never a
+substitute. Otherwise `SessionSetupDraft.captureSupport` is `.formatUnavailable` (or `.modeUnavailable` for doubles and
+practice) and capture shows why instead of its own form. Capture records with `CaptureRecordingPlan`: the preset chosen
+on S04 (the first offered one when the remembered preset is not offered, as the camera row shows) and the microphone
+choice (off: no sound, never asks; on: sound when allowed, the in-app explanation first when iOS has not asked yet).
 The camera preset row lists `CaptureFormatCatalog` options (JovraMedia): the back camera's own formats on a device, the
-fixture clip's format on the simulator. DEBUG launch environment for UI tests:
+fixture clip's format on the simulator. "Played before" chips come from `RecentPlayers`: a person's id is derived from
+their name (`recent-` + FNV-1a), because saved sessions use session-local ids (`player-a`/`player-b`); anyone already
+named in a seat is not offered, and `SetupProblem.samePlayerTwice` blocks one id in two seats. Sheet audits:
+`SessionSetupSheetAuditUITests` audits each sheet at every scroll position (half-height drags, settled) in light, dark
+and AX5, one test per sheet and variant. DEBUG launch environment for UI tests:
 
 | Variable | Effect |
 |---|---|

@@ -2,8 +2,9 @@ import XCTest
 
 /// T21: session setup (S04) end to end on the simulator: the chosen setup reaches the capture route, an
 /// invalid doubles order is blocked, only fixture presets are offered, the microphone consequence, low
-/// space, the slots' empty states, the remembered setup after relaunch, and the accessibility audit of
-/// the screen and every sheet in light, dark and AX5.
+/// space, the slots' empty states, the remembered setup after relaunch, a format capture cannot score
+/// is never replaced, and the accessibility audit of the screen in light, dark and AX5 (the sheets are
+/// audited at every scroll position in `SessionSetupSheetAuditUITests`).
 final class SessionSetupUITests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
@@ -27,20 +28,6 @@ final class SessionSetupUITests: XCTestCase {
         let sheet = app.otherElements["sheet.container"]
         app.reveal(group.buttons[option], in: sheet.exists ? sheet.scrollViews.firstMatch : nil)
         group.buttons[option].tap()
-    }
-
-    /// One audit of a presented sheet as it first appears (no scroll steps): issues on the screen
-    /// behind the sheet are set aside, as `auditSheet` does. A full scroll-step audit of every sheet
-    /// in three variants kept the simulator's test daemon busy for most of an hour on this machine.
-    @MainActor
-    private func auditSheetViewport(_ app: XCUIApplication) throws {
-        let sheet = app.otherElements["sheet.container"]
-        XCTAssertTrue(sheet.waitForExistence(timeout: 5))
-        let frame = sheet.frame.insetBy(dx: -1, dy: -1)
-        try app.performAccessibilityAudit { issue in
-            guard let element = issue.element else { return false }
-            return !frame.contains(element.frame)
-        }
     }
 
     /// Taps the switch itself (trailing), not the row's words.
@@ -162,6 +149,33 @@ final class SessionSetupUITests: XCTestCase {
         XCTAssertEqual(orders[1]["secondServer"] as? String, "partner")
     }
 
+    /// Review round 1: Best of 5 cannot be scored by today's capture screen. Capture says so; it never
+    /// opens its own singles form with Best of 3 and blank names.
+    @MainActor
+    func testAFormatCaptureCannotScoreShowsWhyAndIsNeverReplacedWithBestOfThree() throws {
+        let app = launch()
+        app.buttons["record.mode.singlesMatch"].tap()
+        app.fillPlayers(["me": "Jon", "opponent": "Alex"])
+        app.finishSheet()
+        app.reveal(app.buttons["record.scoring"]); app.buttons["record.scoring"].tap()
+        let preset = app.buttons["format.preset.bestOf5"]
+        app.reveal(preset, in: app.otherElements["sheet.container"].scrollViews.firstMatch)
+        preset.tap()
+        app.finishSheet()
+        let check = app.buttons["record.checkCameraPosition"]
+        app.reveal(check)
+        XCTAssertTrue(check.isEnabled, "the setup itself is complete")
+        check.tap()
+        let card = app.descendants(matching: .any).matching(identifier: "capture.formatUnavailable").firstMatch
+        XCTAssertTrue(card.waitForExistence(timeout: 8), "capture explains that this format cannot be recorded yet")
+        XCTAssertTrue(app.staticTexts["This match format cannot be recorded yet"].exists)
+        XCTAssertFalse(app.buttons["capture.prepare"].exists, "no form to record another format")
+        XCTAssertFalse(app.textFields["capture.setup.title"].exists)
+        XCTAssertFalse(app.staticTexts["Best of three sets"].exists, "Best of 3 is never substituted")
+        attachScreenshot(app, name: "t21-light-capture-format-unavailable")
+        try auditScreen(app)
+    }
+
     @MainActor
     func testTheSimulatorOffersOnlyTheFixturePresetAndMicrophoneOffStatesItsConsequence() throws {
         let app = launch()
@@ -239,16 +253,18 @@ final class SessionSetupUITests: XCTestCase {
     // MARK: Accessibility and evidence (light, dark, AX5)
 
     @MainActor
-    func testSetupAndEverySheetPassTheAuditInLight() throws { try auditEverything(.light, nil, "light") }
+    func testSetupScreenPassesTheAuditInLight() throws { try auditSetupScreen(.light, nil, "light") }
 
     @MainActor
-    func testSetupAndEverySheetPassTheAuditInDark() throws { try auditEverything(.dark, nil, "dark") }
+    func testSetupScreenPassesTheAuditInDark() throws { try auditSetupScreen(.dark, nil, "dark") }
 
     @MainActor
-    func testSetupAndEverySheetPassTheAuditAtAX5() throws { try auditEverything(.light, .accessibility5, "ax5") }
+    func testSetupScreenPassesTheAuditAtAX5() throws { try auditSetupScreen(.light, .accessibility5, "ax5") }
 
+    /// The whole scrolling setup screen at every scroll step, singles with names filled in, then the
+    /// stroke-practice variant (camera angle row, no scoring row).
     @MainActor
-    private func auditEverything(_ appearance: LaunchConfiguration.Appearance, _ size: ContentSize?, _ variant: String) throws {
+    private func auditSetupScreen(_ appearance: LaunchConfiguration.Appearance, _ size: ContentSize?, _ variant: String) throws {
         let app = launch(appearance: appearance, contentSize: size)
         app.fillPlayers(["me": "Jon", "opponent": "Alex"])
         tap("Right", in: "players.me.hand", app)
@@ -262,35 +278,12 @@ final class SessionSetupUITests: XCTestCase {
         app.scrollViews.firstMatch.swipeUp(velocity: .slow)
         attachScreenshot(app, name: "t21-\(variant)-setup-lower")
 
-        for (row, slug) in [("record.players", "players"), ("record.scoring", "format"), ("record.camera", "camera")] {
-            let button = app.buttons[row]
-            app.reveal(button)
-            button.tap()
-            XCTAssertTrue(app.otherElements["sheet.container"].waitForExistence(timeout: 5))
-            Thread.sleep(forTimeInterval: 1.2) // the presentation animation ends before pixels are sampled
-            attachScreenshot(app, name: "t21-\(variant)-sheet-\(slug)")
-            assertHitTargets(in: app)
-            try auditSheetViewport(app)
-            app.buttons["sheet.close"].tap()
-            XCTAssertTrue(app.otherElements["sheet.container"].waitForNonExistence(timeout: 5))
-        }
-
-        // Doubles: the players sheet with the serving-order editor.
-        app.scrollViews.firstMatch.swipeDown(velocity: .fast)
-        app.scrollViews.firstMatch.swipeDown(velocity: .fast)
-        app.buttons["record.mode.doublesMatch"].tap()
-        app.fillPlayers(["partner": "Sam", "opponentPartner": "Lee"])
-        let order = app.descendants(matching: .any).matching(identifier: "players.order.1.second").firstMatch
-        app.reveal(order, in: app.otherElements["sheet.container"].scrollViews.firstMatch)
-        attachScreenshot(app, name: "t21-\(variant)-sheet-players-doubles")
-        app.buttons["sheet.close"].tap()
-
-        // Practice: no scoring row; the camera angle row instead.
-        app.scrollViews.firstMatch.swipeDown(velocity: .fast)
+        for _ in 0..<6 { app.scrollViews.firstMatch.swipeDown(velocity: .fast) }
         app.buttons["record.mode.strokePractice"].tap()
         XCTAssertFalse(app.buttons["record.scoring"].exists, "practice has no scoring row")
         let angle = app.descendants(matching: .any).matching(identifier: "record.cameraAngle").firstMatch
         app.reveal(angle)
         attachScreenshot(app, name: "t21-\(variant)-stroke-practice")
+        try auditScreen(app)
     }
 }

@@ -225,4 +225,60 @@ struct SessionSetupScreenTests {
         store.setup.cameraFormatID = "4k60.ultraWide"
         #expect(store.selectedFormat == fixture, "a remembered preset this camera lacks falls back to a supported one")
     }
+
+    // MARK: What capture records (review round 1)
+
+    @Test(arguments: FormatPreset.allCases)
+    func aSinglesFormatCaptureCannotRecordIsRefusedNeverReplaced(_ preset: FormatPreset) {
+        var setup = Self.readySingles()
+        setup.format = FormatChoice(preset: preset)
+        let draft = SessionSetupDraft(setup)
+        if draft.captureChoices == nil {
+            #expect(draft.captureSupport == .formatUnavailable, "\(preset): capture shows why, it never opens a Best of 3 form")
+        } else {
+            #expect(draft.captureSupport == .supported)
+            #expect(draft.captureChoices?.seed.format == setup.format.format, "\(preset) is recorded exactly")
+        }
+    }
+
+    @Test func overridesCaptureCannotRecordAreRefusedAndModesKeepTheirOwnState() {
+        var setup = Self.readySingles()
+        setup.format = FormatChoice(preset: .clubBestOf3, lets: .noLet)
+        #expect(SessionSetupDraft(setup).captureSupport == .formatUnavailable)
+        setup.format = FormatChoice(preset: .clubBestOf3, setEnding: .advantageSet)
+        #expect(SessionSetupDraft(setup).captureSupport == .formatUnavailable)
+        setup.format = FormatChoice(preset: .clubBestOf3)
+        #expect(SessionSetupDraft(setup).captureSupport == .supported)
+        setup.mode = .doublesMatch
+        setup.partner.name = "Sam"; setup.opponentPartner.name = "Lee"
+        #expect(SessionSetupDraft(setup).captureSupport == .modeUnavailable)
+        #expect(SessionSetupDraft(kind: .singlesMatch).captureSupport == .supported, "the route without a setup keeps its own form")
+    }
+
+    @Test func captureRecordsTheChosenCameraPresetNotAFixedOne() {
+        let offered = [
+            CaptureFormatOption(id: "1080p60.ultraWide", width: 1920, height: 1080, framesPerSecond: 60, bitRate: 12_000_000, lens: .ultraWide),
+            CaptureFormatOption(id: "4k30.wide", width: 3840, height: 2160, framesPerSecond: 30, bitRate: 23_000_000, lens: .wide),
+        ]
+        var setup = Self.readySingles()
+        setup.cameraFormatID = "4k30.wide"
+        #expect(CaptureRecordingPlan.preset(for: setup, offered: offered) == offered[1].preset)
+        setup.cameraFormatID = "720p240.wide"
+        #expect(CaptureRecordingPlan.preset(for: setup, offered: offered) == offered[0].preset,
+                "a remembered preset this camera lacks records the first offered one, as the camera row shows")
+        #expect(CaptureRecordingPlan.preset(for: nil, offered: offered) == CaptureRecordingPlan.defaultPreset)
+        #expect(CaptureRecordingPlan.preset(for: setup, offered: []) == CaptureRecordingPlan.defaultPreset)
+        let fixture = CaptureFormatOption(id: "720p30.fixture", width: 1280, height: 720, framesPerSecond: 30,
+                                          bitRate: CaptureFormatCatalog.fixtureBitRate, lens: .fixture)
+        #expect(fixture.preset == CaptureRecordingPlan.defaultPreset, "on the simulator the fixture records as before")
+    }
+
+    @Test func captureRecordsSoundOnlyWhenTheMicrophoneIsOnAndAllowed() {
+        #expect(CaptureRecordingPlan.microphone(on: false, permission: .authorized) == .record(.notRequested))
+        #expect(CaptureRecordingPlan.microphone(on: false, permission: .notDetermined) == .record(.notRequested), "off never asks")
+        #expect(CaptureRecordingPlan.microphone(on: true, permission: .authorized) == .record(.granted))
+        #expect(CaptureRecordingPlan.microphone(on: true, permission: .denied) == .record(.denied))
+        #expect(CaptureRecordingPlan.microphone(on: true, permission: .restricted) == .record(.denied))
+        #expect(CaptureRecordingPlan.microphone(on: true, permission: .notDetermined) == .askFirst)
+    }
 }

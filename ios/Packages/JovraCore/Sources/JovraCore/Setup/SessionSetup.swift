@@ -46,6 +46,9 @@ public enum SetupError: Error, Equatable, Sendable {
 public enum SetupProblem: Equatable, Sendable {
     case missingName(SetupSeat)
     case nameTooLong(SetupSeat)
+    /// The seat holds a person already in an earlier seat (the same player id): the engine refuses a
+    /// side that names one player twice.
+    case samePlayerTwice(SetupSeat)
     case doublesOrder(set: Int, DoublesOrderProblem)
     case sessionNameTooLong
 }
@@ -208,10 +211,12 @@ public struct SessionSetup: Codable, Hashable, Sendable {
 
     public var problems: [SetupProblem] {
         var found: [SetupProblem] = []
+        var ids = Set<String>()
         for seat in seatsInPlay {
             let name = self[seat].trimmedName
             if name.isEmpty { found.append(.missingName(seat)) }
             else if name.unicodeScalars.count > Self.maximumNameLength { found.append(.nameTooLong(seat)) }
+            if !ids.insert(self[seat].id).inserted { found.append(.samePlayerTwice(seat)) }
         }
         if trimmedSessionName.unicodeScalars.count > Self.maximumSessionNameLength { found.append(.sessionNameTooLong) }
         if mode == .doublesMatch {

@@ -14,7 +14,8 @@ final class SessionSetupStore {
         didSet { if setup != oldValue { save() } }
     }
 
-    /// Opponents and partners from sessions saved on this iPhone, newest first (story 39).
+    /// Opponents and partners from sessions saved on this iPhone, newest first (story 39). The players
+    /// sheet offers the first few not already in the setup (`RecentPlayers.offered`).
     private(set) var recentPlayers: [SessionSetup.Player] = []
 
     @ObservationIgnored private let file: URL?

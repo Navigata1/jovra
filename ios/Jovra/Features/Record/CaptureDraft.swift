@@ -40,3 +40,20 @@ extension CaptureSetupChoices {
         nearPlayer = setup.myTeamStartsNear ? .a : .b
     }
 }
+
+extension SessionSetupDraft {
+    /// Whether today's capture screen can record this draft exactly.
+    enum CaptureSupport: Equatable, Sendable {
+        case supported
+        /// Doubles and practice: capture shows that the mode is not available yet.
+        case modeUnavailable
+        /// A singles format capture cannot score yet (anything but one or three tie-break sets with
+        /// lets): capture says so and never opens its own form with another format.
+        case formatUnavailable
+    }
+
+    var captureSupport: CaptureSupport {
+        guard kind == .singlesMatch else { return .modeUnavailable }
+        return sessionSetup != nil && captureChoices == nil ? .formatUnavailable : .supported
+    }
+}

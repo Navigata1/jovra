@@ -95,7 +95,8 @@ private struct RecentPlayerPicker: View {
             Text("Played before", tableName: "Record", comment: "Previous opponents heading")
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(.jovra(.textSecondary))
-            if store.recentPlayers.isEmpty {
+            let offered = RecentPlayers.offered(store.recentPlayers, for: store.setup)
+            if offered.isEmpty {
                 Text("People you record with appear here.", tableName: "Record", comment: "No previous opponents yet")
                     .font(.subheadline)
                     .foregroundStyle(.jovra(.textSecondary))
@@ -103,7 +104,7 @@ private struct RecentPlayerPicker: View {
                     .accessibilityIdentifier("players.recent.empty")
             } else {
                 ChipFlow(spacing: Space.x1) {
-                    ForEach(store.recentPlayers, id: \.id) { player in
+                    ForEach(offered, id: \.id) { player in
                         Button { pick(player) } label: {
                             Text(player.name)
                                 .font(.jovraLabel)
@@ -122,7 +123,8 @@ private struct RecentPlayerPicker: View {
         }
     }
 
-    /// Fills the first opponent seat that is empty, else the opponent.
+    /// Fills the first opponent seat that is empty, else the opponent. Someone already in a seat is not
+    /// offered, so one person never fills two seats.
     private func pick(_ player: SessionSetup.Player) {
         let seats: [SetupSeat] = store.setup.mode == .doublesMatch ? [.opponent, .opponentPartner] : [.opponent]
         let seat = seats.first { store.setup[$0].trimmedName.isEmpty } ?? .opponent
