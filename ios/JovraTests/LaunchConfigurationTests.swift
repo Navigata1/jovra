@@ -71,7 +71,7 @@ struct LaunchConfigurationTests {
         (["-reduceMotion", "sometimes"], "-reduceMotion: unknown value “sometimes” (expected YES or NO)"),
         (["-archiveState"], "-archiveState: missing value"),
         (["-processingAnalyzer", "real"], "-processingAnalyzer: unknown value “real” (expected steady, failsOnce)"),
-        (["-library", "shared"], "-library: unknown value “shared” (expected fresh)"),
+        (["-library", "shared"], "-library: unknown value “shared” (expected fresh, facets)"),
         (["-processingDevice", "hot"], "-processingDevice: unknown value “hot” (expected lowPowerOnBattery, tooWarm)"),
         (["-profile", "shared"], "-profile: unknown value “shared” (expected fresh, onboarded, persistentNew, persistent)"),
         (["-appleSignIn", "maybe"], "-appleSignIn: unknown value “maybe” (expected succeeded, cancelled, failed)"),

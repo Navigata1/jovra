@@ -1,0 +1,51 @@
+# Red: the new JovraTests suites before any implementation (compile failures = missing types)
+	Testing cancelled because the build failed.
+    |                                                                                                                  `- error: cannot find type 'LibraryEntry' in scope
+    |                                                                                               `- error: binary operator '==' cannot be applied to two '[T]' operands
+    |                                                                                           |- error: value of type 'Any' has no member 'axis'
+    |                                                                                          `- error: cannot infer key path type from context; consider explicitly specifying a root type
+    |                                                                                       |- error: value of type 'Any' has no member 'tone'
+    |                                                                                    `- error: cannot infer key path type from context; consider explicitly specifying a root type
+    |                                                                                   `- error: cannot infer key path type from context; consider explicitly specifying a root type
+    |                                                                               `- error: cannot infer key path type from context; consider explicitly specifying a root type
+    |                        `- error: cannot find 'LibraryFixtures' in scope
+    |                      `- error: cannot find 'SessionFacetLabels' in scope
+    |                     `- error: cannot find 'PurgeScope' in scope
+    |                    `- error: cannot find 'SessionCardPresentation' in scope
+    |                  `- error: cannot find 'SessionFacetLabels' in scope
+    |                 `- error: cannot find 'LibraryListing' in scope
+    |                 `- error: cannot find 'SessionFacetLabels' in scope
+    |                `- error: cannot find 'LibraryEntry' in scope
+** TEST FAILED **
+Testing failed:
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:108:17: error: cannot find 'LibraryListing' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:108:79: error: cannot infer key path type from context; consider explicitly specifying a root type
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:109:17: error: cannot find 'LibraryListing' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:109:83: error: cannot infer key path type from context; consider explicitly specifying a root type
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:110:17: error: cannot find 'LibraryListing' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:110:90: error: cannot infer key path type from context; consider explicitly specifying a root type
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:111:17: error: cannot find 'LibraryListing' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:111:84: error: cannot infer key path type from context; consider explicitly specifying a root type
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:112:17: error: cannot find 'LibraryListing' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:119:21: error: cannot find 'PurgeScope' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:136:21: error: cannot find 'PurgeScope' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:17:114: error: cannot find type 'LibraryEntry' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:18:24: error: cannot find 'LibraryFixtures' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:23:16: error: cannot find 'LibraryEntry' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:30:22: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:35:87: error: value of type 'Any' has no member 'tone'
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:35:95: error: binary operator '==' cannot be applied to two '[T]' operands
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:37:91: error: value of type 'Any' has no member 'axis'
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:54:22: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:61:17: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:62:17: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:63:17: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:65:18: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:66:18: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:67:18: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:77:17: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:82:17: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:83:17: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:84:17: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:85:17: error: cannot find 'SessionFacetLabels' in scope
+ios/JovraTests/Sessions/SessionLibraryPresentationTests.swift:90:20: error: cannot find 'SessionCardPresentation' in scope

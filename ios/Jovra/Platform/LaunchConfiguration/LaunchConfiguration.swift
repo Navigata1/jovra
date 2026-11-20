@@ -29,6 +29,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         static let processingAnalyzer = "-processingAnalyzer"
         static let processingDevice = "-processingDevice"
         static let library = "-library"
+        static let recordFixtureSession = "-recordFixtureSession"
         static let profile = "-profile"
         static let appleSignIn = "-appleSignIn"
         static let importSelection = "-importSelection"
@@ -104,7 +105,13 @@ struct LaunchConfiguration: Equatable, Sendable {
         /// A new, empty library in a temporary folder for this launch only. The library saved on the
         /// device is neither read nor changed, so a UI test sees no sessions left by an earlier test.
         case fresh
+        /// A fresh library seeded with visibly labelled Sample sessions covering every original, analysis,
+        /// review and archive state, one session in Trash and one unreadable document set aside in quarantine.
+        case facets
     }
+
+    /// The longest headless fixture recording a launch may ask for, in seconds.
+    static let maximumFixtureSessionSeconds = 120
 
     /// Which player profile store a launch uses (T18). The welcome gate reads it: with no profile, the launch opens
     /// on Welcome.
@@ -142,6 +149,9 @@ struct LaunchConfiguration: Equatable, Sendable {
     var processingDevice: ProcessingDevice?
     /// nil uses the library saved on the device.
     var library: Library?
+    /// Records a session of this many seconds through the capture engine and the fixture camera at launch,
+    /// with no screen in between (the walking skeleton), then opens the library. nil records nothing.
+    var recordFixtureSessionSeconds: Int?
     /// nil uses the profile saved on the device.
     var profile: ProfileStoreChoice?
     /// nil uses Sign in with Apple itself.
@@ -197,6 +207,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         if let processingAnalyzer { result += [Key.processingAnalyzer, processingAnalyzer.rawValue] }
         if let processingDevice { result += [Key.processingDevice, processingDevice.rawValue] }
         if let library { result += [Key.library, library.rawValue] }
+        if let recordFixtureSessionSeconds { result += [Key.recordFixtureSession, String(recordFixtureSessionSeconds)] }
         if let profile { result += [Key.profile, profile.rawValue] }
         if let appleSignIn { result += [Key.appleSignIn, appleSignIn.rawValue] }
         if !importSelection.isEmpty { result += [Key.importSelection, importSelection.joined(separator: "|")] }
@@ -213,7 +224,7 @@ struct LaunchConfiguration: Equatable, Sendable {
     private static let knownKeys: Set<String> = [
         Key.appearance, Key.demo, Key.fixtureCamera, Key.permissions,
         Key.archiveState, Key.reduceMotion, Key.pseudoLocale, Key.startRoute, Key.library, Key.processingAnalyzer,
-        Key.processingDevice, Key.profile, Key.appleSignIn, Key.importSelection, Key.importStall,
+        Key.processingDevice, Key.recordFixtureSession, Key.profile, Key.appleSignIn, Key.importSelection, Key.importStall,
     ]
 
     private mutating func apply(key: String, value: String) {
@@ -229,6 +240,7 @@ struct LaunchConfiguration: Equatable, Sendable {
         case Key.processingAnalyzer: processingAnalyzer = parse(ProcessingAnalyzer.self, value, for: key)
         case Key.processingDevice: processingDevice = parse(ProcessingDevice.self, value, for: key)
         case Key.library: library = parse(Library.self, value, for: key)
+        case Key.recordFixtureSession: parseFixtureSeconds(value)
         case Key.profile: profile = parse(ProfileStoreChoice.self, value, for: key)
         case Key.appleSignIn: appleSignIn = parse(AppleSignInFixture.self, value, for: key)
         case Key.importSelection: importSelection = value.split(separator: "|").map(String.init)
@@ -267,6 +279,14 @@ struct LaunchConfiguration: Equatable, Sendable {
             }
             permissions[permission] = state
         }
+    }
+
+    private mutating func parseFixtureSeconds(_ value: String) {
+        guard let seconds = Int(value), (1...Self.maximumFixtureSessionSeconds).contains(seconds) else {
+            problems.append("\(Key.recordFixtureSession): unknown value “\(value)” (expected whole seconds from 1 to \(Self.maximumFixtureSessionSeconds))")
+            return
+        }
+        recordFixtureSessionSeconds = seconds
     }
 
     private mutating func parseReduceMotion(_ value: String) {

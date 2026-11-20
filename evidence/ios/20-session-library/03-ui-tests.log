@@ -1,0 +1,21 @@
+# UI receipts on JOVRA-T20 for the round-2 head (AX5 poster fix + purge copy fix), in one run:
+# SIMULATOR_ID=<JOVRA-T20> scripts/ios/ui-test.sh -only-testing JovraUITests/SessionLibraryUITests -only-testing JovraUITests/NativeLibraryUITests \
+#   -only-testing JovraUITests/NavigationRoutesUITests/testEverySheetHasACloseControlAndNamesItsTicket -only-testing JovraUITests/ImportSourcesUITests
+# Precondition: the app was uninstalled from JOVRA-T20 first (xcrun simctl uninstall <JOVRA-T20> com.islanddevcrew.jovra), so the device library
+# holds only what this run stores. NativeLibraryUITests/testRealStoredLibraryIsAccessibleAtAX5 audits whatever the device library holds, and
+# repeated earlier runs had left 70 sessions there: at AX5 the step-by-step audit of that page hit XCTest's "Audit failed to complete in time"
+# twice (machine load average about 120 on the first, 17 on the second). Those two runs, before the reset, are recorded here and are not counted:
+#   run 1 (all four classes): 16 passed, 1 failed (testRealStoredLibraryIsAccessibleAtAX5, audit timeout; its width checks had passed)
+#   run 2 (NativeLibraryUITests only): 1 passed, 1 failed (same test, same audit timeout)
+# Round 2 adds SessionLibraryUITests/testRecordedSessionWithAPosterFitsTheScreenAtAX5 (8 -> 9) and assertFitsTheScreenWidth checks in it and in
+# NativeLibraryUITests/testRealStoredLibraryIsAccessibleAtAX5; testDeleteThenUndoRestoresAndThePurgeDialogStatesItsScope now also opens the purge
+# dialog of the Sample "Old warm-up" (no original stored, no backup) and checks it never says "the only copy" (s08-light-purge-dialog-no-original).
+==> Summary
+Test class                            passed  failed  skipped  expected
+JovraUITests/ImportSourcesUITests          5       0        0         0
+JovraUITests/NativeLibraryUITests          2       0        0         0
+JovraUITests/NavigationRoutesUITests       1       0        0         0
+JovraUITests/SessionLibraryUITests         9       0        0         0
+Total: 17 passed, 0 failed, 0 skipped, 0 expected failure(s) in 4 classes (xcresult summary: 17 passed, 0 failed, 0 skipped; result Passed)
+Device: JOVRA-T20 39331E6A-2160-4C51-A8E1-63902099F844 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/ui-tests-20261120-095745.xcresult

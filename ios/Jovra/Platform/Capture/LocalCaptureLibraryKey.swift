@@ -6,21 +6,27 @@ enum LocalCaptureAvailability: Sendable {
     case unavailable
 }
 
-/// The app's single local actor is shared by capture, library and review. Demo choices never
-/// switch this registration to another store; FixtureCamera writes visibly marked sample sessions.
-/// Only `-library fresh` does: a new, empty library in a temporary folder, so a UI test does not
-/// depend on the sessions earlier tests left in the app container. `-importStall` (a T26 UI-test seam)
-/// keeps the real store and only pauses an import just before it publishes.
+/// The app's single local actor is shared by capture, library and review. FixtureCamera writes visibly
+/// marked sample sessions. A harness launch that asks for a library of its own gets a new one in a temporary
+/// folder, so a UI test does not depend on the sessions earlier tests left in the app container and never
+/// writes into the library saved on the device: `-library fresh` (empty), `-library facets` (the facet
+/// fixtures) and `-demo sample` (the shipped Sample library, installed through SampleContent).
+/// `-importStall` (a T26 UI-test seam) only pauses an import just before it publishes; on its own it keeps
+/// the library saved on the device.
 struct LocalCaptureLibraryKey: ServiceKey {
     static let defaultValue: LocalCaptureAvailability = resolve(.current)
     static func usesFake(_ configuration: LaunchConfiguration) -> Bool {
-        configuration.library == .fresh || configuration.importStall
+        usesTemporaryLibrary(configuration) || configuration.importStall
     }
     static func fake(for configuration: LaunchConfiguration) -> LocalCaptureAvailability {
         let stall: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = configuration.importStall ? stallBeforePublishing : nil
-        guard configuration.library == .fresh else { return live(writeFault: stall) }
+        guard usesTemporaryLibrary(configuration) else { return live(writeFault: stall) }
         return open(root: FileManager.default.temporaryDirectory
-            .appendingPathComponent("JOVRA-fresh-\(UUID().uuidString)", isDirectory: true), writeFault: stall)
+            .appendingPathComponent("JOVRA-fresh-\(UUID().uuidString)", isDirectory: true),
+                    seed: LibraryLaunchSeed.forLaunch(configuration), writeFault: stall)
+    }
+    private static func usesTemporaryLibrary(_ configuration: LaunchConfiguration) -> Bool {
+        configuration.library != nil || configuration.demo == .sample
     }
     static func live() -> LocalCaptureAvailability { live(writeFault: nil) }
 
@@ -39,8 +45,9 @@ struct LocalCaptureLibraryKey: ServiceKey {
         } catch { return .unavailable }
     }
 
-    private static func open(root: URL, writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = nil) -> LocalCaptureAvailability {
-        do { return .ready(try LocalCaptureLibrary(root: root, writeFault: writeFault)) } catch { return .unavailable }
+    private static func open(root: URL, seed: LibraryLaunchSeed? = nil,
+                             writeFault: (@Sendable (SessionWriteCheckpoint) throws -> Void)? = nil) -> LocalCaptureAvailability {
+        do { return .ready(try LocalCaptureLibrary(root: root, launchSeed: seed, writeFault: writeFault)) } catch { return .unavailable }
     }
 }
 

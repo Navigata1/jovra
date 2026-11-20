@@ -1,0 +1,40 @@
+# Round 2 red, unit: SessionLibraryPresentationTests with the new purgeWithoutAnyOriginal / purgeWithoutLocalOriginalButBackedUp tests against the unchanged PurgeScope.
+# SIMULATOR_ID=<JOVRA-T20> xcodebuild test -only-testing:JovraTests/SessionLibraryPresentationTests (Jovra scheme, worktree .derivedData)
+# The dialog said 'No original video is on this iPhone' and then 'This is the only copy of the original video.' for a session with no original stored anywhere.
+Test class                                                                 passed  failed  skipped  expected
+JovraTests/SessionLibraryPresentationTests (Session library presentation)      13       1        0         0
+Total: 13 passed, 1 failed, 0 skipped, 0 expected failure(s) in 1 classes (xcresult summary: 13 passed, 1 failed, 0 skipped; result Failed)
+FAILED SessionLibraryPresentationTests/purgeWithoutAnyOriginal(bytes:): Expectation failed: scope.message == """
+            This removes from this iPhone:
+            • No original video is on this iPhone
+            • Its analysis, points and review
+            • No local copies
+
+            Google Drive: no verified copy. No copy of the original video exists on this iPhone or in Google Drive.
+            This can't be undone.
+            """
+scope.message → "This removes from this iPhone:
+• No original video is on this iPhone
+• Its analysis, points and review
+• No local copies
+
+Google Drive: no verified copy. This is the only copy of the original video.
+This can't be undone."
+"""
+            This removes from this iPhone:
+            • No original video is on this iPhone
+            • Its analysis, points and review
+            • No local copies
+
+            Google Drive: no verified copy. No copy of the original video exists on this iPhone or in Google Drive.
+            This can't be undone.
+            """ → "This removes from this iPhone:
+• No original video is on this iPhone
+• Its analysis, points and review
+• No local copies
+
+Google Drive: no verified copy. No copy of the original video exists on this iPhone or in Google Drive.
+This can't be undone."
+Device: JOVRA-T20 39331E6A-2160-4C51-A8E1-63902099F844 (iPhone 17 Pro, iOS Simulator 27.2)
+Result bundle: .derivedData/red-purge.xcresult
+INCOMPLETE TEST RESULT: require a Passed receipt with executed, recognized test cases.

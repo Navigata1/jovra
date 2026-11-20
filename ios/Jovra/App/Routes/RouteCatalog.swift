@@ -116,7 +116,7 @@ private extension AppTab {
     var rootInfo: RouteInfo {
         let (ticket, file): (String, String) = switch self {
         case .home: ("T19", "Features/Home/HomeView.swift")
-        case .sessions: ("T20", "Features/Sessions/SessionsView.swift")
+        case .sessions: ("T20", "Features/Sessions/Library/SessionsView.swift")
         case .record: ("T21", "Features/Record/RecordView.swift")
         case .insights: ("T47", "Features/Insights/InsightsView.swift")
         case .profile: ("T18", "Features/Profile/ProfileView.swift")
@@ -261,7 +261,7 @@ private extension SheetRoute {
         case .trash:
             sheet("trash", "T20", String(localized: "Trash", table: "App", comment: "Sheet name"),
                   String(localized: "Close trash", table: "App", comment: "VoiceOver label of the Close control"),
-                  "Features/Sessions/Library/TrashSheet.swift")
+                  "Features/Sessions/Library/TrashSheet.swift", placeholder: TrashSheet.isPlaceholder)
         case .goal:
             sheet("goal", "T48", String(localized: "Goal", table: "App", comment: "Sheet name"),
                   String(localized: "Close goal", table: "App", comment: "VoiceOver label of the Close control"),
